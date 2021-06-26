@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/../BestOfNesWebsite/.idea/BestOfNesWebsite.iml" filepath="$PROJECT_DIR$/../BestOfNesWebsite/.idea/BestOfNesWebsite.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/TwitchThing.iml" filepath="$PROJECT_DIR$/.idea/TwitchThing.iml" />
+      <module fileurl="file://$USER_HOME$/WebstormProjects/demono/.idea/demono.iml" filepath="$USER_HOME$/WebstormProjects/demono/.idea/demono.iml" />
     </modules>
   </component>
 </project>
