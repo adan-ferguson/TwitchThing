@@ -11,5 +11,8 @@
     "url": "https://github.com/adan-ferguson/TwitchThing"
   },
   "author": "Me LOL",
-  "license": "ISC"
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^5.40.0"
+  }
 }
