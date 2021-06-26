@@ -2,7 +2,7 @@
   "name": "twitchthing",
   "version": "1.0.0",
   "description": "Some Twitch Thing that listens for channel points redemptions",
-  "main": "./app/server.js",
+  "main": "./server/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -13,6 +13,12 @@
   "author": "Me LOL",
   "license": "ISC",
   "devDependencies": {
+    "@types/express": "^4.17.12",
+    "eslint": "^7.29.0",
+    "typescript": "^4.3.4",
     "webpack": "^5.40.0"
+  },
+  "dependencies": {
+    "express": "^4.17.1"
   }
 }
