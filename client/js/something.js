@@ -1,3 +1,3 @@
-module.exports = {
-    write: () => console.log('write called')
+export function write(){
+    console.log('write called')
 }

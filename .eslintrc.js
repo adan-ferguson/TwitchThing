@@ -1,12 +1,12 @@
 module.exports = {
     env: {
-        browser: true,
-        commonjs: true,
         es2021: true,
+        browser: true,
         node: true
     },
     extends: [
-        'eslint:recommended'
+        'eslint:recommended',
+        'plugin:react/recommended'
     ],
     parserOptions: {
         ecmaVersion: 12

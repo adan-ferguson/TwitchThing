@@ -9,9 +9,7 @@ const config = {
         path: path.resolve(__dirname, 'client_dist'),
     },
     plugins: [
-        new HtmlWebpackPlugin({
-            template: 'index.html',
-        }),
+        new HtmlWebpackPlugin(),
 
     // Add your plugins here
     // Learn more about plugins from https://webpack.js.org/configuration/plugins/
@@ -35,6 +33,7 @@ const config = {
             // Learn more about loaders from https://webpack.js.org/loaders/
         ],
     },
+    devtool: 'source-map'
 }
 
 module.exports = () => {
