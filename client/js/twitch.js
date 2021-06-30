@@ -1,5 +1,6 @@
 import React from 'react'
 import { post } from './fizzetch'
+import TwitchLoginLink from './components/twitchLoginLink'
 
 let userJson
 
@@ -11,17 +12,9 @@ export async function loadUser(){
   return userJson.user || false
 }
 
-export class TwitchLoginLink extends React.Component {
-  render(){
-    if(userJson.loginLink && userJson.stateID) {
-      return <a href={userJson.loginLink} onClick={loginClicked}>Log In with Twitch</a>
-    }else {
-      return <p>An error occurred. (LOL)</p>
-    }
-  }
-}
-
-function loginClicked(){
-  localStorage.stateID = userJson.stateID
-  localStorage.redirectTarget = window.location.pathname
+export function createLoginLink(){
+  React.createElement(TwitchLoginLink, {
+    loginLink: userJson.loginLink,
+    stateID: userJson.stateID
+  })
 }
