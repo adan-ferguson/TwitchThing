@@ -1,4 +1,3 @@
-import { write } from './something'
 import React from 'react'
 import ReactDOM from 'react-dom'
 
@@ -15,5 +14,3 @@ root.id = 'root'
 document.body.appendChild(root)
 
 ReactDOM.render(<App />, root)
-
-write()

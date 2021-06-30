@@ -1,14 +1,24 @@
-const path = require('path')
 const express = require('express')
-const app = express(),
-    DIST_DIR = path.join(__dirname, '..', 'client_dist'),
-    HTML_FILE = path.join(DIST_DIR, 'index.html')
-app.use(express.static(DIST_DIR))
-app.get('*', (req, res) => {
-    res.sendFile(HTML_FILE)
-})
-const PORT = process.env.PORT || 8080
+const app = express()
+const config = require('./config')
+const session = require('express-session')
+const db = require('./db')
+const path = require('path')
+db.init()
+
+app
+  .use(session({
+    resave: true,
+    saveUninitialized: true,
+    secret: config.secret,
+    cookie: {
+      secure: true
+    }
+  }))
+  .use('/', express.static(path.join(__dirname, '..', 'client_dist')))
+  .use('/', require('./routes.js'))
+
+const PORT = config.port
 app.listen(PORT, () => {
-    console.log(`App listening to ${PORT}....`)
-    console.log('Press Ctrl+C to quit.')
+  console.log(`App listening to ${PORT}....`)
 })
