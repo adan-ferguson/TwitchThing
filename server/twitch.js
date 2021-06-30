@@ -23,24 +23,18 @@ const twitch = {
       return null
     }
   },
-  getLoginLink: (req, stateID) => {
-
+  getLoginLink: req => {
+    let stateID = guid()
     let obj = {
       client_id: config.twitch.clientID,
       redirect_uri: `${req.protocol}://${req.headers.host}/twitchredirect`,
-      response_type: 'token id_token',
-      scope: 'openid',
+      response_type: 'token',
+      scope: '',
       state: stateID
     }
-
-    return 'https://id.twitch.tv/oauth2/authorize' + jsonToQueryString(obj)
-  },
-  getTwitchInfo: req => {
-    let id = guid()
     return  {
-      username: req.session.username || null,
-      loginLink: twitch.getLoginLink(req, id),
-      stateID: id
+      loginLink: 'https://id.twitch.tv/oauth2/authorize' + jsonToQueryString(obj),
+      stateID: stateID
     }
   }
 }

@@ -3,44 +3,51 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
+const HTML_FILES = ['index', 'twitchredirect']
+const htmlPlugins = []
+HTML_FILES.forEach((file) => {
+  htmlPlugins.push(
+    new HtmlWebpackPlugin({
+      filename: `${file}.html`,
+      template: `client/html/${file}.html`,
+      chunks: [file.replace(/-(\w)/g, (match, c) => c.toUpperCase())]
+    })
+  )
+})
+
 const config = {
-    entry: './client/js/index.js',
-    output: {
-        path: path.resolve(__dirname, 'client_dist'),
-    },
-    plugins: [
-        new HtmlWebpackPlugin(),
+  entry: './client/js/index.js',
+  output: {
+    path: path.resolve(__dirname, 'client_dist'),
+  },
+  plugins: [...htmlPlugins],
+  module: {
+    rules: [
+      {
+        test: /\.(js|jsx)$/i,
+        loader: 'babel-loader',
+      },
+      {
+        test: /\.s[ac]ss$/i,
+        use: ['css-loader', 'sass-loader'],
+      },
+      {
+        test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
+        type: 'asset',
+      },
 
-    // Add your plugins here
-    // Learn more about plugins from https://webpack.js.org/configuration/plugins/
+      // Add your rules for custom modules here
+      // Learn more about loaders from https://webpack.js.org/loaders/
     ],
-    module: {
-        rules: [
-            {
-                test: /\.(js|jsx)$/i,
-                loader: 'babel-loader',
-            },
-            {
-                test: /\.s[ac]ss$/i,
-                use: ['css-loader', 'sass-loader'],
-            },
-            {
-                test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
-                type: 'asset',
-            },
-
-            // Add your rules for custom modules here
-            // Learn more about loaders from https://webpack.js.org/loaders/
-        ],
-    },
-    devtool: 'source-map'
+  },
+  devtool: 'source-map'
 }
 
 module.exports = () => {
-    if (isProduction) {
-        config.mode = 'production'
-    } else {
-        config.mode = 'development'
-    }
-    return config
+  if (isProduction) {
+    config.mode = 'production'
+  } else {
+    config.mode = 'development'
+  }
+  return config
 }

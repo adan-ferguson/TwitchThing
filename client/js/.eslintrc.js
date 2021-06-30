@@ -1,5 +1,5 @@
 module.exports = {
-    parserOptions: {
-        sourceType: 'module',
-    }
+  parserOptions: {
+    sourceType: 'module',
+  }
 }

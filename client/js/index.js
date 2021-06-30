@@ -1,16 +1,31 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
+import { loadUser, TwitchLoginLink } from './twitch'
+import { Game } from './game'
 
-const App = () => {
-    return (
-        <div>
-            <div>Welcome to my-webpack-react-starter</div>
-        </div>
-    )
+class App extends React.Component {
+
+  constructor(props){
+    super(props)
+    this.state = {
+      loading: true,
+      user: null
+    }
+  }
+
+  render(){
+    if(this.state.user){
+      return React.createElement(Game, { user: this.state.user })
+    }else if(this.state.loading){
+      return <p>Loading...</p>
+    }else {
+      return <TwitchLoginLink/>
+    }
+  }
+
+  async componentDidMount() {
+    this.setState({ user: await loadUser(), loading: false })
+  }
 }
 
-const root = document.createElement('div')
-root.id = 'root'
-document.body.appendChild(root)
-
-ReactDOM.render(<App />, root)
+ReactDOM.render(<App />, document.querySelector('#root'))

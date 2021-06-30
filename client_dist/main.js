@@ -2,6 +2,74 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./client/js/game.js":
+/*!***************************!*\
+  !*** ./client/js/game.js ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "Game": () => (/* binding */ Game)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+class Game extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor(props) {
+    super(props);
+    debugger;
+  }
+
+  render() {
+    return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, "Some Game");
+  }
+
+}
+
+/***/ }),
+
+/***/ "./client/js/twitch.js":
+/*!*****************************!*\
+  !*** ./client/js/twitch.js ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "loadUser": () => (/* binding */ loadUser),
+/* harmony export */   "TwitchLoginLink": () => (/* binding */ TwitchLoginLink)
+/* harmony export */ });
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+let userJson;
+async function loadUser() {
+  const response = await fetch('/gettwitchuser', {
+    method: 'POST'
+  });
+  userJson = await response.json();
+  return userJson.user || false;
+}
+class TwitchLoginLink extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
+  render() {
+    if (userJson.loginLink && userJson.stateID) {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("a", {
+        href: userJson.loginLink,
+        onClick: loginClicked
+      }, "Log In with Twitch");
+    } else {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, "An error occurred. (LOL)");
+    }
+  }
+
+}
+
+function loginClicked() {
+  localStorage.stateID = userJson.stateID;
+  localStorage.redirectTarget = window.location.pathname;
+}
+
+/***/ }),
+
 /***/ "./node_modules/object-assign/index.js":
 /*!*********************************************!*\
   !*** ./node_modules/object-assign/index.js ***!
@@ -7803,6 +7871,23 @@ if (false) {} else {
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/define property getters */
+/******/ 	(() => {
+/******/ 		// define getter functions for harmony exports
+/******/ 		__webpack_require__.d = (exports, definition) => {
+/******/ 			for(var key in definition) {
+/******/ 				if(__webpack_require__.o(definition, key) && !__webpack_require__.o(exports, key)) {
+/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
+/******/ 				}
+/******/ 			}
+/******/ 		};
+/******/ 	})();
+/******/ 	
+/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
+/******/ 	(() => {
+/******/ 		__webpack_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -7824,17 +7909,44 @@ var __webpack_exports__ = {};
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var _twitch__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./twitch */ "./client/js/twitch.js");
+/* harmony import */ var _game__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./game */ "./client/js/game.js");
 
 
 
-var App = function App() {
-  return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, "Welcome to my-webpack-react-starter"));
-};
 
-var root = document.createElement('div');
-root.id = 'root';
-document.body.appendChild(root);
-react_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(App, null), root);
+
+class App extends react__WEBPACK_IMPORTED_MODULE_0__.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      loading: true,
+      user: null
+    };
+  }
+
+  render() {
+    if (this.state.user) {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_game__WEBPACK_IMPORTED_MODULE_3__.Game, {
+        user: this.state.user
+      });
+    } else if (this.state.loading) {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, "Loading...");
+    } else {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_twitch__WEBPACK_IMPORTED_MODULE_2__.TwitchLoginLink, null);
+    }
+  }
+
+  async componentDidMount() {
+    this.setState({
+      user: await (0,_twitch__WEBPACK_IMPORTED_MODULE_2__.loadUser)(),
+      loading: false
+    });
+  }
+
+}
+
+react_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(App, null), document.querySelector('#root'));
 })();
 
 /******/ })()

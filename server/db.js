@@ -5,7 +5,7 @@ const log = require('fancy-log')
 
 let connection
 
-async function initialize(){
+const init = async () => {
   try {
     let client = await MongoClient.connect(`mongodb://localhost:${config.db.port}`, { useNewUrlParser: true })
     connection = client.db(config.db.name)
@@ -15,8 +15,10 @@ async function initialize(){
   }
 }
 
+const id = id => MongoDB.ObjectID(id)
+
 module.exports = {
-  init: initialize,
+  init,
   conn: () => connection,
-  id: id => MongoDB.ObjectID(id)
+  id
 }
