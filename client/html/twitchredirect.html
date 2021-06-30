@@ -5,6 +5,25 @@
     <title>Redirecting...</title>
 </head>
 <body>
+    <script>
 
+        const params = {}
+        document.location.hash.slice(1).split('&').forEach(param => {
+          let [key, val] = param.split('=')
+          if(key && val){
+            params[key] = val
+          }
+        })
+
+        let redirectTarget = localStorage.redirectTarget || '/'
+
+        if(localStorage.stateID && params.state === localStorage.stateID){
+          localStorage.clear()
+          localStorage.accessToken = params.access_token
+        }
+
+        window.location = redirectTarget
+
+    </script>
 </body>
 </html>

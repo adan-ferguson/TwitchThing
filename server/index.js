@@ -15,6 +15,7 @@ app
       secure: true
     }
   }))
+  .use(express.json())
   .use('/', express.static(path.join(__dirname, '..', 'client_dist')))
   .use('/', require('./routes.js'))
 

@@ -2,6 +2,28 @@
 /******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
+/***/ "./client/js/fizzetch.js":
+/*!*******************************!*\
+  !*** ./client/js/fizzetch.js ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "post": () => (/* binding */ post)
+/* harmony export */ });
+function post(url, data) {
+  return fetch(url, {
+    method: 'post',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  });
+}
+
+/***/ }),
+
 /***/ "./client/js/game.js":
 /*!***************************!*\
   !*** ./client/js/game.js ***!
@@ -40,11 +62,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "TwitchLoginLink": () => (/* binding */ TwitchLoginLink)
 /* harmony export */ });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _fizzetch__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./fizzetch */ "./client/js/fizzetch.js");
+
 
 let userJson;
 async function loadUser() {
-  const response = await fetch('/gettwitchuser', {
-    method: 'POST'
+  const response = await (0,_fizzetch__WEBPACK_IMPORTED_MODULE_1__.post)('/gettwitchuser', {
+    accessToken: localStorage.getItem('accessToken')
   });
   userJson = await response.json();
   return userJson.user || false;

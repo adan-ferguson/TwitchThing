@@ -1,10 +1,11 @@
 import React from 'react'
+import { post } from './fizzetch'
 
 let userJson
 
 export async function loadUser(){
-  const response = await fetch('/gettwitchuser', {
-    method: 'POST'
+  const response = await post('/gettwitchuser', {
+    accessToken: localStorage.getItem('accessToken')
   })
   userJson = await response.json()
   return userJson.user || false
