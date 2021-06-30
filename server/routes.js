@@ -4,9 +4,14 @@ const router = express.Router()
 const Twitch = require('./twitch')
 const User = require('./db_models/user')
 
-router.post('/gettwitchuser', (req, res) => {
-  const result = req.body.accessToken ? User.load(req.session.userid) : Twitch.getLoginLink(req)
-  res.send(result)
+router.post('/gettwitchuser', async (req, res) => {
+  const userInfo = await Twitch.getUserInfo(req.body.accessToken)
+  if(!userInfo){
+    return Twitch.getLoginLink(req)
+  }
+  const user = await User.load(userInfo.id) || await User.create(userInfo)
+  req.session.userid = userInfo.twitchId
+  res.send({ user: user })
 })
 
 router.get('/twitchredirect', (req, res) => {

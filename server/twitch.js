@@ -1,24 +1,23 @@
 const fetch = require('node-fetch')
 const config = require('./config.js')
-const users = require('./db_models/user')
 const { v4: guid } = require('uuid')
 
 const twitch = {
-  getUsernameFromAccessToken: async (token) => {
+  getUserInfo: async (accessToken) => {
     try {
-      let resp = await fetch({
+      let resp = await fetch('https://api.twitch.tv/helix/users',{
         method: 'get',
-        url: 'https://api.twitch.tv/helix/users',
         headers: {
-          Authorization: 'Bearer ' + token,
-          'client-id': config.twitch.clientID
-        },
-        json: true
+          Authorization: 'Bearer ' + accessToken,
+          'client-id': config.twitch.clientID,
+          'Content-Type': 'application/json'
+        }
       })
-      if(resp.data.length > 0){
-        return resp.data[0].login
+      const result = await resp.json()
+      if(!result.data || !result.data.length){
+        return null
       }
-      return null
+      return result.data[0]
     } catch(e) {
       return null
     }

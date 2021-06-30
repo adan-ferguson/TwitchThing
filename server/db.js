@@ -7,7 +7,10 @@ let connection
 
 const init = async () => {
   try {
-    let client = await MongoClient.connect(`mongodb://localhost:${config.db.port}`, { useNewUrlParser: true })
+    let client = await MongoClient.connect(`mongodb://localhost:${config.db.port}`, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    })
     connection = client.db(config.db.name)
     log('Connected to DB')
   }catch(e){
