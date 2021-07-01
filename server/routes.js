@@ -10,6 +10,7 @@ router.post('/gettwitchuser', async (req, res) => {
     res.send(Twitch.getLoginLink(req))
   }
   const user = await User.load(userInfo.id) || await User.create(userInfo)
+  await User.loadExtendedInfo(user)
   req.session.userid = userInfo.twitchId
   res.send({ user: user })
 })

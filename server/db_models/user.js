@@ -1,4 +1,5 @@
 const db = require('../db.js')
+const Channels = require('./channels')
 
 const DEFAULTS = {
   exp: 0,
@@ -6,12 +7,20 @@ const DEFAULTS = {
 }
 
 async function load(twitchId){
+
   const user = await db.conn().collection('users').findOne({
     twitchId: twitchId
   })
+
   if(user){
-    return fixBackwardsCompatibility(user)
+    fixBackwardsCompatibility(user)
   }
+
+  return user
+}
+
+async function loadExtendedInfo(user){
+  user.channel = await Channels.get(user.twitchInfo.display_name)
 }
 
 async function create(userInfo){
@@ -23,8 +32,8 @@ async function create(userInfo){
   return user
 }
 
-module.exports = { load,create }
-
 function fixBackwardsCompatibility(user){
   return Object.assign(DEFAULTS, user)
 }
+
+module.exports = { load,loadExtendedInfo,create }

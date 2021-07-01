@@ -47,9 +47,20 @@ async function remove(name){
   emitter.emit('channel_remove', name)
 }
 
+/**
+ * @param name {string} The channel's name
+ * @returns {Promise<void>}
+ */
+async function get(name){
+  return await db.conn().collection('channels').findOne({
+    name: name
+  })
+}
+
 module.exports = {
   on: emitter.on,
   getList,
   add,
-  remove
+  remove,
+  get
 }

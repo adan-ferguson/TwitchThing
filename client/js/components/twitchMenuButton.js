@@ -1,21 +1,79 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import User from '../user'
 
 export default class TwitchMenuButton extends React.Component {
 
   static get propTypes(){
     return {
-      user: PropTypes.object
+      user: PropTypes.instanceOf(User)
+    }
+  }
+
+  constructor(props){
+    super(props)
+    this.state = {
+      showMenu: false
     }
   }
 
   render(){
+    console.log('render', this.state.showMenu)
     return (
-      <button className='twitch-menu-button twitch-button'>
-        <i className='fab fa-twitch'/>
-        {this.props.user.name}
-        <i className='fas fa-caret-up'/>
-      </button>
+      <div className='twitch-menu-button'>
+        <button className='twitch-button' onClick={this._showMenu}>
+          <i className='fab fa-twitch'/>
+          {this.props.user.name}
+          <i className='fas fa-caret-up'/>
+        </button>
+        { this.state.showMenu ? this._makeMenu() : null }
+      </div>
     )
+  }
+
+  _makeMenu(){
+
+    const menuItems = []
+
+    if(this.props.user.isChannelRegistered){
+      menuItems.push(<button key='unregister' onClick={this._unregister}>Unregister Your Channel</button>)
+    }else{
+      menuItems.push(<button key='register' onClick={this._register}>Register Your Channel</button>)
+    }
+
+    menuItems.push(<button key='logout' onClick={this._logout}>Logout</button>)
+
+    return (
+      <div className='menu'>
+        { menuItems }
+      </div>
+    )
+  }
+
+  _register = () => {
+    console.log('Register')
+    // Modal.show()
+  }
+
+  _unregister = () => {
+    console.log('Unregister')
+    // Modal.show()
+  }
+
+  _logout = () => {
+    console.log('Logout')
+  }
+
+  _showMenu = e => {
+    e.preventDefault()
+    this.setState({ showMenu: true }, () => {
+      document.addEventListener('click', this._closeMenu)
+    })
+  }
+
+  _closeMenu = () => {
+    this.setState({ showMenu: false }, () => {
+      document.removeEventListener('click', this._closeMenu)
+    })
   }
 }

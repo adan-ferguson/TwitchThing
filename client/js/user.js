@@ -16,4 +16,8 @@ export default class User {
     return this.data.money
   }
 
+  get isChannelRegistered(){
+    return this.data.channel ? true : false
+  }
+
 }

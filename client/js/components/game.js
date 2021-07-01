@@ -18,14 +18,13 @@ export default class Game extends React.Component {
 
   render(){
     return (
-      <div>
+      <div className='game'>
         <div className='main'>
-          <p>Name: {this.user.name}</p>
-          <p>Exp: {this.user.exp}</p>
-          <p>Money: {this.user.money}</p>
           <p>No gameplay exists at the moment.</p>
         </div>
         <div className='footer'>
+          <p>Exp: {this.user.exp}</p>
+          <p>Money: {this.user.money}</p>
           {React.createElement(TwitchMenuButton, { user: this.user })}
         </div>
       </div>

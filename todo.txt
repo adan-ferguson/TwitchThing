@@ -1,10 +1,15 @@
 2021-06-30
 --------------
++ Fix annoying css
++ Make a footer
+
+2021-06-31
+--------------
 
 
 TODO
 --------------
-- Make a footer
+- Footer
 -- Options menu
 -- Register/unregister channel
 -- Logout
@@ -31,3 +36,5 @@ TODO
 - Listen for subscribing
 - Listen for donating a sub
 - Log money changes
+
+- Experience bar
