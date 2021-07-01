@@ -28,10 +28,6 @@ const config = {
         loader: 'babel-loader',
       },
       {
-        test: /\.s[ac]ss$/i,
-        use: ['css-loader', 'sass-loader'],
-      },
-      {
         test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
         type: 'asset',
       },
@@ -40,7 +36,7 @@ const config = {
       // Learn more about loaders from https://webpack.js.org/loaders/
     ],
   },
-  devtool: 'source-map'
+  devtool: 'inline-source-map'
 }
 
 module.exports = () => {

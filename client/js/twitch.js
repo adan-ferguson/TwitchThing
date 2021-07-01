@@ -13,7 +13,7 @@ export async function loadUser(){
 }
 
 export function createLoginLink(){
-  React.createElement(TwitchLoginLink, {
+  return React.createElement(TwitchLoginLink, {
     loginLink: userJson.loginLink,
     stateID: userJson.stateID
   })

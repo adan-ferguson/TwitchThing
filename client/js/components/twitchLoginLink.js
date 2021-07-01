@@ -1,6 +1,5 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import TwitchButton from './twitchButton'
 
 export default class TwitchLoginLink extends React.Component {
 
@@ -13,14 +12,18 @@ export default class TwitchLoginLink extends React.Component {
 
   render(){
     if(this.props.loginLink && this.props.stateID) {
-      return <TwitchButton isAnchor={true} href={this.props.loginLink} onClick={loginClicked}>Log In with Twitch</TwitchButton>
+      return (
+        <a className='twitch-button' href={this.props.loginLink} onClick={this.loginClicked.bind(this)}>
+          <i className='fab fa-twitch'/> Log In with Twitch
+        </a>
+      )
     }else {
       return <p>An error occurred. (LOL)</p>
     }
   }
-}
 
-function loginClicked(){
-  localStorage.stateID = this.props.stateID
-  localStorage.redirectTarget = window.location.pathname
+  loginClicked(){
+    localStorage.stateID = this.props.stateID
+    localStorage.redirectTarget = window.location.pathname
+  }
 }

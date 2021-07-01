@@ -7,7 +7,7 @@ const User = require('./db_models/user')
 router.post('/gettwitchuser', async (req, res) => {
   const userInfo = await Twitch.getUserInfo(req.body.accessToken)
   if(!userInfo){
-    return Twitch.getLoginLink(req)
+    res.send(Twitch.getLoginLink(req))
   }
   const user = await User.load(userInfo.id) || await User.create(userInfo)
   req.session.userid = userInfo.twitchId
