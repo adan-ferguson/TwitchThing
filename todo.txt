@@ -1,0 +1,24 @@
+2021-06-30
+--------------
+- Money
+-- Keep track of money gains in money log collection
+
+- Sockets
+-- Notify users when they gain money
+
+- Register channels
+-- Allow people to register/unregister their channel to the chatbot
+-- Reconnect on server startup
+
+- Chatbot
+-- Setup
+-- Listen for chat messages in registered channels
+-- Give money when people chat (with a cooldown)
+-- Give money when people chat in a stream for the first time (12 hour cooldown?)
+
+TODO
+--------------
+- Listen for giving bits
+- Listen for subscribing
+- Listen for donating a sub
+- Log money changes

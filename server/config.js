@@ -12,6 +12,10 @@ const defaults = {
     clientID: null,
     clientSecret: null
   },
+  // chatbot: {
+  //   username: null,
+  //   password: null
+  // },
   secret: null
 }
 
@@ -26,5 +30,13 @@ if(!options.twitch.clientID){
 if(!options.twitch.clientSecret){
   throw 'config.json requires  "twitch.clientSecret" value'
 }
+
+// if(!options.chatbot.username){
+//   throw 'config.json requires "twitch.username" value'
+// }
+//
+// if(options.chatbot.password){
+//   throw 'config.json requires "twitch.password" value'
+// }
 
 module.exports = Object.assign(defaults, options)

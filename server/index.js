@@ -4,6 +4,8 @@ const config = require('./config')
 const session = require('express-session')
 const db = require('./db')
 const path = require('path')
+const Chatbot = require('./chatbot')
+
 db.init()
 
 app
@@ -18,6 +20,8 @@ app
   .use(express.json())
   .use('/', express.static(path.join(__dirname, '..', 'client_dist')))
   .use('/', require('./routes.js'))
+
+Chatbot.setup()
 
 const PORT = config.port
 app.listen(PORT, () => {

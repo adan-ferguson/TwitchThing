@@ -21,6 +21,7 @@ export default class Game extends React.Component {
         <p>Name: {this.user.name}</p>
         <p>Exp: {this.user.exp}</p>
         <p>Money: {this.user.money}</p>
+        <p>The points do literally nothing right now.</p>
       </div>
     )
   }
