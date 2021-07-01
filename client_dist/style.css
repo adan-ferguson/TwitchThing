@@ -6,9 +6,29 @@
   justify-content: space-between;
   align-items: center;
 }
+.footer .twitch-menu-button {
+  position: relative;
+}
 .footer .twitch-menu-button .fa-caret-up {
   float: right;
   margin-left: 10px;
+}
+.footer .twitch-menu-button .menu {
+  position: absolute;
+  bottom: 110%;
+  right: 0;
+  width: 180px;
+  border: 1px solid #6441A4;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.footer .twitch-menu-button .menu button {
+  padding: 12px 12px;
+  text-align: left;
+}
+.footer .twitch-menu-button .menu button:hover {
+  background-color: #ebe4f6;
 }
 
 html, body, #root {
@@ -23,10 +43,16 @@ body {
   font-size: 15px;
 }
 
+button {
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
 .twitch-button {
   background-color: #6441A4;
   color: white;
-  padding: 5px 11px;
+  padding: 9px 15px;
   text-decoration: none;
   cursor: pointer;
 }
@@ -52,7 +78,27 @@ body {
   justify-content: space-between;
   align-items: center;
 }
+.footer .twitch-menu-button {
+  position: relative;
+}
 .footer .twitch-menu-button .fa-caret-up {
   float: right;
   margin-left: 10px;
+}
+.footer .twitch-menu-button .menu {
+  position: absolute;
+  bottom: 110%;
+  right: 0;
+  width: 180px;
+  border: 1px solid #6441A4;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+}
+.footer .twitch-menu-button .menu button {
+  padding: 12px 12px;
+  text-align: left;
+}
+.footer .twitch-menu-button .menu button:hover {
+  background-color: #ebe4f6;
 }

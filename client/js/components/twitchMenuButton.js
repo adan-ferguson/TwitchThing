@@ -18,7 +18,6 @@ export default class TwitchMenuButton extends React.Component {
   }
 
   render(){
-    console.log('render', this.state.showMenu)
     return (
       <div className='twitch-menu-button'>
         <button className='twitch-button' onClick={this._showMenu}>
@@ -65,7 +64,12 @@ export default class TwitchMenuButton extends React.Component {
   }
 
   _showMenu = e => {
-    e.preventDefault()
+    e.stopPropagation()
+
+    if(this.state.showMenu){
+      return this._closeMenu()
+    }
+
     this.setState({ showMenu: true }, () => {
       document.addEventListener('click', this._closeMenu)
     })

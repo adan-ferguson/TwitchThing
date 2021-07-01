@@ -8,6 +8,26 @@
   align-items: center
 
   .twitch-menu-button
+    position: relative
+
     .fa-caret-up
       float: right
       margin-left: 10px
+
+    .menu
+      position: absolute
+      bottom: 110%
+      right: 0
+      width: 180px
+      border: 1px solid #6441A4
+
+      display: flex
+      flex-direction: column
+      align-items: stretch
+
+      button
+        padding: 12px 12px
+        text-align: left
+
+        &:hover
+          background-color: #ebe4f6
