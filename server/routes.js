@@ -19,6 +19,11 @@ router.get('/twitchredirect', (req, res) => {
   res.sendFile(getHtml('twitchredirect'))
 })
 
+router.get('/logout', (req, res) => {
+  delete req.session.userid
+  res.redirect('/')
+})
+
 router.get('/', (req, res) => {
   res.sendFile(getHtml('index'))
 })

@@ -1,4 +1,5 @@
 {
+  "port": 8081,
   "secret": "Purple Monkey Dishwasher",
   "twitch": {
     "clientID": "wsi1sitgncagb4fnwc42ug3m0d89t7",

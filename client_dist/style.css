@@ -31,11 +31,39 @@
   background-color: #ebe4f6;
 }
 
-html, body, #root {
+.fade-appear, .fade-enter {
+  opacity: 0;
+  transition: opacity 500ms;
+}
+
+.fade-appear-active, .fade-enter-active, .fade-appear-done, .fade-enter-done {
+  opacity: 1;
+}
+
+.fade-exit {
+  opacity: 1;
+  transition: opacity 500ms;
+}
+
+.fade-exit-active, .fade-exit-done {
+  opacity: 0;
+}
+
+html, body {
+  position: relative;
   width: 100%;
   height: 100%;
   padding: 0;
   margin: 0;
+}
+
+#root {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
 }
 
 body {
@@ -55,6 +83,7 @@ button {
   padding: 9px 15px;
   text-decoration: none;
   cursor: pointer;
+  display: inline-flex;
 }
 .twitch-button .fa-twitch {
   margin-right: 5px;
@@ -69,6 +98,13 @@ button {
 .game .main {
   flex-grow: 1;
   padding: 20px;
+}
+
+.loading {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
 }
 .footer {
   padding: 20px;
@@ -101,4 +137,21 @@ button {
 }
 .footer .twitch-menu-button .menu button:hover {
   background-color: #ebe4f6;
+}
+.fade-appear, .fade-enter {
+  opacity: 0;
+  transition: opacity 500ms;
+}
+
+.fade-appear-active, .fade-enter-active, .fade-appear-done, .fade-enter-done {
+  opacity: 1;
+}
+
+.fade-exit {
+  opacity: 1;
+  transition: opacity 500ms;
+}
+
+.fade-exit-active, .fade-exit-done {
+  opacity: 0;
 }

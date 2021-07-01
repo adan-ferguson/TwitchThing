@@ -1,6 +1,7 @@
 import React from 'react'
 import Game from './game'
 import { loadUser, createLoginLink } from '../twitch'
+import { CSSTransition } from 'react-transition-group'
 
 export default class App extends React.Component {
 
@@ -8,21 +9,32 @@ export default class App extends React.Component {
     super(props)
     this.state = {
       loading: true,
-      user: null
+      user: null,
+      shouldLogIn: false
     }
   }
 
   render(){
     if(this.state.user){
       return React.createElement(Game, { user: this.state.user })
-    }else if(this.state.loading){
-      return <p>Loading...</p>
-    }else {
+    }else if(this.state.shouldLogIn){
       return createLoginLink()
+    }else{
+      return (
+        <CSSTransition in={this.state.loading} classNames='fade' timeout={500}>
+          <p className='loading'>Loading...</p>
+        </CSSTransition>
+      )
     }
   }
 
   async componentDidMount() {
-    this.setState({ user: await loadUser(), loading: false })
+
+    const user = await loadUser()
+    this.setState({ loading: false })
+
+    setTimeout(() => {
+      this.setState({ user: user, shouldLogIn: user ? false : true })
+    }, 700)
   }
 }

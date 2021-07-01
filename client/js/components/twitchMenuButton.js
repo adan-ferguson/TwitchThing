@@ -60,7 +60,8 @@ export default class TwitchMenuButton extends React.Component {
   }
 
   _logout = () => {
-    console.log('Logout')
+    localStorage.clear()
+    window.location = '/logout'
   }
 
   _showMenu = e => {
