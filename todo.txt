@@ -7,17 +7,17 @@
 --------------
 Footer
 + Options menu
-- Register/unregister channel (show modals)
-- Logout
++ Logout
 
-- Figure animations out
++ Figure animations out
 
-Modals
-- Figure them out
-- Register/unregister
++ Initial Channels
 
 TODO
 --------------
+Register/Unregister channels
+- Show modals
+- Update in db
 
 - Levels
 

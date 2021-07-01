@@ -5,7 +5,7 @@ export default class User {
   }
 
   get name(){
-    return this.data.twitchInfo.display_name
+    return this.data.username
   }
 
   get exp(){
@@ -16,8 +16,8 @@ export default class User {
     return this.data.money
   }
 
-  get isChannelRegistered(){
-    return this.data.channel ? true : false
-  }
+  // get isChannelRegistered(){
+  //   return this.data.channel ? true : false
+  // }
 
 }

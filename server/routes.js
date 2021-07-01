@@ -9,10 +9,10 @@ router.post('/gettwitchuser', async (req, res) => {
   if(!userInfo){
     res.send(Twitch.getLoginLink(req))
   }
-  const user = await User.load(userInfo.id) || await User.create(userInfo)
-  await User.loadExtendedInfo(user)
-  req.session.userid = userInfo.twitchId
-  res.send({ user: user })
+  const user = await User.load(userInfo.login) || await User.create(userInfo)
+  // await User.loadExtendedInfo(user)
+  req.session.username = userInfo.username
+  res.send({ user: await user.gameData() })
 })
 
 router.get('/twitchredirect', (req, res) => {

@@ -16,7 +16,8 @@ const defaults = {
   //   username: null,
   //   password: null
   // },
-  secret: null
+  secret: null,
+  initialChannels: []
 }
 
 if(!options.secret){

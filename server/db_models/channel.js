@@ -1,6 +1,7 @@
 const { EventEmitter } = new require('events')
 const emitter = new EventEmitter()
 const db = require('../db.js')
+const initialChannels = require('../../config.json').initialChannels
 
 let __channels
 
@@ -10,6 +11,7 @@ let __channels
 async function getList(){
   if(!__channels){
     __channels = await db.conn().collection('channels').find().toArray()
+    await generateChannelsFromConfig()
   }
   return __channels
 }
@@ -52,8 +54,16 @@ async function remove(name){
  * @returns {Promise<void>}
  */
 async function get(name){
-  return await db.conn().collection('channels').findOne({
-    name: name
+  const channels = await getList()
+  return channels.find(channel => channel.name === name)
+}
+
+async function generateChannelsFromConfig(){
+  initialChannels.forEach(async name => {
+    const c = await get(name)
+    if(!c){
+      await add(name)
+    }
   })
 }
 

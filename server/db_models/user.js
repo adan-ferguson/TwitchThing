@@ -1,39 +1,54 @@
 const db = require('../db.js')
-const Channels = require('./channels')
 
 const DEFAULTS = {
+  username: '',
+  twitchInfo: {},
   exp: 0,
-  money: 100
+  money: 100,
+  moneyTransactions: []
 }
 
-async function load(twitchId){
+class User {
 
-  const user = await db.conn().collection('users').findOne({
-    twitchId: twitchId
-  })
-
-  if(user){
-    fixBackwardsCompatibility(user)
+  static createNew(twitchInfo){
+    return new User({
+      username: twitchInfo.login,
+      twitchInfo: twitchInfo
+    })
   }
 
-  return user
-}
+  constructor(userRecord){
+    this.userRecord = fixBackwardsCompatibility(userRecord)
+  }
 
-async function loadExtendedInfo(user){
-  user.channel = await Channels.get(user.twitchInfo.display_name)
-}
+  async save(){
+    await db.conn().collection('users').save(this.userRecord)
+  }
 
-async function create(userInfo){
-  const user = Object.assign(DEFAULTS, {
-    twitchId: userInfo.id,
-    twitchInfo: userInfo
-  })
-  await db.conn().collection('users').save(user)
-  return user
+  async gameData(){
+    return {
+      username: this.userRecord.username,
+      exp: this.userRecord.exp,
+      money: this.userRecord.money
+    }
+  }
 }
 
 function fixBackwardsCompatibility(user){
-  return Object.assign(DEFAULTS, user)
+  return Object.assign({}, DEFAULTS, user)
 }
 
-module.exports = { load,loadExtendedInfo,create }
+async function load(username){
+  const userRecord = await db.conn().collection('users').findOne({
+    username: username
+  })
+  return userRecord ? new User(userRecord) : null
+}
+
+async function create(twitchInfo){
+  const user = User.createNew(twitchInfo)
+  user.save()
+  return user
+}
+
+module.exports = { load, create }

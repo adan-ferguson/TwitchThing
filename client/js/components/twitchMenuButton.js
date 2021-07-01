@@ -34,11 +34,11 @@ export default class TwitchMenuButton extends React.Component {
 
     const menuItems = []
 
-    if(this.props.user.isChannelRegistered){
-      menuItems.push(<button key='unregister' onClick={this._unregister}>Unregister Your Channel</button>)
-    }else{
-      menuItems.push(<button key='register' onClick={this._register}>Register Your Channel</button>)
-    }
+    // if(this.props.user.isChannelRegistered){
+    //   menuItems.push(<button key='unregister' onClick={this._unregister}>Unregister Your Channel</button>)
+    // }else{
+    //   menuItems.push(<button key='register' onClick={this._register}>Register Your Channel</button>)
+    // }
 
     menuItems.push(<button key='logout' onClick={this._logout}>Logout</button>)
 
