@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import User from '../user'
+import TwitchMenuButton from './twitchMenuButton'
 
 export default class Game extends React.Component {
 
@@ -18,10 +19,15 @@ export default class Game extends React.Component {
   render(){
     return (
       <div>
-        <p>Name: {this.user.name}</p>
-        <p>Exp: {this.user.exp}</p>
-        <p>Money: {this.user.money}</p>
-        <p>The points do literally nothing right now.</p>
+        <div className='main'>
+          <p>Name: {this.user.name}</p>
+          <p>Exp: {this.user.exp}</p>
+          <p>Money: {this.user.money}</p>
+          <p>No gameplay exists at the moment.</p>
+        </div>
+        <div className='footer'>
+          {React.createElement(TwitchMenuButton, { user: this.user })}
+        </div>
       </div>
     )
   }

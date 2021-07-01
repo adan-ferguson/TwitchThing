@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import TwitchButton from './twitchButton'
 
 export default class TwitchLoginLink extends React.Component {
 
@@ -12,7 +13,7 @@ export default class TwitchLoginLink extends React.Component {
 
   render(){
     if(this.props.loginLink && this.props.stateID) {
-      return <a href={this.props.loginLink} onClick={loginClicked}>Log In with Twitch</a>
+      return <TwitchButton isAnchor={true} href={this.props.loginLink} onClick={loginClicked}>Log In with Twitch</TwitchButton>
     }else {
       return <p>An error occurred. (LOL)</p>
     }

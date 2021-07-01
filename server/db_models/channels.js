@@ -1,4 +1,5 @@
-const eventEmitter = new require('events').EventEmitter()
+const { EventEmitter } = new require('events')
+const emitter = new EventEmitter()
 const db = require('../db.js')
 
 let __channels
@@ -8,7 +9,7 @@ let __channels
  */
 async function getList(){
   if(!__channels){
-    __channels = await db.conn().collection('channels').find()
+    __channels = await db.conn().collection('channels').find().toArray()
   }
   return __channels
 }
@@ -25,7 +26,7 @@ async function add(name){
   }
   await db.conn().collection('channels').save(channel)
   channels.push(name)
-  eventEmitter.emit('channel_add', name)
+  emitter.emit('channel_add', name)
 }
 
 /**
@@ -43,11 +44,11 @@ async function remove(name){
   }
   db.conn().collection('channels').remove({ name: name })
   channels.splice(index, 1)
-  eventEmitter.emit('channel_remove', name)
+  emitter.emit('channel_remove', name)
 }
 
 module.exports = {
-  on: eventEmitter.on,
+  on: emitter.on,
   getList,
   add,
   remove

@@ -6,8 +6,6 @@ const db = require('./db')
 const path = require('path')
 const Chatbot = require('./chatbot')
 
-db.init()
-
 app
   .use(session({
     resave: true,
@@ -21,7 +19,9 @@ app
   .use('/', express.static(path.join(__dirname, '..', 'client_dist')))
   .use('/', require('./routes.js'))
 
-Chatbot.setup()
+db.init().then(() => {
+  Chatbot.setup()
+})
 
 const PORT = config.port
 app.listen(PORT, () => {

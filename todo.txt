@@ -1,5 +1,16 @@
 2021-06-30
 --------------
+
+
+TODO
+--------------
+- Make a footer
+-- Options menu
+-- Register/unregister channel
+-- Logout
+
+- Levels
+
 - Money
 -- Keep track of money gains in money log collection
 
@@ -16,8 +27,6 @@
 -- Give money when people chat (with a cooldown)
 -- Give money when people chat in a stream for the first time (12 hour cooldown?)
 
-TODO
---------------
 - Listen for giving bits
 - Listen for subscribing
 - Listen for donating a sub

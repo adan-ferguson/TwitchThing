@@ -1,4 +1,4 @@
-const { Client } = require('tmi')
+const { Client } = require('tmi.js')
 const Channels = require('./db_models/channels')
 
 async function setup(){
@@ -8,7 +8,7 @@ async function setup(){
       secure: true,
       reconnect: true
     },
-    channels: await Channels.getList()
+    channels: (await Channels.getList()).map(channel => channel.name)
   })
 
   Channels.on('channel_add', name => {
@@ -22,7 +22,7 @@ async function setup(){
   client.connect()
 
   client.on('message', (channel, tags, message, self) => {
-    console.log(`${tags['display-name']}: ${message}`)
+    console.log(channel, tags, message, self)
   })
 }
 
