@@ -104,7 +104,7 @@ async function init(){
     const channels = await loadAll()
     const onlineStreams = await Twitch.getOnlineStreams(channels.map(channel => channel.name))
     channels.forEach(channel => {
-      const isStreaming = onlineStreams.find(name === channel.name) ? true : false
+      const isStreaming = onlineStreams.find(name => name === channel.name) ? true : false
       if(isStreaming !== channel.channelRecord.isStreaming){
         channel.channelRecord.isStreaming = isStreaming
         channel.save()

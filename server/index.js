@@ -20,9 +20,11 @@ app
   .use('/', express.static(path.join(__dirname, '..', 'client_dist')))
   .use('/', require('./routes.js'))
 
-db.init().then(() => {
-  Chatbot.init()
-  Channels.init()
+db.init().then(async () => {
+
+  await Channels.init()
+  await Chatbot.init()
+
   const PORT = config.port
   app.listen(PORT, () => {
     console.log(`App listening to ${PORT}....`)

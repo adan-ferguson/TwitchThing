@@ -10,15 +10,15 @@ async function init(){
       secure: true,
       reconnect: true
     },
-    channels: (await Channels.getList()).map(channel => channel.name)
+    channels: (await Channels.loadAll()).map(channel => channel.name)
   })
 
-  Channels.on('channel_add', name => {
-    client.join(name)
+  Channels.on('channel_add', channel => {
+    client.join(channel.name)
   })
 
-  Channels.on('channel_remove', name => {
-    client.leave(name)
+  Channels.on('channel_remove', channel => {
+    client.leave(channel.name)
   })
 
   await client.connect()

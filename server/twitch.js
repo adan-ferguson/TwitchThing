@@ -69,7 +69,8 @@ async function getOnlineStreams(usernames){
         'Content-Type': 'application/json'
       }
     })
-    return results.data.map(result => result.user_name)
+    let json = await results.json()
+    return json.data.map(result => result.user_name)
   } catch(e) {
     log('Could not get user statuses: ', e)
     if(e.status === 401){
@@ -105,10 +106,10 @@ async function getAppAccessToken(){
       method: 'post',
       headers: {
         'Content-Type': 'application/json'
-      },
-      json: true
+      }
     })
-    return resp.access_token
+    let json = await resp.json()
+    return json.access_token
   }
 }
 
