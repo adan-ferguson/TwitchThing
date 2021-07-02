@@ -22,34 +22,34 @@ class Channel {
 
   static async createNew(name){
     const channel = new Channel({
-      name: name
+      name: name.toLowerCase()
     })
-    await channel.save()
+    await db.conn().collection('channels').insertOne(channel.channelDocument)
     emitter.emit('channel_add', channel)
     return channel
   }
 
-  constructor(channelRecord){
-    this.channelRecord = fixBackwardsCompatibility(channelRecord)
+  constructor(channelDocument){
+    this.channelDocument = fixBackwardsCompatibility(channelDocument)
   }
 
   get name(){
-    return this.channelRecord.name
+    return this.channelDocument.name
   }
 
   async save(){
-    await db.conn().collection('channels').save(this.channelRecord)
+    await db.conn().collection('channels').replaceOne({ name: this.name }, this.channelDocument)
     return this
   }
 
   async delete(){
-    await db.conn().collection('channels').remove({ name: this.channelRecord.name })
+    await db.conn().collection('channels').remove({ name: this.channelDocument.name })
     emitter.emit('channel_remove', this)
   }
 }
 
-function fixBackwardsCompatibility(channelRecord){
-  return Object.assign({}, DEFAULTS, channelRecord)
+function fixBackwardsCompatibility(channelDocument){
+  return Object.assign({}, DEFAULTS, channelDocument)
 }
 
 /**
@@ -66,18 +66,18 @@ async function add(name){
  * @returns {Promise<Channel|null>}
  */
 async function load(name){
-  const channelRecord = await db.conn().collection('channels').findOne({
-    name: name
+  const channelDocument = await db.conn().collection('channels').findOne({
+    name: name.toLowerCase()
   })
-  return channelRecord ? new Channel(channelRecord) : null
+  return channelDocument ? new Channel(channelDocument) : null
 }
 
 /**
  * @returns {Promise<[Channel]>}
  */
 async function loadAll(){
-  const channelRecords = await db.conn().collection('channels').find().toArray()
-  return channelRecords.map(record => new Channel(record))
+  const channelDocuments = await db.conn().collection('channels').find().toArray()
+  return channelDocuments.map(document => new Channel(document))
 }
 
 async function init(){
@@ -87,11 +87,11 @@ async function init(){
   log('Channels initialized')
 
   async function createFromConfig(){
-    await initialChannels.forEach(async name => {
+    for(let name of initialChannels){
       if(!await load(name)){
         await Channel.createNew(name)
       }
-    })
+    }
   }
 
   function setupUptimeUpdates(){
@@ -105,8 +105,8 @@ async function init(){
     const onlineStreams = await Twitch.getOnlineStreams(channels.map(channel => channel.name))
     channels.forEach(channel => {
       const isStreaming = onlineStreams.find(name => name === channel.name) ? true : false
-      if(isStreaming !== channel.channelRecord.isStreaming){
-        channel.channelRecord.isStreaming = isStreaming
+      if(isStreaming !== channel.channelDocument.isStreaming){
+        channel.channelDocument.isStreaming = isStreaming
         channel.save()
       }
     })

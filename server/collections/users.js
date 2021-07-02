@@ -10,32 +10,32 @@ const DEFAULTS = {
 
 class User {
 
-  static createNew(twitchInfo){
+  static async createNew(twitchInfo){
     const user = new User({
-      username: twitchInfo.login,
+      username: twitchInfo.login.toLowerCase(),
       twitchInfo: twitchInfo
     })
-    user.save()
+    await db.conn().collection('users').insertOne(user.userDocument)
     return user
   }
 
-  constructor(userRecord){
-    this.userRecord = fixBackwardsCompatibility(userRecord)
+  constructor(userDocument){
+    this.userDocument = fixBackwardsCompatibility(userDocument)
   }
 
   get username(){
-    return this.userRecord.username
+    return this.userDocument.username
   }
 
   async save(){
-    await db.conn().collection('users').save(this.userRecord)
+    await db.conn().collection('users').replaceOne({ username: this.username }, this.userDocument)
   }
 
   async gameData(){
     return {
-      username: this.userRecord.username,
-      exp: this.userRecord.exp,
-      money: this.userRecord.money
+      username: this.userDocument.username,
+      exp: this.userDocument.exp,
+      money: this.userDocument.money
     }
   }
 
@@ -44,7 +44,7 @@ class User {
     moneyChange += await Bonuses.checkForChannelChatBonus(this, channel)
     moneyChange += await Bonuses.checkForChatBonus(this)
     if(moneyChange){
-      this.userRecord.money += moneyChange
+      this.userDocument.money += moneyChange
       // TODO: socket event
       this.save()
     }
@@ -56,10 +56,10 @@ function fixBackwardsCompatibility(user){
 }
 
 async function load(username){
-  const userRecord = await db.conn().collection('users').findOne({
-    username: username
+  const userDocument = await db.conn().collection('users').findOne({
+    username: username.toLowerCase()
   })
-  return userRecord ? new User(userRecord) : null
+  return userDocument ? new User(userDocument) : null
 }
 
 async function create(twitchInfo){

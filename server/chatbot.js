@@ -5,12 +5,13 @@ const log = require('fancy-log')
 
 async function init(){
 
+  const channels = (await Channels.loadAll()).map(channel => channel.name)
   const client = new Client({
     connection: {
       secure: true,
       reconnect: true
     },
-    channels: (await Channels.loadAll()).map(channel => channel.name)
+    channels: channels
   })
 
   Channels.on('channel_add', channel => {
@@ -23,15 +24,15 @@ async function init(){
 
   await client.connect()
 
-  client.on('message', (channelName, tags) => {
+  client.on('message', async (channelName, tags) => {
 
-    const user = User.load(tags['username'])
+    const user = await User.load(tags['username'])
     if(!user) {
       return
     }
 
-    const channel = Channels.load(channelName.name.substring(1))
-    if(!channel || !channel.isStreaming) {
+    const channel = await Channels.load(channelName.substring(1))
+    if(!channel || !channel.channelDocument.isStreaming) {
       return
     }
 
