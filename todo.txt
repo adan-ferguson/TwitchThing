@@ -3,6 +3,10 @@
 + Fix annoying css
 + Make a footer
 
+Chatbot
++ Setup
++ Listen for chat messages in registered channels
+
 2021-06-31
 --------------
 Footer
@@ -11,35 +15,37 @@ Footer
 
 + Figure animations out
 
+Money
+- Keep track of money gains in money log collection
+
+Bonuses
+- Grant chat bonus
+- Grant channel chant bonus
+
+Channels
 + Initial Channels
+- Keep track of if registered channels are streaming
+
+Before 1st Upload
+--------------
+Sockets
+- Notify users when they gain money (+money effect)
+
+Bonuses
+- For giving bits
+- For subbing/gift subs
+- For using channel points
+- Show bonus log
 
 TODO
---------------
-Register/Unregister channels
+-----------
+- Experience bar
+
+Register channels
+- Allow people to register/unregister their channel to the chatbot
 - Show modals
 - Update in db
 
 - Levels
 
-- Money
--- Keep track of money gains in money log collection
-
-- Sockets
--- Notify users when they gain money
-
-- Register channels
--- Allow people to register/unregister their channel to the chatbot
--- Reconnect on server startup
-
-- Chatbot
--- Setup
--- Listen for chat messages in registered channels
--- Give money when people chat (with a cooldown)
--- Give money when people chat in a stream for the first time (12 hour cooldown?)
-
-- Listen for giving bits
-- Listen for subscribing
-- Listen for donating a sub
-- Log money changes
-
-- Experience bar
+- Listen for a specific channel point reward

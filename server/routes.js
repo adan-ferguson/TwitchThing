@@ -2,7 +2,7 @@ const express = require('express')
 const path = require('path')
 const router = express.Router()
 const Twitch = require('./twitch')
-const User = require('./db_models/user')
+const User = require('./collections/users')
 
 router.post('/gettwitchuser', async (req, res) => {
   const userInfo = await Twitch.getUserInfo(req.body.accessToken)

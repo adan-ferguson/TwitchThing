@@ -5,6 +5,7 @@ const session = require('express-session')
 const db = require('./db')
 const path = require('path')
 const Chatbot = require('./chatbot')
+const Channels = require('./collections/channels')
 
 app
   .use(session({
@@ -20,10 +21,10 @@ app
   .use('/', require('./routes.js'))
 
 db.init().then(() => {
-  Chatbot.setup()
-})
-
-const PORT = config.port
-app.listen(PORT, () => {
-  console.log(`App listening to ${PORT}....`)
+  Chatbot.init()
+  Channels.init()
+  const PORT = config.port
+  app.listen(PORT, () => {
+    console.log(`App listening to ${PORT}....`)
+  })
 })

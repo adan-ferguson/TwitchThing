@@ -1,24 +1,30 @@
 const db = require('../db.js')
+const Bonuses = require('./bonuses')
 
 const DEFAULTS = {
   username: '',
   twitchInfo: {},
   exp: 0,
-  money: 100,
-  moneyTransactions: []
+  money: 100
 }
 
 class User {
 
   static createNew(twitchInfo){
-    return new User({
+    const user = new User({
       username: twitchInfo.login,
       twitchInfo: twitchInfo
     })
+    user.save()
+    return user
   }
 
   constructor(userRecord){
     this.userRecord = fixBackwardsCompatibility(userRecord)
+  }
+
+  get username(){
+    return this.userRecord.username
   }
 
   async save(){
@@ -30,6 +36,17 @@ class User {
       username: this.userRecord.username,
       exp: this.userRecord.exp,
       money: this.userRecord.money
+    }
+  }
+
+  async checkForChatBonus(channel){
+    let moneyChange = 0
+    moneyChange += await Bonuses.checkForChannelChatBonus(this, channel)
+    moneyChange += await Bonuses.checkForChatBonus(this)
+    if(moneyChange){
+      this.userRecord.money += moneyChange
+      // TODO: socket event
+      this.save()
     }
   }
 }
@@ -46,9 +63,7 @@ async function load(username){
 }
 
 async function create(twitchInfo){
-  const user = User.createNew(twitchInfo)
-  user.save()
-  return user
+  return User.createNew(twitchInfo)
 }
 
 module.exports = { load, create }

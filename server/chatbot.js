@@ -1,33 +1,44 @@
 const { Client } = require('tmi.js')
-const Channel = require('./db_models/channel')
-const User = require('./db_models/user')
+const Channels = require('./collections/channels')
+const User = require('./collections/users')
+const log = require('fancy-log')
 
-async function setup(){
+async function init(){
 
   const client = new Client({
     connection: {
       secure: true,
       reconnect: true
     },
-    channels: (await Channel.getList()).map(channel => channel.name)
+    channels: (await Channels.getList()).map(channel => channel.name)
   })
 
-  Channel.on('channel_add', name => {
+  Channels.on('channel_add', name => {
     client.join(name)
   })
 
-  Channel.on('channel_remove', name => {
+  Channels.on('channel_remove', name => {
     client.leave(name)
   })
 
-  client.connect()
+  await client.connect()
 
-  client.on('message', (channel, tags) => {
+  client.on('message', (channelName, tags) => {
+
     const user = User.load(tags['username'])
-    if(user){
-      user.chatBonusCheck(channel.name)
+    if(!user) {
+      return
     }
+
+    const channel = Channels.load(channelName.name.substring(1))
+    if(!channel || !channel.isStreaming) {
+      return
+    }
+
+    user.checkForChatBonus(channel)
   })
+
+  log('Chatbot initialized')
 }
 
-module.exports = { setup }
+module.exports = { init }
