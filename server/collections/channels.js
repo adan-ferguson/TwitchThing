@@ -24,26 +24,26 @@ class Channel {
     const channel = new Channel({
       name: name.toLowerCase()
     })
-    await db.conn().collection('channels').insertOne(channel.channelDocument)
+    await db.conn().collection('channels').insertOne(channel.doc)
     emitter.emit('channel_add', channel)
     return channel
   }
 
   constructor(channelDocument){
-    this.channelDocument = fixBackwardsCompatibility(channelDocument)
+    this.doc = fixBackwardsCompatibility(channelDocument)
   }
 
   get name(){
-    return this.channelDocument.name
+    return this.doc.name
   }
 
   async save(){
-    await db.conn().collection('channels').replaceOne({ name: this.name }, this.channelDocument)
+    await db.conn().collection('channels').replaceOne({ name: this.name }, this.doc)
     return this
   }
 
   async delete(){
-    await db.conn().collection('channels').remove({ name: this.channelDocument.name })
+    await db.conn().collection('channels').remove({ name: this.doc.name })
     emitter.emit('channel_remove', this)
   }
 }
@@ -105,8 +105,8 @@ async function init(){
     const onlineStreams = await Twitch.getOnlineStreams(channels.map(channel => channel.name))
     channels.forEach(channel => {
       const isStreaming = onlineStreams.find(name => name === channel.name) ? true : false
-      if(isStreaming !== channel.channelDocument.isStreaming){
-        channel.channelDocument.isStreaming = isStreaming
+      if(isStreaming !== channel.doc.isStreaming){
+        channel.doc.isStreaming = isStreaming
         channel.save()
       }
     })

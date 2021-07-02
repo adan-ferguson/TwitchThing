@@ -32,7 +32,7 @@ async function init(){
     }
 
     const channel = await Channels.load(channelName.substring(1))
-    if(!channel || !channel.channelDocument.isStreaming) {
+    if(!channel || !channel.doc.isStreaming) {
       return
     }
 

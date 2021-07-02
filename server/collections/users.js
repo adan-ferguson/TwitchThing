@@ -15,38 +15,40 @@ class User {
       username: twitchInfo.login.toLowerCase(),
       twitchInfo: twitchInfo
     })
-    await db.conn().collection('users').insertOne(user.userDocument)
+    await db.conn().collection('users').insertOne(user.doc)
     return user
   }
 
   constructor(userDocument){
-    this.userDocument = fixBackwardsCompatibility(userDocument)
+    this.doc = fixBackwardsCompatibility(userDocument)
   }
 
   get username(){
-    return this.userDocument.username
+    return this.doc.username
   }
 
   async save(){
-    await db.conn().collection('users').replaceOne({ username: this.username }, this.userDocument)
+    await db.conn().collection('users').replaceOne({ username: this.username }, this.doc)
   }
 
   async gameData(){
     return {
-      username: this.userDocument.username,
-      exp: this.userDocument.exp,
-      money: this.userDocument.money
+      username: this.doc.username,
+      exp: this.doc.exp,
+      money: this.doc.money
     }
   }
 
   async checkForChatBonus(channel){
-    let moneyChange = 0
-    moneyChange += await Bonuses.checkForChannelChatBonus(this, channel)
-    moneyChange += await Bonuses.checkForChatBonus(this)
+
+    const moneyBefore = this.doc.money
+    await Bonuses.giveChannelChatBonus(this, channel)
+    await Bonuses.giveChatBonus(this, channel)
+
+    const moneyChange = this.doc.money - moneyBefore
     if(moneyChange){
-      this.userDocument.money += moneyChange
       // TODO: socket event
-      this.save()
+      await this.save()
     }
   }
 }
