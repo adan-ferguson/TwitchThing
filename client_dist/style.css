@@ -35,7 +35,7 @@
 
 .fade-appear, .fade-enter {
   opacity: 0;
-  transition: opacity 500ms;
+  transition: opacity 300ms;
 }
 
 .fade-appear-active, .fade-enter-active, .fade-appear-done, .fade-enter-done {
@@ -44,7 +44,7 @@
 
 .fade-exit {
   opacity: 1;
-  transition: opacity 500ms;
+  transition: opacity 300ms;
 }
 
 .fade-exit-active, .fade-exit-done {
@@ -147,7 +147,7 @@ button:hover {
 }
 .fade-appear, .fade-enter {
   opacity: 0;
-  transition: opacity 500ms;
+  transition: opacity 300ms;
 }
 
 .fade-appear-active, .fade-enter-active, .fade-appear-done, .fade-enter-done {
@@ -156,7 +156,7 @@ button:hover {
 
 .fade-exit {
   opacity: 1;
-  transition: opacity 500ms;
+  transition: opacity 300ms;
 }
 
 .fade-exit-active, .fade-exit-done {

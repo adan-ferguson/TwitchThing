@@ -1,16 +1,16 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import Page from './page'
+import { post } from '../../fizzetch'
 
-export default class Bonuses extends React.Component {
-
-  static get propTypes(){
-    return {
-      setPage: PropTypes.func,
-      user: PropTypes.object
-    }
-  }
+export default class Bonuses extends Page {
 
   render(){
     return <div>Loading...</div>
+  }
+
+  async componentDidMount(){
+    this.setState({
+      bonuses: await post('/bonuses')
+    })
   }
 }

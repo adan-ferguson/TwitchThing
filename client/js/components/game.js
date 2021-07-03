@@ -1,9 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import User from '../user'
 import TwitchMenuButton from './twitchMenuButton'
 import { CSSTransition } from 'react-transition-group'
 import Main from './pages/main'
+
+const T_SPEED = 300
 
 export default class Game extends React.Component {
 
@@ -15,20 +16,21 @@ export default class Game extends React.Component {
 
   constructor(props){
     super(props)
-    const page = React.createElement(Main, Object.assign({
-      user: this.user,
-      setPage: this.setPage
-    }, props))
-    this.state = { page }
+    this.state = {
+      page: this.setPage(Main, {}, false),
+      pageReady: false
+    }
   }
 
   render(){
     return (
-      <CSSTransition appear in={true} classNames='fade' timeout={500}>
+      <CSSTransition appear in={true} classNames='fade' timeout={T_SPEED}>
         <div className='game'>
-          <div className='page'>
-            {this.state.page}
-          </div>
+          <CSSTransition in={this.state.pageReady} classNames='fade' timeout={T_SPEED}>
+            <div className='page'>
+              {this.state.page}
+            </div>
+          </CSSTransition>
           <div className='footer'>
             <p>Exp: {this.props.user.exp}</p>
             <p>Money: {this.props.user.money}</p>
@@ -39,11 +41,25 @@ export default class Game extends React.Component {
     )
   }
 
-  setPage = (type, props = {}) => {
+  setPage = (type, props = {}, changeState = true) => {
+
+    if(changeState && !this.state.pageReady){
+      return
+    }
+
     const page = React.createElement(type, Object.assign({
-      user: this.user,
-      setPage: this.setPage
+      user: this.props.user,
+      ready: () => this.setState({ pageReady: true }),
+      changePage: this.setPage
     }, props))
-    this.setState({ page })
+
+    if(changeState){
+      this.setState({ pageReady: false })
+      setTimeout(() => {
+        this.setState({ page })
+      }, T_SPEED)
+    }
+
+    return page
   }
 }

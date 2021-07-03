@@ -24,12 +24,19 @@ Channels
 Bonuses
 + Grant chat bonus
 + Grant channel chant bonus
+
++ Page navigation
+
+2021-07-03
+----------
 - Allow player to view list of bonuses
+
+Sockets
+- Notify users when they get a bonus
+
 
 Before 1st Upload
 --------------
-Sockets
-- Notify users when they get a bonus
 
 Bonuses
 - For giving bits

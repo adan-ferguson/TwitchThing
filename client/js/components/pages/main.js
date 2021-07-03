@@ -1,21 +1,14 @@
 import React from 'react'
-import PropTypes from 'prop-types'
+import Page from './page'
 import Bonuses from './bonuses'
 
-export default class Main extends React.Component {
-
-  static get propTypes(){
-    return {
-      setPage: PropTypes.func,
-      user: PropTypes.object
-    }
-  }
+export default class Main extends Page {
 
   render(){
     return (
       <div>
         <p>No gameplay LOL!</p>
-        <button onClick={() => this.props.setPage(Bonuses)}>View Bonuses</button>
+        <button onClick={() => this.props.changePage(Bonuses)}>View Bonuses</button>
       </div>
     )
   }
