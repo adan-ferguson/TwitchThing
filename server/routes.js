@@ -2,17 +2,22 @@ const express = require('express')
 const path = require('path')
 const router = express.Router()
 const Twitch = require('./twitch')
-const User = require('./collections/users')
+
+const Users = require('./collections/users')
+const Bonuses = require('./collections/bonuses')
 
 router.post('/gettwitchuser', async (req, res) => {
   const userInfo = await Twitch.getUserInfo(req.body.accessToken)
   if(!userInfo){
     res.send(Twitch.getLoginLink(req))
   }
-  const user = await User.load(userInfo.login) || await User.create(userInfo)
-  // await User.loadExtendedInfo(user)
+  const user = await Users.load(userInfo.login) || await Users.create(userInfo)
   req.session.username = userInfo.username
   res.send({ user: await user.gameData() })
+})
+
+router.post('/bonuses', async(req, res) => {
+  res.send(await Bonuses.loadRecent(req.session.username))
 })
 
 router.get('/twitchredirect', (req, res) => {

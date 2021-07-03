@@ -1,4 +1,4 @@
-const options = require('../config.json')
+const options = require('../config/config.json')
 const packageOptions = require('../package.json')
 
 const defaults = {

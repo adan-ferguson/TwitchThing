@@ -29,6 +29,8 @@ Bonuses
 
 2021-07-03
 ----------
++ Page smooth transitions
+- Get session working
 - Allow player to view list of bonuses
 
 Sockets

@@ -5,7 +5,7 @@ const log = require('fancy-log')
 const db = require('../db')
 const Twitch = require('../twitch')
 
-const initialChannels = require('../../config.json').initialChannels
+const initialChannels = require('../../config/config.json').initialChannels
 
 /**
  * How often we update the isStreaming property for channels
