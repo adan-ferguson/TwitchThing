@@ -74,18 +74,21 @@ body {
 }
 
 button {
-  border: none;
+  border: 1px solid black;
+  padding: 9px 15px;
   background: none;
   cursor: pointer;
+}
+button:hover {
+  background-color: #EEE;
 }
 
 .twitch-button {
   background-color: #6441A4;
-  color: white;
-  padding: 9px 15px;
   text-decoration: none;
-  cursor: pointer;
+  color: white;
   display: inline-flex;
+  cursor: pointer;
 }
 .twitch-button .fa-twitch {
   margin-right: 5px;
@@ -97,7 +100,7 @@ button {
   display: flex;
   flex-direction: column;
 }
-.game .main {
+.game .page {
   flex-grow: 1;
   padding: 20px;
 }

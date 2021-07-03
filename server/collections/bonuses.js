@@ -67,13 +67,15 @@ function fixBackwardsCompatibility(user){
  */
 async function giveChannelChatBonus(user, channel) {
 
-  const targetDate = new Date(Date.now - CHANNEL_CHAT_BONUS_TIMEOUT)
+  const targetDate = new Date(Date.now() - CHANNEL_CHAT_BONUS_TIMEOUT)
   const lastBonus = await lastChannelChatBonus(user, channel)
   if (lastBonus && lastBonus.doc.date > targetDate) {
     return false
   }
 
-  return Bonus.createNew(user.username, channel.name, BonusTypes.CHANNEL_CHAT, CHANNEL_CHAT_BONUS_AMOUNT)
+  const bonus = await Bonus.createNew(user.username, channel.name, BonusTypes.CHANNEL_CHAT, CHANNEL_CHAT_BONUS_AMOUNT)
+  user.doc.money += bonus.doc.amount
+  return bonus
 }
 
 /**
@@ -88,7 +90,7 @@ async function lastChannelChatBonus(user, channel) {
   const bonusRecord = await db.conn().collection('bonuses')
     .find({
       username: user.username,
-      channel: channel.name,
+      channelname: channel.name,
       type: BonusTypes.CHANNEL_CHAT
     })
     .limit(1)
@@ -107,13 +109,15 @@ async function lastChannelChatBonus(user, channel) {
  */
 async function giveChatBonus(user, channel){
 
-  const targetDate = new Date(Date.now - CHAT_BONUS_TIMEOUT)
+  const targetDate = new Date(Date.now() - CHAT_BONUS_TIMEOUT)
   const lastBonus = await lastChatBonus(user)
   if (lastBonus && lastBonus.doc.date > targetDate) {
     return false
   }
 
-  return Bonus.createNew(user.username, channel.name, BonusTypes.CHAT, CHAT_BONUS_AMOUNT)
+  const bonus = await Bonus.createNew(user.username, channel.name, BonusTypes.CHAT, CHAT_BONUS_AMOUNT)
+  user.doc.money += bonus.doc.amount
+  return bonus
 }
 
 /**

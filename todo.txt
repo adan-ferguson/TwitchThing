@@ -7,7 +7,7 @@ Chatbot
 + Setup
 + Listen for chat messages in registered channels
 
-2021-06-31
+2021-07-01
 --------------
 Footer
 + Options menu
@@ -15,21 +15,21 @@ Footer
 
 + Figure animations out
 
-Money
-- Keep track of money gains in money log collection
-
-Bonuses
-- Grant chat bonus
-- Grant channel chant bonus
-
 Channels
 + Initial Channels
-- Keep track of if registered channels are streaming
++ Keep track of if registered channels are streaming
+
+2021-07-02
+----------
+Bonuses
++ Grant chat bonus
++ Grant channel chant bonus
+- Allow player to view list of bonuses
 
 Before 1st Upload
 --------------
 Sockets
-- Notify users when they gain money (+money effect)
+- Notify users when they get a bonus
 
 Bonuses
 - For giving bits

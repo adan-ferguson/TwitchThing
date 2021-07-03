@@ -1,6 +1,7 @@
 import React from 'react'
 import { post } from './fizzetch'
 import TwitchLoginLink from './components/twitchLoginLink'
+import User from './user'
 
 let userJson
 
@@ -9,7 +10,7 @@ export async function loadUser(){
     accessToken: localStorage.getItem('accessToken')
   })
   userJson = await response.json()
-  return userJson.user || false
+  return new User(userJson.user) || false
 }
 
 export function createLoginLink(){
