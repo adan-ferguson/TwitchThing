@@ -30,21 +30,33 @@ Bonuses
 2021-07-03
 ----------
 + Page smooth transitions
-- Get session working
-- Allow player to view list of bonuses
++ Get session working
+
+2021-07-04
+----------
++ Allow player to view list of bonuses
 
 Sockets
 - Notify users when they get a bonus
+- Effect for increasing number
 
+Header
+- Code for it
+- Main
+-- Show which streams are active
+- Bonuses
+- Public todo list
 
 Before 1st Upload
 --------------
+- Download a font to use
 
 Bonuses
 - For giving bits
 - For subbing/gift subs
 - For using channel points
-- Show bonus log
+
+- Get working on server
 
 TODO
 -----------

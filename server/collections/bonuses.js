@@ -140,8 +140,15 @@ async function lastChatBonus(user){
   return bonusRecord.length ? new Bonus(bonusRecord[0]) : false
 }
 
-function loadRecent(username){
-
+async function loadRecent(username, page = 0, pageSize = 100){
+  return await db.conn().collection('bonuses')
+    .find({
+      username: username
+    })
+    .skip(page * pageSize)
+    .limit(pageSize)
+    .sort({ date: -1 })
+    .toArray()
 }
 
 module.exports = {
