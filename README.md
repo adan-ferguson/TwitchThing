@@ -1,15 +1,5 @@
-# 🚀 Welcome to your new awesome project!
+# Notes
 
-This project has been created using **webpack-cli**, you can now run
+Make SSL Cert:
 
-```
-npm run build
-```
-
-or
-
-```
-yarn build
-```
-
-to bundle your application
+`openssl req -x509 -newkey rsa:4096 -keyout key.pem -out cert.pem -days 365`

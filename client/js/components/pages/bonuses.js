@@ -22,7 +22,7 @@ export default class Bonuses extends Page {
 
   async componentDidMount(){
     debugger
-    const bonuses = await post('/bonuses')
+    const bonuses = await post('/user/bonuses')
     this.setState({ bonuses })
     this.props.ready()
   }

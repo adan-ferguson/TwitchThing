@@ -19,8 +19,9 @@ async function init(){
       }
     }))
     .use(express.json())
-    .use('/', express.static(path.join(__dirname, '..', 'client_dist')))
-    .use('/', require('./routes.js'))
+    .use('', express.static(path.join(__dirname, '..', 'client_dist')))
+    .use('/', require('./routes/public.js'))
+    .use('/user/', require('./routes/user.js'))
 
   try {
     https.createServer({

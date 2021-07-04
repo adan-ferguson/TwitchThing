@@ -1,9 +1,12 @@
 export async function post(url, data){
-  return await(await fetch(url, {
+  const resp = await fetch(url, {
     method: 'post',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
-  })).json()
+  })
+  const json = await resp.json()
+  console.log(json)
+  return json
 }

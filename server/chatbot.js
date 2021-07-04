@@ -22,7 +22,9 @@ async function init(){
     client.leave(channel.name)
   })
 
-  await client.connect()
+  await client.connect().catch(e => {
+    log(e)
+  })
 
   client.on('message', async (channelName, tags) => {
 

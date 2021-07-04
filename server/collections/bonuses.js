@@ -140,9 +140,12 @@ async function lastChatBonus(user){
   return bonusRecord.length ? new Bonus(bonusRecord[0]) : false
 }
 
+function loadRecent(username){
+
+}
+
 module.exports = {
   giveChannelChatBonus,
-  lastChannelChatBonus,
   giveChatBonus,
-  lastChatBonus
+  loadRecent
 }
