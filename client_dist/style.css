@@ -1,7 +1,9 @@
 .bonus-list {
   overflow-y: scroll;
-  margin: 0 auto;
   text-align: left;
+  margin: 35px auto;
+  padding: 10px;
+  border: 1px solid #e2cfff;
 }
 .bonus-list thead th {
   min-width: 100px;
@@ -116,8 +118,10 @@ button:hover {
 }
 .bonus-list {
   overflow-y: scroll;
-  margin: 0 auto;
   text-align: left;
+  margin: 35px auto;
+  padding: 10px;
+  border: 1px solid #e2cfff;
 }
 .bonus-list thead th {
   min-width: 100px;

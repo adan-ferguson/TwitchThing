@@ -16,11 +16,13 @@ export default class Bonuses extends Page {
     return (
       <div>
         <h1>Bonuses</h1>
-        <p>
-          You can gain bonus money by chatting on khananaphone's channel during a stream
-          - 100 money for the first chat of a stream
-          - 10 money afterwards (5 minute cooldown)
-        </p>
+        <div>
+          You can gain bonus money by chatting on khananaphone&apos;s channel during a stream
+          <ul>
+            <li>100 money for the first chat of a stream</li>
+            <li>10 money afterwards (5 minute cooldown)</li>
+          </ul>
+        </div>
         <table className='bonus-list'>
           <thead>
             <tr>

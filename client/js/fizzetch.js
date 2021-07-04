@@ -6,7 +6,5 @@ export async function post(url, data){
     },
     body: JSON.stringify(data)
   })
-  const json = await resp.json()
-  console.log(json)
-  return json
+  return await resp.json()
 }
