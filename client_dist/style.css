@@ -88,10 +88,19 @@ button:hover {
   text-decoration: none;
   color: white;
   display: inline-flex;
-  cursor: pointer;
+  align-items: flex-end;
 }
 .twitch-button .fa-twitch {
-  margin-right: 5px;
+  margin-right: 9px;
+}
+
+#login-link.twitch-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 9px 15px;
+  cursor: pointer;
 }
 
 .game {

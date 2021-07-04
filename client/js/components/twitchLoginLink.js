@@ -13,7 +13,7 @@ export default class TwitchLoginLink extends React.Component {
   render(){
     if(this.props.loginLink && this.props.stateID) {
       return (
-        <a className='twitch-button' href={this.props.loginLink} onClick={this.loginClicked.bind(this)}>
+        <a id='login-link' className='twitch-button' href={this.props.loginLink} onClick={this.loginClicked.bind(this)}>
           <i className='fab fa-twitch'/> Log In with Twitch
         </a>
       )

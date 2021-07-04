@@ -6,10 +6,10 @@ import User from './user'
 let userJson
 
 export async function loadUser(){
-  const userJson = await post('/gettwitchuser', {
+  userJson = await post('/gettwitchuser', {
     accessToken: localStorage.getItem('accessToken')
   })
-  return new User(userJson.user) || false
+  return userJson.user ? new User(userJson.user) : false
 }
 
 export function createLoginLink(){

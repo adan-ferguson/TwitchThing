@@ -6,5 +6,7 @@ const db = require('./db')
 db.init().then(async () => {
   await Channels.init()
   await Chatbot.init()
-  await Server.init()
+  await Server.init().catch(error => {
+    console.log('Server failed to loead.')
+  })
 })

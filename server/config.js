@@ -17,11 +17,16 @@ const defaults = {
   //   password: null
   // },
   secret: null,
-  initialChannels: []
+  initialChannels: [],
+  sslCertPassPhrase: null
 }
 
 if(!options.secret){
-  throw 'config.json requires a "secret" value'
+  throw 'config.json requires a "secret" value, this can just be any string.'
+}
+
+if(!options.sslCertPassPhrase){
+  throw 'config.json requires a "sslCertPassPhrase" value, the pass phrase used to generate your ssl cert.'
 }
 
 if(!options.twitch.clientID){

@@ -70,7 +70,7 @@ async function getOnlineStreams(usernames){
       }
     })
     let json = await results.json()
-    return json.data.map(result => result.user_name.toLowerCase())
+    return json.data.map(result => result.user_name.toLowerCase() )
   } catch(e) {
     log('Could not get user statuses: ', e)
     if(e.status === 401){
