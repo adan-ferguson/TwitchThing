@@ -11,9 +11,11 @@ export async function loadUser(){
     accessToken: localStorage.getItem('accessToken')
   })
   if(userJson.user){
-    setupUser()
+    const user = new User(userJson.user)
+    setupUser(user)
+    return user
   }
-  return userJson.user ? new User(userJson.user) : false
+  return false
 }
 
 export function createLoginLink(){

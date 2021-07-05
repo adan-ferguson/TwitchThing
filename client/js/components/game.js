@@ -35,8 +35,8 @@ export default class Game extends React.Component {
             </div>
           </CSSTransition>
           <div className='footer'>
-            <p>Exp: {this.props.user.exp}</p>
-            <p>Money: {this.props.user.money}</p>
+            <p>Exp: {this.props.user.data.exp}</p>
+            <p>Money: {this.props.user.data.money}</p>
             {React.createElement(TwitchMenuButton, { user: this.props.user })}
           </div>
         </div>

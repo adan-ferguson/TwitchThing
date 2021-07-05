@@ -11,17 +11,12 @@ function setup(server, sessionMiddleware){
     sessionMiddleware(socket.request, {}, next)
   })
 
-  io.use((socket, next) => {
-    const username = socket.request.session.username
-    if(username && !socket.rooms.has(username)){
-      socket.join(username)
-      log('A user connected.', username)
-    }
-    next()
-  })
-
   io.on('connection', socket => {
-    // Listen for stuff
+    socket.on('join room', ({ room }) => {
+      socket.join(room)
+      io.to(room).emit('room joined', room)
+      log('User joined room', room)
+    })
   })
 }
 

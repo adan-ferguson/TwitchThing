@@ -10,10 +10,12 @@ export function connect(){
 }
 
 export function setupUser(user){
-  socket.emit('setup user', () => {
-    console.log('Joined user socket room')
-  })
-  socket.on('updated', diff => {
-    user.update(diff)
-  })
+  socket
+    .emit('join room', { room: user.data.username })
+    .on('updated', args => {
+      user.update(args)
+    })
+    .on('room joined', name => {
+      console.log('joined room', name)
+    })
 }

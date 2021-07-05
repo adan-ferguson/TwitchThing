@@ -47,7 +47,7 @@ class User {
     this.oldDoc = Object.assign({}, this.doc)
     this.emit('updated', {
       diff: diff,
-      mewDoc: this.doc
+      newDoc: this.doc
     })
   }
 
