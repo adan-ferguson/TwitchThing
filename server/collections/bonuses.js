@@ -40,11 +40,13 @@ const BonusTypes = {
 
 class Bonus {
 
-  static async createNew(username, channelname, type, amount){
+  static async createNew(user, channelname, type, amount){
     const bonus = new Bonus({
-      username, channelname, type, amount, date: new Date()
+      username: user.username, channelname, type, amount, date: new Date()
     })
     await db.conn().collection('bonuses').insertOne(bonus.doc)
+    user.update({ money: user.doc.money + amount })
+    user.emit('bonus granted', bonus.doc)
     return bonus
   }
 
@@ -73,9 +75,7 @@ async function giveChannelChatBonus(user, channel) {
     return false
   }
 
-  const bonus = await Bonus.createNew(user.username, channel.name, BonusTypes.CHANNEL_CHAT, CHANNEL_CHAT_BONUS_AMOUNT)
-  user.doc.money += bonus.doc.amount
-  return bonus
+  return await Bonus.createNew(user, channel.name, BonusTypes.CHANNEL_CHAT, CHANNEL_CHAT_BONUS_AMOUNT)
 }
 
 /**
@@ -115,9 +115,7 @@ async function giveChatBonus(user, channel){
     return false
   }
 
-  const bonus = await Bonus.createNew(user.username, channel.name, BonusTypes.CHAT, CHAT_BONUS_AMOUNT)
-  user.doc.money += bonus.doc.amount
-  return bonus
+  return await Bonus.createNew(user, channel.name, BonusTypes.CHAT, CHAT_BONUS_AMOUNT)
 }
 
 /**

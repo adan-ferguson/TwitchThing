@@ -20,6 +20,9 @@ export default class Game extends React.Component {
       page: this.setPage(Main, {}, false),
       pageReady: false
     }
+    this.props.user.on('updated', ({ diff }) => {
+      console.log(diff)
+    })
   }
 
   render(){

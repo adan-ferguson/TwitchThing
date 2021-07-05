@@ -37,8 +37,9 @@ Bonuses
 + Allow player to view list of bonuses
 
 Sockets
-- Notify users when they get a bonus
-- Effect for increasing number
++ Notify users when they get a bonus
+- Effect for number change
+- update on bonus page
 
 Header
 - Code for it

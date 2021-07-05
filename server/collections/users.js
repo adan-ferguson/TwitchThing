@@ -1,5 +1,8 @@
 const db = require('../db.js')
+const emit = require('../socketServer').emit
 const Bonuses = require('./bonuses')
+const debounce = require('debounce')
+const log = require('fancy-log')
 
 const DEFAULTS = {
   username: '',
@@ -20,15 +23,32 @@ class User {
   }
 
   constructor(userDocument){
-    this.doc = fixBackwardsCompatibility(userDocument)
+    this.oldDoc = fixBackwardsCompatibility(userDocument)
+    this.doc = Object.assign({}, userDocument)
+    this._save = debounce(this._save, 200)
   }
 
   get username(){
     return this.doc.username
   }
 
-  async save(){
-    await db.conn().collection('users').replaceOne({ username: this.username }, this.doc)
+  update(changes){
+    Object.assign(this.doc, changes)
+    this._save()
+  }
+
+  _save(){
+    const diff = calcDiff(this.doc, this.oldDoc)
+    if(!Object.keys(diff).length){
+      return
+    }
+
+    db.conn().collection('users').replaceOne({ username: this.username }, this.doc)
+    this.oldDoc = Object.assign({}, this.doc)
+    this.emit('updated', {
+      diff: diff,
+      mewDoc: this.doc
+    })
   }
 
   async gameData(){
@@ -40,21 +60,30 @@ class User {
   }
 
   async checkForChatBonus(channel){
-
-    const moneyBefore = this.doc.money
     await Bonuses.giveChannelChatBonus(this, channel)
     await Bonuses.giveChatBonus(this, channel)
+  }
 
-    const moneyChange = this.doc.money - moneyBefore
-    if(moneyChange){
-      // TODO: socket event
-      await this.save()
-    }
+  emit(eventName, data){
+    log(this.username, eventName, data)
+    emit(this.username, eventName, data)
   }
 }
 
 function fixBackwardsCompatibility(user){
   return Object.assign({}, DEFAULTS, user)
+}
+
+function calcDiff(newObj, oldObj){
+  const diff = {}
+  Object.keys(newObj).forEach(key => {
+    const oldVal = oldObj[key]
+    const newVal = newObj[key]
+    if(oldVal !== newVal){
+      diff[key] = { oldVal, newVal }
+    }
+  })
+  return diff
 }
 
 async function load(username){
