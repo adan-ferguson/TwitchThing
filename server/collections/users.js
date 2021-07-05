@@ -6,7 +6,7 @@ const log = require('fancy-log')
 
 const DEFAULTS = {
   username: '',
-  twitchInfo: {},
+  displayname: '',
   exp: 0,
   money: 100
 }
@@ -16,7 +16,7 @@ class User {
   static async createNew(twitchInfo){
     const user = new User({
       username: twitchInfo.login.toLowerCase(),
-      twitchInfo: twitchInfo
+      displayname: twitchInfo.display_name.toLowerCase()
     })
     await db.conn().collection('users').insertOne(user.doc)
     return user
@@ -24,7 +24,7 @@ class User {
 
   constructor(userDocument){
     this.oldDoc = fixBackwardsCompatibility(userDocument)
-    this.doc = Object.assign({}, userDocument)
+    this.doc = Object.assign({}, this.oldDoc)
     this._save = debounce(this._save, 200)
   }
 
@@ -52,11 +52,7 @@ class User {
   }
 
   async gameData(){
-    return {
-      username: this.doc.username,
-      exp: this.doc.exp,
-      money: this.doc.money
-    }
+    return this.doc
   }
 
   async checkForChatBonus(channel){
@@ -70,8 +66,12 @@ class User {
   }
 }
 
-function fixBackwardsCompatibility(user){
-  return Object.assign({}, DEFAULTS, user)
+function fixBackwardsCompatibility(doc){
+  if(doc.twitchInfo){
+    doc.displayname = doc.twitchInfo.display_name
+    delete doc.twitchInfo
+  }
+  return Object.assign({}, DEFAULTS, doc)
 }
 
 function calcDiff(newObj, oldObj){

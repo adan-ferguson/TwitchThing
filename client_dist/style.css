@@ -54,6 +54,9 @@ button:hover {
 .twitch-button .fa-twitch {
   margin-right: 9px;
 }
+.twitch-button:hover {
+  background-color: #9584b3;
+}
 
 #login-link.twitch-button {
   position: absolute;
@@ -172,6 +175,9 @@ button:hover {
 }
 .twitch-button .fa-twitch {
   margin-right: 9px;
+}
+.twitch-button:hover {
+  background-color: #9584b3;
 }
 
 #login-link.twitch-button {
