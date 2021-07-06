@@ -79,8 +79,9 @@ function calcDiff(newObj, oldObj){
   Object.keys(newObj).forEach(key => {
     const oldVal = oldObj[key]
     const newVal = newObj[key]
-    if(oldVal !== newVal){
-      diff[key] = { oldVal, newVal }
+    const change = newVal - oldVal
+    if(change){
+      diff[key] = { oldVal, newVal, change }
     }
   })
   return diff

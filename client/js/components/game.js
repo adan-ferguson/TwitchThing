@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import TwitchMenuButton from './twitchMenuButton'
+import Footer from './footer'
 import { CSSTransition } from 'react-transition-group'
 import Main from './pages/main'
 
@@ -10,7 +10,7 @@ export default class Game extends React.Component {
 
   static get propTypes(){
     return {
-      user: PropTypes.object
+      user: PropTypes.object.isRequired
     }
   }
 
@@ -20,9 +20,6 @@ export default class Game extends React.Component {
       page: this.setPage(Main, {}, false),
       pageReady: false
     }
-    this.props.user.on('updated', ({ diff }) => {
-      console.log(diff)
-    })
   }
 
   render(){
@@ -34,11 +31,7 @@ export default class Game extends React.Component {
               {this.state.page}
             </div>
           </CSSTransition>
-          <div className='footer'>
-            <p>Exp: {this.props.user.data.exp}</p>
-            <p>Money: {this.props.user.data.money}</p>
-            {React.createElement(TwitchMenuButton, { user: this.props.user })}
-          </div>
+          <Footer user={this.props.user}/>
         </div>
       </CSSTransition>
     )

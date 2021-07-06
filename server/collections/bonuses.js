@@ -4,7 +4,7 @@ const db = require('../db.js')
  * How often a user can get a bonus for chatting in any registered channel.
  * @type {number} Delay in milliseconds
  */
-const CHAT_BONUS_TIMEOUT = 1000 * 60 * 5
+const CHAT_BONUS_TIMEOUT = 1 // 1000 * 60 * 5
 
 /**
  * Amount of money given for a chat bonus.

@@ -38,8 +38,17 @@ Bonuses
 
 Sockets
 + Notify users when they get a bonus
-- Effect for number change
-- update on bonus page
++ Change footer if user gets updated
+
+2021-07-05
+-----------
+Sockets
++ Show flying text effect for money change
++ update on bonus page
+
+Effects
++ Figure out a flying text effect, looks like it will be outside of the world of react
++ Flying text effect
 
 Header
 - Code for it
@@ -62,6 +71,7 @@ Bonuses
 TODO
 -----------
 - Experience bar
+- React element for bar
 
 Register channels
 - Allow people to register/unregister their channel to the chatbot

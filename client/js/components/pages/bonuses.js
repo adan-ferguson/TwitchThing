@@ -2,6 +2,7 @@ import React from 'react'
 import Page from './page'
 import { post } from '../../fizzetch'
 import PropTypes from 'prop-types'
+import { getSocket } from '../../socketClient'
 
 export default class Bonuses extends Page {
 
@@ -10,6 +11,7 @@ export default class Bonuses extends Page {
     this.state = {
       bonuses: []
     }
+    getSocket().on('bonus granted', this._addBonus)
   }
 
   render(){
@@ -45,6 +47,16 @@ export default class Bonuses extends Page {
     this.setState({ bonuses })
     this.props.ready()
   }
+
+  componentWillUnmount(){
+    getSocket().off('bonus granted', this._addBonus)
+  }
+
+  _addBonus = (bonus) => {
+    this.setState({
+      bonuses: [bonus, ...this.state.bonuses]
+    })
+  }
 }
 
 class BonusRow extends React.Component {
@@ -65,5 +77,4 @@ class BonusRow extends React.Component {
       </tr>
     )
   }
-
 }

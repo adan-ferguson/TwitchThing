@@ -19,3 +19,7 @@ export function setupUser(user){
       console.log('joined room', name)
     })
 }
+
+export function getSocket(){
+  return socket
+}
