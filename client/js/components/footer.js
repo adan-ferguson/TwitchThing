@@ -17,11 +17,7 @@ export default class Footer extends React.Component {
 
     this.moneyAmount = React.createRef()
 
-    this.state = {
-      user: props.user
-    }
-
-    this.state.user.on('updated', ({ diff }) => {
+    this.props.user.on('updated', ({ diff }) => {
       if(diff.money){
         new FlyingTextEffect(this.moneyAmount.current, diff.money.change, {
           direction: 'up'
@@ -34,9 +30,8 @@ export default class Footer extends React.Component {
   render(){
     return (
       <div className='footer'>
-        <p>Exp: {this.state.user.data.exp}</p>
-        <p ref={this.moneyAmount}>Money: {this.state.user.data.money}</p>
-        {React.createElement(TwitchMenuButton, { user: this.state.user })}
+        <p>Exp: {this.props.user.data.exp}</p>
+        <p ref={this.moneyAmount}>Money: {this.props.user.data.money}</p>
       </div>
     )
   }

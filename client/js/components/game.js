@@ -1,8 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Footer from './footer'
 import { CSSTransition } from 'react-transition-group'
+
+import Header from './header'
+import Footer from './footer'
 import Main from './pages/main'
+
+import User from '../user'
 
 const T_SPEED = 300
 
@@ -10,7 +14,7 @@ export default class Game extends React.Component {
 
   static get propTypes(){
     return {
-      user: PropTypes.object.isRequired
+      user: PropTypes.instanceOf(User).isRequired
     }
   }
 
@@ -26,6 +30,7 @@ export default class Game extends React.Component {
     return (
       <CSSTransition appear in={true} classNames='fade' timeout={T_SPEED}>
         <div className='game'>
+          <Header currentPage={this.state.page} changePage={this.setPage} user={this.props.user}/>
           <CSSTransition in={this.state.pageReady} classNames='fade' timeout={T_SPEED}>
             <div className='page'>
               {this.state.page}

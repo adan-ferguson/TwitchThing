@@ -1,5 +1,5 @@
 import React from 'react'
-import Page from './page'
+import Page from '../page'
 import { post } from '../../fizzetch'
 import PropTypes from 'prop-types'
 import { getSocket } from '../../socketClient'

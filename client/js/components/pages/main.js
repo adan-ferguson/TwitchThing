@@ -1,6 +1,5 @@
 import React from 'react'
-import Page from './page'
-import Bonuses from './bonuses'
+import Page from '../page'
 
 export default class Main extends Page {
 
@@ -8,7 +7,6 @@ export default class Main extends Page {
     return (
       <div>
         <p>No gameplay LOL!</p>
-        <button onClick={() => this.props.changePage(Bonuses)}>View Bonuses</button>
       </div>
     )
   }

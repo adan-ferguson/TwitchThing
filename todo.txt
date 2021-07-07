@@ -51,15 +51,24 @@ Effects
 + Flying text effect
 
 Header
-- Code for it
-- Main
--- Show which streams are active
-- Bonuses
-- Public todo list
++ Code for it
++ Main
++ Bonuses
+
+2021-07-06
+-----------
+Header
+- Public patch notes/todo list
+
+- Download a font to use
+
+Bonuses
+- For using channel points
+
+- Get working on server
 
 Before 1st Upload
 --------------
-- Download a font to use
 
 Bonuses
 - For giving bits
@@ -77,6 +86,11 @@ Register channels
 - Allow people to register/unregister their channel to the chatbot
 - Show modals
 - Update in db
+- Show which streams are active
+
+- Character per channel
+- Global character
+- Beta test character
 
 - Levels
 
