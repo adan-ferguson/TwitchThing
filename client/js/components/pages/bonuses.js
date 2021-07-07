@@ -69,7 +69,7 @@ class BonusRow extends React.Component {
 
   render(){
     return (
-      <tr className='bonus-row'>
+      <tr className='bonus-row number'>
         <td>{this.props.bonus.channelname}</td>
         <td>{this.props.bonus.type}</td>
         <td>{this.props.bonus.amount}</td>

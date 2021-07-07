@@ -58,9 +58,11 @@ Header
 2021-07-06
 -----------
 Header
-- Public patch notes/todo list
++ Public patch notes/todo list
 
-- Download a font to use
++ Download a font to use
+
+- Scale with height
 
 Bonuses
 - For using channel points
@@ -95,3 +97,5 @@ Register channels
 - Levels
 
 - Listen for a specific channel point reward
+
+- Mobile aspect ratio

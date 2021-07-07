@@ -1,0 +1,85 @@
+@font-face
+  font-family: 'Number Font'
+  src: url('../assets/CourierPrime-Regular.ttf')
+
+@font-face
+  font-family: 'Main Font'
+  src: url('../assets/NoticiaText-Regular.ttf')
+
+html
+  font-size: 0.12vh
+  user-select: none
+
+html, body
+  position: relative
+  width: 100%
+  height: 100%
+  padding: 0
+  margin: 0
+
+#root, #effects
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+  overflow: hidden
+
+#effects
+  pointer-events: none
+
+body
+  font-family: 'Main Font', Arial, serif
+  font-size: 15rem
+
+button
+  font-family: 'Main Font', Arial, serif
+  border: 1rem solid black
+  padding: 9rem 15rem
+  background: none
+  cursor: pointer
+
+  &:hover
+    background-color: #EEE
+
+.twitch-button
+  background-color: #6441A4
+  text-decoration: none
+  color: white
+  display: inline-flex
+  align-items: flex-end
+
+  .fa-twitch
+    margin-right: 9rem
+
+  &:hover
+    background-color: #9584b3
+
+#login-link.twitch-button
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+  padding: 9rem 15rem
+  cursor: pointer
+
+.game
+  width: 100%
+  height: 100%
+  display: flex
+  flex-direction: column
+
+  .page
+    flex-grow: 1
+    padding: 20rem
+    overflow-x: hidden
+    overflow-y: auto
+
+.loading
+  position: absolute
+  left: 50%
+  top: 50%
+  transform: translate(-50%, -50%)
+
+.number
+  font-family: 'Number Font', Arial, serif

@@ -6,7 +6,7 @@ export default class DevNotes extends Page {
     return (
       <div className='dev-notes'>
         <h3>2021-07-06</h3>
-        <h6>Set up a bunch of stuff</h6>
+        <p>Set up a bunch of stuff</p>
         <ul>
           <li>Login with Twitch</li>
           <li>Keep track of money</li>
