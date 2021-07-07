@@ -1,5 +1,5 @@
 const fetch = require('node-fetch')
-const config = require('./config.js')
+const config = require('../config.js')
 const { v4: guid } = require('uuid')
 const log = require('fancy-log')
 

@@ -62,21 +62,10 @@ Header
 
 + Download a font to use
 
-- Scale with height
++ Scale with height
 
-Bonuses
-- For using channel points
-
-- Get working on server
-
-Before 1st Upload
---------------
-
-Bonuses
-- For giving bits
-- For subbing/gift subs
-- For using channel points
-
+2021-07-07
+-----------
 - Get working on server
 
 TODO
@@ -85,14 +74,16 @@ TODO
 - React element for bar
 
 Register channels
-- Allow people to register/unregister their channel to the chatbot
-- Show modals
-- Update in db
-- Show which streams are active
+- Will need ngrok in order for this to not be annoying to test
+- Allow people to register/unregister their channel
+- Get oauth authorization from them
+- EventSub to registered channels for subs, channel points, cheers
+- List on homepage which registered channels are active
 
-- Character per channel
-- Global character
-- Beta test character
+- DB backups
+
+- Character creation/editing
+- Beta testing version of app w/ infinite gold
 
 - Levels
 

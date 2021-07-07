@@ -1,6 +1,6 @@
 const { Client } = require('tmi.js')
-const Channels = require('./collections/channels')
-const User = require('./collections/users')
+const Channels = require('../collections/channels')
+const User = require('../collections/users')
 const log = require('fancy-log')
 
 async function init(){
@@ -24,7 +24,7 @@ async function init(){
 
   await client.connect().catch(e => {
     log(e)
-  } )
+  })
 
   client.on('message', async (channelName, tags) => {
 

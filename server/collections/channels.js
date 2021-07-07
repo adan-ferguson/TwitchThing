@@ -3,9 +3,7 @@ const emitter = new EventEmitter()
 const log = require('fancy-log')
 
 const db = require('../db')
-const Twitch = require('../twitch')
-
-const initialChannels = require('../../config/config.json').initialChannels
+const Twitch = require('../twitch/api')
 
 /**
  * How often we update the isStreaming property for channels
@@ -82,17 +80,8 @@ async function loadAll(){
 
 async function init(){
 
-  await createFromConfig()
   setupUptimeUpdates()
   log('Channels initialized')
-
-  async function createFromConfig(){
-    for(let name of initialChannels){
-      if(!await load(name)){
-        await Channel.createNew(name)
-      }
-    }
-  }
 
   function setupUptimeUpdates(){
     // Set up the uptime updates

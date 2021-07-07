@@ -1,4 +1,4 @@
-const Chatbot = require('./chatbot')
+const Chatbot = require('./twitch/chatbot')
 const Channels = require('./collections/channels')
 const Server = require('./server')
 const db = require('./db')

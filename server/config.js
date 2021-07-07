@@ -17,7 +17,6 @@ const defaults = {
   //   password: null
   // },
   secret: null,
-  initialChannels: [],
   sslCertPassPhrase: null
 }
 

@@ -1,6 +1,6 @@
 const express = require('express')
 const path = require('path')
-const Twitch = require('../twitch')
+const Twitch = require('../twitch/api')
 
 const Users = require('../collections/users')
 
@@ -19,6 +19,7 @@ router.post('/gettwitchuser', async (req, res) => {
   const userInfo = await Twitch.getUserInfo(req.body.accessToken)
   if(!userInfo){
     res.send(Twitch.getLoginLink(req))
+    return
   }
   const user = await Users.load(userInfo.login) || await Users.create(userInfo)
   req.session.username = userInfo.login
