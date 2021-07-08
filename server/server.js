@@ -1,11 +1,9 @@
 const express = require('express')
 const session = require('express-session')
 const path = require('path')
-const https = require('https')
 const log = require('fancy-log')
-const fs = require('fs')
 
-const config = require('../config/config.json')
+const config = require('../config.json')
 
 async function init(){
 
@@ -14,7 +12,7 @@ async function init(){
     saveUninitialized: true,
     secret: config.secret,
     cookie: {
-      secure: true
+      secure: config.requireHttps
     }
   })
 
@@ -27,14 +25,9 @@ async function init(){
 
 
   try {
-    const server = https.createServer({
-      key: fs.readFileSync('../config/key.pem'),
-      cert: fs.readFileSync('../config/cert.pem'),
-      passphrase: config.sslCertPassPhrase
-    }, app).listen(config.port, () => {
+    const server = app.listen(config.port, () => {
       log('Server running', config.port)
     })
-
     require('./socketServer').setup(server, sessionMiddlware)
   }catch(ex){
     log(ex)

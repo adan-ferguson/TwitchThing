@@ -1,4 +1,4 @@
-const options = require('../config/config.json')
+const options = require('../config.json')
 const packageOptions = require('../package.json')
 
 const defaults = {
@@ -17,15 +17,11 @@ const defaults = {
   //   password: null
   // },
   secret: null,
-  sslCertPassPhrase: null
+  requireHttps: true
 }
 
 if(!options.secret){
   throw 'config.json requires a "secret" value, this can just be any string.'
-}
-
-if(!options.sslCertPassPhrase){
-  throw 'config.json requires a "sslCertPassPhrase" value, the pass phrase used to generate your ssl cert.'
 }
 
 if(!options.twitch.clientID){
