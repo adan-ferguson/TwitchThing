@@ -10,7 +10,8 @@ const defaults = {
   name: packageOptions.name,
   twitch: {
     clientID: null,
-    clientSecret: null
+    clientSecret: null,
+    redirectURL: null
   },
   // chatbot: {
   //   username: null,
@@ -26,6 +27,10 @@ if(!options.secret){
 
 if(!options.twitch.clientID){
   throw 'config.json requires  "twitch.clientID" value'
+}
+
+if(!options.twitch.redirectURL){
+  throw 'config.json requires  "twitch.redirectURL" value'
 }
 
 if(!options.twitch.clientSecret){

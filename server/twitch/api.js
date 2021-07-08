@@ -29,7 +29,7 @@ function getLoginLink(req){
   let stateID = guid()
   let obj = {
     client_id: config.twitch.clientID,
-    redirect_uri: `${req.protocol}://${req.headers.host}/twitchredirect`,
+    redirect_uri: `${config.twitch.redirectURL}/twitchredirect`,
     response_type: 'token',
     scope: '',
     state: stateID
