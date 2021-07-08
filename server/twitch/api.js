@@ -25,11 +25,11 @@ async function getUserInfo(accessToken){
   }
 }
 
-function getLoginLink(req){
+function getLoginLink(){
   let stateID = guid()
   let obj = {
     client_id: config.twitch.clientID,
-    redirect_uri: `${config.twitch.redirectURL}`,
+    redirect_uri: `${config.serverURL}/twitchredirect`,
     response_type: 'token',
     scope: '',
     state: stateID
