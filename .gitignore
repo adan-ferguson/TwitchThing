@@ -2,6 +2,6 @@
 
 node_modules
 
-config
+client_dist/config.json
 
 client_dist
