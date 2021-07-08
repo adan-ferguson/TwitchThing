@@ -12,3 +12,11 @@ Make config.json
     }
 }
 ```
+
+```
+npm install
+npm run gulp
+npm rum build
+npm run startdb
+npm run startserver
+```
