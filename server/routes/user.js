@@ -28,18 +28,30 @@ router.post('/settings', async(req, res) => {
 
   let channel = await Channels.load(req.user.username)
 
-  if(!channel){
-    const { loginLink, stateID } = TwitchApi.getLoginLink(req,true)
+  if(!channel || !await channel.accessTokenValid()){
+    const { loginLink, stateID } = TwitchApi.getChannelAuthLink(req)
     channel = {
       requiresAuth: true,
       loginLink,
       stateID
     }
+  }else{
+    channel = channel.doc
   }
 
   res.send({
     channel
   })
+})
+
+router.post('/savechannelauth', async(req, res) => {
+  let channel = await Channels.load(req.user.username)
+  if(!channel){
+    channel = await Channels.add(req.user.username)
+  }
+  channel.doc.accesToken = req.body.access_token
+  channel.save()
+  res.send(200)
 })
 
 module.exports = router

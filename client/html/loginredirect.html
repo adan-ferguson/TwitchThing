@@ -15,14 +15,15 @@
           }
         })
 
-        let redirectTarget = localStorage.redirectPage ? '/?page=' + localStorage.redirectPage : '/'
-
-        if(localStorage.stateID && params.state === localStorage.stateID){
-          localStorage.clear()
-          localStorage.accessToken = params.access_token
+        debugger
+        if(params.access_token){
+          if(localStorage.stateID && params.state === localStorage.stateID){
+            localStorage.clear()
+            localStorage.accessToken = params.access_token
+          }
         }
 
-        window.location = redirectTarget
+        window.location = '/'
 
     </script>
 </body>

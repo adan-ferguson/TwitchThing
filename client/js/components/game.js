@@ -41,6 +41,11 @@ export default class Game extends React.Component {
               {this.state.page}
             </div>
           </CSSTransition>
+          <CSSTransition in={!this.state.pageReady} classNames='fade' timeout={T_SPEED}>
+            <div className='loading'>
+              Loading...
+            </div>
+          </CSSTransition>
           <Footer user={this.props.user}/>
         </div>
       </CSSTransition>

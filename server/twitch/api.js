@@ -5,7 +5,7 @@ const log = require('fancy-log')
 
 let appAccessToken = null
 
-const ADVANCED_SCOPE = ['channel:read:redemptions'].join(' ')
+const ADVANCED_SCOPES = ['channel:read:redemptions']
 
 async function getUserInfo(accessToken){
   try {
@@ -27,13 +27,21 @@ async function getUserInfo(accessToken){
   }
 }
 
-function getLoginLink(req, advancedScope = false){
+function getLoginLink(req){
+  return generateLink(`${req.headers.origin}/loginredirect`)
+}
+
+function getChannelAuthLink(req){
+  return generateLink(`${req.headers.origin}/channelauthredirect`, ADVANCED_SCOPES.join(' '))
+}
+
+function generateLink(redirect_uri, scope = ''){
   let stateID = guid()
   let obj = {
     client_id: config.twitch.clientID,
-    redirect_uri: `${req.headers.origin}/twitchredirect`,
+    redirect_uri,
     response_type: 'token',
-    scope: advancedScope ? ADVANCED_SCOPE : '',
+    scope,
     state: stateID
   }
   return  {
@@ -115,6 +123,30 @@ async function getAppAccessToken(){
   }
 }
 
+async function validateAccessToken(accessToken, username, advanced = false){
+  const url = 'https://id.twitch.tv/oauth2/validate'
+  const resp = await fetch(url, {
+    method: 'get',
+    headers: {
+      Authorization: 'OAuth ' + accessToken,
+      'Content-Type': 'application/json'
+    }
+  })
+  const json = await resp.json()
+  if(!json || json.login !== username){
+    return false
+  }
+  if(advanced){
+    const invalidScope = ADVANCED_SCOPES.find(scope => {
+      return json.scopes.indexOf(scope) === -1
+    })
+    if(invalidScope){
+      return false
+    }
+  }
+  return true
+}
+
 function jsonToQueryString(json) {
   return Object.keys(json).map(function(key) {
     return encodeURIComponent(key) + '=' +
@@ -124,6 +156,8 @@ function jsonToQueryString(json) {
 
 module.exports = {
   getLoginLink,
+  getChannelAuthLink,
   getUserInfo,
-  getOnlineStreams
+  getOnlineStreams,
+  validateAccessToken
 }

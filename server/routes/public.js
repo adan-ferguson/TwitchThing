@@ -1,14 +1,11 @@
 const express = require('express')
 const path = require('path')
+const fs = require('fs')
 const Twitch = require('../twitch/api')
 
 const Users = require('../collections/users')
 
 const router = express.Router()
-
-router.get('/twitchredirect', (req, res) => {
-  res.sendFile(getHtml('twitchredirect'))
-})
 
 router.get('/logout', (req, res) => {
   delete req.session.username
@@ -31,7 +28,12 @@ router.get('/', (req, res) => {
 })
 
 router.get('*', (req, res) => {
-  res.redirect('/')
+  const file = getHtml(req.url)
+  if(fs.existsSync(file)){
+    res.sendFile(file)
+  }else{
+    res.redirect('/')
+  }
 })
 
 function getHtml(file){

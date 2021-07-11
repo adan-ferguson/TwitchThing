@@ -3,7 +3,7 @@ const emitter = new EventEmitter()
 const log = require('fancy-log')
 
 const db = require('../db')
-const Twitch = require('../twitch/api')
+const TwitchApi = require('../twitch/api')
 
 /**
  * How often we update the isStreaming property for channels
@@ -13,6 +13,7 @@ const UPTIME_CHECK_FREQUENCY = 60
 
 const DEFAULTS = {
   name: '',
+  accessToken: null,
   enabled: true,
   isStreaming: false
 }
@@ -36,6 +37,13 @@ class Channel {
     return this.doc.name
   }
 
+  async accessTokenValid(){
+    if(!this.doc.accessToken){
+      return false
+    }
+    return await TwitchApi.validateAccessToken(this.doc.accessToken, this.name, true)
+  }
+
   async save(){
     await db.conn().collection('channels').replaceOne({ name: this.name }, this.doc)
     return this
@@ -48,7 +56,12 @@ class Channel {
 }
 
 function fixBackwardsCompatibility(channelDocument){
-  return Object.assign({}, DEFAULTS, channelDocument)
+  const doc = Object.assign({}, DEFAULTS, channelDocument)
+  if(doc.authToken){
+    doc.accessToken = doc.authToken
+    delete doc.authToken
+  }
+  return doc
 }
 
 /**
@@ -92,7 +105,7 @@ async function init(){
 
   async function update(){
     const channels = await loadAll()
-    const onlineStreams = await Twitch.getOnlineStreams(channels.map(channel => channel.name))
+    const onlineStreams = await TwitchApi.getOnlineStreams(channels.map(channel => channel.name))
     channels.forEach(channel => {
       const isStreaming = onlineStreams.find(name => name === channel.name) ? true : false
       if(isStreaming !== channel.doc.isStreaming){

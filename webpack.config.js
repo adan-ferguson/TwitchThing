@@ -3,7 +3,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-const HTML_FILES = ['index', 'twitchredirect']
+const HTML_FILES = ['index', 'loginredirect', 'channelauthredirect']
 const htmlPlugins = []
 HTML_FILES.forEach((file) => {
   htmlPlugins.push(
