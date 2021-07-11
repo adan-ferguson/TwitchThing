@@ -14,7 +14,7 @@ function copyAssets(){
     .pipe(gulp.dest('./client_dist/assets'))
 }
 
-exports.default = () => {
+exports.watch = () => {
   gulp.watch('./client/styles/**/*.sass', { ignoreInitial: false },function(cb){
     buildStyles()
     cb()
@@ -24,3 +24,5 @@ exports.default = () => {
     cb()
   })
 }
+
+exports.default = gulp.series(buildStyles, copyAssets)

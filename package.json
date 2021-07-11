@@ -7,12 +7,11 @@
     "url": "https://github.com/adan-ferguson/TwitchThing"
   },
   "scripts": {
+    "fullbuild": "gulp default && webpack --mode=production --node-env=production && pm2 stop ./app/server.js --name twitchthing && pm2 start twitchthing",
     "build": "webpack --mode=production --node-env=production",
-    "build:dev": "webpack --mode=development",
     "watch": "webpack --watch",
-    "gulp": "gulp",
-    "startdb": "mongod --dbpath db/data",
-    "startserver": "forever start server/index.js"
+    "gulpwatch": "gulp watch",
+    "startdb": "mongod --dbpath db/data"
   },
   "author": "Me LOL",
   "license": "ISC",
@@ -54,6 +53,7 @@
     "gulp-concat": "^2.6.1",
     "mongodb": "^3.6.9",
     "node-fetch": "^2.6.1",
+    "pm2": "^5.1.0",
     "request-promise-native": "^1.0.9",
     "socket.io": "^4.1.2",
     "socket.io-client": "^4.1.2",

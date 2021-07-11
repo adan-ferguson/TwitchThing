@@ -66,11 +66,21 @@ Header
 
 2021-07-07
 -----------
-- Get working on server
++ Get working on server
+
+
+2021-07-08
+-----------
+- Login button in different tab
+
+Register Channel Page
+- Make page
+
+Some sort of admin command page
+- Lazy button to Git pull, Rebuild webpack, Recompile styles, Restart self
 
 TODO
 -----------
-- Some sort of admin command page
 
 Register channels
 - Will need ngrok in order for this to not be annoying to test
@@ -79,6 +89,9 @@ Register channels
 - EventSub to registered channels for subs, channel points, cheers
 - List on homepage which registered channels are active
 
+- beta.coolzone.xyz w/ infinite money
+
+Start on an actual game
 - Experience bar
 - React element for bar
 - DB backups

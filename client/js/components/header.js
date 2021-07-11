@@ -67,7 +67,10 @@ export default class Header extends React.Component {
             ))
           }
         </div>
-        {React.createElement(TwitchMenuButton, { user: this.props.user })}
+        {React.createElement(TwitchMenuButton, {
+          user: this.props.user,
+          changePage: this.props.changePage
+        })}
       </div>
     )
   }

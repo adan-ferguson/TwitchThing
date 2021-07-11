@@ -13,6 +13,7 @@ const UPTIME_CHECK_FREQUENCY = 60
 
 const DEFAULTS = {
   name: '',
+  enabled: true,
   isStreaming: false
 }
 

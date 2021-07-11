@@ -1,4 +1,5 @@
 const express = require('express')
+const path = require('path')
 
 const Users = require('../collections/users')
 const Bonuses = require('../collections/bonuses')
@@ -21,4 +22,11 @@ router.post('/bonuses', async(req, res) => {
   res.send(bonuses)
 })
 
+router.get('/settings', (req, res) => {
+  res.sendFile(getHtml('settings'))
+})
+
+function getHtml(file){
+  return path.join(process.cwd(), 'client_dist', file + '.html')
+}
 module.exports = router

@@ -1,6 +1,7 @@
 const db = require('../db.js')
 const emit = require('../socketServer').emit
 const Bonuses = require('./bonuses')
+const Channels = require('./channels')
 const debounce = require('debounce')
 const log = require('fancy-log')
 

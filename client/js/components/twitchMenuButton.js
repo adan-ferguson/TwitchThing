@@ -6,7 +6,8 @@ export default class TwitchMenuButton extends React.Component {
 
   static get propTypes(){
     return {
-      user: PropTypes.instanceOf(User)
+      user: PropTypes.instanceOf(User),
+      changePage: PropTypes.func.isRequired
     }
   }
 
@@ -33,13 +34,7 @@ export default class TwitchMenuButton extends React.Component {
   _makeMenu(){
 
     const menuItems = []
-
-    // if(this.props.user.isChannelRegistered){
-    //   menuItems.push(<button key='unregister' onClick={this._unregister}>Unregister Your Channel</button>)
-    // }else{
-    //   menuItems.push(<button key='register' onClick={this._register}>Register Your Channel</button>)
-    // }
-
+    menuItems.push(<button key='settings' onClick={this.props.changePage()}>Settings</button>)
     menuItems.push(<button key='logout' onClick={this._logout}>Logout</button>)
 
     return (
@@ -49,14 +44,8 @@ export default class TwitchMenuButton extends React.Component {
     )
   }
 
-  _register = () => {
-    console.log('Register')
-    // Modal.show()
-  }
+  _settings = () => {
 
-  _unregister = () => {
-    console.log('Unregister')
-    // Modal.show()
   }
 
   _logout = () => {

@@ -5,16 +5,18 @@ export default class TwitchLoginLink extends React.Component {
 
   static get propTypes(){
     return {
-      loginLink: PropTypes.string,
-      stateID: PropTypes.string
+      loginLink: PropTypes.string.isRequired,
+      stateID: PropTypes.string.isRequired,
+      text: PropTypes.string,
+      redirectPage: PropTypes.string
     }
   }
 
   render(){
     if(this.props.loginLink && this.props.stateID) {
       return (
-        <a id='login-link' className='twitch-button' href={this.props.loginLink} onClick={this.loginClicked.bind(this)}>
-          <i className='fab fa-twitch'/> Log In with Twitch
+        <a id='login-link' className='twitch-button' href={this.props.loginLink} onClick={this.loginClicked.bind(this)} rel="noreferrer">
+          <i className='fab fa-twitch'/> {this.props.text || 'Log In with Twitch'}
         </a>
       )
     }else {
@@ -24,6 +26,6 @@ export default class TwitchLoginLink extends React.Component {
 
   loginClicked(){
     localStorage.stateID = this.props.stateID
-    localStorage.redirectTarget = window.location.pathname
+    localStorage.redirectPage = this.props.redirectPage
   }
 }

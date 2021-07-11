@@ -15,7 +15,7 @@
           }
         })
 
-        let redirectTarget = localStorage.redirectTarget || '/'
+        let redirectTarget = localStorage.redirectPage ? '/?page=' + localStorage.redirectPage : '/'
 
         if(localStorage.stateID && params.state === localStorage.stateID){
           localStorage.clear()
