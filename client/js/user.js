@@ -11,4 +11,8 @@ export default class User extends EventEmitter {
     this.data = args.newDoc
     this.emit('updated', args)
   }
+
+  isAdmin(){
+    return this.data.username === 'khananaphone'
+  }
 }

@@ -34,4 +34,8 @@ router.get('*', (req, res) => {
   res.redirect('/')
 })
 
+function getHtml(file){
+  return path.join(process.cwd(), '..', 'client_dist', file + '.html')
+}
+
 module.exports = router

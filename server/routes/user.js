@@ -1,8 +1,9 @@
 const express = require('express')
-const path = require('path')
 
 const Users = require('../collections/users')
 const Bonuses = require('../collections/bonuses')
+const Channels = require('../collections/channels')
+const TwitchApi = require('../twitch/api')
 
 const router = express.Router()
 
@@ -14,19 +15,31 @@ router.use(async (req, res, next) => {
   if(!user){
     res.status(401).send('User not found')
   }
+  req.user = user
   next()
 })
 
 router.post('/bonuses', async(req, res) => {
-  const bonuses = await Bonuses.loadRecent(req.session.username)
+  const bonuses = await Bonuses.loadRecent(req.user.username)
   res.send(bonuses)
 })
 
-router.get('/settings', (req, res) => {
-  res.sendFile(getHtml('settings'))
+router.post('/settings', async(req, res) => {
+
+  let channel = await Channels.load(req.user.username)
+
+  if(!channel){
+    const { loginLink, stateID } = TwitchApi.getLoginLink(req,true)
+    channel = {
+      requiresAuth: true,
+      loginLink,
+      stateID
+    }
+  }
+
+  res.send({
+    channel
+  })
 })
 
-function getHtml(file){
-  return path.join(process.cwd(), 'client_dist', file + '.html')
-}
 module.exports = router

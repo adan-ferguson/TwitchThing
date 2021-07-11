@@ -26,6 +26,6 @@ export default class TwitchLoginLink extends React.Component {
 
   loginClicked(){
     localStorage.stateID = this.props.stateID
-    localStorage.redirectPage = this.props.redirectPage
+    localStorage.redirectPage = this.props.redirectPage || ''
   }
 }

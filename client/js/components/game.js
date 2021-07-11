@@ -2,11 +2,16 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { CSSTransition } from 'react-transition-group'
 
+import User from '../user'
 import Header from './header'
 import Footer from './footer'
+import Bonuses from './pages/bonuses'
+import DevNotes from './pages/devnotes'
 import Main from './pages/main'
 
-import User from '../user'
+import Settings from './pages/settings'
+
+const pageList = { Bonuses, DevNotes, Main, Settings }
 
 const T_SPEED = 300
 
@@ -21,7 +26,7 @@ export default class Game extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      page: this.setPage(Main, {}, false),
+      page: this.setPage(getInitialPage(), {}, false),
       pageReady: false
     }
   }
@@ -63,4 +68,11 @@ export default class Game extends React.Component {
 
     return page
   }
+}
+
+function getInitialPage(){
+  let initialPage = (new URLSearchParams(window.location.search)).get('page') || 'Main'
+  initialPage = initialPage.toLowerCase()
+  initialPage = initialPage.slice(0, 1).toUpperCase() + initialPage.slice(1)
+  return pageList[initialPage] || Main
 }

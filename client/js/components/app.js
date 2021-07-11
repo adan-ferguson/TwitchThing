@@ -11,6 +11,7 @@ export default class App extends React.Component {
       user: null,
       shouldLogIn: false
     }
+    this._loadUser()
   }
 
   render(){
@@ -19,17 +20,15 @@ export default class App extends React.Component {
     }else if(this.state.shouldLogIn){
       return createLoginLink()
     }else{
-      return <div/>
+      return <p className='loading'>Loading...</p>
     }
   }
 
-  async componentDidMount() {
-
+  async _loadUser() {
     const user = await loadUser()
     this.setState({ loading: false })
     setTimeout(() => {
       this.setState({ user: user, shouldLogIn: user ? false : true })
     }, 300)
-
   }
 }

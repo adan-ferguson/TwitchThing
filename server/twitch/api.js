@@ -5,6 +5,8 @@ const log = require('fancy-log')
 
 let appAccessToken = null
 
+const ADVANCED_SCOPE = ['channel:read:redemptions'].join(' ')
+
 async function getUserInfo(accessToken){
   try {
     let resp = await fetch('https://api.twitch.tv/helix/users',{
@@ -25,13 +27,13 @@ async function getUserInfo(accessToken){
   }
 }
 
-function getLoginLink(){
+function getLoginLink(req, advancedScope = false){
   let stateID = guid()
   let obj = {
     client_id: config.twitch.clientID,
-    redirect_uri: `${config.serverURL}/twitchredirect`,
+    redirect_uri: `${req.headers.origin}/twitchredirect`,
     response_type: 'token',
-    scope: '',
+    scope: advancedScope ? ADVANCED_SCOPE : '',
     state: stateID
   }
   return  {
