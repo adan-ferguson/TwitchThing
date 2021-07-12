@@ -1,4 +1,5 @@
 const express = require('express')
+const log = require('fancy-log')
 
 const Users = require('../collections/users')
 const Bonuses = require('../collections/bonuses')
@@ -45,6 +46,7 @@ router.post('/settings', async(req, res) => {
 })
 
 router.post('/savechannelauth', async(req, res) => {
+  log('channel auth', req.user.username, req.body)
   let channel = await Channels.load(req.user.username)
   if(!channel){
     channel = await Channels.add(req.user.username)
