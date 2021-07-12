@@ -7,7 +7,7 @@
     "url": "https://github.com/adan-ferguson/TwitchThing"
   },
   "scripts": {
-    "fullbuild": "gulp default && webpack --mode=production --node-env=production && pm2 stop ./app/server.js --name twitchthing && pm2 start twitchthing",
+    "fullbuild": "npx gulp default && npx webpack --mode=production --node-env=production && npx pm2 stop ./app/server.js --name twitchthing && npx pm2 start twitchthing",
     "build": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch",
     "gulpwatch": "gulp watch",
