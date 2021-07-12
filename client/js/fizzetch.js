@@ -6,5 +6,9 @@ export async function post(url, data){
     },
     body: JSON.stringify(data)
   })
-  return await resp.json()
+  try {
+    return await resp.json()
+  }catch(e){
+    return resp
+  }
 }

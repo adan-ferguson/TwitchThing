@@ -44,6 +44,11 @@ class Channel {
     return await TwitchApi.validateAccessToken(this.doc.accessToken, this.name, true)
   }
 
+  async update(changes){
+    Object.assign(this.doc, changes)
+    await this.save()
+  }
+
   async save(){
     await db.conn().collection('channels').replaceOne({ name: this.name }, this.doc)
     return this

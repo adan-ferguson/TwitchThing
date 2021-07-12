@@ -9,11 +9,11 @@ const router = express.Router()
 
 router.use(async (req, res, next) => {
   if(!req.session.username){
-    res.status(401).send('Not logged in')
+    return res.status(401).send('Not logged in')
   }
   const user = await Users.load(req.session.username)
   if(!user){
-    res.status(401).send('User not found')
+    return res.status(401).send('User not found')
   }
   req.user = user
   next()
@@ -51,6 +51,15 @@ router.post('/savechannelauth', async(req, res) => {
   }
   channel.doc.accesToken = req.body.access_token
   channel.save()
+  res.send(200)
+})
+
+router.post('/updatechannel', async(req, res) => {
+  let channel = await Channels.load(req.user.username)
+  if(!channel){
+    return res.code(401)
+  }
+  channel.update(req.body)
   res.send(200)
 })
 

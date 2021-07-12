@@ -2,6 +2,8 @@ import React from 'react'
 import Page from '../page'
 import TwitchLoginLink from '../twitchLoginLink'
 import { post } from '../../fizzetch'
+import ChannelSettings from '../channelSettings'
+import Channel from '../../channel'
 
 export default class Main extends Page {
 
@@ -16,40 +18,18 @@ export default class Main extends Page {
     return <div className='settings'>{this._renderSettings()}</div>
   }
 
-  _renderSettings(){
+  _renderSettings() {
 
-    if(!this.state.settings){
+    if (!this.state.settings) {
       return
     }
 
-    if(!this.props.user.isAdmin){
+    if (!this.props.user.isAdmin) {
       return <div>No settings LOL</div>
     }
 
-    if(this.state.settings.channel.requiresAuth){
-      return (
-        <div>
-          <p>
-            Write diatribe here LOL
-          </p>
-          {this._authLink()}
-        </div>
-      )
-    }
-
-    return (
-      <div>
-        Channel is registered
-      </div>
-    )
-  }
-
-  _authLink(){
-    return React.createElement(TwitchLoginLink, {
-      loginLink: this.state.settings.channel.loginLink,
-      stateID: this.state.settings.channel.stateID,
-      text: 'Authorize with Twitch',
-      redirectPage: 'Settings'
+    return React.createElement(ChannelSettings, {
+      channel: new Channel(this.state.settings.channel)
     })
   }
 

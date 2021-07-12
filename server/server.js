@@ -19,9 +19,9 @@ async function init(){
   const app = express()
     .use(sessionMiddlware)
     .use(express.json())
-    .use('', express.static(path.join(__dirname, '..', 'client_dist')))
+    .use('/', express.static(path.join(__dirname, '..', 'client_dist')))
     .use('/', require('./routes/public.js'))
-    .use('/user/', require('./routes/user.js'))
+    .use('/user', require('./routes/user.js'))
 
 
   try {
