@@ -7,26 +7,32 @@ export default class ChannelSettings extends React.Component {
 
   static get propTypes(){
     return {
-      channel: PropTypes.instanceOf(Channel).isRequired
+      channelSettings: PropTypes.object
     }
   }
 
   constructor(props){
     super(props)
-    this.state = {
-      enabled: this.props.channel.doc.enabled
+    if(props.channelSettings.authRequired){
+      this.state = {
+        authRequired: props.channelSettings.authRequired
+      }
+    }else{
+      this.state = {
+        channel: new Channel(props.channelSettings.channelDocument)
+      }
     }
   }
 
   render(){
 
-    if(this.props.channel.requiresAuth){
+    if(this.state.authRequired){
       return (
         <div>
           <p>
             Write diatribe here LOL
           </p>
-          {_authLink(this.props.channel)}
+          {_authLink(this.state.authRequired)}
         </div>
       )
     }
@@ -38,12 +44,10 @@ export default class ChannelSettings extends React.Component {
         </p>
         <label>
           Enabled
-          <input type='checkbox' checked={this.state.enabled} onChange={e => {
+          <input type='checkbox' checked={this.state.channel.doc.enabled} onChange={e => {
             const checked = e.target.checked
-            this.props.channel.setEnabled(checked)
-            this.setState({
-              enabled: checked
-            })
+            this.state.channel.setEnabled(checked)
+            this.forceUpdate()
           }}/>
         </label>
       </div>
@@ -51,10 +55,10 @@ export default class ChannelSettings extends React.Component {
   }
 }
 
-function _authLink(channel){
+function _authLink(auth){
   return React.createElement(TwitchLoginLink, {
-    loginLink: channel.loginLink,
-    stateID: channel.stateID,
+    loginLink: auth.loginLink,
+    stateID: auth.stateID,
     text: 'Authorize with Twitch',
     redirectPage: 'Settings'
   })

@@ -27,20 +27,20 @@ router.post('/bonuses', async(req, res) => {
 router.post('/settings', async(req, res) => {
 
   let channel = await Channels.load(req.user.username)
+  const channelSettings = {}
 
   if(!channel || !await channel.accessTokenValid()){
     const { loginLink, stateID } = TwitchApi.getChannelAuthLink(req)
-    channel = {
-      requiresAuth: true,
+    channelSettings.authRequired = {
       loginLink,
       stateID
     }
   }else{
-    channel = channel.doc
+    channelSettings.channelDocument = channel.doc
   }
 
   res.send({
-    channel
+    channelSettings
   })
 })
 

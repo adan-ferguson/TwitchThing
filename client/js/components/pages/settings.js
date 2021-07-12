@@ -29,7 +29,7 @@ export default class Main extends Page {
     }
 
     return React.createElement(ChannelSettings, {
-      channel: new Channel(this.state.settings.channel)
+      channelSettings: this.state.settings.channelSettings
     })
   }
 

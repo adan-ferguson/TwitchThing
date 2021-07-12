@@ -36,14 +36,14 @@ export default class Game extends React.Component {
       <CSSTransition appear in={true} classNames='fade' timeout={T_SPEED}>
         <div className='game'>
           <Header currentPage={this.state.page} changePage={this.setPage} user={this.props.user}/>
-          <CSSTransition in={this.state.pageReady} classNames='fade' timeout={T_SPEED}>
-            <div className='page'>
-              {this.state.page}
-            </div>
-          </CSSTransition>
           <CSSTransition in={!this.state.pageReady} classNames='fade' timeout={T_SPEED}>
             <div className='loading'>
               Loading...
+            </div>
+          </CSSTransition>
+          <CSSTransition in={this.state.pageReady} classNames='fade' timeout={T_SPEED}>
+            <div className='page'>
+              {this.state.page}
             </div>
           </CSSTransition>
           <Footer user={this.props.user}/>

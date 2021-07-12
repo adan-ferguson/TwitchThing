@@ -87,6 +87,9 @@ Register Channels (admin only for now)
 
 TODO
 -----------
+- DB backups
+- Try to find bestofnes db??
+
 Some sort of admin command page
 - Lazy button to Git pull, Rebuild webpack, Recompile styles, Restart self
 
@@ -101,7 +104,6 @@ Register channels (admin only for now)
 Start on an actual game
 - Experience bar
 - React element for bar
-- DB backups
 
 - Character creation/editing
 - Beta testing version of app w/ infinite gold
