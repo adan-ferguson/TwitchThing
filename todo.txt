@@ -82,7 +82,8 @@ Register Channels (admin only for now)
 
 2021-07-11
 ----------
-- Allow people to enabled/disable their channel connection
++ Allow people to enabled/disable their channel connection
+- EventSub listen for channel points redemptions
 
 TODO
 -----------
@@ -90,9 +91,10 @@ Some sort of admin command page
 - Lazy button to Git pull, Rebuild webpack, Recompile styles, Restart self
 
 Register channels (admin only for now)
-- Allow people to register/unregister their channel
 - EventSub to registered channels for subs, channel points, cheers
 - List on homepage which registered channels are active
+
+- Debugging for access tokens
 
 - beta.coolzone.xyz w/ infinite money
 

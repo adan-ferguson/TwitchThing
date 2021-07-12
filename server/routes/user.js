@@ -49,8 +49,7 @@ router.post('/savechannelauth', async(req, res) => {
   if(!channel){
     channel = await Channels.add(req.user.username)
   }
-  channel.doc.accesToken = req.body.access_token
-  channel.save()
+  await channel.updateAccessToken(req.body.access_token)
   res.send(200)
 })
 

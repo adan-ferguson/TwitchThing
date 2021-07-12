@@ -4,6 +4,7 @@ const log = require('fancy-log')
 
 const db = require('../db')
 const TwitchApi = require('../twitch/api')
+const TwitchEventSub = require('../twitch/eventsub')
 
 /**
  * How often we update the isStreaming property for channels
@@ -42,6 +43,14 @@ class Channel {
       return false
     }
     return await TwitchApi.validateAccessToken(this.doc.accessToken, this.name, true)
+  }
+
+  async updateAccessToken(newToken){
+    if(!newToken){
+      throw 'Oh no! Token bad!'
+    }
+    await this.update({ accessToken: newToken })
+    // TwitchEventSub.subscribeToEvents(this)
   }
 
   async update(changes){
