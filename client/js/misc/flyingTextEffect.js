@@ -1,7 +1,7 @@
 const DEFAULTS = {
   direction: 'up',
   color: 'black',
-  distance: 5,
+  distance: 25,
   duration: 3000
 }
 

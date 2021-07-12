@@ -22,6 +22,7 @@ function setup(server, sessionMiddleware){
 
 function emit(roomname, eventName, data = {}){
   io.to(roomname).emit(eventName, data)
+  log(roomname, eventName, data)
 }
 
 module.exports = {

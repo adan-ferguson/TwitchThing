@@ -22,7 +22,7 @@ async function init(){
     .use('/', express.static(path.join(__dirname, '..', 'client_dist')))
     .use('/', require('./routes/public.js'))
     .use('/user', require('./routes/user.js'))
-    .use('/channel', require('./routes/channel.js'))
+    // .use('/channel', require('./routes/channel.js'))
 
 
   try {

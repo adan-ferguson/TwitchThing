@@ -5,6 +5,8 @@ export default class DevNotes extends Page {
   render(){
     return (
       <div className='dev-notes'>
+        <h3>2021-07-11</h3>
+        <p>A bunch of whatnot</p>
         <h3>2021-07-06</h3>
         <p>Set up a bunch of stuff</p>
         <ul>

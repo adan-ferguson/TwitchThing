@@ -34,9 +34,11 @@ async function init(){
     }
 
     const channel = await Channels.load(channelName.substring(1))
-    if(!channel || !channel.doc.isStreaming || !channel.doc.enabled) {
+    if(!channel || /*!channel.doc.isStreaming ||*/ !channel.doc.enabled) {
       return
     }
+
+    console.log('chatted', user.username)
 
     user.checkForChatBonus(channel)
   })
