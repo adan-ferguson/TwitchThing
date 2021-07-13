@@ -29,7 +29,6 @@ router.get('/', (req, res) => {
 
 router.get('*', (req, res) => {
   const file = getHtml(req.url)
-  console.log('file:', file)
   if(fs.existsSync(file)){
     res.sendFile(file)
   }else{

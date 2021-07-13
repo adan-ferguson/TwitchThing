@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import User from '../user'
+import Admin from './pages/admin'
 import Settings from './pages/settings'
 
 export default class TwitchMenuButton extends React.Component {
@@ -35,6 +36,11 @@ export default class TwitchMenuButton extends React.Component {
   _makeMenu(){
 
     const menuItems = []
+
+    if(this.props.user.isAdmin){
+      menuItems.push(<button key='admin' onClick={() => this.props.changePage(Admin)}>Admin</button>)
+    }
+
     menuItems.push(<button key='settings' onClick={() => this.props.changePage(Settings)}>Settings</button>)
     menuItems.push(<button key='logout' onClick={this._logout}>Logout</button>)
 

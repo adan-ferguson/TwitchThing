@@ -83,15 +83,17 @@ Register Channels (admin only for now)
 2021-07-11
 ----------
 + Allow people to enabled/disable their channel connection
-- EventSub listen for channel points redemptions
++ Crapload of server config
+
+2021-07-12
+----------
++ DB backups (crappy)
++ Some sort of admin command page
 
 TODO
 -----------
-- DB backups
-- Try to find bestofnes db??
+- EventSub listen for channel points redemptions
 
-Some sort of admin command page
-- Lazy button to Git pull, Rebuild webpack, Recompile styles, Restart self
 
 Register channels (admin only for now)
 - EventSub to registered channels for subs, channel points, cheers

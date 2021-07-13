@@ -5,13 +5,13 @@ import { CSSTransition } from 'react-transition-group'
 import User from '../user'
 import Header from './header'
 import Footer from './footer'
+
 import Bonuses from './pages/bonuses'
 import DevNotes from './pages/devnotes'
 import Main from './pages/main'
-
+import Admin from './pages/admin'
 import Settings from './pages/settings'
-
-const pageList = { Bonuses, DevNotes, Main, Settings }
+const pageList = { Bonuses, DevNotes, Main, Settings, Admin }
 
 const T_SPEED = 300
 

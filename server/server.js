@@ -20,9 +20,10 @@ async function init(){
     .use(sessionMiddlware)
     .use(express.json())
     .use('/', express.static(path.join(__dirname, '..', 'client_dist')))
-    .use('/', require('./routes/public.js'))
     .use('/user', require('./routes/user.js'))
+    .use('/admin', require('./routes/admin.js'))
     // .use('/channel', require('./routes/channel.js'))
+    .use('/', require('./routes/public.js'))
 
 
   try {
