@@ -1,5 +1,5 @@
 import React from 'react'
-import Page from '../page'
+import Page from '../page.js'
 
 export default class Admin extends Page {
   render(){

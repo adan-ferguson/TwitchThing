@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import User from '../user'
-import FlyingTextEffect from '../misc/flyingTextEffect'
+import User from '../user.js'
+import FlyingTextEffect from '../misc/flyingTextEffect.js'
 
 export default class Footer extends React.Component {
 

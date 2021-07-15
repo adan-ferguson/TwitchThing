@@ -1,6 +1,6 @@
 import React from 'react'
-import Game from './game'
-import { loadUser, createLoginLink } from '../twitch'
+import Game from './game.js'
+import { loadUser, createLoginLink } from '../twitch.js'
 
 export default class App extends React.Component {
 

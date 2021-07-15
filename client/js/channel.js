@@ -1,4 +1,4 @@
-import { post } from './fizzetch'
+import { post } from './fizzetch.js'
 
 export default class Channel {
 

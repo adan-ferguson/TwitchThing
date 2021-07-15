@@ -1,6 +1,6 @@
 import React from 'react'
-import Page from '../page'
-import MakeCharacter from './makeCharacter'
+import Page from '../page.js'
+import MakeCharacter from './makeCharacter.js'
 
 export default class Main extends Page {
 

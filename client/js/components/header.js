@@ -1,12 +1,12 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Main from './pages/main'
-import Bonuses from './pages/bonuses'
-import DevNotes from './pages/devnotes'
+import Main from './pages/main.js'
+import Bonuses from './pages/bonuses.js'
+import DevNotes from './pages/devnotes.js'
 
-import TwitchMenuButton from './twitchMenuButton'
-import User from '../user'
+import TwitchMenuButton from './twitchMenuButton.js'
+import User from '../user.js'
 
 const TABS = [
   { tabName: 'Game', PageType: Main },

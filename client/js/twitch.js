@@ -1,8 +1,8 @@
 import React from 'react'
-import { post } from './fizzetch'
-import TwitchLoginLink from './components/twitchLoginLink'
-import User from './user'
-import { setupUser } from './socketClient'
+import { post } from './fizzetch.js'
+import TwitchLoginLink from './components/twitchLoginLink.js'
+import User from './user.js'
+import { setupUser } from './socketClient.js'
 
 let userJson
 

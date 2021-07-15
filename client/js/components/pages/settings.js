@@ -1,9 +1,7 @@
 import React from 'react'
-import Page from '../page'
-import TwitchLoginLink from '../twitchLoginLink'
-import { post } from '../../fizzetch'
-import ChannelSettings from '../channelSettings'
-import Channel from '../../channel'
+import Page from '../page.js'
+import { post } from '../../fizzetch.js'
+import ChannelSettings from '../channelSettings.js'
 
 export default class Main extends Page {
 

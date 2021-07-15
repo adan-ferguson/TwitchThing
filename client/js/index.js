@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import App from './components/app'
-import './loadIcons'
-import { connect } from './socketClient'
+import App from './components/app.js'
+import './loadIcons.js'
+import { connect } from './socketClient.js'
 
 connect()
 

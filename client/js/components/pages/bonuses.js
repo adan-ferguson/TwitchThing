@@ -1,8 +1,8 @@
 import React from 'react'
-import Page from '../page'
-import { post } from '../../fizzetch'
 import PropTypes from 'prop-types'
-import { getSocket } from '../../socketClient'
+import Page from '../page.js'
+import { post } from '../../fizzetch.js'
+import { getSocket } from '../../socketClient.js'
 
 export default class Bonuses extends Page {
 

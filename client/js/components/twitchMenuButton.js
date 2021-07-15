@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import User from '../user'
-import Admin from './pages/admin'
-import Settings from './pages/settings'
+import User from '../user.js'
+import Admin from './pages/admin.js'
+import Settings from './pages/settings.js'
 
 export default class TwitchMenuButton extends React.Component {
 

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Channel from '../channel'
-import TwitchLoginLink from './twitchLoginLink'
+import Channel from '../channel.js'
+import TwitchLoginLink from './twitchLoginLink.js'
 
 export default class ChannelSettings extends React.Component {
 
