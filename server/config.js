@@ -1,5 +1,4 @@
-const options = require('../config.json')
-const packageOptions = require('../package.json')
+import options from '../config.js'
 
 const defaults = {
   port: 8080,
@@ -7,7 +6,6 @@ const defaults = {
     port: 27017,
     name: 'thing'
   },
-  name: packageOptions.name,
   twitch: {
     clientID: null,
     clientSecret: null
@@ -21,27 +19,27 @@ const defaults = {
 }
 
 if(!options.secret){
-  throw 'config.json requires a "secret" value, this can just be any string.'
+  throw 'config.js requires a "secret" value, this can just be any string.'
 }
 
 if(!options.twitch.clientID){
-  throw 'config.json requires  "twitch.clientID" value'
+  throw 'config.js requires  "twitch.clientID" value'
 }
 
 if(!options.serverURL){
-  throw 'config.json requires  "serverURL" value'
+  throw 'config.js requires  "serverURL" value'
 }
 
 if(!options.twitch.clientSecret){
-  throw 'config.json requires  "twitch.clientSecret" value'
+  throw 'config.js requires  "twitch.clientSecret" value'
 }
 
 // if(!options.chatbot.username){
-//   throw 'config.json requires "twitch.username" value'
+//   throw 'config.js requires "twitch.username" value'
 // }
 //
 // if(options.chatbot.password){
-//   throw 'config.json requires "twitch.password" value'
+//   throw 'config.js requires "twitch.password" value'
 // }
 
-module.exports = Object.assign(defaults, options)
+export default Object.assign(defaults, options)

@@ -1,9 +1,13 @@
-const express = require('express')
-const session = require('express-session')
-const path = require('path')
-const log = require('fancy-log')
+import express from 'express'
+import session from 'express-session'
+import log from 'fancy-log'
 
-const config = require('../config.json')
+import userRouter from './routes/user.js'
+import adminRouter from './routes/admin.js'
+import publicRouter from './routes/public.js'
+
+import { setup as setupSocketServer } from './socketServer.js'
+import config from '../config.js'
 
 async function init(){
 
@@ -19,24 +23,22 @@ async function init(){
   const app = express()
     .use(sessionMiddlware)
     .use(express.json())
-    .use('/', express.static(path.join(__dirname, '..', 'client_dist')))
-    .use('/user', require('./routes/user.js'))
-    .use('/admin', require('./routes/admin.js'))
-    // .use('/channel', require('./routes/channel.js'))
-    .use('/', require('./routes/public.js'))
+    .use('/', express.static('client_dist'))
+    .use('/user', userRouter)
+    .use('/admin', adminRouter)
+    // .use('/channel', import('./routes/channel.js'))
+    .use('/', publicRouter)
 
 
   try {
     const server = app.listen(config.port, () => {
       log('Server running', config.port)
     })
-    require('./socketServer').setup(server, sessionMiddlware)
+    setupSocketServer(server, sessionMiddlware)
   }catch(ex){
     log(ex)
     log('Server failed to load.')
   }
 }
 
-module.exports = {
-  init
-}
+export default { init }

@@ -1,9 +1,9 @@
-const SocketServer = require('socket.io').Server
-const log = require('fancy-log')
+import { Server as SocketServer } from 'socket.io'
+import log from 'fancy-log'
 
 let io
 
-function setup(server, sessionMiddleware){
+export function setup(server, sessionMiddleware){
 
   io = new SocketServer(server)
 
@@ -20,12 +20,7 @@ function setup(server, sessionMiddleware){
   })
 }
 
-function emit(roomname, eventName, data = {}){
+export function emit(roomname, eventName, data = {}){
   io.to(roomname).emit(eventName, data)
   log(roomname, eventName, data)
-}
-
-module.exports = {
-  setup,
-  emit
 }

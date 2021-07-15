@@ -1,7 +1,7 @@
-const { Client } = require('tmi.js')
-const Channels = require('../collections/channels')
-const User = require('../collections/users')
-const log = require('fancy-log')
+import { Client } from 'tmi.js'
+import Channels from '../collections/channels.js'
+import User from '../collections/users.js'
+import log from 'fancy-log'
 
 async function init(){
 
@@ -46,4 +46,4 @@ async function init(){
   log('Chatbot initialized')
 }
 
-module.exports = { init }
+export default { init }

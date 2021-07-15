@@ -1,5 +1,5 @@
-const fetch = require('node-fetch')
-const config = require('../config.js')
+import fetch from 'node-fetch'
+import config from '../config.js'
 
 async function subscribeToEvents(channel){
 
@@ -22,6 +22,6 @@ async function subscribeToEvents(channel){
   // }
 }
 
-module.exports = {
+export default {
   subscribeToEvents
 }

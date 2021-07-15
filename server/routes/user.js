@@ -1,10 +1,10 @@
-const express = require('express')
-const log = require('fancy-log')
+import express from 'express'
+import log from 'fancy-log'
 
-const Users = require('../collections/users')
-const Bonuses = require('../collections/bonuses')
-const Channels = require('../collections/channels')
-const TwitchApi = require('../twitch/api')
+import Users from '../collections/users.js'
+import Bonuses from '../collections/bonuses.js'
+import Channels from '../collections/channels.js'
+import TwitchApi from '../twitch/api.js'
 
 const router = express.Router()
 
@@ -63,4 +63,4 @@ router.post('/updatechannel', async(req, res) => {
   res.send(200)
 })
 
-module.exports = router
+export default router

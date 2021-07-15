@@ -1,10 +1,10 @@
-const { EventEmitter } = new require('events')
-const emitter = new EventEmitter()
-const log = require('fancy-log')
+import Events from 'events'
+const emitter = new Events()
 
-const db = require('../db')
-const TwitchApi = require('../twitch/api')
-const TwitchEventSub = require('../twitch/eventsub')
+import log from 'fancy-log'
+import db from '../db.js'
+import TwitchApi from '../twitch/api.js'
+import TwitchEventSub from '../twitch/eventsub.js'
 
 /**
  * How often we update the isStreaming property for channels
@@ -130,7 +130,7 @@ async function init(){
   }
 }
 
-module.exports = {
+export default {
   on: emitter.on,
   add,
   load,

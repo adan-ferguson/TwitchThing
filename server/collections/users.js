@@ -1,8 +1,8 @@
-const db = require('../db.js')
-const emit = require('../socketServer').emit
-const Bonuses = require('./bonuses')
-const debounce = require('debounce')
-const log = require('fancy-log')
+import db from '../db.js'
+import { emit } from '../socketServer.js'
+import Bonuses from './bonuses.js'
+import debounce from 'debounce'
+import log from 'fancy-log'
 
 const DEFAULTS = {
   username: '',
@@ -105,4 +105,4 @@ function fixBackwardsCompatibility(doc){
   return Object.assign({}, DEFAULTS, doc)
 }
 
-module.exports = { load, create }
+export default { load, create }

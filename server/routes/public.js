@@ -1,9 +1,9 @@
-const express = require('express')
-const path = require('path')
-const fs = require('fs')
-const Twitch = require('../twitch/api')
+import express from 'express'
+import path from 'path'
+import fs from 'fs'
+import Twitch from '../twitch/api.js'
 
-const Users = require('../collections/users')
+import Users from '../collections/users.js'
 
 const router = express.Router()
 
@@ -40,4 +40,4 @@ function getHtml(file){
   return path.join(__dirname, '..', '..', 'client_dist', file + '.html')
 }
 
-module.exports = router
+export default router

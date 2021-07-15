@@ -1,13 +1,12 @@
-const MongoDB = require('mongodb')
-const MongoClient = MongoDB.MongoClient
-const config = require('./config.js')
-const log = require('fancy-log')
+import MongoDB from 'mongodb'
+import config from './config.js'
+import log from 'fancy-log'
 
 let connection
 
 const init = async () => {
   try {
-    let client =  await MongoClient.connect(`mongodb://localhost:${config.db.port}`, {
+    let client =  await MongoDB.MongoClient.connect(`mongodb://localhost:${config.db.port}`, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     })
@@ -20,7 +19,7 @@ const init = async () => {
 
 const id = id => MongoDB.ObjectID(id)
 
-module.exports = {
+export default {
   init,
   conn: () => connection,
   id

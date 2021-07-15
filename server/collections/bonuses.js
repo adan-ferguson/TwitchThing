@@ -1,4 +1,4 @@
-const db = require('../db.js')
+import db from '../db.js'
 
 /**
  * How often a user can get a bonus for chatting in any registered channel.
@@ -150,7 +150,7 @@ async function loadRecent(username, page = 0, pageSize = 100){
     .toArray()
 }
 
-module.exports = {
+export default {
   giveChannelChatBonus,
   giveChatBonus,
   loadRecent

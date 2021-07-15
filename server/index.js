@@ -1,8 +1,8 @@
-const Chatbot = require('./twitch/chatbot')
-const Channels = require('./collections/channels')
-const Server = require('./server')
-const db = require('./db')
-const log = require('fancy-log')
+import Chatbot from './twitch/chatbot.js'
+import Channels from './collections/channels.js'
+import Server from './server.js'
+import db from './db.js'
+import log from 'fancy-log'
 
 db.init().then(async () => {
   await Channels.init()

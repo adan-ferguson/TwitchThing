@@ -1,7 +1,7 @@
-const fetch = require('node-fetch')
-const config = require('../config.js')
-const { v4: guid } = require('uuid')
-const log = require('fancy-log')
+import fetch from 'node-fetch'
+import config from '../config.js'
+import { v4 as guid } from 'uuid'
+import log from 'fancy-log'
 
 let appAccessToken = null
 
@@ -154,7 +154,7 @@ function jsonToQueryString(json) {
   }).join('&')
 }
 
-module.exports = {
+export default {
   getLoginLink,
   getChannelAuthLink,
   getUserInfo,

@@ -94,7 +94,8 @@ Register Channels (admin only for now)
 ----------
 - User money -> resources object
 - Characters collection
-- Tests so it's easier to test stuff
+- Switch node to es6 modules
+- "Shared" folder for data both sides need
 
 TODO
 -----------

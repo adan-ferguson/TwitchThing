@@ -1,5 +1,5 @@
-const express = require('express')
-const log = require('fancy-log')
+import express from 'express'
+import log from 'fancy-log'
 
 const router = express.Router()
 
@@ -19,4 +19,4 @@ router.get('/*', (req, res) => {
   res.status(403).send('Forbidden')
 })
 
-module.exports = router
+export default  router
