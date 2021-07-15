@@ -90,10 +90,15 @@ Register Channels (admin only for now)
 + DB backups (crappy)
 + Some sort of admin command page
 
+2021-07-14
+----------
+- User money -> resources object
+- Characters collection
+- Tests so it's easier to test stuff
+
 TODO
 -----------
 - EventSub listen for channel points redemptions
-
 
 Register channels (admin only for now)
 - EventSub to registered channels for subs, channel points, cheers
@@ -103,7 +108,6 @@ Register channels (admin only for now)
 
 - beta.coolzone.xyz w/ infinite money
 
-Start on an actual game
 - Experience bar
 - React element for bar
 

@@ -45,7 +45,8 @@ class Bonus {
       username: user.username, channelname, type, amount, date: new Date()
     })
     await db.conn().collection('bonuses').insertOne(bonus.doc)
-    user.update({ money: user.doc.money + amount })
+    user.doc.resources.money += amount
+    user.save()
     user.emit('bonus granted', bonus.doc)
     return bonus
   }

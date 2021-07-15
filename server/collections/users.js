@@ -1,15 +1,15 @@
 const db = require('../db.js')
 const emit = require('../socketServer').emit
 const Bonuses = require('./bonuses')
-const Channels = require('./channels')
 const debounce = require('debounce')
 const log = require('fancy-log')
 
 const DEFAULTS = {
   username: '',
   displayname: '',
-  exp: 0,
-  money: 100
+  resources: {
+    money: 100
+  }
 }
 
 class User {
@@ -26,30 +26,17 @@ class User {
   constructor(userDocument){
     this.oldDoc = fixBackwardsCompatibility(userDocument)
     this.doc = Object.assign({}, this.oldDoc)
-    this._save = debounce(this._save, 200)
+    this.save = debounce(this.save, 100)
   }
 
   get username(){
     return this.doc.username
   }
 
-  update(changes){
-    Object.assign(this.doc, changes)
-    this._save()
-  }
-
-  _save(){
-    const diff = calcDiff(this.doc, this.oldDoc)
-    if(!Object.keys(diff).length){
-      return
-    }
-
+  save(){
     db.conn().collection('users').replaceOne({ username: this.username }, this.doc)
+    this._resourcesUpdated()
     this.oldDoc = Object.assign({}, this.doc)
-    this.emit('updated', {
-      diff: diff,
-      newDoc: this.doc
-    })
   }
 
   async gameData(){
@@ -65,14 +52,18 @@ class User {
     log(this.username, eventName, data)
     emit(this.username, eventName, data)
   }
-}
 
-function fixBackwardsCompatibility(doc){
-  if(doc.twitchInfo){
-    doc.displayname = doc.twitchInfo.display_name
-    delete doc.twitchInfo
+  _resourcesUpdated(){
+    const resourcesDiff = calcDiff(this.doc.resources, this.oldDoc.resources)
+    if(!Object.keys(resourcesDiff).length){
+      return
+    }
+    this.emit('resources_updated', {
+      diff: resourcesDiff,
+      oldVals: this.oldDoc.resources,
+      newVals: this.doc.resources
+    })
   }
-  return Object.assign({}, DEFAULTS, doc)
 }
 
 function calcDiff(newObj, oldObj){
@@ -97,6 +88,21 @@ async function load(username){
 
 async function create(twitchInfo){
   return User.createNew(twitchInfo)
+}
+
+function fixBackwardsCompatibility(doc){
+  if(doc.twitchInfo){
+    doc.displayname = doc.twitchInfo.display_name
+    delete doc.twitchInfo
+  }
+  if(doc.money){
+    doc.resources = {
+      money: doc.money
+    }
+    delete doc.money
+  }
+  delete doc.exp
+  return Object.assign({}, DEFAULTS, doc)
 }
 
 module.exports = { load, create }
