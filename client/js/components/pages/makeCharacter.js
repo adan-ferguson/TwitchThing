@@ -2,7 +2,7 @@ import React from 'react'
 import Page from '../page.js'
 import { showLoader, hideLoader } from '../../misc/loaderOverlay.js'
 import { post } from '../../fizzetch.js'
-import Character from '../../character.js'
+import Character from '/game/character.js'
 
 export default class Main extends Page {
 

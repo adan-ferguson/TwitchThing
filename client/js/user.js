@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events'
-import Character from './character.js'
+import Character from '/game/character.js'
 
 export default class User extends EventEmitter {
 
