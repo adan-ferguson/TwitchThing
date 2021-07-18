@@ -1,5 +1,6 @@
 import db from '../db.js'
 import log from 'fancy-log'
+import debounce from 'debounce'
 
 const DEFAULTS = {
   name: '',
@@ -15,12 +16,12 @@ class Character {
   static async createNew(user, characterName){
 
     if(await load(characterName)){
-      throw `Character with name ${characterName} already exists.`
+      throw { name: `Character with name ${characterName} already exists.` }
     }
 
     const character = new Character(Object.assign({}, DEFAULTS, {
-      name: characterName.toLowerCase(),
-      username: user.name.toLowerCase(),
+      name: characterName,
+      username: user.username,
       date: new Date()
     }))
 
@@ -29,6 +30,12 @@ class Character {
     return character
   }
 
+  constructor(characterDocument) {
+    // this.oldDoc = fixBackwardsCompatibility(userDocument)
+    // this.doc = Object.assign({}, this.oldDoc)
+    // this.save = debounce(this.save)}
+    this.doc = Object.assign({}, characterDocument)
+  }
 }
 
 export async function load(name){
@@ -48,5 +55,5 @@ export async function loadByUser(username){
 }
 
 export async function create(user, characterName){
-  await Character.createNew(user, characterName)
+  return await Character.createNew(user, characterName)
 }

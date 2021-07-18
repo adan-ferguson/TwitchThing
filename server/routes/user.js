@@ -4,6 +4,7 @@ import log from 'fancy-log'
 import Users from '../collections/users.js'
 import Bonuses from '../collections/bonuses.js'
 import Channels from '../collections/channels.js'
+import { create as createCharacter } from '../collections/characters.js'
 import TwitchApi from '../twitch/api.js'
 
 const router = express.Router()
@@ -61,6 +62,15 @@ router.post('/updatechannel', async(req, res) => {
   }
   channel.update(req.body)
   res.send(200)
+})
+
+router.post('/makecharacter', async(req, res) => {
+  try {
+    const character = await createCharacter(req.user, req.body.name)
+    res.send(character.doc)
+  }catch(errors){
+    return res.status(400).send({ errors })
+  }
 })
 
 export default router

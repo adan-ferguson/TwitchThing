@@ -11,6 +11,15 @@ export default class User extends EventEmitter {
     this._setupCharacters(characters)
   }
 
+  set activeCharacter(character){
+    localStorage.setItem('activecharacter', character.name)
+    this._activeCharacter = character
+  }
+
+  get activeCharacter(){
+    return this._activeCharacter
+  }
+
   update(args){
     this.resources = args.newVals
     this.emit('resources_updated', args)
@@ -20,13 +29,11 @@ export default class User extends EventEmitter {
     return this.username === 'khananaphone'
   }
 
-  set activeCharacter(character){
-    localStorage.setItem('activecharacter', character.name)
-    this._activeCharacter = character
-  }
-
-  get activeCharacter(){
-    return this._activeCharacter
+  addCharacter(character, makeActive = true){
+    this.characters.push(character)
+    if(makeActive){
+      this.activeCharacter = character
+    }
   }
 
   _setupCharacters(characters){

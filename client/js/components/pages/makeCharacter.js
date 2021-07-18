@@ -2,6 +2,7 @@ import React from 'react'
 import Page from '../page.js'
 import { showLoader, hideLoader } from '../../misc/loaderOverlay.js'
 import { post } from '../../fizzetch.js'
+import Character from '../../character.js'
 
 export default class Main extends Page {
 
@@ -59,6 +60,8 @@ export default class Main extends Page {
       this.setState({ errors: result.errors })
       hideLoader()
     }else{
+      const newCharacter = new Character(result)
+      this.props.user.addCharacter(newCharacter)
       this.props.changePage()
     }
   }

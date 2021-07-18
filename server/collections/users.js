@@ -27,7 +27,7 @@ class User {
   constructor(userDocument){
     this.oldDoc = fixBackwardsCompatibility(userDocument)
     this.doc = Object.assign({}, this.oldDoc)
-    this.save = debounce(this.save, 100)
+    this.save = debounce(this.save)
   }
 
   get username(){
