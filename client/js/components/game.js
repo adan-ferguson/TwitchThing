@@ -48,7 +48,7 @@ export default class Game extends React.Component {
     )
   }
 
-  setPage = (type, props = {}, changeState = true) => {
+  setPage = (type = Main, props = {}, changeState = true) => {
 
     const page = React.createElement(type, Object.assign({
       user: this.props.user,
