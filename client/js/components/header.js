@@ -53,7 +53,7 @@ export default class Header extends React.Component {
           {
             TABS.map(({ tabName, PageType })  => (
               <button
-                className={this.state.tabName === tabName ? 'active' : ''}
+                className={this.state.tabName === tabName ? 'actisve' : ''}
                 key={tabName}
                 onClick={() => {
                   if(this.state.tabName !== tabName){

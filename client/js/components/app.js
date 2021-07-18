@@ -19,9 +19,8 @@ export default class App extends React.Component {
       return React.createElement(Game, { user: this.state.user })
     }else if(this.state.shouldLogIn){
       return createLoginLink()
-    }else{
-      return <p className='loading'>Loading...</p>
     }
+    return null
   }
 
   async _loadUser() {

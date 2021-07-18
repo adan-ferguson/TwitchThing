@@ -25,7 +25,7 @@ export default class TwitchMenuButton extends React.Component {
       <div className='twitch-menu-button'>
         <button className='twitch-button' onClick={this._showMenu}>
           <i className='fab fa-twitch'/>
-          {this.props.user.data.displayname}
+          {this.props.user.displayname}
           <i className='fas fa-caret-down'/>
         </button>
         { this.state.showMenu ? this._makeMenu() : null }

@@ -6,10 +6,14 @@
     <link rel="stylesheet" href="./styles/style.css">
 </head>
 <body>
-    <div id="root">
-        <p class="loading">Loading...</p>
-    </div>
+    <div id="root"></div>
     <div id="effects"></div>
-    <script defer src='./main.js'></script>
+    <div id="loader" class="show">
+        <div class="overlay"></div>
+        <div class="message">
+            <i class='fas fa-circle-notch fa-spin'></i>
+        </div>
+    </div>
+    <script defer src="./main.js"></script>
 </body>
 </html>

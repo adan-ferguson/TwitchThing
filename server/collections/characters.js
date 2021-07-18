@@ -24,22 +24,22 @@ class Character {
       date: new Date()
     }))
 
-    await db.conn().collections('characters').insertOne(character.doc)
+    await db.conn().collection('characters').insertOne(character.doc)
     log('Character created', character)
     return character
   }
 
 }
 
-async function load(name){
-  return await db.conn().connection('characters')
+export async function load(name){
+  return await db.conn().collection('characters')
     .findOne({
       name: name.toLowerCase()
     })
 }
 
-async function loadByUser(username){
-  return await db.conn().connection('characters')
+export async function loadByUser(username){
+  return await db.conn().collection('characters')
     .find({
       username: username.toLowerCase()
     })
@@ -47,10 +47,6 @@ async function loadByUser(username){
     .toArray()
 }
 
-async function create(user, characterName){
+export async function create(user, characterName){
   await Character.createNew(user, characterName)
-}
-
-export default {
-  loadByUser, create
 }

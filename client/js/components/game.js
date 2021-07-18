@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { CSSTransition } from 'react-transition-group'
+import { showLoader, hideLoader } from '../misc/loaderOverlay.js'
 
 import User from '../user.js'
 import Header from './header.js'
@@ -36,11 +37,6 @@ export default class Game extends React.Component {
       <CSSTransition appear in={true} classNames='fade' timeout={T_SPEED}>
         <div className='game'>
           <Header currentPage={this.state.page} changePage={this.setPage} user={this.props.user}/>
-          <CSSTransition in={!this.state.pageReady} classNames='fade' timeout={T_SPEED}>
-            <div className='loading'>
-              Loading...
-            </div>
-          </CSSTransition>
           <CSSTransition in={this.state.pageReady} classNames='fade' timeout={T_SPEED}>
             <div className='page'>
               {this.state.page}
@@ -54,14 +50,11 @@ export default class Game extends React.Component {
 
   setPage = (type, props = {}, changeState = true) => {
 
-    if(changeState && !this.state.pageReady){
-      return
-    }
-
     const page = React.createElement(type, Object.assign({
       user: this.props.user,
       ready: () => {
         if(this.state.page === page){
+          hideLoader()
           this.setState({ pageReady: true })
         }
       },
@@ -70,6 +63,7 @@ export default class Game extends React.Component {
 
     if(changeState){
       this.setState({ pageReady: false })
+      showLoader()
       setTimeout(() => {
         this.setState({ page })
       }, T_SPEED)

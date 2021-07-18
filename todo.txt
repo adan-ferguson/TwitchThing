@@ -92,13 +92,22 @@ Register Channels (admin only for now)
 
 2021-07-14
 ----------
-- User money -> resources object
-- Characters collection
-- Switch node to es6 modules
++ User money -> resources object
++ Characters collection
++ Switch node to es6 modules
+
+2021-07-18
+----------
++ Different loader
++ Character creation
 - "Shared" folder for data both sides need
 
 TODO
 -----------
+- Turn header into player info
+- TUrn footer into character info
+- Hamburger misc menu
+
 - EventSub listen for channel points redemptions
 
 Register channels (admin only for now)
@@ -120,3 +129,5 @@ Register channels (admin only for now)
 - Listen for a specific channel point reward
 
 - Mobile aspect ratio
+
+- JS file too big

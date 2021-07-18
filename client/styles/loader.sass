@@ -1,0 +1,30 @@
+#loader
+  position: fixed
+  left: 0
+  top: 0
+  right: 0
+  bottom: 0
+  opacity: 0
+  transition: opacity 0.16s
+  pointer-events: none
+
+  &.show
+    pointer-events: initial
+    opacity: 1
+
+  .overlay
+    position: absolute
+    left: 0
+    top: 0
+    right: 0
+    bottom: 0
+    opacity: 0.66
+    background-color: white
+
+  .message
+    color: #9584b3
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    font-size: 25rem

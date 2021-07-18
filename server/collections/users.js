@@ -1,6 +1,7 @@
 import db from '../db.js'
 import { emit } from '../socketServer.js'
 import Bonuses from './bonuses.js'
+import { loadByUser } from './characters.js'
 import debounce from 'debounce'
 import log from 'fancy-log'
 
@@ -40,7 +41,12 @@ class User {
   }
 
   async gameData(){
-    return this.doc
+    return {
+      username: this.username,
+      displayname: this.doc.displayname,
+      resources: this.doc.resources,
+      characters: await loadByUser(this.username)
+    }
   }
 
   async checkForChatBonus(channel){

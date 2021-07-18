@@ -37,7 +37,7 @@ router.get('*', (req, res) => {
 })
 
 function getHtml(file){
-  return path.join(__dirname, '..', '..', 'client_dist', file + '.html')
+  return path.join('client_dist', file + '.html')
 }
 
 export default router

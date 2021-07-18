@@ -1,10 +1,13 @@
-const gulp = require('gulp')
-const sass = require('gulp-sass')(require('sass'))
-const concat = require('gulp-concat')
+import gulp from 'gulp'
+import gulpSass from 'gulp-sass'
+import sass from 'sass'
+import concat from 'gulp-concat'
+
+const S = gulpSass(sass)
 
 function buildStyles() {
   return gulp.src('./client/styles/**/*.sass')
-    .pipe(sass().on('error', sass.logError))
+    .pipe(S().on('error', S.logError))
     .pipe(concat('style.css'))
     .pipe(gulp.dest('./client_dist/styles'))
 }
@@ -14,8 +17,9 @@ function copyAssets(){
     .pipe(gulp.dest('./client_dist/assets'))
 }
 
-exports.watch = () => {
+export const watch =  () => {
   gulp.watch('./client/styles/**/*.sass', { ignoreInitial: false },function(cb){
+    console.log('build')
     buildStyles()
     cb()
   })
@@ -25,4 +29,4 @@ exports.watch = () => {
   })
 }
 
-exports.default = gulp.series(buildStyles, copyAssets)
+export const build = gulp.series(buildStyles, copyAssets)

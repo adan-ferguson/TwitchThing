@@ -1,21 +1,23 @@
-import * as EventEmitter from 'events'
+import { EventEmitter } from 'events'
 import Character from './character.js'
 
 export default class User extends EventEmitter {
 
-  constructor(data){
+  constructor({ username, displayname, resources, characters }){
     super()
-    this.data = data
-    this._setupCharacters()
+    this.username = username
+    this.displayname = displayname
+    this.resources = resources
+    this._setupCharacters(characters)
   }
 
   update(args){
-    this.data = args.newDoc
-    this.emit('updated', args)
+    this.resources = args.newVals
+    this.emit('resources_updated', args)
   }
 
   isAdmin(){
-    return this.data.username === 'khananaphone'
+    return this.username === 'khananaphone'
   }
 
   set activeCharacter(character){
@@ -27,8 +29,8 @@ export default class User extends EventEmitter {
     return this._activeCharacter
   }
 
-  _setupCharacters(){
-    this.characters = this.data.characters.map(charData => new Character(charData))
+  _setupCharacters(characters){
+    this.characters = characters.map(charData => new Character(charData))
     const activeCharName = localStorage.getItem('activecharacter') || ''
     const activeChar = this.characters.find(char => char.name === activeCharName)
     if(activeChar){
