@@ -1,13 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import User from '../user.js'
-import FlyingTextEffect from '../misc/flyingTextEffect.js'
+
+import CharacterInfo from './pages/characterInfo.js'
+import Inventory from './pages/inventory.js'
+import Battle from './pages/battle.js'
 
 export default class Footer extends React.Component {
 
   static get propTypes(){
     return {
-      user: PropTypes.instanceOf(User).isRequired
+      user: PropTypes.instanceOf(User).isRequired,
+      changePage: PropTypes.func.isRequired
     }
   }
 
@@ -32,18 +36,13 @@ export default class Footer extends React.Component {
 
   render(){
     if(!this.character){
-      return <div className='footer'/>
+      return <div className='footer-hidden'/>
     }
     return (
       <div className='footer'>
-        <div>{this.character.name}</div>
-        <div>
-          <div>Lvl: {this.character.level}</div>
-          <div>Exp: {this.character.experience}</div>
-        </div>
-        <div>
-          Items: {this.character.items}
-        </div>
+        <button onClick={() => this.props.changePage(CharacterInfo)}>Lvl. {this.character.level} {this.character.name}</button>
+        <button onClick={() => this.props.changePage(Battle)}>Battle</button>
+        <button onClick={() => this.props.changePage(Inventory)}>Items: {this.character.items}</button>
       </div>
     )
   }

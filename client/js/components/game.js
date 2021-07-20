@@ -27,7 +27,7 @@ export default class Game extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      page: this.setPage(getInitialPage(), {}, false),
+      page: this.changePage(getInitialPage(), {}, false),
       pageReady: false
     }
   }
@@ -36,19 +36,19 @@ export default class Game extends React.Component {
     return (
       <CSSTransition appear in={true} classNames='fade' timeout={T_SPEED}>
         <div className='game'>
-          <Header currentPage={this.state.page} changePage={this.setPage} user={this.props.user}/>
+          <Header currentPage={this.state.page} changePage={this.changePage} user={this.props.user}/>
           <CSSTransition in={this.state.pageReady} classNames='fade' timeout={T_SPEED}>
             <div className='page'>
               {this.state.page}
             </div>
           </CSSTransition>
-          <Footer user={this.props.user}/>
+          <Footer changePage={this.changePage} user={this.props.user}/>
         </div>
       </CSSTransition>
     )
   }
 
-  setPage = (type = Main, props = {}, changeState = true) => {
+  changePage = (type = Main, props = {}, changeState = true) => {
 
     const page = React.createElement(type, Object.assign({
       user: this.props.user,
@@ -58,7 +58,7 @@ export default class Game extends React.Component {
           this.setState({ pageReady: true })
         }
       },
-      changePage: this.setPage
+      changePage: this.changePage
     }, props))
 
     if(changeState){
