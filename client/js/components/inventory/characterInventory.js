@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Character from '/game/character.js'
+import Character from '/client/js/character.js'
 
 export default class CharacterInventory extends React.Component {
 
@@ -14,7 +14,7 @@ export default class CharacterInventory extends React.Component {
   constructor(props){
     super(props)
     this.state = {
-      inventory: this.props.character.inventory.clone()
+      inventory: this.props.character.items.slice()
     }
   }
 

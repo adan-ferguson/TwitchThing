@@ -10,7 +10,8 @@ const DEFAULTS = {
   displayname: '',
   resources: {
     money: 100
-  }
+  },
+  inventory: []
 }
 
 class User {
@@ -45,7 +46,8 @@ class User {
       username: this.username,
       displayname: this.doc.displayname,
       resources: this.doc.resources,
-      characters: await loadByUser(this.username)
+      characters: await loadByUser(this.username),
+      inventory: this.doc.inventory
     }
   }
 

@@ -7,26 +7,18 @@ export default class UserInventory extends React.Component {
 
   static get propTypes() {
     return {
-      user: PropTypes.instanceOf(User).isRequired,
-      loaded: PropTypes.func.isRequired
+      user: PropTypes.instanceOf(User).isRequired
     }
   }
 
   constructor(props){
     super(props)
     this.state = {
-      inventory: null
+      inventory: this.props.user.inventory.slice()
     }
-    this.props.user.loadInventory().then(inventory => {
-      this.setState({ inventory: inventory })
-      this.props.loaded()
-    })
   }
 
   render(){
-    if(!this.state.inventory){
-      return null
-    }
     return (
       <div className='user-inventory'>
         {this.state.inventory}

@@ -18,14 +18,10 @@ export default class Inventory extends Page {
     return (
       <div id='inventory'>
         <h1>Swap Gear</h1>
-        <UserInventory ref={this.userInventory} user={this.props.user} loaded={() => this.props.ready()}/>
+        <UserInventory ref={this.userInventory} user={this.props.user}/>
         <CharacterInventory ref={this.characterInventory} character={this.props.user.activeCharacter}/>
         <ScrappedInventory ref={this.scrappedInventory}/>
       </div>
     )
-  }
-
-  componentDidMount() {
-
   }
 }

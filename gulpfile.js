@@ -18,15 +18,8 @@ function copyAssets(){
 }
 
 export const watch =  () => {
-  gulp.watch('./client/styles/**/*.sass', { ignoreInitial: false },function(cb){
-    console.log('build')
-    buildStyles()
-    cb()
-  })
-  gulp.watch('./client/assets/**/*', { ignoreInitial: false },function(cb){
-    copyAssets()
-    cb()
-  })
+  gulp.watch('./client/styles/**/*.sass', { ignoreInitial: false }, buildStyles)
+  gulp.watch('./client/assets/**/*', { ignoreInitial: false }, copyAssets)
 }
 
 export const build = gulp.series(buildStyles, copyAssets)
