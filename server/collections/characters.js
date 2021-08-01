@@ -63,7 +63,7 @@ export async function create(user, characterName){
   })
 
   character.doc.items[0] = {
-    id: 'punch',
+    id: 'Punch',
     uuid: uuid(),
     date: new Date()
   }

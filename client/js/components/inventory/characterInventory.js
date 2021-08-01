@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import Character from '/client/js/character.js'
+import InventoryItem from './inventoryItem.js'
 
 export default class CharacterInventory extends React.Component {
 
@@ -24,7 +25,9 @@ export default class CharacterInventory extends React.Component {
     }
     return (
       <div className='character-inventory'>
-        {this.state.inventory}
+        <div className='item-list'>
+          {this.state.inventory.map((item, i) => <InventoryItem item={item} key={item ? item.uuid : 'slot' + i}/>)}
+        </div>
       </div>
     )
   }

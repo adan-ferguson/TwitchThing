@@ -1,9 +1,9 @@
-import { ItemDefinition } from '../../item.js'
+import ItemDefinition from '../itemDefinition.js'
 
-export class Punch extends ItemDefinition {
+export default class Punch extends ItemDefinition {
 
   get id(){
-    return 'punch'
+    return 'Punch'
   }
 
   get name(){

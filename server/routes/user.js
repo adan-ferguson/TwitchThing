@@ -67,7 +67,7 @@ router.post('/updatechannel', async(req, res) => {
 router.post('/makecharacter', async(req, res) => {
   try {
     const character = await createCharacter(req.user, req.body.name)
-    res.send(character.doc)
+    res.send(character)
   }catch(errors){
     return res.status(400).send({ errors })
   }

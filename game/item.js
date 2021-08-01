@@ -1,7 +1,7 @@
 import Items from './items/combined.js'
 
 export default class Item {
-  constructor(id, uuid, date){
+  constructor({ id, uuid, date }){
     if(!Items[id]){
       throw 'Invalid item ID: ' + id
     }

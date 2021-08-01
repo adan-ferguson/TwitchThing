@@ -42,7 +42,7 @@ export default class Footer extends React.Component {
       <div className='footer'>
         <button onClick={() => this.props.changePage(CharacterInfo)}>Lvl. {this.character.level} {this.character.name}</button>
         <button onClick={() => this.props.changePage(Battle)}>Battle</button>
-        <button onClick={() => this.props.changePage(Inventory)}>Items: {this.character.items}</button>
+        <button onClick={() => this.props.changePage(Inventory)}>Items: ???</button>
       </div>
     )
   }

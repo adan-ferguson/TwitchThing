@@ -6,8 +6,12 @@ export function expToLevel(){
 
 export async function validateInventory(level, items){
 
+  if(!Array.isArray(items)){
+    throw 'Items was not an array'
+  }
+
   if(items.length !== 8){
-    return 'Wrong number of item slots'
+    throw 'Wrong number of item slots'
   }
 
   for(let i = 0; i < items.length; i++){
@@ -19,7 +23,7 @@ export async function validateInventory(level, items){
   }
 
   if(level < 0){
-    return 'Combined item level too high.'
+    throw 'Combined item level too high.'
   }
 }
 

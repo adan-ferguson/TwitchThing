@@ -1,8 +1,11 @@
+import { validateInventory } from '../../game/character.js'
+import Item from '/game/item.js'
+
 export default class Character {
 
   constructor(data){
     this.data = data
-    delete this.data.level
+    this.items = this.data.items.map(item => item ? new Item(item) : null)
   }
 
   get name(){
@@ -11,10 +14,6 @@ export default class Character {
 
   get level(){
     return 1 // todo: exp func
-  }
-
-  get items(){
-    return this.data.items
   }
 
   get experience(){
