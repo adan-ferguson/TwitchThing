@@ -100,12 +100,17 @@ Register Channels (admin only for now)
 ----------
 + Different loader
 + Character creation
-- "Shared" folder for data both sides need
++ "Shared" folder for data both sides need
+
+2021-07-21
+-----------
++ Turn header into player info
++ TUrn footer into character info
++ Links to a bunch of pages
++ Item infrastructure
 
 TODO
 -----------
-- Turn header into player info
-- TUrn footer into character info
 - Hamburger misc menu
 
 - EventSub listen for channel points redemptions

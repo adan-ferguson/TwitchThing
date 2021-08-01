@@ -2,8 +2,7 @@ import db from '../db.js'
 import log from 'fancy-log'
 import { v4 as uuid } from 'uuid'
 
-import { expToLevel } from '../../game/character.js'
-import { validateInventory } from '../../game/item.js'
+import { expToLevel, validateInventory } from '../../game/character.js'
 
 const DEFAULTS = {
   name: '',
@@ -26,10 +25,7 @@ class Character {
 
   async save(){
     const doc = this.toDoc()
-    const error = await validateInventory(doc.level, doc.items)
-    if(error){
-      throw error
-    }
+    validateInventory(doc.level, doc.items)
     db.conn().collection('characters').replaceOne({ name: doc.name }, doc)
   }
 

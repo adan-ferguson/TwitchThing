@@ -1,7 +1,2 @@
-import { Item, register } from '../../item.js'
-
-export class Punch extends Item {
-
-}
-
-register(Punch)
+import Punch from './simpleAttacks/punch.js'
+export default { Punch }

@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
+import InventoryItem from './inventoryItem.js'
 import User from '../../user.js'
 
 export default class UserInventory extends React.Component {
@@ -21,7 +22,10 @@ export default class UserInventory extends React.Component {
   render(){
     return (
       <div className='user-inventory'>
-        {this.state.inventory}
+        <div>Some sort of filtering</div>
+        <div className='item-list'>
+          {this.state.inventory.map(item => <InventoryItem item={item} key={item.uuid}/>)}
+        </div>
       </div>
     )
   }

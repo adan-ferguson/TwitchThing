@@ -18,9 +18,11 @@ export default class Inventory extends Page {
     return (
       <div id='inventory'>
         <h1>Swap Gear</h1>
-        <UserInventory ref={this.userInventory} user={this.props.user}/>
-        <CharacterInventory ref={this.characterInventory} character={this.props.user.activeCharacter}/>
-        <ScrappedInventory ref={this.scrappedInventory}/>
+        <div className='panels'>
+          <UserInventory ref={this.userInventory} user={this.props.user}/>
+          <CharacterInventory ref={this.characterInventory} character={this.props.user.activeCharacter}/>
+          <ScrappedInventory ref={this.scrappedInventory}/>
+        </div>
       </div>
     )
   }

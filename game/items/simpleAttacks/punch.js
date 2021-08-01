@@ -1,4 +1,4 @@
-import { ItemDefinition, register } from '../../item.js'
+import { ItemDefinition } from '../../item.js'
 
 export class Punch extends ItemDefinition {
 
@@ -15,5 +15,3 @@ export class Punch extends ItemDefinition {
   }
 
 }
-
-register(new Punch())

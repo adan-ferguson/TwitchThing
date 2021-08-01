@@ -62,6 +62,7 @@
     "socket.io-client": "^4.1.2",
     "styled-components": "^5.3.0",
     "tmi.js": "^1.8.3",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "vinyl": "^2.2.1"
   }
 }
