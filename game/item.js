@@ -12,4 +12,8 @@ export default class Item {
     this.uuid = uuid
     this.date = date
   }
+
+  scrapValue(){
+    return 1 // TODO: calc
+  }
 }

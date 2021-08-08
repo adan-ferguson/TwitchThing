@@ -12,14 +12,13 @@ export default class InventoryItem extends React.Component {
   }
 
   render(){
-    return <div className='inventory-item'>{this.contents()}</div>
+    return <div className='item-slot'>{this.contents()}</div>
   }
 
   contents(){
     if(this.props.item instanceof Item){
-      return <div>{this.props.item.itemDefinition.name}</div>
+      return <div className='item' data-locked={this.props.item.locked}>{this.props.item.itemDefinition.name}</div>
     }
-    return null
+    return <div className='empty'/>
   }
-
 }
