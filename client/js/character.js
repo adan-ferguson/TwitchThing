@@ -1,5 +1,5 @@
-import { validateInventory } from '../../game/character.js'
 import Item from '/game/item.js'
+import Stats from '/game/stats.js'
 
 export default class Character {
 
@@ -18,5 +18,17 @@ export default class Character {
 
   get experience(){
     return this.data.experience
+  }
+
+  get stats(){
+    return new Stats(this)
+  }
+
+  get filteredItems(){
+    return this.items.filter(i => i)
+  }
+
+  get innateBonuses(){
+    return this.data.innateBonuses || []
   }
 }

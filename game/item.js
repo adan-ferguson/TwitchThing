@@ -1,16 +1,26 @@
 import Items from './items/combined.js'
 
 export default class Item {
-  constructor({ id, uuid, date }){
-    if(!Items[id]){
-      throw 'Invalid item ID: ' + id
+  constructor(data){
+    this.data = Object.assign({
+      baseItemID: null,
+      name: null,
+      username: null,
+      date: new Date(),
+      level: 1,
+      tier: 1,
+      bonuses: []
+    }, data)
+    if(!Items[this.data.baseItemID]){
+      throw 'Invalid item ID: ' + this.data.baseItemID
     }
-    if(!uuid){
-      throw 'Missing uuid'
+    if(!this.data.name){
+      throw 'Missing item name.'
     }
-    this.itemDefinition = Items[id]
-    this.uuid = uuid
-    this.date = date
+    if(this.data.username){
+      this.data.username = this.data.username.toLowerCase()
+    }
+    this.baseItem = Items[this.data.baseItemID]
   }
 
   scrapValue(){

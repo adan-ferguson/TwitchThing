@@ -27,10 +27,13 @@
     flex-grow: 1
     flex-direction: column
     padding-bottom: $padding
+    overflow-y: auto
 
     .item-slot
       height: 12.5%
       padding: $padding $padding 0
+      flex-shrink: 0
+      box-sizing: border-box
 
       > div
         width: 100%

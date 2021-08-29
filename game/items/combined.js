@@ -1,2 +1,2 @@
-import Punch from './simpleAttacks/punch.js'
-export default { Punch }
+import Sword from './simpleAttacks/sword.js'
+export default { Sword }

@@ -4,11 +4,14 @@ import { v4 as uuid } from 'uuid'
 
 import { expToLevel, validateInventory } from '../../game/character.js'
 
+import { createStartingItem } from './items.js'
+
 const DEFAULTS = {
   name: '',
   username: '',
   experience: 0,
   items: [null,null,null,null,null,null,null,null],
+  innateBonuses: [],
   date: new Date(0)
 }
 
@@ -62,14 +65,11 @@ export async function create(user, characterName){
     date: new Date()
   })
 
-  character.doc.items[0] = {
-    id: 'Punch',
-    uuid: uuid(),
-    date: new Date()
-  }
-
   const doc = character.toDoc()
   await db.conn().collection('characters').insertOne(doc)
+
+  createStartingItem(characterName)
+
   log('Character created', doc)
   return doc
 }

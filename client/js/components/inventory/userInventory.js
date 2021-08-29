@@ -22,9 +22,12 @@ export default class UserInventory extends React.Component {
   render(){
     return (
       <div className='user-inventory'>
-        <div>Some sort of filtering</div>
+        <div className='inv-header'>
+          <div>Your Items</div>
+          <button>Filter</button>
+        </div>
         <div className='item-list'>
-          {this.state.inventory.map(item => <InventoryItem item={item} key={item.uuid}/>)}
+          {this.state.inventory.map((item, i) => <InventoryItem item={item} key={item ? item.uuid : 'slot' + i}/>)}
         </div>
       </div>
     )

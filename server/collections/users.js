@@ -1,7 +1,8 @@
 import db from '../db.js'
 import { emit } from '../socketServer.js'
 import Bonuses from './bonuses.js'
-import { loadByUser } from './characters.js'
+import * as Characters from './characters.js'
+import * as Items from './items.js'
 import debounce from 'debounce'
 import log from 'fancy-log'
 
@@ -10,8 +11,7 @@ const DEFAULTS = {
   displayname: '',
   resources: {
     money: 100
-  },
-  inventory: []
+  }
 }
 
 class User {
@@ -46,8 +46,8 @@ class User {
       username: this.username,
       displayname: this.doc.displayname,
       resources: this.doc.resources,
-      characters: await loadByUser(this.username),
-      inventory: this.doc.inventory
+      characters: await Characters.loadByUser(this.username),
+      inventory: await Items.loadByUser(this.username)
     }
   }
 
