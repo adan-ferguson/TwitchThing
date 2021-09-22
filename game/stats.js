@@ -43,7 +43,7 @@ export default class Stats {
   }
 
   _getPctStatMod(type){
-    return this.statAffectors.filteredItems.reduce((val, statAffector) => {
+    return this.statAffectors.reduce((val, statAffector) => {
       return val * (statAffector.statMods[type] || 1)
     }, 1)
   }

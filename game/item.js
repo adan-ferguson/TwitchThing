@@ -1,11 +1,14 @@
 import Items from './items/combined.js'
+import { v4 as uuid } from 'uuid'
 
 export default class Item {
   constructor(data){
     this.data = Object.assign({
+      uuid: uuid(),
       baseItemID: null,
       name: null,
       username: null,
+      charactername: null,
       date: new Date(),
       level: 1,
       tier: 1,

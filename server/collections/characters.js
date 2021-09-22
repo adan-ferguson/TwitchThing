@@ -1,10 +1,8 @@
 import db from '../db.js'
 import log from 'fancy-log'
-import { v4 as uuid } from 'uuid'
+import Item from './items.js'
 
 import { expToLevel, validateInventory } from '../../game/character.js'
-
-import { createStartingItem } from './items.js'
 
 const DEFAULTS = {
   name: '',
@@ -53,22 +51,28 @@ export async function loadByUser(username){
     .toArray()
 }
 
-export async function create(user, characterName){
+export async function create(user, charactername){
 
-  if(await load(characterName)){
-    throw { name: `Character with name ${characterName} already exists.` }
+  if(await load(charactername)){
+    throw { name: `Character with name ${charactername} already exists.` }
   }
 
-  const character = new Character({
-    name: characterName,
+  const item = new Item({
     username: user.username,
-    date: new Date()
+    charactername: charactername,
+    baseItemID: 'Sword',
+    name: 'Sword'
+  })
+
+  const character = new Character({
+    name: charactername,
+    username: user.username,
+    date: new Date(),
+    items: [item.data._id, null, null, null, null, null, null, null]
   })
 
   const doc = character.toDoc()
   await db.conn().collection('characters').insertOne(doc)
-
-  createStartingItem(characterName)
 
   log('Character created', doc)
   return doc
