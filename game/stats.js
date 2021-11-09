@@ -1,11 +1,5 @@
-const BASE_HEALTH = 42
-const HEALTH_PER_LEVEL = 8
-
-const BASE_MIN_DAMAGE = 3
-const MIN_DAMAGE_PER_LEVEL = 1
-
-const BASE_MAX_DAMAGE = 3
-const MAX_DAMAGE_PER_LEVEL = 1
+const BASE_HEALTH = 90
+const HEALTH_PER_LEVEL = 10
 
 export default class Stats {
 
@@ -14,24 +8,17 @@ export default class Stats {
   }
 
   get maxHealth(){
-    return Math.ceil(this.getStat('MaxHealth', BASE_HEALTH, HEALTH_PER_LEVEL))
-  }
-
-  get minDamage(){
-    return Math.ceil(this.getStat('MinDamage', BASE_MIN_DAMAGE, MIN_DAMAGE_PER_LEVEL))
-  }
-
-  get maxDamage(){
-    return Math.ceil(this.minDamage + this.getStat('MaxDamage', BASE_MAX_DAMAGE, MAX_DAMAGE_PER_LEVEL))
+    const baseVal = BASE_HEALTH + this.character.level * HEALTH_PER_LEVEL
+    return Math.ceil(baseVal + this.getStat('maxHealth'))
   }
 
   get statAffectors(){
     return this.character.innateBonuses.concat(this.character.filteredItems.map(item => item.itemDefinition))
   }
 
-  getStat(type, base = 0, perLevel = 0){
-    let val = base + this._getFlatStatMod(type)
-    val += this.character.level * (perLevel + this._getFlatStatMod(type + 'PerLevel'))
+  getStat(type){
+    let val = this._getFlatStatMod(type)
+    val += this.character.level * this._getFlatStatMod(type + 'PerLevel')
     val *= this._getPctStatMod(type + 'Pct')
     return val
   }

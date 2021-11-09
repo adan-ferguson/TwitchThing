@@ -6,16 +6,16 @@ export default class Item {
     this.data = Object.assign({
       uuid: uuid(),
       baseItemID: null,
+      baseCost: 1,
       name: null,
       username: null,
       charactername: null,
       date: new Date(),
-      level: 1,
       tier: 1,
       bonuses: []
     }, data)
-    if(!Items[this.data.baseItemID]){
-      throw 'Invalid item ID: ' + this.data.baseItemID
+    if(!Items[this.data.baseItemName]){
+      throw 'Invalid item ID: ' + this.data.baseItemName
     }
     if(!this.data.name){
       throw 'Missing item name.'
@@ -23,7 +23,7 @@ export default class Item {
     if(this.data.username){
       this.data.username = this.data.username.toLowerCase()
     }
-    this.baseItem = Items[this.data.baseItemID]
+    this.baseItem = Items[this.data.baseItemName]
   }
 
   scrapValue(){

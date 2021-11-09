@@ -20,7 +20,6 @@ export default class CharacterStats extends React.Component {
       <div className='character-stats'>
         <div>{this.props.character.name}</div>
         <div>Health: {stats.maxHealth}</div>
-        <div>Damage: {stats.minDamage} - {stats.maxDamage}</div>
         <div>And whatever</div>
       </div>
     )

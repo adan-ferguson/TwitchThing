@@ -7,6 +7,7 @@ import VinylFile from 'vinyl'
 import path from 'path'
 
 const S = gulpSass(sass)
+const REGISTRIES = ['items', 'bonuses']
 
 function buildStyles() {
   return gulp.src('./client/styles/**/*.sass')
@@ -20,10 +21,12 @@ function copyAssets(){
     .pipe(gulp.dest('./client_dist/assets'))
 }
 
-function generateItemRegistry(){
-  return gulp.src('./game/items/*/**/*.js')
-    .pipe(exporterConcater('./game/items/combined.js'))
-    .pipe(gulp.dest('.'))
+function generateRegistries(){
+  return REGISTRIES.map(t => {
+    return gulp.src('./game/' + t + '/*/**/*.js')
+      .pipe(exporterConcater('./game/' + t + '/combined.js'))
+      .pipe(gulp.dest('.'))
+  })
 }
 
 function exporterConcater(targetFile){
@@ -58,58 +61,15 @@ function exporterConcater(targetFile){
   }
 }
 
-// function generateItemRegistry(){
-//
-//   const data = []
-//   const basePath = path.join('game/items/', categoryName, 'definitions')
-//   readDir()
-//   const contents = generateLoaderCode(getConfig(categoryName), data)
-//   fs.writeFileSync(path.join(DATA_PATH, categoryName, 'definitionLoader.ts'), contents)
-//
-//   console.log(`Definition Loader for ${categoryName} compiled.`)
-//
-//   function readDir(subdirs = []){
-//     const files = fs.readdirSync(path.join(basePath, ...subdirs))
-//     files.forEach(filename => {
-//       const name = filename.replace(/\.[^/.]+$/, '')
-//       const filepath = path.join(basePath, ...subdirs, filename)
-//       if(fs.lstatSync(filepath).isDirectory()) {
-//         readDir([...subdirs, name])
-//       }else{
-//         data.push({
-//           name: name,
-//           categories: subdirs
-//         })
-//       }
-//     })
-//   }
-// }
-//
-//
-// function generateLoaderCode(config, data){
-// //   return `import { DataCollection } from 'game/data/dataCollection'
-// // import { ${config.interfaceName} } from '${config.interfacePath}'
-// // ${data.map(d => `import { ${d.name} } from './definitions/${d.categories.join('/')}/${d.name}'`).join('\n')}
-// //
-// // type ${config.className}ID = ${data.map(d => `'${d.name}'`).join(' | ')}
-// //
-// // const ${config.className}Definitions = new DataCollection<${config.className}ID, ${config.interfaceName}>({
-// //     ${data.map(d => `${d.name}: { definition: ${d.name}, categories: [${d.categories.map(name => `'${name}'`)}] }`).join(',\n    ')}
-// // })
-// //
-// // export { ${config.className}ID, ${config.className}Definitions }
-// // `
-// }
-
 export const watch =  () => {
   gulp.watch('./client/styles/**/*.sass', { ignoreInitial: false }, buildStyles)
   gulp.watch('./client/assets/**/*', { ignoreInitial: false }, copyAssets)
-  gulp.watch('./game/items/*/**/*.js', { ignoreInitial: false }, generateItemRegistry)
+  gulp.watch('./game/*/**/*.js', { ignoreInitial: false }, generateRegistries)
 }
 
-export const build = gulp.series(buildStyles, copyAssets, generateItemRegistry)
+export const build = gulp.series(buildStyles, copyAssets, generateRegistries)
 
 function toClassName(filename){
   let name = filename.split('.')[0]
-  return name.slice(0, 1).toUpperCase() + name.slice(1)
+  return name.toLowerCase()
 }
