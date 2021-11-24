@@ -7,4 +7,4 @@ export default {
     'physDamage'
   ],
   scaling: true
-} 
+}

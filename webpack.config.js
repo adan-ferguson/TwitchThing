@@ -18,7 +18,7 @@ HTML_FILES.forEach((file) => {
 const config = {
   entry: './client/js/index.js',
   output: {
-    path: path.resolve('client_dist'),
+    path: path.resolve('client_dist')
   },
   plugins: [...htmlPlugins],
   module: {

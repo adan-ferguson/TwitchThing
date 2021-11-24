@@ -1,12 +1,16 @@
-import React from 'react'
-import ReactDOM from 'react-dom'
 import App from './components/app.js'
 import './loadIcons.js'
-import { connect } from './socketClient.js'
-import { showLoader } from './misc/loaderOverlay.js'
+import * as SocketClient from './socketClient.js'
+import User from './user.js'
 
-showLoader()
+SocketClient.connect()
+const app = new App()
+document.querySelector('#root').appendChild(app)
 
-connect()
-
-ReactDOM.render(<App />, document.querySelector('#root'))
+User.load().then(user => {
+  if(user){
+    app.setUser(user)
+  }else{
+    app.showLoginPage()
+  }
+})

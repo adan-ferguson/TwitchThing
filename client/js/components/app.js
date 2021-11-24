@@ -1,33 +1,39 @@
-import React from 'react'
-import Game from './game.js'
-import { loadUser, createLoginLink } from '../twitch.js'
+import MainPage from './pages/main.js'
+import LoginPage from './pages/login.js'
+import * as Loader from '../loader.js'
 
-export default class App extends React.Component {
+const HTML = `
+<div class="effects"></div>
+<div class="content"></div>
+`
 
-  constructor(props){
-    super(props)
-    this.state = {
-      loading: true,
-      user: null,
-      shouldLogIn: false
-    }
-    this._loadUser()
+export default class App extends HTMLElement {
+
+  constructor(){
+    super()
+    this.innerHTML = HTML
   }
 
-  render(){
-    if(this.state.user){
-      return React.createElement(Game, { user: this.state.user })
-    }else if(this.state.shouldLogIn){
-      return createLoginLink()
-    }
-    return null
+  setUser(user){
+    Loader.hide()
+    this.user = user
+    this.setPage(new MainPage(this))
   }
 
-  async _loadUser() {
-    const user = await loadUser()
-    this.setState({ loading: false })
-    setTimeout(() => {
-      this.setState({ user: user, shouldLogIn: user ? false : true })
-    }, 300)
+  showLoginPage(){
+    Loader.hide()
+    this.setPage(new LoginPage())
+  }
+
+  async setPage(page){
+    if(this.currentPage){
+      await this.currentPage.navigateFrom()
+      this.currentPage.remove()
+    }
+    await page.navigateTo()
+    this.querySelector(':scope > .content').appendChild(page)
+    this.currentPage = page
   }
 }
+
+customElements.define('di-app', App)

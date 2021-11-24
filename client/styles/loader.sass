@@ -1,4 +1,10 @@
-#loader
+@keyframes spin
+  0%
+    transform: rotate(0deg)
+  100%
+    transform: rotate(359deg)
+
+body > #loader
   position: fixed
   left: 0
   top: 0
@@ -7,6 +13,7 @@
   opacity: 0
   transition: opacity 0.16s
   pointer-events: none
+  color: #9584b3
 
   &.show
     pointer-events: initial
@@ -21,10 +28,15 @@
     opacity: 0.66
     background-color: white
 
-  .message
-    color: #9584b3
+  .middle
     position: absolute
     top: 50%
     left: 50%
     transform: translate(-50%, -50%)
+    text-align: center
+    line-height: 2.5em
     font-size: 25rem
+
+    .spinner
+      animation: spin 3s infinite linear
+

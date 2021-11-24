@@ -1,7 +1,16 @@
 import { EventEmitter } from 'events'
 import Character from '/client/js/character.js'
+import { post } from './fizzetch.js'
 
 export default class User extends EventEmitter {
+
+  static async load(){
+    const userInfo = localStorage.getItem('user')
+    if(!userInfo || !JSON.parse(userInfo)) {
+      return null
+    }
+    return await post('/getuser', { userInfo: JSON.parse(userInfo) })
+  }
 
   constructor({ username, displayname, resources, characters, inventory }){
     super()

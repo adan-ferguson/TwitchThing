@@ -109,30 +109,13 @@ Register Channels (admin only for now)
 + Links to a bunch of pages
 + Item infrastructure
 
+
+2021-11-21
+----------
+- Get rid of react
+- Get inventory working
+
 TODO
 -----------
-- Hamburger misc menu
-
-- EventSub listen for channel points redemptions
-
-Register channels (admin only for now)
-- EventSub to registered channels for subs, channel points, cheers
-- List on homepage which registered channels are active
-
-- Debugging for access tokens
-
-- beta.coolzone.xyz w/ infinite money
-
-- Experience bar
-- React element for bar
-
-- Character creation/editing
-- Beta testing version of app w/ infinite gold
-
-- Levels
-
-- Listen for a specific channel point reward
-
-- Mobile aspect ratio
-
-- JS file too big
+- Clear out twitch channel stuff
+- Enable login without twitch account
