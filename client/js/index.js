@@ -8,9 +8,9 @@ const app = new App()
 document.querySelector('#root').appendChild(app)
 
 User.load().then(user => {
-  if(user){
+  if(user.username){
     app.setUser(user)
   }else{
-    app.showLoginPage()
+    window.location = '/login'
   }
 })

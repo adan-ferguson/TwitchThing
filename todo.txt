@@ -109,13 +109,17 @@ Register Channels (admin only for now)
 + Links to a bunch of pages
 + Item infrastructure
 
-
 2021-11-21
 ----------
-- Get rid of react
-- Get inventory working
++ Get rid of react
+
+2021-11-24
+----------
+- Redis sessions
+- Email login
+- Sendgrid
+- Get basic functionality working
 
 TODO
 -----------
 - Clear out twitch channel stuff
-- Enable login without twitch account

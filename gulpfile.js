@@ -21,6 +21,11 @@ function copyAssets(){
     .pipe(gulp.dest('./client_dist/assets'))
 }
 
+function copyHtmls(){
+  return gulp.src('./client/html/**/*')
+    .pipe(gulp.dest('./client_dist/html'))
+}
+
 function generateRegistries(){
   return REGISTRIES.map(t => {
     return gulp.src('./game/' + t + '/*/**/*.js')
@@ -62,6 +67,7 @@ function exporterConcater(targetFile){
 }
 
 export const watch =  () => {
+  gulp.watch('./client/html/**/*.html', { ignoreInitial: false }, copyHtmls)
   gulp.watch('./client/styles/**/*.sass', { ignoreInitial: false }, buildStyles)
   gulp.watch('./client/assets/**/*', { ignoreInitial: false }, copyAssets)
   gulp.watch('./game/*/**/*.js', { ignoreInitial: false }, generateRegistries)
