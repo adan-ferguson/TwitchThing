@@ -87,9 +87,9 @@ function calcDiff(newObj, oldObj){
   return diff
 }
 
-async function load(username){
+async function load(magicID){
   const userDocument = await db.conn().collection('users').findOne({
-    username: username.toLowerCase()
+    magicID
   })
   return userDocument ? new User(userDocument) : null
 }

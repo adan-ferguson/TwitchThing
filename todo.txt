@@ -115,11 +115,10 @@ Register Channels (admin only for now)
 
 2021-11-24
 ----------
-- Redis sessions
-- Email login
-- Sendgrid
-- Get basic functionality working
+- Email login w/ magic links
+- Source chunks
 
 TODO
 -----------
 - Clear out twitch channel stuff
+- Get basic functionality working

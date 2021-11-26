@@ -2,7 +2,7 @@ import path from 'path'
 
 const isProduction = process.env.NODE_ENV === 'production'
 
-const config = [{
+export default {
   entry: {
     index: './client/js/index.js',
     login: './client/js/login.js'
@@ -22,14 +22,6 @@ const config = [{
       },
     ],
   },
-  devtool: 'inline-source-map'
-}]
-
-export default () => {
-  if (isProduction) {
-    config.mode = 'production'
-  } else {
-    config.mode = 'development'
-  }
-  return config
+  devtool: 'inline-source-map',
+  mode: isProduction ? 'production' : 'development'
 }

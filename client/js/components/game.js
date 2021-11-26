@@ -1,6 +1,6 @@
 // import { showLoader, hideLoader } from '../misc/loaderOverlay.js'
 //
-// import User from '../user.js'
+// import User from '../game.js'
 // import Header from './header.js'
 // import Footer from './footer.js'
 //
