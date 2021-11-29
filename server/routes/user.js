@@ -1,7 +1,7 @@
 import express from 'express'
 import { Magic } from '@magic-sdk/admin'
 import config from '../config.js'
-import Users from '../collections/users.js'
+import * as Users from '../collections/users.js'
 import passport from 'passport'
 import { Strategy } from 'passport-magic'
 
@@ -10,23 +10,24 @@ const magic = new Magic(config.magic.secretKey)
 
 const strategy = new Strategy(async function(magicUser, done){
   try {
-    const userMetadata = await magic.users.getMetadataByIssuer(magicUser.issuer)
+    // do we need this?
+    // const userMetadata = await magic.users.getMetadataByIssuer(magicUser.issuer)
     let user = await Users.load(magicUser.issuer)
     if(!user){
-      user = await Users.create(user, userMetadata)
+      user = await Users.create(magicUser.issuer, magicUser.claim.iat)
     }else{
-      user.login()
+      Users.login(user)
     }
-    done(null, user)
+    return done(null, user)
   }catch(err){
-    done(err)
+    return done(err)
   }
 })
 
 passport.use(strategy)
 
 passport.serializeUser((user, done) => {
-  done(null, user.issuer)
+  done(null, user.magicID)
 })
 
 passport.deserializeUser(async (id, done) => {

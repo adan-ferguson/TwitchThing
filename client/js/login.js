@@ -21,4 +21,7 @@ async function sendLink(email){
     credentials: 'same-origin',
     method: 'POST'
   })
+  if(result.status === 200){
+    window.location = '/game'
+  }
 }

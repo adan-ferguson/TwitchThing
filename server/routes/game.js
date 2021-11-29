@@ -1,8 +1,7 @@
 import express from 'express'
 import log from 'fancy-log'
 
-import Users from '../collections/users.js'
-import Bonuses from '../collections/bonuses.js'
+import * as Users from '../collections/users.js'
 import Channels from '../collections/channels.js'
 import { create as createCharacter } from '../collections/characters.js'
 import TwitchApi from '../twitch/api.js'
@@ -10,20 +9,22 @@ import TwitchApi from '../twitch/api.js'
 const router = express.Router()
 
 router.use(async (req, res, next) => {
-  if(!req.session.username){
-    return res.status(401).send('Not logged in')
+  if(!req.user){
+    if(req.method === 'GET'){
+      return res.redirect('/')
+    }else{
+      return res.status(401).send('Not logged in')
+    }
   }
-  const user = await Users.load(req.session.username)
-  if(!user){
-    return res.status(401).send('User not found')
+  if(!req.user.displayname){
+    return res.redirect('/newuser')
   }
-  req.user = user
   next()
 })
 
-router.post('/bonuses', async(req, res) => {
-  const bonuses = await Bonuses.loadRecent(req.user.username)
-  res.send(bonuses)
+router.get('/', async(req, res) => {
+  const data = await Users.gameData(req.user)
+  res.render('game', { user: data })
 })
 
 router.post('/settings', async(req, res) => {

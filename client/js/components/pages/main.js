@@ -1,9 +1,7 @@
 import Page from './page.js'
 
-export default class Main extends Page {
-  constructor(app){
-    super(app)
-  }
+export default class MainPage extends Page {
+
 }
 
-customElements.define('di-page-main', Main)
+customElements.define('di-page-main', MainPage)

@@ -115,8 +115,17 @@ Register Channels (admin only for now)
 
 2021-11-24
 ----------
-- Email login w/ magic links
-- Source chunks
++ Email login w/ magic links
++ Sessions
+
+2021-11-27
+----------
++ Game header
++ newUser page
+- Logout button
+- Style login form
+- Style newuser page
+- main page
 
 TODO
 -----------

@@ -4,7 +4,7 @@ const isProduction = process.env.NODE_ENV === 'production'
 
 export default {
   entry: {
-    index: './client/js/index.js',
+    game: './client/js/game.js',
     login: './client/js/login.js'
   },
   output: {

@@ -14,9 +14,9 @@
             <div class="spinner">DI</div>
         </div>
     </div>
-    <script defer src="/main.js"></script>
+    <script defer src="/scripts/game.js"></script>
     <script>
-        window.INITIAL_USER = <%= user %>
+        window.INITIAL_USER_DATA = <%- JSON.stringify(user) %>
     </script>
 </body>
 </html>

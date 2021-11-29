@@ -1,12 +1,36 @@
 import express from 'express'
+import * as Users  from '../collections/users.js'
 import config from '../config.js'
 
 const router = express.Router()
 
 router.get('/login', (req, res) => {
-  res.render('login', {
-    magicPublishableKey: config.magic.publishableKey
-  })
+  if(req.user){
+    res.redirect('/game')
+  }else{
+    res.render('login', {
+      magicPublishableKey: config.magic.publishableKey
+    })
+  }
+})
+
+router.get('/newuser', (req, res) => {
+  if(!req.user){
+    res.redirect('/login')
+  }else if(req.user.displayname){
+    res.redirect('/game')
+  }else{
+    if(req.query && req.query.displayname){
+      const err = Users.setDisplayname(req.user, req.query.displayname)
+      if(err){
+        res.render('newuser', { error: err })
+      }else{
+        res.redirect('/game')
+      }
+    }else{
+      res.render('newuser')
+    }
+  }
 })
 
 router.get('/', (req, res) => {
@@ -16,33 +40,5 @@ router.get('/', (req, res) => {
     res.redirect('/game')
   }
 })
-
-// router.post('/getuser', async (req, res) => {
-//
-//   if(!req.session.username){
-//     return res.send({})
-//   }
-//
-//   const user = await Users.load(req.session.username)
-//   if(!user){
-//     return res.send({})
-//   }
-//
-//   res.send(await user.gameData())
-//
-//   // if(userInfo){
-//   //   Users.loadFromUserInfo(userInfo)
-//   // }
-//   //
-//   // await Twitch.getUserInfo(req.body.accessToken)
-//   // if(!userInfo){
-//   //   res.send(Twitch.getLoginLink(req))
-//   //   return
-//   // }
-//   // const user = await Users.load(userInfo.login) || await Users.create(userInfo)
-//   // req.session.username = userInfo.login
-//   // req.session.save()
-//   // res.send({ user: await user.gameData() })
-// })
 
 export default router

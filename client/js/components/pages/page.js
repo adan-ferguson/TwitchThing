@@ -1,8 +1,12 @@
 export default class Page extends HTMLElement {
-  constructor(app) {
+  constructor() {
     super()
-    this.app = app
     this.classList.add('page')
+  }
+
+  get user() {
+    debugger
+    return this.closest('di-app')?.user
   }
 
   navigateTo(){

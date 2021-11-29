@@ -10,9 +10,11 @@ import adminRouter from './routes/admin.js'
 import publicRouter from './routes/public.js'
 
 import { setup as setupSocketServer } from './socketServer.js'
-import config from '../config.js'
+import config from './config.js'
 import { fileURLToPath } from 'url'
 import path from 'path'
+import DB from './db.js'
+import MongoStore from 'connect-mongo'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -26,7 +28,11 @@ async function init(){
     cookie: {
       secure: config.requireHttps,
       sameSite: true
-    }
+    },
+    store: MongoStore.create({
+      client: DB.client(),
+      dbName: config.db.name
+    })
   })
 
   const app = express()
@@ -35,13 +41,13 @@ async function init(){
     .set('views', path.join(__dirname, '../client/views'))
     .use(sessionMiddlware)
     .use(express.json())
+    .use(passport.initialize())
+    .use(passport.session())
     .use('/game', gameRouter)
     .use('/user', userRouter)
     .use('/admin', adminRouter)
     .use('/', publicRouter)
     .use('/', express.static('client_dist'))
-    .use(passport.initialize())
-    .use(passport.session())
 
   try {
     const server = app.listen(config.port, () => {

@@ -6,111 +6,49 @@ import * as Items from './items.js'
 import debounce from 'debounce'
 import log from 'fancy-log'
 
-const DEFAULTS = {
-  username: '',
-  displayname: '',
-  resources: {
-    money: 100
-  }
-}
+// emit(eventName, data){
+//   log(this.username, eventName, data)
+//   emit(this.username, eventName, data)
+// }
 
-class User {
-
-  static async createNew(twitchInfo){
-    const user = new User({
-      username: twitchInfo.login.toLowerCase(),
-      displayname: twitchInfo.display_name.toLowerCase()
-    })
-    await db.conn().collection('users').insertOne(user.doc)
-    return user
-  }
-
-  constructor(userDocument){
-    this.oldDoc = fixBackwardsCompatibility(userDocument)
-    this.doc = Object.assign({}, this.oldDoc)
-    this.save = debounce(this.save)
-  }
-
-  get username(){
-    return this.doc.username
-  }
-
-  save(){
-    db.conn().collection('users').replaceOne({ username: this.username }, this.doc)
-    this._resourcesUpdated()
-    this.oldDoc = Object.assign({}, this.doc)
-  }
-
-  async gameData(){
-    return {
-      username: this.username,
-      displayname: this.doc.displayname,
-      resources: this.doc.resources,
-      characters: await Characters.loadByUser(this.username),
-      inventory: await Items.loadByUser(this.username)
-    }
-  }
-
-  async checkForChatBonus(channel){
-    await Bonuses.giveChannelChatBonus(this, channel)
-    await Bonuses.giveChatBonus(this, channel)
-  }
-
-  emit(eventName, data){
-    log(this.username, eventName, data)
-    emit(this.username, eventName, data)
-  }
-
-  _resourcesUpdated(){
-    const resourcesDiff = calcDiff(this.doc.resources, this.oldDoc.resources)
-    if(!Object.keys(resourcesDiff).length){
-      return
-    }
-    this.emit('resources_updated', {
-      diff: resourcesDiff,
-      oldVals: this.oldDoc.resources,
-      newVals: this.doc.resources
-    })
-  }
-}
-
-function calcDiff(newObj, oldObj){
-  const diff = {}
-  Object.keys(newObj).forEach(key => {
-    const oldVal = oldObj[key]
-    const newVal = newObj[key]
-    const change = newVal - oldVal
-    if(change){
-      diff[key] = { oldVal, newVal, change }
-    }
-  })
-  return diff
-}
-
-async function load(magicID){
-  const userDocument = await db.conn().collection('users').findOne({
+export async function load(magicID){
+  return await db.conn().collection('users').findOne({
     magicID
-  })
-  return userDocument ? new User(userDocument) : null
+  }) || null
 }
 
-async function create(twitchInfo){
-  return User.createNew(twitchInfo)
+export async function create(magicID, iat){
+  const userDoc = { magicID, iat }
+  await db.conn().collection('users').insertOne(userDoc)
+  return userDoc
 }
 
-function fixBackwardsCompatibility(doc){
-  if(doc.twitchInfo){
-    doc.displayname = doc.twitchInfo.display_name
-    delete doc.twitchInfo
+export async function save(userDoc){
+  if(userDoc._id){
+    await db.conn().collection('users').replaceOne({ _id: userDoc._id }, userDoc)
+  }else{
+    await db.conn().collection('users').insertOne(userDoc)
   }
-  if(doc.money){
-    doc.resources = {
-      money: doc.money
-    }
-    delete doc.money
-  }
-  delete doc.exp
-  return Object.assign({}, DEFAULTS, doc)
 }
 
-export default { load, create }
+export async function login(userDoc, iat){
+  if(userDoc.iat >= iat){
+    throw `Replay attack detected for user ${userDoc.magicID}.`
+  }
+  userDoc.iat = iat
+  save(userDoc)
+}
+
+export async function gameData(userDoc){
+  return {
+    id: userDoc._id,
+    displayname: userDoc.displayname,
+    // resources: this.doc.resources,
+    // characters: await Characters.loadByUser(this.username),
+    // inventory: await Items.loadByUser(this.username)
+  }
+}
+
+export async function setDisplayname(userDoc, displayname){
+
+}

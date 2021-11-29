@@ -1,20 +1,12 @@
-import { EventEmitter } from 'events'
 import Character from '/client/js/character.js'
-import { post } from './fizzetch.js'
 
-export default class User extends EventEmitter {
+export default class User {
 
-  static async load(){
-    return await post('/getuser')
-  }
-
-  constructor({ username, displayname, resources, characters, inventory }){
-    super()
-    this.username = username
+  constructor({ id, displayname, resources, characters }){
+    this.id = id
     this.displayname = displayname
-    this.resources = resources
-    this.inventory = inventory
-    this.characters = this._setupCharacters(characters)
+    // this.resources = resources
+    // this.characters = this._setupCharacters(characters)
   }
 
   set activeCharacter(character){
@@ -29,10 +21,6 @@ export default class User extends EventEmitter {
   update(args){
     this.resources = args.newVals
     this.emit('resources_updated', args)
-  }
-
-  isAdmin(){
-    return this.username === 'khananaphone'
   }
 
   addCharacter(character, makeActive = true){

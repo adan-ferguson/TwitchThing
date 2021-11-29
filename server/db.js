@@ -3,10 +3,11 @@ import config from './config.js'
 import log from 'fancy-log'
 
 let connection
+let client
 
 const init = async () => {
   try {
-    let client =  await MongoDB.MongoClient.connect(`mongodb://localhost:${config.db.port}`, {
+    client = await MongoDB.MongoClient.connect(`mongodb://localhost:${config.db.port}`, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     })
@@ -21,6 +22,7 @@ const id = id => MongoDB.ObjectID(id)
 
 export default {
   init,
+  client: () => client,
   conn: () => connection,
   id
 }
