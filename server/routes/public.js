@@ -14,7 +14,7 @@ router.get('/login', (req, res) => {
   }
 })
 
-router.get('/newuser', (req, res) => {
+router.get('/newuser', async (req, res) => {
 
   if(!req.user){
     return res.redirect('/login')
@@ -26,7 +26,7 @@ router.get('/newuser', (req, res) => {
 
   let err = ''
   if(req.query && req.query.displayname){
-    const err = Users.setDisplayname(req.user, req.query.displayname)
+    err = await Users.setDisplayname(req.user, req.query.displayname)
     if(!err) {
       return res.redirect('/game')
     }

@@ -57,4 +57,10 @@ export async function setDisplayname(userDoc, displayname){
   if(displayname.length > 15){
     return 'Display name must be between 2 and 15 letters.'
   }
+  const user = await db.conn().collection('users').findOne({ displayname })
+  if(user){
+    return `Display name '${displayname}' is taken.`
+  }
+  userDoc.displayname = displayname
+  await save(userDoc)
 }
