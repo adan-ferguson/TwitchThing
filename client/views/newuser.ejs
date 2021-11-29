@@ -11,6 +11,9 @@
             Enter your username: <input type="text" name="displayname" required="required"/>
         </label>
         <button type="submit">Save</button>
+        <% if(error){ %>
+            <span class="error"><%= error %></span>
+        <% } %>
     </form>
 </body>
 </html>

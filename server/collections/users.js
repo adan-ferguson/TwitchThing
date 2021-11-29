@@ -50,5 +50,11 @@ export async function gameData(userDoc){
 }
 
 export async function setDisplayname(userDoc, displayname){
-
+  displayname = displayname + ''
+  if(displayname.length <= 1){
+    return 'Display name must be between 2 and 15 letters.'
+  }
+  if(displayname.length > 15){
+    return 'Display name must be between 2 and 15 letters.'
+  }
 }

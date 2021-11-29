@@ -15,22 +15,23 @@ router.get('/login', (req, res) => {
 })
 
 router.get('/newuser', (req, res) => {
+
   if(!req.user){
-    res.redirect('/login')
-  }else if(req.user.displayname){
-    res.redirect('/game')
-  }else{
-    if(req.query && req.query.displayname){
-      const err = Users.setDisplayname(req.user, req.query.displayname)
-      if(err){
-        res.render('newuser', { error: err })
-      }else{
-        res.redirect('/game')
-      }
-    }else{
-      res.render('newuser')
+    return res.redirect('/login')
+  }
+
+  if(req.user.displayname){
+    return res.redirect('/game')
+  }
+
+  let err = ''
+  if(req.query && req.query.displayname){
+    const err = Users.setDisplayname(req.user, req.query.displayname)
+    if(!err) {
+      return res.redirect('/game')
     }
   }
+  res.render('newuser', { error: err })
 })
 
 router.get('/', (req, res) => {
