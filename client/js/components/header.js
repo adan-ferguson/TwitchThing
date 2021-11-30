@@ -1,4 +1,5 @@
 import SettingsPage from './pages/settings.js'
+import { create as createDropdown }  from './dropdown.js'
 
 const HTML = `
 <button class="back hidden"><- Back</button>
@@ -19,10 +20,11 @@ export default class Header extends HTMLElement {
     this.backButton = this.querySelector('.back')
     this.backButton.addEventListener('click', () => this.app.back())
 
-    this.userDropdownButton = this.querySelector('.user-dropdown')
-    this.userDropdownButton.addEventListener('click', () => this._showMenu())
+    createDropdown(this.querySelector('.user-dropdown'), {
+      Settings: () => this.app.setPage(new SettingsPage()),
+      Logout: () => confirmLogout()
+    })
 
-    this.app.addEventListener('click', () => this._hideMenu())
     this.app.addEventListener('pagechange', () => this.backButton.classList.toggle('show', this.app.showBackButton))
   }
 
@@ -32,24 +34,6 @@ export default class Header extends HTMLElement {
 
   get user(){
     return this.app?.user
-  }
-
-  _showMenu(){
-    const menu = {
-      Settings: () => this.app.setPage(new SettingsPage()),
-      Logout: () => confirmLogout()
-    }
-
-    const menuEl = document.createElement('div')
-    for(let option of menu){
-
-    }
-    // menuItems.push(<button key='settings' onClick={() => this.props.changePage(Settings)}>Settings</button>)
-    // menuItems.push(<button key='logout' onClick={this._logout}>Logout</button>)
-  }
-
-  _hideMenu(){
-
   }
 }
 

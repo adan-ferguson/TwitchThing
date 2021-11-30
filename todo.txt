@@ -122,6 +122,14 @@ Register Channels (admin only for now)
 ----------
 + Game header
 + newUser page
+
+2021-11-28
+----------
++ newUser name validation
+
+2021-11-29
+----------
+- dropdown menu
 - Logout button
 - Style login form
 - Style newuser page
