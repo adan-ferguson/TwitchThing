@@ -1,5 +1,6 @@
 import SettingsPage from './pages/settings.js'
-import { create as createDropdown }  from './dropdown.js'
+import * as Dropdown  from './dropdown.js'
+import * as Modal from './modal.js'
 
 const HTML = `
 <button class="back hidden"><- Back</button>
@@ -20,7 +21,7 @@ export default class Header extends HTMLElement {
     this.backButton = this.querySelector('.back')
     this.backButton.addEventListener('click', () => this.app.back())
 
-    createDropdown(this.querySelector('.user-dropdown'), {
+    Dropdown.create(this.querySelector('.user-dropdown'), {
       Settings: () => this.app.setPage(new SettingsPage()),
       Logout: () => confirmLogout()
     })
@@ -38,7 +39,16 @@ export default class Header extends HTMLElement {
 }
 
 function confirmLogout(){
-
+  Modal.confirm('Are you sure you want to log out?', [{
+    text: 'Yes',
+    style: 'scary',
+    fn: () => {
+      window.location = '/user/logout'
+      return false
+    }
+  },
+  { text: 'No' }
+  ])
 }
 
 customElements.define('di-header', Header)

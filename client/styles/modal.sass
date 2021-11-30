@@ -1,0 +1,43 @@
+$padding: 10rem
+
+di-modal
+  position: fixed
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+
+  .underlay
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+    background-color: #00000066
+
+  .inner-pane
+    position: absolute
+    top: 50%
+    left: 50%
+    transform: translate(-50%, -50%)
+    background-color: white
+    border: 1rem solid #666
+    padding: 15rem
+    font-size: 12rem
+
+  .content
+    padding-bottom: $padding
+
+  .buttons
+    border-top: 1rem solid #555
+    padding-top: $padding
+    text-align: right
+
+    button
+      padding: 4rem 16rem
+      margin-left: 2rem
+
+      &.style-scary
+        background-color: red
+        color: white
+

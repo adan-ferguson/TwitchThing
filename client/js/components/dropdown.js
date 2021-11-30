@@ -4,9 +4,10 @@ export function create(options, parent){
 
 class Dropdown extends HTMLElement{
 
-  constructor(parent, options){
+  constructor(target, options){
     super()
     this.classList.add('dropdown-menu')
+    this.target = target
 
     for(let key in options){
       const optionEl = document.createElement('button')
@@ -17,18 +18,24 @@ class Dropdown extends HTMLElement{
       this.appendChild(optionEl)
     }
 
-    parent.addEventListener('click', e => {
-      if(this.parent){
-        parent.removeChild(this)
+    target.addEventListener('click', e => {
+      if(this.parentNode){
+        this.hide()
       }else{
-        parent.appendChild(this)
+        this.show()
       }
       e.stopPropagation()
     })
+  }
 
-    document.body.addEventListener('click', () => {
-      parent.removeChild(this)
-    })
+  show = () => {
+    this.target.appendChild(this)
+    document.body.addEventListener('click', this.hide)
+  }
+
+  hide = () => {
+    this.target.removeChild(this)
+    document.body.removeEventListener('click', this.hide)
   }
 }
 
