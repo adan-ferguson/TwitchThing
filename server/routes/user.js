@@ -47,14 +47,12 @@ router.post('/login', passport.authenticate('magic'), (req, res) => {
   }
 })
 
-router.post('/logout', async (req, res) => {
+router.get('/logout', async (req, res) => {
   if(req.isAuthenticated()){
-    await magic.users.logoutByIssuer(req.user.issuer)
+    await magic.users.logoutByIssuer(req.user.magicID)
     req.logout()
-    res.status(200).end()
-  }else {
-    res.status(401).end('User is not logged in.')
   }
+  res.redirect('/')
 })
 
 export default router

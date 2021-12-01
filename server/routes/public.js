@@ -35,7 +35,7 @@ router.get('/newuser', async (req, res) => {
 })
 
 router.get('/', (req, res) => {
-  if(!req.session.username){
+  if(!req.user){
     res.redirect('/login')
   }else{
     res.redirect('/game')

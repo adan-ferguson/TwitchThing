@@ -129,13 +129,18 @@ Register Channels (admin only for now)
 
 2021-11-29
 ----------
-- dropdown menu
-- Logout button
-- Style login form
-- Style newuser page
-- main page
++ dropdown menu
++ Logout button
++ modals
+
+2021-12-01
+----------
++ logout route
++ Style login form
 
 TODO
 -----------
+- Style newuser page (make it use a diform)
+- main page
 - Clear out twitch channel stuff
-- Get basic functionality working
+- ability to make a character

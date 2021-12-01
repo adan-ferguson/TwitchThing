@@ -1,8 +1,19 @@
 import { Magic } from 'magic-sdk'
-const form = document.querySelector('#login-widget form')
+import DIForm from './components/form.js'
+
+const diform = new DIForm()
+diform.addInput({
+  type: 'email',
+  name: 'email',
+  required: 'required',
+  placeholder: 'Enter your e-mail address'
+})
+diform.addSubmitButton('Login  / Signup')
+document.querySelector('.login-form').appendChild(diform)
+
 const magic = new Magic(window.magicPublishableKey)
 
-form.onsubmit = e => {
+diform.onsubmit = e => {
   e.preventDefault()
   const email = new FormData(e.target).get('email')
   if(!email) {
