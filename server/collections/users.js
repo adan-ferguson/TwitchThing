@@ -38,16 +38,16 @@ export async function login(userDoc, iat){
   userDoc.iat = iat
   save(userDoc)
 }
-
-export async function gameData(userDoc){
-  return {
-    id: userDoc._id,
-    displayname: userDoc.displayname,
-    // resources: this.doc.resources,
-    // characters: await Characters.loadByUser(this.username),
-    // inventory: await Items.loadByUser(this.username)
-  }
-}
+//
+// export async function gameData(userDoc){
+//   return {
+//     id: userDoc._id,
+//     displayname: userDoc.displayname,
+//     // resources: this.doc.resources,
+//     // characters: await Characters.loadByUser(this.username),
+//     // inventory: await Items.loadByUser(this.username)
+//   }
+// }
 
 export async function setDisplayname(userDoc, displayname){
   displayname = displayname + ''
@@ -63,4 +63,8 @@ export async function setDisplayname(userDoc, displayname){
   }
   userDoc.displayname = displayname
   await save(userDoc)
+}
+
+export function isSetupComplete(userDoc){
+  return userDoc.displayname ? true : false
 }

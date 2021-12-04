@@ -6,14 +6,10 @@
     <link rel="stylesheet" href="/styles/style.css">
 </head>
 <body>
-    <form>
-        <label>
-            Enter your username: <input type="text" name="displayname" required="required"/>
-        </label>
-        <button type="submit">Save</button>
-    </form>
-    <% if(error){ %>
-        <span class="error"><%= error %></span>
-    <% } %>
+    <div class='new-user-form screen-center'></div>
+    <script>
+        window.ERROR = <%- error ? JSON.stringify(error) : 'null' %>
+    </script>
+    <script defer src="/scripts/newuser.js"></script>
 </body>
 </html>

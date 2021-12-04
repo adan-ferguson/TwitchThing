@@ -6,8 +6,18 @@ import passport from 'passport'
 import { Strategy } from 'passport-magic'
 
 const router = express.Router()
-const magic = new Magic(config.magic.secretKey)
+router.use(async (req, res, next) => {
+  if(!req.user){
+    if(req.method === 'GET'){
+      return res.redirect('/')
+    }else{
+      return res.status(401).send('Not logged in')
+    }
+  }
+  next()
+})
 
+const magic = new Magic(config.magic.secretKey)
 const strategy = new Strategy(async function(magicUser, done){
   try {
     // do we need this?
@@ -53,6 +63,26 @@ router.get('/logout', async (req, res) => {
     req.logout()
   }
   res.redirect('/')
+})
+
+router.get('/newuser', async (req, res) => {
+
+  if(!req.user){
+    return res.redirect('/login')
+  }
+
+  if(req.user.displayname){
+    return res.redirect('/game')
+  }
+
+  let err = null
+  if(req.query && req.query.displayname){
+    err = await Users.setDisplayname(req.user, req.query.displayname)
+    if(!err) {
+      return res.redirect('/game')
+    }
+  }
+  res.render('newuser', { error: err })
 })
 
 export default router

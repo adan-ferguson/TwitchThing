@@ -1,5 +1,5 @@
 import { Magic } from 'magic-sdk'
-import DIForm from './components/form.js'
+import DIForm from '../components/form.js'
 
 const diform = new DIForm()
 diform.addInput({
@@ -11,7 +11,7 @@ diform.addInput({
 diform.addSubmitButton('Login  / Signup')
 document.querySelector('.login-form').appendChild(diform)
 
-const magic = new Magic(window.magicPublishableKey)
+const magic = new Magic(window.MAGIC_PUBLISHABLE_KEY)
 
 diform.onsubmit = e => {
   e.preventDefault()

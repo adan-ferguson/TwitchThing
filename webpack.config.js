@@ -1,12 +1,11 @@
 import path from 'path'
 
 const isProduction = process.env.NODE_ENV === 'production'
+const ENTRY_POINTS_DIR = './client/js/entryPoints/'
+const ENTRY_POINTS = ['game', 'login', 'newuser']
 
 export default {
-  entry: {
-    game: './client/js/game.js',
-    login: './client/js/login.js'
-  },
+  entry: makeEntryPoints(),
   output: {
     path: path.resolve('client_dist/scripts')
   },
@@ -24,4 +23,10 @@ export default {
   },
   devtool: 'inline-source-map',
   mode: isProduction ? 'production' : 'development'
+}
+
+function makeEntryPoints(){
+  const points = {}
+  ENTRY_POINTS.forEach(name => points[name] = ENTRY_POINTS_DIR + name + '.js')
+  return points
 }

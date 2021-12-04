@@ -144,3 +144,4 @@ TODO
 - main page
 - Clear out twitch channel stuff
 - ability to make a character
+- Make a 404 page and/or just redirect

@@ -8,6 +8,7 @@ import TwitchApi from '../twitch/api.js'
 
 const router = express.Router()
 
+// Make sure we're logged in.
 router.use(async (req, res, next) => {
   if(!req.user){
     if(req.method === 'GET'){
@@ -16,15 +17,27 @@ router.use(async (req, res, next) => {
       return res.status(401).send('Not logged in')
     }
   }
-  if(!req.user.displayname){
-    return res.redirect('/newuser')
+  next()
+})
+
+// Make sure we're allowed to play, and if not then redirect somewhere.
+router.use((req, res, next) => {
+  let redirect = false
+  if(!Users.isSetupComplete(req.user)){
+    redirect = '/user/newuser'
+  }
+  if(redirect){
+    if(req.method === 'GET'){
+      return res.redirect(redirect)
+    }else{
+      return res.status(401).send('Not logged in')
+    }
   }
   next()
 })
 
 router.get('/', async(req, res) => {
-  const data = await Users.gameData(req.user)
-  res.render('game', { user: data })
+  res.render('game', { user: req.user })
 })
 
 router.post('/settings', async(req, res) => {
