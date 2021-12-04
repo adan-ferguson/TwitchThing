@@ -17,8 +17,8 @@ export async function load(magicID){
   }) || null
 }
 
-export async function create(magicID, iat){
-  const userDoc = { magicID, iat }
+export async function create(magicID, iat, email){
+  const userDoc = { magicID, iat, auth: { type: 'email', email } }
   await db.conn().collection('users').insertOne(userDoc)
   return userDoc
 }

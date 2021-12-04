@@ -6,16 +6,6 @@ import passport from 'passport'
 import { Strategy } from 'passport-magic'
 
 const router = express.Router()
-router.use(async (req, res, next) => {
-  if(!req.user){
-    if(req.method === 'GET'){
-      return res.redirect('/')
-    }else{
-      return res.status(401).send('Not logged in')
-    }
-  }
-  next()
-})
 
 const magic = new Magic(config.magic.secretKey)
 const strategy = new Strategy(async function(magicUser, done){
@@ -24,7 +14,8 @@ const strategy = new Strategy(async function(magicUser, done){
     // const userMetadata = await magic.users.getMetadataByIssuer(magicUser.issuer)
     let user = await Users.load(magicUser.issuer)
     if(!user){
-      user = await Users.create(magicUser.issuer, magicUser.claim.iat)
+      const userMetadata = await magic.users.getMetadataByIssuer(magicUser.issuer)
+      user = await Users.create(magicUser.issuer, magicUser.claim.iat, userMetadata.email)
     }else{
       Users.login(user)
     }
