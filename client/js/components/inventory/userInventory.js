@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 
 import InventoryItem from './inventoryItem.js'
-import User from '../../user.js'
+import User from '../../bridges/user.js'
 
 export default class UserInventory extends React.Component {
 

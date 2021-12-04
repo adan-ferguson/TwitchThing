@@ -1,7 +1,7 @@
 import App from '../components/app.js'
 import '../loadIcons.js'
 import * as SocketClient from '../socketClient.js'
-import User from '../user.js'
+import User from '../bridges/user.js'
 
 if(!window.INITIAL_USER_DATA){
   window.location = '/login'

@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import User from '../user.js'
+import User from '../bridges/user.js'
 
 import CharacterInfo from './pages/characterInfo.js'
 import Inventory from './pages/inventory.js'

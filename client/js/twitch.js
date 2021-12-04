@@ -1,6 +1,6 @@
 import React from 'react'
 import TwitchLoginLink from './components/twitchLoginLink.js'
-import User from './user.js'
+import User from './bridges/user.js'
 import { setupUser } from './socketClient.js'
 
 let userJson

@@ -1,10 +1,5 @@
 import db from '../db.js'
 import { emit } from '../socketServer.js'
-import Bonuses from './bonuses.js'
-import * as Characters from './characters.js'
-import * as Items from './items.js'
-import debounce from 'debounce'
-import log from 'fancy-log'
 
 // emit(eventName, data){
 //   log(this.username, eventName, data)
@@ -15,6 +10,14 @@ export async function load(magicID){
   return await db.conn().collection('users').findOne({
     magicID
   }) || null
+}
+
+export async function loadData(_id, projection = null){
+  const options = [{ _id }]
+  if(projection){
+    options.push({ projection })
+  }
+  return await db.conn().collection('users').findOne(...options)
 }
 
 export async function create(magicID, iat, email){
@@ -39,15 +42,14 @@ export async function login(userDoc, iat){
   save(userDoc)
 }
 //
-// export async function gameData(userDoc){
-//   return {
-//     id: userDoc._id,
-//     displayname: userDoc.displayname,
-//     // resources: this.doc.resources,
-//     // characters: await Characters.loadByUser(this.username),
-//     // inventory: await Items.loadByUser(this.username)
-//   }
-// }
+export async function loadGameData(userDoc){
+  return {
+    displayname: userDoc.displayname,
+    // resources: this.doc.resources,
+    // characters: await Characters.loadByUser(this.username),
+    // inventory: await Items.loadByUser(this.username)
+  }
+}
 
 export async function setDisplayname(userDoc, displayname){
   displayname = displayname + ''

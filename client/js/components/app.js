@@ -1,5 +1,5 @@
 import * as Loader from '../loader.js'
-import MainPage from './pages/main.js'
+import MainPage from './main/mainPage.js'
 
 import './header.js'
 
@@ -25,12 +25,14 @@ export default class App extends HTMLElement {
   async setPage(page){
     Loader.show()
     if(this.currentPage){
-      await this.currentPage.navigateFrom()
+      this.currentPage.classList.add('fade-out')
+      await this.currentPage.unload()
       this.currentPage.remove()
     }
-    await page.navigateTo()
-    this.querySelector(':scope > .content').appendChild(page)
+    await page.load()
     this.currentPage = page
+    this.querySelector(':scope > .content').appendChild(page)
+    page.classList.add('fade-in')
     this.dispatchEvent(new Event('pagechange'))
     Loader.hide()
   }

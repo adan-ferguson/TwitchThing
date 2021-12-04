@@ -9,11 +9,26 @@ export default class Page extends HTMLElement {
     return this.closest('di-app')?.user
   }
 
-  navigateTo(){
-    this.classList.add('fade-in')
+  /**
+   * Page to go to if back button gets clicked. If null, back button will not be visible.
+   */
+  get backPage(){
+    return null
   }
 
-  navigateFrom(){
-    this.classList.add('fade-out')
+  /**
+   * Load page content here.
+   * @returns {Promise<void>}
+   */
+  async load(){
+
+  }
+
+  /**
+   * Unload page content here. Not sure if this is even necessary.
+   * @returns {Promise<void>}
+   */
+  async unload(){
+
   }
 }

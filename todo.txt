@@ -74,7 +74,7 @@ Header
 Register Channel Page
 + Make page
 
-+ Shrink main.js for initial load
++ Shrink mainPage.js for initial load
 
 Register Channels (admin only for now)
 + Will need ngrok in order for this to not be annoying to test
@@ -138,10 +138,18 @@ Register Channels (admin only for now)
 + logout route
 + Style login form
 
+2021-12-03
+----------
++ Style newuser page (make it use a diform)
++ Store email addresses just in case something happens w/ magic link or someone needs help
++ Hide back button unless it has something to do
++ clear out more react stuff
+- mix fizzetch a bit
+- main page
+- make an adventurer
+- load adventurers on main page
+
 TODO
 -----------
-- Style newuser page (make it use a diform)
-- main page
 - Clear out twitch channel stuff
-- ability to make a character
 - Make a 404 page and/or just redirect

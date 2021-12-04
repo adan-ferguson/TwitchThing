@@ -3,7 +3,7 @@ import * as Dropdown  from './dropdown.js'
 import * as Modal from './modal.js'
 
 const HTML = `
-<button class="back hidden"><- Back</button>
+<button class="back-button hidden"><- Back</button>
 <button class="user-dropdown">
   <span class="username">???</span>
   <i class='fas fa-caret-down'></i>
@@ -18,7 +18,7 @@ export default class Header extends HTMLElement {
 
     this.querySelector('.username').textContent = this.user.displayname
 
-    this.backButton = this.querySelector('.back')
+    this.backButton = this.querySelector('.back-button')
     this.backButton.addEventListener('click', () => this.app.back())
 
     Dropdown.create(this.querySelector('.user-dropdown'), {

@@ -1,25 +1,22 @@
-export async function post(url, data){
+export default async function(url, data = null){
   try {
-    const resp = await fetch(url, {
+    const obj = {
       method: 'post',
       headers: {
         'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(data)
-    })
-    if(!resp.ok){
-      return {
-        errors: {
-          request: resp.statusText
-        }
       }
+    }
+
+    if(data){
+      obj.body = JSON.stringify(data)
+    }
+
+    const resp = await fetch(url, obj)
+    if(!resp.ok){
+      return { error: resp.statusText }
     }
     return await resp.json()
-  }catch(err){
-    return {
-      errors: {
-        request: err
-      }
-    }
+  }catch(error){
+    return { error }
   }
 }
