@@ -1,6 +1,15 @@
 import db from '../db.js'
 import { emit } from '../socketServer.js'
 
+const PROJECTION_CATEGORIES = {
+  mainpage: {
+    adventurers: {
+      name: 1,
+      level: 1,
+    }
+  }
+}
+
 // emit(eventName, data){
 //   log(this.username, eventName, data)
 //   emit(this.username, eventName, data)
@@ -12,12 +21,12 @@ export async function load(magicID){
   }) || null
 }
 
-export async function loadData(_id, projection = null){
-  const options = [{ _id }]
-  if(projection){
-    options.push({ projection })
+export async function loadData(_userid, category){
+  const projection = PROJECTION_CATEGORIES[category]
+  if(!projection){
+    throw 'Invalid category: ' + category
   }
-  return await db.conn().collection('users').findOne(...options)
+  return await db.conn().collection('users').findOne({ _id: _userid }, projection)
 }
 
 export async function create(magicID, iat, email){

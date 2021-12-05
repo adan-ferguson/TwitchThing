@@ -1,6 +1,8 @@
 import DIForm from '../components/form.js'
 
-const diform = new DIForm()
+const diform = new DIForm({
+  submitButton: 'Save'
+})
 diform.addInput({
   type: 'text',
   name: 'displayname',
@@ -9,7 +11,6 @@ diform.addInput({
   required: 'required',
   placeholder: 'Choose a username'
 })
-diform.addSubmitButton('Save')
 document.querySelector('.new-user-form').appendChild(diform)
 
 if(window.ERROR){

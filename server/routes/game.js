@@ -37,12 +37,12 @@ router.get('/', async(req, res) => {
   res.render('game', { user: await Users.loadGameData(req.user) })
 })
 
-router.post('/userdata', async(req, res) => {
+router.post('/load', async(req, res) => {
   if(!req.body){
     return res.status(401).send('Missing body data')
   }
   try {
-    const payload = await Users.loadData(req.user._id, req.body)
+    const payload = await Users.loadData(req.user._id, req.body.category)
     res.send(payload)
   }catch(ex){
     return res.status(401).send(ex)

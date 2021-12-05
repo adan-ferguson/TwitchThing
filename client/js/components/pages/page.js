@@ -6,7 +6,11 @@ export default class Page extends HTMLElement {
 
   get user() {
     debugger
-    return this.closest('di-app')?.user
+    return this.app?.user
+  }
+
+  get app(){
+    return this.closest('di-app')
   }
 
   /**

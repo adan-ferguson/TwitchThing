@@ -1,28 +1,26 @@
 import { Magic } from 'magic-sdk'
 import DIForm from '../components/form.js'
 
-const diform = new DIForm()
+const diform = new DIForm({
+  submitText: 'Login / Signup',
+  async: true,
+  action: sendLink,
+  success: () => window.location = '/game'
+})
+
 diform.addInput({
   type: 'email',
   name: 'email',
   required: 'required',
   placeholder: 'Enter your e-mail address'
 })
-diform.addSubmitButton('Login  / Signup')
+
 document.querySelector('.login-form').appendChild(diform)
 
 const magic = new Magic(window.MAGIC_PUBLISHABLE_KEY)
 
-diform.onsubmit = e => {
-  e.preventDefault()
-  const email = new FormData(e.target).get('email')
-  if(!email) {
-    return
-  }
-  sendLink(email)
-}
-
-async function sendLink(email){
+async function sendLink(){
+  const email = diform.data().email
   const didToken = await magic.auth.loginWithMagicLink({ email })
   const result = await fetch('/user/login', {
     headers: new Headers({
@@ -32,7 +30,6 @@ async function sendLink(email){
     credentials: 'same-origin',
     method: 'POST'
   })
-  if(result.status === 200){
-    window.location = '/game'
-  }
+  debugger
+  return { error: result.error }
 }

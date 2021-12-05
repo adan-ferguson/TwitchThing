@@ -1,8 +1,16 @@
+import DIForm from './form.js'
+
 export function confirm(message, buttons){
   const modal = new Modal()
   modal.content.innerHTML = message
   buttons.forEach(button => modal.addButton(button))
   modal.show()
+}
+
+export function custom(el){
+  const modal = new Modal()
+  modal.innerPane.innerHTML = ''
+  modal.innerPane.appendChild(el)
 }
 
 const HTML = `
@@ -22,6 +30,7 @@ class Modal extends HTMLElement{
     this.underlay = this.querySelector('.underlay')
     this.content = this.querySelector('.content')
     this.buttons = this.querySelector('.buttons')
+    this.innerPane = this.querySelector('.inner-pane')
   }
 
   addButton(options){
