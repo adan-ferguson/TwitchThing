@@ -12,11 +12,8 @@ export default async function(url, data = null){
     }
 
     const resp = await fetch(url, obj)
-    if(!resp.ok){
-      return { error: resp.statusText }
-    }
     return await resp.json()
-  }catch(error){
-    return { error }
+  }catch(ex){
+    return { error: `An error occurred during fizzetch of ${url}` }
   }
 }

@@ -144,10 +144,20 @@ Register Channels (admin only for now)
 + Store email addresses just in case something happens w/ magic link or someone needs help
 + Hide back button unless it has something to do
 + clear out more react stuff
-- mix fizzetch a bit
-- main page
-- make an adventurer
-- load adventurers on main page
++ fix fizzetch a bit
+
+2021-12-05
+----------
++ form'd modals
++ make an adventurer
++ fizzetch error handling
++ form error handling (basic)
+
+2021-12-06
+----------
++ form loading
+- adventurer rows
+- adventurer page
 
 TODO
 -----------

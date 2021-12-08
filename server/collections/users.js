@@ -1,7 +1,18 @@
 import db from '../db.js'
+import * as Adventurers from './adventurers.js'
 import { emit } from '../socketServer.js'
 
-const PROJECTION_CATEGORIES = {
+const DEFAULTS = {
+  magicID: null,
+  iat: 0,
+  auth: {
+    type: 'none'
+  },
+  displayname: null,
+  adventurers: []
+}
+
+const DATA_CATEGORIES = {
   mainpage: {
     adventurers: {
       name: 1,
@@ -15,32 +26,44 @@ const PROJECTION_CATEGORIES = {
 //   emit(this.username, eventName, data)
 // }
 
-export async function load(magicID){
-  return await db.conn().collection('users').findOne({
+export async function loadFromMagicID(magicID){
+  const userDoc = await db.conn().collection('users').findOne({
     magicID
-  }) || null
+  })
+  if(!userDoc){
+    return null
+  }
+  return {
+    ...DEFAULTS,
+    ...userDoc
+  }
 }
 
-export async function loadData(_userid, category){
-  const projection = PROJECTION_CATEGORIES[category]
+export async function loadData(userDoc, category){
+  const projection = DATA_CATEGORIES[category]
+  const data = {}
   if(!projection){
     throw 'Invalid category: ' + category
   }
-  return await db.conn().collection('users').findOne({ _id: _userid }, projection)
+  if(projection.adventurers){
+    data.adventurers = await Adventurers.loadByIDs(userDoc.adventurers, projection.adventurers)
+  }
+  return data
 }
 
 export async function create(magicID, iat, email){
-  const userDoc = { magicID, iat, auth: { type: 'email', email } }
-  await db.conn().collection('users').insertOne(userDoc)
+  const userDoc = {
+    ...DEFAULTS,
+    magicID,
+    iat,
+    auth: { type: 'email', email }
+  }
+  save(userDoc)
   return userDoc
 }
 
 export async function save(userDoc){
-  if(userDoc._id){
-    await db.conn().collection('users').replaceOne({ _id: userDoc._id }, userDoc)
-  }else{
-    await db.conn().collection('users').insertOne(userDoc)
-  }
+  await db.save(userDoc, 'users')
 }
 
 export async function login(userDoc, iat){
@@ -53,10 +76,7 @@ export async function login(userDoc, iat){
 //
 export async function loadGameData(userDoc){
   return {
-    displayname: userDoc.displayname,
-    // resources: this.doc.resources,
-    // characters: await Characters.loadByUser(this.username),
-    // inventory: await Items.loadByUser(this.username)
+    displayname: userDoc.displayname
   }
 }
 
@@ -74,6 +94,18 @@ export async function setDisplayname(userDoc, displayname){
   }
   userDoc.displayname = displayname
   await save(userDoc)
+}
+
+export async function newAdventurer(userDoc, adventurername){
+  // TODO: check for slots
+  const availableSlots = 1 - userDoc.adventurers.length
+  if(availableSlots <= 0){
+    throw { message: 'No slots available.', code: 403 }
+  }
+  const adventurerDoc = await Adventurers.createNew(userDoc._id, adventurername)
+  userDoc.adventurers.push(adventurerDoc._id)
+  save(userDoc)
+  return adventurerDoc
 }
 
 export function isSetupComplete(userDoc){

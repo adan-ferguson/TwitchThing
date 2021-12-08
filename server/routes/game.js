@@ -42,20 +42,20 @@ router.post('/load', async(req, res) => {
     return res.status(401).send('Missing body data')
   }
   try {
-    const payload = await Users.loadData(req.user._id, req.body.category)
+    const payload = await Users.loadData(req.user, req.body.category)
     res.send(payload)
   }catch(ex){
     return res.status(401).send(ex)
   }
 })
 
-// router.post('/makecharacter', async(req, res) => {
-//   try {
-//     const character = await createCharacter(req.user, req.body.name)
-//     res.send(character)
-//   }catch(errors){
-//     return res.status(400).send({ errors })
-//   }
-// })
+router.post('/newadventurer', async(req, res) => {
+  try {
+    const adventurer = await Users.newAdventurer(req.user, req.body.name)
+    res.send(adventurer)
+  }catch(error){
+    return res.status(error.code || 500).send({ error: error.message || error })
+  }
+})
 
 export default router

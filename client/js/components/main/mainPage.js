@@ -32,9 +32,9 @@ export default class MainPage extends Page {
       })
     })
 
-    // TODO: only add "create new" button if user has an available slot
+    // TODO: show each available slot
     if(!adventurers.length){
-      const newAdventurerRow = document.createElement('div')
+      const newAdventurerRow = new AdventurerRow()
       adventurerList.appendChild(newAdventurerRow)
       adventurerList.addEventListener('click', () => {
         this._showNewAdventurerModal()
@@ -52,28 +52,16 @@ export default class MainPage extends Page {
     })
 
     form.addInput({
+      label: 'Name',
       type: 'text',
       name: 'name',
       required: 'required',
       maxLength: 15,
-      placeholder: 'Choose a name for your Adventurer'
+      placeholder: 'Choose a name'
     })
     // TODO: choose adventurer card
 
-    form.onsubmit = async e => {
-      if(!form.async){
-        return
-      }
-      e.preventDefault()
-      const name = form.get('name')
-      const result = await fizzetch('/game/newadventurer', { name: name })
-      if(result.error){
-        form.addError(result.error)
-      }else{
-      }
-    }
-
-    Modal.custom(form)
+    new Modal(form).show()
   }
 }
 

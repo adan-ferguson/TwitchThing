@@ -1,17 +1,28 @@
 form
-
   border: 1rem solid #BBB
   padding: 20rem 30rem
-  text-align: center
-
-  button
-    margin-bottom: 1.5em
+  text-align: left
+  display: flex
+  flex-direction: column
+  align-items: stretch
 
   label
-    display: block
+    display: flex
+    flex-direction: column
+    align-items: stretch
     margin-bottom: 10rem
+
+    span
+      margin-bottom: 5rem
+      font-size: 0.8em
 
   .error-message
     color: red
     display: block
-    font-size: 0.9em
+    font-size: 0.8em
+    margin-top: 1.5rem
+
+di-modal form
+  border: none
+  padding: 0
+  min-width: 200rem

@@ -24,5 +24,12 @@ export default {
   init,
   client: () => client,
   conn: () => connection,
-  id
+  id,
+  save: async (doc, collectionName) => {
+    if(doc._id){
+      await connection.collection(collectionName).replaceOne({ _id: doc._id }, doc)
+    }else{
+      await connection.collection(collectionName).insertOne(doc)
+    }
+  }
 }

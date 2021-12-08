@@ -1,56 +1,20 @@
-import DIForm from './form.js'
-
-export function confirm(message, buttons){
-  const modal = new Modal()
-  modal.content.innerHTML = message
-  buttons.forEach(button => modal.addButton(button))
-  modal.show()
-}
-
-export function custom(el){
-  const modal = new Modal()
-  modal.innerPane.innerHTML = ''
-  modal.innerPane.appendChild(el)
-}
-
 const HTML = `
 <div class='underlay'></div>
-<div class='inner-pane'>
-  <div class='content'></div>
-  <div class='buttons'></div>
-</div>
+<div class='inner-pane'></div>
 `
 
-class Modal extends HTMLElement{
+export default class Modal extends HTMLElement{
 
-  constructor() {
+  constructor(content = null){
     super()
     this.classList.add('modal')
     this.innerHTML = HTML
     this.underlay = this.querySelector('.underlay')
-    this.content = this.querySelector('.content')
-    this.buttons = this.querySelector('.buttons')
     this.innerPane = this.querySelector('.inner-pane')
-  }
 
-  addButton(options){
-    options = {
-      text: 'text',
-      style: 'normal',
-      fn: () => {}, // Called on click. If it returns false, the modal won't close after clicking.
-      ...options
+    if(content){
+      this.innerPane.appendChild(content)
     }
-
-    const btn = document.createElement('button')
-    btn.classList.add('style-' + options.style)
-    btn.textContent = options.text
-    btn.addEventListener('click', () => {
-      const ret = options.fn()
-      if(ret !== false){
-        this.hide()
-      }
-    })
-    this.buttons.appendChild(btn)
   }
 
   show = () => {
@@ -63,5 +27,4 @@ class Modal extends HTMLElement{
     this.underlay.removeEventListener('click', this.hide)
   }
 }
-
 customElements.define('di-modal', Modal)

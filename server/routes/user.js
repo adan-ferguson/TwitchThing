@@ -12,7 +12,7 @@ const strategy = new Strategy(async function(magicUser, done){
   try {
     // do we need this?
     // const userMetadata = await magic.users.getMetadataByIssuer(magicUser.issuer)
-    let user = await Users.load(magicUser.issuer)
+    let user = await Users.loadFromMagicID(magicUser.issuer)
     if(!user){
       const userMetadata = await magic.users.getMetadataByIssuer(magicUser.issuer)
       user = await Users.create(magicUser.issuer, magicUser.claim.iat, userMetadata.email)
@@ -32,7 +32,7 @@ passport.serializeUser((user, done) => {
 })
 
 passport.deserializeUser(async (id, done) => {
-  const user = await Users.load(id)
+  const user = await Users.loadFromMagicID(id)
   if(user){
     done(null, user)
   }else{

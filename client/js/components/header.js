@@ -1,6 +1,6 @@
 import SettingsPage from './pages/settings.js'
 import * as Dropdown  from './dropdown.js'
-import * as Modal from './modal.js'
+import SimpleModal from './simpleModal.js'
 
 const HTML = `
 <button class="back-button hidden"><- Back</button>
@@ -39,16 +39,16 @@ export default class Header extends HTMLElement {
 }
 
 function confirmLogout(){
-  Modal.confirm('Are you sure you want to log out?', [{
+  SimpleModal('Are you sure you want to log out?', [{
     text: 'Yes',
     style: 'scary',
     fn: () => {
       window.location = '/user/logout'
       return false
     }
-  },
-  { text: 'No' }
-  ])
+  },{
+    text: 'No'
+  }]).show()
 }
 
 customElements.define('di-header', Header)

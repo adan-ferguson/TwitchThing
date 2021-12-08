@@ -13,6 +13,7 @@ export default class DIForm extends HTMLFormElement {
       customFetch: false,
       ...options
     }
+    this.options = options
 
     if(options.action){
       this.setAttribute('action', options.action)
@@ -25,7 +26,7 @@ export default class DIForm extends HTMLFormElement {
         const result = options.action instanceof Function ? await options.action() : await fizzetch(options.action, this.data())
         this._loadingFinished()
         if(result.error){
-          this.addError(result.error)
+          this.error(result.error)
         }else{
           options.success(result)
         }
@@ -41,14 +42,15 @@ export default class DIForm extends HTMLFormElement {
     this.appendChild(this.submitButton)
 
     this.errorMessage = document.createElement('div')
-    this.errorMessage.classList.add('error', 'hidden')
+    this.errorMessage.classList.add('error-message', 'hidden')
     this.appendChild(this.errorMessage)
   }
 
   data(){
-    debugger
     const data = new FormData(this)
-    return data
+    const obj = {}
+    Array.from(data.entries()).forEach(([key, val]) => obj[key] = val)
+    return obj
   }
 
   addInput(options){
@@ -59,22 +61,37 @@ export default class DIForm extends HTMLFormElement {
     }
 
     const label = document.createElement('label')
-    const input = document.createElement('input')
+    if(options.label){
+      const span = document.createElement('span')
+      span.textContent = options.label
+      label.appendChild(span)
+    }
 
+    const input = document.createElement('input')
     for(let key in options){
       input.setAttribute(key, options[key])
     }
-
-    label.textContent = options.label
     label.appendChild(input)
+
     this.inputs.appendChild(label)
 
     return input
   }
 
   error(message){
-    this.errorMessage.removeClass('hidden')
-    this.errorMessage.textContent(message)
+    this.errorMessage.textContent = message
+    this.errorMessage.classList.remove('hidden')
+  }
+
+  _loading(){
+    this.errorMessage.classList.add('hidden')
+    this.submitButton.disabled = true
+    this.submitButton.innerHTML = '<span class="spin-effect">DI</span>'
+  }
+
+  _loadingFinished(){
+    this.submitButton.disabled = false
+    this.submitButton.textContent = this.options.submitText
   }
 }
 
