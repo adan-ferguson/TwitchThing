@@ -1,5 +1,5 @@
 import * as Loader from '../loader.js'
-import MainPage from './main/mainPage.js'
+import MainPage from './pages/main/mainPage.js'
 
 import './header.js'
 

@@ -31,5 +31,17 @@ export default {
     }else{
       await connection.collection(collectionName).insertOne(doc)
     }
+    return doc
+  },
+  fix: (doc, defaults, projection = null) => {
+    const fixedDoc = { ...doc }
+    for(let key in defaults){
+      if(!projection || projection[key]){
+        if(!(key in fixedDoc)){
+          fixedDoc[key] = defaults[key]
+        }
+      }
+    }
+    return fixedDoc
   }
 }

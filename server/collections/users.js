@@ -12,13 +12,12 @@ const DEFAULTS = {
   adventurers: []
 }
 
-const DATA_CATEGORIES = {
-  mainpage: {
-    adventurers: {
-      name: 1,
-      level: 1,
-    }
-  }
+export async function save(userDoc){
+  return await db.save(fix(userDoc), 'users')
+}
+
+function fix(userDoc, projection = null){
+  return db.fix(userDoc, DEFAULTS, projection)
 }
 
 // emit(eventName, data){
@@ -33,37 +32,25 @@ export async function loadFromMagicID(magicID){
   if(!userDoc){
     return null
   }
-  return {
-    ...DEFAULTS,
-    ...userDoc
-  }
+  return fix(userDoc)
 }
 
-export async function loadData(userDoc, category){
-  const projection = DATA_CATEGORIES[category]
+export async function loadData(userDoc, searchObj = {}){
   const data = {}
-  if(!projection){
-    throw 'Invalid category: ' + category
-  }
-  if(projection.adventurers){
-    data.adventurers = await Adventurers.loadByIDs(userDoc.adventurers, projection.adventurers)
+  if(searchObj.adventurers){
+    data.adventurers = await Adventurers.loadByIDs(userDoc.adventurers, searchObj.adventurers)
   }
   return data
 }
 
 export async function create(magicID, iat, email){
-  const userDoc = {
-    ...DEFAULTS,
+  const userDoc = fix({
     magicID,
     iat,
     auth: { type: 'email', email }
-  }
-  save(userDoc)
+  })
+  await save(userDoc)
   return userDoc
-}
-
-export async function save(userDoc){
-  await db.save(userDoc, 'users')
 }
 
 export async function login(userDoc, iat){
@@ -71,9 +58,9 @@ export async function login(userDoc, iat){
     throw `Replay attack detected for user ${userDoc.magicID}.`
   }
   userDoc.iat = iat
-  save(userDoc)
+  await save(userDoc)
 }
-//
+
 export async function loadGameData(userDoc){
   return {
     displayname: userDoc.displayname
@@ -104,7 +91,7 @@ export async function newAdventurer(userDoc, adventurername){
   }
   const adventurerDoc = await Adventurers.createNew(userDoc._id, adventurername)
   userDoc.adventurers.push(adventurerDoc._id)
-  save(userDoc)
+  await save(userDoc)
   return adventurerDoc
 }
 

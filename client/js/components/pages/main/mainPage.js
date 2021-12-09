@@ -1,9 +1,9 @@
-import Page from '../pages/page.js'
-import AdventurerPage from '../pages/adventurer.js'
+import Page from '../page.js'
+import AdventurerPage from '../adventurer/adventurerPage.js'
 import AdventurerRow from './adventurerRow.js'
-import fizzetch from '../../fizzetch.js'
-import Modal from '../modal.js'
-import DIForm from '../form.js'
+import fizzetch from '../../../fizzetch.js'
+import Modal from '../../modal.js'
+import DIForm from '../../form.js'
 
 const HTML = `
 <div class="adventurer-list content-well"></div>
@@ -18,7 +18,7 @@ export default class MainPage extends Page {
   }
 
   async load(){
-    const myContent = await fizzetch('/game/load', { category: 'mainpage' })
+    const myContent = await fizzetch('/game/pagedata/main')
     await this._populateAdventurers(myContent.adventurers)
   }
 

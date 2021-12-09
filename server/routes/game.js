@@ -2,6 +2,7 @@ import express from 'express'
 import log from 'fancy-log'
 
 import * as Users from '../collections/users.js'
+import pagedataRouter from './pagedata.js'
 
 const router = express.Router()
 
@@ -33,20 +34,10 @@ router.use((req, res, next) => {
   next()
 })
 
+router.use('/pagedata', pagedataRouter)
+
 router.get('/', async(req, res) => {
   res.render('game', { user: await Users.loadGameData(req.user) })
-})
-
-router.post('/load', async(req, res) => {
-  if(!req.body){
-    return res.status(401).send('Missing body data')
-  }
-  try {
-    const payload = await Users.loadData(req.user, req.body.category)
-    res.send(payload)
-  }catch(ex){
-    return res.status(401).send(ex)
-  }
 })
 
 router.post('/newadventurer', async(req, res) => {

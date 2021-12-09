@@ -1,27 +1,42 @@
 import db from '../db.js'
 
 const DEFAULTS = {
+  _id: null,
   name: null,
   level: 1,
-  userid: null
+  xp: 0,
+  userid: null,
+  loadout: [null, null, null, null, null, null, null, null]
 }
 
 export async function save(adventurerDoc){
-  await db.save(adventurerDoc, 'adventurers')
+  return await db.save(fix(adventurerDoc), 'adventurers')
+}
+
+function fix(adventurerDoc, projection = null){
+  return db.fix(adventurerDoc, DEFAULTS, projection)
 }
 
 export async function loadByIDs(_ids, projection = {}){
-  return await db.conn().collection('adventurers').find({
+  const adventurers = await db.conn().collection('adventurers').find({
     _id: { $in: _ids }
-  }, { projection: projection }).toArray()
+  }, { projection }).toArray()
+  return adventurers.map(adventurer => fix(adventurer, projection))
 }
 
 export async function createNew(userid, name){
-  const adventurerDoc = {
-    ...DEFAULTS,
-    name,
-    userid
+  return await save({ name, userid })
+}
+
+export async function loadData(_id, projection = {}){
+  const adventurerDoc = await db.conn().collection('adventurers')
+    .findOne({ _id }, { projection })
+  if(!adventurerDoc){
+    throw { code: 401, error: 'Invalid adventurer ID.' }
   }
-  await save(adventurerDoc)
-  return adventurerDoc
+  if(projection.loadout){
+    // TODO: load the loadout items
+    // adventurerDoc.loadout = Items.loadByIds(adventurerDoc.loadout)
+  }
+  return fix(adventurerDoc, projection)
 }
