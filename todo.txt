@@ -159,8 +159,9 @@ Register Channels (admin only for now)
 
 2021-12-08
 ----------
-- adventurer rows
++ adventurer rows
 - adventurer page
+- page load function should be able to redirect
 
 TODO
 -----------

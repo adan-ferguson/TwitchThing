@@ -12,14 +12,22 @@ const HTML = `
 
 export default class MainPage extends Page {
 
-  constructor(){
+  constructor({ error }){
     super()
     this.innerHTML = HTML
+    if(error){
+      this._showError(error)
+    }
+    // TODO: handle error
   }
 
   async load(){
     const myContent = await fizzetch('/game/pagedata/main')
-    await this._populateAdventurers(myContent.adventurers)
+    if(myContent.error){
+      this._showError(myContent.error, true)
+    }else{
+      await this._populateAdventurers(myContent.adventurers)
+    }
   }
 
   async _populateAdventurers(adventurers = []){
@@ -62,6 +70,15 @@ export default class MainPage extends Page {
     // TODO: choose adventurer card
 
     new Modal(form).show()
+  }
+
+  /**
+   * @param message {string}
+   * @param critical {boolean} If true, then the main page itself failed to load.
+   * @private
+   */
+  _showError(message, critical = false){
+
   }
 }
 

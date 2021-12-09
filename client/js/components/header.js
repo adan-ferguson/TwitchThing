@@ -26,7 +26,7 @@ export default class Header extends HTMLElement {
       Logout: () => confirmLogout()
     })
 
-    this.app.addEventListener('pagechange', () => this.backButton.classList.toggle('show', this.app.showBackButton))
+    this.app.addEventListener('pagechange', () => this.backButton.classList.toggle('hidden', !this.app.showBackButton))
   }
 
   get app(){

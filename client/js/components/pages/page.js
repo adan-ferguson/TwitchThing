@@ -5,7 +5,6 @@ export default class Page extends HTMLElement {
   }
 
   get user() {
-    debugger
     return this.app?.user
   }
 
@@ -21,16 +20,18 @@ export default class Page extends HTMLElement {
   }
 
   /**
-   * Load page content here.
-   * @returns {Promise<void>}
+   * Load page content here. Return false to prevent the page from loading (for example,
+   * if an error occurred).
+   * @returns {Promise<boolean>}
    */
   async load(){
 
   }
 
   /**
-   * Unload page content here. Not sure if this is even necessary.
-   * @returns {Promise<void>}
+   * Unload page content here. Return false to prevent the page from
+   * unloading (for example, we want to show a confirmation dialog first).
+   * @returns {Promise<boolean>}
    */
   async unload(){
 
