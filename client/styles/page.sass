@@ -1,0 +1,29 @@
+$margin: 25rem
+
+di-app .page
+  max-width: 900rem
+  display: flex
+  align-items: stretch
+
+  > *
+    flex: 1 1
+
+  .flex-columns
+    display: flex
+    flex-direction: row
+    align-items: stretch
+    margin-right: -$margin
+
+    > *
+      margin-right: $margin
+      flex: 1 1
+
+  .flex-rows
+    display: flex
+    flex-direction: column
+    align-items: stretch
+    margin-bottom: -$margin
+
+    > *
+      margin-bottom: $margin
+      flex: 1 1

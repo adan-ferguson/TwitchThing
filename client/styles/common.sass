@@ -76,4 +76,15 @@ input
   transform: translate(-50%, -50%)
 
 .content-well
-  border: 1px solid #BBB
+  border: 1rem solid #BBB
+
+  &.clickable
+    cursor: pointer
+    &:hover
+      background-color: #EEE
+
+.hidden
+  visibility: hidden
+
+.displaynone
+  display: none !important

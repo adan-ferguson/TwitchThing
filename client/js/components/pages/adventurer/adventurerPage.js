@@ -11,16 +11,18 @@ import Loadout from './loadout.js'
 import fizzetch from '../../../fizzetch.js'
 
 const HTML = `
-<div class="column">
-  <div class="stats content-well clickable"></div>
-  <div class="loadout content-well clickable"></div>
-</div>
-<div class="column column-dungeons">
-    <div class="basic-dungeon content-well clickable">Enter Dungeon</div>
-    <div class="something-else content-well">Something Else Goes Here</div>
-</div>
-<div class="column column-levelup hidden">
-    <div class="levelup content-well clickable">Level Up</div>
+<div class="flex-columns">
+  <div class="flex-rows">
+    <div class="stats content-well clickable"></div>
+    <div class="loadout content-well clickable"></div>
+  </div>
+  <div class="flex-rows dungeons">
+      <div class="basic-dungeon content-well clickable">Enter Dungeon</div>
+      <div class="something-else content-well">Something Else Goes Here</div>
+  </div>
+  <div class="flex-rows levelup displaynone">
+      <div class="levelup content-well clickable">Level Up</div>
+  </div>
 </div>
 `
 
@@ -52,7 +54,7 @@ export default class AdventurerPage extends Page {
   _showStats(){
     const stats = this.querySelector('.stats')
     stats.addEventListener('click', () => {
-      this.app.setPage(new AdventurerStatsPage(this.adventurerID))
+      // void this.app.setPage(new AdventurerStatsPage(this.adventurerID))
     })
     stats.appendChild(new Stats(this.adventurer))
   }
@@ -60,7 +62,7 @@ export default class AdventurerPage extends Page {
   _showLoadout(){
     const loadout = this.querySelector('.loadout')
     loadout.addEventListener('click', () => {
-      this.app.setPage(new AdventurerLoadoutPage(this.adventurerID))
+      // void this.app.setPage(new AdventurerLoadoutPage(this.adventurerID))
     })
     loadout.appendChild(new Loadout(this.adventurer))
   }
@@ -68,12 +70,12 @@ export default class AdventurerPage extends Page {
   _showDungeonOrLevelupButton(){
     // TODO: if pending levelup, show the levelup one instead
     this.querySelector('.basic-dungeon').addEventListener('click', () => {
-      this.app.setPage(new DungeonPickerPage(this.adventurerID))
+      // void this.app.setPage(new DungeonPickerPage(this.adventurerID))
     })
     this.querySelector('.levelup').addEventListener('click', () => {
-      this.app.setPage(new LevelupPage(this.adventurerID))
+      // void this.app.setPage(new LevelupPage(this.adventurerID))
     })
   }
 }
 
-customElements.define('di-page-adventurer', AdventurerPage)
+customElements.define('di-adventurer-page', AdventurerPage)

@@ -4,4 +4,4 @@ export default class SettingsPage extends Page {
 
 }
 
-customElements.define('di-page-settings', SettingsPage)
+customElements.define('di-settings-page', SettingsPage)

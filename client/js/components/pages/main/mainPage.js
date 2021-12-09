@@ -6,13 +6,15 @@ import Modal from '../../modal.js'
 import DIForm from '../../form.js'
 
 const HTML = `
-<div class="adventurer-list content-well"></div>
-<div class="other-stuff content-well">Other stuff goes over here</div>
+<div class="flex-columns">
+  <div class="adventurer-list content-well"></div>
+  <div class="other-stuff content-well">Other stuff goes over here</div>
+</div>
 `
 
 export default class MainPage extends Page {
 
-  constructor({ error }){
+  constructor({ error } = {}){
     super()
     this.innerHTML = HTML
     if(error){
@@ -36,7 +38,7 @@ export default class MainPage extends Page {
       const adventurerRow = new AdventurerRow(adventurer)
       adventurerList.appendChild(adventurerRow)
       adventurerRow.addEventListener('click', () => {
-        this.app.setPage(new AdventurerPage(adventurer))
+        this.app.setPage(new AdventurerPage(adventurer._id))
       })
     })
 
@@ -82,4 +84,4 @@ export default class MainPage extends Page {
   }
 }
 
-customElements.define('di-page-main', MainPage)
+customElements.define('di-main-page', MainPage)

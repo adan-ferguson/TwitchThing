@@ -160,7 +160,8 @@ Register Channels (admin only for now)
 2021-12-08
 ----------
 + adventurer rows
-- adventurer page
++ adventurer page
++ columny stuff
 - page load function should be able to redirect
 
 TODO
