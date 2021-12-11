@@ -162,9 +162,13 @@ Register Channels (admin only for now)
 + adventurer rows
 + adventurer page
 + columny stuff
+
+2021-12-10
+----------
 - page load function should be able to redirect
 
 TODO
 -----------
 - Clear out twitch channel stuff
+- Responsive for mobile aspect ratio
 - Make a 404 page and/or just redirect

@@ -5,14 +5,14 @@ import AdventurerLoadoutPage from '../adventurerLoadout/adventurerLoadoutPage.js
 import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
 import LevelupPage from '../levelup/levelupPage.js'
 
-import Stats from './stats.js'
-import Loadout from './loadout.js'
+import StatsBox from './statsBox.js'
+import Loadout from '../../loadout.js'
 
 import fizzetch from '../../../fizzetch.js'
 
 const HTML = `
 <div class="flex-columns">
-  <div class="flex-rows">
+  <div class="flex-rows" style="flex-basis:350rem;flex-grow:0">
     <div class="stats content-well clickable"></div>
     <div class="loadout content-well clickable"></div>
   </div>
@@ -56,7 +56,7 @@ export default class AdventurerPage extends Page {
     stats.addEventListener('click', () => {
       // void this.app.setPage(new AdventurerStatsPage(this.adventurerID))
     })
-    stats.appendChild(new Stats(this.adventurer))
+    stats.appendChild(new StatsBox(this.adventurer))
   }
 
   _showLoadout(){

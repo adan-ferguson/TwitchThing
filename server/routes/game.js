@@ -1,5 +1,4 @@
 import express from 'express'
-import log from 'fancy-log'
 
 import * as Users from '../collections/users.js'
 import pagedataRouter from './pagedata.js'
