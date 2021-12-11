@@ -13,8 +13,8 @@ import fizzetch from '../../../fizzetch.js'
 const HTML = `
 <div class="flex-columns">
   <div class="flex-rows" style="flex-basis:350rem;flex-grow:0">
-    <div class="stats content-well clickable"></div>
-    <div class="loadout content-well clickable"></div>
+    <div class="stats content-well"></div>
+    <div class="loadout content-well"></div>
   </div>
   <div class="flex-rows dungeons">
       <div class="basic-dungeon content-well clickable">Enter Dungeon</div>

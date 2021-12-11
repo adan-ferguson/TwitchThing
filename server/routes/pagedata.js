@@ -25,13 +25,13 @@ router.post('/adventurer', async(req, res) => {
     if(!id){
       return res.status(403).send('Invalid adventurer ID.')
     }
-    const payload = await Adventurers.loadData(id, {
+    const adventurer = await Adventurers.loadData(id, {
       name: 1,
       level: 1,
       xp: 1,
       loadout: 1
     })
-    res.send(payload)
+    res.send({ adventurer })
   }catch(ex){
     return res.status(ex.code || 401).send(ex.error || ex)
   }

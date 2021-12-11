@@ -50,7 +50,7 @@ export default class App extends HTMLElement {
 
   back(){
     if(this.currentPage.backPage){
-      this.setPage(new this.currentPage.backPage())
+      this.setPage(this.currentPage.backPage())
     }
   }
 }
