@@ -1,7 +1,9 @@
 import express from 'express'
-
 import * as Users from '../collections/users.js'
-import pagedataRouter from './pagedata.js'
+import * as Adventurers from '../collections/adventurers.js'
+
+import pagedataRouter from './game/pagedata.js'
+import adventurerRouter from './game/adventurer.js'
 
 const router = express.Router()
 
@@ -34,6 +36,7 @@ router.use((req, res, next) => {
 })
 
 router.use('/pagedata', pagedataRouter)
+router.use('/adventurer', adventurerRouter)
 
 router.get('/', async(req, res) => {
   res.render('game', { user: await Users.loadGameData(req.user) })
@@ -41,11 +44,13 @@ router.get('/', async(req, res) => {
 
 router.post('/newadventurer', async(req, res) => {
   try {
+    req.validateParamExists('name')
     const adventurer = await Users.newAdventurer(req.user, req.body.name)
     res.send(adventurer)
   }catch(error){
     return res.status(error.code || 500).send({ error: error.message || error })
   }
 })
+
 
 export default router

@@ -39,7 +39,7 @@ export default class AdventurerPage extends Page {
   }
 
   async load(){
-    const result = await fizzetch('/game/pagedata/adventurer', { id: this.adventurerID })
+    const result = await fizzetch(`/game/adventurer/${this.adventurerID}`)
     if(result.error){
       return result.error
     }else{
@@ -70,7 +70,7 @@ export default class AdventurerPage extends Page {
   _showDungeonOrLevelupButton(){
     // TODO: if pending levelup, show the levelup one instead
     this.querySelector('.basic-dungeon').addEventListener('click', () => {
-      // void this.app.setPage(new DungeonPickerPage(this.adventurerID))
+      void this.app.setPage(new DungeonPickerPage(this.adventurerID))
     })
     this.querySelector('.levelup').addEventListener('click', () => {
       // void this.app.setPage(new LevelupPage(this.adventurerID))

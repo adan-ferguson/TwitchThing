@@ -11,6 +11,7 @@ export default class DIForm extends HTMLFormElement {
       submitText: 'Submit',
       success: () => {},
       customFetch: false,
+      extraData: {},
       ...options
     }
     this.options = options
@@ -50,7 +51,7 @@ export default class DIForm extends HTMLFormElement {
     const data = new FormData(this)
     const obj = {}
     Array.from(data.entries()).forEach(([key, val]) => obj[key] = val)
-    return obj
+    return { ...obj, ...this.options.extraData }
   }
 
   addInput(options){

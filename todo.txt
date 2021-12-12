@@ -163,9 +163,14 @@ Register Channels (admin only for now)
 + adventurer page
 + columny stuff
 
-2021-12-10
+2021-12-11
 ----------
-- page load function should be able to redirect
++ Different font
++ Dungeon picker
+- Add function to req that helps with validation
+- Adventurers can be in "dungeon" mode
+- Dungeon page
+- page load function should be able to halt loading or go to a provided redirect pagex
 
 TODO
 -----------
