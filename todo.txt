@@ -167,14 +167,20 @@ Register Channels (admin only for now)
 ----------
 + Different font
 + Dungeon picker
-- Add function to req that helps with validation
-- Adventurers can be in "dungeon" mode
-- Dungeon page
-- page load function should be able to halt loading or go to a provided redirect pagex
 
-TODO
------------
+2021-12-12
+----------
++ Add function to req that helps with validation
++ Adventurers can be in "dungeon" mode
+- Venture/dungeonrun serialization
+
+
+- Dungeon page
+- page load function should be able to halt loading or go to a provided redirect pages
 - Clear out twitch channel stuff
+
+TODO Later
+-----------
 - Responsive for mobile aspect ratio
 - Make a 404 page and/or just redirect
 - loader shouldn't go on top of header

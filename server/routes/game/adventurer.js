@@ -1,8 +1,9 @@
 import express from 'express'
 import * as Adventurers from '../../collections/adventurers.js'
 import db from '../../db.js'
+import * as Ventures from '../../dungeons/ventures.js'
 const router = express.Router()
-const router2 = express.Router()
+const verifiedRouter = express.Router()
 
 router.use('/:adventurerID', function(req, res, next){
   req.adventurerID = db.id(req.params.adventurerID)
@@ -12,9 +13,10 @@ router.use('/:adventurerID', function(req, res, next){
   next()
 })
 
-router.use('/:adventurerID', router2)
+// TODO is this really the only way to do this
+router.use('/:adventurerID', verifiedRouter)
 
-router2.post('/dungeonpicker', async(req, res) => {
+verifiedRouter.post('/dungeonpicker', async(req, res) => {
   try {
     res.send({ dungeons: ['these do not exist yet lol'] })
   }catch(ex){
@@ -22,16 +24,16 @@ router2.post('/dungeonpicker', async(req, res) => {
   }
 })
 
-router2.post('/enterdungeon/:dungeonID', async(req, res) => {
+verifiedRouter.post('/enterdungeon/:dungeonID', async(req, res) => {
   try {
-    const result = await Adventurers.enterDungeon(req.adventurerID, req.params.dungeonID)
-    res.send({ result })
+    const venture =  Ventures.beginVenture(req.adventurerID, req.params.dungeonID)
+    res.send({ venture })
   }catch(error){
     return res.status(error.code || 500).send({ error: error.message || error })
   }
 })
 
-router2.post('*', async(req, res, next) => {
+verifiedRouter.post('*', async(req, res, next) => {
   try {
     const adventurer = await Adventurers.loadData(req.adventurerID, {
       name: 1,

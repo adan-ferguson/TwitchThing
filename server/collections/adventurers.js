@@ -1,4 +1,5 @@
 import db from '../db.js'
+import * as Ventures from '../dungeons/ventures.js'
 
 const DEFAULTS = {
   _id: null,
@@ -6,10 +7,11 @@ const DEFAULTS = {
   level: 1,
   xp: 0,
   userid: null,
-  loadout: [null, null, null, null, null, null, null, null]
+  loadout: [null, null, null, null, null, null, null, null],
+  currentVenture: null
 }
 
-export async function save(adventurerDoc){
+async function save(adventurerDoc){
   return await db.save(fix(adventurerDoc), 'adventurers')
 }
 
@@ -41,7 +43,6 @@ export async function loadData(_id, projection = {}){
   return fix(adventurerDoc, projection)
 }
 
-export async function enterDungeon(adventurerID, dungeonID){
-  // TODO: make sure adventurer isn't in a dungeon already
-  // TODO: makes ure dungeon id is valid for this adventurer
+export async function update(_id, $set = {}){
+  return await db.updateOne({ _id }, { $set })
 }
