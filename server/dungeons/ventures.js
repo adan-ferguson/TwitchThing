@@ -1,32 +1,23 @@
-import db from '../db.js'
-import DungeonRun from './dungeonRun.js'
+import { addRun } from './dungeonRunner.js'
 import * as Adventurers from '../collections/adventurers.js'
-
-const ventures = {}
 
 export async function getByAdventurerID(adventurerID){
   const data = await Adventurers.loadData(adventurerID, {
     currentVenture: 1
   })
-  return get(data.currentVenture)
-}
-
-export function get(ventureID){
-  return ventures[ventureID]
+  return data.currentVenture
 }
 
 // TODO: more options
 export async function beginVenture(adventurerID, dungeonID){
 
-  const venture = getByAdventurerID(adventurerID)
-  if(venture){
+  if(getByAdventurerID(adventurerID)){
     throw { code: 401, error: 'Can not enter dungeon, adventurer is already venturing.' }
   }
 
   // TODO: check if adventurer is allowed to run this dungeon
 
-  const ventureID = db.id()
-  ventures[ventureID] = {
+  const venture = {
     adventurerID,
     dungeonID,
     plan: {
@@ -35,22 +26,16 @@ export async function beginVenture(adventurerID, dungeonID){
       limit: 1
     },
     currentRun: null,
-    runs: []
+    finishedRuns: []
   }
 
-  Adventurers.update(adventurerID, { currentVenture: ventureID })
-  continueVenture(ventureID)
-
-  return ventureID
+  Adventurers.update(adventurerID, { currentVenture: venture })
+  continueVenture(venture)
 }
 
-function continueVenture(ventureID){
-  const venture = ventures[ventureID]
-  if(!venture){
-    throw { code: 401, error: 'Venture does not exist.' }
-  }
+async function continueVenture(venture){
 
-  if(venture.currentRun && !venture.currentRun.finished){
+  if(venture.currentRun){
     throw { code: 401, error: 'Adventurer is still in dungeon.' }
   }
 
@@ -64,15 +49,20 @@ function continueVenture(ventureID){
   }
 
   if(shouldStop){
-    stopVenture(ventureID)
+    stopVenture(venture)
   }else{
-    const dungeonRun = DungeonRun.create(venture.adventurerID, venture.dungeonID)
-    // TODO: do things when things happen
-    // dungeonRun.on('finished', () => continueVenture(ventureID))
-    venture.runs.push(dungeonRun.id)
+    venture.currentRun = await addRun(venture.adventurerID, venture.dungeonID)
+    void await Adventurers.update(venture.adventurerID, { currentVenture: venture })
   }
 }
 
-export function stopVenture(ventureID){
+export function stopVenture(venture){
   // TODO: this
+}
+
+export function runFinished(adventurerID){
+  const venture = getByAdventurerID(adventurerID)
+  venture.finishedRuns.push(venture.currentRun)
+  venture.currentRun = null
+  continueVenture(venture)
 }
