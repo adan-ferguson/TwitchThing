@@ -19,7 +19,7 @@ export default class DungeonPickerPage extends Page {
 
     const form = new DIForm({
       async: true,
-      action: `/game/adventurer/${this.adventurerID}/enterdungeon/${1}`,
+      action: `/game/adventurer/${this.adventurerID}/enterdungeon/main`,
       submitText: 'Go!',
       success: () => this.app.setPage(new DungeonPage(this.adventurerID))
     })

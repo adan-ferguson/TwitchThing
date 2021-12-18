@@ -1,5 +1,6 @@
 import * as DungeonRuns from '../collections/dungeonRuns.js'
-import { runFinished } from './ventures.js'
+import { advanceVentures } from './ventures.js'
+import { generateEvent } from './eventPlanner.js'
 
 const TICK_TIME = 5000
 
@@ -20,7 +21,7 @@ export function start(){
  */
 export async function addRun(adventurerID, dungeonID){
   const run = await DungeonRuns.create(adventurerID, dungeonID)
-  return run.id
+  return run._id
 }
 
 async function advanceAllRuns(){
@@ -29,7 +30,19 @@ async function advanceAllRuns(){
     return
   }
 
+  process.stdout.write('.')
   const runs = await DungeonRuns.loadAllInProgress()
+  await advanceVentures(runs.map(run => run._id))
+  // TODO: calculate inter-adventurer encounters
+  runs.forEach(run => {
+    const event = generateEvent(run)
+    run.events.push(event)
+    // TODO: emit this event
+    if(event.finished){
+      run.finished = true
+    }
+    DungeonRuns.save(run)
+  })
 
   setTimeout(() => {
     advanceAllRuns()

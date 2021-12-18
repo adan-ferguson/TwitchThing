@@ -4,6 +4,7 @@ import AdventurerRow from './adventurerRow.js'
 import fizzetch from '../../../fizzetch.js'
 import Modal from '../../modal.js'
 import DIForm from '../../form.js'
+import DungeonPage from '../dungeon/dungeonPage.js'
 
 const HTML = `
 <div class="flex-columns">
@@ -38,7 +39,7 @@ export default class MainPage extends Page {
       const adventurerRow = new AdventurerRow(adventurer)
       adventurerList.appendChild(adventurerRow)
       adventurerRow.addEventListener('click', () => {
-        this.app.setPage(new AdventurerPage(adventurer._id))
+        this.app.setPage(adventurer.currentVenture ? new DungeonPage(adventurer._id) : new AdventurerPage(adventurer._id))
       })
     })
 

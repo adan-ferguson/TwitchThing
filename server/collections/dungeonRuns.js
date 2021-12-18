@@ -4,10 +4,19 @@ const DEFAULTS = {
   _id: null,
   adventurerID: null,
   dungeonID: null,
+  finished: false,
   // floor: 1,
-  // loot: [],
-  // events: [],
+  // rewards: {},
+  events: [],
   // adventurerState: {}
+}
+
+export async function save(dungeonRunDoc){
+  return await db.save(fix(dungeonRunDoc), 'dungeonRuns')
+}
+
+function fix(dungeonRunDoc, projection = null){
+  return db.fix(dungeonRunDoc, DEFAULTS, projection)
 }
 
 export async function create(adventurerID, dungeonID){
@@ -19,5 +28,9 @@ export async function create(adventurerID, dungeonID){
 }
 
 export async function loadAllInProgress(){
-
+  const arr = await db.conn().collection('dungeonRuns').find({
+    finished: false
+  }).sort({ dungeonID: 1 })
+    .toArray()
+  return arr.map(dungeonRuns => fix(dungeonRuns))
 }

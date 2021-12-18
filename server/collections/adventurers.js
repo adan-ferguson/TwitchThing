@@ -1,5 +1,6 @@
 import db from '../db.js'
 
+
 const DEFAULTS = {
   _id: null,
   name: null,
@@ -43,5 +44,16 @@ export async function loadData(_id, projection = {}){
 }
 
 export async function update(_id, $set = {}){
-  return await db.updateOne({ _id }, { $set })
+  return await db.conn().collection('adventurers').updateOne({ _id }, { $set })
+}
+
+export async function loadRunningVentures() {
+  const adventurers = await db.conn().collection('adventurers').find({
+    'currentVenture.status': 'Running'
+  }, {
+    projection: {
+      currentVenture: 1
+    }
+  }).toArray()
+  return adventurers.map(adv => adv.currentVenture)
 }

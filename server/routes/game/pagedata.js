@@ -1,6 +1,5 @@
 import express from 'express'
 import * as Users from '../../collections/users.js'
-import * as Adventurers from '../../collections/adventurers.js'
 
 const router = express.Router()
 
@@ -10,6 +9,7 @@ router.post('/main', async(req, res) => {
       adventurers: {
         name: 1,
         level: 1,
+        currentVenture: 1
       }
     })
     res.send(payload)
