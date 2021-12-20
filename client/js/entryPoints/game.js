@@ -7,6 +7,10 @@ if(!window.INITIAL_USER_DATA){
 }
 
 SocketClient.connect()
-
-const app = new App(window.INITIAL_USER_DATA)
-document.querySelector('#root').appendChild(app)
+SocketClient.getSocket().on('user connect', id => {
+  console.log('socket user connected', id)
+  const app = new App(window.INITIAL_USER_DATA)
+  document.querySelector('#root').appendChild(app)
+}).on('adventurer update', ({ dungeonRun, event }) => {
+  console.log('adventurer updated', dungeonRun, event)
+})

@@ -1,6 +1,8 @@
 import * as DungeonRuns from '../collections/dungeonRuns.js'
 import { advanceVentures } from './ventures.js'
 import { generateEvent } from './eventPlanner.js'
+import { emit } from '../socketServer.js'
+import { loadData } from '../collections/adventurers.js'
 
 const TICK_TIME = 5000
 
@@ -34,15 +36,9 @@ async function advanceAllRuns(){
   const runs = await DungeonRuns.loadAllInProgress()
   await advanceVentures(runs.map(run => run._id))
   // TODO: calculate inter-adventurer encounters
-  runs.forEach(run => {
-    const event = generateEvent(run)
-    run.events.push(event)
-    // TODO: emit this event
-    if(event.finished){
-      run.finished = true
-    }
-    DungeonRuns.save(run)
-  })
+  for (const run of runs) {
+    await DungeonRuns.advance(run)
+  }
 
   setTimeout(() => {
     advanceAllRuns()

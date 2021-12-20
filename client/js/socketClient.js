@@ -14,17 +14,6 @@ export function connect(){
   })
 }
 
-export function setupUser(user){
-  socket
-    .emit('join room', { room: user.username })
-    .on('resources_updated', args => {
-      user.update(args)
-    })
-    .on('room joined', name => {
-      console.log('joined room', name)
-    })
-}
-
 export function getSocket(){
   return socket
 }

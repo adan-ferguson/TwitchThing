@@ -1,6 +1,5 @@
 import { addRun } from './dungeonRunner.js'
 import * as Adventurers from '../collections/adventurers.js'
-import { loadRunningVentures } from '../collections/adventurers.js'
 
 export async function getByAdventurerID(adventurerID){
   const data = await Adventurers.loadData(adventurerID, {
@@ -37,7 +36,7 @@ export async function beginVenture(adventurerID, dungeonID){
 async function continueVenture(venture){
 
   if(venture.currentRun){
-    ven  ture.finishedRuns.push(venture.currentRun)
+    venture.finishedRuns.push(venture.currentRun)
     venture.currentRun = null
   }
 
