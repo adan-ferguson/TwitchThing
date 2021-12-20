@@ -17,7 +17,8 @@ export default class AdventurerRow extends HTMLButtonElement {
     this.querySelector('.level').textContent = adventurer.level
 
     if(adventurer.currentVenture){
-      this.querySelector('.status').textContent = 'In Dungeon'
+      // More info
+      this.querySelector('.status').textContent = adventurer.currentVenture.status
     }
   }
 }

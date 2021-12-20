@@ -172,14 +172,18 @@ Register Channels (admin only for now)
 ----------
 + Add function to req that helps with validation
 + Adventurers can be in "dungeon" mode
-- Venture/dungeonrun serialization
-- Dungeonrun ticking
++ Venture/dungeonrun serialization
++ Dungeonrun ticking
 - Dungeon page
+- Dungeon results page, clear venture
 - page load function should be able to halt loading or go to a provided redirect pages
 - Clear out twitch channel stuff
 
 TODO Later
 -----------
+- Event log
+- View previous dungeon runs/ventures
+- Multi-run ventures w/ timer
 - Responsive for mobile aspect ratio
 - Make a 404 page and/or just redirect
 - loader shouldn't go on top of header

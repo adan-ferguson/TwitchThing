@@ -8,10 +8,10 @@ const DEFAULTS = {
   adventurerID: null,
   dungeonID: null,
   finished: false,
-  // floor: 1,
-  // rewards: {},
+  floor: 1,
+  rewards: {},
   events: [],
-  // adventurerState: {}
+  adventurerState: {}
 }
 
 export async function save(dungeonRunDoc){
@@ -50,7 +50,7 @@ export async function advance(dungeonRunDoc){
   }
 
   // TODO: more detail in this one
-  emit(dungeonRunDoc.adventurerID, 'dungeon run event', event)
+  emit(dungeonRunDoc.adventurerID, 'dungeon run update', event)
 
   // TODO: less detail in this one
   emit(adventurer.userid, 'adventurer update', { dungeonRunDoc, event })
