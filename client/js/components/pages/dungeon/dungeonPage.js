@@ -25,11 +25,10 @@ export default class DungeonPage extends Page {
 
   constructor(adventurerID){
     super()
-    debugger
     this.adventurerID = adventurerID
     this.innerHTML = HTML
 
-    this.adventurerEl = this.querySelector('di-dungeon-adventurer')
+    this.adventurerEl =  this.querySelector('di-dungeon-adventurer')
     this.eventEl = this.querySelector('di-dungeon-event')
     this.stateEl = this.querySelector('di-dungeon-state')
   }
@@ -40,10 +39,18 @@ export default class DungeonPage extends Page {
 
   async load(){
 
-    const { adventurer, currentRunState, currentEvent } = await fizzetch('/game/pagedata/dungeon')
-    this.adventurerEl.update(adventurer)
-    this.eventEl.update(currentEvent)
-    this.stateEl.update(currentRunState)
+    // TODO: handle ventures
+    const { adventurer, dungeonRun } = await fizzetch(`/game/adventurer/${this.adventurerID}/dungeonrun`)
+
+    if(!dungeonRun){
+
+    }else if(dungeonRun.finished){
+
+    }
+
+    this.adventurerEl.setAdventurer(adventurer)
+    this.stateEl.update(dungeonRun)
+    this.eventEl.update(dungeonRun.currentEvent)
 
     getSocket()
       .emit('view dungeon run', {

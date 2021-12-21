@@ -25,7 +25,7 @@ export default class MainPage extends Page {
   }
 
   async load(){
-    const myContent = await fizzetch('/game/pagedata/main')
+    const myContent = await fizzetch('/game/main')
     if(myContent.error){
       this._showError(myContent.error, true)
     }else{

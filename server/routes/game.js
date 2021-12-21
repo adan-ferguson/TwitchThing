@@ -35,7 +35,21 @@ router.use((req, res, next) => {
   next()
 })
 
-router.use('/pagedata', pagedataRouter)
+router.post('/main', async(req, res) => {
+  try {
+    const payload = await Users.loadData(req.user, {
+      adventurers: {
+        name: 1,
+        level: 1,
+        currentVenture: 1
+      }
+    })
+    res.send(payload)
+  }catch(ex){
+    return res.status(ex.code || 401).send(ex.error || ex)
+  }
+})
+
 router.use('/adventurer', adventurerRouter)
 
 router.get('/', async(req, res) => {

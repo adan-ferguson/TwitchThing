@@ -5,6 +5,14 @@ export default class Adventurer extends HTMLElement {
     super()
     this.innerHTML = innerHTML
   }
+
+  setAdventurer(adventurer){
+
+  }
+
+  update(adventurerState){
+
+  }
 }
 
 customElements.define('di-dungeon-adventurer', Adventurer)

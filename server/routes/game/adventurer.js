@@ -2,6 +2,7 @@ import express from 'express'
 import * as Adventurers from '../../collections/adventurers.js'
 import db from '../../db.js'
 import * as Ventures from '../../dungeons/ventures.js'
+import * as DungeonRuns from '../../collections/adventurers.js'
 const router = express.Router()
 const verifiedRouter = express.Router()
 
@@ -33,7 +34,33 @@ verifiedRouter.post('/enterdungeon/:dungeonID', async(req, res) => {
   }
 })
 
-verifiedRouter.post('*', async(req, res, next) => {
+verifiedRouter.post('/dungeonrun', async(req, res) => {
+  try {
+    const adventurer = Adventurers.loadData(req.adventurerID)
+    if(!adventurer.currentVenture){
+      return res.status(404).send({ error: 'Adventurer is not currently venturing.' })
+    }
+    const dungeonRunID = adventurer.currentVenture.currentRun || adventurer.currentVenture.finishedRuns.at(-1)
+    const dungeonRun = DungeonRuns.loadData({
+      _id: dungeonRunID,
+      adventurerID: req.adventurerID
+    }, {
+      dungeonID: 1,
+      floor: 1,
+      finished: 1,
+      currentEvent: 1,
+      adventurerState: 1
+    })
+    if(!dungeonRun || dungeonRun.adventurerID !== req.adventurerID){
+      return res.status(500).send({ error: 'Could not load dungeon run.' })
+    }
+    res.send({ adventurer, dungeonRun })
+  }catch(error){
+    return res.status(error.code || 500).send({ error: error.message || error })
+  }
+})
+
+verifiedRouter.post('', async(req, res, next) => {
   try {
     const adventurer = await Adventurers.loadData(req.adventurerID, {
       name: 1,

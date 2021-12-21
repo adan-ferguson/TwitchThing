@@ -11,6 +11,7 @@ const DEFAULTS = {
   floor: 1,
   rewards: {},
   events: [],
+  currentEvent: null,
   adventurerState: {}
 }
 
