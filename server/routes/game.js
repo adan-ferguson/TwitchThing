@@ -1,8 +1,6 @@
 import express from 'express'
 import * as Users from '../collections/users.js'
-import * as Adventurers from '../collections/adventurers.js'
 
-import pagedataRouter from './game/pagedata.js'
 import adventurerRouter from './game/adventurer.js'
 
 const router = express.Router()
