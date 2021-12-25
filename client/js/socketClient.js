@@ -7,6 +7,12 @@ export function connect(){
   socket.on('connect', () => {
     console.log('Socket connected')
   })
+  socket.on('room joined', id => {
+    console.log('Room joined', id)
+  })
+  socket.on('room left', id => {
+    console.log('Room left', id)
+  })
 }
 
 export function getSocket(){

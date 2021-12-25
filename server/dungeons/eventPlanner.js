@@ -1,15 +1,11 @@
 export async function generateEvent(dungeonRun){
-  if(dungeonRun.events.length >= 10){
+  if(dungeonRun.events.length >= 20){
     return {
       finished: true,
       message: 'You leave because it\'s really boring.'
     }
-  }else if(dungeonRun.events.length <= 0){
-    return {
-      message: 'You enter the dungeon.'
-    }
   }
   return {
-    message: 'Nothing happens because the dungeon is empty.'
+    message: 'Nothing happens because the dungeon is empty. ' + dungeonRun.events.length
   }
 }

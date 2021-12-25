@@ -10,8 +10,6 @@ const router = express.Router()
 const magic = new Magic(config.magic.secretKey)
 const strategy = new Strategy(async function(magicUser, done){
   try {
-    // do we need this?
-    // const userMetadata = await magic.users.getMetadataByIssuer(magicUser.issuer)
     let user = await Users.loadFromMagicID(magicUser.issuer)
     if(!user){
       const userMetadata = await magic.users.getMetadataByIssuer(magicUser.issuer)
@@ -33,11 +31,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
   const user = await Users.loadFromMagicID(id)
-  if(user){
-    done(null, user)
-  }else{
-    done('User not found', null)
-  }
+  done(null, user)
 })
 
 router.post('/login', passport.authenticate('magic'), (req, res) => {

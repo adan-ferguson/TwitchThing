@@ -1,6 +1,7 @@
 import db from '../db.js'
 import { generateEvent } from '../dungeons/eventPlanner.js'
 import { emit } from '../socketServer.js'
+import * as Adventurers from './adventurers.js'
 
 const DEFAULTS = {
   _id: null,
@@ -10,7 +11,9 @@ const DEFAULTS = {
   floor: 1,
   rewards: {},
   events: [],
-  currentEvent: null,
+  currentEvent: {
+    message: 'You enter the dungeon.'
+  },
   adventurerState: {}
 }
 
@@ -47,7 +50,7 @@ export async function findOne(queryOrID = {}, projection = {}){
 }
 
 export async function advance(dungeonRunDoc){
-  const adventurer = await find(dungeonRunDoc.adventurerID)
+  const adventurer = await Adventurers.findOne(dungeonRunDoc.adventurerID)
 
   // TODO: provide more detail here
   const event = await generateEvent(dungeonRunDoc)
@@ -60,7 +63,9 @@ export async function advance(dungeonRunDoc){
   }
 
   // TODO: more detail in this one
-  emit(dungeonRunDoc.adventurerID, 'dungeon run update', event)
+  emit(dungeonRunDoc.adventurerID, 'dungeon run update', {
+    dungeonRun: dungeonRunDoc
+  })
 
   // TODO: less detail in this one
   emit(adventurer.userid, 'adventurer update', { dungeonRunDoc, event })

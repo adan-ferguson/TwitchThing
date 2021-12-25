@@ -41,7 +41,7 @@ verifiedRouter.post('/dungeonrun', async(req, res) => {
       name: 1
     })
     if(!adventurer.currentVenture){
-      return res.status(404).send({ error: 'Loadout is not currently venturing.' })
+      return res.status(404).send({ error: 'Adventurer is not currently venturing.' })
     }
     const dungeonRunID = adventurer.currentVenture.currentRun || adventurer.currentVenture.finishedRuns.at(-1)
     const dungeonRun = await DungeonRuns.findOne({
@@ -58,6 +58,43 @@ verifiedRouter.post('/dungeonrun', async(req, res) => {
       return res.status(500).send({ error: 'Could not load dungeon run.' })
     }
     res.send({ adventurer, dungeonRun })
+  }catch(error){
+    return res.status(error.code || 500).send({ error: error.message || error })
+  }
+})
+
+verifiedRouter.post('/results', async (req, res) => {
+  try {
+    const adventurer = await Adventurers.findOne(req.adventurerID, {
+      currentVenture: 1,
+      name: 1
+    })
+    if(!adventurer.currentVenture){
+      return res.status(401).send({ error: 'Adventurer is not currently venturing.', targetPage: 'Adventurer' })
+    }
+    if(adventurer.currentVenture.status !== 'Finished'){
+      return res.status(401).send({ error: 'Venture is not finished yet.', targetPage: 'Dungeon' })
+    }
+    res.send({ results: 'something' })
+  }catch(error){
+    return res.status(error.code || 500).send({ error: error.message || error })
+  }
+})
+
+verifiedRouter.post('/confirmresults', async (req, res) => {
+  try {
+    const adventurer = await Adventurers.findOne(req.adventurerID, {
+      currentVenture: 1,
+      name: 1
+    })
+    if(!adventurer.currentVenture){
+      return res.status(401).send({ error: 'Adventurer is not currently venturing.', targetPage: 'Adventurer' })
+    }
+    if(adventurer.currentVenture.status !== 'Finished'){
+      return res.status(401).send({ error: 'Venture is not finished yet.', targetPage: 'Dungeon' })
+    }
+    await Adventurers.update(req.adventurerID, { currentVenture: null })
+    res.send({ results: 'something' })
   }catch(error){
     return res.status(error.code || 500).send({ error: error.message || error })
   }

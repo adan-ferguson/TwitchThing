@@ -175,7 +175,9 @@ Register Channels (admin only for now)
 + Venture/dungeonrun serialization
 + Dungeonrun ticking
 + Dungeon page
-- Dungeon results page, clear venture
++ Dungeon results page, clear venture
+- Some sort of animation while adventure happening
+- Prevent weird double-ventures? What's going on?
 - page load function should be able to halt loading or go to a provided redirect pages
 - Clear out twitch channel stuff
 

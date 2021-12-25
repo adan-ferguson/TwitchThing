@@ -5,6 +5,7 @@ import fizzetch from '../../../fizzetch.js'
 import DIForm from '../../form.js'
 import DungeonPage from '../dungeon/dungeonPage.js'
 import FormModal from '../../formModal.js'
+import ResultsPage from '../results/resultsPage.js'
 
 const HTML = `
 <div class="flex-columns">
@@ -36,11 +37,10 @@ export default class MainPage extends Page {
   async _populateAdventurers(adventurers = []){
     const adventurerList = this.querySelector('.adventurer-list')
     adventurers.forEach(adventurer => {
-      const adventurerRow = new AdventurerRow(adventurer)
-      adventurerList.appendChild(adventurerRow)
-      adventurerRow.addEventListener('click', () => {
-        this.app.setPage(adventurer.currentVenture ? new DungeonPage(adventurer._id) : new AdventurerPage(adventurer._id))
+      const adventurerRow = new AdventurerRow(adventurer, page => {
+        this.app.setPage(page)
       })
+      adventurerList.appendChild(adventurerRow)
     })
 
     // TODO: show each available slot

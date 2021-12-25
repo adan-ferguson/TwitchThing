@@ -37,3 +37,4 @@ export default class SimpleModal extends Modal {
     })
   }
 }
+customElements.define('di-simple-modal', SimpleModal)

@@ -7,6 +7,7 @@ import './stats.js'
 import './loadout.js'
 import './event.js'
 import './state.js'
+import ResultsPage from '../results/resultsPage.js'
 
 const HTML = `
 <div class='flex-columns'>
@@ -53,6 +54,8 @@ export default class DungeonPage extends Page {
 
     if(!dungeonRun){
       // TODO: error thing
+    }else if(dungeonRun.finished){
+      this._finish()
     }
 
     this.statsEl.setAdventurer(adventurer)
@@ -73,14 +76,17 @@ export default class DungeonPage extends Page {
       .emit('leave dungeon run')
   }
 
-  _parseSocketEvent = ({ currentEvent, runState }) => {
-    this.eventEl.update(currentEvent)
-    this.stateEl.update(runState)
+  _parseSocketEvent = ({ dungeonRun }) => {
+    this.eventEl.update(dungeonRun.currentEvent)
+    this.stateEl.update(dungeonRun)
+    if(dungeonRun.finished){
+      this._finish()
+    }
   }
 
   _finish(){
     // TODO: deal with multi-run ventures
-    // TODO: go to dungeon run summary
+    this.app.setPage(new ResultsPage(this.adventurerID))
   }
 }
 

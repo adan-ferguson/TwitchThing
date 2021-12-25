@@ -25,13 +25,13 @@ export function setup(server, sessionMiddleware){
       })
     }
 
-    socket.on('view dungeon run', (adventurerID) => {
+    socket.on('view dungeon run', ({ adventurerID }) => {
       socket.join(adventurerID)
       io.to(adventurerID).emit('room joined', adventurerID)
       log('User joined room', adventurerID)
     })
 
-    socket.on('leave dungeon run', (adventurerID) => {
+    socket.on('leave dungeon run', ({ adventurerID }) => {
       socket.leave(adventurerID)
       io.to(adventurerID).emit('room left', adventurerID)
       log('User left room', adventurerID)
@@ -40,6 +40,5 @@ export function setup(server, sessionMiddleware){
 }
 
 export function emit(roomname, eventName, data = {}){
-  io.to(roomname).emit(eventName, data)
-  log(roomname, eventName, data)
+  io.to(roomname.toString()).emit(eventName, data)
 }

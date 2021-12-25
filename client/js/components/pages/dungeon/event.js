@@ -10,11 +10,10 @@ export default class Event extends HTMLElement {
   }
 
   update(dungeonEvent){
-    debugger
     if(!dungeonEvent){
       return
     }
-    this.querySelector('.text').textContent = dungeonEvent.message
+    this.querySelector('.message').textContent = dungeonEvent.message
   }
 }
 

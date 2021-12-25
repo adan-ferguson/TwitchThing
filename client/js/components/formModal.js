@@ -4,6 +4,7 @@ export default class FormModal extends Modal {
   constructor(form){
     super()
     this.innerPane.appendChild(form)
-    form.on('success', () => this.hide())
+    form.addEventListener('success', () => this.hide())
   }
 }
+customElements.define('di-form-modal', FormModal)
