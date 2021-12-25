@@ -40,7 +40,7 @@ export async function update(_id, $set = {}){
 
 export async function loadRunningVentures() {
   const adventurers = await db.conn().collection('adventurers').find({
-    'currentVenture.status': 'Running'
+    'currentVenture.finished': false
   }, {
     projection: {
       currentVenture: 1

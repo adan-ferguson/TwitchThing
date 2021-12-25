@@ -72,7 +72,7 @@ verifiedRouter.post('/results', async (req, res) => {
     if(!adventurer.currentVenture){
       return res.status(401).send({ error: 'Adventurer is not currently venturing.', targetPage: 'Adventurer' })
     }
-    if(adventurer.currentVenture.status !== 'Finished'){
+    if(!adventurer.currentVenture.finished){
       return res.status(401).send({ error: 'Venture is not finished yet.', targetPage: 'Dungeon' })
     }
     res.send({ results: 'something' })
@@ -90,7 +90,7 @@ verifiedRouter.post('/confirmresults', async (req, res) => {
     if(!adventurer.currentVenture){
       return res.status(401).send({ error: 'Adventurer is not currently venturing.', targetPage: 'Adventurer' })
     }
-    if(adventurer.currentVenture.status !== 'Finished'){
+    if(!adventurer.currentVenture.finished){
       return res.status(401).send({ error: 'Venture is not finished yet.', targetPage: 'Dungeon' })
     }
     await Adventurers.update(req.adventurerID, { currentVenture: null })

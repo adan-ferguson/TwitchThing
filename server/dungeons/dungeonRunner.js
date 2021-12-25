@@ -34,11 +34,11 @@ async function advanceAllRuns(){
 
   process.stdout.write('.')
   const runs = await DungeonRuns.loadAllInProgress()
-  await advanceVentures(runs.map(run => run._id))
   // TODO: calculate inter-adventurer encounters
   for (const run of runs) {
     await DungeonRuns.advance(run)
   }
+  await advanceVentures(runs.map(run => run._id))
 
   setTimeout(() => {
     advanceAllRuns()

@@ -1,5 +1,6 @@
 import { addRun } from './dungeonRunner.js'
 import * as Adventurers from '../collections/adventurers.js'
+import { emit } from '../socketServer.js'
 
 export async function getByAdventurerID(adventurerID){
   const data = await Adventurers.findOne(adventurerID, {
@@ -20,7 +21,7 @@ export async function beginVenture(adventurerID, dungeonID){
   const venture = {
     adventurerID,
     dungeonID,
-    status: 'Running',
+    finished: false,
     plan: {
       type: 'count',
       current: 0,
@@ -52,12 +53,13 @@ async function continueVenture(venture){
   }
 
   if(shouldStop){
-    venture.status = 'Finished'
+    venture.finished = true
   }else{
     venture.currentRun = await addRun(venture.adventurerID, venture.dungeonID)
   }
 
   await Adventurers.update(venture.adventurerID, { currentVenture: venture })
+  emit(venture.adventurerID, 'venture update', venture)
 }
 
 export async function runFinished(runID, adventurerID){
@@ -85,7 +87,7 @@ export async function advanceVentures(runsInProgress){
   const ventures = await Adventurers.loadRunningVentures()
   for(let i = 0; i < ventures.length; i++){
     let venture = ventures[i]
-    if(!venture.currentRun || !runsInProgress[venture.currentRun.toString()]){
+    if(!venture.currentRun || !runsObj[venture.currentRun.toString()]){
       await continueVenture(venture)
     }
   }

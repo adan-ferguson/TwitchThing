@@ -50,7 +50,7 @@ export async function findOne(queryOrID = {}, projection = {}){
 }
 
 export async function advance(dungeonRunDoc){
-  const adventurer = await Adventurers.findOne(dungeonRunDoc.adventurerID)
+  // const adventurer = await Adventurers.findOne(dungeonRunDoc.adventurerID)
 
   // TODO: provide more detail here
   const event = await generateEvent(dungeonRunDoc)
@@ -63,12 +63,10 @@ export async function advance(dungeonRunDoc){
   }
 
   // TODO: more detail in this one
-  emit(dungeonRunDoc.adventurerID, 'dungeon run update', {
-    dungeonRun: dungeonRunDoc
-  })
+  emit(dungeonRunDoc.adventurerID, 'dungeon run update', dungeonRunDoc)
 
-  // TODO: less detail in this one
-  emit(adventurer.userid, 'adventurer update', { dungeonRunDoc, event })
+  // // TODO: less detail in this one
+  // emit(adventurer.userid, 'adventurer update', { dungeonRunDoc, event })
 
   await save(dungeonRunDoc)
 }

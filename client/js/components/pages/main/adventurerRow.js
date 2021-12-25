@@ -22,13 +22,13 @@ export default class AdventurerRow extends HTMLButtonElement {
 
     if(adventurer.currentVenture){
       // More info
-      this.querySelector('.status').textContent = adventurer.currentVenture.status
+      this.querySelector('.status').textContent = adventurer.currentVenture.finished ? 'Finished' : 'Running'
     }
 
     this.addEventListener('click', () => {
       let page
       if(adventurer.currentVenture){
-        if(adventurer.currentVenture.status === 'Finished'){
+        if(adventurer.currentVenture.finished){
           page = new ResultsPage(adventurer._id)
         }else{
           page = new DungeonPage(adventurer._id)

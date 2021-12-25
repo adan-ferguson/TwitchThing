@@ -54,8 +54,6 @@ export default class DungeonPage extends Page {
 
     if(!dungeonRun){
       // TODO: error thing
-    }else if(dungeonRun.finished){
-      this._finish()
     }
 
     this.statsEl.setAdventurer(adventurer)
@@ -67,19 +65,27 @@ export default class DungeonPage extends Page {
       .emit('view dungeon run', {
         adventurerID: this.adventurerID
       })
-      .on('dungeon run update', this._parseSocketEvent)
+      .on('dungeon run update', this._parseDungeonUpdate)
+      .on('venture update', this._parseVentureUpdate)
   }
 
   async unload(){
     getSocket()
-      .off('dungeon run update', this._parseSocketEvent)
-      .emit('leave dungeon run')
+      .off('dungeon run update', this._parseDungeonUpdate)
+      .off('venture update', this._parseVentureUpdate)
+      .emit('leave dungeon run', {
+        adventurerID: this.adventurerID
+      })
   }
 
-  _parseSocketEvent = ({ dungeonRun }) => {
+  _parseDungeonUpdate = dungeonRun => {
     this.eventEl.update(dungeonRun.currentEvent)
     this.stateEl.update(dungeonRun)
-    if(dungeonRun.finished){
+  }
+
+  _parseVentureUpdate = venture => {
+    debugger
+    if(venture.finished){
       this._finish()
     }
   }
