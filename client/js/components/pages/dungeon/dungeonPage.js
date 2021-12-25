@@ -3,21 +3,29 @@ import MainPage from '../main/mainPage.js'
 import fizzetch from '../../../fizzetch.js'
 import { getSocket } from '../../../socketClient.js'
 
-import './adventurer.js'
+import './stats.js'
+import './loadout.js'
 import './event.js'
 import './state.js'
 
 const HTML = `
 <div class='flex-columns'>
-    <div class='content-well adventurer'>
-        <di-dungeon-adventurer></di-dungeon-adventurer>
+  <div class="flex-rows" style="flex-basis:300rem;flex-grow:0">
+    <div class="stats content-well">
+        <di-dungeon-stats></di-dungeon-stats>
     </div>
-    <div class='content-well event'>
+    <div class="loadout content-well no-padding">
+        <di-loadout></di-loadout>
+    </div>
+  </div>
+  <div class="flex-rows">
+    <div class="event content-well">
         <di-dungeon-event></di-dungeon-event>
     </div>
-    <div class='content-well right'>
+    <div class="state content-well" style="flex-basis:125rem;flex-grow:0">
         <di-dungeon-state></di-dungeon-state>
     </div>
+  </div>
 </div>
 `
 
@@ -28,7 +36,8 @@ export default class DungeonPage extends Page {
     this.adventurerID = adventurerID
     this.innerHTML = HTML
 
-    this.adventurerEl =  this.querySelector('di-dungeon-adventurer')
+    this.statsEl = this.querySelector('di-dungeon-stats')
+    this.loadoutEl = this.querySelector('di-dungeon-loadout')
     this.eventEl = this.querySelector('di-dungeon-event')
     this.stateEl = this.querySelector('di-dungeon-state')
   }
@@ -43,12 +52,11 @@ export default class DungeonPage extends Page {
     const { adventurer, dungeonRun } = await fizzetch(`/game/adventurer/${this.adventurerID}/dungeonrun`)
 
     if(!dungeonRun){
-
-    }else if(dungeonRun.finished){
-
+      // TODO: error thing
     }
 
-    this.adventurerEl.setAdventurer(adventurer)
+    this.statsEl.setAdventurer(adventurer)
+    // this.loadoutEl.setLoadout(adventurer)
     this.stateEl.update(dungeonRun)
     this.eventEl.update(dungeonRun.currentEvent)
 
@@ -66,12 +74,8 @@ export default class DungeonPage extends Page {
   }
 
   _parseSocketEvent = ({ currentEvent, runState }) => {
-    if(currentEvent){
-      this.eventEl.update(currentEvent)
-    }
-    if(runState){
-      this.stateEl.update(runState)
-    }
+    this.eventEl.update(currentEvent)
+    this.stateEl.update(runState)
   }
 
   _finish(){

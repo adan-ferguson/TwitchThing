@@ -58,7 +58,7 @@ export function levelToXp(lvl){
 //     throw 'Combined item level too high.'
 //   }
 // }
-// export default class Adventurer {
+// export default class Loadout {
 //   constructor(adventurerDoc){
 //     this.adventurerDoc = adventurerDoc
 //   }

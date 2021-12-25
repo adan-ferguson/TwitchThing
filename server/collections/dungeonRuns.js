@@ -1,5 +1,4 @@
 import db from '../db.js'
-import { loadData } from './adventurers.js'
 import { generateEvent } from '../dungeons/eventPlanner.js'
 import { emit } from '../socketServer.js'
 
@@ -39,13 +38,23 @@ export async function loadAllInProgress(){
   return arr.map(dungeonRuns => fix(dungeonRuns))
 }
 
+export async function find(queryOrID = {}, projection = {}){
+  return db.find('dungeonRuns', queryOrID, projection, DEFAULTS)
+}
+
+export async function findOne(queryOrID = {}, projection = {}){
+  return db.findOne('dungeonRuns', queryOrID, projection, DEFAULTS)
+}
+
 export async function advance(dungeonRunDoc){
-  const adventurer = await loadData(dungeonRunDoc.adventurerID)
+  const adventurer = await find(dungeonRunDoc.adventurerID)
 
   // TODO: provide more detail here
   const event = await generateEvent(dungeonRunDoc)
 
   dungeonRunDoc.events.push(event)
+  dungeonRunDoc.currentEvent = event
+
   if(event.finished){
     dungeonRunDoc.finished = true
   }

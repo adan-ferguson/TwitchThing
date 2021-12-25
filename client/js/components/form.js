@@ -30,6 +30,7 @@ export default class DIForm extends HTMLFormElement {
           this.error(result.error)
         }else{
           options.success(result)
+          this.dispatchEvent(new Event('success'))
         }
       })
     }

@@ -2,7 +2,7 @@ import * as DungeonRuns from '../collections/dungeonRuns.js'
 import { advanceVentures } from './ventures.js'
 import { generateEvent } from './eventPlanner.js'
 import { emit } from '../socketServer.js'
-import { loadData } from '../collections/adventurers.js'
+import { findOne } from '../collections/adventurers.js'
 
 const TICK_TIME = 5000
 

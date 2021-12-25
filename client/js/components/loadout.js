@@ -12,4 +12,4 @@ export default class Loadout extends HTMLElement {
   }
 }
 
-customElements.define('di-adventurer-loadout', Loadout)
+customElements.define('di-loadout', Loadout)

@@ -2,7 +2,7 @@ import { addRun } from './dungeonRunner.js'
 import * as Adventurers from '../collections/adventurers.js'
 
 export async function getByAdventurerID(adventurerID){
-  const data = await Adventurers.loadData(adventurerID, {
+  const data = await Adventurers.findOne(adventurerID, {
     currentVenture: 1
   })
   return data.currentVenture

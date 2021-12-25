@@ -1,12 +1,20 @@
-const innerHTML = ''
+const innerHTML = `
+<div class="message"></div>
+`
 
 export default class Event extends HTMLElement {
+
   constructor(){
     super()
     this.innerHTML = innerHTML
   }
-  update(event){
 
+  update(dungeonEvent){
+    debugger
+    if(!dungeonEvent){
+      return
+    }
+    this.querySelector('.text').textContent = dungeonEvent.message
   }
 }
 

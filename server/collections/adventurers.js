@@ -1,5 +1,5 @@
 import db from '../db.js'
-
+import MongoDB from 'mongodb'
 
 const DEFAULTS = {
   _id: null,
@@ -30,17 +30,8 @@ export async function createNew(userid, name){
   return await save({ name, userid })
 }
 
-export async function loadData(_id, projection = {}){
-  const adventurerDoc = await db.conn().collection('adventurers')
-    .findOne({ _id }, { projection })
-  if(!adventurerDoc){
-    throw { code: 401, error: 'Invalid adventurer ID.' }
-  }
-  if(projection.loadout){
-    // TODO: load the loadout items
-    // adventurerDoc.loadout = Items.loadByIds(adventurerDoc.loadout)
-  }
-  return fix(adventurerDoc, projection)
+export async function findOne(queryOrID, projection = {}){
+  return await db.findOne('adventurers', queryOrID, projection, DEFAULTS)
 }
 
 export async function update(_id, $set = {}){

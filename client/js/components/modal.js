@@ -5,16 +5,12 @@ const HTML = `
 
 export default class Modal extends HTMLElement{
 
-  constructor(content = null){
+  constructor(){
     super()
     this.classList.add('modal')
     this.innerHTML = HTML
     this.underlay = this.querySelector('.underlay')
     this.innerPane = this.querySelector('.inner-pane')
-
-    if(content){
-      this.innerPane.appendChild(content)
-    }
   }
 
   show = () => {

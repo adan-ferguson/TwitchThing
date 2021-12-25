@@ -174,7 +174,7 @@ Register Channels (admin only for now)
 + Adventurers can be in "dungeon" mode
 + Venture/dungeonrun serialization
 + Dungeonrun ticking
-- Dungeon page
++ Dungeon page
 - Dungeon results page, clear venture
 - page load function should be able to halt loading or go to a provided redirect pages
 - Clear out twitch channel stuff

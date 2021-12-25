@@ -20,6 +20,25 @@ const init = async () => {
 
 const id = id => MongoDB.ObjectID(id)
 
+const fix = (doc, defaults, projection = null) => {
+  const fixedDoc = { ...doc }
+  for(let key in defaults){
+    if(!projection || projection[key]){
+      if(!(key in fixedDoc)){
+        fixedDoc[key] = defaults[key]
+      }
+    }
+  }
+  return fixedDoc
+}
+
+const qoid = queryOrID => {
+  if(typeof(queryOrID) === 'string' || queryOrID instanceof MongoDB.ObjectID){
+    queryOrID = { _id : queryOrID }
+  }
+  return queryOrID
+}
+
 export default {
   init,
   client: () => client,
@@ -33,15 +52,16 @@ export default {
     }
     return doc
   },
-  fix: (doc, defaults, projection = null) => {
-    const fixedDoc = { ...doc }
-    for(let key in defaults){
-      if(!projection || projection[key]){
-        if(!(key in fixedDoc)){
-          fixedDoc[key] = defaults[key]
-        }
-      }
+  fix,
+  findOne: async (collection, queryOrID, projection = {}, defaults = {}) => {
+    const doc = await connection.collection(collection).findOne(qoid(queryOrID), { projection })
+    if(doc){
+      return fix(doc, defaults, projection)
     }
-    return fixedDoc
+    return null
+  },
+  find: async (collection, queryOrID, projection = {}, defaults = {}) => {
+    const docs = await connection.collection(collection).find(qoid(queryOrID), { projection }).toArray()
+    return docs.map(doc => fix(doc, defaults, projection))
   }
 }

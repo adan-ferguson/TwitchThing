@@ -30,6 +30,5 @@ async function sendLink(){
     credentials: 'same-origin',
     method: 'POST'
   })
-  debugger
   return { error: result.error }
 }

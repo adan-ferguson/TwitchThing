@@ -2,9 +2,9 @@ import Page from '../page.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import AdventurerRow from './adventurerRow.js'
 import fizzetch from '../../../fizzetch.js'
-import Modal from '../../modal.js'
 import DIForm from '../../form.js'
 import DungeonPage from '../dungeon/dungeonPage.js'
+import FormModal from '../../formModal.js'
 
 const HTML = `
 <div class="flex-columns">
@@ -72,7 +72,7 @@ export default class MainPage extends Page {
     })
     // TODO: choose adventurer card
 
-    new Modal(form).show()
+    new FormModal(form).show()
   }
 
   /**

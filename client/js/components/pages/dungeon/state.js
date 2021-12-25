@@ -1,4 +1,9 @@
-const innerHTML = ''
+const innerHTML = `
+<div class="floor">
+    Floor <span></span>
+</div>
+<button disabled="disabled">View Log</button>
+`
 
 /**
  * Show either the run/venture state
@@ -10,10 +15,9 @@ export default class State extends HTMLElement {
     this.innerHTML = innerHTML
   }
 
-  update(state){
-
+  update(dungeonRun){
+    this.querySelector('.floor span').textContent = dungeonRun.floor
   }
-
 }
 
 customElements.define('di-dungeon-state', State)
