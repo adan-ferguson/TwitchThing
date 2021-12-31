@@ -27,7 +27,7 @@ verifiedRouter.post('/dungeonpicker', async(req, res) => {
 
 verifiedRouter.post('/enterdungeon/:dungeonID', async(req, res) => {
   try {
-    const venture =  Ventures.beginVenture(req.adventurerID, req.params.dungeonID)
+    const venture =  Ventures.beginVenture(req.user._id, req.adventurerID, req.params.dungeonID)
     res.send({ venture })
   }catch(error){
     return res.status(error.code || 500).send({ error: error.message || error })

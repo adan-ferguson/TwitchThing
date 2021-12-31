@@ -58,7 +58,8 @@ export default class DungeonPage extends Page {
 
     this.statsEl.setAdventurer(adventurer)
     // this.loadoutEl.setLoadout(adventurer)
-    this.stateEl.update(dungeonRun)
+    this.stateEl.updateDungeonRun(dungeonRun)
+    this.stateEl.updateVenture(adventurer.currentVenture)
     this.eventEl.update(dungeonRun.currentEvent)
 
     getSocket()
@@ -84,9 +85,10 @@ export default class DungeonPage extends Page {
   }
 
   _parseVentureUpdate = venture => {
-    debugger
     if(venture.finished){
       this._finish()
+    }else{
+      this.stateEl.updateVenture(venture)
     }
   }
 

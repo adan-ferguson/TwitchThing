@@ -6,6 +6,7 @@ import DIForm from '../../form.js'
 import DungeonPage from '../dungeon/dungeonPage.js'
 import FormModal from '../../formModal.js'
 import ResultsPage from '../results/resultsPage.js'
+import { getSocket } from '../../../socketClient.js'
 
 const HTML = `
 <div class="flex-columns">
@@ -32,6 +33,11 @@ export default class MainPage extends Page {
     }else{
       await this._populateAdventurers(myContent.adventurers)
     }
+    getSocket().on('venture update', this._ventureUpdate)
+  }
+
+  async unload(){
+    getSocket().off('venture update', this._ventureUpdate)
   }
 
   async _populateAdventurers(adventurers = []){
@@ -82,6 +88,14 @@ export default class MainPage extends Page {
    */
   _showError(message, critical = false){
 
+  }
+
+  _ventureUpdate(venture){
+    const row = this.querySelector(`di-adventurer-row[adventurerID="${venture.adventurerID}"]`)
+    if(row){
+      row.adventurer.venture = venture
+      row.update()
+    }
   }
 }
 

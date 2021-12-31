@@ -10,7 +10,7 @@ export async function getByAdventurerID(adventurerID){
 }
 
 // TODO: more options
-export async function beginVenture(adventurerID, dungeonID){
+export async function beginVenture(userID, adventurerID, dungeonID){
 
   if(await getByAdventurerID(adventurerID)){
     throw { code: 401, error: 'Can not enter dungeon, adventurer is already venturing.' }
@@ -19,6 +19,7 @@ export async function beginVenture(adventurerID, dungeonID){
   // TODO: check if adventurer is allowed to run this dungeon
 
   const venture = {
+    userID,
     adventurerID,
     dungeonID,
     finished: false,
@@ -27,6 +28,7 @@ export async function beginVenture(adventurerID, dungeonID){
       current: 0,
       limit: 1
     },
+    startTime: new Date(),
     currentRun: null,
     finishedRuns: []
   }
@@ -59,7 +61,7 @@ async function continueVenture(venture){
   }
 
   await Adventurers.update(venture.adventurerID, { currentVenture: venture })
-  emit(venture.adventurerID, 'venture update', venture)
+  emit(venture.userID, 'venture update', venture)
 }
 
 export async function runFinished(runID, adventurerID){

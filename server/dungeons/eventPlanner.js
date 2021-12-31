@@ -1,5 +1,5 @@
 export async function generateEvent(dungeonRun){
-  if(dungeonRun.events.length >= 20){
+  if(dungeonRun.events.length >= 5){
     return {
       finished: true,
       message: 'You leave because it\'s really boring.'

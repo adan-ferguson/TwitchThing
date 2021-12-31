@@ -65,8 +65,5 @@ export async function advance(dungeonRunDoc){
   // TODO: more detail in this one
   emit(dungeonRunDoc.adventurerID, 'dungeon run update', dungeonRunDoc)
 
-  // // TODO: less detail in this one
-  // emit(adventurer.userid, 'adventurer update', { dungeonRunDoc, event })
-
   await save(dungeonRunDoc)
 }

@@ -18,21 +18,22 @@ export function setup(server, sessionMiddleware){
     if(magicID){
       socket.request.user = loadFromMagicID(magicID).then(user => {
         if(user){
-          socket.join(user._id)
-          io.to(user._id).emit('user connect', user._id)
-          log('User joined room', user._id)
+          const id = user._id.toString()
+          socket.join(id)
+          io.to(id).emit('user connect', id)
+          log('User joined room', id)
         }
       })
     }
 
     socket.on('view dungeon run', ({ adventurerID }) => {
-      socket.join(adventurerID)
+      socket.join(adventurerID.toString())
       io.to(adventurerID).emit('room joined', adventurerID)
       log('User joined room', adventurerID)
     })
 
     socket.on('leave dungeon run', ({ adventurerID }) => {
-      socket.leave(adventurerID)
+      socket.leave(adventurerID.toString())
       io.to(adventurerID).emit('room left', adventurerID)
       log('User left room', adventurerID)
     })
