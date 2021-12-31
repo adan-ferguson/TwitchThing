@@ -8,7 +8,7 @@
   },
   "type": "module",
   "scripts": {
-    "fullbuild": "npx gulp build && npx webpack --mode=production --node-env=production && npx pm2 stop twitchthing && npx pm2 start ./server/index.js --name twitchthing",
+    "fullbuild": "npx gulp build && npx webpack --mode=production --node-env=production && npx pm2 stop twitchthing; npx pm2 start ./server/index.js --name twitchthing",
     "build": "webpack --mode=production --node-env=production",
     "watch": "webpack --watch",
     "gulpwatch": "gulp watch",

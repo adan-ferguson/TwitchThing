@@ -195,3 +195,4 @@ TODO Later
 - Responsive for mobile aspect ratio
 - Make a 404 page and/or just redirect
 - loader shouldn't go on top of header
+- Shrink entrypoint sizes
