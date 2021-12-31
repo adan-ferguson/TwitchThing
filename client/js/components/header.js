@@ -39,7 +39,7 @@ export default class Header extends HTMLElement {
 }
 
 function confirmLogout(){
-  SimpleModal('Are you sure you want to log out?', [{
+  new SimpleModal('Are you sure you want to log out?', [{
     text: 'Yes',
     style: 'scary',
     fn: () => {

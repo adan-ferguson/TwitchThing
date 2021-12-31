@@ -81,7 +81,7 @@ export default class DungeonPage extends Page {
 
   _parseDungeonUpdate = dungeonRun => {
     this.eventEl.update(dungeonRun.currentEvent)
-    this.stateEl.update(dungeonRun)
+    this.stateEl.updateDungeonRun(dungeonRun)
   }
 
   _parseVentureUpdate = venture => {

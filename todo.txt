@@ -176,13 +176,15 @@ Register Channels (admin only for now)
 + Dungeonrun ticking
 + Dungeon page
 + Dungeon results page, clear venture
-- Some sort of animation while adventure happening
-- Prevent weird double-ventures? What's going on?
-- page load function should be able to halt loading or go to a provided redirect pages
-- Clear out twitch channel stuff
+
+2021-12-....
+-----------
++ Timer
++ Clear out twitch channel stuff
 
 TODO Later
 -----------
+- page load function should be able to halt loading or go to a provided redirect pages
 - Event log
 - View previous dungeon runs/ventures
 - Multi-run ventures w/ timer
