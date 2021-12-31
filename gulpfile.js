@@ -1,4 +1,5 @@
 import gulp from 'gulp'
+import merge from 'merge-stream'
 import gulpSass from 'gulp-sass'
 import sass from 'sass'
 import concat from 'gulp-concat'
@@ -22,11 +23,12 @@ function copyAssets(){
 }
 
 function generateRegistries(){
-  return REGISTRIES.map(t => {
+  const pipes = REGISTRIES.map(t => {
     return gulp.src('./game/' + t + '/*/**/*.js')
       .pipe(exporterConcater('./game/' + t + '/combined.js'))
       .pipe(gulp.dest('.'))
   })
+  return merge(...pipes)
 }
 
 function exporterConcater(targetFile){

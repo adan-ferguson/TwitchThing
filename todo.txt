@@ -181,10 +181,14 @@ Register Channels (admin only for now)
 -----------
 + Timer
 + Clear out twitch channel stuff
+- Let's get it running on server
 
 TODO Later
 -----------
-- page load function should be able to halt loading or go to a provided redirect pages
+- Basic XP gain
+- Leveling Up
+- Very basic combat
+
 - Event log
 - View previous dungeon runs/ventures
 - Multi-run ventures w/ timer
