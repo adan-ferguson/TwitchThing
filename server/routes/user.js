@@ -28,13 +28,14 @@ const strategy = new Strategy(async function(magicUser, done){
 passport.use(strategy)
 
 passport.serializeUser((user, done) => {
+  console.log('serializing', user)
   done(null, user.magicID)
 })
 
 passport.deserializeUser(async (id, done) => {
-  console.log('User loading', id)
+  console.log('deserializing', id)
   const user = await Users.loadFromMagicID(id)
-  console.log('User loaded', user)
+  console.log('deserializing done', user)
   done(null, user)
 })
 
