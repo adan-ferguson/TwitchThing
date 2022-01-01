@@ -14,8 +14,10 @@ const strategy = new Strategy(async function(magicUser, done){
     if(!user){
       const userMetadata = await magic.users.getMetadataByIssuer(magicUser.issuer)
       user = await Users.create(magicUser.issuer, magicUser.claim.iat, userMetadata.email)
+      console.log('User created', user)
     }else{
       Users.login(user)
+      console.log('User logged in', user)
     }
     return done(null, user)
   }catch(err){
@@ -30,11 +32,14 @@ passport.serializeUser((user, done) => {
 })
 
 passport.deserializeUser(async (id, done) => {
+  console.log('User loading', id)
   const user = await Users.loadFromMagicID(id)
+  console.log('User loaded', user)
   done(null, user)
 })
 
 router.post('/login', passport.authenticate('magic'), (req, res) => {
+  console.log('after authenticate', req.user)
   if(req.user){
     res.status(200).end('User is logged in.')
   }else{
