@@ -22,9 +22,9 @@ const __dirname = path.dirname(__filename)
 
 async function init(){
 
-  const sessionMiddlware = session({
+  const sessionOptions = {
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     secret: config.secret,
     cookie: {
       secure: config.requireHttps,
@@ -34,7 +34,11 @@ async function init(){
       client: DB.client(),
       dbName: config.db.name
     })
-  })
+  }
+
+  const sessionMiddlware = session(sessionOptions)
+
+  console.log('session options', sessionOptions)
 
   const app = express()
     .set('trust proxy', 1)
