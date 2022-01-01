@@ -14,7 +14,7 @@ export default class AdventurerRow extends HTMLButtonElement {
     this.classList.add('adventurer-row')
 
     if(!adventurer) {
-      this.innerHTML = 'Create a new Loadout'
+      this.innerHTML = 'Create a new Adventurer'
       return
     }
 
