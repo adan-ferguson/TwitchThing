@@ -27,7 +27,7 @@ async function init(){
     saveUninitialized: false,
     secret: config.secret,
     cookie: {
-      secure: false, //config.requireHttps,
+      secure: config.requireHttps,
       sameSite: false
     },
     store: MongoStore.create({
