@@ -7,17 +7,18 @@ di-main-page
     flex-basis: 440rem
     margin: 0 $margin 0 0
 
-  .adventurer-list
-    display: flex
-    align-items: stretch
-    flex-direction: column
+  .adventurer-row
+    height: 52rem
+    margin: $rowMargin $rowMargin 0
+    padding: 4rem 8rem
 
-    .adventurer-row
-      height: 60rem
-      margin: $rowMargin $rowMargin 0
-      padding: 4rem 8rem
+    .status
+      color: red
 
-      .status
-        color: red
 
-  //@media (max-aspect-ratio: 1/1)
+@media (max-aspect-ratio: 1/1)
+
+  di-main-page
+
+    > *
+      flex-basis: initial

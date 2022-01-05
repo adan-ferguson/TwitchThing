@@ -181,7 +181,12 @@ Register Channels (admin only for now)
 -----------
 + Timer
 + Clear out twitch channel stuff
-- Let's get it running on server
++ Let's get it running on server
+
+2022-01-04
+-----------
+- Responsive for mobile aspect ratio
+- Basic XP gain (adv + user)
 
 TODO Later
 -----------
@@ -192,7 +197,6 @@ TODO Later
 - Event log
 - View previous dungeon runs/ventures
 - Multi-run ventures w/ timer
-- Responsive for mobile aspect ratio
 - Make a 404 page and/or just redirect
 - loader shouldn't go on top of header
 - Shrink entrypoint sizes

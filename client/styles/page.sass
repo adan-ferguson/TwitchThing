@@ -1,7 +1,7 @@
 $margin: 25rem
 
 di-app .page
-  max-width: 900rem
+  max-width: 780rem
   display: flex
   align-items: stretch
 
@@ -27,3 +27,13 @@ di-app .page
     > *
       margin-bottom: $margin
       flex: 1 1
+
+
+@media (max-aspect-ratio: 1/1)
+  di-app .page
+    .m-no-flex
+      display: block
+      margin: 0
+
+      > *
+        margin: 0 0 $margin

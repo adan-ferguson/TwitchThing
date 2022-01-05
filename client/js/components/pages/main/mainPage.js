@@ -7,10 +7,13 @@ import DungeonPage from '../dungeon/dungeonPage.js'
 import FormModal from '../../formModal.js'
 import ResultsPage from '../results/resultsPage.js'
 import { getSocket } from '../../../socketClient.js'
+import '../../list.js'
 
 const HTML = `
-<div class="flex-columns">
-  <div class="adventurer-list content-well"></div>
+<div class="flex-columns m-no-flex">
+  <div class="content-well">
+    <di-list class="adventurer-list"></di-list>
+  </div>
   <div class="other-stuff content-well">Other stuff goes over here</div>
 </div>
 `
@@ -42,21 +45,22 @@ export default class MainPage extends Page {
 
   async _populateAdventurers(adventurers = []){
     const adventurerList = this.querySelector('.adventurer-list')
+    const rows = []
     adventurers.forEach(adventurer => {
-      const adventurerRow = new AdventurerRow(adventurer, page => {
+      rows.push(new AdventurerRow(adventurer, page => {
         this.app.setPage(page)
-      })
-      adventurerList.appendChild(adventurerRow)
+      }))
     })
 
     // TODO: show each available slot
     if(!adventurers.length){
       const newAdventurerRow = new AdventurerRow()
-      adventurerList.appendChild(newAdventurerRow)
-      adventurerList.addEventListener('click', () => {
+      rows.push(newAdventurerRow)
+      newAdventurerRow.addEventListener('click', () => {
         this._showNewAdventurerModal()
       })
     }
+    adventurerList.setItems(rows)
   }
 
   _showNewAdventurerModal(){
