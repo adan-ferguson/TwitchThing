@@ -3,7 +3,6 @@ import MainPage from '../main/mainPage.js'
 import AdventurerStatsPage from '../adventurerStats/adventurerStatsPage.js'
 import AdventurerLoadoutPage from '../adventurerLoadout/adventurerLoadoutPage.js'
 import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
-import LevelupPage from '../levelup/levelupPage.js'
 
 import StatsBox from './statsBox.js'
 import Loadout from '../../loadout.js'
@@ -12,16 +11,13 @@ import fizzetch from '../../../fizzetch.js'
 
 const HTML = `
 <div class="flex-columns">
-  <div class="flex-rows" style="flex-basis:350rem;flex-grow:0">
+  <div class="flex-rows">
     <div class="stats content-well"></div>
     <div class="loadout content-well"></div>
   </div>
   <div class="flex-rows dungeons">
       <div class="basic-dungeon content-well clickable">Enter Dungeon</div>
       <div class="something-else content-well">Something Else Goes Here</div>
-  </div>
-  <div class="flex-rows levelup displaynone">
-      <div class="levelup content-well clickable">Level Up</div>
   </div>
 </div>
 `
@@ -47,7 +43,7 @@ export default class AdventurerPage extends Page {
       this.adventurer = result.adventurer
       this._showStats()
       this._showLoadout()
-      this._showDungeonOrLevelupButton()
+      this._showDungeonButton()
     }
   }
 
@@ -67,13 +63,9 @@ export default class AdventurerPage extends Page {
     loadout.appendChild(new Loadout(this.adventurer))
   }
 
-  _showDungeonOrLevelupButton(){
-    // TODO: if pending levelup, show the levelup one instead
+  _showDungeonButton(){
     this.querySelector('.basic-dungeon').addEventListener('click', () => {
       void this.app.setPage(new DungeonPickerPage(this.adventurerID))
-    })
-    this.querySelector('.levelup').addEventListener('click', () => {
-      // void this.app.setPage(new LevelupPage(this.adventurerID))
     })
   }
 }

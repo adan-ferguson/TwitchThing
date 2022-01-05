@@ -1,5 +1,6 @@
 di-header
   padding: 20rem 30rem
+  width: 100%
   flex-basis: 40rem
   flex-shrink: 0
 
@@ -9,6 +10,7 @@ di-header
   align-items: center
 
   box-shadow: 0 -5rem 10rem black
+  box-sizing: border-box
 
   .user-dropdown
     position: relative
@@ -21,3 +23,7 @@ di-header
 
   .back-button.hidden
     visibility: hidden
+
+@media (max-aspect-ratio: 1/1)
+  di-header
+    flex-basis: 65rem

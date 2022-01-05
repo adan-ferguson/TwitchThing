@@ -10,7 +10,7 @@ import { getSocket } from '../../../socketClient.js'
 import '../../list.js'
 
 const HTML = `
-<div class="flex-columns m-no-flex">
+<div class="flex-columns">
   <div class="content-well">
     <di-list class="adventurer-list"></di-list>
   </div>
