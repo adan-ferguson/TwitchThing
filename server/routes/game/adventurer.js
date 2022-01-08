@@ -51,8 +51,10 @@ verifiedRouter.post('/dungeonrun', async(req, res) => {
       adventurerID: 1,
       dungeonID: 1,
       floor: 1,
+      room: 1,
       finished: 1,
-      currentEvent: 1
+      currentEvent: 1,
+      rewards: 1
     })
     if(!dungeonRun){
       return res.status(500).send({ error: 'Could not load dungeon run.' })

@@ -9,7 +9,10 @@ const DEFAULTS = {
   dungeonID: null,
   finished: false,
   floor: 1,
-  rewards: {},
+  room: 1,
+  rewards: {
+    xp: 0
+  },
   events: [],
   currentEvent: {
     message: 'You enter the dungeon.'
@@ -50,15 +53,25 @@ export async function findOne(queryOrID = {}, projection = {}){
 }
 
 export async function advance(dungeonRunDoc){
-  // const adventurer = await Adventurers.findOne(dungeonRunDoc.adventurerID)
 
-  // TODO: provide more detail here
-  const event = await generateEvent(dungeonRunDoc)
+  const adventurer = await Adventurers.findOne(dungeonRunDoc.adventurerID)
 
-  dungeonRunDoc.events.push(event)
-  dungeonRunDoc.currentEvent = event
+  const newEvent = await generateEvent(adventurer, dungeonRunDoc)
 
-  if(event.finished){
+  if(!newEvent) {
+    // Nothing happened, perhaps we're resting or in combat.
+    return
+  }
+
+  dungeonRunDoc.room++
+  dungeonRunDoc.events.push(newEvent)
+  dungeonRunDoc.currentEvent = newEvent
+
+  if(newEvent.rewards){
+    addRewards(dungeonRunDoc.rewards, newEvent.rewards)
+  }
+
+  if(newEvent.finished){
     dungeonRunDoc.finished = true
   }
 
@@ -66,4 +79,16 @@ export async function advance(dungeonRunDoc){
   emit(dungeonRunDoc.adventurerID, 'dungeon run update', dungeonRunDoc)
 
   await save(dungeonRunDoc)
+}
+
+function addRewards(rewards, toAdd){
+  for(let key in toAdd){
+    if(key in rewards){
+      if(Number.isInteger(rewards[key])){
+        rewards[key] += toAdd[key]
+      }else if(Array.isArray(rewards[key])) {
+        rewards[key].push(toAdd[key])
+      }
+    }
+  }
 }

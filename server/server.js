@@ -38,8 +38,6 @@ async function init(){
 
   const sessionMiddlware = session(sessionOptions)
 
-  console.log('session options', sessionOptions)
-
   const app = express()
     .set('trust proxy', 1)
     .set('view engine', 'ejs')

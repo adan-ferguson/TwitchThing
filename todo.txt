@@ -185,7 +185,7 @@ Register Channels (admin only for now)
 
 2022-01-04
 -----------
-- Responsive for mobile aspect ratio
++ Responsive for mobile aspect ratio (more later)
 - Basic XP gain (adv + user)
 
 TODO Later
@@ -193,6 +193,10 @@ TODO Later
 - Basic XP gain
 - Leveling Up
 - Very basic combat
+
+- Floors
+-- Advance floors
+-- Average floor size
 
 - Event log
 - View previous dungeon runs/ventures

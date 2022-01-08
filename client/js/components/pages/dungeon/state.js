@@ -1,9 +1,11 @@
 const innerHTML = `
-<div class="floor">
-    Floor <span></span>
-</div>
 <di-timer></di-timer><br/>
-<button disabled="disabled">View Log</button>
+<div>
+    Floor <span class="floor"></span> - Room <span class="room"></span>
+</div>
+<div>
+    xp: <span class="xp-reward">0</span>
+</div>
 `
 
 /**
@@ -18,7 +20,9 @@ export default class State extends HTMLElement {
   }
 
   updateDungeonRun(dungeonRun){
-    this.querySelector('.floor span').textContent = dungeonRun.floor
+    this.querySelector('.floor').textContent = dungeonRun.floor
+    this.querySelector('.room').textContent = dungeonRun.room
+    this.querySelector('.xp-reward').textContent = dungeonRun.rewards.xp
   }
 
   updateVenture(venture){
