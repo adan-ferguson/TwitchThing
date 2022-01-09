@@ -22,8 +22,7 @@ export function start(){
  * @param dungeonID
  */
 export async function addRun(adventurerID, dungeonID){
-  const run = await DungeonRuns.create(adventurerID, dungeonID)
-  return run._id
+  return await DungeonRuns.create(adventurerID, dungeonID)
 }
 
 async function advanceAllRuns(){

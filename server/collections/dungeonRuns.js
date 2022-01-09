@@ -39,8 +39,14 @@ export async function create(adventurerID, dungeonID){
 export async function loadAllInProgress(){
   const arr = await db.conn().collection('dungeonRuns').find({
     finished: false
-  }).sort({ dungeonID: 1 })
-    .toArray()
+  }).toArray()
+  return arr.map(dungeonRuns => fix(dungeonRuns))
+}
+
+export async function loadByIDs(ids){
+  const arr = await db.conn().collection('dungeonRuns').find({
+    _id: { $in: ids }
+  }).toArray()
   return arr.map(dungeonRuns => fix(dungeonRuns))
 }
 
@@ -81,7 +87,7 @@ export async function advance(dungeonRunDoc){
   await save(dungeonRunDoc)
 }
 
-function addRewards(rewards, toAdd){
+export function addRewards(rewards, toAdd){
   for(let key in toAdd){
     if(key in rewards){
       if(Number.isInteger(rewards[key])){

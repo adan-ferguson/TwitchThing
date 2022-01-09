@@ -77,7 +77,9 @@ verifiedRouter.post('/results', async (req, res) => {
     if(!adventurer.currentVenture.finished){
       return res.status(401).send({ error: 'Venture is not finished yet.', targetPage: 'Dungeon' })
     }
-    res.send({ results: 'something' })
+    res.send({
+      venture: adventurer.currentVenture
+    })
   }catch(error){
     return res.status(error.code || 500).send({ error: error.message || error })
   }

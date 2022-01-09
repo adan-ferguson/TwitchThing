@@ -1,6 +1,9 @@
 import { addRun } from './dungeonRunner.js'
+import { addRewards, loadByIDs } from '../collections/dungeonRuns.js'
 import * as Adventurers from '../collections/adventurers.js'
 import { emit } from '../socketServer.js'
+import { xpToLevel as advXpToLevel } from '../../game/adventurer.js'
+import { previewLevelup } from '../adventurer/leveler.js'
 
 export async function getByAdventurerID(adventurerID){
   const data = await Adventurers.findOne(adventurerID, {
@@ -36,34 +39,6 @@ export async function beginVenture(userID, adventurerID, dungeonID){
   continueVenture(venture)
 }
 
-async function continueVenture(venture){
-
-  if(venture.currentRun){
-    venture.finishedRuns.push(venture.currentRun)
-    venture.currentRun = null
-  }
-
-  let shouldStop = false
-  if(venture.plan.type === 'count'){
-    if(venture.plan.current >= venture.plan.limit){
-      shouldStop = true
-    }else{
-      venture.plan.current++
-    }
-  }else if(venture.plan.type === 'time'){
-    // TODO this
-  }
-
-  if(shouldStop){
-    venture.finished = true
-  }else{
-    venture.currentRun = await addRun(venture.adventurerID, venture.dungeonID)
-  }
-
-  await Adventurers.update(venture.adventurerID, { currentVenture: venture })
-  emit(venture.userID, 'venture update', venture)
-}
-
 export async function runFinished(runID, adventurerID){
   const venture = await getByAdventurerID(adventurerID)
   if(!venture || !runID.equals(venture.currentRun)){
@@ -92,5 +67,59 @@ export async function advanceVentures(runsInProgress){
     if(!venture.currentRun || !runsObj[venture.currentRun.toString()]){
       await continueVenture(venture)
     }
+  }
+}
+
+async function continueVenture(venture){
+
+  if(venture.currentRun){
+    venture.finishedRuns.push(venture.currentRun)
+    venture.currentRun = null
+  }
+
+  let shouldStop = false
+  if(venture.plan.type === 'count'){
+    if(venture.plan.current >= venture.plan.limit){
+      shouldStop = true
+    }else{
+      venture.plan.current++
+    }
+  }else if(venture.plan.type === 'time'){
+    // TODO this
+  }
+
+  if(shouldStop){
+    venture.results = await calculateResults(venture)
+    venture.finished = true
+  }else{
+    venture.currentRun = await addRun(venture.adventurerID, venture.dungeonID)._id
+  }
+
+  await Adventurers.update(venture.adventurerID, { currentVenture: venture })
+  emit(venture.userID, 'venture update', venture)
+}
+
+/**
+ * Create the "results" conglomeration value, which contains rewards and
+ * information on what actions the user has to do (mainly regarding leveling up).
+ * @param venture
+ */
+async function calculateResults(venture){
+  const adventurer = await Adventurers.findOne(venture.adventurerID)
+  const dungeonRuns = await loadByIDs(venture.finishedRuns)
+  const rewards = {}
+  dungeonRuns.forEach(run => {
+    addRewards(rewards, run.rewards)
+  })
+
+  const levelAfter = advXpToLevel()
+  const levelups = []
+  for(let levelBefore = adventurer.level; levelBefore < levelAfter; levelBefore++){
+    levelups.push(previewLevelup(adventurer))
+  }
+
+  return {
+    rewards,
+    levelups
   }
 }

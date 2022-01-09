@@ -186,7 +186,13 @@ Register Channels (admin only for now)
 2022-01-04
 -----------
 + Responsive for mobile aspect ratio (more later)
-- Basic XP gain (adv + user)
+
+2022-01-08
+----------
+- Basic XP gain
+-- While in dungeon
+-- Level up adventurer
+-- Level up user
 
 TODO Later
 -----------
@@ -200,7 +206,7 @@ TODO Later
 
 - Event log
 - View previous dungeon runs/ventures
-- Multi-run ventures w/ timer
+- Multi-run ventures
 - Make a 404 page and/or just redirect
 - loader shouldn't go on top of header
 - Shrink entrypoint sizes

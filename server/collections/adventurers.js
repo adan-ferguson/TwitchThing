@@ -1,5 +1,4 @@
 import db from '../db.js'
-import MongoDB from 'mongodb'
 
 const DEFAULTS = {
   _id: null,
