@@ -92,7 +92,8 @@ async function continueVenture(venture){
     venture.results = await calculateResults(venture)
     venture.finished = true
   }else{
-    venture.currentRun = await addRun(venture.adventurerID, venture.dungeonID)._id
+    const run = await addRun(venture.adventurerID, venture.dungeonID)
+    venture.currentRun = run._id.toString()
   }
 
   await Adventurers.update(venture.adventurerID, { currentVenture: venture })
@@ -112,7 +113,7 @@ async function calculateResults(venture){
     addRewards(rewards, run.rewards)
   })
 
-  const levelAfter = advXpToLevel()
+  const levelAfter = advXpToLevel(adventurer.xp + rewards.xp)
   const levelups = []
   for(let levelBefore = adventurer.level; levelBefore < levelAfter; levelBefore++){
     levelups.push(previewLevelup(adventurer))

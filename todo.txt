@@ -196,6 +196,8 @@ Register Channels (admin only for now)
 
 TODO Later
 -----------
+- Variable adventure speed
+
 - Basic XP gain
 - Leveling Up
 - Very basic combat

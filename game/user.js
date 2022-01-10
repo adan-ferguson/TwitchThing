@@ -1,5 +1,5 @@
 const LEVEL_2_XP = 200
-const XP_MULTIPLIER = 0.3
+const XP_MULTIPLIER = 1.3
 
 export function xpToLevel(xp) {
   let lvl = 1
