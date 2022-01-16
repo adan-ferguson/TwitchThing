@@ -5,7 +5,7 @@ import { levelToXp } from '/game/user.js'
 
 const HTML = `
 <button class="back-button hidden"><- Back</button>
-<di-bar class="user-bar"></di-bar>
+<di-bar class="user-bar clickable"></di-bar>
 `
 
 export default class Header extends HTMLElement {
@@ -14,13 +14,11 @@ export default class Header extends HTMLElement {
     super()
     this.innerHTML = HTML
 
-    this.querySelector('.username').textContent = this.user.displayname
-
     this.backButton = this.querySelector('.back-button')
     this.backButton.addEventListener('click', () => this.app.back())
 
     this.userBar = this.querySelector('.user-bar')
-    this.userBar.setLabel(this.user.name)
+    this.userBar.setLabel(this.user.displayname)
     this._updateUserBar()
 
     Dropdown.create(this.userBar, {

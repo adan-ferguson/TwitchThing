@@ -8,6 +8,8 @@ const DEFAULTS = {
   auth: {
     type: 'none'
   },
+  xp: 0,
+  level: 1,
   displayname: null,
   adventurers: []
 }
@@ -63,7 +65,9 @@ export async function login(userDoc, iat){
 
 export async function loadGameData(userDoc){
   return {
-    displayname: userDoc.displayname
+    displayname: userDoc.displayname,
+    xp: userDoc.xp,
+    level: userDoc.level
   }
 }
 

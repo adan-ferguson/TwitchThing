@@ -2,6 +2,7 @@ import * as Loader from '../loader.js'
 import MainPage from './pages/main/mainPage.js'
 
 import './header.js'
+import './adventurer/well.js'
 
 const HTML = `
 <di-header></di-header>

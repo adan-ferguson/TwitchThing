@@ -1,5 +1,7 @@
 const innerHTML = `
-<div class="bar-badge hidden"></div>
+<div class="bar-badge hidden">
+    <span></span>
+</div>
 <div class="bar-border">
     <div class="bar-fill"></div>
     <div class="bar-label"></div>
@@ -22,7 +24,7 @@ export default class Bar extends HTMLElement {
     const badge = this.querySelector('.bar-badge')
     if(text){
       badge.classList.remove('hidden')
-      badge.textContent = text
+      badge.querySelector('span').textContent = text
     }else{
       badge.classList.add('hidden')
     }
@@ -38,7 +40,7 @@ export default class Bar extends HTMLElement {
   }
 
   setValue(val){
-    this._val = val
+    this._val = val || 0
     this.setAttribute('title', `${this._val}/${this.max}`)
 
     let pct = (val - this.min) / (this.max - this.min)
@@ -48,22 +50,20 @@ export default class Bar extends HTMLElement {
   }
 
   animateValueChange(diff){
-
     return new Promise(res => {
-
       if(this._currentTimeout){
         clearTimeout(this._currentTimeout)
       }
-
-      const time = TIME_TO_FILL_ONE_BAR * diff / (this.max - this.min)
-      this.barFill.style.transition = `width ${time}ms linear`
-      this.setValue(this._val + diff)
-
-      this._currentTimeout = setTimeout(() => {
-        this.barFill.style.transition = 'initial'
-        this._currentTimeout = null
-        res()
-      }, time)
+      requestAnimationFrame(() => {
+        const time = TIME_TO_FILL_ONE_BAR
+        this.barFill.style.transition = `width ${time}ms`
+        this.setValue(this._val + diff)
+        this._currentTimeout = setTimeout(() => {
+          this.barFill.style.transition = 'initial'
+          this._currentTimeout = null
+          requestAnimationFrame(res)
+        }, time)
+      })
     })
   }
 }

@@ -1,15 +1,31 @@
 di-bar
-  position: relative
+  display: flex
+  height: 2.5em
+  flex-direction: row
+  align-items: stretch
+
+  .bar-badge
+    text-align: center
+    background-color: white
+    border: 0.2rem solid currentColor
+    border-right: none
+    display: flex
+    align-items: center
+
+    span
+      padding: 0 0.8em
+
+
+  &.clickable
+    cursor: pointer
+    &:hover
+      color: #9584b3
 
   .bar-border
-    position: absolute
-    top: 0
-    left: 0
-    right: 0
-    bottom: 0
+    flex-grow: 1
+    position: relative
 
-    border: 0.5rem solid black
-    border-radius: 2rem
+    border: 0.5rem solid currentColor
 
     .bar-fill
       position: absolute
@@ -18,15 +34,15 @@ di-bar
       right: 0
       bottom: 0
 
-      background-color: red
+      background-color: #DDD
 
     .bar-label
-      $shadowThickness: 0.05rem
+      $t: 0.2rem
       position: absolute
       top: 50%
       left: 50%
       transform: translate(-50%, -50%)
 
-      color: white
-      text-shadow: -$shadowThickness -$shadowThickness 0 #000,$shadowThickness -$shadowThickness 0 #000,-$shadowThickness $shadowThickness 0 #000,$shadowThickness $shadowThickness 0 #000
+      color: currentColor
+      //text-shadow: -$t -$t 0 #000, $t -$t 0 #000,-$t $t 0 #000, $t $t 0 #000
 
