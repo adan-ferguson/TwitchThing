@@ -31,6 +31,7 @@ export async function beginVenture(userID, adventurerID, dungeonID){
       current: 0,
       limit: 1
     },
+    results: null,
     startTime: new Date(),
     currentRun: null,
     finishedRuns: []

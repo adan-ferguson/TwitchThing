@@ -35,7 +35,3 @@ export function levelToXp(lvl){
     return parseInt(x.substring(0,3) + x.substring(3).replace(/g/, 0))
   }
 }
-
-export function previewLevelup(user){
-
-}

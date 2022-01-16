@@ -69,7 +69,9 @@ verifiedRouter.post('/results', async (req, res) => {
   try {
     const adventurer = await Adventurers.findOne(req.adventurerID, {
       currentVenture: 1,
-      name: 1
+      name: 1,
+      level: 1,
+      xp: 1
     })
     if(!adventurer.currentVenture){
       return res.status(401).send({ error: 'Adventurer is not currently venturing.', targetPage: 'Adventurer' })
@@ -78,6 +80,7 @@ verifiedRouter.post('/results', async (req, res) => {
       return res.status(401).send({ error: 'Venture is not finished yet.', targetPage: 'Dungeon' })
     }
     res.send({
+      adventurer,
       venture: adventurer.currentVenture
     })
   }catch(error){

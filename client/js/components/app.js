@@ -14,6 +14,7 @@ export default class App extends HTMLElement {
     this.user = user
     this.innerHTML = HTML
     this.currentPage = null
+    this.header = this.querySelector('di-header')
 
     this.setPage(new MainPage())
   }

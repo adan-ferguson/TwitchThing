@@ -4,16 +4,20 @@ import AdventurerStatsPage from '../adventurerStats/adventurerStatsPage.js'
 import AdventurerLoadoutPage from '../adventurerLoadout/adventurerLoadoutPage.js'
 import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
 
-import StatsBox from './statsBox.js'
-import Loadout from '../../loadout.js'
+import '../../adventurer/statsBox.js'
+import '../../loadout.js'
 
 import fizzetch from '../../../fizzetch.js'
 
 const HTML = `
 <div class="flex-columns">
   <div class="flex-rows">
-    <div class="stats content-well"></div>
-    <div class="loadout content-well"></div>
+    <div class="content-well">
+      <di-adventurer-statsbox></di-adventurer-statsbox>
+    </div>
+    <div class="content-well">
+      <di-loadout></di-loadout>
+    </div>
   </div>
   <div class="flex-rows dungeons">
       <div class="basic-dungeon content-well clickable">Enter Dungeon</div>
@@ -48,19 +52,19 @@ export default class AdventurerPage extends Page {
   }
 
   _showStats(){
-    const stats = this.querySelector('.stats')
+    const stats = this.querySelector('di-adventurer-statsbox')
     stats.addEventListener('click', () => {
       // void this.app.setPage(new AdventurerStatsPage(this.adventurerID))
     })
-    stats.appendChild(new StatsBox(this.adventurer))
+    stats.setAdventurer(this.adventurer)
   }
 
   _showLoadout(){
-    const loadout = this.querySelector('.loadout')
+    const loadout = this.querySelector('di-loadout')
     loadout.addEventListener('click', () => {
       // void this.app.setPage(new AdventurerLoadoutPage(this.adventurerID))
     })
-    loadout.appendChild(new Loadout(this.adventurer))
+    loadout.setAdventurer(this.adventurer)
   }
 
   _showDungeonButton(){

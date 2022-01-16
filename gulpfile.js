@@ -66,7 +66,7 @@ function exporterConcater(targetFile){
 export const watch =  () => {
   gulp.watch('./client/styles/**/*.sass', { ignoreInitial: false }, buildStyles)
   gulp.watch('./client/assets/**/*', { ignoreInitial: false }, copyAssets)
-  gulp.watch('./game/*/**/*.js', { ignoreInitial: false }, generateRegistries)
+  gulp.watch(['./game/*/**/*.js', '!./game/**/combined.js'], { ignoreInitial: false }, generateRegistries)
 }
 
 export const build = gulp.series(buildStyles, copyAssets, generateRegistries)
