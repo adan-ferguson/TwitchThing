@@ -18,6 +18,7 @@ export default class Bar extends HTMLElement {
     this.min = 0
     this.max = 100
     this.decimals = 0
+    this.barLabel = this.querySelector('.bar-label')
     this.barFill = this.querySelector('.bar-fill')
   }
 
@@ -36,42 +37,54 @@ export default class Bar extends HTMLElement {
     this.max = max
   }
 
-  setValue(val, cancelAnimationInProgress = true){
+  setValue(val){
 
-    if(cancelAnimationInProgress && this.animation){
+    if(isNaN(val) || val === this._val){
+      return
+    }
+
+    if(this.animation){
       this.animation.cancel()
     }
 
-    this._val = val || 0
-    this.setAttribute('title', `${this._val}/${this.max}`)
+    val = Math.min(this.max, Math.max(this.min, Math.round(val)))
 
-    let pct = (val - this.min) / (this.max - this.min)
-    pct = Math.min(1, Math.max(0, pct))
-
-    this.querySelector('.bar-fill').style.width = `${pct * 100}%`
+    this._val = val
+    this.barLabel.textContent = `${this._val} / ${this.max}`
+    this.querySelector('.bar-fill').style.width = `${this._pct(val) * 100}%`
   }
 
   setFill(val){
     this.barFill.style.backgroundColor = val
   }
 
-  animateValueChange(diff){
+  animateValue(val){
+
+    if(isNaN(val) || val === this._val){
+      return
+    }
 
     if(this.animation){
       this.animation.cancel()
     }
 
-    const before = this._val
-
     return new Promise(res => {
-      this.animation = new Animation({
-        tick: pct => {
-          this.setValue(before + pct * diff, false)
-        },
-        time: TIME_TO_FILL_ONE_BAR,
-        finish: res
+      this.animation = this.barFill.animate([
+        { width: `${this._pct(val) * 100}%` }
+      ], {
+        duration: TIME_TO_FILL_ONE_BAR,
+        easing: 'ease-out'
       })
+      this.animation.onfinish = () => {
+        this.setValue(val)
+        res()
+      }
     })
+  }
+
+  _pct(val){
+    const pct = (val - this.min) / (this.max - this.min)
+    return Math.min(1, Math.max(0, pct))
   }
 }
 

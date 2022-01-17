@@ -32,7 +32,7 @@ export default class StatsBox extends HTMLElement {
     while(xpToAdd > 0){
       let toNextLevel = this.levelBar.max - this.levelBar.min
       if (xpToAdd >= toNextLevel) {
-        await this.levelBar.animateValueChange(toNextLevel)
+        await this.levelBar.animateValue(this.levelBar.max)
         // TODO: flying text "Level Up!"
         // TODO: editing the adventurer here seems a bit wonky
         this.adventurer.xp += toNextLevel
@@ -40,7 +40,7 @@ export default class StatsBox extends HTMLElement {
         await this._updateLevelBar()
         xpToAdd -= toNextLevel
       }else{
-        await this.levelBar.animateValueChange(xpToAdd)
+        await this.levelBar.animateValue(this.adventurer.xp + xpToAdd)
         xpToAdd = 0
       }
     }

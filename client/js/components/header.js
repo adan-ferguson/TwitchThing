@@ -40,7 +40,7 @@ export default class Header extends HTMLElement {
     while(xpToAdd > 0){
       let toNextLevel = this.userBar.max - this.userBar.min
       if (xpToAdd >= toNextLevel) {
-        await this.userBar.animateValueChange(toNextLevel)
+        await this.userBar.animateValue(this.userBar.max)
         // TODO: flying text "Level Up!"
         // TODO: probably need a temp user
         this.user.xp += toNextLevel
@@ -48,7 +48,7 @@ export default class Header extends HTMLElement {
         this._updateUserBar()
         xpToAdd -= toNextLevel
       }else{
-        await this.userBar.animateValueChange(xpToAdd)
+        await this.userBar.animateValue(this.user.xp + xpToAdd)
         xpToAdd = 0
       }
     }

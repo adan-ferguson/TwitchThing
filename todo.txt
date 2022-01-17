@@ -196,9 +196,13 @@ Register Channels (admin only for now)
 
 2022-01-16
 ----------
-- Results page
--- Choose bonus
--- Animate xps at the same time
++ Results page
+++ Choose bonus
+++ Animate xps at the same time
+
+2022-01-17
+----------
++ Use Web Animations API, cool
 
 TODO Later
 -----------
