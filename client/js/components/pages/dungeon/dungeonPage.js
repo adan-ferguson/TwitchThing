@@ -26,6 +26,7 @@ export default class DungeonPage extends Page {
     this.innerHTML = HTML
 
     this.adventurerWell = this.querySelector('di-adventurer-well')
+    this.adventurerWell.setDisplayMode('dungeon')
     this.eventEl = this.querySelector('di-dungeon-event')
     this.stateEl = this.querySelector('di-dungeon-state')
   }

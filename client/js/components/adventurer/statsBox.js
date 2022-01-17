@@ -13,11 +13,16 @@ export default class StatsBox extends HTMLElement {
     this.innerHTML = HTML
     this.classList.add('content-well')
     this.levelBar = this.querySelector('di-bar')
+    this.displayMode = 'normal'
+  }
+
+  setDisplayMode(displayMode) {
+    this.displayMode = displayMode
+    this.levelBar.setFill('#1affa0')
   }
 
   setAdventurer(adventurer){
     this.adventurer = adventurer
-    this.levelBar.setLabel(adventurer.name)
     this._updateLevelBar()
   }
 
@@ -40,9 +45,17 @@ export default class StatsBox extends HTMLElement {
   }
 
   _updateLevelBar(){
-    this.levelBar.setBadge(this.adventurer.level)
-    this.levelBar.setRange(levelToXp(this.adventurer.level), levelToXp(this.adventurer.level + 1))
-    this.levelBar.setValue(this.adventurer.xp)
+    if(this.displayMode === 'normal'){
+      this.levelBar.setLabel(this.adventurer.name)
+      this.levelBar.setBadge(this.adventurer.level)
+      this.levelBar.setRange(levelToXp(this.adventurer.level), levelToXp(this.adventurer.level + 1))
+      this.levelBar.setValue(this.adventurer.xp)
+    }else if(this.displayMode === 'dungeon'){
+      // TODO: adventurer HP, adventurer state
+      this.levelBar.setLabel(this.adventurer.name)
+      this.levelBar.setRange(0, 100)
+      this.levelBar.setValue(100)
+    }
   }
 }
 

@@ -1,5 +1,5 @@
 const innerHTML = `
-<div class="bar-badge hidden">
+<div class="bar-badge displaynone">
     <span></span>
 </div>
 <div class="bar-border">
@@ -23,10 +23,10 @@ export default class Bar extends HTMLElement {
   setBadge(text){
     const badge = this.querySelector('.bar-badge')
     if(text){
-      badge.classList.remove('hidden')
+      badge.classList.remove('displaynone')
       badge.querySelector('span').textContent = text
     }else{
-      badge.classList.add('hidden')
+      badge.classList.add('displaynone')
     }
   }
 
@@ -47,6 +47,10 @@ export default class Bar extends HTMLElement {
     pct = Math.min(1, Math.max(0, pct))
 
     this.querySelector('.bar-fill').style.width = `${pct * 100}%`
+  }
+
+  setFill(val){
+    this.barFill.style.backgroundColor = val
   }
 
   animateValueChange(diff){

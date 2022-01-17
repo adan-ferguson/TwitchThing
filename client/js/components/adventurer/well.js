@@ -11,6 +11,13 @@ export default class AdventurerWell extends HTMLElement {
     this.classList.add('flex-rows')
     this.statsbox = this.querySelector('di-adventurer-statsbox')
     this.loadout = this.querySelector('di-loadout')
+    this.displayMode = 'normal'
+  }
+
+  setDisplayMode(displayMode){
+    this.displayMode = displayMode
+    this.statsbox.setDisplayMode(displayMode)
+    this.loadout.setDisplayMode(displayMode)
   }
 
   setAdventurer(adventurer){
