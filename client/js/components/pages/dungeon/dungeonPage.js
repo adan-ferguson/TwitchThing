@@ -2,23 +2,11 @@ import Page from '../page.js'
 import MainPage from '../main/mainPage.js'
 import fizzetch from '../../../fizzetch.js'
 import { getSocket } from '../../../socketClient.js'
-
-import './stats.js'
-import './loadout.js'
-import './event.js'
-import './state.js'
 import ResultsPage from '../results/resultsPage.js'
 
 const HTML = `
 <div class='flex-columns'>
-  <div class="flex-rows" style="flex-basis:300rem;flex-grow:0">
-    <div class="stats content-well">
-        <di-dungeon-stats></di-dungeon-stats>
-    </div>
-    <div class="loadout content-well no-padding">
-        <di-loadout></di-loadout>
-    </div>
-  </div>
+  <di-adventurer-well></di-adventurer-well>
   <div class="flex-rows">
     <div class="event content-well">
         <di-dungeon-event></di-dungeon-event>
@@ -37,8 +25,7 @@ export default class DungeonPage extends Page {
     this.adventurerID = adventurerID
     this.innerHTML = HTML
 
-    this.statsEl = this.querySelector('di-dungeon-stats')
-    this.loadoutEl = this.querySelector('di-dungeon-loadout')
+    this.adventurerWell = this.querySelector('di-adventurer-well')
     this.eventEl = this.querySelector('di-dungeon-event')
     this.stateEl = this.querySelector('di-dungeon-state')
   }
@@ -50,14 +37,14 @@ export default class DungeonPage extends Page {
   async load(){
 
     // TODO: handle ventures
-    const { adventurer, dungeonRun } = await fizzetch(`/game/adventurer/${this.adventurerID}/dungeonrun`)
+    const { adventurer, dungeonRun, error } = await fizzetch(`/game/adventurer/${this.adventurerID}/dungeonrun`)
 
-    if(!dungeonRun){
-      // TODO: error thing
+    if(error){
+      throw error
+      // TODO: handle error
     }
 
-    this.statsEl.setAdventurer(adventurer)
-    // this.loadoutEl.setLoadout(adventurer)
+    this.adventurerWell.setAdventurer(adventurer)
     this.stateEl.updateDungeonRun(dungeonRun)
     this.stateEl.updateVenture(adventurer.currentVenture)
     this.eventEl.update(dungeonRun.currentEvent)

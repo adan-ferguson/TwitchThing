@@ -80,6 +80,7 @@ export default class ResultsPage extends Page {
         modal.innerPane.appendChild(selector)
         modal.show()
         selector.addEventListener('finished', e => {
+          modal.hide()
           this._finish(e.detail.selectedBonuses)
         })
       }else{

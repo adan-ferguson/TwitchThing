@@ -53,11 +53,11 @@ export async function loadByIDs(ids){
 }
 
 export async function find(queryOrID = {}, projection = {}){
-  return db.find('dungeonRuns', queryOrID, projection, DEFAULTS)
+  return await db.find('dungeonRuns', queryOrID, projection, DEFAULTS)
 }
 
 export async function findOne(queryOrID = {}, projection = {}){
-  return db.findOne('dungeonRuns', queryOrID, projection, DEFAULTS)
+  return await db.findOne('dungeonRuns', queryOrID, projection, DEFAULTS)
 }
 
 export async function advance(dungeonRunDoc){

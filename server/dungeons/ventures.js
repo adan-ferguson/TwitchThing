@@ -94,7 +94,7 @@ async function continueVenture(venture){
     venture.finished = true
   }else{
     const run = await addRun(venture.adventurerID, venture.dungeonID)
-    venture.currentRun = run._id.toString()
+    venture.currentRun = run._id
   }
 
   await Adventurers.update(venture.adventurerID, { currentVenture: venture })

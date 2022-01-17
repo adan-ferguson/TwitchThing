@@ -94,7 +94,7 @@ export default class MainPage extends Page {
 
   }
 
-  _ventureUpdate(venture){
+  _ventureUpdate = venture => {
     const row = this.querySelector(`di-adventurer-row[adventurerID="${venture.adventurerID}"]`)
     if(row){
       row.adventurer.venture = venture

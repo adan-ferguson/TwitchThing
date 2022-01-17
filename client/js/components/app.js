@@ -3,6 +3,8 @@ import MainPage from './pages/main/mainPage.js'
 
 import './header.js'
 import './adventurer/well.js'
+import './pages/dungeon/event.js'
+import './pages/dungeon/state.js'
 
 const HTML = `
 <di-header></di-header>
