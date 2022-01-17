@@ -204,8 +204,10 @@ TODO Later
 -----------
 - Variable adventure speed
 
-- Basic XP gain
-- Leveling Up
+- Better bars
+-- getters for values
+-- special rankup bar
+
 - Very basic combat
 
 - Floors

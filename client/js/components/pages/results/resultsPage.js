@@ -8,11 +8,7 @@ import LevelupSelector from '../../adventurer/levelupSelector.js'
 
 const HTML = `
 <div class='flex-columns'>
-  <div class='flex-rows' style="flex-basis:300rem;flex-grow:0">
-    <div class="content-well">
-      <di-adventurer-well></di-adventurer-well>
-    </div>
-  </div>
+  <di-adventurer-well></di-adventurer-well>
   <div class='content-well results'>
     <div class="title">Results</div>
     <div class='results-list'></div>
@@ -59,7 +55,7 @@ export default class ResultsPage extends Page {
     const xpRow = document.createElement('div')
     xpRow.textContent = `+${this.venture.results.rewards.xp} xp`
     this.results.appendChild(xpRow)
-    await this.adventurerWell.addXp(this.venture.results.rewards.xp)
+    await this.adventurerWell.statsbox.addXp(this.venture.results.rewards.xp)
   }
 
   async _userXp(){

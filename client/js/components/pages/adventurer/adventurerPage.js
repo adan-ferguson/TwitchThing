@@ -11,14 +11,7 @@ import fizzetch from '../../../fizzetch.js'
 
 const HTML = `
 <div class="flex-columns">
-  <div class="flex-rows">
-    <div class="content-well">
-      <di-adventurer-statsbox></di-adventurer-statsbox>
-    </div>
-    <div class="content-well">
-      <di-loadout></di-loadout>
-    </div>
-  </div>
+  <di-adventurer-well></di-adventurer-well>
   <div class="flex-rows dungeons">
       <div class="basic-dungeon content-well clickable">Enter Dungeon</div>
       <div class="something-else content-well">Something Else Goes Here</div>
@@ -32,6 +25,7 @@ export default class AdventurerPage extends Page {
     super()
     this.innerHTML = HTML
     this.adventurerID = adventurerID
+    this.adventurerWell = this.querySelector('di-adventurer-well')
   }
 
   get backPage(){
@@ -43,28 +37,18 @@ export default class AdventurerPage extends Page {
     if(result.error){
       return result.error
     }else{
-      // TODO: redirect to dungeon page if adventurer is in one
       this.adventurer = result.adventurer
-      this._showStats()
-      this._showLoadout()
+      this.adventurerWell.setAdventurer(this.adventurer)
+      // this.adventurerWell.statsbox.classList.add('clickable')
+      this.adventurerWell.statsbox.addEventListener('click', () => {
+        // void this.app.setPage(new AdventurerStatsPage(this.adventurerID))
+      })
+      // this.adventurerWell.loadout.classList.add('clickable')
+      this.adventurerWell.loadout.addEventListener('click', () => {
+        // void this.app.setPage(new AdventurerStatsPage(this.adventurerID))
+      })
       this._showDungeonButton()
     }
-  }
-
-  _showStats(){
-    const stats = this.querySelector('di-adventurer-statsbox')
-    stats.addEventListener('click', () => {
-      // void this.app.setPage(new AdventurerStatsPage(this.adventurerID))
-    })
-    stats.setAdventurer(this.adventurer)
-  }
-
-  _showLoadout(){
-    const loadout = this.querySelector('di-loadout')
-    loadout.addEventListener('click', () => {
-      // void this.app.setPage(new AdventurerLoadoutPage(this.adventurerID))
-    })
-    loadout.setAdventurer(this.adventurer)
   }
 
   _showDungeonButton(){

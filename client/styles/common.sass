@@ -80,13 +80,17 @@ input
   border: 1rem solid #BBB
   padding: 10rem
 
+  &.clickable:hover
+    background-color: #F8F8F8
+    color: #6f46b0
+
   &.no-padding
     padding: 0
 
-  &.clickable
-    cursor: pointer
-    &:hover
-      background-color: #EEE
+.clickable
+  cursor: pointer
+  &:hover
+    color: #9584b3
 
 .hidden
   visibility: hidden
