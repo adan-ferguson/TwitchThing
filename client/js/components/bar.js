@@ -17,6 +17,7 @@ export default class Bar extends HTMLElement {
     this.innerHTML = innerHTML
     this.min = 0
     this.max = 100
+    this.decimals = 0
     this.barFill = this.querySelector('.bar-fill')
   }
 
@@ -30,16 +31,17 @@ export default class Bar extends HTMLElement {
     }
   }
 
-  setLabel(text){
-    this.querySelector('.bar-label').textContent = text
-  }
-
   setRange(min, max){
     this.min = min
     this.max = max
   }
 
-  setValue(val){
+  setValue(val, cancelAnimationInProgress = true){
+
+    if(cancelAnimationInProgress && this.animation){
+      this.animation.cancel()
+    }
+
     this._val = val || 0
     this.setAttribute('title', `${this._val}/${this.max}`)
 
@@ -54,19 +56,20 @@ export default class Bar extends HTMLElement {
   }
 
   animateValueChange(diff){
+
+    if(this.animation){
+      this.animation.cancel()
+    }
+
+    const before = this._val
+
     return new Promise(res => {
-      if(this._currentTimeout){
-        clearTimeout(this._currentTimeout)
-      }
-      requestAnimationFrame(() => {
-        const time = TIME_TO_FILL_ONE_BAR
-        this.barFill.style.transition = `width ${time}ms`
-        this.setValue(this._val + diff)
-        this._currentTimeout = setTimeout(() => {
-          this.barFill.style.transition = 'initial'
-          this._currentTimeout = null
-          requestAnimationFrame(res)
-        }, time)
+      this.animation = new Animation({
+        tick: pct => {
+          this.setValue(before + pct * diff, false)
+        },
+        time: TIME_TO_FILL_ONE_BAR,
+        finish: res
       })
     })
   }

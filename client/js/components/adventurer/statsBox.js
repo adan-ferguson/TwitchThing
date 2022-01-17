@@ -2,6 +2,7 @@ import '../bar.js'
 import { levelToXp } from '../../../../game/adventurer.js'
 
 const HTML = `
+<div class="name"></div>
 <di-bar></di-bar>
 <div class="health">Other stats here</div>
 `
@@ -23,6 +24,7 @@ export default class StatsBox extends HTMLElement {
 
   setAdventurer(adventurer){
     this.adventurer = adventurer
+    this.querySelector('.name').textContent = adventurer.name
     this._updateLevelBar()
   }
 
@@ -46,13 +48,11 @@ export default class StatsBox extends HTMLElement {
 
   _updateLevelBar(){
     if(this.displayMode === 'normal'){
-      this.levelBar.setLabel(this.adventurer.name)
       this.levelBar.setBadge(this.adventurer.level)
       this.levelBar.setRange(levelToXp(this.adventurer.level), levelToXp(this.adventurer.level + 1))
       this.levelBar.setValue(this.adventurer.xp)
     }else if(this.displayMode === 'dungeon'){
       // TODO: adventurer HP, adventurer state
-      this.levelBar.setLabel(this.adventurer.name)
       this.levelBar.setRange(0, 100)
       this.levelBar.setValue(100)
     }

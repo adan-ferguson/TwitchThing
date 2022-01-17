@@ -18,7 +18,6 @@ export default class Header extends HTMLElement {
     this.backButton.addEventListener('click', () => this.app.back())
 
     this.userBar = this.querySelector('.user-bar')
-    this.userBar.setLabel(this.user.displayname)
     this._updateUserBar()
 
     Dropdown.create(this.userBar, {
