@@ -1,4 +1,4 @@
-export function previewLevelup(adventurer){
+export function previewLevelup(adventurer, level){
 
   const bonusOptions = []
 
@@ -14,7 +14,11 @@ export function previewLevelup(adventurer){
   // TODO: add options provided by items
 
   return {
-    stats: {},
-    options: bonusOptions
+    stats: [{
+      type: 'Some Stat',
+      value: 8
+    }],
+    options: bonusOptions,
+    level
   }
 }

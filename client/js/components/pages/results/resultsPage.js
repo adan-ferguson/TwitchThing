@@ -14,6 +14,7 @@ const HTML = `
     </div>
   </div>
   <div class='content-well results'>
+    <div class="title">Results</div>
     <div class='results-list'></div>
     <button class="done hidden">Okay</button>
   </div>
@@ -49,10 +50,8 @@ export default class ResultsPage extends Page {
     this.venture = venture
 
     wait(500).then(async () => {
-      await this._adventurerXp()
-      await this._userXp()
-      await this._loot()
-      this._enableButton(this.venture.results.levelups)
+      await Promise.all([this._adventurerXp(), this._userXp(), this._loot()])
+      this._enableButton(adventurer, this.venture.results.levelups)
     })
   }
 
@@ -63,28 +62,6 @@ export default class ResultsPage extends Page {
     await this.adventurerWell.addXp(this.venture.results.rewards.xp)
   }
 
-  _adventurerLevelups(){
-    // return new Promise(res => {
-    //   if (!this.venture.results.levelups.length) {
-    //     return res()
-    //   }
-    //   const levelupEl = new LevelupSelector(this.venture.results.levelups)
-    //   this.results.appendChild(levelupEl)
-    //   levelupEl.addEventListener('finished', e => {
-    //     this.selectedBonuses = e.bonuses
-    //     res()
-    //   })
-    // })
-    // const levelupEl = document.createElement('div')
-    // this.venture.results.levelups[this.selectedBonuses.length].options.forEach(option => {
-    //   const btn = document.createElement('button')
-    //   btn.textContent = `+${option.value} ${option.type}`
-    //   btn.addEventListener('click', () => {
-    //
-    //   })
-    // })
-  }
-
   async _userXp(){
     await this.app.header.addUserXp(this.venture.results.rewards.xp)
   }
@@ -93,7 +70,7 @@ export default class ResultsPage extends Page {
 
   }
 
-  _enableButton(levelups){
+  _enableButton(adventurer, levelups){
     if(levelups.length){
       this.doneButton.textContent = 'Level up'
       this.doneButton.classList.add('levelup')
@@ -101,12 +78,13 @@ export default class ResultsPage extends Page {
     this.doneButton.classList.remove('hidden')
     this.doneButton.addEventListener('click', async () => {
       if(levelups.length){
-        const selector = new LevelupSelector(levelups)
+        const selector = new LevelupSelector()
+        selector.setLevelups(adventurer, levelups)
         const modal = new Modal()
         modal.innerPane.appendChild(selector)
         modal.show()
         selector.addEventListener('finished', e => {
-          this._finish(e.selectedBonuses)
+          this._finish(e.detail.selectedBonuses)
         })
       }else{
         this._finish()

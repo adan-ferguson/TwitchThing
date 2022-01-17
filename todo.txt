@@ -189,10 +189,16 @@ Register Channels (admin only for now)
 
 2022-01-08
 ----------
-- Basic XP gain
--- While in dungeon
--- Level up adventurer
--- Level up user
++ Basic XP gain
+++ While in dungeon
+++ Level up adventurer
+++ Level up user
+
+2022-01-16
+----------
+- Results page
+-- Choose bonus
+-- Animate xps at the same time
 
 TODO Later
 -----------
@@ -213,3 +219,4 @@ TODO Later
 - loader shouldn't go on top of header
 - Shrink entrypoint sizes
 - DB backups
+- Modal nice fadein effect

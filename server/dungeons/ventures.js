@@ -117,7 +117,7 @@ async function calculateResults(venture){
   const levelAfter = advXpToLevel(adventurer.xp + rewards.xp)
   const levelups = []
   for(let levelBefore = adventurer.level; levelBefore < levelAfter; levelBefore++){
-    levelups.push(previewLevelup(adventurer))
+    levelups.push(previewLevelup(adventurer, levelBefore + 1))
   }
 
   return {
