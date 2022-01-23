@@ -18,6 +18,7 @@ export default class Bar extends HTMLElement {
     this.min = 0
     this.max = 100
     this.decimals = 0
+    this._label = ''
     this.barLabel = this.querySelector('.bar-label')
     this.barFill = this.querySelector('.bar-fill')
   }
@@ -50,12 +51,16 @@ export default class Bar extends HTMLElement {
     val = Math.min(this.max, Math.max(this.min, Math.round(val)))
 
     this._val = val
-    this.barLabel.textContent = `${this._val} / ${this.max}`
+    this.barLabel.textContent = `${this._val} / ${this.max} ${this._label}`
     this.querySelector('.bar-fill').style.width = `${this._pct(val) * 100}%`
   }
 
   setFill(val){
     this.barFill.style.backgroundColor = val
+  }
+
+  setLabel(label = null){
+    this._label = label
   }
 
   animateValue(val){
@@ -69,16 +74,19 @@ export default class Bar extends HTMLElement {
     }
 
     return new Promise(res => {
-      this.animation = this.barFill.animate([
-        { width: `${this._pct(val) * 100}%` }
-      ], {
-        duration: TIME_TO_FILL_ONE_BAR,
-        easing: 'ease-out'
+      requestAnimationFrame(() => {
+        this.animation = this.barFill.animate([
+          { width: `${this._pct(this._val) * 100}%` },
+          { width: `${this._pct(val) * 100}%` }
+        ], {
+          duration: TIME_TO_FILL_ONE_BAR,
+          easing: 'ease-out'
+        })
+        this.animation.onfinish = () => {
+          this.setValue(val)
+          res()
+        }
       })
-      this.animation.onfinish = () => {
-        this.setValue(val)
-        res()
-      }
     })
   }
 

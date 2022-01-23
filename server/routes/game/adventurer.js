@@ -3,6 +3,7 @@ import * as Adventurers from '../../collections/adventurers.js'
 import * as DungeonRuns from '../../collections/dungeonRuns.js'
 import db from '../../db.js'
 import * as Ventures from '../../dungeons/ventures.js'
+import { finalizeVenture } from '../../dungeons/ventures.js'
 const router = express.Router()
 const verifiedRouter = express.Router()
 
@@ -90,18 +91,8 @@ verifiedRouter.post('/results', async (req, res) => {
 
 verifiedRouter.post('/confirmresults', async (req, res) => {
   try {
-    const adventurer = await Adventurers.findOne(req.adventurerID, {
-      currentVenture: 1,
-      name: 1
-    })
-    if(!adventurer.currentVenture){
-      return res.status(401).send({ error: 'Adventurer is not currently venturing.', targetPage: 'Adventurer' })
-    }
-    if(!adventurer.currentVenture.finished){
-      return res.status(401).send({ error: 'Venture is not finished yet.', targetPage: 'Dungeon' })
-    }
-    await Adventurers.update(req.adventurerID, { currentVenture: null })
-    res.send({ results: 'something' })
+    await finalizeVenture(req.adventurerID, req.body.selectedBonuses)
+    res.status(200).send({ result: 'okay' })
   }catch(error){
     return res.status(error.code || 500).send({ error: error.message || error })
   }

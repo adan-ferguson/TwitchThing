@@ -204,15 +204,33 @@ Register Channels (admin only for now)
 ----------
 + Use Web Animations API, cool
 
-TODO Later
------------
-- Variable adventure speed
+2022-01-22
+----------
++ Milestone 2
+++ Multilevel-up fade-out + fade-in
+++ Save adv and user xp
+++ Fix bar animations
+++ Main page doesn't change adventurer when venture finishes in realtime
+
+===============
+MILESTONE 3
+===============
+- Show error in name selection form
 
 - Better bars
 -- getters for values
 -- special rankup bar
+-- Full animation should take 1s even if multiple level
+-- Number ticking
 
 - Very basic combat
+
+- Shrink entrypoint sizes
+
+TODO Later
+-----------
+
+- Variable adventure speed
 
 - Floors
 -- Advance floors
@@ -222,7 +240,5 @@ TODO Later
 - View previous dungeon runs/ventures
 - Multi-run ventures
 - Make a 404 page and/or just redirect
-- loader shouldn't go on top of header
-- Shrink entrypoint sizes
 - DB backups
 - Modal nice fadein effect

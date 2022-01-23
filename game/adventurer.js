@@ -1,7 +1,7 @@
 const LEVEL_2_XP = 100
 const XP_MULTIPLIER = 1.25
 
-export function xpToLevel(xp) {
+export function xpToLevel(xp){
   let lvl = 1
   while(xp >= levelToXp(lvl + 1)){
     lvl++

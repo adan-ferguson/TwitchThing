@@ -5,6 +5,7 @@ import DungeonPage from '../dungeon/dungeonPage.js'
 import MainPage from '../main/mainPage.js'
 import Modal from '../../modal.js'
 import LevelupSelector from '../../adventurer/levelupSelector.js'
+import { show as showLoader } from '../../../loader.js'
 
 const HTML = `
 <div class='flex-columns'>
@@ -90,12 +91,14 @@ export default class ResultsPage extends Page {
   }
 
   async _finish(selectedBonuses = []){
+    showLoader()
     const results = await fizzetch(`/game/adventurer/${this.adventurerID}/confirmresults`, {
       selectedBonuses
     })
     if(!results.error){
       this.app.setPage(new AdventurerPage(this.adventurerID))
     }
+    // TODO: handle error, usually just shouldn't happen though
   }
 }
 

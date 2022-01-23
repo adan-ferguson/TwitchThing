@@ -51,7 +51,7 @@ router.post('/main', async(req, res) => {
 router.use('/adventurer', adventurerRouter)
 
 router.get('/', async(req, res) => {
-  res.render('game', { user: await Users.loadGameData(req.user) })
+  res.render('game')
 })
 
 router.post('/newadventurer', async(req, res) => {

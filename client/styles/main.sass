@@ -7,11 +7,18 @@ di-main-page
     flex-basis: 440rem
     margin: 0 $margin 0 0
 
-  .adventurer-row
+  di-main-adventurer-row
     height: 52rem
     margin: $rowMargin $rowMargin 0
-    padding: 4rem 8rem
     font-size: 1em
+    border: 1rem solid black
+    cursor: pointer
+    display: flex
+    align-items: center
+    justify-content: center
+
+    &:hover
+      background-color: #EEE
 
     .status
       color: red

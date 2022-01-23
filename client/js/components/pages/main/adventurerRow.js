@@ -5,20 +5,21 @@ import AdventurerPage from '../adventurer/adventurerPage.js'
 import '../../timer.js'
 
 const HTML = `
-Lvl <span class="level"></span> - <span class="name"></span> <span class="status"></span> <di-timer class="hidden"></di-timer>
+<div>
+    Lvl <span class="level"></span> - <span class="name"></span> <span class="status"></span> <di-timer class="displaynone"></di-timer>
+</div>
 `
 
-export default class AdventurerRow extends HTMLButtonElement {
+export default class AdventurerRow extends HTMLElement {
   constructor(adventurer, setPageFn){
     super()
-    this.classList.add('adventurer-row')
 
     if(!adventurer) {
       this.innerHTML = 'Create a new Adventurer'
       return
     }
 
-    this.setAttribute('adventurerID', adventurer._id)
+    this.setAttribute('adventurer-id', adventurer._id)
     this.innerHTML = HTML
     this.adventurer = adventurer
     this.update()
@@ -36,14 +37,14 @@ export default class AdventurerRow extends HTMLButtonElement {
     function updateTimer(){
       if(adventurer.currentVenture && !adventurer.currentVenture.finished){
         timer.setTimeSince(adventurer.currentVenture.startTime)
-        timer.classList.remove('hidden')
+        timer.classList.remove('displaynone')
         if(adventurer.currentVenture.finished){
           timer.stop()
         }else{
           timer.start()
         }
       }else{
-        timer.classList.add('hidden')
+        timer.classList.add('displaynone')
       }
     }
 
@@ -78,4 +79,4 @@ export default class AdventurerRow extends HTMLButtonElement {
   }
 }
 
-customElements.define('di-main-adventurer-row', AdventurerRow, { extends: 'button' })
+customElements.define('di-main-adventurer-row', AdventurerRow)

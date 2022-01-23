@@ -18,8 +18,12 @@ export async function save(userDoc){
   return await db.save(fix(userDoc), 'users')
 }
 
-function fix(userDoc, projection = null){
-  return db.fix(userDoc, DEFAULTS, projection)
+export async function findOne(queryOrID, projection = {}){
+  return await db.findOne('users', queryOrID, projection, DEFAULTS)
+}
+
+export async function update(_id, $set = {}){
+  return await db.conn().collection('users').updateOne({ _id }, { $set })
 }
 
 // emit(eventName, data){
@@ -101,4 +105,8 @@ export async function newAdventurer(userDoc, adventurername){
 
 export function isSetupComplete(userDoc){
   return userDoc.displayname ? true : false
+}
+
+function fix(userDoc, projection = null){
+  return db.fix(userDoc, DEFAULTS, projection)
 }

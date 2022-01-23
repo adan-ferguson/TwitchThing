@@ -1,9 +1,11 @@
 import { addRun } from './dungeonRunner.js'
 import { addRewards, loadByIDs } from '../collections/dungeonRuns.js'
 import * as Adventurers from '../collections/adventurers.js'
+import * as Users from '../collections/users.js'
 import { emit } from '../socketServer.js'
 import { xpToLevel as advXpToLevel } from '../../game/adventurer.js'
 import { previewLevelup } from '../adventurer/leveler.js'
+import { xpToLevel as userXpToLevel } from '../../game/user.js'
 
 export async function getByAdventurerID(adventurerID){
   const data = await Adventurers.findOne(adventurerID, {
@@ -68,6 +70,52 @@ export async function advanceVentures(runsInProgress){
     if(!venture.currentRun || !runsObj[venture.currentRun.toString()]){
       await continueVenture(venture)
     }
+  }
+}
+
+export async function finalizeVenture(adventurerID, selectedBonuses){
+
+  const adventurer = await Adventurers.findOne(adventurerID, {
+    currentVenture: 1,
+    name: 1,
+    xp: 1,
+    level: 1
+  })
+
+  const venture = adventurer.currentVenture
+
+  if(!venture){
+    throw { code: 401, error: 'Adventurer is not currently venturing.', targetPage: 'Adventurer' }
+  }
+
+  if(!venture.finished){
+    return { code: 401, error: 'Venture is not finished yet.', targetPage: 'Dungeon' }
+  }
+
+  if(selectedBonuses.length !== venture.results.levelups.length){
+    return { code: 401, error: 'Selected bonuses array length mismatched' }
+  }
+
+  await Promise.all([saveAdventurer(), saveUser()])
+
+  async function saveAdventurer(){
+    // TODO: save selected bonuses
+    const xpAfter = adventurer.xp + venture.results.rewards.xp
+    await Adventurers.update(adventurerID, {
+      currentVenture: null,
+      xp: xpAfter,
+      level: advXpToLevel(xpAfter)
+    })
+  }
+
+  async function saveUser(){
+    // TODO: add level rewards
+    const user = await Users.findOne(venture.userID)
+    const xpAfter = user.xp + venture.results.rewards.xp
+    await Users.update(venture.userID, {
+      xp: xpAfter,
+      level: userXpToLevel(xpAfter)
+    })
   }
 }
 

@@ -1,3 +1,5 @@
+import * as AnimationHelper from '../../animationHelper.js'
+
 const HTML = `
 <div>
     <span class="name"></span> has reached level <span class="level"></span>
@@ -25,7 +27,7 @@ export default class LevelupSelector extends HTMLElement{
     this._showNextLevelup()
   }
 
-  _showNextLevelup(){
+  async _showNextLevelup(){
     const nextLevelup = this._levelups.splice(0, 1)[0]
 
     this.stats.innerHTML = ''
@@ -38,21 +40,24 @@ export default class LevelupSelector extends HTMLElement{
       this.stats.appendChild(statEl)
     })
 
-    nextLevelup.options.forEach(option => {
+    nextLevelup.options.forEach((option, i) => {
       const optionEl = document.createElement('button')
       optionEl.classList.add('option')
       optionEl.innerHTML = OPTION_HTML(option)
       optionEl.addEventListener('click', () => {
-        this._selectOption(option)
+        this._selectOption(i)
       })
       this.options.appendChild(optionEl)
     })
   }
 
-  _selectOption(option){
-    this._selectedOptions.push(option)
+  _selectOption(i){
+    this._selectedOptions.push(i)
     if(this._levelups.length){
-      this._showNextLevelup()
+      AnimationHelper.fadeOut(this).then(() => {
+        this._showNextLevelup()
+        AnimationHelper.fadeIn(this)
+      })
     }else{
       const e = new CustomEvent('finished', {
         detail: {

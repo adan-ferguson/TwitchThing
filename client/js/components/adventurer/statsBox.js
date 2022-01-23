@@ -30,7 +30,7 @@ export default class StatsBox extends HTMLElement {
 
   async addXp(xpToAdd){
     while(xpToAdd > 0){
-      let toNextLevel = this.levelBar.max - this.levelBar.min
+      let toNextLevel = this.levelBar.max - this.adventurer.xp
       if (xpToAdd >= toNextLevel) {
         await this.levelBar.animateValue(this.levelBar.max)
         // TODO: flying text "Level Up!"
@@ -47,13 +47,15 @@ export default class StatsBox extends HTMLElement {
   }
 
   _updateLevelBar(){
+    this.levelBar.setBadge(this.adventurer.level)
     if(this.displayMode === 'normal'){
-      this.levelBar.setBadge(this.adventurer.level)
       this.levelBar.setRange(levelToXp(this.adventurer.level), levelToXp(this.adventurer.level + 1))
+      this.levelBar.setLabel('xp')
       this.levelBar.setValue(this.adventurer.xp)
     }else if(this.displayMode === 'dungeon'){
       // TODO: adventurer HP, adventurer state
       this.levelBar.setRange(0, 100)
+      this.levelBar.setLabel('hp')
       this.levelBar.setValue(100)
     }
   }

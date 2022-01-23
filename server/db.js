@@ -23,7 +23,7 @@ const id = id => MongoDB.ObjectID(id)
 const fix = (doc, defaults, projection = null) => {
   const fixedDoc = { ...doc }
   for(let key in defaults){
-    if(!projection || projection[key]){
+    if(!projection || !Object.keys(projection).length || projection[key]){
       if(!(key in fixedDoc)){
         fixedDoc[key] = defaults[key]
       }

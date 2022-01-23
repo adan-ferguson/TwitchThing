@@ -5,6 +5,7 @@ import './header.js'
 import './adventurer/well.js'
 import './pages/dungeon/event.js'
 import './pages/dungeon/state.js'
+import fizzetch from '../fizzetch.js'
 
 const HTML = `
 <di-header></di-header>
@@ -18,7 +19,6 @@ export default class App extends HTMLElement {
     this.innerHTML = HTML
     this.currentPage = null
     this.header = this.querySelector('di-header')
-
     this.setPage(new MainPage())
   }
 
@@ -29,6 +29,9 @@ export default class App extends HTMLElement {
   async setPage(page){
 
     Loader.show()
+
+    // Update the user whenever we change pages
+    this._fetchUser()
 
     if(this.currentPage){
       const preventUnload = await this.currentPage.unload()
@@ -49,6 +52,7 @@ export default class App extends HTMLElement {
     this.querySelector(':scope > .content').appendChild(page)
     page.classList.add('fade-in')
     this.dispatchEvent(new Event('pagechange'))
+
     Loader.hide()
   }
 
@@ -56,6 +60,12 @@ export default class App extends HTMLElement {
     if(this.currentPage.backPage){
       this.setPage(this.currentPage.backPage())
     }
+  }
+
+  async _fetchUser(){
+    // TODO: error handle
+    this.user = await fizzetch('/user')
+    this.header.updateUserBar()
   }
 }
 

@@ -70,4 +70,8 @@ router.get('/newuser', async (req, res) => {
   res.render('newuser', { error: err })
 })
 
+router.post('', async (req, res) => {
+  res.send(await Users.loadGameData(req.user))
+})
+
 export default router
