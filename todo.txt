@@ -224,21 +224,23 @@ MILESTONE 3
 -- Number ticking
 
 - Very basic combat
+-- Combat page
+-- Generic bat enemy that scales with floor
+-- No items, just damage amounts
+-- Adventure ends when run out of hp
+-- Adventurer's max hp and damage goes up as they level up
+-- Advancing floors
 
 - Shrink entrypoint sizes
 
 TODO Later
 -----------
-
 - Variable adventure speed
-
-- Floors
--- Advance floors
--- Average floor size
-
 - Event log
 - View previous dungeon runs/ventures
 - Multi-run ventures
 - Make a 404 page and/or just redirect
 - DB backups
 - Modal nice fadein effect
+- Admin page
+- Random events
