@@ -8,19 +8,18 @@ const innerHTML = `
 </div>
 `
 
-const TIME_TO_FILL_ONE_BAR = 1000
+const ANIM_TIME = 1000
 
 export default class Bar extends HTMLElement {
 
   constructor(){
     super()
     this.innerHTML = innerHTML
-    this.min = 0
-    this.max = 100
-    this.decimals = 0
+    this._min = 0
+    this._max = 100
     this._label = ''
-    this.barLabel = this.querySelector('.bar-label')
-    this.barFill = this.querySelector('.bar-fill')
+    this._barLabel = this.querySelector('.bar-label')
+    this._barFill = this.querySelector('.bar-fill')
   }
 
   setBadge(text){
@@ -34,8 +33,8 @@ export default class Bar extends HTMLElement {
   }
 
   setRange(min, max){
-    this.min = min
-    this.max = max
+    this._min = min
+    this._max = max
   }
 
   setValue(val){
@@ -48,15 +47,15 @@ export default class Bar extends HTMLElement {
       this.animation.cancel()
     }
 
-    val = Math.min(this.max, Math.max(this.min, Math.round(val)))
+    val = Math.min(this._max, Math.max(this._min, Math.round(val)))
 
     this._val = val
-    this.barLabel.textContent = `${this._val} / ${this.max} ${this._label}`
+    this._barLabel.textContent = `${this._val} / ${this._max} ${this._label}`
     this.querySelector('.bar-fill').style.width = `${this._pct(val) * 100}%`
   }
 
   setFill(val){
-    this.barFill.style.backgroundColor = val
+    this._barFill.style.backgroundColor = val
   }
 
   setLabel(label = null){
@@ -75,11 +74,11 @@ export default class Bar extends HTMLElement {
 
     return new Promise(res => {
       requestAnimationFrame(() => {
-        this.animation = this.barFill.animate([
+        this.animation = this._barFill.animate([
           { width: `${this._pct(this._val) * 100}%` },
           { width: `${this._pct(val) * 100}%` }
         ], {
-          duration: TIME_TO_FILL_ONE_BAR,
+          duration: ANIM_TIME,
           easing: 'ease-out'
         })
         this.animation.onfinish = () => {
@@ -91,7 +90,7 @@ export default class Bar extends HTMLElement {
   }
 
   _pct(val){
-    const pct = (val - this.min) / (this.max - this.min)
+    const pct = (val - this._min) / (this._max - this._min)
     return Math.min(1, Math.max(0, pct))
   }
 }

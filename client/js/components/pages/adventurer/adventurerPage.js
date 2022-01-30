@@ -4,9 +4,6 @@ import AdventurerStatsPage from '../adventurerStats/adventurerStatsPage.js'
 import AdventurerLoadoutPage from '../adventurerLoadout/adventurerLoadoutPage.js'
 import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
 
-import '../../adventurer/statsBox.js'
-import '../../loadout.js'
-
 import fizzetch from '../../../fizzetch.js'
 
 const HTML = `

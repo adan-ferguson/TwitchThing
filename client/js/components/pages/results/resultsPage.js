@@ -56,7 +56,7 @@ export default class ResultsPage extends Page {
     const xpRow = document.createElement('div')
     xpRow.textContent = `+${this.venture.results.rewards.xp} xp`
     this.results.appendChild(xpRow)
-    await this.adventurerWell.statsbox.addXp(this.venture.results.rewards.xp)
+    await this.adventurerWell.addXp(this.venture.results.rewards.xp)
   }
 
   async _userXp(){

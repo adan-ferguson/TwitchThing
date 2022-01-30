@@ -215,13 +215,22 @@ Register Channels (admin only for now)
 ===============
 MILESTONE 3
 ===============
-- Show error in name selection form
 
+2022-01-23
+----------
++ Show error in name selection form
+
+2022-01-26
+----------
 - Better bars
--- getters for values
--- special rankup bar
--- Full animation should take 1s even if multiple level
+++ getters for values
+++ special rankup bar
 -- Number ticking
+-- gradient for healthbar
+
+- Adventurer stats object, for use when not in dungeon
+- Adventurer state definition object (stored in each event object)
+- Adventurer state + stats extrapolation
 
 - Very basic combat
 -- Combat page

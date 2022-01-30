@@ -1,11 +1,15 @@
 import * as Loader from '../loader.js'
 import MainPage from './pages/main/mainPage.js'
+import fizzetch from '../fizzetch.js'
 
 import './header.js'
-import './adventurer/well.js'
+import './pages/adventurer/adventurerWell.js'
+import './pages/dungeon/adventurerWell.js'
 import './pages/dungeon/event.js'
 import './pages/dungeon/state.js'
-import fizzetch from '../fizzetch.js'
+import './xpBar.js'
+import './hpBar.js'
+import './loadout.js'
 
 const HTML = `
 <di-header></di-header>

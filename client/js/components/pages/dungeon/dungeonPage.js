@@ -6,7 +6,7 @@ import ResultsPage from '../results/resultsPage.js'
 
 const HTML = `
 <div class='flex-columns'>
-  <di-adventurer-well></di-adventurer-well>
+  <di-dungeon-adventurer-well></di-dungeon-adventurer-well>
   <div class="flex-rows">
     <div class="event content-well">
         <di-dungeon-event></di-dungeon-event>
@@ -25,8 +25,7 @@ export default class DungeonPage extends Page {
     this.adventurerID = adventurerID
     this.innerHTML = HTML
 
-    this.adventurerWell = this.querySelector('di-adventurer-well')
-    this.adventurerWell.setDisplayMode('dungeon')
+    this.adventurerWell = this.querySelector('di-dungeon-adventurer-well')
     this.eventEl = this.querySelector('di-dungeon-event')
     this.stateEl = this.querySelector('di-dungeon-state')
   }
@@ -46,6 +45,7 @@ export default class DungeonPage extends Page {
     }
 
     this.adventurerWell.setAdventurer(adventurer)
+    this.adventurerWell.setState(dungeonRun.currentEvent.adventurerState)
     this.stateEl.updateDungeonRun(dungeonRun)
     this.stateEl.updateVenture(adventurer.currentVenture)
     this.eventEl.update(dungeonRun.currentEvent)
