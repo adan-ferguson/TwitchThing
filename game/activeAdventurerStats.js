@@ -1,17 +1,38 @@
-export default class ActiveAdventurerStats {
-  constructor(adventurerStats, adventurerState){
-    this.adventurerStats = adventurerStats
-    this.adventurerState = adventurerState
+import AdventurerStats from './adventurerStats.js'
+import Stats from './stats.js'
 
-    this._maxHp = adventurerStats.maxHp
-    this._hp = adventurerStats.maxHp
+export default class ActiveAdventurerStats extends Stats {
+  constructor(adventurer, adventurerState){
+    super()
+    this.adventurer = adventurer
+    this.adventurerStats = new AdventurerStats(adventurer)
+    this.updateState(adventurerState)
+  }
+
+  get level(){
+    return this.adventurer.level
+  }
+
+  get statAffectors(){
+    const stateStatAffectors = [] // TODO: derive from adventurer state
+    return [...this.adventurerStats.statAffectors, ...stateStatAffectors]
   }
 
   get hp(){
-    return this._hp
+    if('hp' in this.adventurerState){
+      return Math.max(0, Math.min(this.maxHp, this.adventurerState.hp))
+    }
+    return this.maxHp
   }
 
+  /**
+   * @returns {number}
+   */
   get maxHp(){
-    return this._maxHp
+    return this._getStat('hp')
+  }
+
+  updateState(adventurerState){
+    this.adventurerState = adventurerState
   }
 }

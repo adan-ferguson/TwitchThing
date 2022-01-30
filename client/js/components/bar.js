@@ -20,7 +20,7 @@ export default class Bar extends HTMLElement {
     this._min = 0
     this._max = 100
     this._label = ''
-    this._color = '#DDD '
+    this._color = '#DDD'
     this._barLabel = this.querySelector('.bar-label')
     this._barFill = this.querySelector('.bar-fill')
   }
