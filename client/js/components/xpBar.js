@@ -46,7 +46,7 @@ export default class XpBar extends Bar {
     while(xpToAdd > 0){
       let toNextLevel = this._max - this._val
       if (xpToAdd >= toNextLevel) {
-        await super.animateValue(this.max)
+        await super.animateValue(this._max)
         // TODO: flying text "Level Up!"
         xpToAdd -= toNextLevel
       }else{

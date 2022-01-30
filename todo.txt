@@ -222,15 +222,20 @@ MILESTONE 3
 
 2022-01-26
 ----------
-- Better bars
++ Better bars
 ++ getters for values
 ++ special rankup bar
--- Number ticking
--- gradient for healthbar
+++ Number ticking
+++ gradient for healthbar
 
-- Adventurer stats object, for use when not in dungeon
-- Adventurer state definition object (stored in each event object)
-- Adventurer state + stats extrapolation
++ Adventurer stats object, for use when not in dungeon
++ Adventurer state definition object (stored in each event object)
++ Adventurer state + stats extrapolation
+
+2022-01-29
+----------
+- Stats
+-- Derive HP
 
 - Very basic combat
 -- Combat page

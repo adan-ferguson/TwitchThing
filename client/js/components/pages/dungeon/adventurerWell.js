@@ -24,7 +24,7 @@ export default class AdventurerWell extends HTMLElement {
 
   setAdventurer(adventurer){
     this.adventurer = adventurer
-    this.hpBar.setLabel(adventurer.level)
+    this.hpBar.setBadge(adventurer.level)
     this.querySelector('.name').textContent = adventurer.name
   }
 

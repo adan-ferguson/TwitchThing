@@ -1,3 +1,5 @@
+import CustomAnimation from '../customAnimation.js'
+
 const innerHTML = `
 <div class="bar-badge displaynone">
     <span></span>
@@ -18,6 +20,7 @@ export default class Bar extends HTMLElement {
     this._min = 0
     this._max = 100
     this._label = ''
+    this._color = '#DDD '
     this._barLabel = this.querySelector('.bar-label')
     this._barFill = this.querySelector('.bar-fill')
   }
@@ -50,8 +53,9 @@ export default class Bar extends HTMLElement {
     val = Math.min(this._max, Math.max(this._min, Math.round(val)))
 
     this._val = val
-    this._barLabel.textContent = `${this._val} / ${this._max} ${this._label}`
-    this.querySelector('.bar-fill').style.width = `${this._pct(val) * 100}%`
+    this._setLabel(this._val)
+    this._barFill.style.width = `${this._pct(val) * 100}%`
+    this._barFill.style.backgroundColor = this._valToColor(val)
   }
 
   setFill(val){
@@ -60,6 +64,10 @@ export default class Bar extends HTMLElement {
 
   setLabel(label = null){
     this._label = label
+  }
+
+  setColor(color){
+    this._color = color
   }
 
   animateValue(val){
@@ -74,17 +82,40 @@ export default class Bar extends HTMLElement {
 
     return new Promise(res => {
       requestAnimationFrame(() => {
-        this.animation = this._barFill.animate([
-          { width: `${this._pct(this._val) * 100}%` },
-          { width: `${this._pct(val) * 100}%` }
+
+        const initialVal = this._val
+        const diff = val - initialVal
+
+        const animation = this._barFill.animate([
+          {
+            width: `${this._pct(this._val) * 100}%`,
+            backgroundColor: this._valToColor(this._val)
+          },
+          {
+            width: `${this._pct(val) * 100}%`,
+            backgroundColor: this._valToColor(val)
+          }
         ], {
           duration: ANIM_TIME,
           easing: 'ease-out'
         })
-        this.animation.onfinish = () => {
+        animation.onfinish = () => {
           this.setValue(val)
           res()
         }
+
+        const tickAnimation = new CustomAnimation({
+          tick: pct => {
+            if(animation.playState !== 'running'){
+              tickAnimation.cancel()
+            }else{
+              this._setLabel(Math.min(this._max, Math.max(this._min, Math.round(initialVal + pct * diff))))
+            }
+          },
+          duration: ANIM_TIME
+        })
+
+        this.animation = animation
       })
     })
   }
@@ -92,6 +123,17 @@ export default class Bar extends HTMLElement {
   _pct(val){
     const pct = (val - this._min) / (this._max - this._min)
     return Math.min(1, Math.max(0, pct))
+  }
+
+  _setLabel(val){
+    this._barLabel.textContent = `${val} / ${this._max} ${this._label || ''}`
+  }
+
+  _valToColor(val){
+    if(typeof(this._color) === 'function'){
+      return this._color(this._pct(val))
+    }
+    return this._color
   }
 }
 
