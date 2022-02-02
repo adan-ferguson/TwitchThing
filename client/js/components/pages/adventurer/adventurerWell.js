@@ -1,13 +1,16 @@
 import { levelToXp, xpToLevel } from '../../../../../game/adventurer.js'
+import AdventurerStats from '../../../../../game/adventurerStats.js'
 
 const HTML = `
 <div class="content-well">
-  <div class="stats-box">
-    <div class="name"></div>
-    <di-xp-bar></di-xp-bar>
-    <div class="stats"></div>
+  <div class="flex-rows">
+    <div class="stats-box">
+      <div class="name"></div>
+      <di-xp-bar></di-xp-bar>
+      <div class="stats"></div>
+    </div>
+    <di-loadout></di-loadout>
   </div>
-  <di-loadout></di-loadout>
 </div>
 `
 
@@ -17,18 +20,17 @@ export default class AdventurerWell extends HTMLElement {
     super()
     this.innerHTML = HTML
     this.classList.add('flex-rows')
-    this.statsbox = this.querySelector('.stats-box')
     this.xpBar = this.querySelector('di-xp-bar')
     this.xpBar.setLevelFunctions(xpToLevel, levelToXp)
     this.loadout = this.querySelector('di-loadout')
-    this.displayMode = 'normal'
+    this.statsbox = this.querySelector('.stats-box')
+    this.stats = this.querySelector('.stats')
   }
 
   setAdventurer(adventurer){
     this.adventurer = adventurer
     this.querySelector('.name').textContent = adventurer.name
     this._update()
-    // TODO: loadout
   }
 
   async addXp(xp){
@@ -39,6 +41,17 @@ export default class AdventurerWell extends HTMLElement {
 
   _update(){
     this.xpBar.setValue(this.adventurer.xp)
+
+    const stats = new AdventurerStats(this.adventurer)
+    this.stats.innerHTML = ''
+
+    // TODO: figure out this but better
+    const statsToShow = ['hp', 'attack']
+    statsToShow.forEach(statName => {
+      const el = document.createElement('div')
+      el.innerHTML = `${statName} ${stats[statName]}`
+      this.stats.appendChild(el)
+    })
   }
 }
 customElements.define('di-adventurer-well', AdventurerWell )

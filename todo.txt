@@ -232,10 +232,11 @@ MILESTONE 3
 + Adventurer state definition object (stored in each event object)
 + Adventurer state + stats extrapolation
 
-2022-01-29
+2022-02-02
 ----------
-- Stats
--- Derive HP
++ Stats
+++ Derive HP
+-- Derive attack
 
 - Very basic combat
 -- Combat page

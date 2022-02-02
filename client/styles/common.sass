@@ -80,16 +80,21 @@ input
   left: 50%
   transform: translate(-50%, -50%)
 
+.fill-contents
+  display: flex
+  flex-direction: column
+
+  > *
+    flex-grow: 1
+
 .content-well
+  @extend .fill-contents
   border: 1rem solid #BBB
   padding: 10rem
 
   &.clickable:hover
     background-color: #F8F8F8
     color: #6f46b0
-
-  &.no-padding
-    padding: 0
 
 .clickable
   cursor: pointer

@@ -30,4 +30,8 @@ export default class AdventurerStats extends Stats {
   get hp(){
     return this._getStat('hp')
   }
+
+  get attack(){
+    return this._getStat('attack')
+  }
 }
