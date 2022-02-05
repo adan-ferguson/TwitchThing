@@ -2,15 +2,13 @@ import { levelToXp, xpToLevel } from '../../../../../game/adventurer.js'
 import AdventurerStats from '../../../../../game/adventurerStats.js'
 
 const HTML = `
-<div class="content-well">
-  <div class="flex-rows">
-    <div class="stats-box">
-      <div class="name"></div>
-      <di-xp-bar></di-xp-bar>
-      <div class="stats"></div>
-    </div>
-    <di-loadout></di-loadout>
+<div class="flex-rows">
+  <div class="stats-box">
+    <div class="name"></div>
+    <di-xp-bar></di-xp-bar>
+    <div class="stats"></div>
   </div>
+  <di-loadout></di-loadout>
 </div>
 `
 
@@ -19,7 +17,7 @@ export default class AdventurerWell extends HTMLElement {
   constructor(){
     super()
     this.innerHTML = HTML
-    this.classList.add('flex-rows')
+    this.classList.add('content-well')
     this.xpBar = this.querySelector('di-xp-bar')
     this.xpBar.setLevelFunctions(xpToLevel, levelToXp)
     this.loadout = this.querySelector('di-loadout')

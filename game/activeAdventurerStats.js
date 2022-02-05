@@ -32,6 +32,10 @@ export default class ActiveAdventurerStats extends Stats {
     return this._getStat('hp')
   }
 
+  get attack(){
+    return this._getStat('attack')
+  }
+
   updateState(adventurerState){
     this.adventurerState = adventurerState
   }

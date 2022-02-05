@@ -11,9 +11,11 @@ const HTML = `
 <div class='flex-columns'>
   <di-adventurer-well></di-adventurer-well>
   <div class='content-well results'>
-    <div class="title">Results</div>
-    <div class='results-list'></div>
-    <button class="done hidden">Okay</button>
+    <div class='flex-rows'>
+      <div class="title">Results</div>
+      <div class='results-list'></div>
+      <button class="done hidden">Okay</button>
+    </div>
   </div>
 </div>
 `

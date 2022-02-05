@@ -236,7 +236,7 @@ MILESTONE 3
 ----------
 + Stats
 ++ Derive HP
--- Derive attack
+++ Derive attack
 
 - Very basic combat
 -- Combat page

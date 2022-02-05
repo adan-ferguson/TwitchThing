@@ -39,7 +39,9 @@ verifiedRouter.post('/dungeonrun', async(req, res) => {
   try {
     const adventurer = await Adventurers.findOne(req.adventurerID, {
       currentVenture: 1,
-      name: 1
+      name: 1,
+      level: 1,
+      xp: 1
     })
     if(!adventurer.currentVenture){
       return res.status(404).send({ error: 'Adventurer is not currently venturing.' })

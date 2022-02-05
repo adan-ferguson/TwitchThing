@@ -1,13 +1,14 @@
 import ActiveAdventurerStats from '../../../../../game/activeAdventurerStats.js'
-import AdventurerStats from '../../../../../game/adventurerStats.js'
 
 const HTML = `
-<div class="stats-box content-well">
-  <div class="name"></div>
-  <di-hp-bar></di-hp-bar>
-  <div class="stats"></div>
+<div class="flex-rows">
+  <div class="stats-box">
+    <div class="name"></div>
+    <di-hp-bar></di-hp-bar>
+    <div class="stats"></div>
+  </div>
+  <di-loadout></di-loadout>
 </div>
-<di-loadout></di-loadout>
 `
 
 export default class AdventurerWell extends HTMLElement {
@@ -15,10 +16,11 @@ export default class AdventurerWell extends HTMLElement {
   constructor(){
     super()
     this.innerHTML = HTML
-    this.classList.add('flex-rows')
+    this.classList.add('content-well')
     this.hpBar = this.querySelector('di-hp-bar')
     this.loadout = this.querySelector('di-loadout')
     this.statsbox = this.querySelector('.stats-box')
+    this.stats = this.querySelector('.stats')
     this.displayMode = 'normal'
   }
 
@@ -35,10 +37,17 @@ export default class AdventurerWell extends HTMLElement {
   }
 
   _update(animateChanges){
-    const stats = new AdventurerStats(this.adventurer)
-    const activeStats = new ActiveAdventurerStats(stats, this.state)
-    this.hpBar.setValue(activeStats.hp)
+    const activeStats = new ActiveAdventurerStats(this.adventurer, this.state)
     this.hpBar.setRange(0, activeStats.maxHp)
+    this.hpBar.setValue(activeStats.hp)
+
+    // TODO: figure out this but better
+    const statsToShow = ['attack']
+    statsToShow.forEach(statName => {
+      const el = document.createElement('div')
+      el.innerHTML = `${statName} ${activeStats[statName]}`
+      this.stats.appendChild(el)
+    })
   }
 }
 customElements.define('di-dungeon-adventurer-well', AdventurerWell )

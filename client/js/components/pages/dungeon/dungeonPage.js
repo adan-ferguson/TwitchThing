@@ -5,15 +5,15 @@ import { getSocket } from '../../../socketClient.js'
 import ResultsPage from '../results/resultsPage.js'
 
 const HTML = `
-<div class='flex-columns'>
-  <di-dungeon-adventurer-well></di-dungeon-adventurer-well>
-  <div class="flex-rows">
+<div class='flex-rows'>
+  <div class='flex-columns'>
+    <di-dungeon-adventurer-well></di-dungeon-adventurer-well>
     <div class="event content-well">
         <di-dungeon-event></di-dungeon-event>
     </div>
-    <div class="state content-well" style="flex-basis:125rem;flex-grow:0">
-        <di-dungeon-state></di-dungeon-state>
-    </div>
+  </div>
+  <div class="state content-well" style="flex-basis:125rem;flex-grow:0">
+      <di-dungeon-state></di-dungeon-state>
   </div>
 </div>
 `
@@ -42,6 +42,7 @@ export default class DungeonPage extends Page {
     if(error){
       throw error
       // TODO: handle error
+      // TODO: if we should be on the combat page, navigate there
     }
 
     this.adventurerWell.setAdventurer(adventurer)
@@ -68,6 +69,11 @@ export default class DungeonPage extends Page {
   }
 
   _parseDungeonUpdate = dungeonRun => {
+
+    if(dungeonRun.currentEvent.combat?.state === 'finished'){
+      return this.app.setPage(new CombatPage(dungeonRun.currentEvent.combat.id))
+    }
+
     this.eventEl.update(dungeonRun.currentEvent)
     this.stateEl.updateDungeonRun(dungeonRun)
   }

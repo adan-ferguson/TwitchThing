@@ -1,5 +1,5 @@
 import db from '../db.js'
-import { generateEvent } from '../dungeons/eventPlanner.js'
+import { generateEvent } from '../dungeons/dungeonEventPlanner.js'
 import { emit } from '../socketServer.js'
 import * as Adventurers from './adventurers.js'
 
@@ -63,6 +63,12 @@ export async function findOne(queryOrID = {}, projection = {}){
 export async function advance(dungeonRunDoc){
 
   const adventurer = await Adventurers.findOne(dungeonRunDoc.adventurerID)
+  const prevEvent = dungeonRunDoc.currentEvent
+
+  if(prevEvent.stairs){
+    dungeonRunDoc.room = 0
+    dungeonRunDoc.floor++
+  }
 
   const newEvent = await generateEvent(adventurer, dungeonRunDoc)
 
@@ -71,9 +77,13 @@ export async function advance(dungeonRunDoc){
     return
   }
 
-  dungeonRunDoc.room++
   dungeonRunDoc.events.push(newEvent)
   dungeonRunDoc.currentEvent = newEvent
+  dungeonRunDoc.room++
+
+  if(newEvent.adventurerState){
+    dungeonRunDoc.adventurerState = newEvent.adventurerState
+  }
 
   if(newEvent.rewards){
     addRewards(dungeonRunDoc.rewards, newEvent.rewards)
