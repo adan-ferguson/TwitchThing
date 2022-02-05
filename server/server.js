@@ -28,8 +28,7 @@ async function init(){
     secret: config.secret,
     cookie: {
       secure: config.requireHttps,
-      sameSite: false,
-      maxAge: 365 * 24 * 60 * 60 * 1000
+      sameSite: false
     },
     store: MongoStore.create({
       client: DB.client(),
