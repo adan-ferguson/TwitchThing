@@ -29,13 +29,15 @@ async function init(){
     cookie: {
       secure: config.requireHttps,
       sameSite: false,
-      httpOnly: !config.requireHttps
+      maxAge: 365 * 24 * 60 * 60 * 1000
     },
     store: MongoStore.create({
       client: DB.client(),
       dbName: config.db.name
     })
   }
+
+  console.log('sessoptions', sessionOptions)
 
   const sessionMiddlware = session(sessionOptions)
 
