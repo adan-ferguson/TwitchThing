@@ -27,13 +27,17 @@ async function init(){
     saveUninitialized: false,
     secret: config.secret,
     cookie: {
-      // secure: config.requireHttps,
-      sameSite: false
+      secure: false
     },
     store: MongoStore.create({
       client: DB.client(),
       dbName: config.db.name
     })
+  }
+
+  if(config.requireHttps){
+    sessionOptions.cookie.secure = true
+    sessionOptions.proxy = true
   }
 
   console.log('sessoptions', sessionOptions)
