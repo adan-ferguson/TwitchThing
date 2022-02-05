@@ -40,8 +40,6 @@ async function init(){
     sessionOptions.proxy = true
   }
 
-  console.log('sessoptions', sessionOptions)
-
   const sessionMiddlware = session(sessionOptions)
 
   const app = express()

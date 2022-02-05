@@ -10,17 +10,13 @@ const router = express.Router()
 const magic = new Magic(config.magic.secretKey)
 const strategy = new Strategy(async function(magicUser, done){
   try {
-    console.log('magicUser', magicUser)
     let user = await Users.loadFromMagicID(magicUser.issuer)
-    console.log('userb', user)
     if(!user){
       const userMetadata = await magic.users.getMetadataByIssuer(magicUser.issuer)
-      console.log('meta', userMetadata)
       user = await Users.create(magicUser.issuer, magicUser.claim.iat, userMetadata.email)
     }else{
       Users.login(user)
     }
-    console.log('usera', user)
     return done(null, user)
   }catch(err){
     return done(err)
@@ -30,13 +26,11 @@ const strategy = new Strategy(async function(magicUser, done){
 passport.use(strategy)
 
 passport.serializeUser((user, done) => {
-  console.log('ser', user, user.magicID)
   done(null, user.magicID)
 })
 
 passport.deserializeUser(async (id, done) => {
   const user = await Users.loadFromMagicID(id)
-  console.log('deser', id, user)
   done(null, user)
 })
 
@@ -57,8 +51,6 @@ router.get('/logout', async (req, res) => {
 })
 
 router.get('/newuser', async (req, res) => {
-
-  console.log('newuser', req.user)
 
   if(!req.user){
     return res.redirect('/login')
