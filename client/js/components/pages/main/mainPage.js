@@ -29,6 +29,10 @@ export default class MainPage extends Page {
     // TODO: handle error
   }
 
+  get backPage(){
+    return null
+  }
+
   async load(){
     const myContent = await fizzetch('/game/main')
     if(myContent.error){

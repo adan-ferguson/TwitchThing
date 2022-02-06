@@ -9,7 +9,9 @@ import { show as showLoader } from '../../../loader.js'
 
 const HTML = `
 <div class='flex-columns'>
-  <di-adventurer-well></di-adventurer-well>
+  <div class='content-well'>
+    <di-adventurer-pane></di-adventurer-pane>
+  </div>
   <div class='content-well results'>
     <div class='flex-rows'>
       <div class="title">Results</div>
@@ -26,7 +28,7 @@ export default class ResultsPage extends Page {
     super()
     this.innerHTML = HTML
     this.adventurerID = adventurerID
-    this.adventurerWell = this.querySelector('di-adventurer-well')
+    this.adventurerPane = this.querySelector('di-adventurer-pane')
     this.results = this.querySelector('.results-list')
     this.doneButton = this.querySelector('.done')
   }
@@ -45,7 +47,7 @@ export default class ResultsPage extends Page {
     }
 
     this.selectedBonuses = []
-    this.adventurerWell.setAdventurer(adventurer)
+    this.adventurerPane.setAdventurer(adventurer)
     this.venture = venture
 
     wait(500).then(async () => {
@@ -58,7 +60,7 @@ export default class ResultsPage extends Page {
     const xpRow = document.createElement('div')
     xpRow.textContent = `+${this.venture.results.rewards.xp} xp`
     this.results.appendChild(xpRow)
-    await this.adventurerWell.addXp(this.venture.results.rewards.xp)
+    await this.adventurerPane.addXp(this.venture.results.rewards.xp)
   }
 
   async _userXp(){

@@ -1,3 +1,5 @@
+import MainPage from './main/mainPage.js'
+
 export default class Page extends HTMLElement {
   constructor() {
     super()
@@ -13,10 +15,11 @@ export default class Page extends HTMLElement {
   }
 
   /**
-   * Page to go to if back button gets clicked. If null, back button will not be visible.
+   * Page to go to if back button gets clicked. If null/false, back button will not be visible.
+   * @returns {null|function(): Page}
    */
   get backPage(){
-    return null
+    return () => new MainPage()
   }
 
   /**

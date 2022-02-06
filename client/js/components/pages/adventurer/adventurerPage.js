@@ -8,7 +8,9 @@ import fizzetch from '../../../fizzetch.js'
 
 const HTML = `
 <div class="flex-columns">
-  <di-adventurer-well></di-adventurer-well>
+  <div class="content-well">
+    <di-adventurer-pane></di-adventurer-pane>
+  </div>
   <div class="flex-rows dungeons">
       <div class="basic-dungeon content-well clickable">Enter Dungeon</div>
       <div class="something-else content-well">Something Else Goes Here</div>
@@ -22,11 +24,7 @@ export default class AdventurerPage extends Page {
     super()
     this.innerHTML = HTML
     this.adventurerID = adventurerID
-    this.adventurerWell = this.querySelector('di-adventurer-well')
-  }
-
-  get backPage(){
-    return () => new MainPage()
+    this.adventurerPane = this.querySelector('di-adventurer-pane')
   }
 
   async load(){
@@ -35,13 +33,13 @@ export default class AdventurerPage extends Page {
       return result.error
     }else{
       this.adventurer = result.adventurer
-      this.adventurerWell.setAdventurer(this.adventurer)
+      this.adventurerPane.setAdventurer(this.adventurer)
       // this.adventurerWell.statsbox.classList.add('clickable')
-      this.adventurerWell.statsbox.addEventListener('click', () => {
+      this.adventurerPane.statsbox.addEventListener('click', () => {
         // void this.app.setPage(new AdventurerStatsPage(this.adventurerID))
       })
       // this.adventurerWell.loadout.classList.add('clickable')
-      this.adventurerWell.loadout.addEventListener('click', () => {
+      this.adventurerPane.loadout.addEventListener('click', () => {
         // void this.app.setPage(new AdventurerStatsPage(this.adventurerID))
       })
       this._showDungeonButton()

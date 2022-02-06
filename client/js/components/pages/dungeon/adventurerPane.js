@@ -11,12 +11,12 @@ const HTML = `
 </div>
 `
 
-export default class AdventurerWell extends HTMLElement {
+export default class AdventurerPane extends HTMLElement {
 
   constructor(){
     super()
+    this.classList.add('adventurer-pane')
     this.innerHTML = HTML
-    this.classList.add('content-well')
     this.hpBar = this.querySelector('di-hp-bar')
     this.loadout = this.querySelector('di-loadout')
     this.statsbox = this.querySelector('.stats-box')
@@ -50,4 +50,4 @@ export default class AdventurerWell extends HTMLElement {
     })
   }
 }
-customElements.define('di-dungeon-adventurer-well', AdventurerWell )
+customElements.define('di-dungeon-adventurer-pane', AdventurerPane )

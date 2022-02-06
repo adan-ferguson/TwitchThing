@@ -7,8 +7,10 @@ import ResultsPage from '../results/resultsPage.js'
 const HTML = `
 <div class='flex-rows'>
   <div class='flex-columns'>
-    <di-dungeon-adventurer-well></di-dungeon-adventurer-well>
-    <div class="event content-well">
+    <div class="content-well">
+        <di-dungeon-adventurer-pane></di-dungeon-adventurer-pane>
+    </div>
+    <div class="content-well">
         <di-dungeon-event></di-dungeon-event>
     </div>
   </div>
@@ -28,10 +30,6 @@ export default class DungeonPage extends Page {
     this.adventurerWell = this.querySelector('di-dungeon-adventurer-well')
     this.eventEl = this.querySelector('di-dungeon-event')
     this.stateEl = this.querySelector('di-dungeon-state')
-  }
-
-  get backPage(){
-    return () => new MainPage()
   }
 
   async load(){

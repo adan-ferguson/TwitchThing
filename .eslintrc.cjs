@@ -29,6 +29,7 @@ module.exports = {
       'error',
       'always'
     ],
+    'space-before-blocks': ['error', 'never'],
     indent: ['error', 2]
   }
 }

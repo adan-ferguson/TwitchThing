@@ -1,5 +1,7 @@
 import express from 'express'
 import * as Users from '../collections/users.js'
+import * as Adventurers from '../collections/adventurers.js'
+import * as Combats from '../collections/combats.js'
 
 import adventurerRouter from './game/adventurer.js'
 
@@ -19,7 +21,7 @@ router.use(async (req, res, next) => {
 
 // Make sure we're allowed to play, and if not then redirect somewhere.
 router.use((req, res, next) => {
-  let redirect = false
+  let redirect = ''
   if(!Users.isSetupComplete(req.user)){
     redirect = '/user/newuser'
   }
@@ -32,6 +34,8 @@ router.use((req, res, next) => {
   }
   next()
 })
+
+router.use('/adventurer', adventurerRouter)
 
 router.post('/main', async(req, res) => {
   try {
@@ -48,12 +52,6 @@ router.post('/main', async(req, res) => {
   }
 })
 
-router.use('/adventurer', adventurerRouter)
-
-router.get('/', async(req, res) => {
-  res.render('game')
-})
-
 router.post('/newadventurer', async(req, res) => {
   try {
     req.validateParamExists('name')
@@ -64,5 +62,24 @@ router.post('/newadventurer', async(req, res) => {
   }
 })
 
+router.post('/combat/:combatID', async(req, res) => {
+  try {
+    const combat = Combats.findOne(req.combatID)
+    if(!combat){
+      return res.status(404).send('Combat not found.')
+    }
+    const currentTime = new Date() - combat.startTime
+    const adventurer = await Adventurers.findOne(combat.adventurerID)
+    const adventurer2 = null       // TODO: load adventurer2
+    const monster = combat.monster // TODO: DB monsters
+    return { combat, currentTime, adventurer, monster, adventurer2 }
+  }catch(ex){
+    return res.status(ex.code || 401).send(ex.error || ex)
+  }
+})
+
+router.get('/', async(req, res) => {
+  res.render('game')
+})
 
 export default router
