@@ -69,10 +69,7 @@ router.post('/combat/:combatID', async(req, res) => {
       return res.status(404).send('Combat not found.')
     }
     const currentTime = new Date() - combat.startTime
-    const adventurer = await Adventurers.findOne(combat.adventurerID)
-    const adventurer2 = null       // TODO: load adventurer2
-    const monster = combat.monster // TODO: DB monsters
-    return { combat, currentTime, adventurer, monster, adventurer2 }
+    return { combat, currentTime }
   }catch(ex){
     return res.status(ex.code || 401).send(ex.error || ex)
   }

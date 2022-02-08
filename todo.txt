@@ -247,6 +247,12 @@ MILESTONE 3
 -- Adventure ends when run out of hp
 -- Adventurer's max hp and damage goes up as they level up
 -- Advancing floors
+-- Combat should have full fighter documents so they work retroactively
+
+- Actually DON'T derive stats
+-- Store stats obj in adventurers (and fighters later)
+-- HP and ATK grow% per level
+-- Levelup screen shows hp + damage increase amounts
 
 - Shrink entrypoint sizes
 

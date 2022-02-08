@@ -1,5 +1,5 @@
-import { generateMonsterCombat } from '../collections/combats.js'
 import { generateMonster } from '../monster/generator.js'
+import { generateCombat } from '../combat/generator.js'
 
 /**
  * @param adventurer
@@ -26,10 +26,10 @@ export async function generateEvent(adventurer, dungeonRun){
 
   if(foundMonster(dungeonRun)){
     const monster = await generateMonster(dungeonRun.floor)
-    const combat = await generateMonsterCombat(adventurer, monster)
+    const combat = await generateCombat(adventurer, monster, dungeonRun.adventurerState)
     return {
       combat: {
-        id: combat.id,
+        combatID: combat._id,
         state: 'running',
         monster: combat.monster
       }
