@@ -1,5 +1,5 @@
 import { generateMonster } from '../monster/generator.js'
-import { generateCombat } from '../combat/generator.js'
+import { generateCombat } from '../combat/combat.js'
 
 /**
  * @param adventurer
