@@ -1,5 +1,5 @@
 import * as Combats from '../collections/combats.js'
-import FighterInstance from './fighterInstance.js'
+import FighterInstance from '../../game/combat/fighterInstance.js'
 
 export async function generateCombat(fighter1, fighter2, fighterStartState1 = {}, fighterStartState2 = {}){
 

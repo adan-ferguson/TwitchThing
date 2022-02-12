@@ -1,4 +1,4 @@
-import ActiveAdventurerStats from '../../../../../game/activeAdventurerStats.js'
+import Stats from '/game/stats.js'
 
 const HTML = `
 <div class="flex-rows">
@@ -11,7 +11,7 @@ const HTML = `
 </div>
 `
 
-export default class AdventurerPane extends HTMLElement {
+export default class AdventurerPane extends HTMLElement{
 
   constructor(){
     super()
@@ -37,17 +37,20 @@ export default class AdventurerPane extends HTMLElement {
   }
 
   _update(animateChanges){
-    const activeStats = new ActiveAdventurerStats(this.adventurer, this.state)
-    this.hpBar.setRange(0, activeStats.maxHp)
-    this.hpBar.setValue(activeStats.hp)
+    // TODO: add affectors from items
+    // TODO: add affectors from effects
+    const stats = new Stats([this.adventurer.baseStats])
+    this.hpBar.setRange(0, stats.getCompositeStat('hpMax'))
+    this.hpBar.setValue(this.state.hp)
 
     // TODO: figure out this but better
     const statsToShow = ['attack']
     statsToShow.forEach(statName => {
       const el = document.createElement('div')
-      el.innerHTML = `${statName} ${activeStats[statName]}`
+      el.innerHTML = `${statName} ${stats.getCompositeStat('hpMax')}`
       this.stats.appendChild(el)
     })
   }
 }
+
 customElements.define('di-dungeon-adventurer-pane', AdventurerPane )

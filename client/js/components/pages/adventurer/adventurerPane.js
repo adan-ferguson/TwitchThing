@@ -1,5 +1,5 @@
 import { levelToXp, xpToLevel } from '../../../../../game/adventurer.js'
-import AdventurerStats from '../../../../../game/adventurerStats.js'
+import Stats from '../../../../../game/stats.js'
 
 const HTML = `
 <div class="flex-rows">
@@ -12,7 +12,7 @@ const HTML = `
 </div>
 `
 
-export default class AdventurerPane extends HTMLElement {
+export default class AdventurerPane extends HTMLElement{
 
   constructor(){
     super()
@@ -40,14 +40,16 @@ export default class AdventurerPane extends HTMLElement {
   _update(){
     this.xpBar.setValue(this.adventurer.xp)
 
-    const stats = new AdventurerStats(this.adventurer)
+    // TODO: add affectors from items
+    // TODO: add affectors from effects
+    const stats = new Stats([this.adventurer.baseStats])
     this.stats.innerHTML = ''
 
     // TODO: figure out this but better
-    const statsToShow = ['hp', 'attack']
+    const statsToShow = ['hpMax', 'attack']
     statsToShow.forEach(statName => {
       const el = document.createElement('div')
-      el.innerHTML = `${statName} ${stats[statName]}`
+      el.innerHTML = `${statName} ${stats.getCompositeStat(statName)}`
       this.stats.appendChild(el)
     })
   }

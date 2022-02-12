@@ -9,7 +9,7 @@ const DEFAULTS = {
   loadout: [null, null, null, null, null, null, null, null],
   currentVenture: null,
   baseStats: {
-    hp: 100,
+    hpMax: 100,
     attack: 10
   },
   levelups: []

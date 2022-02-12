@@ -1,4 +1,4 @@
-import Stats from '../../game/stats.js'
+import Stats from '../stats.js'
 
 const STATE_DEFAULTS = {
   timeSinceLastAction: 0
@@ -30,7 +30,7 @@ export default class FighterInstance{
   }
 
   get currentState(){
-    return { ...this.currentState }
+    return { ...this._currentState }
   }
 
   get timeUntilNextAction(){
@@ -39,8 +39,12 @@ export default class FighterInstance{
   }
 
   get hp(){
-    this._currentState.hp = Math.min(this.stats.getCompositeStat('hpMax'), this._currentState.hp)
+    this._currentState.hp = Math.min(this.hpMax, this._currentState.hp)
     return this._currentState.hp
+  }
+
+  get hpMax(){
+    return this.stats.getCompositeStat('hpMax')
   }
 
   advanceTime(ms){
