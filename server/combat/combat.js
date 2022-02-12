@@ -1,21 +1,23 @@
 import * as Combats from '../collections/combats.js'
-import FighterStats from '../../game/fighterStats.js'
+import FighterInstance from './fighterInstance.js'
 
-export async function generateCombat(fighter1, fighter2, fighter1startState = {}, fighter2startState = {}){
-  const fighterInstance1 = new FighterInstance(fighter1, fighter1startState)
-  const fighterInstance2 = new FighterInstance(fighter2, fighter2startState)
+export async function generateCombat(fighter1, fighter2, fighterStartState1 = {}, fighterStartState2 = {}){
+
+  const fighterInstance1 = new FighterInstance(fighter1, fighterStartState1)
+  const fighterInstance2 = new FighterInstance(fighter2, fighterStartState2)
   const combat = new Combat(fighterInstance1, fighterInstance2)
+
   return await Combats.save({
     startTime: new Date(),
     endTime: new Date() + combat.duration,
     fighter1: {
       data: fighter1,
-      startState: fighter1startState,
+      startState: fighterStartState1,
       endState: combat.fighterEndState1
     },
     fighter2: {
       data: fighter2,
-      startState: fighter2startState,
+      startState: fighterStartState2,
       endState: combat.fighterEndState2
     },
     timeline: combat.timeline
@@ -30,6 +32,7 @@ class Combat{
     this.timeline = []
     this._currentTime = 0
     this._run()
+    // TODO: clean up the states, get rid of things that aren't combat relevant
     this.fighterEndState1 = { ...this.fighterInstance1.currentState }
     this.fighterEndState2 = { ...this.fighterInstance2.currentState }
     this.duration = this._currentTime
@@ -55,8 +58,8 @@ class Combat{
 
       if(timelineEntry.events.length){
         timelineEntry.time = this._currentTime
-        timelineEntry.fighter1state = { ...this._fighter1currentState }
-        timelineEntry.fighter2state = { ...this._fighter2currentState }
+        timelineEntry.fighter1state = this.fighterInstance1.currentState
+        timelineEntry.fighter2state = this.fighterInstance2.currentState
         this.timeline.push(timelineEntry)
       }
     }
@@ -80,13 +83,13 @@ class Combat{
 
     const f1action = () => {
       if(!this.fighterInstance1.timeUntilNextAction){
-        events.push(...this.fighterInstance1.performAction(this))
+        events.push(...this.fighterInstance1.performAction())
       }
     }
 
     const f2action = () => {
       if(!this.fighterInstance2.timeUntilNextAction){
-        events.push(...this.fighterInstance1.performAction(this))
+        events.push(...this.fighterInstance1.performAction())
       }
     }
 

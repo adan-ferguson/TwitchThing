@@ -35,36 +35,3 @@ export function levelToXp(lvl){
     return parseInt(x.substring(0,3) + x.substring(3).replace(/g/, 0))
   }
 }
-
-export function previewLevelup(level){
-
-}
-
-//
-// export async function validateInventory(level, items){
-//
-//   if(!Array.isArray(items)){
-//     throw 'Items was not an array'
-//   }
-//
-//   if(items.length !== 8){
-//     throw 'Wrong number of item slots'
-//   }
-//
-//   for(let i = 0; i < items.length; i++){
-//     if(items[i] === null){
-//       continue
-//     }
-//     const item = new Item(items[i])
-//     level -= item.itemDefinition.level
-//   }
-//
-//   if(level < 0){
-//     throw 'Combined item level too high.'
-//   }
-// }
-// export default class Loadout {
-//   constructor(adventurerDoc){
-//     this.adventurerDoc = adventurerDoc
-//   }
-// }

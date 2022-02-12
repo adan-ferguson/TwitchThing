@@ -7,7 +7,12 @@ const DEFAULTS = {
   xp: 0,
   userid: null,
   loadout: [null, null, null, null, null, null, null, null],
-  currentVenture: null
+  currentVenture: null,
+  baseStats: {
+    hp: 100,
+    attack: 10
+  },
+  levelups: []
 }
 
 async function save(adventurerDoc){
@@ -37,7 +42,7 @@ export async function update(_id, $set = {}){
   return await db.conn().collection('adventurers').updateOne({ _id }, { $set })
 }
 
-export async function loadRunningVentures() {
+export async function loadRunningVentures(){
   const adventurers = await db.conn().collection('adventurers').find({
     'currentVenture.finished': false
   }, {

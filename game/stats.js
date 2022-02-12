@@ -1,32 +1,22 @@
-export default class Stats {
+export default class Stats{
 
-  /**
-   * @return array
-   */
-  get statAffectors(){
-    throw 'statAffectors getter not implemented'
+  constructor(statAffectors){
+    this._statAffectors = statAffectors
   }
 
-  get level(){
-    throw 'level getter not implemented'
+  getCompositeStat(type, base = 0){
+    return this.getFlatStatMod(type, base) * this.getPctStatMod(type + 'Pct')
   }
 
-  _getStat(type){
-    let val = this._getFlatStatMod(type)
-    val += this.level * this._getFlatStatMod(type + 'PerLevel')
-    val *= this._getPctStatMod(type + 'Pct')
-    return val
-  }
-
-  _getFlatStatMod(type){
-    return this.statAffectors.reduce((val, statAffector) => {
+  getFlatStatMod(type, base = 0){
+    return this._statAffectors.reduce((val, statAffector) => {
       return val + (statAffector[type] || 0)
-    }, 0)
+    }, base)
   }
 
-  _getPctStatMod(type){
-    return this.statAffectors.reduce((val, statAffector) => {
+  getPctStatMod(type, base = 1){
+    return this._statAffectors.reduce((val, statAffector) => {
       return val * (statAffector[type] || 1)
-    }, 1)
+    }, base)
   }
 }
