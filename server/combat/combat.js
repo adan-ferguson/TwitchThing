@@ -47,19 +47,17 @@ class Combat{
     while(!this.finished){
       this._advanceTime()
 
-      const timelineEntry = {
-        events: []
-      }
+      let timelineEntry = {}
 
       if(this._currentTime % 1000 === 0){
-        timelineEntry.events.push(...this._tick())
+        timelineEntry = { ...timelineEntry, ...this._tick() }
       }
-      timelineEntry.events.push(...this._doActions())
+      timelineEntry = { ...timelineEntry, ...this._doActions() }
 
-      if(timelineEntry.events.length){
+      if(Object.keys(timelineEntry).length){
         timelineEntry.time = this._currentTime
-        timelineEntry.fighter1state = this.fighterInstance1.currentState
-        timelineEntry.fighter2state = this.fighterInstance2.currentState
+        timelineEntry.fighterState1 = this.fighterInstance1.currentState
+        timelineEntry.fighterState2 = this.fighterInstance2.currentState
         this.timeline.push(timelineEntry)
       }
     }
@@ -74,22 +72,23 @@ class Combat{
   }
 
   _tick(){
-    return [ ... this.fighterInstance1.tick(), ... this.fighterInstance2.tick() ]
+    // TODO: ticks
+    return {}
   }
 
   _doActions(){
 
-    const events = []
+    const actions = {}
 
     const f1action = () => {
-      if(!this.fighterInstance1.timeUntilNextAction){
-        events.push(...this.fighterInstance1.performAction())
+      if(this.fighterInstance1.actionReady){
+        actions.fighterAction1 = this.fighterInstance1.performAction(this.fighterInstance2)
       }
     }
 
     const f2action = () => {
-      if(!this.fighterInstance2.timeUntilNextAction){
-        events.push(...this.fighterInstance1.performAction())
+      if(this.fighterInstance2.actionReady){
+        actions.fighterAction2 = this.fighterInstance1.performAction(this.fighterInstance1)
       }
     }
 
@@ -102,6 +101,6 @@ class Combat{
     }
     fns.forEach(fn => fn())
 
-    return events
+    return actions
   }
 }

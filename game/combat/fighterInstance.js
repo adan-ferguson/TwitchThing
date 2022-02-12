@@ -38,9 +38,16 @@ export default class FighterInstance{
     return Math.max(0, (actionTime - this.currentState.timeSinceLastAction))
   }
 
+  get actionReady(){
+    return this.hp > 0 && !this.timeUntilNextAction
+  }
+
   get hp(){
-    this._currentState.hp = Math.min(this.hpMax, this._currentState.hp)
     return this._currentState.hp
+  }
+
+  set hp(val){
+    this._currentState.hp = Math.min(this.hpMax, Math.max(0, val))
   }
 
   get hpMax(){
@@ -51,11 +58,30 @@ export default class FighterInstance{
     this._currentState.timeSinceLastAction += ms
   }
 
-  performAction(){
-    return []
+  performAction(enemy){
+    let baseDamage = this.stats.getCompositeStat('attack')
+    const damageResult = this._dealDamage(baseDamage, enemy)
+    this._currentState.timeSinceLastAction = 0
+
+    return {
+      actionType: 'attack',
+      result: damageResult
+    }
   }
 
   tick(){
     return []
+  }
+
+  _dealDamage(amount, enemy){
+    return enemy._takeDamage(amount)
+  }
+
+  _takeDamage(amount){
+    this.hp -= amount
+    return {
+      damage: amount,
+      hpAfter: this.hp
+    }
   }
 }
