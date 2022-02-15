@@ -71,7 +71,7 @@ export default class DungeonPage extends Page{
 
   _parseDungeonUpdate = dungeonRun => {
 
-    if(dungeonRun.currentEvent.combat?.state === 'finished'){
+    if(dungeonRun.currentEvent.combat?.state === 'running'){
       debugger
       return this.app.setPage(new CombatPage(dungeonRun.currentEvent.combat.id))
     }

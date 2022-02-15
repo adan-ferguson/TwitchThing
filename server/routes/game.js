@@ -64,12 +64,11 @@ router.post('/newadventurer', async(req, res) => {
 
 router.post('/combat/:combatID', async(req, res) => {
   try {
-    const combat = Combats.findOne(req.combatID)
+    const combat = await Combats.findOne(req.combatID)
     if(!combat){
       return res.status(404).send('Combat not found.')
     }
-    const currentTime = new Date() - combat.startTime
-    return { combat, currentTime }
+    return { combat, currentTime: Date.now() }
   }catch(ex){
     return res.status(ex.code || 401).send(ex.error || ex)
   }

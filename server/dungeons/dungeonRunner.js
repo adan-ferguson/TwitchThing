@@ -1,7 +1,7 @@
 import * as DungeonRuns from '../collections/dungeonRuns.js'
 import { advanceVentures } from './ventures.js'
 
-const TICK_TIME = 5000
+const TICK_TIME = 2000
 
 let running = false
 export function start(){

@@ -1,13 +1,14 @@
 import Page from '../page.js'
 import fizzetch from '../../../fizzetch.js'
+import DungeonPage from '../dungeon/dungeonPage.js'
+import Timeline from '../../../../../game/timeline.js'
 
 const HTML = `
 <div class='flex-rows'>
   <div class='flex-columns'>
-    <di-combat-adventurer-pane class="adv1"></di-combat-adventurer-pane>
+    <di-combat-fighter-pane class="fighter1"></di-combat-fighter-pane>
     <div class="mid-thing">VS.</div>
-    <di-combat-adventurer-pane class="adv2"></di-combat-adventurer-pane>
-    <di-combat-monster-pane></di-combat-monster-pane>
+    <di-combat-fighter-pane class="fighter2"></di-combat-fighter-pane>
   </div>
   <div class="content-well">
     <di-combat-feed></di-combat-feed>
@@ -21,39 +22,81 @@ export default class CombatPage extends Page{
     super()
     this.combatID = combatID
     this.innerHTML = HTML
-    this.adventurerPane = this.querySelector('.adv1')
-    this.adventurerPane2 = this.querySelector('.adv2')
-    this.monsterPane = this.querySelector('di-combat-monster-pane')
+    this.fighterPane1 = this.querySelector('.fighter1')
+    this.fighterPane2 = this.querySelector('.fighter2')
   }
 
   async load(){
 
     debugger
-    const { combat, currentTime, adventurer, adventurer2, monster } = await fizzetch(`/game/combat/${this.combatID}`)
+    const { combat, currentTime } = await fizzetch(`/game/combat/${this.combatID}`)
+    this.timeline = new Timeline(this.combat.timeline)
     this.combat = combat
 
-    this._setupAdventurer(adventurer, this.adventurerPane)
+    this.fighterPane1.setFighter(combat.fighter1)
+    this.fighterPane2.setFighter(combat.fighter2)
 
-    if(monster){
-      this._setupMonster(monster, this.monsterPane)
-      this.adventurerPane2.remove()
+    if(currentTime < combat.endTime){
+      this._inProgress(currentTime)
     }else{
-      this._setupAdventurer(adventurer2, this.adventurerPane2)
-      this.monsterPane.remove()
+      this._isReplay()
     }
 
-    this._setTime(currentTime)
+    this._run()
+  }
+
+  _inProgress(currentTime){
+    // TODO: timer
+    // this._setEndTime(currentTime)
+    this.timeline.time = currentTime
+  }
+
+  _isReplay(){
+    // TODO: timer
+    this.timeline.time = 0
   }
 
   _setTime(time){
-
+    this.timeline.time = time
+    const entry = this.timeline.prevEntry
+    this.fighterPane1.setState(entry.fighterState1)
+    this.fighterPane1.advanceTime(this.timeline.timeSinceLastEntry)
+    this.fighterPane2.setState(entry.fighterState2)
+    this.fighterPane2.advanceTime(this.timeline.timeSinceLastEntry)
   }
 
-  _setupAdventurer(adventurer, pane){
-
+  _run(){
+    this._tick()
   }
 
-  _setupMonster(monster, pane){
+  _tick(){
+    const before = Date.now()
+    requestAnimationFrame(() => {
+      const nextEntry = this.timeline.nextEntry
+      const msToAdvance = Date.now() - before
+      if(nextEntry.time <= this.timeline.time + msToAdvance){
+        this._applyEntry(nextEntry)
+      }else{
+        this._advanceTime(msToAdvance)
+      }
+      if(this.timeline.nextEntry)
+        this._tick()
+    })
+  }
 
+  _applyEntry(timelineEntry){
+    this.timeline.time = timelineEntry.time
+    this.fighterPane1.setState(timelineEntry.fighterState1)
+    this.fighterPane2.setState(timelineEntry.fighterState2)
+    // TODO: log the entry
+  }
+
+  _advanceTime(ms){
+    this.timeline.time += ms
+    this.fighterPane1.advanceTime(ms)
+    this.fighterPane2.advanceTime(ms)
+    // TODO: clock?
   }
 }
+
+customElements.define('di-combat-page', CombatPage )

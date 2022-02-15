@@ -238,21 +238,23 @@ MILESTONE 3
 ++ Derive HP
 ++ Derive attack
 
-2022-02-05 - 2022-02-13
+Milestone 3
+2022-02-05 - 2022-02-14
 ----------
 - Very basic combat
 -- Combat page
--- Generic bat enemy that scales with floor
--- No items, just damage amounts
--- Adventure ends when run out of hp
+++ Generic bat enemy that scales with floor
+++ No items, just damage amounts
+++ Adventure ends when run out of hp
 -- Adventurer's max hp and damage goes up as they level up
--- Advancing floors
--- Combat should have full fighter documents so they work retroactively
+++ Advancing floors
+++ Combat should have full fighter documents so replays work
+-- Share button for combat replays
 
-- Actually DON'T derive stats
--- Store stats obj in adventurers (and fighters later)
++ Actually DON'T derive stats
+++ Store stats obj in adventurers (and fighters later)
 -- HP and ATK grow% per level
--- Levelup screen shows hp + damage increase amounts
+-- Levelup screen shows hp + damage increase amounts, no bonuses yet
 
 - Admin page
 -- Clear All Data
