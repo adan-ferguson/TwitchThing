@@ -2,6 +2,7 @@ import db from '../db.js'
 import { generateEvent } from '../dungeons/dungeonEventPlanner.js'
 import { emit } from '../socketServer.js'
 import * as Adventurers from './adventurers.js'
+import * as Combats from './combats.js'
 
 const DEFAULTS = {
   _id: null,
@@ -62,41 +63,35 @@ export async function findOne(queryOrID = {}, projection = {}){
 
 export async function advance(dungeonRunDoc){
 
-  const adventurer = await Adventurers.findOne(dungeonRunDoc.adventurerID)
   const prevEvent = dungeonRunDoc.currentEvent
+  let goToNewEvent = true
+  let changesMade = false
 
-  if(prevEvent.stairs){
-    dungeonRunDoc.room = 0
+  if (prevEvent.stairs){
+    dungeonRunDoc.room = 1
     dungeonRunDoc.floor++
   }
 
-  const newEvent = await generateEvent(adventurer, dungeonRunDoc)
-
-  if(!newEvent) {
-    // Nothing happened, perhaps we're resting or in combat.
-    return
+  if (prevEvent.combat?.state === 'running'){
+    if (Date.now() > prevEvent.combat.endTime){
+      prevEvent.combat.state = 'finished'
+      await applyCombatResult(prevEvent, dungeonRunDoc.adventurerID)
+      parseEvent(prevEvent, dungeonRunDoc)
+      changesMade = true
+    }
+    goToNewEvent = false
   }
 
-  dungeonRunDoc.events.push(newEvent)
-  dungeonRunDoc.currentEvent = newEvent
-  dungeonRunDoc.room++
-
-  if(newEvent.adventurerState){
-    dungeonRunDoc.adventurerState = newEvent.adventurerState
-  }
-
-  if(newEvent.rewards){
-    addRewards(dungeonRunDoc.rewards, newEvent.rewards)
-  }
-
-  if(newEvent.finished){
-    dungeonRunDoc.finished = true
+  if (goToNewEvent){
+    await newEvent(dungeonRunDoc)
+    changesMade = true
   }
 
   // TODO: more detail in this one
-  emit(dungeonRunDoc.adventurerID, 'dungeon run update', dungeonRunDoc)
-
-  await save(dungeonRunDoc)
+  if(changesMade){
+    emit(dungeonRunDoc.adventurerID, 'dungeon run update', dungeonRunDoc)
+    await save(dungeonRunDoc)
+  }
 }
 
 export function addRewards(rewards, toAdd){
@@ -111,11 +106,52 @@ export function addRewards(rewards, toAdd){
         rewards[key] = 0
       }
       rewards[key] += toAdd[key]
-    }else if(REWARDS_TYPES[key] === 'array') {
+    }else if(REWARDS_TYPES[key] === 'array'){
       if(!rewards[key]){
         rewards[key] = []
       }
       rewards[key].push(toAdd[key])
     }
   }
+}
+
+async function newEvent(dungeonRunDoc){
+
+  const adventurer = await Adventurers.findOne(dungeonRunDoc.adventurerID)
+  const nextEvent = await generateEvent(adventurer, dungeonRunDoc)
+
+  nextEvent.room = dungeonRunDoc.room
+  nextEvent.floor = dungeonRunDoc.floor
+
+  parseEvent(nextEvent, dungeonRunDoc)
+
+  dungeonRunDoc.events.push(nextEvent)
+  dungeonRunDoc.currentEvent = nextEvent
+  dungeonRunDoc.room++
+}
+
+function parseEvent(event, dungeonRunDoc){
+  if(event.adventurerState){
+    dungeonRunDoc.adventurerState = event.adventurerState
+  }
+  if(event.rewards){
+    addRewards(dungeonRunDoc.rewards, event.rewards)
+  }
+  if(event.finished){
+    dungeonRunDoc.finished = true
+  }
+}
+
+async function applyCombatResult(combatEvent, myAdventurerID){
+  const combat = await Combats.findOne(combatEvent.combat.combatID)
+  const fighter = combat.fighter1.data._id.equals(myAdventurerID) ? combat.fighter1 : combat.fighter2
+  const enemy = combat.fighter1.data._id.equals(myAdventurerID) ? combat.fighter2 : combat.fighter1
+  if(!fighter.endState.hp){
+    combatEvent.finished = true
+    combatEvent.message = `${fighter.data.name} has fallen, and got kicked out of the dungeon by some mysterious entity.`
+  }else{
+    combatEvent.rewards = enemy.data.rewards
+    combatEvent.message = `${fighter.data.name} defeated the ${enemy.data.name}.`
+  }
+  combatEvent.adventurerState = fighter.endState
 }

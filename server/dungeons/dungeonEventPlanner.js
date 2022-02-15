@@ -8,8 +8,6 @@ import { generateCombat } from '../combat/combat.js'
  */
 export async function generateEvent(adventurer, dungeonRun){
 
-  // TODO: check if combat should end
-
   if(dungeonRun.events.length >= 100){
     return {
       finished: true,
@@ -30,8 +28,9 @@ export async function generateEvent(adventurer, dungeonRun){
     return {
       combat: {
         combatID: combat._id,
-        state: 'running',
-        monster: combat.monster
+        monster: monster,
+        endTime: combat.endTime,
+        state: 'running'
       }
     }
   }
@@ -45,16 +44,16 @@ export async function generateEvent(adventurer, dungeonRun){
 }
 
 function foundStairs(floor, room){
-  if(room < 5){
+  if(room < 10){
     return
   }
-  const stairsChance = room / (5 + floor)
+  const stairsChance = room / (10 + floor)
   return Math.random() < stairsChance
 }
 
 function foundMonster(dungeonRun){
   const monsterChance = roomsSinceMonster() / 25
-  return Math.random < monsterChance
+  return Math.random() < monsterChance
   function roomsSinceMonster(){
     let i
     for(i = 1; i <= dungeonRun.events.length; i++){

@@ -8,8 +8,8 @@ export async function generateCombat(fighter1, fighter2, fighterStartState1 = {}
   const combat = new Combat(fighterInstance1, fighterInstance2)
 
   return await Combats.save({
-    startTime: new Date(),
-    endTime: new Date() + combat.duration,
+    startTime: Date.now(),
+    endTime: Date.now() + combat.duration,
     fighter1: {
       data: fighter1,
       startState: fighterStartState1,
@@ -40,7 +40,7 @@ class Combat{
 
   get finished(){
     /// TODO: dead or ran away or something else happened
-    return this.fighterInstance1.dead || this.fighterInstance2.dead
+    return !this.fighterInstance1.hp || !this.fighterInstance2.hp
   }
 
   _run(){
@@ -65,7 +65,7 @@ class Combat{
 
   _advanceTime(){
     const nextTickTime = 1000 - (this._currentTime % 1000)
-    const timeToAdvance = Math.min(nextTickTime, this.fighterInstance1.timeUntilNextAction, this.fighterInstance2.timeUntilNextAction)
+    const timeToAdvance = Math.ceil(Math.min(nextTickTime, this.fighterInstance1.timeUntilNextAction, this.fighterInstance2.timeUntilNextAction))
     this._currentTime += timeToAdvance
     this.fighterInstance1.advanceTime(timeToAdvance)
     this.fighterInstance2.advanceTime(timeToAdvance)
@@ -88,7 +88,7 @@ class Combat{
 
     const f2action = () => {
       if(this.fighterInstance2.actionReady){
-        actions.fighterAction2 = this.fighterInstance1.performAction(this.fighterInstance1)
+        actions.fighterAction2 = this.fighterInstance2.performAction(this.fighterInstance1)
       }
     }
 

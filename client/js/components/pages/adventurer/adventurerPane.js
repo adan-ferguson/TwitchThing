@@ -54,4 +54,4 @@ export default class AdventurerPane extends HTMLElement{
     })
   }
 }
-customElements.define('di-adventurer-page', AdventurerPane )
+customElements.define('di-adventurer-pane', AdventurerPane)

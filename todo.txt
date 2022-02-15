@@ -238,7 +238,7 @@ MILESTONE 3
 ++ Derive HP
 ++ Derive attack
 
-2022-02-05
+2022-02-05 - 2022-02-13
 ----------
 - Very basic combat
 -- Combat page
@@ -254,7 +254,8 @@ MILESTONE 3
 -- HP and ATK grow% per level
 -- Levelup screen shows hp + damage increase amounts
 
-- Shrink entrypoint sizes
+- Admin page
+-- Clear All Data
 
 TODO Later
 -----------
@@ -265,5 +266,4 @@ TODO Later
 - Make a 404 page and/or just redirect
 - DB backups
 - Modal nice fadein effect
-- Admin page
 - Random events

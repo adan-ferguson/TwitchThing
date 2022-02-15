@@ -28,6 +28,7 @@ export default class CombatPage extends Page{
 
   async load(){
 
+    debugger
     const { combat, currentTime, adventurer, adventurer2, monster } = await fizzetch(`/game/combat/${this.combatID}`)
     this.combat = combat
 

@@ -12,7 +12,7 @@ export async function save(combatDoc){
   return await db.save(fix(combatDoc), 'combats')
 }
 
-export async function fix(combatDoc, projection = null){
+export function fix(combatDoc, projection = null){
   return db.fix(combatDoc, DEFAULTS, projection)
 }
 

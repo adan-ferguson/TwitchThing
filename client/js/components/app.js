@@ -15,7 +15,7 @@ const HTML = `
 <di-header></di-header>
 <div class="content"></div>
 `
-export default class App extends HTMLElement {
+export default class App extends HTMLElement{
 
   constructor(user){
     super()
@@ -47,10 +47,11 @@ export default class App extends HTMLElement {
     }
 
     this.currentPage = page
-    const error = await page.load()
+    const { error, redirect } = (await page.load() || {})
     if(error){
-      this.setPage(new MainPage({ error }))
-      return
+      return this.setPage(new MainPage({ error }))
+    }else if(redirect){
+      return this.setPage(redirect)
     }
 
     this.querySelector(':scope > .content').appendChild(page)

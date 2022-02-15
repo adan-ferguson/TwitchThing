@@ -3,6 +3,7 @@ import MainPage from '../main/mainPage.js'
 import fizzetch from '../../../fizzetch.js'
 import { getSocket } from '../../../socketClient.js'
 import ResultsPage from '../results/resultsPage.js'
+import CombatPage from '../combat/combatPage.js'
 
 const HTML = `
 <div class='flex-rows'>
@@ -20,14 +21,14 @@ const HTML = `
 </div>
 `
 
-export default class DungeonPage extends Page {
+export default class DungeonPage extends Page{
 
   constructor(adventurerID){
     super()
     this.adventurerID = adventurerID
     this.innerHTML = HTML
 
-    this.adventurerWell = this.querySelector('di-dungeon-adventurer-well')
+    this.adventurerPane = this.querySelector('di-dungeon-adventurer-pane')
     this.eventEl = this.querySelector('di-dungeon-event')
     this.stateEl = this.querySelector('di-dungeon-state')
   }
@@ -39,12 +40,14 @@ export default class DungeonPage extends Page {
 
     if(error){
       throw error
-      // TODO: handle error
-      // TODO: if we should be on the combat page, navigate there
     }
 
-    this.adventurerWell.setAdventurer(adventurer)
-    this.adventurerWell.setState(dungeonRun.currentEvent.adventurerState)
+    if(dungeonRun.currentEvent.combat?.state === 'running'){
+      return { redirect: new CombatPage(dungeonRun.currentEvent.combat.id) }
+    }
+
+    this.adventurerPane.setAdventurer(adventurer)
+    this.adventurerPane.setState(dungeonRun.adventurerState)
     this.stateEl.updateDungeonRun(dungeonRun)
     this.stateEl.updateVenture(adventurer.currentVenture)
     this.eventEl.update(dungeonRun.currentEvent)
@@ -69,6 +72,7 @@ export default class DungeonPage extends Page {
   _parseDungeonUpdate = dungeonRun => {
 
     if(dungeonRun.currentEvent.combat?.state === 'finished'){
+      debugger
       return this.app.setPage(new CombatPage(dungeonRun.currentEvent.combat.id))
     }
 

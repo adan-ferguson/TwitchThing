@@ -37,12 +37,7 @@ verifiedRouter.post('/enterdungeon/:dungeonID', async(req, res) => {
 
 verifiedRouter.post('/dungeonrun', async(req, res) => {
   try {
-    const adventurer = await Adventurers.findOne(req.adventurerID, {
-      currentVenture: 1,
-      name: 1,
-      level: 1,
-      xp: 1
-    })
+    const adventurer = await Adventurers.findOne(req.adventurerID)
     if(!adventurer.currentVenture){
       return res.status(404).send({ error: 'Adventurer is not currently venturing.' })
     }
@@ -70,12 +65,7 @@ verifiedRouter.post('/dungeonrun', async(req, res) => {
 
 verifiedRouter.post('/results', async (req, res) => {
   try {
-    const adventurer = await Adventurers.findOne(req.adventurerID, {
-      currentVenture: 1,
-      name: 1,
-      level: 1,
-      xp: 1
-    })
+    const adventurer = await Adventurers.findOne(req.adventurerID)
     if(!adventurer.currentVenture){
       return res.status(401).send({ error: 'Adventurer is not currently venturing.', targetPage: 'Adventurer' })
     }
@@ -102,12 +92,7 @@ verifiedRouter.post('/confirmresults', async (req, res) => {
 
 verifiedRouter.post('', async(req, res, next) => {
   try {
-    const adventurer = await Adventurers.findOne(req.adventurerID, {
-      name: 1,
-      level: 1,
-      xp: 1,
-      loadout: 1
-    })
+    const adventurer = await Adventurers.findOne(req.adventurerID)
     res.send({ adventurer })
   }catch(ex){
     return res.status(ex.code || 401).send(ex.error || ex)

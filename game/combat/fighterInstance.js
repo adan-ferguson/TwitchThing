@@ -9,6 +9,9 @@ const BASE_TURN_TIME = 3000
 export default class FighterInstance{
 
   constructor(fighter, fighterStartState){
+
+    checkValidity(fighter)
+
     this.baseFighter = fighter
     this._currentState = {
       ...STATE_DEFAULTS,
@@ -35,7 +38,7 @@ export default class FighterInstance{
 
   get timeUntilNextAction(){
     const actionTime = BASE_TURN_TIME / this.stats.getPctStatMod('speed')
-    return Math.max(0, (actionTime - this.currentState.timeSinceLastAction))
+    return Math.ceil(Math.max(0, (actionTime - this.currentState.timeSinceLastAction)))
   }
 
   get actionReady(){
@@ -83,5 +86,20 @@ export default class FighterInstance{
       damage: amount,
       hpAfter: this.hp
     }
+  }
+}
+
+function checkValidity(fighter){
+  if(!fighter.name){
+    throw 'fighter name is required'
+  }
+  if(!fighter.baseStats?.hpMax){
+    throw 'fighter hpMax is required'
+  }
+  if(!fighter.baseStats?.attack){
+    throw 'fighter attack is required'
+  }
+  if(!fighter.loadout){
+    throw 'fighter loadout is required'
   }
 }

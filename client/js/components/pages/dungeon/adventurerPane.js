@@ -32,7 +32,9 @@ export default class AdventurerPane extends HTMLElement{
 
   setState(state = {}){
     const animateChanges = this.state ? true : false
-    this.state = state
+    this.state = {
+      hp: this.adventurer.baseStats.hpMax,
+      ...state }
     this._update(animateChanges)
   }
 
