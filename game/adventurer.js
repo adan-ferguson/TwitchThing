@@ -1,3 +1,5 @@
+import Stats from './stats.js'
+
 const LEVEL_2_XP = 100
 const XP_MULTIPLIER = 1.25
 
@@ -34,4 +36,21 @@ export function levelToXp(lvl){
     x = x + ''
     return parseInt(x.substring(0,3) + x.substring(3).replace(/g/, 0))
   }
+}
+
+/**
+ * @param adventurer
+ * @returns {Stats}
+ */
+export function getStats(adventurer){
+  return new Stats([adventurer.baseStats])
+}
+
+/**
+ * @param adventurer
+ * @param state
+ * @returns {Stats}
+ */
+export function getActiveStats(adventurer, state){
+  return new Stats([adventurer.baseStats])
 }

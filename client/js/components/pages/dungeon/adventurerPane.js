@@ -1,4 +1,4 @@
-import Stats from '/game/stats.js'
+import { getActiveStats } from '../../../../../game/adventurer.js'
 
 const HTML = `
 <div class="flex-rows">
@@ -41,7 +41,7 @@ export default class AdventurerPane extends HTMLElement{
   _update(animateChanges){
     // TODO: add affectors from items
     // TODO: add affectors from effects
-    const stats = new Stats([this.adventurer.baseStats])
+    const stats = getActiveStats(this.adventurer, this.state)
     this.hpBar.setRange(0, stats.getCompositeStat('hpMax'))
     this.hpBar.setValue(this.state.hp)
 
@@ -49,7 +49,7 @@ export default class AdventurerPane extends HTMLElement{
     const statsToShow = ['attack']
     statsToShow.forEach(statName => {
       const el = document.createElement('div')
-      el.innerHTML = `${statName} ${stats.getCompositeStat('hpMax')}`
+      el.innerHTML = `${statName} ${stats.getCompositeStat(statName)}`
       this.stats.appendChild(el)
     })
   }

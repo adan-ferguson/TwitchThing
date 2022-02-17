@@ -4,7 +4,7 @@ import fizzetch from '../../../fizzetch.js'
 import DungeonPage from '../dungeon/dungeonPage.js'
 import MainPage from '../main/mainPage.js'
 import Modal from '../../modal.js'
-import LevelupSelector from '../../adventurer/levelupSelector.js'
+import LevelupSelector from './levelupSelector.js'
 import { show as showLoader } from '../../../loader.js'
 
 const HTML = `
@@ -22,7 +22,7 @@ const HTML = `
 </div>
 `
 
-export default class ResultsPage extends Page {
+export default class ResultsPage extends Page{
 
   constructor(adventurerID){
     super()
@@ -106,7 +106,7 @@ export default class ResultsPage extends Page {
   }
 }
 
-function wait(time = 0) {
+function wait(time = 0){
   return new Promise(res => {
     setTimeout(res, time)
   })

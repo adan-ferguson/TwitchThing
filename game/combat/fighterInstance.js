@@ -36,9 +36,12 @@ export default class FighterInstance{
     return { ...this._currentState }
   }
 
+  get actionTime(){
+    return BASE_TURN_TIME / this.stats.getPctStatMod('speed')
+  }
+
   get timeUntilNextAction(){
-    const actionTime = BASE_TURN_TIME / this.stats.getPctStatMod('speed')
-    return Math.ceil(Math.max(0, (actionTime - this.currentState.timeSinceLastAction)))
+    return Math.ceil(Math.max(0, (this.actionTime - this.currentState.timeSinceLastAction)))
   }
 
   get actionReady(){

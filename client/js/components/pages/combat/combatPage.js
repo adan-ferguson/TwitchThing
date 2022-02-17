@@ -89,6 +89,7 @@ export default class CombatPage extends Page{
     this.fighterPane1.setState(timelineEntry.fighterState1)
     this.fighterPane2.setState(timelineEntry.fighterState2)
     // TODO: log the entry
+    // TODO: show the performed action somehow
   }
 
   _advanceTime(ms){

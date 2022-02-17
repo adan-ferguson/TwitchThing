@@ -5,7 +5,7 @@ const RED = '#ffadad'
 const YELLOW = '#ffffc7'
 const GREEN = '#c3ffc3'
 
-export default class HpBar extends Bar {
+export default class HpBar extends Bar{
   constructor(){
     super()
     this.setLabel('hp')

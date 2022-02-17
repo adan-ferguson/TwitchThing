@@ -1,4 +1,4 @@
-import * as AnimationHelper from '../../animationHelper.js'
+import * as AnimationHelper from '../../../animationHelper.js'
 
 const HTML = `
 <div>
@@ -13,7 +13,7 @@ const OPTION_HTML = option => `
 `
 
 export default class LevelupSelector extends HTMLElement{
-  constructor() {
+  constructor(){
     super()
     this.innerHTML = HTML
     this.stats = this.querySelector('.stats')

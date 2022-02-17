@@ -12,7 +12,7 @@ const innerHTML = `
 
 const ANIM_TIME = 1000
 
-export default class Bar extends HTMLElement {
+export default class Bar extends HTMLElement{
 
   constructor(){
     super()
@@ -33,6 +33,10 @@ export default class Bar extends HTMLElement {
     }else{
       badge.classList.add('displaynone')
     }
+  }
+
+  setMax(val){
+    this.setRange(0, val)
   }
 
   setRange(min, max){
