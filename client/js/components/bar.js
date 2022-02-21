@@ -23,6 +23,11 @@ export default class Bar extends HTMLElement{
     this._color = '#DDD'
     this._barLabel = this.querySelector('.bar-label')
     this._barFill = this.querySelector('.bar-fill')
+    this._showValueBeforeLabel = true
+  }
+
+  set showValueBeforeLabel(val){
+    this._showValueBeforeLabel = val ? true : false
   }
 
   setBadge(text){
@@ -130,7 +135,8 @@ export default class Bar extends HTMLElement{
   }
 
   _setLabel(val){
-    this._barLabel.textContent = `${val} / ${this._max} ${this._label || ''}`
+    const valueText = this._showValueBeforeLabel ? `${val} / ${this._max} ` : ''
+    this._barLabel.textContent = `${valueText}${this._label || ''}`
   }
 
   _valToColor(val){

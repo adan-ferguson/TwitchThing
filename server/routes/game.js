@@ -1,6 +1,6 @@
 import express from 'express'
+import db from '../db.js'
 import * as Users from '../collections/users.js'
-import * as Adventurers from '../collections/adventurers.js'
 import * as Combats from '../collections/combats.js'
 
 import adventurerRouter from './game/adventurer.js'
@@ -64,11 +64,14 @@ router.post('/newadventurer', async(req, res) => {
 
 router.post('/combat/:combatID', async(req, res) => {
   try {
-    const combat = await Combats.findOne(req.combatID)
+    const combat = await Combats.findOne(db.id(req.params.combatID))
     if(!combat){
       return res.status(404).send('Combat not found.')
     }
-    return { combat, currentTime: Date.now() }
+    const currentTime = Date.now()
+    const state = combat.endTime < currentTime ? { status: 'replay' } : { status: 'live', currentTime }
+    console.log('combat state', combat.startTime, currentTime, combat.endTime, currentTime - combat.startTime)
+    res.send({ combat, state })
   }catch(ex){
     return res.status(ex.code || 401).send(ex.error || ex)
   }

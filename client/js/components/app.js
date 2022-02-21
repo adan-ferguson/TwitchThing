@@ -4,6 +4,8 @@ import fizzetch from '../fizzetch.js'
 
 import './header.js'
 import './pages/adventurer/adventurerPane.js'
+import './pages/combat/fighterPane.js'
+import './pages/combat/feed.js'
 import './pages/dungeon/adventurerPane.js'
 import './pages/dungeon/event.js'
 import './pages/dungeon/state.js'

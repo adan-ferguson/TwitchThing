@@ -43,7 +43,7 @@ export default class DungeonPage extends Page{
     }
 
     if(dungeonRun.currentEvent.combat?.state === 'running'){
-      return { redirect: new CombatPage(dungeonRun.currentEvent.combat.id) }
+      return { redirect: new CombatPage(dungeonRun.currentEvent.combat.combatID, this.adventurerID) }
     }
 
     this.adventurerPane.setAdventurer(adventurer)
@@ -72,8 +72,7 @@ export default class DungeonPage extends Page{
   _parseDungeonUpdate = dungeonRun => {
 
     if(dungeonRun.currentEvent.combat?.state === 'running'){
-      debugger
-      return this.app.setPage(new CombatPage(dungeonRun.currentEvent.combat.id))
+      return this.app.setPage(new CombatPage(dungeonRun.currentEvent.combat.combatID, this.adventurerID))
     }
 
     this.eventEl.update(dungeonRun.currentEvent)
