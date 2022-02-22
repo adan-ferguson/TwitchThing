@@ -70,7 +70,6 @@ router.post('/combat/:combatID', async(req, res) => {
     }
     const currentTime = Date.now()
     const state = combat.endTime < currentTime ? { status: 'replay' } : { status: 'live', currentTime }
-    console.log('combat state', combat.startTime, currentTime, combat.endTime, currentTime - combat.startTime)
     res.send({ combat, state })
   }catch(ex){
     return res.status(ex.code || 401).send(ex.error || ex)

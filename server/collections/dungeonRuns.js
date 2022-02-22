@@ -67,13 +67,18 @@ export async function advance(dungeonRunDoc){
   let goToNewEvent = true
   let changesMade = false
 
+  if(prevEvent?.waitUntil > Date.now()){
+    console.log('waiting', prevEvent.waitUntil, prevEvent.waitUntil - Date.now())
+    return
+  }
+
   if (prevEvent.stairs){
     dungeonRunDoc.room = 1
     dungeonRunDoc.floor++
   }
 
   if (prevEvent.combat?.state === 'running'){
-    if (Date.now() > prevEvent.combat.endTime){
+    if (Date.now() > prevEvent.waitUntil){
       prevEvent.combat.state = 'finished'
       await applyCombatResult(prevEvent, dungeonRunDoc.adventurerID)
       parseEvent(prevEvent, dungeonRunDoc)
@@ -154,4 +159,5 @@ async function applyCombatResult(combatEvent, myAdventurerID){
     combatEvent.message = `${fighter.data.name} defeated the ${enemy.data.name}.`
   }
   combatEvent.adventurerState = fighter.endState
+  combatEvent.waitUntil = Date.now() + 8000
 }

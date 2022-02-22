@@ -239,10 +239,10 @@ MILESTONE 3
 ++ Derive attack
 
 Milestone 3
-2022-02-05 - 2022-02-14
+2022-02-05 - 2022-02-21
 ----------
 - Very basic combat
--- Combat page
+++ Combat page
 ++ Generic bat enemy that scales with floor
 ++ No items, just damage amounts
 ++ Adventure ends when run out of hp
@@ -258,6 +258,17 @@ Milestone 3
 
 - Admin page
 -- Clear All Data
+
+To Fix:
+- Hangs on dungeon page after loss
+- Better text feed
+- Flying text
+- Reset attack time to ~3s
+- End of fight is clunky on both sides
+
+- Bars are buggy, just use non-caked animations
+-- State updates if there's no actual updates
+-- HP bar should use red thing like fighting game
 
 TODO Later
 -----------

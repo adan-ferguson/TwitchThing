@@ -34,7 +34,7 @@ export default class AdventurerPane extends HTMLElement{
   async addXp(xp){
     this.adventurer.xp += xp
     this.adventurer.level = xpToLevel(this.adventurer.xp)
-    await this.xpBar.animateValue(this.adventurer.xp)
+    await this.xpBar.setValue(this.adventurer.xp, { animate: true })
   }
 
   _update(){

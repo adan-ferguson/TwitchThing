@@ -11,7 +11,7 @@ const HTML = `
 </div>
 `
 
-export default class Header extends HTMLElement {
+export default class Header extends HTMLElement{
 
   constructor(){
     super()
@@ -42,7 +42,7 @@ export default class Header extends HTMLElement {
   async addUserXp(xpToAdd){
     this.user.xp += xpToAdd
     this.user.level = xpToLevel(this.user.xp)
-    this.xpBar.animateValue(this.user.xp)
+    this.xpBar.setValue(this.user.xp, { animate: true })
   }
 
   updateUserBar(){

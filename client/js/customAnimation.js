@@ -1,4 +1,4 @@
-export default class CustomAnimation {
+export default class CustomAnimation{
 
   /**
    * Options:
@@ -15,8 +15,10 @@ export default class CustomAnimation {
       duration: 300,
       start: () => {},
       finish: () => {},
+      cancel: () => {},
       // eslint-disable-next-line no-unused-vars
-      tick: pct => {}
+      tick: pct => {},
+      easing: 'linear'
     }, options)
 
     this._go()
@@ -27,6 +29,11 @@ export default class CustomAnimation {
    */
   cancel(){
     this.cancelled = true
+    this.options.cancel()
+  }
+
+  finish(){
+    this._finishForced = true
   }
 
   async _go(){
@@ -44,27 +51,26 @@ export default class CustomAnimation {
     while(now - starttime < this.options.duration){
 
       if(this.cancelled){
-        this.options.finish()
         return
+      }
+
+      if(this._finishForced){
+        return this.options.finish()
       }
 
       await frame()
       now = new Date()
-      this.options.tick(Math.min(1, (now - starttime) / this.options.duration))
+      const pct = Math.min(1, (now - starttime) / this.options.duration)
+      this.options.tick(EASING_FNS[this.options.easing](pct))
     }
 
     this.options.finish()
   }
 }
 
-/**
- * Create a basic animation.
- *
- * @param options
- * @return {Animation}
- */
-Animation.basic = function(options){
-  return new Animation(options)
+const EASING_FNS = {
+  linear: x => x,
+  easeOut: x => 1 - (1 - x) * (1 - x)
 }
 
 // Wait one frame

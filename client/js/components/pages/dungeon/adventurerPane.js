@@ -32,6 +32,7 @@ export default class AdventurerPane extends HTMLElement{
 
   setState(state = {}){
     const animateChanges = this.state ? true : false
+    console.log(state)
     this.state = {
       hp: this.adventurer.baseStats.hpMax,
       ...state }
@@ -46,6 +47,7 @@ export default class AdventurerPane extends HTMLElement{
     this.hpBar.setValue(this.state.hp)
 
     // TODO: figure out this but better
+    this.stats.innerHTML = ''
     const statsToShow = ['attack']
     statsToShow.forEach(statName => {
       const el = document.createElement('div')

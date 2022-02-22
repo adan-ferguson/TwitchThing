@@ -1,13 +1,13 @@
 import Bar from './bar.js'
 
-export default class XpBar extends Bar {
+export default class XpBar extends Bar{
 
   constructor(){
     super()
     this._label = 'xp'
   }
 
-  setBadge() {
+  setBadge(){
     throw 'Do not call setBadge on levelBar, call setValue'
   }
 
@@ -20,38 +20,30 @@ export default class XpBar extends Bar {
     this._levelToXp = levelToXp
   }
 
-  setValue(val){
+  async setValue(val, options = {}){
 
-    if(isNaN(val) || val === this._val){
+    if(isNaN(parseFloat(val)) || !this._xpToLevel || !this._levelToXp){
       return
     }
 
-    const level = this._xpToLevel(val)
-    super.setBadge(level)
-    super.setRange(this._levelToXp(level), this._levelToXp(level + 1))
-    super.setValue(val)
-  }
-
-  async animateValue(val){
-
-    if(isNaN(val) || val === this._val){
-      return
-    }
-
-    if(this.animation){
-      this.animation.cancel()
-    }
-
-    let xpToAdd = val - this._val
-    while(xpToAdd > 0){
-      let toNextLevel = this._max - this._val
-      if (xpToAdd >= toNextLevel) {
-        await super.animateValue(this._max)
-        // TODO: flying text "Level Up!"
-        xpToAdd -= toNextLevel
-      }else{
-        await super.animateValue(this._val + xpToAdd)
-        xpToAdd = 0
+    if(!options.animate){
+      const level = this._xpToLevel(val)
+      super.setBadge(level)
+      super.setRange(this._levelToXp(level), this._levelToXp(level + 1))
+      super.setValue(val)
+    }else{
+      let xpToAdd = val - this._val
+      this._flyingText(`+${xpToAdd} xp`)
+      while(xpToAdd > 0){
+        let toNextLevel = this._max - this._val
+        if (xpToAdd >= toNextLevel){
+          await super.setValue(this._max, { animate: true })
+          this._flyingText('Level Up!')
+          xpToAdd -= toNextLevel
+        }else{
+          await super.setValue(val, { animate: true })
+          return
+        }
       }
     }
   }

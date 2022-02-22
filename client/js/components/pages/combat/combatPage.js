@@ -1,6 +1,5 @@
 import Page from '../page.js'
 import fizzetch from '../../../fizzetch.js'
-import DungeonPage from '../dungeon/dungeonPage.js'
 import Timeline from '../../../../../game/timeline.js'
 
 const HTML = `
@@ -22,10 +21,10 @@ const HTML = `
 
 export default class CombatPage extends Page{
 
-  constructor(combatID, adventurerID = null){
+  constructor(combatID, returnPage = null){
     super()
     this.combatID = combatID
-    this.adventurerID = adventurerID
+    this.returnPage = returnPage
     this.innerHTML = HTML
     this.fighterPane1 = this.querySelector('.fighter1')
     this.fighterPane2 = this.querySelector('.fighter2')
@@ -35,7 +34,6 @@ export default class CombatPage extends Page{
   async load(){
 
     const { combat, state } = await fizzetch(`/game/combat/${this.combatID}`)
-    console.log('combat state', combat.startTime, state.currentTime, combat.endTime, state.currentTime - combat.startTime)
     this.timeline = new Timeline(combat.timeline)
     this.combat = combat
 
@@ -44,13 +42,25 @@ export default class CombatPage extends Page{
     this.combatFeed.setCombat(this.combat)
     this.combatFeed.setTimeline(this.timeline)
 
+    // TODO: This only makes sense in monster combat
+    this.combatFeed.setText(`A ${combat.fighter2.data.name} draws near.`)
+
     if(state.status === 'live'){
-      this._inProgress(state.currentTime)
+      this.timeline.time = state.currentTime - this.combat.startTime
     }else{
-      this._isReplay()
+      this.timeline.time = 0
     }
 
-    this._run()
+    this._setup()
+
+    const waitUntilStartTime = this.combat.startTime - state.currentTime
+    if(waitUntilStartTime > 0){
+      setTimeout(() => {
+        this._run()
+      }, waitUntilStartTime)
+    }else{
+      this._run()
+    }
   }
 
   _inProgress(currentTime){
@@ -66,19 +76,22 @@ export default class CombatPage extends Page{
 
   _setTime(time){
     this.timeline.time = time
-    const entry = this.timeline.prevEntry
+    const entry = this.timeline.prevEntry || this.timeline.firstEntry
     this.fighterPane1.setState(entry.fighterState1)
-    this.fighterPane1.advanceTime(this.timeline.timeSinceLastEntry)
     this.fighterPane2.setState(entry.fighterState2)
+    this.fighterPane1.advanceTime(this.timeline.timeSinceLastEntry)
     this.fighterPane2.advanceTime(this.timeline.timeSinceLastEntry)
   }
 
-  _run(){
+  _setup(){
     const currentTime = this.timeline.time
     const prevEntry = this.timeline.prevEntry
-    this._applyEntry(prevEntry)
+    this._applyEntry(prevEntry, false)
+    this._setTime(currentTime - prevEntry.time)
+  }
+
+  _run(){
     if(this.timeline.nextEntry){
-      this._advanceTime(currentTime - prevEntry.time)
       this._tick()
     }else{
       this._finish()
@@ -102,14 +115,11 @@ export default class CombatPage extends Page{
     })
   }
 
-  _applyEntry(timelineEntry){
+  _applyEntry(timelineEntry, animate = true){
     this.timeline.time = timelineEntry.time
-    this.fighterPane1.setState(timelineEntry.fighterState1)
-    this.fighterPane2.setState(timelineEntry.fighterState2)
-    this.combatFeed.addEntry(timelineEntry)
-
-    // TODO: log the entry
-    // TODO: show the performed action somehow
+    this.fighterPane1.setState(timelineEntry.fighterState1, animate)
+    this.fighterPane2.setState(timelineEntry.fighterState2, animate)
+    this.combatFeed.setTime(this.timeline.time)
   }
 
   _advanceTime(ms){
@@ -121,11 +131,18 @@ export default class CombatPage extends Page{
   }
 
   _finish(){
-    // display the result
-    // if this is a live combat, go back to the dungeon page or the results page
-    // otherwise, do nothing? this is in a new tab right?
+    const adventurerWon = this.combat.fighter1.endState.hp > 0
+
+    if(adventurerWon){
+      this.combatFeed.setText(`The ${this.combat.fighter2.data.name} has been defeated.`)
+    }else{
+      this.combatFeed.setText(`${this.combat.fighter1.data.name} has been defeated.`)
+    }
+
     setTimeout(() => {
-      this.app.setPage(new DungeonPage(this.adventurerID))
+      if(this.returnPage){
+        this.app.setPage(this.returnPage)
+      }
     }, 5000)
   }
 }

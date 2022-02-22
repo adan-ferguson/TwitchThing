@@ -17,7 +17,11 @@ export default class Timeline{
   }
 
   get timeSinceLastEntry(){
-    return this.time - this.prevEntry.time
+    return Math.max(0, this.time - this.prevEntry.time)
+  }
+
+  get firstEntry(){
+    return this._entries[0]
   }
 
   get prevEntry(){

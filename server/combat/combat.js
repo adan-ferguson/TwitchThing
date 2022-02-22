@@ -1,6 +1,8 @@
 import * as Combats from '../collections/combats.js'
 import FighterInstance from '../../game/combat/fighterInstance.js'
 
+const START_TIME_DELAY = 2000
+
 export async function generateCombat(fighter1, fighter2, fighterStartState1 = {}, fighterStartState2 = {}){
 
   const fighterInstance1 = new FighterInstance(fighter1, fighterStartState1)
@@ -8,8 +10,8 @@ export async function generateCombat(fighter1, fighter2, fighterStartState1 = {}
   const combat = new Combat(fighterInstance1, fighterInstance2)
 
   return await Combats.save({
-    startTime: Date.now(),
-    endTime: Date.now() + combat.duration,
+    startTime: Date.now() + START_TIME_DELAY,
+    endTime: Date.now() + combat.duration + START_TIME_DELAY,
     fighter1: {
       data: fighter1,
       startState: fighterStartState1,
@@ -20,7 +22,8 @@ export async function generateCombat(fighter1, fighter2, fighterStartState1 = {}
       startState: fighterStartState2,
       endState: combat.fighterEndState2
     },
-    timeline: combat.timeline
+    timeline: combat.timeline,
+    result: combat.result
   })
 }
 
@@ -29,13 +32,21 @@ class Combat{
   constructor(fighterInstance1, fighterInstance2){
     this.fighterInstance1 = fighterInstance1
     this.fighterInstance2 = fighterInstance2
-    this.timeline = []
+    this.timeline = [{
+      time: 0,
+      fighterState1: this.fighterInstance1.currentState,
+      fighterState2: this.fighterInstance2.currentState
+    }]
     this._currentTime = 0
     this._run()
     // TODO: clean up the states, get rid of things that aren't combat relevant
     this.fighterEndState1 = { ...this.fighterInstance1.currentState }
     this.fighterEndState2 = { ...this.fighterInstance2.currentState }
     this.duration = this._currentTime
+  }
+
+  get result(){
+    return {}
   }
 
   get finished(){

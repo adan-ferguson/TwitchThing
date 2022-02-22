@@ -5,12 +5,13 @@ const innerHTML = `
     <span></span>
 </div>
 <div class="bar-border">
-    <div class="bar-fill"></div>
+    <div class="bar-fill bar-background"></div>
+    <div class="bar-fill bar-foreground"></div>
     <div class="bar-label"></div>
 </div>
 `
 
-const ANIM_TIME = 1000
+const ANIM_SPEED = 1000
 
 export default class Bar extends HTMLElement{
 
@@ -21,13 +22,30 @@ export default class Bar extends HTMLElement{
     this._max = 100
     this._label = ''
     this._color = '#DDD'
+    this._increaserColor = null
+    this._decreaserColor = null
     this._barLabel = this.querySelector('.bar-label')
-    this._barFill = this.querySelector('.bar-fill')
+    this._barBackground = this.querySelector('.bar-background')
+    this._barForeground = this.querySelector('.bar-foreground')
     this._showValueBeforeLabel = true
+
+    this.setValue(0)
   }
 
   set showValueBeforeLabel(val){
     this._showValueBeforeLabel = val ? true : false
+  }
+
+  set color(val){
+    this._color = val
+  }
+
+  set increaserColor(val){
+    this._increaserColor = val
+  }
+
+  set decreaserColor(val){
+    this._decreaserColor = val
   }
 
   setBadge(text){
@@ -49,9 +67,10 @@ export default class Bar extends HTMLElement{
     this._max = max
   }
 
-  setValue(val){
+  async setValue(val, options = {}){
 
-    if(isNaN(val) || val === this._val){
+    console.log('setValue', val, options)
+    if(isNaN(parseFloat(val))){
       return
     }
 
@@ -59,72 +78,89 @@ export default class Bar extends HTMLElement{
       this.animation.cancel()
     }
 
+    options = {
+      animate: false,
+      flyingText: false,
+      forceSet: false,
+      ...options
+    }
+
     val = Math.min(this._max, Math.max(this._min, Math.round(val)))
 
-    this._val = val
-    this._setLabel(this._val)
-    this._barFill.style.width = `${this._pct(val) * 100}%`
-    this._barFill.style.backgroundColor = this._valToColor(val)
-  }
-
-  setFill(val){
-    this._barFill.style.backgroundColor = val
+    if(!options.animate){
+      this._val = val
+      this._setLabel(this._val)
+      this._barBackground.classList.add('hidden')
+      this._barBackground.style.width = `${this._pct(val) * 100}%`
+      this._barForeground.style.width = `${this._pct(val) * 100}%`
+      this._barForeground.style.backgroundColor = this._color
+    }else{
+      await this._animateToValue(val)
+    }
   }
 
   setLabel(label = null){
     this._label = label
   }
 
-  setColor(color){
-    this._color = color
-  }
+  _animateToValue(val){
 
-  animateValue(val){
-
-    if(isNaN(val) || val === this._val){
-      return
-    }
-
-    if(this.animation){
-      this.animation.cancel()
+    function setWidth(bar, pct){
+      bar.style.width = `${pct * 100}%`
     }
 
     return new Promise(res => {
-      requestAnimationFrame(() => {
 
-        const initialVal = this._val
-        const diff = val - initialVal
+      if(this.animation){
+        this.animation.cancel()
+      }
 
-        const animation = this._barFill.animate([
-          {
-            width: `${this._pct(this._val) * 100}%`,
-            backgroundColor: this._valToColor(this._val)
-          },
-          {
-            width: `${this._pct(val) * 100}%`,
-            backgroundColor: this._valToColor(val)
+
+      const growing = val > this._val
+      const secondaryColor = growing ? this._increaserColor : this._decreaserColor
+
+      let animatingBar
+      let snappingBar
+      if(secondaryColor){
+        animatingBar = growing ? this._barForeground : this._barBackground
+        snappingBar = !growing ? this._barForeground : this._barBackground
+        this._barBackground.classList.remove('hidden')
+        this._barBackground.style.backgroundColor = secondaryColor
+      }else{
+        animatingBar = this._barForeground
+        snappingBar = null
+        this._barBackground.classList.add('hidden')
+      }
+
+      // Figure out our target width
+      const startWidth = (parseFloat(animatingBar.style.width) / 100) || 0
+      const targetWidth = this._pct(val)
+      let currentWidth = startWidth
+
+      this._val = val
+
+      this.animation = new CustomAnimation({
+        duration: ANIM_SPEED * Math.sqrt(Math.abs(targetWidth - currentWidth)),
+        easing: 'easeOut',
+        start: () => {
+          if(snappingBar){
+            setWidth(snappingBar, targetWidth)
           }
-        ], {
-          duration: ANIM_TIME,
-          easing: 'ease-out'
-        })
-        animation.onfinish = () => {
+        },
+        cancel: () => {
+          this.animation = null
+          res()
+        },
+        finish: () => {
+          this.animation = null
           this.setValue(val)
           res()
+        },
+        tick: pct => {
+          currentWidth = startWidth * (1 - pct) + targetWidth * pct
+          setWidth(animatingBar, currentWidth)
+          this._setLabel(Math.round(this._pctToVal(currentWidth)))
         }
-
-        const tickAnimation = new CustomAnimation({
-          tick: pct => {
-            if(animation.playState !== 'running'){
-              tickAnimation.cancel()
-            }else{
-              this._setLabel(Math.min(this._max, Math.max(this._min, Math.round(initialVal + pct * diff))))
-            }
-          },
-          duration: ANIM_TIME
-        })
-
-        this.animation = animation
       })
     })
   }
@@ -132,6 +168,11 @@ export default class Bar extends HTMLElement{
   _pct(val){
     const pct = (val - this._min) / (this._max - this._min)
     return Math.min(1, Math.max(0, pct))
+  }
+
+  _pctToVal(pct){
+    pct = Math.min(1, Math.max(0, pct))
+    return this._min * (1 - pct) + this._max * pct
   }
 
   _setLabel(val){
@@ -144,6 +185,10 @@ export default class Bar extends HTMLElement{
       return this._color(this._pct(val))
     }
     return this._color
+  }
+
+  _flyingText(text){
+
   }
 }
 

@@ -26,10 +26,10 @@ export async function generateEvent(adventurer, dungeonRun){
     const monster = await generateMonster(dungeonRun.floor)
     const combat = await generateCombat(adventurer, monster, dungeonRun.adventurerState)
     return {
+      waitUntil: combat.endTime,
       combat: {
         combatID: combat._id,
         monster: monster,
-        endTime: combat.endTime,
         state: 'running'
       }
     }

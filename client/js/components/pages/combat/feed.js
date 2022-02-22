@@ -1,5 +1,5 @@
 const HTML = `
-<div class='time'></div>
+<di-timer></di-timer>
 <div class='text-feed'></div>
 `
 
@@ -7,8 +7,11 @@ export default class Feed extends HTMLElement{
 
   constructor(){
     super()
+    this.entries = []
     this.innerHTML = HTML
     this.textFeed = this.querySelector('.text-feed')
+    this.timer = this.querySelector('di-timer')
+    this.timer.format = 'M:ss.L'
   }
 
   setCombat(combat){
@@ -20,14 +23,19 @@ export default class Feed extends HTMLElement{
     // TODO: show timeline slider if we're not live?
   }
 
-  addEntry(timelineEntry){
-    // Add text feed entry
-    this.textFeed.textContent = JSON.stringify(timelineEntry)
-    this.setTime(timelineEntry.time)
+  setText(text){
+    if(!text){
+      return
+    }
+    this.textFeed.textContent = text
   }
 
   setTime(time){
-    this.querySelector('.time').textContent = (time / 1000).toFixed(1)
+    this.timer.time = time
+  }
+
+  addEntry(entry){
+    this.entries.push(entry)
   }
 }
 

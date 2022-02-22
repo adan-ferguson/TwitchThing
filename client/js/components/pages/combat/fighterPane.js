@@ -1,4 +1,5 @@
 import FighterInstance from '../../../../../game/combat/fighterInstance.js'
+import { fadeOut } from '../../../animationHelper.js'
 
 const HTML = `
 <div class="flex-rows">
@@ -32,19 +33,43 @@ export default class FighterPane extends HTMLElement{
     this.hpBar.setBadge(fighter.level || '')
   }
 
-  setState(state = {}){
+  setState(state = {}, animate = false){
+
+    if(this._finished){
+      return
+    }
+
     this.fighterInstance = new FighterInstance(this.fighter, state)
-    this._update()
+    this._update(animate)
   }
 
   advanceTime(ms){
+
+    if(this._finished){
+      return
+    }
+
     this.fighterInstance.advanceTime(ms)
     this._updateCooldowns()
   }
 
-  _update(){
+  _update(animate = false){
+
+    if(this._finished){
+      return
+    }
+
     this.hpBar.setMax(this.fighterInstance.hpMax)
-    this.hpBar.setValue(this.fighterInstance.hp)
+
+    if(animate){
+      this.hpBar.setValue(this.fighterInstance.hp, {
+        animate: true,
+        flyingText: true
+      })
+    }else{
+      this.hpBar.setValue(this.fighterInstance.hp)
+    }
+
     this.actionBar.setMax(this.fighterInstance.actionTime)
 
     // TODO: figure out this but better
@@ -57,6 +82,11 @@ export default class FighterPane extends HTMLElement{
     })
 
     this._updateCooldowns()
+
+    if(!this.fighterInstance.hp){
+      fadeOut(this)
+      this._finished = true
+    }
   }
 
   _updateCooldowns(){

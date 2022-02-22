@@ -4,7 +4,7 @@ const STATE_DEFAULTS = {
   timeSinceLastAction: 0
 }
 
-const BASE_TURN_TIME = 15000
+const BASE_TURN_TIME = 3000
 
 export default class FighterInstance{
 
