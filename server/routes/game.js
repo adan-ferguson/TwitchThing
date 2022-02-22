@@ -43,7 +43,7 @@ router.post('/main', async(req, res) => {
       adventurers: {
         name: 1,
         level: 1,
-        currentVenture: 1
+        dungeonRunID: 1
       }
     })
     res.send(payload)

@@ -5,9 +5,9 @@ const DEFAULTS = {
   name: null,
   level: 1,
   xp: 0,
-  userid: null,
+  userID: null,
   loadout: [null, null, null, null, null, null, null, null],
-  currentVenture: null,
+  dungeonRunID: null,
   baseStats: {
     hpMax: 100,
     attack: 10
@@ -30,8 +30,8 @@ export async function loadByIDs(_ids, projection = {}){
   return adventurers.map(adventurer => fix(adventurer, projection))
 }
 
-export async function createNew(userid, name){
-  return await save({ name, userid })
+export async function createNew(userID, name){
+  return await save({ name, userID })
 }
 
 export async function findOne(queryOrID, projection = {}){
@@ -40,15 +40,4 @@ export async function findOne(queryOrID, projection = {}){
 
 export async function update(_id, $set = {}){
   return await db.conn().collection('adventurers').updateOne({ _id }, { $set })
-}
-
-export async function loadRunningVentures(){
-  const adventurers = await db.conn().collection('adventurers').find({
-    'currentVenture.finished': false
-  }, {
-    projection: {
-      currentVenture: 1
-    }
-  }).toArray()
-  return adventurers.map(adv => adv.currentVenture)
 }

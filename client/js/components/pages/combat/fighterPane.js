@@ -61,13 +61,15 @@ export default class FighterPane extends HTMLElement{
 
     this.hpBar.setMax(this.fighterInstance.hpMax)
 
-    if(animate){
-      this.hpBar.setValue(this.fighterInstance.hp, {
-        animate: true,
-        flyingText: true
-      })
-    }else{
-      this.hpBar.setValue(this.fighterInstance.hp)
+    if(this.fighterInstance.hp !== this.hpBar.value){
+      if(animate){
+        this.hpBar.setValue(this.fighterInstance.hp, {
+          animate: true,
+          flyingText: true
+        })
+      }else{
+        this.hpBar.setValue(this.fighterInstance.hp)
+      }
     }
 
     this.actionBar.setMax(this.fighterInstance.actionTime)

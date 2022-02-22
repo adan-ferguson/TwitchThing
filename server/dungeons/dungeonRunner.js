@@ -38,8 +38,7 @@ async function advanceAllRuns(){
       console.error(e)
       process.exit()
     }
-  }
-  await advanceVentures(runs.map(run => run._id))
+
 
   setTimeout(() => {
     advanceAllRuns()

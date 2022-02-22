@@ -10,11 +10,11 @@ const HTML = `
 </div>
 `
 
-export default class AdventurerRow extends HTMLElement {
+export default class AdventurerRow extends HTMLElement{
   constructor(adventurer, setPageFn){
     super()
 
-    if(!adventurer) {
+    if(!adventurer){
       this.innerHTML = 'Create a new Adventurer'
       return
     }
@@ -35,10 +35,10 @@ export default class AdventurerRow extends HTMLElement {
     updateTimer()
 
     function updateTimer(){
-      if(adventurer.currentVenture && !adventurer.currentVenture.finished){
-        timer.setTimeSince(adventurer.currentVenture.startTime)
+      if(adventurer.dungeonRun && !adventurer.dungeonRun.finished){
+        timer.setTimeSince(adventurer.dungeonRun.startTime)
         timer.classList.remove('displaynone')
-        if(adventurer.currentVenture.finished){
+        if(adventurer.dungeonRun.finished){
           timer.stop()
         }else{
           timer.start()
@@ -49,10 +49,10 @@ export default class AdventurerRow extends HTMLElement {
     }
 
     function statusText(){
-      if(!adventurer.currentVenture){
+      if(!adventurer.dungeonRun){
         return ''
       }
-      return adventurer.currentVenture.finished ? 'Finished' : 'Venturing'
+      return adventurer.dungeonRun.finished ? 'Finished' : 'In Dungeon Run'
     }
   }
 
@@ -65,8 +65,8 @@ export default class AdventurerRow extends HTMLElement {
   _events(setPageFn){
     this.addEventListener('click', () => {
       let page
-      if(this.adventurer.currentVenture){
-        if(this.adventurer.currentVenture.finished){
+      if(this.adventurer.dungeonRun){
+        if(this.adventurer.dungeonRun.finished){
           page = new ResultsPage(this.adventurer._id)
         }else{
           page = new DungeonPage(this.adventurer._id)

@@ -38,12 +38,11 @@ verifiedRouter.post('/enterdungeon/:dungeonID', async(req, res) => {
 verifiedRouter.post('/dungeonrun', async(req, res) => {
   try {
     const adventurer = await Adventurers.findOne(req.adventurerID)
-    if(!adventurer.currentVenture){
-      return res.status(404).send({ error: 'Adventurer is not currently venturing.' })
+    if(!adventurer.dungeonRunID){
+      return res.status(404).send({ error: 'Adventurer is not currently in a dungeon run.' })
     }
-    const dungeonRunID = adventurer.currentVenture.currentRun || adventurer.currentVenture.finishedRuns.at(-1)
     const dungeonRun = await DungeonRuns.findOne({
-      _id: dungeonRunID,
+      _id: adventurer.dungeonRunID,
       adventurerID: req.adventurerID
     }, {
       adventurerID: 1,
@@ -66,15 +65,16 @@ verifiedRouter.post('/dungeonrun', async(req, res) => {
 verifiedRouter.post('/results', async (req, res) => {
   try {
     const adventurer = await Adventurers.findOne(req.adventurerID)
-    if(!adventurer.currentVenture){
-      return res.status(401).send({ error: 'Adventurer is not currently venturing.', targetPage: 'Adventurer' })
+    if(!adventurer.dungeonRunID){
+      return res.status(401).send({ error: 'Adventurer is not currently in a dungeon run.', targetPage: 'Adventurer' })
     }
-    if(!adventurer.currentVenture.finished){
-      return res.status(401).send({ error: 'Venture is not finished yet.', targetPage: 'Dungeon' })
+    const dungeonRun = await DungeonRuns.findOne(adventurer.dungeonRunID)
+    if(!dungeonRun || !dungeonRun.finished){
+      return res.status(401).send({ error: 'Dungeon run is not finished yet.', targetPage: 'Dungeon' })
     }
     res.send({
       adventurer,
-      venture: adventurer.currentVenture
+      dungeonRun
     })
   }catch(error){
     return res.status(error.code || 500).send({ error: error.message || error })

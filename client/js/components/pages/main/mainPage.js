@@ -18,7 +18,7 @@ const HTML = `
 </div>
 `
 
-export default class MainPage extends Page {
+export default class MainPage extends Page{
 
   constructor({ error } = {}){
     super()
@@ -98,10 +98,10 @@ export default class MainPage extends Page {
 
   }
 
-  _ventureUpdate = venture => {
-    const row = this.querySelector(`di-main-adventurer-row[adventurer-id="${venture.adventurerID}"]`)
+  _dungeonRunUpdate = dungeonRun => {
+    const row = this.querySelector(`di-main-adventurer-row[adventurer-id="${dungeonRun.adventurerID}"]`)
     if(row){
-      row.adventurer.currentVenture = venture
+      row.adventurer.dungeonRun = dungeonRun
       row.update()
     }
   }

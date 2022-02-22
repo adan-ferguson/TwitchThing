@@ -3,6 +3,7 @@ import { generateEvent } from '../dungeons/dungeonEventPlanner.js'
 import { emit } from '../socketServer.js'
 import * as Adventurers from './adventurers.js'
 import * as Combats from './combats.js'
+import { calculateResults } from '../dungeons/results.js'
 
 const DEFAULTS = {
   _id: null,
@@ -68,7 +69,6 @@ export async function advance(dungeonRunDoc){
   let changesMade = false
 
   if(prevEvent?.waitUntil > Date.now()){
-    console.log('waiting', prevEvent.waitUntil, prevEvent.waitUntil - Date.now())
     return
   }
 
@@ -144,6 +144,7 @@ function parseEvent(event, dungeonRunDoc){
   }
   if(event.finished){
     dungeonRunDoc.finished = true
+    dungeonRunDoc.results = calculateResults(dungeonRunDoc)
   }
 }
 

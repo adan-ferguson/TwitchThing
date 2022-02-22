@@ -49,7 +49,6 @@ export default class DungeonPage extends Page{
     this.adventurerPane.setAdventurer(adventurer)
     this.adventurerPane.setState(dungeonRun.currentEvent.adventurerState)
     this.stateEl.updateDungeonRun(dungeonRun)
-    this.stateEl.updateVenture(adventurer.currentVenture)
     this.eventEl.update(dungeonRun.currentEvent)
 
     getSocket()
@@ -88,7 +87,6 @@ export default class DungeonPage extends Page{
   }
 
   _finish(){
-    // TODO: deal with multi-run ventures
     this.app.setPage(new ResultsPage(this.adventurerID))
   }
 }

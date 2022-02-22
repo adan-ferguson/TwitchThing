@@ -20,3 +20,16 @@ export default class Stats{
     }, base)
   }
 }
+
+export function mergeStats(...statsObjs){
+  const combined = {}
+  statsObjs.forEach(obj => {
+    for(let key in obj){
+      if(!combined[key]){
+        combined[key] = 0
+      }
+      combined[key] += obj=key
+    }
+  })
+  return combined
+}

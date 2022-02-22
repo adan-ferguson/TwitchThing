@@ -1,4 +1,5 @@
 import CustomAnimation from '../customAnimation.js'
+import FlyingTextEffect from '../effects/flyingTextEffect.js'
 
 const innerHTML = `
 <div class="bar-badge displaynone">
@@ -18,6 +19,7 @@ export default class Bar extends HTMLElement{
   constructor(){
     super()
     this.innerHTML = innerHTML
+    this._val = 0
     this._min = 0
     this._max = 100
     this._label = ''
@@ -30,6 +32,10 @@ export default class Bar extends HTMLElement{
     this._showValueBeforeLabel = true
 
     this.setValue(0)
+  }
+
+  get value(){
+    return this._val
   }
 
   set showValueBeforeLabel(val){
@@ -69,7 +75,6 @@ export default class Bar extends HTMLElement{
 
   async setValue(val, options = {}){
 
-    console.log('setValue', val, options)
     if(isNaN(parseFloat(val))){
       return
     }
@@ -81,11 +86,14 @@ export default class Bar extends HTMLElement{
     options = {
       animate: false,
       flyingText: false,
-      forceSet: false,
       ...options
     }
 
     val = Math.min(this._max, Math.max(this._min, Math.round(val)))
+
+    if(options.flyingText){
+      this._flyingText(val - this._val)
+    }
 
     if(!options.animate){
       this._val = val
@@ -94,7 +102,7 @@ export default class Bar extends HTMLElement{
       this._barBackground.style.width = `${this._pct(val) * 100}%`
       this._barForeground.style.width = `${this._pct(val) * 100}%`
       this._barForeground.style.backgroundColor = this._color
-    }else{
+    }else {
       await this._animateToValue(val)
     }
   }
@@ -114,7 +122,6 @@ export default class Bar extends HTMLElement{
       if(this.animation){
         this.animation.cancel()
       }
-
 
       const growing = val > this._val
       const secondaryColor = growing ? this._increaserColor : this._decreaserColor
@@ -187,8 +194,8 @@ export default class Bar extends HTMLElement{
     return this._color
   }
 
-  _flyingText(text){
-
+  _flyingText(text, options = {}){
+    new FlyingTextEffect(this, text, options)
   }
 }
 

@@ -265,10 +265,11 @@ To Fix:
 - Flying text
 - Reset attack time to ~3s
 - End of fight is clunky on both sides
+- Just remove ventures forget it
 
-- Bars are buggy, just use non-caked animations
--- State updates if there's no actual updates
--- HP bar should use red thing like fighting game
++ Bars are buggy, just use non-caked animations
+++ State updates if there's no actual updates
+++ HP bar should use red thing like fighting game
 
 TODO Later
 -----------
