@@ -22,23 +22,24 @@ export default class AdventurerRow extends HTMLElement{
     this.setAttribute('adventurer-id', adventurer._id)
     this.innerHTML = HTML
     this.adventurer = adventurer
-    this.update()
+
+    this.querySelector('.name').textContent = this.adventurer.name
+    this.querySelector('.level').textContent = this.adventurer.level
+
     this._events(setPageFn)
   }
 
-  update(){
-    const adventurer = this.adventurer
+  setDungeonRun(dungeonRun){
+
     const timer = this.querySelector('di-timer')
-    this.querySelector('.name').textContent = adventurer.name
-    this.querySelector('.level').textContent = adventurer.level
     this.querySelector('.status').textContent = statusText()
     updateTimer()
 
     function updateTimer(){
-      if(adventurer.dungeonRun && !adventurer.dungeonRun.finished){
-        timer.setTimeSince(adventurer.dungeonRun.startTime)
+      if(dungeonRun.finished){
+        timer.setTimeSince(dungeonRun.startTime)
         timer.classList.remove('displaynone')
-        if(adventurer.dungeonRun.finished){
+        if(dungeonRun.finished){
           timer.stop()
         }else{
           timer.start()
@@ -49,10 +50,10 @@ export default class AdventurerRow extends HTMLElement{
     }
 
     function statusText(){
-      if(!adventurer.dungeonRun){
+      if(!dungeonRun){
         return ''
       }
-      return adventurer.dungeonRun.finished ? 'Finished' : 'In Dungeon Run'
+      return dungeonRun.finished ? 'Finished' : 'In Dungeon Run'
     }
   }
 

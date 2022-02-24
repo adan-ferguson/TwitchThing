@@ -1,6 +1,6 @@
 import { Server as SocketServer } from 'socket.io'
 import log from 'fancy-log'
-import { loadFromMagicID } from './collections/users.js'
+import Users from './collections/users.js'
 
 let io
 
@@ -14,9 +14,9 @@ export function setup(server, sessionMiddleware){
 
   io.on('connection', socket => {
 
-    const magicID = socket.request.session.passport.user
+    const magicID = socket.request.session?.passport?.user
     if(magicID){
-      socket.request.user = loadFromMagicID(magicID).then(user => {
+      socket.request.user = Users.loadFromMagicID(magicID).then(user => {
         if(user){
           const id = user._id.toString()
           socket.join(id)

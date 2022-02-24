@@ -1,4 +1,4 @@
-import * as Combats from '../collections/combats.js'
+import Combats from '../collections/combats.js'
 import FighterInstance from '../../game/combat/fighterInstance.js'
 
 const START_TIME_DELAY = 2000
@@ -11,7 +11,7 @@ export async function generateCombat(fighter1, fighter2, fighterStartState1 = {}
 
   return await Combats.save({
     startTime: Date.now() + START_TIME_DELAY,
-    endTime: Date.now() + combat.duration + START_TIME_DELAY,
+    duration: combat.duration,
     fighter1: {
       data: fighter1,
       startState: fighterStartState1,

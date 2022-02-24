@@ -1,4 +1,4 @@
-import db from '../db.js'
+import Collection from './collection.js'
 
 const DEFAULTS = {
   _id: null,
@@ -15,29 +15,10 @@ const DEFAULTS = {
   levelups: []
 }
 
-async function save(adventurerDoc){
-  return await db.save(fix(adventurerDoc), 'adventurers')
+const Adventurers = new Collection('adventurers', DEFAULTS)
+
+Adventurers.createNew = async function(userID, name){
+  return await Adventurers.save({ name, userID })
 }
 
-function fix(adventurerDoc, projection = null){
-  return db.fix(adventurerDoc, DEFAULTS, projection)
-}
-
-export async function loadByIDs(_ids, projection = {}){
-  const adventurers = await db.conn().collection('adventurers').find({
-    _id: { $in: _ids }
-  }, { projection }).toArray()
-  return adventurers.map(adventurer => fix(adventurer, projection))
-}
-
-export async function createNew(userID, name){
-  return await save({ name, userID })
-}
-
-export async function findOne(queryOrID, projection = {}){
-  return await db.findOne('adventurers', queryOrID, projection, DEFAULTS)
-}
-
-export async function update(_id, $set = {}){
-  return await db.conn().collection('adventurers').updateOne({ _id }, { $set })
-}
+export default Adventurers

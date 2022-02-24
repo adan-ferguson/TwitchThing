@@ -1,19 +1,45 @@
-import * as Adventurers from '../collections/adventurers.js'
+import Adventurers from '../collections/adventurers.js'
+import DungeonRuns from 'mongodb'
+import Users from '../collections/users.js'
 import { getStats, xpToLevel as advXpToLevel } from '../../game/adventurer.js'
-import * as Users from '../collections/users.js'
 import { xpToLevel as userXpToLevel } from '../../game/user.js'
-import * as DungeonRuns from 'mongodb'
 import { mergeStats } from '../../game/stats.js'
 
-export async function calculateResults(dungeonRunDoc){
-  const adventurer = await Adventurers.findOne(dungeonRunDoc.adventurerID)
-  const levelAfter = advXpToLevel(adventurer.xp + dungeonRunDoc.rewards.xp)
+const REWARDS_TYPES = {
+  xp: 'int'
+}
+
+export function addRewards(rewards, toAdd){
+  const r = { ...rewards }
+  for(let key in toAdd){
+
+    if(!(key in REWARDS_TYPES)){
+      continue
+    }
+
+    if(REWARDS_TYPES[key] === 'int'){
+      if(!r[key]){
+        r[key] = 0
+      }
+      r[key] += toAdd[key]
+    }else if(REWARDS_TYPES[key] === 'array'){
+      if(!r[key]){
+        r[key] = []
+      }
+      r[key].push(toAdd[key])
+    }
+  }
+  return r
+}
+
+export async function calculateResults(adventurer, rewards){
+  const levelAfter = advXpToLevel(adventurer.xp + rewards.xp)
   const levelups = []
   for(let levelBefore = adventurer.level; levelBefore < levelAfter; levelBefore++){
     levelups.push(previewLevelup(adventurer, levelBefore + 1))
   }
   return {
-    rewards: dungeonRunDoc.rewards,
+    rewards,
     levelups
   }
 }
@@ -60,7 +86,6 @@ export async function finalizeResults(adventurerID, selectedBonuses){
     })
 
     const newStats = mergeStats(adventurer.baseStats, ...bonuses)
-
     await Adventurers.update(adventurerID, {
       dungeonRun: null,
       xp: xpAfter,

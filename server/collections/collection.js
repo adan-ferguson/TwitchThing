@@ -1,0 +1,31 @@
+import db from '../db.js'
+
+export default class Collection{
+
+  constructor(collectionName, defaults = {}){
+    this.collectionName = collectionName
+    this.defaults = defaults
+  }
+
+  async save(doc){
+    return await db.save(db.fix(doc, this.defaults), this.collectionName)
+  }
+
+  async findOne(queryOrID, projection = {}){
+    return await db.findOne(this.collectionName, queryOrID, projection, this.defaults)
+  }
+
+  async find(queryOrID, projection = {}){
+    return await db.find(this.collectionName, queryOrID, projection, this.defaults)
+  }
+
+  async findByIDs(ids, projection = {}){
+    return await this.find({
+      _id: { $in: ids }
+    }, projection)
+  }
+
+  async update(_id, $set){
+    db.conn().collection(this.collectionName).updateOne({ _id }, { $set })
+  }
+}

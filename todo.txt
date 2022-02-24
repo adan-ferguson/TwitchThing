@@ -246,23 +246,31 @@ Milestone 3
 ++ Generic bat enemy that scales with floor
 ++ No items, just damage amounts
 ++ Adventure ends when run out of hp
--- Adventurer's max hp and damage goes up as they level up
+++ Adventurer's max hp and damage goes up as they level up
 ++ Advancing floors
 ++ Combat should have full fighter documents so replays work
 -- Share button for combat replays
 
 + Actually DON'T derive stats
 ++ Store stats obj in adventurers (and fighters later)
--- HP and ATK grow% per level
--- Levelup screen shows hp + damage increase amounts, no bonuses yet
+++ HP and ATK grow% per level
+++ Levelup screen shows hp + damage increase amounts
+++ Choose bonuses (hp or atk)
+-- Test
+
+- Remove ventures
+-- Reorganize a bunch of stuff
+-- Make everything work again
 
 - Admin page
--- Clear All Data
+-- Clear All Data button
+
+- Collections objects
+-- Reduce usage of projections since they just cause bugs mostly
 
 To Fix:
 - Hangs on dungeon page after loss
-- Better text feed
-- Flying text
++ Flying text
 - Reset attack time to ~3s
 - End of fight is clunky on both sides
 - Just remove ventures forget it

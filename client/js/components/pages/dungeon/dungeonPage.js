@@ -1,5 +1,4 @@
 import Page from '../page.js'
-import MainPage from '../main/mainPage.js'
 import fizzetch from '../../../fizzetch.js'
 import { getSocket } from '../../../socketClient.js'
 import ResultsPage from '../results/resultsPage.js'
@@ -56,13 +55,11 @@ export default class DungeonPage extends Page{
         adventurerID: this.adventurerID
       })
       .on('dungeon run update', this._parseDungeonUpdate)
-      .on('venture update', this._parseVentureUpdate)
   }
 
   async unload(){
     getSocket()
       .off('dungeon run update', this._parseDungeonUpdate)
-      .off('venture update', this._parseVentureUpdate)
       .emit('leave dungeon run', {
         adventurerID: this.adventurerID
       })
@@ -74,20 +71,19 @@ export default class DungeonPage extends Page{
       return this.app.setPage(new CombatPage(dungeonRun.currentEvent.combat.combatID, this))
     }
 
+    if(dungeonRun.finished){
+      this._finish()
+    }
+
     this.eventEl.update(dungeonRun.currentEvent)
     this.stateEl.updateDungeonRun(dungeonRun)
   }
 
-  _parseVentureUpdate = venture => {
-    if(venture.finished){
-      this._finish()
-    }else{
-      this.stateEl.updateVenture(venture)
-    }
-  }
-
   _finish(){
-    this.app.setPage(new ResultsPage(this.adventurerID))
+    console.log('run finished, transitioning in 5 seconds')
+    setTimeout(() => {
+      this.app.setPage(new ResultsPage(this.adventurerID))
+    }, 5000)
   }
 }
 

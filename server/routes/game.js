@@ -1,9 +1,11 @@
 import express from 'express'
 import db from '../db.js'
-import * as Users from '../collections/users.js'
-import * as Combats from '../collections/combats.js'
+import Users from '../collections/users.js'
+import Combats from '../collections/combats.js'
 
 import adventurerRouter from './game/adventurer.js'
+import Adventurers from '../collections/adventurers.js'
+import DungeonRuns from '../collections/dungeonRuns.js'
 
 const router = express.Router()
 
@@ -39,14 +41,9 @@ router.use('/adventurer', adventurerRouter)
 
 router.post('/main', async(req, res) => {
   try {
-    const payload = await Users.loadData(req.user, {
-      adventurers: {
-        name: 1,
-        level: 1,
-        dungeonRunID: 1
-      }
-    })
-    res.send(payload)
+    const adventurers = await Adventurers.findByIDs(req.user.adventurers)
+    const dungeonRuns = await DungeonRuns.findByIDs(adventurers.map(adv => adv.dungeonRunID).filter(id => id))
+    res.send({  adventurers, dungeonRuns })
   }catch(ex){
     return res.status(ex.code || 401).send(ex.error || ex)
   }

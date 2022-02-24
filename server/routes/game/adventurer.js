@@ -1,9 +1,9 @@
 import express from 'express'
-import * as Adventurers from '../../collections/adventurers.js'
-import * as DungeonRuns from '../../collections/dungeonRuns.js'
-import db from '../../db.js'
-import * as Ventures from '../../dungeons/ventures.js'
-import { finalizeVenture } from '../../dungeons/ventures.js'
+import Adventurers from '../../collections/adventurers.js'
+import DungeonRuns from '../../collections/dungeonRuns.js'
+import { addRun } from '../../dungeons/dungeonRunner.js'
+import { finalizeResults } from '../../dungeons/results.js'
+import db  from '../../db.js'
 const router = express.Router()
 const verifiedRouter = express.Router()
 
@@ -28,8 +28,8 @@ verifiedRouter.post('/dungeonpicker', async(req, res) => {
 
 verifiedRouter.post('/enterdungeon/:dungeonID', async(req, res) => {
   try {
-    const venture =  Ventures.beginVenture(req.user._id, req.adventurerID, req.params.dungeonID)
-    res.send({ venture })
+    const dungeonRun = addRun(req.adventurerID, req.params.dungeonID)
+    res.send({ dungeonRun })
   }catch(error){
     return res.status(error.code || 500).send({ error: error.message || error })
   }
@@ -44,14 +44,6 @@ verifiedRouter.post('/dungeonrun', async(req, res) => {
     const dungeonRun = await DungeonRuns.findOne({
       _id: adventurer.dungeonRunID,
       adventurerID: req.adventurerID
-    }, {
-      adventurerID: 1,
-      dungeonID: 1,
-      floor: 1,
-      room: 1,
-      finished: 1,
-      currentEvent: 1,
-      rewards: 1
     })
     if(!dungeonRun){
       return res.status(500).send({ error: 'Could not load dungeon run.' })
@@ -83,7 +75,7 @@ verifiedRouter.post('/results', async (req, res) => {
 
 verifiedRouter.post('/confirmresults', async (req, res) => {
   try {
-    await finalizeVenture(req.adventurerID, req.body.selectedBonuses)
+    await finalizeResults(req.adventurerID, req.body.selectedBonuses)
     res.status(200).send({ result: 'okay' })
   }catch(error){
     return res.status(error.code || 500).send({ error: error.message || error })

@@ -51,6 +51,6 @@ export function getStats(adventurer){
  * @param state
  * @returns {Stats}
  */
-export function getActiveStats(adventurer, state){
+export function getActiveStats(adventurer, state = {}){
   return new Stats([adventurer.baseStats])
 }
