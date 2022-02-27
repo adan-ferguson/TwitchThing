@@ -1,10 +1,12 @@
-export default class Page extends HTMLElement {
-  constructor() {
+import MainPage from './main/mainPage.js'
+
+export default class Page extends HTMLElement{
+  constructor(){
     super()
     this.classList.add('page')
   }
 
-  get user() {
+  get user(){
     return this.app?.user
   }
 
@@ -13,16 +15,17 @@ export default class Page extends HTMLElement {
   }
 
   /**
-   * Page to go to if back button gets clicked. If null, back button will not be visible.
+   * Page to go to if back button gets clicked. If null/false, back button will not be visible.
+   * @returns {null|function(): Page}
    */
   get backPage(){
-    return null
+    return () => new MainPage()
   }
 
   /**
    * Load page content here. Return false to prevent the page from loading (for example,
    * if an error occurred).
-   * @returns {Promise<boolean>}
+   * @returns {Promise<{error,redirect}>}
    */
   async load(){
 

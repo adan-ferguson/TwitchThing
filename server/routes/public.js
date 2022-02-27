@@ -14,7 +14,6 @@ router.get('/login', (req, res) => {
 })
 
 router.get('/', (req, res) => {
-  console.log('login', req.user, req.session, req.sessionID)
   if(!req.user){
     res.redirect('/login')
   }else{

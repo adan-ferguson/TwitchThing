@@ -1,9 +1,9 @@
-export function fadeOut(el){
+export function fadeOut(el, speed = 200){
   return new Promise(res => {
     el.animate([
       { opacity: 0 }
     ], {
-      duration: 200,
+      duration: speed,
       easing: 'ease-out'
     }).onfinish = () => {
       el.style.opacity = 0

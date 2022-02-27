@@ -1,19 +1,20 @@
-import * as AnimationHelper from '../../animationHelper.js'
+import * as AnimationHelper from '../../../animationHelper.js'
 
 const HTML = `
 <div>
     <span class="name"></span> has reached level <span class="level"></span>
 </div>
 <div class="stats"></div>
+<div>Select A Bonus:</div>
 <div class="options"></div>
 `
 
-const OPTION_HTML = option => `
-+<span class="value">${option.value}</span> <span class="type">${option.type}</span>
+const STAT_HTML = (name, val)  => `
++<span class="value">${val}</span> <span class="type">${name}</span>
 `
 
 export default class LevelupSelector extends HTMLElement{
-  constructor() {
+  constructor(){
     super()
     this.innerHTML = HTML
     this.stats = this.querySelector('.stats')
@@ -34,21 +35,27 @@ export default class LevelupSelector extends HTMLElement{
     this.options.innerHTML = ''
     this.querySelector('.level').textContent = nextLevelup.level
 
-    nextLevelup.stats.forEach(stat => {
-      const statEl = document.createElement('div')
-      statEl.innerHTML = OPTION_HTML(stat)
-      this.stats.appendChild(statEl)
+    Object.entries(nextLevelup.stats).forEach(([key, val]) => {
+      this.stats.appendChild(makeStatDescription(key, val))
     })
 
     nextLevelup.options.forEach((option, i) => {
       const optionEl = document.createElement('button')
       optionEl.classList.add('option')
-      optionEl.innerHTML = OPTION_HTML(option)
+      Object.entries(option).forEach(([key, val]) => {
+        optionEl.appendChild(makeStatDescription(key, val))
+      })
       optionEl.addEventListener('click', () => {
         this._selectOption(i)
       })
       this.options.appendChild(optionEl)
     })
+
+    function makeStatDescription(key, val){
+      const optionEl = document.createElement('div')
+      optionEl.innerHTML = STAT_HTML(key, val)
+      return optionEl
+    }
   }
 
   _selectOption(i){

@@ -1,7 +1,7 @@
 import express from 'express'
 import { Magic } from '@magic-sdk/admin'
 import config from '../config.js'
-import * as Users from '../collections/users.js'
+import Users from '../collections/users.js'
 import passport from 'passport'
 import { Strategy } from 'passport-magic'
 
@@ -63,7 +63,7 @@ router.get('/newuser', async (req, res) => {
   let err = null
   if(req.query && req.query.displayname){
     err = await Users.setDisplayname(req.user, req.query.displayname)
-    if(!err) {
+    if(!err){
       return res.redirect('/game')
     }
   }
@@ -71,7 +71,7 @@ router.get('/newuser', async (req, res) => {
 })
 
 router.post('', async (req, res) => {
-  res.send(await Users.loadGameData(req.user))
+  res.send(Users.gameData(req.user))
 })
 
 export default router

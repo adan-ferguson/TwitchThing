@@ -1,17 +1,23 @@
 import * as Loader from '../loader.js'
 import MainPage from './pages/main/mainPage.js'
+import fizzetch from '../fizzetch.js'
 
 import './header.js'
-import './adventurer/well.js'
+import './pages/adventurer/adventurerPane.js'
+import './pages/combat/fighterPane.js'
+import './pages/combat/feed.js'
+import './pages/dungeon/adventurerPane.js'
 import './pages/dungeon/event.js'
 import './pages/dungeon/state.js'
-import fizzetch from '../fizzetch.js'
+import './xpBar.js'
+import './hpBar.js'
+import './loadout.js'
 
 const HTML = `
 <di-header></di-header>
 <div class="content"></div>
 `
-export default class App extends HTMLElement {
+export default class App extends HTMLElement{
 
   constructor(user){
     super()
@@ -43,10 +49,15 @@ export default class App extends HTMLElement {
     }
 
     this.currentPage = page
-    const error = await page.load()
-    if(error){
-      this.setPage(new MainPage({ error }))
+    const { error } = (await page.load() || {})
+
+    if(this.currentPage !== page){
+      // The page.load() caused a redirect, so this setPage is no longer relevant.
       return
+    }
+
+    if(error){
+      return this.setPage(new MainPage({ error }))
     }
 
     this.querySelector(':scope > .content').appendChild(page)

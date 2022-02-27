@@ -1,7 +1,7 @@
 const DEFAULTS = {
   direction: 'up',
   color: 'black',
-  distance: 25,
+  distance: 40,
   duration: 3000
 }
 
@@ -9,7 +9,7 @@ const EFFECT_HTML = (text, color) => `
 <span style='color:${color};'>${text}</span>
 `
 
-export default class FlyingTextEffect {
+export default class FlyingTextEffect{
 
   constructor(origin, text, options = {}){
 
@@ -32,7 +32,7 @@ export default class FlyingTextEffect {
     this.el.style.left = startingPosition.x + 'px'
     this.el.style.top = startingPosition.y + 'px'
 
-    document.querySelector('#effects').appendChild(this.el)
+    document.querySelector('body').appendChild(this.el)
 
     requestAnimationFrame(() => {
       this._start()
@@ -64,7 +64,3 @@ function getStartingPosition(origin, direction){
     }
   }
 }
-
-window.FlyingTextEffect = FlyingTextEffect
-
-export { FlyingTextEffect }

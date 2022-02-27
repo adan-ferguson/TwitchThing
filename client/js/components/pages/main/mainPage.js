@@ -18,7 +18,7 @@ const HTML = `
 </div>
 `
 
-export default class MainPage extends Page {
+export default class MainPage extends Page{
 
   constructor({ error } = {}){
     super()
@@ -29,21 +29,28 @@ export default class MainPage extends Page {
     // TODO: handle error
   }
 
+  get backPage(){
+    return null
+  }
+
   async load(){
     const myContent = await fizzetch('/game/main')
     if(myContent.error){
       this._showError(myContent.error, true)
     }else{
-      await this._populateAdventurers(myContent.adventurers)
+      this._populateAdventurers(myContent.adventurers)
+      myContent.dungeonRuns.forEach(dr => {
+        this._dungeonRunUpdate(dr)
+      })
     }
-    getSocket().on('venture update', this._ventureUpdate)
+    getSocket().on('dungeon run update', this._dungeonRunUpdate)
   }
 
   async unload(){
-    getSocket().off('venture update', this._ventureUpdate)
+    getSocket().off('dungeon run update', this._dungeonRunUpdate)
   }
 
-  async _populateAdventurers(adventurers = []){
+  _populateAdventurers(adventurers = []){
     const adventurerList = this.querySelector('.adventurer-list')
     const rows = []
     adventurers.forEach(adventurer => {
@@ -94,11 +101,10 @@ export default class MainPage extends Page {
 
   }
 
-  _ventureUpdate = venture => {
-    const row = this.querySelector(`di-main-adventurer-row[adventurer-id="${venture.adventurerID}"]`)
+  _dungeonRunUpdate = dungeonRun => {
+    const row = this.querySelector(`di-main-adventurer-row[adventurer-id="${dungeonRun.adventurerID}"]`)
     if(row){
-      row.adventurer.currentVenture = venture
-      row.update()
+      row.setDungeonRun(dungeonRun)
     }
   }
 }

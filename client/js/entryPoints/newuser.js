@@ -14,6 +14,6 @@ diform.addInput({
 document.querySelector('.new-user-form').appendChild(diform)
 
 if(window.ERROR){
-  diform.addError(window.ERROR)
+  diform.error(window.ERROR)
 }
 

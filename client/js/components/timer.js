@@ -4,7 +4,7 @@ import dateformat from 'dateformat'
  * Timer that ticks up in seconds.
  * TODO: more options at we required more timer functionality
  */
-export default class Timer extends HTMLElement {
+export default class Timer extends HTMLElement{
 
   constructor(){
     super()

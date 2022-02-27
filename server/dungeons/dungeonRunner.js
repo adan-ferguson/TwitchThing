@@ -1,18 +1,52 @@
-import * as DungeonRuns from '../collections/dungeonRuns.js'
-import { advanceVentures } from './ventures.js'
-import { generateEvent } from './eventPlanner.js'
+import DungeonRuns from '../collections/dungeonRuns.js'
+import Combats from '../collections/combats.js'
+import Adventurers from '../collections/adventurers.js'
+import { addRewards, calculateResults } from './results.js'
+import { generateEvent } from './dungeonEventPlanner.js'
 import { emit } from '../socketServer.js'
-import { findOne } from '../collections/adventurers.js'
+import { getActiveStats } from '../../game/adventurer.js'
 
-const TICK_TIME = 5000
+const BASE_EVENT_TIME = 2000
 
 let running = false
-export function start(){
+let activeRuns = {}
+
+export async function start(){
+
   if(running){
     return
   }
+
   running = true
-  advanceAllRuns()
+  const dungeonRuns = await DungeonRuns.find({
+    finished: false
+  })
+  const adventurers = await Adventurers.findByIDs(dungeonRuns.map(dr => dr.adventurerID))
+
+  dungeonRuns.forEach(dr => {
+    const adventurer = adventurers.find(adv => adv._id.equals(dr.adventurerID))
+    if(!adventurer){
+      console.error('Dungeon run in limbo, no adventurer')
+      return
+    }
+    activeRuns[dr._id] = new DungeonRunInstance(dr, adventurer)
+  })
+
+  advanceTime(0)
+
+  async function advanceTime(ms){
+    for(const id in activeRuns){
+      const activeRun = activeRuns[id]
+      activeRun.timeSinceLastEvent += ms
+      if(activeRun.currentEvent.duration <= activeRun.timeSinceLastEvent){
+        await activeRun.advance()
+      }
+    }
+    const before = Date.now()
+    setTimeout(() => {
+      advanceTime(Date.now() - before)
+    })
+  }
 }
 
 /**
@@ -22,24 +56,113 @@ export function start(){
  * @param dungeonID
  */
 export async function addRun(adventurerID, dungeonID){
-  return await DungeonRuns.create(adventurerID, dungeonID)
+  const adventurerDoc = await Adventurers.findOne(adventurerID)
+  const drDoc = await DungeonRuns.save({
+    adventurerID,
+    dungeonID,
+    events: [{
+      message: `${adventurerDoc.name} enters the dungeon.`,
+      duration: BASE_EVENT_TIME
+    }]
+  })
+  Adventurers.update(adventurerID, {
+    dungeonRunID: drDoc._id
+  })
+  activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, adventurerDoc)
 }
 
-async function advanceAllRuns(){
+class DungeonRunInstance{
 
-  if(!running){
-    return
+  constructor(doc, adventurer){
+    this.doc = doc
+    this.adventurer = adventurer
+    this.timeSinceLastEvent = 0
+
+    if(!this.currentEvent){
+      this.doc.events = [{
+        message: `${this.adventurer.name} enters the dungeon.`,
+        duration: BASE_EVENT_TIME
+      }]
+    }
   }
 
-  process.stdout.write('.')
-  const runs = await DungeonRuns.loadAllInProgress()
-  // TODO: calculate inter-adventurer encounters
-  for (const run of runs) {
-    await DungeonRuns.advance(run)
+  get currentEvent(){
+    return this.doc.events.at(-1)
   }
-  await advanceVentures(runs.map(run => run._id))
 
-  setTimeout(() => {
-    advanceAllRuns()
-  }, TICK_TIME)
+  get adventurerStats(){
+    return getActiveStats(this.adventurer, this.doc.adventurerState)
+  }
+
+  async loadAdventurer(){
+    return this.adventurer = await Adventurers.findOne(this.doc.adventurerID)
+  }
+
+  async advance(){
+    process.stdout.write('.')
+    if(this.currentEvent.pending){
+      await this._continueEvent(this.currentEvent)
+    }else{
+      await this._newEvent()
+    }
+    if(!this.currentEvent.pending){
+      this._resolveEvent(this.currentEvent)
+    }
+    emit(this.doc.adventurerID, 'dungeon run update', this.doc)
+    DungeonRuns.save(this.doc)
+  }
+
+  async _continueEvent(event){
+    if(event.combatID){
+      await this._applyCombatResult(event)
+    }
+  }
+
+  async _newEvent(){
+    const adventurer = this.adventurer
+    const room = this.currentEvent.stairs ? 1 : this.doc.room + 1
+    const floor = this.currentEvent.stairs ? this.doc.floor + 1 : this.doc.floor
+    const nextEvent = {
+      room: room,
+      floor: floor,
+      startTime: this.doc.elapsedTime,
+      duration: BASE_EVENT_TIME / this.adventurerStats.getPctStatMod('adventuringSpeed'),
+      ...(await generateEvent(adventurer, this.doc, room, floor))
+    }
+    this.doc.events.push(nextEvent)
+    this.timeSinceLastEvent = 0
+  }
+
+  async _resolveEvent(event){
+    if(event.adventurerState){
+      this.doc.adventurerState = event.adventurerState
+    }
+    if(event.rewards){
+      this.doc.rewards = addRewards(this.doc.rewards, event.rewards)
+    }
+    if(event.runFinished){
+      this.doc.finished = true
+      this.doc.results = calculateResults(this.adventurer, this.doc.rewards)
+      delete activeRuns[this.doc._id]
+    }
+    this.doc.room = event.room
+    this.doc.floor = event.floor
+    this.doc.elapsedTime += event.duration
+  }
+
+  async _applyCombatResult(event){
+    const combat = await Combats.findOne(event.combatID)
+    const fighter = combat.fighter1.data._id.equals(this.doc.adventurerID) ? combat.fighter1 : combat.fighter2
+    const enemy = combat.fighter1.data._id.equals(this.doc.adventurerID) ? combat.fighter2 : combat.fighter1
+    if(!fighter.endState.hp){
+      event.runFinished = true
+      event.message = `${fighter.data.name} has fallen, and got kicked out of the dungeon by some mysterious entity.`
+    }else{
+      event.rewards = enemy.data.rewards
+      event.message = `${fighter.data.name} defeated the ${enemy.data.name}.`
+    }
+    event.adventurerState = fighter.endState
+    event.pending = false
+    event.duration += 8000
+  }
 }

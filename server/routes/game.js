@@ -1,7 +1,11 @@
 import express from 'express'
-import * as Users from '../collections/users.js'
+import db from '../db.js'
+import Users from '../collections/users.js'
+import Combats from '../collections/combats.js'
 
 import adventurerRouter from './game/adventurer.js'
+import Adventurers from '../collections/adventurers.js'
+import DungeonRuns from '../collections/dungeonRuns.js'
 
 const router = express.Router()
 
@@ -19,7 +23,7 @@ router.use(async (req, res, next) => {
 
 // Make sure we're allowed to play, and if not then redirect somewhere.
 router.use((req, res, next) => {
-  let redirect = false
+  let redirect = ''
   if(!Users.isSetupComplete(req.user)){
     redirect = '/user/newuser'
   }
@@ -33,25 +37,16 @@ router.use((req, res, next) => {
   next()
 })
 
+router.use('/adventurer', adventurerRouter)
+
 router.post('/main', async(req, res) => {
   try {
-    const payload = await Users.loadData(req.user, {
-      adventurers: {
-        name: 1,
-        level: 1,
-        currentVenture: 1
-      }
-    })
-    res.send(payload)
+    const adventurers = await Adventurers.findByIDs(req.user.adventurers)
+    const dungeonRuns = await DungeonRuns.findByIDs(adventurers.map(adv => adv.dungeonRunID).filter(id => id))
+    res.send({  adventurers, dungeonRuns })
   }catch(ex){
     return res.status(ex.code || 401).send(ex.error || ex)
   }
-})
-
-router.use('/adventurer', adventurerRouter)
-
-router.get('/', async(req, res) => {
-  res.render('game')
 })
 
 router.post('/newadventurer', async(req, res) => {
@@ -64,5 +59,22 @@ router.post('/newadventurer', async(req, res) => {
   }
 })
 
+router.post('/combat/:combatID', async(req, res) => {
+  try {
+    const combat = await Combats.findOne(db.id(req.params.combatID))
+    if(!combat){
+      return res.status(404).send('Combat not found.')
+    }
+    const currentTime = Date.now()
+    const state = combat.startTime + combat.duration < currentTime ? { status: 'finished' } : { status: 'live', currentTime }
+    res.send({ combat, state })
+  }catch(ex){
+    return res.status(ex.code || 401).send(ex.error || ex)
+  }
+})
+
+router.get('/', async(req, res) => {
+  res.render('game')
+})
 
 export default router

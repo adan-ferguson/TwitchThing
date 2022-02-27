@@ -1,17 +1,17 @@
 import SettingsPage from './pages/settings.js'
 import * as Dropdown  from './dropdown.js'
 import SimpleModal from './simpleModal.js'
-import { levelToXp } from '/game/user.js'
+import { levelToXp, xpToLevel } from '/game/user.js'
 
 const HTML = `
 <button class="back-button hidden"><- Back</button>
 <div>
     <div class="displayname"></div>
-    <di-bar class="user-bar clickable"></di-bar>
+    <di-xp-bar class="clickable"></di-xp-bar>
 </div>
 `
 
-export default class Header extends HTMLElement {
+export default class Header extends HTMLElement{
 
   constructor(){
     super()
@@ -20,9 +20,10 @@ export default class Header extends HTMLElement {
     this.backButton = this.querySelector('.back-button')
     this.backButton.addEventListener('click', () => this.app.back())
 
-    this.userBar = this.querySelector('.user-bar')
+    this.xpBar = this.querySelector('di-xp-bar')
+    this.xpBar.setLevelFunctions(xpToLevel, levelToXp)
 
-    Dropdown.create(this.userBar, {
+    Dropdown.create(this.xpBar, {
       Settings: () => this.app.setPage(new SettingsPage()),
       Logout: () => confirmLogout()
     })
@@ -39,29 +40,14 @@ export default class Header extends HTMLElement {
   }
 
   async addUserXp(xpToAdd){
-    while(xpToAdd > 0){
-      let toNextLevel = this.userBar.max - this.user.xp
-      if (xpToAdd >= toNextLevel) {
-        await this.userBar.animateValue(this.userBar.max)
-        // TODO: flying text "Level Up!"
-        // TODO: probably need a temp user
-        this.user.xp += toNextLevel
-        this.user.level++
-        this.updateUserBar()
-        xpToAdd -= toNextLevel
-      }else{
-        await this.userBar.animateValue(this.user.xp + xpToAdd)
-        xpToAdd = 0
-      }
-    }
+    this.user.xp += xpToAdd
+    this.user.level = xpToLevel(this.user.xp)
+    this.xpBar.setValue(this.user.xp, { animate: true })
   }
 
   updateUserBar(){
     this.querySelector('.displayname').textContent = this.user.displayname
-    this.userBar.setBadge(this.user.level)
-    this.userBar.setRange(levelToXp(this.user.level), levelToXp(this.user.level + 1))
-    this.userBar.setLabel('xp')
-    this.userBar.setValue(this.user.xp)
+    this.xpBar.setValue(this.user.xp)
   }
 }
 

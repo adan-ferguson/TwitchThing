@@ -1,6 +1,5 @@
-import db from '../db.js'
-import * as Adventurers from './adventurers.js'
-import { emit } from '../socketServer.js'
+import Adventurers from './adventurers.js'
+import Collection from './collection.js'
 
 const DEFAULTS = {
   magicID: null,
@@ -14,68 +13,31 @@ const DEFAULTS = {
   adventurers: []
 }
 
-export async function save(userDoc){
-  return await db.save(fix(userDoc), 'users')
-}
+const Users = new Collection('users', DEFAULTS)
 
-export async function findOne(queryOrID, projection = {}){
-  return await db.findOne('users', queryOrID, projection, DEFAULTS)
-}
-
-export async function update(_id, $set = {}){
-  return await db.conn().collection('users').updateOne({ _id }, { $set })
-}
-
-// emit(eventName, data){
-//   log(this.username, eventName, data)
-//   emit(this.username, eventName, data)
-// }
-
-export async function loadFromMagicID(magicID){
-  const userDoc = await db.conn().collection('users').findOne({
+Users.loadFromMagicID = async function(magicID){
+  return await Users.findOne({
     magicID
   })
-  if(!userDoc){
-    return null
-  }
-  return fix(userDoc)
 }
 
-export async function loadData(userDoc, searchObj = {}){
-  const data = {}
-  if(searchObj.adventurers){
-    data.adventurers = await Adventurers.loadByIDs(userDoc.adventurers, searchObj.adventurers)
-  }
-  return data
-}
-
-export async function create(magicID, iat, email){
-  const userDoc = fix({
+Users.create = async function(magicID, iat, email){
+  return await Users.save({
     magicID,
     iat,
     auth: { type: 'email', email }
   })
-  await save(userDoc)
-  return userDoc
 }
 
-export async function login(userDoc, iat){
+Users.login = async function(userDoc, iat){
   if(userDoc.iat >= iat){
     throw `Replay attack detected for user ${userDoc.magicID}.`
   }
   userDoc.iat = iat
-  await save(userDoc)
+  await Users.save(userDoc)
 }
 
-export async function loadGameData(userDoc){
-  return {
-    displayname: userDoc.displayname,
-    xp: userDoc.xp,
-    level: userDoc.level
-  }
-}
-
-export async function setDisplayname(userDoc, displayname){
+Users.setDisplayname = async function(userDoc, displayname){
   displayname = displayname + ''
   if(displayname.length <= 1){
     return 'Display name must be between 2 and 15 letters.'
@@ -83,15 +45,15 @@ export async function setDisplayname(userDoc, displayname){
   if(displayname.length > 15){
     return 'Display name must be between 2 and 15 letters.'
   }
-  const user = await db.conn().collection('users').findOne({ displayname })
+  const user = await Users.findOne({ displayname })
   if(user){
     return `Display name '${displayname}' is taken.`
   }
   userDoc.displayname = displayname
-  await save(userDoc)
+  await Users.save(userDoc)
 }
 
-export async function newAdventurer(userDoc, adventurername){
+Users.newAdventurer = async function(userDoc, adventurername){
   // TODO: check for slots
   const availableSlots = 1 - userDoc.adventurers.length
   if(availableSlots <= 0){
@@ -99,14 +61,20 @@ export async function newAdventurer(userDoc, adventurername){
   }
   const adventurerDoc = await Adventurers.createNew(userDoc._id, adventurername)
   userDoc.adventurers.push(adventurerDoc._id)
-  await save(userDoc)
+  await Users.save(userDoc)
   return adventurerDoc
 }
 
-export function isSetupComplete(userDoc){
+Users.isSetupComplete = function isSetupComplete(userDoc){
   return userDoc.displayname ? true : false
 }
 
-function fix(userDoc, projection = null){
-  return db.fix(userDoc, DEFAULTS, projection)
+Users.gameData = function(userDoc){
+  const filteredData = { ...userDoc }
+  delete filteredData.magicID
+  delete filteredData.iat
+  delete filteredData.auth
+  return filteredData
 }
+
+export default Users

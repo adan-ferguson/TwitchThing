@@ -21,9 +21,13 @@ export default class List extends HTMLElement{
     this.itemsList = this.querySelector('.items')
     this._itemsCache = []
     this._page = 1
-    this._pageSizeStandard = Math.floor(this.getAttribute('page-size') || 10)
-    this._pageSizeMobile = Math.floor(this.getAttribute('m-page-size') || 5)
     this._isMobile = mobileMode()
+
+    this._options = {
+      paginate: true,
+      pageSize: 10,
+      mobilePageSize: null
+    }
 
     window.addEventListener('resize', () => {
       if(this._isMobile !== mobileMode()){
@@ -53,11 +57,18 @@ export default class List extends HTMLElement{
   }
 
   get _maxPage(){
-    return Math.floor(1 + this._itemsCache.length / this._pageSizeStandard)
+    return this._options.paginate ? Math.floor(1 + this._itemsCache.length / this._pageSize) : 1
   }
 
   get _pageSize(){
-    return mobileMode ? this._pageSizeMobile : this._pageSizeStandard
+    return mobileMode && this._options.mobilePageSize ? this._options.mobilePageSize : this._options.pageSize
+  }
+
+  setOptions(options) {
+    for (let key in options) {
+      this._options[key] = options[key]
+    }
+    this._update()
   }
 
   setItems(items){
@@ -67,14 +78,23 @@ export default class List extends HTMLElement{
 
   _update(){
 
+    this.isMobile = mobileMode()
+
+    if(!this._options.paginate){
+      this.querySelector('.pagination-buttons').classList.add('displaynone')
+    }
+
     this.querySelector('.first').disabled = this._page === 1 ? true : false
     this.querySelector('.prev').disabled = this._page === 1 ? true : false
     this.querySelector('.next').disabled = this._page === this._maxPage ? true : false
     this.querySelector('.last').disabled = this._page === this._maxPage ? true : false
 
     this.itemsList.innerHTML = ''
-    const start = (this._page - 1) * this._pageSizeStandard
-    const toDisplay = this._itemsCache.slice(start, start + this._pageSizeStandard - 1)
+    const start = (this._page - 1) * this._pageSize
+    const toDisplay = this._itemsCache.slice(start, start + this._pageSize - 1)
+    toDisplay.forEach(el => {
+      el.style.flexBasis = `${100 / this._pageSize}%`
+    })
     this.itemsList.append(...toDisplay)
   }
 }

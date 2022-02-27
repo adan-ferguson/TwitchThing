@@ -4,34 +4,38 @@ import fizzetch from '../../../fizzetch.js'
 import DungeonPage from '../dungeon/dungeonPage.js'
 import MainPage from '../main/mainPage.js'
 import Modal from '../../modal.js'
-import LevelupSelector from '../../adventurer/levelupSelector.js'
+import LevelupSelector from './levelupSelector.js'
 import { show as showLoader } from '../../../loader.js'
 
 const HTML = `
 <div class='flex-columns'>
-  <di-adventurer-well></di-adventurer-well>
+  <div class='content-well'>
+    <di-adventurer-pane></di-adventurer-pane>
+  </div>
   <div class='content-well results'>
-    <div class="title">Results</div>
-    <div class='results-list'></div>
-    <button class="done hidden">Okay</button>
+    <div class='flex-rows'>
+      <div class="title">Results</div>
+      <div class='results-list'></div>
+      <button class="done hidden">Okay</button>
+    </div>
   </div>
 </div>
 `
 
-export default class ResultsPage extends Page {
+export default class ResultsPage extends Page{
 
   constructor(adventurerID){
     super()
     this.innerHTML = HTML
     this.adventurerID = adventurerID
-    this.adventurerWell = this.querySelector('di-adventurer-well')
+    this.adventurerPane = this.querySelector('di-adventurer-pane')
     this.results = this.querySelector('.results-list')
     this.doneButton = this.querySelector('.done')
   }
 
   async load(){
 
-    const { venture, adventurer, error } = await fizzetch(`/game/adventurer/${this.adventurerID}/results`)
+    const { dungeonRun, adventurer, error } = await fizzetch(`/game/adventurer/${this.adventurerID}/results`)
     if(error){
       if(error.targetPage === 'Adventurer'){
         this.app.setPage(new AdventurerPage(this.adventurerID))
@@ -43,24 +47,24 @@ export default class ResultsPage extends Page {
     }
 
     this.selectedBonuses = []
-    this.adventurerWell.setAdventurer(adventurer)
-    this.venture = venture
+    this.adventurerPane.setAdventurer(adventurer)
+    this.dungeonRun = dungeonRun
 
     wait(500).then(async () => {
       await Promise.all([this._adventurerXp(), this._userXp(), this._loot()])
-      this._enableButton(adventurer, this.venture.results.levelups)
+      this._enableButton(adventurer, this.dungeonRun.results.levelups)
     })
   }
 
   async _adventurerXp(){
     const xpRow = document.createElement('div')
-    xpRow.textContent = `+${this.venture.results.rewards.xp} xp`
+    xpRow.textContent = `+${this.dungeonRun.results.rewards.xp} xp`
     this.results.appendChild(xpRow)
-    await this.adventurerWell.statsbox.addXp(this.venture.results.rewards.xp)
+    await this.adventurerPane.addXp(this.dungeonRun.results.rewards.xp)
   }
 
   async _userXp(){
-    await this.app.header.addUserXp(this.venture.results.rewards.xp)
+    await this.app.header.addUserXp(this.dungeonRun.results.rewards.xp)
   }
 
   async _loot(){
@@ -102,7 +106,7 @@ export default class ResultsPage extends Page {
   }
 }
 
-function wait(time = 0) {
+function wait(time = 0){
   return new Promise(res => {
     setTimeout(res, time)
   })

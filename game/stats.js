@@ -1,37 +1,35 @@
-const BASE_HEALTH = 90
-const HEALTH_PER_LEVEL = 10
+export default class Stats{
 
-export default class Stats {
-
-  constructor(character){
-    this.character = character
+  constructor(statAffectors){
+    this._statAffectors = statAffectors
   }
 
-  get maxHealth(){
-    const baseVal = BASE_HEALTH + this.character.level * HEALTH_PER_LEVEL
-    return Math.ceil(baseVal + this.getStat('maxHealth'))
+  getCompositeStat(type, base = 0){
+    return this.getFlatStatMod(type, base) * this.getPctStatMod(type + 'Pct')
   }
 
-  get statAffectors(){
-    return this.character.innateBonuses.concat(this.character.filteredItems.map(item => item.itemDefinition))
+  getFlatStatMod(type, base = 0){
+    return this._statAffectors.reduce((val, statAffector) => {
+      return val + (statAffector[type] || 0)
+    }, base)
   }
 
-  getStat(type){
-    let val = this._getFlatStatMod(type)
-    val += this.character.level * this._getFlatStatMod(type + 'PerLevel')
-    val *= this._getPctStatMod(type + 'Pct')
-    return val
+  getPctStatMod(type, base = 1){
+    return this._statAffectors.reduce((val, statAffector) => {
+      return val * (statAffector[type] || 1)
+    }, base)
   }
+}
 
-  _getFlatStatMod(type){
-    return this.statAffectors.reduce((val, statAffector) => {
-      return val + (statAffector.statMods[type] || 0)
-    }, 0)
-  }
-
-  _getPctStatMod(type){
-    return this.statAffectors.reduce((val, statAffector) => {
-      return val * (statAffector.statMods[type] || 1)
-    }, 1)
-  }
+export function mergeStats(...statsObjs){
+  const combined = {}
+  statsObjs.forEach(obj => {
+    for(let key in obj){
+      if(!combined[key]){
+        combined[key] = 0
+      }
+      combined[key] += obj[key]
+    }
+  })
+  return combined
 }

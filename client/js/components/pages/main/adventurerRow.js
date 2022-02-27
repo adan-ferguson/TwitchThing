@@ -10,11 +10,11 @@ const HTML = `
 </div>
 `
 
-export default class AdventurerRow extends HTMLElement {
+export default class AdventurerRow extends HTMLElement{
   constructor(adventurer, setPageFn){
     super()
 
-    if(!adventurer) {
+    if(!adventurer){
       this.innerHTML = 'Create a new Adventurer'
       return
     }
@@ -22,37 +22,36 @@ export default class AdventurerRow extends HTMLElement {
     this.setAttribute('adventurer-id', adventurer._id)
     this.innerHTML = HTML
     this.adventurer = adventurer
-    this.update()
+
+    this.querySelector('.name').textContent = this.adventurer.name
+    this.querySelector('.level').textContent = this.adventurer.level
+
     this._events(setPageFn)
   }
 
-  update(){
-    const adventurer = this.adventurer
+  setDungeonRun(dungeonRun){
+
+    this.dungeonRun = dungeonRun
+
     const timer = this.querySelector('di-timer')
-    this.querySelector('.name').textContent = adventurer.name
-    this.querySelector('.level').textContent = adventurer.level
     this.querySelector('.status').textContent = statusText()
     updateTimer()
 
     function updateTimer(){
-      if(adventurer.currentVenture && !adventurer.currentVenture.finished){
-        timer.setTimeSince(adventurer.currentVenture.startTime)
+      if(!dungeonRun.finished){
+        timer.time = dungeonRun.elapsedTime
         timer.classList.remove('displaynone')
-        if(adventurer.currentVenture.finished){
-          timer.stop()
-        }else{
-          timer.start()
-        }
+        timer.start()
       }else{
         timer.classList.add('displaynone')
       }
     }
 
     function statusText(){
-      if(!adventurer.currentVenture){
+      if(!dungeonRun){
         return ''
       }
-      return adventurer.currentVenture.finished ? 'Finished' : 'Venturing'
+      return dungeonRun.finished ? 'Finished' : 'In Dungeon Run'
     }
   }
 
@@ -65,8 +64,8 @@ export default class AdventurerRow extends HTMLElement {
   _events(setPageFn){
     this.addEventListener('click', () => {
       let page
-      if(this.adventurer.currentVenture){
-        if(this.adventurer.currentVenture.finished){
+      if(this.dungeonRun){
+        if(this.dungeonRun.finished){
           page = new ResultsPage(this.adventurer._id)
         }else{
           page = new DungeonPage(this.adventurer._id)
