@@ -251,19 +251,18 @@ Milestone 3
 ++ Combat should have full fighter documents so replays work
 -- Share button for combat replays
 
+- Clear all data on live
+
 + Actually DON'T derive stats
 ++ Store stats obj in adventurers (and fighters later)
 ++ HP and ATK grow% per level
 ++ Levelup screen shows hp + damage increase amounts
 ++ Choose bonuses (hp or atk)
--- Test
+++ Test
 
-- Remove ventures
--- Reorganize a bunch of stuff
--- Make everything work again
-
-- Admin page
--- Clear All Data button
++ Remove ventures
+++ Reorganize a bunch of stuff
+++ Make everything work again
 
 - Collections objects
 -- Reduce usage of projections since they just cause bugs mostly
@@ -281,6 +280,8 @@ To Fix:
 
 TODO Later
 -----------
+- Admin page
+- Fix errors + targetPage redirects
 - Variable adventure speed
 - Event log
 - View previous dungeon runs/ventures

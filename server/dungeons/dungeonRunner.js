@@ -108,22 +108,26 @@ class DungeonRunInstance{
     if(!this.currentEvent.pending){
       this._resolveEvent(this.currentEvent)
     }
+    emit(this.doc.adventurerID, 'dungeon run update', this.doc)
+    DungeonRuns.save(this.doc)
   }
 
-  _continueEvent(event){
-    if(event.combat){
-      this._applyCombatResult(event)
+  async _continueEvent(event){
+    if(event.combatID){
+      await this._applyCombatResult(event)
     }
   }
 
   async _newEvent(){
     const adventurer = this.adventurer
+    const room = this.currentEvent.stairs ? 1 : this.doc.room + 1
+    const floor = this.currentEvent.stairs ? this.doc.floor + 1 : this.doc.floor
     const nextEvent = {
-      room: this.doc.room,
-      floor: this.doc.floor,
+      room: room,
+      floor: floor,
       startTime: this.doc.elapsedTime,
       duration: BASE_EVENT_TIME / this.adventurerStats.getPctStatMod('adventuringSpeed'),
-      ...(await generateEvent(adventurer, this.doc))
+      ...(await generateEvent(adventurer, this.doc, room, floor))
     }
     this.doc.events.push(nextEvent)
     this.timeSinceLastEvent = 0
@@ -136,23 +140,18 @@ class DungeonRunInstance{
     if(event.rewards){
       this.doc.rewards = addRewards(this.doc.rewards, event.rewards)
     }
-    if(event.finished){
+    if(event.runFinished){
       this.doc.finished = true
       this.doc.results = calculateResults(this.adventurer, this.doc.rewards)
       delete activeRuns[this.doc._id]
     }
-    if(event.stairs){
-      this.doc.floor++
-      this.doc.room = 0
-    }
-    this.doc.room++
+    this.doc.room = event.room
+    this.doc.floor = event.floor
     this.doc.elapsedTime += event.duration
-    emit(this.doc.adventurerID, 'dungeon run update', this.doc)
-    DungeonRuns.save(this.doc)
   }
 
   async _applyCombatResult(event){
-    const combat = await Combats.findOne(event.combat.combatID)
+    const combat = await Combats.findOne(event.combatID)
     const fighter = combat.fighter1.data._id.equals(this.doc.adventurerID) ? combat.fighter1 : combat.fighter2
     const enemy = combat.fighter1.data._id.equals(this.doc.adventurerID) ? combat.fighter2 : combat.fighter1
     if(!fighter.endState.hp){

@@ -85,6 +85,9 @@ verifiedRouter.post('/confirmresults', async (req, res) => {
 verifiedRouter.post('', async(req, res, next) => {
   try {
     const adventurer = await Adventurers.findOne(req.adventurerID)
+    if(adventurer.dungeonRunID){
+      return res.status(401).send({ error: 'Adventurer is currently in a dungeon run.', targetPage: 'Dungeon' })
+    }
     res.send({ adventurer })
   }catch(ex){
     return res.status(ex.code || 401).send(ex.error || ex)

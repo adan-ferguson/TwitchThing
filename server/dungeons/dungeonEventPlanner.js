@@ -4,9 +4,11 @@ import { generateCombat } from '../combat/combat.js'
 /**
  * @param adventurer
  * @param dungeonRun
+ * @param room
+ * @param floor
  * @returns {Event|null} If it's a new event, return it, otherwise return null.
  */
-export async function generateEvent(adventurer, dungeonRun){
+export async function generateEvent(adventurer, dungeonRun, room, floor){
 
   if(dungeonRun.events.length >= 100){
     return {
@@ -15,7 +17,7 @@ export async function generateEvent(adventurer, dungeonRun){
     }
   }
 
-  if(foundStairs(dungeonRun.floor, dungeonRun.room)){
+  if(foundStairs(floor, room)){
     return {
       stairs: true,
       message: `${adventurer.name} found the stairs and goes deeper.`
@@ -23,33 +25,31 @@ export async function generateEvent(adventurer, dungeonRun){
   }
 
   if(foundMonster(dungeonRun)){
-    const monster = await generateMonster(dungeonRun.floor)
+    const monster = await generateMonster(floor)
     const combat = await generateCombat(adventurer, monster, dungeonRun.adventurerState)
     return {
       duration: combat.duration,
       pending: true,
-      combat: combat._id
+      combatID: combat._id,
+      monster: true
     }
   }
 
   return {
     rewards: {
-      xp: 20 + Math.floor(11 * Math.random())
+      xp: Math.floor(3 * dungeonRun.floor + 3 * dungeonRun.floor * Math.random())
     },
     message: `${adventurer.name} finds an ancient tablet and learns various things.`
   }
 }
 
 function foundStairs(floor, room){
-  if(room < 10){
-    return
-  }
-  const stairsChance = room / (10 + floor)
+  const stairsChance = (-5 + room) / (5 + floor)
   return Math.random() < stairsChance
 }
 
 function foundMonster(dungeonRun){
-  const monsterChance = roomsSinceMonster() / 25
+  const monsterChance = (-3 + roomsSinceMonster()) / 20
   return Math.random() < monsterChance
   function roomsSinceMonster(){
     let i

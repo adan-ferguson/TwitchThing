@@ -1,15 +1,16 @@
 export async function generateMonster(floor){
+  const power = floor * (floor + 1) / 2
   return {
     type: 'monster',
     name: 'Bat',
     loadout: [],
     rewards: {
-      xp: floor * 50
+      xp: Math.ceil(6 + power * 12)
     },
     baseStats: {
-      hpMax: 20 + 10 * floor,
-      attack: 4 + 1 * floor,
-      speed: 1.2 + 0.1 * floor
+      hpMax: Math.ceil(13 + 4 * power),
+      attack: Math.ceil(4 + 1.06 * power),
+      speed: Math.ceil(1.2 + 0.04 * power)
     }
   }
 }

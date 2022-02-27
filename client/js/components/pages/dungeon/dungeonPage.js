@@ -34,21 +34,18 @@ export default class DungeonPage extends Page{
 
   async load(){
 
-    // TODO: handle ventures
     const { adventurer, dungeonRun, error } = await fizzetch(`/game/adventurer/${this.adventurerID}/dungeonrun`)
 
     if(error){
       throw error
     }
 
-    if(dungeonRun.currentEvent.combat?.state === 'running'){
-      return { redirect: new CombatPage(dungeonRun.currentEvent.combat.combatID, this) }
-    }
-
     this.adventurerPane.setAdventurer(adventurer)
-    this.adventurerPane.setState(dungeonRun.currentEvent.adventurerState)
-    this.stateEl.updateDungeonRun(dungeonRun)
-    this.eventEl.update(dungeonRun.currentEvent)
+
+    requestAnimationFrame(() => {
+      // Let the page attach so it can redirect
+      this._parseDungeonUpdate(dungeonRun)
+    })
 
     getSocket()
       .emit('view dungeon run', {
@@ -67,20 +64,22 @@ export default class DungeonPage extends Page{
 
   _parseDungeonUpdate = dungeonRun => {
 
-    if(dungeonRun.currentEvent.combat?.state === 'running'){
-      return this.app.setPage(new CombatPage(dungeonRun.currentEvent.combat.combatID, this))
+    const currentEvent = dungeonRun.events.at(-1)
+
+    if(currentEvent.combatID && currentEvent.pending){
+      return this.app.setPage(new CombatPage(currentEvent.combatID, true, this))
     }
+
+    this.adventurerPane.setState(dungeonRun.adventurerState)
+    this.stateEl.updateDungeonRun(dungeonRun)
+    this.eventEl.update(currentEvent)
 
     if(dungeonRun.finished){
       this._finish()
     }
-
-    this.eventEl.update(dungeonRun.currentEvent)
-    this.stateEl.updateDungeonRun(dungeonRun)
   }
 
   _finish(){
-    console.log('run finished, transitioning in 5 seconds')
     setTimeout(() => {
       this.app.setPage(new ResultsPage(this.adventurerID))
     }, 5000)

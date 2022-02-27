@@ -11,7 +11,7 @@ const innerHTML = `
 /**
  * Show either the run/venture state
  */
-export default class State extends HTMLElement {
+export default class State extends HTMLElement{
 
   constructor(){
     super()
@@ -23,11 +23,7 @@ export default class State extends HTMLElement {
     this.querySelector('.floor').textContent = dungeonRun.floor
     this.querySelector('.room').textContent = dungeonRun.room
     this.querySelector('.xp-reward').textContent = dungeonRun.rewards.xp
-  }
-
-  updateVenture(venture){
-    // TODO: set the timer time
-    this.timer.setTimeSince(venture.startTime)
+    this.timer.time = dungeonRun.elapsedTime
     this.timer.start()
   }
 }

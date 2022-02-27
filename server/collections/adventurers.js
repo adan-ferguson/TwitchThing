@@ -11,8 +11,7 @@ const DEFAULTS = {
   baseStats: {
     hpMax: 100,
     attack: 10
-  },
-  levelups: []
+  }
 }
 
 const Adventurers = new Collection('adventurers', DEFAULTS)

@@ -31,19 +31,17 @@ export default class AdventurerRow extends HTMLElement{
 
   setDungeonRun(dungeonRun){
 
+    this.dungeonRun = dungeonRun
+
     const timer = this.querySelector('di-timer')
     this.querySelector('.status').textContent = statusText()
     updateTimer()
 
     function updateTimer(){
-      if(dungeonRun.finished){
-        timer.setTimeSince(dungeonRun.startTime)
+      if(!dungeonRun.finished){
+        timer.time = dungeonRun.elapsedTime
         timer.classList.remove('displaynone')
-        if(dungeonRun.finished){
-          timer.stop()
-        }else{
-          timer.start()
-        }
+        timer.start()
       }else{
         timer.classList.add('displaynone')
       }
@@ -66,8 +64,8 @@ export default class AdventurerRow extends HTMLElement{
   _events(setPageFn){
     this.addEventListener('click', () => {
       let page
-      if(this.adventurer.dungeonRun){
-        if(this.adventurer.dungeonRun.finished){
+      if(this.dungeonRun){
+        if(this.dungeonRun.finished){
           page = new ResultsPage(this.adventurer._id)
         }else{
           page = new DungeonPage(this.adventurer._id)

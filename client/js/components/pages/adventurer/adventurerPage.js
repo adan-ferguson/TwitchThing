@@ -1,7 +1,4 @@
 import Page from '../page.js'
-import MainPage from '../main/mainPage.js'
-import AdventurerStatsPage from '../adventurerStats/adventurerStatsPage.js'
-import AdventurerLoadoutPage from '../adventurerLoadout/adventurerLoadoutPage.js'
 import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
 
 import fizzetch from '../../../fizzetch.js'
@@ -18,7 +15,7 @@ const HTML = `
 </div>
 `
 
-export default class AdventurerPage extends Page {
+export default class AdventurerPage extends Page{
 
   constructor(adventurerID){
     super()

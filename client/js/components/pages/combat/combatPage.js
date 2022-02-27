@@ -21,10 +21,11 @@ const HTML = `
 
 export default class CombatPage extends Page{
 
-  constructor(combatID, returnPage = null){
+  constructor(combatID, forceLive = true, returnPage = null){
     super()
     this.combatID = combatID
     this.returnPage = returnPage
+    this.forceLive = forceLive
     this.innerHTML = HTML
     this.fighterPane1 = this.querySelector('.fighter1')
     this.fighterPane2 = this.querySelector('.fighter2')
@@ -47,55 +48,29 @@ export default class CombatPage extends Page{
 
     if(state.status === 'live'){
       this.timeline.time = state.currentTime - this.combat.startTime
+    }else if(this.forceLive){
+      this.timeline.time = this.combat.duration
     }else{
       this.timeline.time = 0
     }
 
     this._setup()
 
-    const waitUntilStartTime = this.combat.startTime - state.currentTime
-    if(waitUntilStartTime > 0){
-      setTimeout(() => {
-        this._run()
-      }, waitUntilStartTime)
-    }else{
+    const waitUntilStartTime = Math.max(1000, this.combat.startTime - state.currentTime)
+    setTimeout(() => {
       this._run()
-    }
+    }, waitUntilStartTime)
   }
 
-  _inProgress(currentTime){
-    // TODO: timer
-    // this._setEndTime(currentTime)
-    this.timeline.time = currentTime - this.combat.startTime
-  }
-
-  _isReplay(){
-    // TODO: timer
-    this.timeline.time = 0
-  }
-
-  _setTime(time){
-    this.timeline.time = time
-    const entry = this.timeline.prevEntry || this.timeline.firstEntry
-    this.fighterPane1.setState(entry.fighterState1)
-    this.fighterPane2.setState(entry.fighterState2)
+  _setup(){
+    const prevEntry = this.timeline.prevEntry
+    this._applyEntry(prevEntry, false)
     this.fighterPane1.advanceTime(this.timeline.timeSinceLastEntry)
     this.fighterPane2.advanceTime(this.timeline.timeSinceLastEntry)
   }
 
-  _setup(){
-    const currentTime = this.timeline.time
-    const prevEntry = this.timeline.prevEntry
-    this._applyEntry(prevEntry, false)
-    this._setTime(currentTime - prevEntry.time)
-  }
-
   _run(){
-    if(this.timeline.nextEntry){
-      this._tick()
-    }else{
-      this._finish()
-    }
+    this._tick()
   }
 
   _tick(){
@@ -123,6 +98,9 @@ export default class CombatPage extends Page{
   }
 
   _advanceTime(ms){
+    if(ms <= 0){
+      return
+    }
     this.timeline.time += ms
     this.fighterPane1.advanceTime(ms)
     this.fighterPane2.advanceTime(ms)
@@ -143,7 +121,7 @@ export default class CombatPage extends Page{
       if(this.returnPage){
         this.app.setPage(this.returnPage)
       }
-    }, 5000)
+    }, 2200)
   }
 }
 

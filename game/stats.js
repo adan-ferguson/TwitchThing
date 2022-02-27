@@ -28,7 +28,7 @@ export function mergeStats(...statsObjs){
       if(!combined[key]){
         combined[key] = 0
       }
-      combined[key] += obj=key
+      combined[key] += obj[key]
     }
   })
   return combined

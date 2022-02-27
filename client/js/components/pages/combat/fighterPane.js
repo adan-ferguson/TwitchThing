@@ -86,7 +86,7 @@ export default class FighterPane extends HTMLElement{
     this._updateCooldowns()
 
     if(!this.fighterInstance.hp){
-      fadeOut(this)
+      fadeOut(this, 2000)
       this._finished = true
     }
   }

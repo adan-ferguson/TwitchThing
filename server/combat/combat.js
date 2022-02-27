@@ -1,7 +1,7 @@
 import Combats from '../collections/combats.js'
 import FighterInstance from '../../game/combat/fighterInstance.js'
 
-const START_TIME_DELAY = 2000
+const START_TIME_DELAY = 1000
 
 export async function generateCombat(fighter1, fighter2, fighterStartState1 = {}, fighterStartState2 = {}){
 

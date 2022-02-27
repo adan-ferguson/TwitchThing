@@ -26,6 +26,6 @@ export default class Collection{
   }
 
   async update(_id, $set){
-    db.conn().collection(this.collectionName).updateOne({ _id }, { $set })
+    await db.conn().collection(this.collectionName).updateOne({ _id }, { $set })
   }
 }

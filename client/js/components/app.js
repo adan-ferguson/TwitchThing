@@ -49,11 +49,15 @@ export default class App extends HTMLElement{
     }
 
     this.currentPage = page
-    const { error, redirect } = (await page.load() || {})
+    const { error } = (await page.load() || {})
+
+    if(this.currentPage !== page){
+      // The page.load() caused a redirect, so this setPage is no longer relevant.
+      return
+    }
+
     if(error){
       return this.setPage(new MainPage({ error }))
-    }else if(redirect){
-      return this.setPage(redirect)
     }
 
     this.querySelector(':scope > .content').appendChild(page)

@@ -9,15 +9,20 @@ di-results-page
     flex-grow: 0 !important
 
 di-adventurer-levelup-selector
+  $padding: 10rem
   display: flex
   flex-direction: column
-  margin-bottom: -10rem
+  margin-bottom: -$padding
   > *
-    margin-bottom: 10rem
+    margin-bottom: $padding
+
+  .stats
+    border-bottom: 0.5rem solid #DDD
+    padding-bottom: $padding
 
   .options
     display: flex
-    flex-direction: row
-    margin-right: -10rem
+    flex-direction: column
+    margin-bottom: 0
     > *
-      margin-right: 10rem
+      margin-bottom: $padding
