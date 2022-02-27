@@ -280,6 +280,9 @@ Milestone 4 - Stats
 Implement some stats in order to allow adventurers and monsters to differentiate each other.
 These are required before implementing items because...well, items without stats are just nothing.
 
+- Prevent combat infinite loop
+- Chunk dungeon run events
+
 - Stats should have the following things
 -- A stat type (flat, percentage, etc)
 -- Some sort of weight value for determining levelups (eg. 500 hp and 500 armor are not the same weight)

@@ -1,3 +1,5 @@
+const POWER_MULTIPLIER = 1.5
+
 export async function generateMonster(floor){
   const power = floorToPower(floor)
   return {
@@ -18,7 +20,7 @@ export async function generateMonster(floor){
 function floorToPower(floor){
   let base = 1
   for(let i = 0; i < floor; i++){
-    base *= 1.5
+    base *= POWER_MULTIPLIER
   }
   return base
 }
