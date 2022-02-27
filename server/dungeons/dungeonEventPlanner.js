@@ -10,13 +10,6 @@ import { generateCombat } from '../combat/combat.js'
  */
 export async function generateEvent(adventurer, dungeonRun, room, floor){
 
-  if(dungeonRun.events.length >= 100){
-    return {
-      finished: true,
-      message: 'You leave because it\'s really boring.'
-    }
-  }
-
   if(foundStairs(floor, room)){
     return {
       stairs: true,
