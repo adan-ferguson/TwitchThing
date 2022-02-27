@@ -76,7 +76,7 @@ export default class MainPage extends Page{
       async: true,
       action: '/game/newadventurer',
       submitText: 'Create',
-      success: result => this.app.setPage(new AdventurerPage(result.adventurer))
+      success: result => this.app.setPage(new AdventurerPage(result.adventurerID))
     })
 
     form.addInput({

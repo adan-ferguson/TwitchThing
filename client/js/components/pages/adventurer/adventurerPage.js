@@ -27,7 +27,7 @@ export default class AdventurerPage extends Page{
   async load(){
     const result = await fizzetch(`/game/adventurer/${this.adventurerID}`)
     if(result.error){
-      return result.error
+      return result
     }else{
       this.adventurer = result.adventurer
       this.adventurerPane.setAdventurer(this.adventurer)
