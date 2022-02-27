@@ -6,7 +6,7 @@ import { generateEvent } from './dungeonEventPlanner.js'
 import { emit } from '../socketServer.js'
 import { getActiveStats } from '../../game/adventurer.js'
 
-const BASE_EVENT_TIME = 2000
+const BASE_EVENT_TIME = 3000
 
 let running = false
 let activeRuns = {}

@@ -239,7 +239,7 @@ MILESTONE 3
 ++ Derive attack
 
 Milestone 3
-2022-02-05 - 2022-02-21
+Started 2022-02-05
 ----------
 - Very basic combat
 ++ Combat page
@@ -274,13 +274,57 @@ To Fix:
 ++ State updates if there's no actual updates
 ++ HP bar should use red thing like fighting game
 
+
+Milestone 4 - Stats
+-------------------
+Implement some stats in order to allow adventurers and monsters to differentiate each other.
+These are required before implementing items because...well, items without stats are just nothing.
+
+- Stats should have the following things
+-- A stat type (flat, percentage, etc)
+-- Some sort of weight value for determining levelups (eg. 500 hp and 500 armor are not the same weight)
+-- Tags (defensive, offensive, magic, etc)
+-- A display string
+-- An icon
+-- An optional description in their tooltip (more elaborate later)
+
+- Implement the following stats, fairly basic stuff but a variety
+-- Armor
+-- Speed
+-- Lifesteal
+--- This will test the healing
+-- Combat XP
+-- Adventuring Speed
+-- Adventuring XP
+-- Stair find chance
+-- Relic find chance
+
+- Relics:
+-- Small XP gain
+-- Large XP gain
+-- HP restore
+
+- Make some monsters that are sort of a variety of these things
+
+- Make combats last a big longer by buffing HP
+
+- Levelups
+-- Levelup stats choose some random base stats to grant bonuses to (in addition to hp and attack)
+-- Bonus options should skew towards tags
+
+- User levelups should unlock new adventurer slots
+
 TODO Later
 -----------
+- Big numbers will be a problem
+- Janky going back from combat to adv
 - Back button browser acts like back button header?
 - Stupid webpack openssl thing, upgrade webpack or whatever
 - npm audit
 
 - Admin page
+-- Show console logs
+
 - Fix errors + targetPage redirects
 
 - View previous dungeon runs
