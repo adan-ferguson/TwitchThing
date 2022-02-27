@@ -249,9 +249,8 @@ Milestone 3
 ++ Adventurer's max hp and damage goes up as they level up
 ++ Advancing floors
 ++ Combat should have full fighter documents so replays work
--- Share button for combat replays
 
-- Clear all data on live
++ Clear all data on live
 
 + Actually DON'T derive stats
 ++ Store stats obj in adventurers (and fighters later)
@@ -264,15 +263,12 @@ Milestone 3
 ++ Reorganize a bunch of stuff
 ++ Make everything work again
 
-- Collections objects
--- Reduce usage of projections since they just cause bugs mostly
++ Collections objects
+++ Reduce usage of projections since they just cause bugs mostly
 
 To Fix:
-- Hangs on dungeon page after loss
 + Flying text
-- Reset attack time to ~3s
-- End of fight is clunky on both sides
-- Just remove ventures forget it
++ End of fight is clunky on both sides
 
 + Bars are buggy, just use non-caked animations
 ++ State updates if there's no actual updates
@@ -282,11 +278,13 @@ TODO Later
 -----------
 - Admin page
 - Fix errors + targetPage redirects
-- Variable adventure speed
-- Event log
-- View previous dungeon runs/ventures
-- Multi-run ventures
+
+- View previous dungeon runs
+-- Shareable
+-- Dungeon runs will also have to use adventurer doc copies
+-- Event log viewer
+-- Combat timeline
+
 - Make a 404 page and/or just redirect
 - DB backups
 - Modal nice fadein effect
-- Random events
