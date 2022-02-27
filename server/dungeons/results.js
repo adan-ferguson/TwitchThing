@@ -104,7 +104,7 @@ function previewLevelup(adventurer, level){
   const stats = getStats(adventurer)
 
   bonusOptions.push({
-    hpMax: Math.ceil(stats.getCompositeStat('hpMax') * 0.1)
+    hpMax: Math.ceil(stats.getCompositeStat('hpMax') * 0.15)
   })
 
   bonusOptions.push({
@@ -115,7 +115,7 @@ function previewLevelup(adventurer, level){
 
   return {
     stats: {
-      hpMax: Math.ceil(stats.getCompositeStat('hpMax') * 0.1),
+      hpMax: Math.ceil(stats.getCompositeStat('hpMax') * 0.15),
       attack: Math.ceil(stats.getCompositeStat('attack') * 0.1)
     },
     options: bonusOptions,

@@ -304,6 +304,8 @@ These are required before implementing items because...well, items without stats
 -- Large XP gain
 -- HP restore
 
+- Have XP gain do the number tickup thing
+
 - Make some monsters that are sort of a variety of these things
 
 - Make combats last a big longer by buffing HP
@@ -311,13 +313,17 @@ These are required before implementing items because...well, items without stats
 - Levelups
 -- Levelup stats choose some random base stats to grant bonuses to (in addition to hp and attack)
 -- Bonus options should skew towards tags
+-- Have offensive/defensive/adventuring option groups
 
 - User levelups should unlock new adventurer slots
 
 TODO Later
 -----------
-- Big numbers will be a problem
 - Janky going back from combat to adv
+-- Timer at combat resets funny
+-- Generally the visuals seem to jump
+
+- Big numbers will be a problem
 - Back button browser acts like back button header?
 - Stupid webpack openssl thing, upgrade webpack or whatever
 - npm audit
