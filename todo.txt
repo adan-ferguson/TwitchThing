@@ -279,9 +279,14 @@ Milestone 4 - Stats
 -------------------
 Implement some stats in order to allow adventurers and monsters to differentiate each other.
 These are required before implementing items because...well, items without stats are just nothing.
+-------------------
+- Add login providers for twitch & google
+
+- Scaling math, use Math.pow(<factor>, levels) and Math.log(<factor>, val)
 
 - Prevent combat infinite loop
-- Chunk dungeon run events
+- Don't send entire event array in socket update
+- requestAnimationFrame doesn't work when alt-tabbed so be aware of that
 
 - Stats should have the following things
 -- A stat type (flat, percentage, etc)
