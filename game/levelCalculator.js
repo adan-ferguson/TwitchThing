@@ -1,8 +1,16 @@
+import ScaledValue from './scaledFactor.js'
+
 export default class LevelCalculator{
 
   constructor(level2xp, xpMultiplier){
     this.level2xp = level2xp
     this.xpMultiplier = xpMultiplier
+
+    const vals = []
+    for(let i = 0; i <= 50; i++){
+      vals[i] = this.levelToXp(i)
+    }
+    return vals
   }
 
   xpToLevel(xp){
@@ -15,12 +23,15 @@ export default class LevelCalculator{
 
   levelToXp(lvl){
 
-    let xp = 0
-    let nextXp = this.level2xp
-    for(let i = 1; i < lvl; i++){
-      xp += nextXp
+    if(lvl <= 1){
+      return 0
+    }
+
+    let xp = this.level2xp
+    let scaledValue = new ScaledValue(this.xpMultiplier)
+    for(let i = 2; i < lvl; i++){
+      xp += this.level2xp * scaledValue.getVal(i - 1)
       xp = toThreeDigits(xp)
-      nextXp *= this.xpMultiplier
     }
     return xp
 

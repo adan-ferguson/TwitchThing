@@ -282,7 +282,7 @@ These are required before implementing items because...well, items without stats
 -------------------
 - Add login providers for twitch & google
 
-- Scaling math, use Math.pow(<factor>, levels) and Math.log(<factor>, val)
++ Scaling math, use Math.pow(<factor>, levels) and Math.log(<factor>, val)
 
 - Prevent combat infinite loop
 - Don't send entire event array in socket update
@@ -307,9 +307,9 @@ These are required before implementing items because...well, items without stats
 -- Stair find chance
 -- Relic find chance
 
-- Relics:
--- Small XP gain
--- Large XP gain
++ Relics:
+++ Small XP gain
+++ Large XP gain
 -- HP restore
 
 - Have XP gain do the number tickup thing

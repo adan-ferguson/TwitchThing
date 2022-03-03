@@ -8,7 +8,7 @@ export default class ScaledValue{
     return Math.pow(this.scalePct, iterations)
   }
 
-  getFactors(val){
+  getIterations(val){
     return baseLog(this.scalePct, val)
   }
 }

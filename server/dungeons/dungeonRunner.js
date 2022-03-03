@@ -4,7 +4,7 @@ import Adventurers from '../collections/adventurers.js'
 import { addRewards, calculateResults } from './results.js'
 import { generateEvent } from './dungeonEventPlanner.js'
 import { emit } from '../socketServer.js'
-import { getActiveStats } from '../../game/adventurer.js'
+import AdventurerInstance from '../../game/adventurerInstance.js'
 
 const BASE_EVENT_TIME = 3000
 
@@ -90,8 +90,8 @@ class DungeonRunInstance{
     return this.doc.events.at(-1)
   }
 
-  get adventurerStats(){
-    return getActiveStats(this.adventurer, this.doc.adventurerState)
+  get adventurerInstance(){
+    return new AdventurerInstance(this.adventurer, this.doc.adventurerState)
   }
 
   async loadAdventurer(){
@@ -119,15 +119,14 @@ class DungeonRunInstance{
   }
 
   async _newEvent(){
-    const adventurer = this.adventurer
-    const room = this.currentEvent.stairs ? 1 : this.doc.room + 1
-    const floor = this.currentEvent.stairs ? this.doc.floor + 1 : this.doc.floor
+    this.doc.room = this.currentEvent.nextRoom || this.doc.room + 1
+    this.doc.floor = this.currentEvent.nextFloor || this.doc.floor
     const nextEvent = {
-      room: room,
-      floor: floor,
+      room: this.doc.room,
+      floor: this.doc.floor,
       startTime: this.doc.elapsedTime,
-      duration: BASE_EVENT_TIME / this.adventurerStats.getPctStatMod('adventuringSpeed'),
-      ...(await generateEvent(adventurer, this.doc, room, floor))
+      duration: BASE_EVENT_TIME / this.adventurerInstance.stats.getPctStatMod('adventuringSpeed'),
+      ...(await generateEvent(this.adventurerInstance, this.doc))
     }
     this.doc.events.push(nextEvent)
     this.timeSinceLastEvent = 0
@@ -145,8 +144,6 @@ class DungeonRunInstance{
       this.doc.results = calculateResults(this.adventurer, this.doc.rewards)
       delete activeRuns[this.doc._id]
     }
-    this.doc.room = event.room
-    this.doc.floor = event.floor
     this.doc.elapsedTime += event.duration
   }
 
