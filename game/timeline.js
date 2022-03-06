@@ -16,6 +16,10 @@ export default class Timeline{
     this._time = Math.max(0, Math.min(this.duration, val))
   }
 
+  get finished(){
+    return this._time >= this.duration
+  }
+
   get timeSinceLastEntry(){
     return Math.max(0, this.time - this.prevEntry.time)
   }

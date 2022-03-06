@@ -21,11 +21,11 @@ Users.loadFromMagicID = async function(magicID){
   })
 }
 
-Users.create = async function(magicID, iat, email){
+Users.create = async function(magicID, iat, email, provider){
   return await Users.save({
     magicID,
     iat,
-    auth: { type: 'email', email }
+    auth: { type: provider, email }
   })
 }
 

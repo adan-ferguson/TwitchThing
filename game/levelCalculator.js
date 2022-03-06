@@ -10,7 +10,7 @@ export default class LevelCalculator{
     for(let i = 0; i <= 50; i++){
       vals[i] = this.levelToXp(i)
     }
-    return vals
+    console.log(vals)
   }
 
   xpToLevel(xp){

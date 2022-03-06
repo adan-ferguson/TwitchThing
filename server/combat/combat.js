@@ -2,6 +2,7 @@ import Combats from '../collections/combats.js'
 import FighterInstance from '../../game/combat/fighterInstance.js'
 
 const START_TIME_DELAY = 1000
+const MAX_TIME = 120000
 
 export async function generateCombat(fighter1, fighter2, fighterStartState1 = {}, fighterStartState2 = {}){
 
@@ -50,8 +51,7 @@ class Combat{
   }
 
   get finished(){
-    /// TODO: dead or ran away or something else happened
-    return !this.fighterInstance1.hp || !this.fighterInstance2.hp
+    return this._currentTime === MAX_TIME || !this.fighterInstance1.hp || !this.fighterInstance2.hp
   }
 
   _run(){

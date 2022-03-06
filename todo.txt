@@ -280,11 +280,20 @@ Milestone 4 - Stats
 Implement some stats in order to allow adventurers and monsters to differentiate each other.
 These are required before implementing items because...well, items without stats are just nothing.
 -------------------
-- Add login providers for twitch & google
++ Add login providers for twitch & google
+-- set them up on live
+
+- Fix the styling of the logout dropdown + modal
+
++ Remove font awesome react
++ Use font awesome regular
 
 + Scaling math, use Math.pow(<factor>, levels) and Math.log(<factor>, val)
 
-- Prevent combat infinite loop
++ Prevent combat infinite loop
+-- Handle combat result without set winner server side
+-- ...and client side
+
 - Don't send entire event array in socket update
 - requestAnimationFrame doesn't work when alt-tabbed so be aware of that
 
@@ -292,9 +301,12 @@ These are required before implementing items because...well, items without stats
 -- A stat type (flat, percentage, etc)
 -- Some sort of weight value for determining levelups (eg. 500 hp and 500 armor are not the same weight)
 -- Tags (defensive, offensive, magic, etc)
+-- Can it grow?
+
+- Then for the clientside
 -- A display string
 -- An icon
--- An optional description in their tooltip (more elaborate later)
+-- A tooltip?
 
 - Implement the following stats, fairly basic stuff but a variety
 -- Armor
@@ -303,18 +315,25 @@ These are required before implementing items because...well, items without stats
 --- This will test the healing
 -- Combat XP
 -- Adventuring Speed
--- Adventuring XP
 -- Stair find chance
 -- Relic find chance
+
+- When you level up it should pull more options
 
 + Relics:
 ++ Small XP gain
 ++ Large XP gain
--- HP restore
+++ HP restore
+-- test
 
 - Have XP gain do the number tickup thing
 
 - Make some monsters that are sort of a variety of these things
+++ Basic generator logic w/ minimum floors
+-- Armored
+-- Slow
+-- Lifestealing
+-- Rarer
 
 - Make combats last a big longer by buffing HP
 
@@ -324,6 +343,9 @@ These are required before implementing items because...well, items without stats
 -- Have offensive/defensive/adventuring option groups
 
 - User levelups should unlock new adventurer slots
+
+- Admin page
+-- Clear all adventurers
 
 TODO Later
 -----------
@@ -336,8 +358,7 @@ TODO Later
 - Stupid webpack openssl thing, upgrade webpack or whatever
 - npm audit
 
-- Admin page
--- Show console logs
+- Admin page bonus logs
 
 - Fix errors + targetPage redirects
 
