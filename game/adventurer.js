@@ -2,7 +2,7 @@ import Stats from './stats.js'
 import LevelCalculator from './levelCalculator.js'
 
 const LEVEL_2_XP = 100
-const XP_MULTIPLIER = 1.25
+const XP_MULTIPLIER = 0.25
 const calc = new LevelCalculator(LEVEL_2_XP, XP_MULTIPLIER)
 
 export function xpToLevel(xp){

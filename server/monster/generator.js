@@ -1,7 +1,7 @@
-import ScaledValue from '../../game/scaledFactor.js'
+import ScaledValue from '../../game/scaledValue.js'
 import randoJando from '../../game/randoJando.js'
 
-const POWER_MULTIPLIER = 1.3
+const POWER_MULTIPLIER = 0.15
 const MONSTER_BUFFER = 3 // Minimum rooms between monster encounters
 const MONSTER_CHANCE_INCREASE_PER_ROOM = 0.05
 const powerScaler = new ScaledValue(POWER_MULTIPLIER)

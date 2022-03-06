@@ -3,7 +3,12 @@ import DungeonRuns from '../collections/dungeonRuns.js'
 import Users from '../collections/users.js'
 import { getStats, xpToLevel as advXpToLevel } from '../../game/adventurer.js'
 import { xpToLevel as userXpToLevel } from '../../game/user.js'
-import { mergeStats } from '../../game/stats.js'
+import { mergeStats, StatDefinitions } from '../../game/stats.js'
+import scaledValue from '../../game/scaledValue.js'
+
+const GROWTH_SCALE = 0.10
+const BONUS_BASE_WEIGHT = 20
+const BONUS_WEIGHT_GROWTH = 0.12
 
 const REWARDS_TYPES = {
   xp: 'int'
@@ -100,25 +105,42 @@ export async function finalizeResults(adventurerID, selectedBonuses){
 
 function previewLevelup(adventurer, level){
 
-  const bonusOptions = []
   const stats = getStats(adventurer)
-
-  bonusOptions.push({
-    hpMax: Math.ceil(stats.getCompositeStat('hpMax') * 0.15)
+  const growths = {}
+  stats.getGrowables().forEach(type => {
+    growths[type] = Math.ceil(stats.getStat(type) * GROWTH_SCALE)
   })
-
-  bonusOptions.push({
-    attack: Math.ceil(stats.getCompositeStat('attack') * 0.1)
-  })
-
-  // TODO: add options provided by items
-
+  const bonusWeight = scaledValue(BONUS_BASE_WEIGHT, BONUS_WEIGHT_GROWTH, level)
   return {
-    stats: {
-      hpMax: Math.ceil(stats.getCompositeStat('hpMax') * 0.15),
-      attack: Math.ceil(stats.getCompositeStat('attack') * 0.1)
-    },
-    options: bonusOptions,
+    stats: growths,
+    options: calculateBonusOptions(stats, bonusWeight),
     level
   }
+}
+
+function calculateBonusOptions(stats, bonusWeight){
+
+  const bonusOptions = {
+    offensive: {},
+    defensive: {},
+    adventuring: {}
+  }
+  //
+  // for (let type in StatDefinitions){
+  //   const def = StatDefinitions[type]
+  //   if (!def.category){
+  //     continue
+  //   }
+  //   const val = stats.getWeightedValue(type)
+  // }
+  //
+  // bonusOptions.push({
+  //   hpMax: Math.floor(stats.getCompositeStat('hpMax') * 0.1)
+  // })
+  //
+  // bonusOptions.push({
+  //   attack: Math.floor(stats.getCompositeStat('attack') * 0.1)
+  // })
+
+  return bonusOptions
 }

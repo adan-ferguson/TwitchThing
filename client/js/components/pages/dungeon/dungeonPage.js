@@ -64,7 +64,8 @@ export default class DungeonPage extends Page{
 
   _parseDungeonUpdate = dungeonRun => {
 
-    const currentEvent = dungeonRun.events.at(-1)
+    debugger
+    const currentEvent = dungeonRun.currentEvent || dungeonRun.events.at(-1)
 
     if(currentEvent.combatID && currentEvent.pending){
       return this.app.setPage(new CombatPage(currentEvent.combatID, true, this))

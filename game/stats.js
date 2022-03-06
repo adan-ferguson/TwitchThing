@@ -1,7 +1,18 @@
+const DEFAULT_DEFINITION = {
+  weight: false,
+  category: StatBonusCategory.NONE,
+  type: StatType.COMPOSITE,
+  growing: false,
+}
+
 export default class Stats{
 
   constructor(statAffectors){
     this._statAffectors = statAffectors
+  }
+
+  getWeightedValue(type){
+
   }
 
   getStat(type){
@@ -40,6 +51,10 @@ export default class Stats{
       return val * (statAffector[type] || 1)
     }, 1)
   }
+
+  getGrowables(){
+
+  }
 }
 
 export function mergeStats(...statsObjs){
@@ -68,17 +83,10 @@ export const StatBonusCategory = {
   NONE: 0,
   OFFENSIVE: 1,
   DEFENSIVE: 2,
-  MISC: 3
+  ADVENTURING: 3
 }
 
-const DEFAULT_DEFINITION = {
-  weight: false,
-  category: StatBonusCategory.NONE,
-  type: StatType.COMPOSITE,
-  growing: false,
-}
-
-const StatDefinitions = {
+export const StatDefinitions = {
   attack: {
     weight: 20,
     category: StatBonusCategory.OFFENSIVE,
@@ -107,21 +115,21 @@ const StatDefinitions = {
   adventuringSpeed: {
     weight: 10,
     type: StatType.FLAT,
-    category: StatBonusCategory.MISC
+    category: StatBonusCategory.ADVENTURING
   },
-  combatXP: {
-    weight: 8,
+  xpGain: {
+    weight: 10,
     type: StatType.PERCENTAGE,
-    category: StatBonusCategory.MISC,
+    category: StatBonusCategory.ADVENTURING,
   },
   stairFind: {
     weight: 7,
     type: StatType.PERCENTAGE,
-    category: StatBonusCategory.MISC,
+    category: StatBonusCategory.ADVENTURING,
   },
   relicFind: {
     weight: 7,
     type: StatType.PERCENTAGE,
-    category: StatBonusCategory.MISC,
+    category: StatBonusCategory.ADVENTURING,
   },
 }

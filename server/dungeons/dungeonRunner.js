@@ -108,6 +108,12 @@ class DungeonRunInstance{
     if(!this.currentEvent.pending){
       this._resolveEvent(this.currentEvent)
     }
+    const truncatedDoc = {
+      currentEvent: this.currentEvent,
+      ...this.doc
+    }
+    debugger
+    delete truncatedDoc.events
     emit(this.doc.adventurerID, 'dungeon run update', this.doc)
     DungeonRuns.save(this.doc)
   }

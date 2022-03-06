@@ -1,7 +1,7 @@
 import LevelCalculator from './levelCalculator.js'
 
 const LEVEL_2_XP = 200
-const XP_MULTIPLIER = 1.3
+const XP_MULTIPLIER = 0.3
 const calc = new LevelCalculator(LEVEL_2_XP, XP_MULTIPLIER)
 
 export function xpToLevel(xp){

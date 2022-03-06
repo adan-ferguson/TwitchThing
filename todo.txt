@@ -294,8 +294,11 @@ These are required before implementing items because...well, items without stats
 -- Handle combat result without set winner server side
 -- ...and client side
 
-- Don't send entire event array in socket update
-- requestAnimationFrame doesn't work when alt-tabbed so be aware of that
++ Don't send entire event array in socket update
+-- test
+
++ requestAnimationFrame doesn't work when alt-tabbed so be aware of that
+-- test
 
 - Stats should have the following things
 -- A stat type (flat, percentage, etc)
