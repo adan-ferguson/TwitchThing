@@ -1,20 +1,22 @@
 import scaledValue from '../../game/scaledValue.js'
-import randoJando from '../../game/randoJando.js'
+import { chooseOne } from '../../game/rando.js'
 
-const RELIC_CHANCE = 0.2
-const VALUE_MULTIPLIER = 0.08
+const BASE_RELIC_CHANCE = 0.2
+const RELIC_CHANCE_SCALE = 0.03
+const VALUE_MULTIPLIER = 0.10
 
 export function foundRelic(adventurerInstance, dungeonRun){
-  return Math.random() <= RELIC_CHANCE
+  debugger
+  return Math.random() <= adventurerInstance.stats.get('relicFind').convertedValue * BASE_RELIC_CHANCE / scaledValue(RELIC_CHANCE_SCALE, dungeonRun.floor)
 }
 
 export function generateRelicEvent(adventurerInstance, dungeonRun){
   debugger
-  return randoJando([
+  return chooseOne([
     { weight: 40, fn: minorRelic },
     { weight: 10, fn: majorRelic },
     { weight: 50 - 50 * adventurerInstance.hpPct, fn: healingRelic }
-  ], [adventurerInstance, dungeonRun])
+  ])([adventurerInstance, dungeonRun])
 }
 
 function minorRelic(adventurerInstance, dungeonRun){

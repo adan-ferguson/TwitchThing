@@ -1,10 +1,9 @@
-import ScaledValue from '../../game/scaledValue.js'
-import randoJando from '../../game/randoJando.js'
+import scaledValue from '../../game/scaledValue.js'
+import { chooseOne } from '../../game/rando.js'
 
 const POWER_MULTIPLIER = 0.15
 const MONSTER_BUFFER = 3 // Minimum rooms between monster encounters
 const MONSTER_CHANCE_INCREASE_PER_ROOM = 0.05
-const powerScaler = new ScaledValue(POWER_MULTIPLIER)
 
 export function foundMonster(dungeonRun){
   const monsterChance = (-MONSTER_BUFFER + roomsSinceMonster()) * MONSTER_CHANCE_INCREASE_PER_ROOM
@@ -23,7 +22,7 @@ export function foundMonster(dungeonRun){
 export async function generateMonster(dungeonRun){
   debugger
   const floor = dungeonRun.floor
-  const power = powerScaler.getVal(dungeonRun.floor - 1)
+  const power = scaledValue(POWER_MULTIPLIER, dungeonRun.floor - 1)
   const options = [
     { weight: 10, fn: bat },
     { weight: floor >= 5 ? 10 : 0, fn: bat },
@@ -32,7 +31,8 @@ export async function generateMonster(dungeonRun){
     { weight: floor >= 20 ? 10 : 0, fn: bat },
     { weight: floor >= 25 ? 10 : 0, fn: bat }
   ]
-  return randoJando(options, [power])
+  const fn = chooseOne(options)
+  return fn(power)
 }
 
 function bat(power){

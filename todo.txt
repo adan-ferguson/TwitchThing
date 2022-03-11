@@ -280,6 +280,8 @@ Milestone 4 - Stats
 Implement some stats in order to allow adventurers and monsters to differentiate each other.
 These are required before implementing items because...well, items without stats are just nothing.
 -------------------
++ tippy
+
 + Add login providers for twitch & google
 -- set them up on live
 
@@ -300,11 +302,11 @@ These are required before implementing items because...well, items without stats
 + requestAnimationFrame doesn't work when alt-tabbed so be aware of that
 -- test
 
-- Stats should have the following things
--- A stat type (flat, percentage, etc)
--- Some sort of weight value for determining levelups (eg. 500 hp and 500 armor are not the same weight)
--- Tags (defensive, offensive, magic, etc)
--- Can it grow?
++ Stats should have the following things
+++ A stat type (flat, percentage, etc)
+++ Some sort of weight value for determining levelups (eg. 500 hp and 500 armor are not the same weight)
+++ Tags (defensive, offensive, magic, etc)
+-- test
 
 - Then for the clientside
 -- A display string
@@ -312,16 +314,29 @@ These are required before implementing items because...well, items without stats
 -- A tooltip?
 
 - Implement the following stats, fairly basic stuff but a variety
--- Armor
--- Speed
--- Lifesteal
---- This will test the healing
--- Combat XP
--- Adventuring Speed
+++ Armor
+--- Test
+--- Clientside
+++ Speed
+--- Test
+--- Clientside
+++ Lifesteal
+--- Test
+--- Clientside
+++ XP Gain
+--- Test
+--- Clientside
+++ Adventuring Speed
+--- Test
+--- Clientside
 -- Stair find chance
--- Relic find chance
+--- Test
+--- Clientside
+++ Relic find chance
+--- Test
+--- Clientside
 
-- When you level up it should pull more options
++ When you level up it should pull more options
 
 + Relics:
 ++ Small XP gain
@@ -329,7 +344,7 @@ These are required before implementing items because...well, items without stats
 ++ HP restore
 -- test
 
-- Have XP gain do the number tickup thing
+- Have XP gain do the number tickup thing (dungeon run page)
 
 - Make some monsters that are sort of a variety of these things
 ++ Basic generator logic w/ minimum floors
@@ -341,17 +356,18 @@ These are required before implementing items because...well, items without stats
 - Make combats last a big longer by buffing HP
 
 - Levelups
--- Levelup stats choose some random base stats to grant bonuses to (in addition to hp and attack)
--- Bonus options should skew towards tags
--- Have offensive/defensive/adventuring option groups
+++ Have offensive/defensive/adventuring option groups
 
-- User levelups should unlock new adventurer slots
+- User levelups should unlock new adventurer slots every 10 levels
 
 - Admin page
 -- Clear all adventurers
 
 TODO Later
 -----------
+- Mobile considerations
+-- Tooltips
+
 - Janky going back from combat to adv
 -- Timer at combat resets funny
 -- Generally the visuals seem to jump

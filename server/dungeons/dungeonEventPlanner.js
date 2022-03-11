@@ -1,5 +1,10 @@
 import { foundMonster, generateMonster } from '../monster/generator.js'
 import { generateCombat } from '../combat/combat.js'
+import { foundRelic, generateRelicEvent } from './relics.js'
+import scaledValue from '../../game/scaledValue.js'
+
+const FLOOR_SIZE_BASE = 10
+const FLOOR_SIZE_SCALE = 0.05
 
 /**
  * @param adventurerInstance
@@ -11,7 +16,7 @@ export async function generateEvent(adventurerInstance, dungeonRun){
   const floor = dungeonRun.floor
   const room = dungeonRun.room
 
-  if(foundStairs(floor, room)){
+  if(foundStairs(floor, room, adventurerInstance.stats.get('stairFind').convertedValue)){
     return {
       nextRoom: 1,
       nextFloor: floor + 1,
@@ -39,7 +44,9 @@ export async function generateEvent(adventurerInstance, dungeonRun){
   }
 }
 
-function foundStairs(floor, room){
-  const stairsChance = (-5 + room) / (5 + floor)
-  return Math.random() < stairsChance
+function foundStairs(floor, room, stairFind){
+  debugger
+  const maxRooms = Math.floor(scaledValue(FLOOR_SIZE_SCALE, floor, FLOOR_SIZE_BASE))
+  const stairsChance = 1 / Math.max(1, maxRooms - room + 1)
+  return Math.random() < stairsChance * stairFind
 }

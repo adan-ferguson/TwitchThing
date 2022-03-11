@@ -1,10 +1,8 @@
-import Stats from '../stats.js'
-
 const STATE_DEFAULTS = {
   timeSinceLastAction: 0
 }
 
-const BASE_TURN_TIME = 3000
+export const COMBAT_BASE_TURN_TIME = 3000
 
 export default class FighterInstance{
 
@@ -18,7 +16,7 @@ export default class FighterInstance{
       ...fighterStartState
     }
     if(!('hp' in this._currentState)){
-      this._currentState.hp = this.stats.getCompositeStat('hpMax')
+      this._currentState.hp = this.stats.get('hpMax').convertedValue
     }
   }
 
@@ -37,7 +35,7 @@ export default class FighterInstance{
   }
 
   get actionTime(){
-    return BASE_TURN_TIME / this.stats.getPctStatMod('speed')
+    return COMBAT_BASE_TURN_TIME / this.stats.get('speed').convertedValue
   }
 
   get timeUntilNextAction(){
@@ -57,7 +55,7 @@ export default class FighterInstance{
   }
 
   get hpMax(){
-    return this.stats.getCompositeStat('hpMax')
+    return this.stats.get('hpMax').convertedValue
   }
 
   advanceTime(ms){
@@ -65,7 +63,7 @@ export default class FighterInstance{
   }
 
   performAction(enemy){
-    let baseDamage = this.stats.getCompositeStat('attack')
+    let baseDamage = this.stats.get('attack').convertedValue
     const damageResult = this._dealDamage(baseDamage, enemy)
     this._currentState.timeSinceLastAction = 0
 
@@ -80,13 +78,33 @@ export default class FighterInstance{
   }
 
   _dealDamage(amount, enemy){
-    return enemy._takeDamage(amount)
+    const damageResult = enemy._takeDamage(amount)
+
+    const lifesteal = this._lifesteal(damageResult.damage)
+    if(lifesteal){
+      damageResult.lifesteal = lifesteal
+    }
+
+    return damageResult
   }
 
-  _takeDamage(amount){
-    this.hp -= amount
+  _lifesteal(damage){
+    const lifesteal = Math.min(
+      this.hpMax - this.hp,
+      Math.ceil(this.stats.get('lifesteal').convertedValue * damage)
+    )
+    this.hp += lifesteal
+    return lifesteal
+  }
+
+  _takeDamage(preMitigationDamage){
+    debugger
+    const damageAfterArmor = preMitigationDamage * this.stats.get('armor').convertedValue
+    const blocked = preMitigationDamage - damageAfterArmor
+    const finalDamage = Math.min(this.hp, damageAfterArmor)
     return {
-      damage: amount,
+      damage: finalDamage,
+      blocked: blocked,
       hpAfter: this.hp
     }
   }

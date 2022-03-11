@@ -5,12 +5,6 @@ export default class LevelCalculator{
   constructor(level2xp, xpMultiplier){
     this.level2xp = level2xp
     this.xpMultiplier = xpMultiplier
-
-    const vals = []
-    for(let i = 0; i <= 50; i++){
-      vals[i] = this.levelToXp(i)
-    }
-    console.log(vals)
   }
 
   xpToLevel(xp){

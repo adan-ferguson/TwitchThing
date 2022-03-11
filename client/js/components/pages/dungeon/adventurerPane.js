@@ -46,12 +46,12 @@ export default class AdventurerPane extends HTMLElement{
     this.hpBar.setValue(this.state.hp)
 
     // TODO: figure out this but better
-    this.stats.innerHTML = ''
+    this.statsList.innerHTML = ''
     const statsToShow = ['attack']
     statsToShow.forEach(statName => {
       const el = document.createElement('div')
       el.innerHTML = `${statName} ${stats.getCompositeStat(statName)}`
-      this.stats.appendChild(el)
+      this.statsList.appendChild(el)
     })
   }
 }

@@ -1,4 +1,4 @@
-import Stats from './stats.js'
+import Stats from './stats/stats.js'
 import LevelCalculator from './levelCalculator.js'
 
 const LEVEL_2_XP = 100

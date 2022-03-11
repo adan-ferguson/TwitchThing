@@ -1,5 +1,7 @@
 import { getActiveStats } from './adventurer.js'
 
+export const ADVENTURER_BASE_ROOM_TIME = 3000
+
 export default class AdventurerInstance{
   constructor(adventurer, adventurerState){
     this.adventurer = adventurer
@@ -19,6 +21,10 @@ export default class AdventurerInstance{
   }
 
   get hpMax(){
-    return this.stats.getCompositeStat('hpMax')
+    return this.stats.get('hpMax').convertedValue
+  }
+
+  get standardRoomDuration(){
+    return ADVENTURER_BASE_ROOM_TIME / this.stats.get('adventuringSpeed').convertedValue
   }
 }

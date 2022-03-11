@@ -1,12 +1,12 @@
-import { levelToXp, xpToLevel } from '../../../../../game/adventurer.js'
-import Stats from '../../../../../game/stats.js'
+import { getStats, levelToXp, xpToLevel } from '../../../../../game/adventurer.js'
+import StatRow from '../../stats/statRow.js'
 
 const HTML = `
 <div class="flex-rows">
   <div class="stats-box">
     <div class="name"></div>
     <di-xp-bar></di-xp-bar>
-    <div class="stats"></div>
+    <div class="stats-list"></div>
   </div>
   <di-loadout></di-loadout>
 </div>
@@ -16,13 +16,13 @@ export default class AdventurerPane extends HTMLElement{
 
   constructor(){
     super()
-    this.classList.add('adventurer-pane')
+    this.classList.add('adventurer-pane', 'fill-contents')
     this.innerHTML = HTML
     this.xpBar = this.querySelector('di-xp-bar')
     this.xpBar.setLevelFunctions(xpToLevel, levelToXp)
     this.loadout = this.querySelector('di-loadout')
     this.statsbox = this.querySelector('.stats-box')
-    this.stats = this.querySelector('.stats')
+    this.statsList = this.querySelector('.stats-list')
   }
 
   setAdventurer(adventurer){
@@ -42,16 +42,13 @@ export default class AdventurerPane extends HTMLElement{
 
     // TODO: add affectors from items
     // TODO: add affectors from effects
-    const stats = new Stats([this.adventurer.baseStats])
-    this.stats.innerHTML = ''
+    const stats = getStats(this.adventurer)
+    this.statsList.innerHTML = ''
 
-    // TODO: figure out this but better
-    const statsToShow = ['hpMax', 'attack']
-    statsToShow.forEach(statName => {
-      const el = document.createElement('div')
-      el.innerHTML = `${statName} ${stats.getCompositeStat(statName)}`
-      this.stats.appendChild(el)
-    })
+    const statsToShow = stats.getAll()
+    for(let key in statsToShow){
+      this.statsList.appendChild(new StatRow(statsToShow[key]))
+    }
   }
 }
 customElements.define('di-adventurer-pane', AdventurerPane)

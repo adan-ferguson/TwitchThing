@@ -6,8 +6,6 @@ import { generateEvent } from './dungeonEventPlanner.js'
 import { emit } from '../socketServer.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 
-const BASE_EVENT_TIME = 3000
-
 let running = false
 let activeRuns = {}
 
@@ -56,14 +54,12 @@ export async function start(){
  * @param dungeonID
  */
 export async function addRun(adventurerID, dungeonID){
+  debugger
   const adventurerDoc = await Adventurers.findOne(adventurerID)
   const drDoc = await DungeonRuns.save({
     adventurerID,
     dungeonID,
-    events: [{
-      message: `${adventurerDoc.name} enters the dungeon.`,
-      duration: BASE_EVENT_TIME
-    }]
+    events: []
   })
   Adventurers.update(adventurerID, {
     dungeonRunID: drDoc._id
@@ -81,7 +77,7 @@ class DungeonRunInstance{
     if(!this.currentEvent){
       this.doc.events = [{
         message: `${this.adventurer.name} enters the dungeon.`,
-        duration: BASE_EVENT_TIME
+        duration: this.adventurerInstance.standardRoomDuration
       }]
     }
   }
@@ -112,7 +108,6 @@ class DungeonRunInstance{
       currentEvent: this.currentEvent,
       ...this.doc
     }
-    debugger
     delete truncatedDoc.events
     emit(this.doc.adventurerID, 'dungeon run update', this.doc)
     DungeonRuns.save(this.doc)
@@ -131,7 +126,7 @@ class DungeonRunInstance{
       room: this.doc.room,
       floor: this.doc.floor,
       startTime: this.doc.elapsedTime,
-      duration: BASE_EVENT_TIME / this.adventurerInstance.stats.getPctStatMod('adventuringSpeed'),
+      duration: this.adventurerInstance.standardRoomDuration,
       ...(await generateEvent(this.adventurerInstance, this.doc))
     }
     this.doc.events.push(nextEvent)
@@ -143,6 +138,9 @@ class DungeonRunInstance{
       this.doc.adventurerState = event.adventurerState
     }
     if(event.rewards){
+      if(event.rewards.xp){
+        event.rewards.xp *= (1 + this.adventurerInstance.stats.get('xpGain').convertedValue)
+      }
       this.doc.rewards = addRewards(this.doc.rewards, event.rewards)
     }
     if(event.runFinished){
