@@ -1,9 +1,9 @@
-import { chooseMulti, chooseOne } from '../../game/rando.js'
+import { chooseMulti, chooseOne, randomRound } from '../../game/rando.js'
 import scaledValue from '../../game/scaledValue.js'
-import { StatDefinitions } from '../../game/stats/statDefinitions.js'
+import { StatBonusCategory, StatDefinitions } from '../../game/stats/statDefinitions.js'
 
 const BONUS_BASE_WEIGHT = 20
-const BONUS_WEIGHT_GROWTH = 0.12
+const BONUS_WEIGHT_GROWTH = 0.1
 
 const RARITY_TO_BONUS_CHANCE = {
   1: 60,
@@ -26,16 +26,16 @@ const NUM_BONUS_CHOICES_WEIGHT = {
 export function calculateBonusOptions(stats, level){
 
   const allBonusOptions = {
-    offensive: {},
-    defensive: {},
-    adventuring: {}
+    [StatBonusCategory.OFFENSIVE]: {},
+    [StatBonusCategory.DEFENSIVE]: {},
+    [StatBonusCategory.ADVENTURING]: {}
   }
 
   // TODO: just use relevant stats to the adventurer
   for(let type in StatDefinitions){
     const stat = StatDefinitions[type]
     if(allBonusOptions[stat.category]){
-      allBonusOptions[stat.category] = stat
+      allBonusOptions[stat.category][type] = stat
     }
   }
 
@@ -44,6 +44,8 @@ export function calculateBonusOptions(stats, level){
   for(let type in allBonusOptions){
     randomlySelectedBonusOptions[type] = pickSome(allBonusOptions[type])
   }
+
+  return randomlySelectedBonusOptions
 
   function pickSome(choices){
 
@@ -63,12 +65,9 @@ export function calculateBonusOptions(stats, level){
     const randomOptions = {}
     picked.forEach(type => {
       const statDef = choices[type]
-      const value = Math.floor(bonusWeight * (statDef.scaling ? bonusScaling : 1) / statDef.weight)
-      randomOptions[type] = { statDef, value }
+      randomOptions[type] = Math.max(1, randomRound(bonusWeight * (statDef.scaling ? bonusScaling : 1) / statDef.weight))
     })
 
     return randomOptions
   }
-
-  return allBonusOptions
 }

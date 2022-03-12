@@ -2,7 +2,7 @@ export const StatType = {
   COMPOSITE: 0,
   LOLSCALED: 1,
   LOLSCALEDINVERTED: 2,
-  PERCENTAGE: 3
+  ADDITIVE_PERCENTAGE: 3
 }
 
 /**
@@ -54,34 +54,35 @@ export const StatDefinitions = {
   },
   lifesteal: {
     ...DEFAULT_DEFINITION,
-    weight: 20,
+    weight: 2,
     category: StatBonusCategory.DEFENSIVE,
     rarity: 3
   },
   adventuringSpeed: {
     ...DEFAULT_DEFINITION,
     weight: 2,
+    type: StatType.ADDITIVE_PERCENTAGE,
     category: StatBonusCategory.ADVENTURING,
     rarity: 3
   },
   xpGain: {
     ...DEFAULT_DEFINITION,
     weight: 2,
-    type: StatType.PERCENTAGE,
+    type: StatType.ADDITIVE_PERCENTAGE,
     category: StatBonusCategory.ADVENTURING,
     rarity: 3
   },
   stairFind: {
     ...DEFAULT_DEFINITION,
     weight: 2,
-    type: StatType.PERCENTAGE,
+    type: StatType.ADDITIVE_PERCENTAGE,
     category: StatBonusCategory.ADVENTURING,
     rarity: 2
   },
   relicFind: {
     ...DEFAULT_DEFINITION,
     weight: 2,
-    type: StatType.PERCENTAGE,
+    type: StatType.ADDITIVE_PERCENTAGE,
     category: StatBonusCategory.ADVENTURING,
     rarity: 3
   },

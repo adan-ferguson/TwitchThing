@@ -5,6 +5,7 @@ import { getStats, xpToLevel as advXpToLevel } from '../../game/adventurer.js'
 import { xpToLevel as userXpToLevel } from '../../game/user.js'
 import { mergeStats } from '../../game/stats/stats.js'
 import { calculateBonusOptions } from './bonuses.js'
+import { randomRound } from '../../game/rando.js'
 
 const GROWTH_SCALE = 0.10
 
@@ -103,12 +104,12 @@ export async function finalizeResults(adventurerID, selectedBonuses){
 
 function previewLevelup(adventurer, level){
 
-  debugger
   const stats = getStats(adventurer)
   const growths = {
-    hpMax: stats.get('hpMax').convertedValue * GROWTH_SCALE,
-    attack: stats.get('attack').convertedValue * GROWTH_SCALE
+    hpMax: Math.max(1, randomRound(stats.get('hpMax').value * GROWTH_SCALE)),
+    attack: Math.max(1, randomRound(stats.get('attack').value * GROWTH_SCALE))
   }
+
   return {
     stats: growths,
     options: calculateBonusOptions(stats, level),

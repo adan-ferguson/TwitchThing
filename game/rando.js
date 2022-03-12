@@ -1,3 +1,12 @@
+/**
+ * Randomly round up or down in a statistical way.
+ * Eg. 0.3 gets rounded to 0 70% of the time and 1 30% of the time.
+ * @param val
+ */
+export function randomRound(val){
+  return (val % 1) < Math.random() ? Math.floor(val) : Math.ceil(val)
+}
+
 export function chooseOne(choices){
   return chooseMulti(choices, 1)[0]
 }
@@ -38,8 +47,9 @@ function choose(targetWeight, choices){
   for(let i = 0; i < choices.length; i++){
     let o = choices[i]
     if(currentWeight + o.weight > targetWeight){
-      return o.value
+      return i
     }
+    currentWeight += o.weight
   }
 }
 

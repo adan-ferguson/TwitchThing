@@ -4,6 +4,8 @@ import FighterInstance from '../../game/combat/fighterInstance.js'
 const START_TIME_DELAY = 1000
 const MAX_TIME = 120000
 
+const STATE_VALUES_TO_CLEAR = ['timeSinceLastAction']
+
 export async function generateCombat(fighter1, fighter2, fighterStartState1 = {}, fighterStartState2 = {}){
 
   const fighterInstance1 = new FighterInstance(fighter1, fighterStartState1)
@@ -40,9 +42,8 @@ class Combat{
     }]
     this._currentTime = 0
     this._run()
-    // TODO: clean up the states, get rid of things that aren't combat relevant
-    this.fighterEndState1 = { ...this.fighterInstance1.currentState }
-    this.fighterEndState2 = { ...this.fighterInstance2.currentState }
+    this.fighterEndState1 = cleanupState(this.fighterInstance1.currentState)
+    this.fighterEndState2 = cleanupState(this.fighterInstance2.currentState)
     this.duration = this._currentTime
   }
 
@@ -114,4 +115,12 @@ class Combat{
 
     return actions
   }
+}
+
+function cleanupState(state){
+  const cleanedupState = { ...state }
+  STATE_VALUES_TO_CLEAR.forEach(key => {
+    delete cleanedupState[key]
+  })
+  return cleanedupState
 }

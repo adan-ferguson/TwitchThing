@@ -59,7 +59,10 @@ export async function addRun(adventurerID, dungeonID){
   const drDoc = await DungeonRuns.save({
     adventurerID,
     dungeonID,
-    events: []
+    events: [],
+    adventurerState: {
+      hp: adventurerDoc.baseStats.hpMax
+    }
   })
   Adventurers.update(adventurerID, {
     dungeonRunID: drDoc._id
@@ -95,7 +98,7 @@ class DungeonRunInstance{
   }
 
   async advance(){
-    process.stdout.write('.')
+    process.stdout.write(this.doc.floor + '')
     if(this.currentEvent.pending){
       await this._continueEvent(this.currentEvent)
     }else{
@@ -139,7 +142,7 @@ class DungeonRunInstance{
     }
     if(event.rewards){
       if(event.rewards.xp){
-        event.rewards.xp *= (1 + this.adventurerInstance.stats.get('xpGain').convertedValue)
+        event.rewards.xp *= this.adventurerInstance.stats.get('xpGain').convertedValue
       }
       this.doc.rewards = addRewards(this.doc.rewards, event.rewards)
     }
@@ -158,9 +161,11 @@ class DungeonRunInstance{
     if(!fighter.endState.hp){
       event.runFinished = true
       event.message = `${fighter.data.name} has fallen, and got kicked out of the dungeon by some mysterious entity.`
-    }else{
+    }else if(!enemy.endState.hp){
       event.rewards = enemy.data.rewards
       event.message = `${fighter.data.name} defeated the ${enemy.data.name}.`
+    }else{
+      event.message = 'That fight was going nowhere so you both just get bored and leave.'
     }
     event.adventurerState = fighter.endState
     event.pending = false

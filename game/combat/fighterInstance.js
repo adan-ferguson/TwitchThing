@@ -1,3 +1,5 @@
+import Stats from '../stats/stats.js'
+
 const STATE_DEFAULTS = {
   timeSinceLastAction: 0
 }
@@ -98,14 +100,13 @@ export default class FighterInstance{
   }
 
   _takeDamage(preMitigationDamage){
-    debugger
     const damageAfterArmor = preMitigationDamage * this.stats.get('armor').convertedValue
     const blocked = preMitigationDamage - damageAfterArmor
     const finalDamage = Math.min(this.hp, damageAfterArmor)
+    this.hp -= finalDamage
     return {
       damage: finalDamage,
-      blocked: blocked,
-      hpAfter: this.hp
+      blocked
     }
   }
 }

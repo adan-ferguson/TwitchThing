@@ -76,10 +76,9 @@ export function mergeStats(...statsObjs){
  *    0 = 1
  *  100 = 2
  *  200 = 3
- * @param type
+ * @param val
  */
-function toLol(type){
-  const val = this.getStat(type)
+function toLol(val){
   if(val > 0){
     return 1 + val / 100
   }else {
@@ -89,8 +88,8 @@ function toLol(type){
 
 function convertValue(val, type){
 
-  if(type === StatType.PERCENTAGE){
-    return val / 100
+  if(type === StatType.ADDITIVE_PERCENTAGE){
+    return Math.max(0, (1 + val / 100))
   }else if(type === StatType.LOLSCALED){
     return toLol(val)
   }else if(type === StatType.LOLSCALEDINVERTED){

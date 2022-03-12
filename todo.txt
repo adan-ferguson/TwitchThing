@@ -293,7 +293,7 @@ These are required before implementing items because...well, items without stats
 + Scaling math, use Math.pow(<factor>, levels) and Math.log(<factor>, val)
 
 + Prevent combat infinite loop
--- Handle combat result without set winner server side
+++ Handle combat result without set winner server side
 -- ...and client side
 
 + Don't send entire event array in socket update
@@ -308,17 +308,16 @@ These are required before implementing items because...well, items without stats
 ++ Tags (defensive, offensive, magic, etc)
 -- test
 
-- Then for the clientside
--- A display string
--- An icon
--- A tooltip?
++ Then for the clientside
+++ A display string
+++ A tooltip
 
 - Implement the following stats, fairly basic stuff but a variety
 ++ Armor
 --- Test
 --- Clientside
 ++ Speed
---- Test
++++ Test
 --- Clientside
 ++ Lifesteal
 --- Test
@@ -329,7 +328,7 @@ These are required before implementing items because...well, items without stats
 ++ Adventuring Speed
 --- Test
 --- Clientside
--- Stair find chance
+++ Stair find chance
 --- Test
 --- Clientside
 ++ Relic find chance
@@ -348,15 +347,17 @@ These are required before implementing items because...well, items without stats
 
 - Make some monsters that are sort of a variety of these things
 ++ Basic generator logic w/ minimum floors
--- Armored
--- Slow
--- Lifestealing
--- Rarer
+-- Skeleton
+-- Bat
+-- Golem
+-- Vampire
+-- Dragon
 
-- Make combats last a big longer by buffing HP
++ Make combats last a big longer by buffing HP
 
 - Levelups
 ++ Have offensive/defensive/adventuring option groups
+-- Clientside
 
 - User levelups should unlock new adventurer slots every 10 levels
 
