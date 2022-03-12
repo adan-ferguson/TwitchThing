@@ -24,11 +24,11 @@ export async function generateMonster(dungeonRun){
   const power = scaledValue(POWER_MULTIPLIER, dungeonRun.floor - 1)
   const options = [
     { weight: 10, value: bat },
-    { weight: floor >= 5 ? 10 : 0, value: bat },
+    { weight: floor >= 5 ? 10 : 0, value: skeleton },
     { weight: floor >= 10 ? 9 : 0, value: bat },
-    { weight: floor >= 15 ? 8 : 0, value: bat },
-    { weight: floor >= 20 ? 7 : 0, value: bat },
-    { weight: floor >= 25 ? 5 : 0, value: bat }
+    { weight: floor >= 15 ? 8 : 0, value: golem },
+    { weight: floor >= 20 ? 7 : 0, value: vampire },
+    { weight: floor >= 25 ? 5 : 0, value: dragon }
   ]
   const fn = chooseOne(options)
   return fn(power)
@@ -43,8 +43,8 @@ function skeleton(power){
       xp: Math.ceil(power * 20)
     },
     baseStats: {
-      hpMax: Math.ceil(24 + 12 * power),
-      attack: Math.ceil(4 + 0.5 * power)
+      hpMax: Math.ceil(40 * power),
+      attack: Math.ceil(4 * power)
     }
   }
 }
@@ -55,12 +55,12 @@ function bat(power){
     name: 'Bat',
     loadout: [],
     rewards: {
-      xp: Math.ceil(power * 20)
+      xp: Math.ceil(power * 25)
     },
     baseStats: {
-      hpMax: Math.ceil(24 + 12 * power),
-      attack: Math.ceil(4 + 0.5 * power),
-      speed: Math.ceil(40 + 1 * power)
+      hpMax: Math.ceil(25 * power),
+      attack: Math.ceil(2.5 * power),
+      speed: Math.ceil(40 + 1.5 * power)
     }
   }
 }
@@ -68,15 +68,49 @@ function bat(power){
 function golem(power){
   return {
     type: 'monster',
-    name: 'Bat',
+    name: 'Iron Golem',
     loadout: [],
     rewards: {
-      xp: Math.ceil(power * 20)
+      xp: Math.ceil(power * 35)
     },
     baseStats: {
-      hpMax: Math.ceil(24 + 12 * power),
-      attack: Math.ceil(4 + 0.5 * power),
-      speed: Math.ceil(40 + 1 * power)
+      hpMax: Math.ceil(50 * power),
+      attack: Math.ceil(8 * power),
+      speed: -100,
+      armor: Math.ceil(50 + 1.2 * power)
+    }
+  }
+}
+
+function vampire(power){
+  return {
+    type: 'monster',
+    name: 'Vampire',
+    loadout: [],
+    rewards: {
+      xp: Math.ceil(power * 50)
+    },
+    baseStats: {
+      hpMax: Math.ceil(40 * power),
+      attack: Math.ceil(6 * power),
+      lifesteal: 25
+    }
+  }
+}
+
+function dragon(power){
+  return {
+    type: 'monster',
+    name: 'Dragon',
+    loadout: [],
+    rewards: {
+      xp: Math.ceil(power * 100)
+    },
+    baseStats: {
+      hpMax: Math.ceil(50 * power),
+      attack: Math.ceil(7 * power),
+      armor: Math.ceil(20 + 0.8 * power),
+      speed: Math.ceil(10 + 0.4 * power)
     }
   }
 }

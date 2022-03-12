@@ -54,7 +54,6 @@ export async function start(){
  * @param dungeonID
  */
 export async function addRun(adventurerID, dungeonID){
-  debugger
   const adventurerDoc = await Adventurers.findOne(adventurerID)
   const drDoc = await DungeonRuns.save({
     adventurerID,
@@ -143,6 +142,7 @@ class DungeonRunInstance{
     if(event.rewards){
       if(event.rewards.xp){
         event.rewards.xp *= this.adventurerInstance.stats.get('xpGain').convertedValue
+        event.rewards.xp = Math.ceil(event.rewards.xp)
       }
       this.doc.rewards = addRewards(this.doc.rewards, event.rewards)
     }
