@@ -76,8 +76,8 @@ function golem(power){
     baseStats: {
       hpMax: Math.ceil(50 * power),
       attack: Math.ceil(8 * power),
-      speed: -100,
-      armor: Math.ceil(50 + 1.2 * power)
+      speed: -50,
+      physDef: defFlatToPct(20 + 1.5 * power).toFixed(1),
     }
   }
 }
@@ -109,8 +109,12 @@ function dragon(power){
     baseStats: {
       hpMax: Math.ceil(50 * power),
       attack: Math.ceil(7 * power),
-      armor: Math.ceil(20 + 0.8 * power),
+      physDef: defFlatToPct(10 + 0.8 * power).toFixed(1),
       speed: Math.ceil(10 + 0.4 * power)
     }
   }
+}
+
+function defFlatToPct(flat){
+  return flat / (100 + flat)
 }

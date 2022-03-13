@@ -18,7 +18,7 @@ export default class FighterInstance{
       ...fighterStartState
     }
     if(!('hp' in this._currentState)){
-      this._currentState.hp = this.stats.get('hpMax').convertedValue
+      this._currentState.hp = this.stats.get('hpMax').value
     }
   }
 
@@ -37,7 +37,7 @@ export default class FighterInstance{
   }
 
   get actionTime(){
-    return COMBAT_BASE_TURN_TIME / this.stats.get('speed').convertedValue
+    return COMBAT_BASE_TURN_TIME / this.stats.get('speed').value
   }
 
   get timeUntilNextAction(){
@@ -57,7 +57,7 @@ export default class FighterInstance{
   }
 
   get hpMax(){
-    return this.stats.get('hpMax').convertedValue
+    return this.stats.get('hpMax').value
   }
 
   advanceTime(ms){
@@ -65,7 +65,7 @@ export default class FighterInstance{
   }
 
   performAction(enemy){
-    let baseDamage = this.stats.get('attack').convertedValue
+    let baseDamage = this.stats.get('attack').value
     const damageResult = this._dealDamage(baseDamage, enemy)
     this._currentState.timeSinceLastAction = 0
 
@@ -93,16 +93,15 @@ export default class FighterInstance{
   _lifesteal(damage){
     const lifesteal = Math.min(
       this.hpMax - this.hp,
-      Math.ceil(this.stats.get('lifesteal').convertedValue * damage)
+      Math.ceil(this.stats.get('lifesteal').value * damage)
     )
     this.hp += lifesteal
     return lifesteal
   }
 
   _takeDamage(preMitigationDamage){
-    const damageAfterArmor = preMitigationDamage * this.stats.get('armor').convertedValue
-    const blocked = preMitigationDamage - damageAfterArmor
-    const finalDamage = Math.min(this.hp, damageAfterArmor)
+    const blocked = preMitigationDamage * this.stats.get('physDef').value
+    const finalDamage = Math.min(this.hp, preMitigationDamage - blocked)
     this.hp -= finalDamage
     return {
       damage: finalDamage,

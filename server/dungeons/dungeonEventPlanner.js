@@ -16,7 +16,7 @@ export async function generateEvent(adventurerInstance, dungeonRun){
   const floor = dungeonRun.floor
   const room = dungeonRun.room
 
-  if(foundStairs(floor, room, adventurerInstance.stats.get('stairFind').convertedValue)){
+  if(foundStairs(floor, room, adventurerInstance.stats.get('stairFind').value)){
     return {
       nextRoom: 1,
       nextFloor: floor + 1,

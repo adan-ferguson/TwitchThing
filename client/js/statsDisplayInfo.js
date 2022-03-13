@@ -1,5 +1,6 @@
 import { COMBAT_BASE_TURN_TIME } from '../../game/combat/fighterInstance.js'
 import { ADVENTURER_BASE_ROOM_TIME } from '../../game/adventurerInstance.js'
+import { StatType } from '../../game/stats/statDefinitions.js'
 
 const statDefinitionsInfo = {
   attack: {
@@ -11,20 +12,21 @@ const statDefinitionsInfo = {
     description: () => 'Maximum health.'
   },
   speed: {
-    text: 'Speed',
-    description: stat => `Time between actions while in combat. ${stat.value} = ${speedToPct(stat.convertedValue, COMBAT_BASE_TURN_TIME)}s`
+    text: 'Combat Speed',
+    description: stat => 'Time between actions during combat.'
   },
-  armor: {
-    text: 'Armor',
-    description: stat => `Physical damage taken reduced by ${Math.floor(100 * (1 - stat.convertedValue))}%.`
+  physDef: {
+    text: 'Phys Defense',
+    description: stat => 'Blocks physical damage.'
   },
   lifesteal: {
     text: 'Lifesteal',
+    valueFormat: value => `${Math.floor(value)}%`,
     description: () => 'Gain health when dealing physical damage.'
   },
   adventuringSpeed: {
     text: 'Adventuring Speed',
-    description: stat => `Time between rooms while adventuring. ${stat.value} = ${speedToPct(stat.convertedValue, ADVENTURER_BASE_ROOM_TIME)}s`
+    description: stat => 'Time between rooms while adventuring.'
   },
   xpGain: {
     text: 'XP Gain',
@@ -41,13 +43,29 @@ const statDefinitionsInfo = {
 }
 
 const DEFAULTS = {
-  description: null
+  description: null,
+  displayedValue: null
 }
 
 export default function getStatDisplayInfo(stat){
+  const info = statDefinitionsInfo[stat.name]
+  if(info.valueFormat){
+    info.displayedValue = info.valueFormat(stat.value)
+  }else{
+    info.displayedValue = toText(stat.type, stat.value)
+  }
   return { ...DEFAULTS, ...(statDefinitionsInfo[stat.name] || {}) }
 }
 
 function speedToPct(val, base){
   return Math.floor(base / val) / 1000
+}
+
+function toText(statType, value){
+  if(statType === StatType.ADDITIVE_MULTIPLIER){
+    return `${value >= 1 ? '+' : ''}${(100 * (value - 1)).toFixed(1)}%`
+  }else if(statType === StatType.PERCENTAGE){
+    return `${(value * 100).toFixed(1)}%`
+  }
+  return value
 }

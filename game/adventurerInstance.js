@@ -21,10 +21,10 @@ export default class AdventurerInstance{
   }
 
   get hpMax(){
-    return this.stats.get('hpMax').convertedValue
+    return this.stats.get('hpMax').value
   }
 
   get standardRoomDuration(){
-    return ADVENTURER_BASE_ROOM_TIME / this.stats.get('adventuringSpeed').convertedValue
+    return ADVENTURER_BASE_ROOM_TIME / this.stats.get('adventuringSpeed').value
   }
 }

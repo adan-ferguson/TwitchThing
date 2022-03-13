@@ -13,18 +13,18 @@ export default class Stats{
       throw 'Unknown stat type: ' + name
     }
 
-    let value = this._getCompositeStat(name)
-
-    if('minimum' in stat){
-      value = Math.max(0, value)
+    let value
+    if(stat.type === StatType.COMPOSITE){
+      value = this._getCompositeValue(name)
+    }else if(stat.type === StatType.PERCENTAGE){
+      value = this._getPercentageValue(name)
+    }else if(stat.type === StatType.ADDITIVE_MULTIPLIER){
+      value = this._getAdditiveMultiplierValue(name)
+    }else if(stat.type === StatType.MULTIPLIER){
+      value = this._getMultiplierValue(name)
     }
 
-    return {
-      ...stat,
-      name,
-      value,
-      convertedValue: convertValue(value, stat.type)
-    }
+    return makeStatObject(name, value)
   }
 
   getAll(){
@@ -39,62 +39,115 @@ export default class Stats{
     return allStats
   }
 
-  _getCompositeStat(type){
-    return this._getFlatStatMod(type) * this._getPctStatMod(type + 'Pct')
+  _getCompositeValue(name){
+    const mods = this._getMods(name)
+    let value = 0
+
+    value = mods.flatPlus.reduce((val, mod) => {
+      return val + mod
+    }, value)
+
+    value = mods.flatMinus.reduce((val, mod) => {
+      return val - mod
+    }, value)
+
+    value = mods.pct.reduce((val, mod) => {
+      return val * mod
+    }, value)
+
+    return value
   }
 
-  _getFlatStatMod(type){
-    return this._statAffectors.reduce((val, statAffector) => {
-      return val + (statAffector[type] || 0)
-    }, 0)
+  _getPercentageValue(name){
+    const mods = this._getMods(name)
+    let value = 0
+
+    value = mods.flatPlus.reduce((val, mod) => {
+      return val + (1 - val) * (mod / 100)
+    }, value)
+
+    value = mods.flatMinus.reduce((val, mod) => {
+      mod = Math.min(100, mod)
+      return val - val * (mod / 100)
+    }, value)
+
+    return value
   }
 
-  _getPctStatMod(type){
-    return this._statAffectors.reduce((val, statAffector) => {
-      return val * (statAffector[type] || 1)
-    }, 1)
+  _getMultiplierValue(name){
+    const mods = this._getMods(name)
+    let value = 1
+
+    value = mods.flatPlus.reduce((val, mod) => {
+      return val * (1 + mod / 100)
+    }, value)
+
+    value = mods.flatMinus.reduce((val, mod) => {
+      mod = Math.min(100, mod)
+      return val - val * mod / 100
+    }, value)
+
+    return value
+  }
+
+  _getAdditiveMultiplierValue(name){
+    const mods = this._getMods(name)
+    let value = 1
+
+    value = mods.flatPlus.reduce((val, mod) => {
+      return val + mod / 100
+    }, value)
+
+    value = mods.flatMinus.reduce((val, mod) => {
+      mod = Math.min(100, mod)
+      return val - val * mod / 100
+    }, value)
+
+    return value
+  }
+
+  _getMods(name){
+
+    const mods = {
+      flatPlus: [],
+      flatMinus: [],
+      pct: []
+    }
+
+    this._statAffectors.forEach(affector => {
+      if(name in affector){
+        const change = affector[name]
+        const changeStr = change + ''
+        if(changeStr.charAt(changeStr.length - 1) === '%'){
+          const value = (1 + parseFloat(changeStr) / 100)
+          mods.pct.push(value)
+        }else{
+          if(change > 0){
+            mods.flatPlus.push(change)
+          }else if(change < 0){
+            mods.flatMinus.push(-change)
+          }
+        }
+      }
+    })
+
+    return mods
+  }
+}
+
+export function makeStatObject(name, value){
+  const stat = StatDefinitions[name]
+  if('minimum' in stat){
+    value = Math.max(0, value)
+  }
+  return {
+    ...stat,
+    name,
+    value
   }
 }
 
 export function mergeStats(...statsObjs){
-  const combined = {}
-  statsObjs.forEach(obj => {
-    for(let key in obj){
-      if(!combined[key]){
-        combined[key] = 0
-      }
-      combined[key] += obj[key]
-    }
-  })
-  return combined
-}
-
-/**
- * Convert a base stat to a LOL-style stat percentage.
- * -200 = 0.33
- * -100 = 0.50
- *    0 = 1
- *  100 = 2
- *  200 = 3
- * @param val
- */
-function toLol(val){
-  if(val > 0){
-    return 1 + val / 100
-  }else {
-    return 100 / (100 - val)
-  }
-}
-
-function convertValue(val, type){
-
-  if(type === StatType.ADDITIVE_PERCENTAGE){
-    return Math.max(0, (1 + val / 100))
-  }else if(type === StatType.LOLSCALED){
-    return toLol(val)
-  }else if(type === StatType.LOLSCALEDINVERTED){
-    return toLol(-val)
-  }
-
-  return val
+  const stats = new Stats(statsObjs)
+  return stats.getAll()
 }

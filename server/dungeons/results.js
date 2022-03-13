@@ -73,7 +73,7 @@ export async function finalizeResults(adventurerID, selectedBonuses){
   await Promise.all([saveAdventurer(), saveUser()])
 
   async function saveAdventurer(){
-    const xpAfter = adventurer.xp + dungeonRun.results.rewards.xp
+    const xpAfter = adventurer.xp + Math.floor(dungeonRun.results.rewards.xp)
 
     const bonuses = []
     dungeonRun.results.levelups.forEach((levelup, index) => {
