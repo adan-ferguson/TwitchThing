@@ -48,10 +48,9 @@ import DIForm from '../components/form.js'
   }
 
   async function handleOAuthLogin(provider){
-    console.log('pro', provider)
     magic.oauth.loginWithRedirect({
       provider,
-      redirectURI: 'https://secretprojectdi.ngrok.io/oauthredirect'
+      redirectURI: window.location.origin + '/oauthredirect'
     })
   }
 
