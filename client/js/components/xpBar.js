@@ -7,6 +7,10 @@ export default class XpBar extends Bar{
     this._label = 'xp'
   }
 
+  get animSpeed(){
+    return 1000
+  }
+
   setBadge(){
     throw 'Do not call setBadge on levelBar, call setValue'
   }
@@ -38,7 +42,7 @@ export default class XpBar extends Bar{
         let toNextLevel = this._max - this._val
         if (xpToAdd >= toNextLevel){
           await super.setValue(this._max, { animate: true })
-          this._flyingText('Level Up!')
+          this._dispatchLevelupEvent(this._xpToLevel(this._val))
           xpToAdd -= toNextLevel
         }else{
           await super.setValue(val, { animate: true })
@@ -46,6 +50,16 @@ export default class XpBar extends Bar{
         }
       }
     }
+  }
+
+  _dispatchLevelupEvent(level){
+    this._flyingText('Level Up!')
+    const e = new CustomEvent('levelup', {
+      detail: {
+        level
+      }
+    })
+    this.dispatchEvent(e)
   }
 }
 

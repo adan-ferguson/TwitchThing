@@ -1,11 +1,12 @@
 import { getActiveStats } from '../../../../../game/adventurer.js'
+import StatRow from '../../stats/statRow.js'
 
 const HTML = `
 <div class="flex-rows">
   <div class="stats-box">
     <div class="name"></div>
     <di-hp-bar></di-hp-bar>
-    <div class="stats"></div>
+    <div class="stats-list"></div>
   </div>
   <di-loadout></di-loadout>
 </div>
@@ -20,7 +21,7 @@ export default class AdventurerPane extends HTMLElement{
     this.hpBar = this.querySelector('di-hp-bar')
     this.loadout = this.querySelector('di-loadout')
     this.statsbox = this.querySelector('.stats-box')
-    this.stats = this.querySelector('.stats')
+    this.statsList = this.querySelector('.stats-list')
     this.displayMode = 'normal'
   }
 
@@ -42,17 +43,25 @@ export default class AdventurerPane extends HTMLElement{
     // TODO: add affectors from items
     // TODO: add affectors from effects
     const stats = getActiveStats(this.adventurer, this.state)
-    this.hpBar.setRange(0, stats.getCompositeStat('hpMax'))
-    this.hpBar.setValue(this.state.hp)
+    this.hpBar.setRange(0, stats.get('hpMax').value)
 
-    // TODO: figure out this but better
-    this.stats.innerHTML = ''
-    const statsToShow = ['attack']
-    statsToShow.forEach(statName => {
-      const el = document.createElement('div')
-      el.innerHTML = `${statName} ${stats.getCompositeStat(statName)}`
-      this.stats.appendChild(el)
-    })
+    if(this.state.hp !== this.hpBar.value){
+      if(animateChanges){
+        this.hpBar.setValue(this.state.hp, {
+          animate: true,
+          flyingText: true
+        })
+      }else{
+        this.hpBar.setValue(this.state.hp)
+      }
+    }
+
+    this.statsList.innerHTML = ''
+
+    const statsToShow = stats.getAll()
+    for(let key in statsToShow){
+      this.statsList.appendChild(new StatRow(statsToShow[key]))
+    }
   }
 }
 

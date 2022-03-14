@@ -1,34 +1,58 @@
 import { Magic } from 'magic-sdk'
+import { OAuthExtension } from '@magic-ext/oauth'
 import DIForm from '../components/form.js'
 
-const diform = new DIForm({
-  submitText: 'Login / Signup',
-  async: true,
-  action: sendLink,
-  success: () => window.location = '/game'
-})
+(async () => {
 
-diform.addInput({
-  type: 'email',
-  name: 'email',
-  required: 'required',
-  placeholder: 'Enter your e-mail address'
-})
-
-document.querySelector('.login-form').appendChild(diform)
-
-const magic = new Magic(window.MAGIC_PUBLISHABLE_KEY)
-
-async function sendLink(){
-  const email = diform.data().email
-  const didToken = await magic.auth.loginWithMagicLink({ email })
-  const result = await fetch('/user/login', {
-    headers: new Headers({
-      Authorization: 'Bearer ' + didToken
-    }),
-    withCredentials: true,
-    credentials: 'same-origin',
-    method: 'POST'
+  const magic = new Magic(window.MAGIC_PUBLISHABLE_KEY, {
+    extensions: [new OAuthExtension()]
   })
-  return { error: result.error }
-}
+
+  const diform = new DIForm({
+    submitText: 'Login / Signup',
+    async: true,
+    action: sendLink,
+    success: () => window.location = '/game'
+  })
+
+  diform.addInput({
+    type: 'email',
+    name: 'email',
+    required: 'required',
+    placeholder: 'Enter your e-mail address'
+  })
+
+  document.querySelector('.email-login-form').appendChild(diform)
+  document.querySelectorAll('.providers-list button').forEach(
+    el => {
+      el.addEventListener('click', e => {
+        const provider = el.getAttribute('provider')
+        if (provider){
+          handleOAuthLogin(provider)
+        }
+      })
+    })
+
+  async function sendLink(){
+    const email = diform.data().email
+    const didToken = await magic.auth.loginWithMagicLink({ email })
+    const result = await fetch('/user/login', {
+      headers: new Headers({
+        Authorization: 'Bearer ' + didToken
+      }),
+      withCredentials: true,
+      credentials: 'same-origin',
+      method: 'POST'
+    })
+    return { error: result.error }
+  }
+
+  async function handleOAuthLogin(provider){
+    console.log('pro', provider)
+    magic.oauth.loginWithRedirect({
+      provider,
+      redirectURI: 'https://secretprojectdi.ngrok.io/oauthredirect'
+    })
+  }
+
+})()

@@ -1,25 +1,32 @@
-import { generateMonster } from '../monster/generator.js'
+import { foundMonster, generateMonster } from '../monster/generator.js'
 import { generateCombat } from '../combat/combat.js'
+import { foundRelic, generateRelicEvent } from './relics.js'
+import scaledValue from '../../game/scaledValue.js'
+
+const FLOOR_SIZE_BASE = 10
+const FLOOR_SIZE_SCALE = 0.05
 
 /**
- * @param adventurer
+ * @param adventurerInstance
  * @param dungeonRun
- * @param room
- * @param floor
  * @returns {Event|null} If it's a new event, return it, otherwise return null.
  */
-export async function generateEvent(adventurer, dungeonRun, room, floor){
+export async function generateEvent(adventurerInstance, dungeonRun){
 
-  if(foundStairs(floor, room)){
+  const floor = dungeonRun.floor
+  const room = dungeonRun.room
+
+  if(foundStairs(floor, room, adventurerInstance.stats.get('stairFind').value)){
     return {
-      stairs: true,
-      message: `${adventurer.name} found the stairs and goes deeper.`
+      nextRoom: 1,
+      nextFloor: floor + 1,
+      message: `${adventurerInstance.name} found the stairs and goes deeper.`
     }
   }
 
   if(foundMonster(dungeonRun)){
-    const monster = await generateMonster(floor)
-    const combat = await generateCombat(adventurer, monster, dungeonRun.adventurerState)
+    const monster = await generateMonster(dungeonRun)
+    const combat = await generateCombat(adventurerInstance.adventurer, monster, adventurerInstance.adventurerState)
     return {
       duration: combat.duration,
       pending: true,
@@ -28,29 +35,20 @@ export async function generateEvent(adventurer, dungeonRun, room, floor){
     }
   }
 
+  if(foundRelic(adventurerInstance, dungeonRun)){
+    return generateRelicEvent(adventurerInstance, dungeonRun)
+  }
+
   return {
-    rewards: {
-      xp: Math.floor(3 * dungeonRun.floor + 3 * dungeonRun.floor * Math.random())
-    },
-    message: `${adventurer.name} finds an ancient tablet and learns various things.`
+    message: `${adventurerInstance.name} is wandering around.`
   }
 }
 
-function foundStairs(floor, room){
-  const stairsChance = (-5 + room) / (5 + floor)
-  return Math.random() < stairsChance
-}
-
-function foundMonster(dungeonRun){
-  const monsterChance = (-3 + roomsSinceMonster()) / 20
-  return Math.random() < monsterChance
-  function roomsSinceMonster(){
-    let i
-    for(i = 1; i <= dungeonRun.events.length; i++){
-      if(dungeonRun.events.at(-i)?.monster){
-        break
-      }
-    }
-    return i
+function foundStairs(floor, room, stairFind){
+  if(room <= 2){
+    return false
   }
+  const maxRooms = Math.floor(scaledValue(FLOOR_SIZE_SCALE, floor - 1, FLOOR_SIZE_BASE))
+  const stairsChance = 1 / Math.max(1, maxRooms - room + 1)
+  return Math.random() < stairsChance * stairFind
 }

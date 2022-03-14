@@ -1,0 +1,60 @@
+.login-form
+
+  display: flex
+  flex-direction: column
+  align-items: center
+  font-size: 12rem
+
+  input[type="email"]
+    width: 250rem
+    font-size: 12rem
+
+  button
+    font-size: 12rem
+
+  .oauth-providers
+
+    border-top: 1rem solid #DDD
+    padding-top: 15rem
+    text-align: center
+
+    .providers-list
+      margin-top: 5rem
+      display: flex
+      flex-direction: row
+
+      button
+        margin-right: 10rem
+        width: 110rem
+
+        &:hover
+          background-color: inherit
+          opacity: 0.8
+
+        &[provider="google"]
+          border-color: #4285F4
+          justify-content: left
+          padding: 0
+
+          img
+            width: 18rem
+            height: 18rem
+            padding: 0 8rem 0 8rem
+            background-color: white
+
+          span
+            color: white
+            background-color: #4285F4
+            height: 100%
+            flex-grow: 1
+            display: flex
+            justify-content: center
+            align-items: center
+
+
+        &[provider="twitch"]
+          background-color: #6441a5
+          color: white
+
+          i
+            padding-right: 12rem

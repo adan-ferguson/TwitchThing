@@ -4,9 +4,7 @@ import Adventurers from '../collections/adventurers.js'
 import { addRewards, calculateResults } from './results.js'
 import { generateEvent } from './dungeonEventPlanner.js'
 import { emit } from '../socketServer.js'
-import { getActiveStats } from '../../game/adventurer.js'
-
-const BASE_EVENT_TIME = 3000
+import AdventurerInstance from '../../game/adventurerInstance.js'
 
 let running = false
 let activeRuns = {}
@@ -60,10 +58,10 @@ export async function addRun(adventurerID, dungeonID){
   const drDoc = await DungeonRuns.save({
     adventurerID,
     dungeonID,
-    events: [{
-      message: `${adventurerDoc.name} enters the dungeon.`,
-      duration: BASE_EVENT_TIME
-    }]
+    events: [],
+    adventurerState: {
+      hp: adventurerDoc.baseStats.hpMax
+    }
   })
   Adventurers.update(adventurerID, {
     dungeonRunID: drDoc._id
@@ -81,7 +79,7 @@ class DungeonRunInstance{
     if(!this.currentEvent){
       this.doc.events = [{
         message: `${this.adventurer.name} enters the dungeon.`,
-        duration: BASE_EVENT_TIME
+        duration: this.adventurerInstance.standardRoomDuration
       }]
     }
   }
@@ -90,8 +88,8 @@ class DungeonRunInstance{
     return this.doc.events.at(-1)
   }
 
-  get adventurerStats(){
-    return getActiveStats(this.adventurer, this.doc.adventurerState)
+  get adventurerInstance(){
+    return new AdventurerInstance(this.adventurer, this.doc.adventurerState)
   }
 
   async loadAdventurer(){
@@ -99,7 +97,7 @@ class DungeonRunInstance{
   }
 
   async advance(){
-    process.stdout.write('.')
+    process.stdout.write(this.doc.floor + '')
     if(this.currentEvent.pending){
       await this._continueEvent(this.currentEvent)
     }else{
@@ -108,6 +106,11 @@ class DungeonRunInstance{
     if(!this.currentEvent.pending){
       this._resolveEvent(this.currentEvent)
     }
+    const truncatedDoc = {
+      currentEvent: this.currentEvent,
+      ...this.doc
+    }
+    delete truncatedDoc.events
     emit(this.doc.adventurerID, 'dungeon run update', this.doc)
     DungeonRuns.save(this.doc)
   }
@@ -119,15 +122,14 @@ class DungeonRunInstance{
   }
 
   async _newEvent(){
-    const adventurer = this.adventurer
-    const room = this.currentEvent.stairs ? 1 : this.doc.room + 1
-    const floor = this.currentEvent.stairs ? this.doc.floor + 1 : this.doc.floor
+    this.doc.room = this.currentEvent.nextRoom || this.doc.room + 1
+    this.doc.floor = this.currentEvent.nextFloor || this.doc.floor
     const nextEvent = {
-      room: room,
-      floor: floor,
+      room: this.doc.room,
+      floor: this.doc.floor,
       startTime: this.doc.elapsedTime,
-      duration: BASE_EVENT_TIME / this.adventurerStats.getPctStatMod('adventuringSpeed'),
-      ...(await generateEvent(adventurer, this.doc, room, floor))
+      duration: this.adventurerInstance.standardRoomDuration,
+      ...(await generateEvent(this.adventurerInstance, this.doc))
     }
     this.doc.events.push(nextEvent)
     this.timeSinceLastEvent = 0
@@ -138,6 +140,10 @@ class DungeonRunInstance{
       this.doc.adventurerState = event.adventurerState
     }
     if(event.rewards){
+      if(event.rewards.xp){
+        event.rewards.xp *= this.adventurerInstance.stats.get('xpGain').value
+        event.rewards.xp = Math.ceil(event.rewards.xp)
+      }
       this.doc.rewards = addRewards(this.doc.rewards, event.rewards)
     }
     if(event.runFinished){
@@ -145,8 +151,6 @@ class DungeonRunInstance{
       this.doc.results = calculateResults(this.adventurer, this.doc.rewards)
       delete activeRuns[this.doc._id]
     }
-    this.doc.room = event.room
-    this.doc.floor = event.floor
     this.doc.elapsedTime += event.duration
   }
 
@@ -157,12 +161,14 @@ class DungeonRunInstance{
     if(!fighter.endState.hp){
       event.runFinished = true
       event.message = `${fighter.data.name} has fallen, and got kicked out of the dungeon by some mysterious entity.`
-    }else{
+    }else if(!enemy.endState.hp){
       event.rewards = enemy.data.rewards
       event.message = `${fighter.data.name} defeated the ${enemy.data.name}.`
+    }else{
+      event.message = 'That fight was going nowhere so you both just get bored and leave.'
     }
     event.adventurerState = fighter.endState
     event.pending = false
-    event.duration += 8000
+    event.duration += 6000
   }
 }

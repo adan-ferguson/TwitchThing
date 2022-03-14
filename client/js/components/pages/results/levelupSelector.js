@@ -1,23 +1,21 @@
 import * as AnimationHelper from '../../../animationHelper.js'
+import StatRow from '../../stats/statRow.js'
+import { StatsDisplayStyle } from '../../../statsDisplayInfo.js'
 
 const HTML = `
 <div>
     <span class="name"></span> has reached level <span class="level"></span>
 </div>
-<div class="stats"></div>
+<div class="stats-list"></div>
 <div>Select A Bonus:</div>
 <div class="options"></div>
-`
-
-const STAT_HTML = (name, val)  => `
-+<span class="value">${val}</span> <span class="type">${name}</span>
 `
 
 export default class LevelupSelector extends HTMLElement{
   constructor(){
     super()
     this.innerHTML = HTML
-    this.stats = this.querySelector('.stats')
+    this.statsList = this.querySelector('.stats-list')
     this.options = this.querySelector('.options')
   }
 
@@ -31,31 +29,40 @@ export default class LevelupSelector extends HTMLElement{
   async _showNextLevelup(){
     const nextLevelup = this._levelups.splice(0, 1)[0]
 
-    this.stats.innerHTML = ''
+    this.statsList.innerHTML = ''
     this.options.innerHTML = ''
     this.querySelector('.level').textContent = nextLevelup.level
 
     Object.entries(nextLevelup.stats).forEach(([key, val]) => {
-      this.stats.appendChild(makeStatDescription(key, val))
+      this.statsList.appendChild(StatRow.fromNameAndValue(key, val, {
+        style: StatsDisplayStyle.ADDITIONAL
+      }))
     })
 
-    nextLevelup.options.forEach((option, i) => {
+    Object.keys(nextLevelup.options).forEach((category) => {
+
+      const options = nextLevelup.options[category]
+
       const optionEl = document.createElement('button')
       optionEl.classList.add('option')
-      Object.entries(option).forEach(([key, val]) => {
-        optionEl.appendChild(makeStatDescription(key, val))
+
+      const statsList = document.createElement('div')
+      statsList.classList.add('stats-list')
+      optionEl.appendChild(statsList)
+
+      Object.entries(options).forEach(([key, val]) => {
+        statsList.appendChild(
+          this.statsList.appendChild(StatRow.fromNameAndValue(key, val, {
+            style: StatsDisplayStyle.ADDITIONAL
+          })))
       })
+
       optionEl.addEventListener('click', () => {
-        this._selectOption(i)
+        this._selectOption(category)
       })
+
       this.options.appendChild(optionEl)
     })
-
-    function makeStatDescription(key, val){
-      const optionEl = document.createElement('div')
-      optionEl.innerHTML = STAT_HTML(key, val)
-      return optionEl
-    }
   }
 
   _selectOption(i){

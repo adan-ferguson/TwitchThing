@@ -1,5 +1,6 @@
 import Adventurers from './adventurers.js'
 import Collection from './collection.js'
+import { levelToAdventurerSlots } from '../../game/user.js'
 
 const DEFAULTS = {
   magicID: null,
@@ -21,11 +22,11 @@ Users.loadFromMagicID = async function(magicID){
   })
 }
 
-Users.create = async function(magicID, iat, email){
+Users.create = async function(magicID, iat, email, provider){
   return await Users.save({
     magicID,
     iat,
-    auth: { type: 'email', email }
+    auth: { type: provider, email }
   })
 }
 
@@ -54,8 +55,7 @@ Users.setDisplayname = async function(userDoc, displayname){
 }
 
 Users.newAdventurer = async function(userDoc, adventurername){
-  // TODO: check for slots
-  const availableSlots = 1 - userDoc.adventurers.length
+  const availableSlots = levelToAdventurerSlots(userDoc.level)  - userDoc.adventurers.length
   if(availableSlots <= 0){
     throw { message: 'No slots available.', code: 403 }
   }

@@ -3,6 +3,12 @@ import config from '../config.js'
 
 const router = express.Router()
 
+router.get('/oauthredirect', (req, res) => {
+  res.render('oauthredirect', {
+    magicPublishableKey: config.magic.publishableKey
+  })
+})
+
 router.get('/login', (req, res) => {
   if(req.user){
     res.redirect('/game')

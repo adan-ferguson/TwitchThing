@@ -279,51 +279,131 @@ Milestone 4 - Stats
 -------------------
 Implement some stats in order to allow adventurers and monsters to differentiate each other.
 These are required before implementing items because...well, items without stats are just nothing.
+-------------------
++ tippy
 
-- Stats should have the following things
--- A stat type (flat, percentage, etc)
--- Some sort of weight value for determining levelups (eg. 500 hp and 500 armor are not the same weight)
--- Tags (defensive, offensive, magic, etc)
--- A display string
--- An icon
--- An optional description in their tooltip (more elaborate later)
++ Remove font awesome react
++ Use font awesome regular
 
-- Implement the following stats, fairly basic stuff but a variety
--- Armor
--- Speed
--- Lifesteal
---- This will test the healing
--- Combat XP
--- Adventuring Speed
--- Adventuring XP
--- Stair find chance
--- Relic find chance
++ Scaling math, use Math.pow(<factor>, levels) and Math.log(<factor>, val)
 
-- Relics:
--- Small XP gain
--- Large XP gain
--- HP restore
++ Don't send entire event array in socket update
+++ test
 
-- Make some monsters that are sort of a variety of these things
++ requestAnimationFrame doesn't work when alt-tabbed so be aware of that
+++ test
 
-- Make combats last a big longer by buffing HP
++ Then for the clientside
+++ A display string
+++ A tooltip
 
-- Levelups
--- Levelup stats choose some random base stats to grant bonuses to (in addition to hp and attack)
--- Bonus options should skew towards tags
++ Implement the following stats, fairly basic stuff but a variety
+++ Armor
++++ Test
++++ Clientside
+++ Speed
++++ Test
++++ Clientside
+++ Lifesteal
++++ Test
++++ Clientside
+++ XP Gain
++++ Test
++++ Clientside
+++ Adventuring Speed
++++ Test
++++ Clientside
+++ Stair find chance
++++ Test
++++ Clientside
+++ Relic find chance
++++ Test
++++ Clientside
 
-- User levelups should unlock new adventurer slots
++ When you level up it should pull more options
+
++ Make some monsters that are sort of a variety of these things
+++ Basic generator logic w/ minimum floors
+++ Skeleton
+++ Bat
+++ Golem
+++ Vampire
+++ Dragon
+
++ Make combats last a big longer by buffing HP
+
++ Levelups
+++ Have offensive/defensive/adventuring option groups
+++ Clientside
+
++ Stats should have the following things
+++ A stat type (flat, percentage, etc)
+++ Some sort of weight value for determining levelups (eg. 500 hp and 500 armor are not the same weight)
+++ Tags (defensive, offensive, magic, etc)
+++ test
+
++ Relics:
+++ Small XP gain
+++ Large XP gain
+++ HP restore
+++ test
+++ HP restore doesn't seem to happen + doesn't show clientside
+
++ User levelups should unlock new adventurer slots every 10 levels
+
++ Clear all adventurers
+
++ Results page:
+++ what floor/room
+++ Show level up! Message if adventurer/user levels up
+++ Show "you unlocked a new adventurer slot" if user levels up
+
++ Add login providers for twitch & google
+++ set them up on live
+
+4.5
+---------
+- Results page
+-- Show what you died to
+-- Show # of monsters killed, relics found
+
+- Choose floor
+- Keep track of adv max floor
+
+- Admin page
+-- Clear all adventurers
+
+- Have XP gain do the number tickup thing (dungeon run page)
+
++ Prevent combat infinite loop
+++ Handle combat result without set winner server side
+-- ...and client side
+
+- Fix the styling of the logout dropdown +
+- Fix janky thing when first start dungeon run
+- Tooltips get stuck if they're showing when you get a dungeon run update
+- Heal animation looks wrong especially when near a damage animation
 
 TODO Later
 -----------
-- Big numbers will be a problem
+- Fix flex styling/loadouts
+
+- Bonuses are +1, +2 -1, +3 -1 -1
+- StatList + buff + debuff display
+
+- Mobile considerations
+-- Tooltips
+
 - Janky going back from combat to adv
+-- Timer at combat resets funny
+-- Generally the visuals seem to jump
+
+- Big numbers will be a problem
 - Back button browser acts like back button header?
 - Stupid webpack openssl thing, upgrade webpack or whatever
 - npm audit
 
-- Admin page
--- Show console logs
+- Admin page bonus logs
 
 - Fix errors + targetPage redirects
 
