@@ -314,8 +314,17 @@ These are required before implementing items because...well, items without stats
 
 - User levelups should unlock new adventurer slots
 
+=============
+Milestone 5
+=============
+Loadout + Items for both adventurers and monsters.
+Adventurer levels up now depend on their held items.
+Item and Monsters should now use the generator.
+Test some monster mods for the monster loadouts. No base stats other than hp/attack.
+
 TODO Later
 -----------
+- Move monsters to generator
 - Big numbers will be a problem
 - Janky going back from combat to adv
 - Back button browser acts like back button header?
