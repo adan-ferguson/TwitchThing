@@ -363,6 +363,8 @@ These are required before implementing items because...well, items without stats
 
 4.5
 ---------
+- Don't animate hp bar after combat
+
 - Results page
 -- Show what you died to
 -- Show # of monsters killed, relics found
@@ -384,16 +386,6 @@ These are required before implementing items because...well, items without stats
 - Tooltips get stuck if they're showing when you get a dungeon run update
 - Heal animation looks wrong especially when near a damage animation
 
-TODO Later
------------
-- Fix flex styling/loadouts
-
-- Bonuses are +1, +2 -1, +3 -1 -1
-- StatList + buff + debuff display
-
-- Mobile considerations
--- Tooltips
-
 =============
 Milestone 5
 =============
@@ -404,6 +396,16 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 TODO Later
 -----------
+- On main page show when adventurer is in combat
+
+- Fix flex styling/loadouts
+
+- Bonuses are +1, +2 -1, +3 -1 -1
+- StatList + buff + debuff display
+
+- Mobile considerations
+-- Tooltips
+
 - Move monsters to generator
 - Big numbers will be a problem
 - Janky going back from combat to adv

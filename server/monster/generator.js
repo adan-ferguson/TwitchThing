@@ -45,7 +45,7 @@ function skeleton(power){
     },
     baseStats: {
       hpMax: Math.ceil(40 * power),
-      attack: Math.ceil(4 * power)
+      attack: Math.ceil(8 * power)
     }
   }
 }
@@ -60,7 +60,7 @@ function bat(power){
     },
     baseStats: {
       hpMax: Math.ceil(25 * power),
-      attack: Math.ceil(2.5 * power),
+      attack: Math.ceil(5 * power),
       speed: 1.5 + 0.05 * power
     }
   }
@@ -76,7 +76,7 @@ function golem(power){
     },
     baseStats: {
       hpMax: Math.ceil(50 * power),
-      attack: Math.ceil(8 * power),
+      attack: Math.ceil(16 * power),
       speed: 0.5,
       physDef: defFlatToPct(20 + 1.5 * power),
     }
@@ -93,7 +93,7 @@ function vampire(power){
     },
     baseStats: {
       hpMax: Math.ceil(40 * power),
-      attack: Math.ceil(6 * power),
+      attack: Math.ceil(12 * power),
       lifesteal: 25
     }
   }
@@ -109,7 +109,7 @@ function dragon(power){
     },
     baseStats: {
       hpMax: Math.ceil(50 * power),
-      attack: Math.ceil(7 * power),
+      attack: Math.ceil(14 * power),
       physDef: defFlatToPct(10 + 0.8 * power),
       speed: 1.1 + 0.02 * power
     }
