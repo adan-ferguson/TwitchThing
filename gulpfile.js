@@ -10,8 +10,8 @@ import path from 'path'
 const S = gulpSass(sass)
 const REGISTRIES = ['items', 'bonuses']
 
-function buildStyles() {
-  return gulp.src('./client/styles/**/*.sass')
+function buildStyles(){
+  return gulp.src('./client/styles/**/*.*ss')
     .pipe(S().on('error', S.logError))
     .pipe(concat('style.css'))
     .pipe(gulp.dest('./client_dist/styles'))

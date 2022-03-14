@@ -3,7 +3,11 @@ import DungeonRuns from '../collections/dungeonRuns.js'
 import Users from '../collections/users.js'
 import { getStats, xpToLevel as advXpToLevel } from '../../game/adventurer.js'
 import { xpToLevel as userXpToLevel } from '../../game/user.js'
-import { mergeStats } from '../../game/stats.js'
+import { mergeStats } from '../../game/stats/stats.js'
+import { calculateBonusOptions } from './bonuses.js'
+import { randomRound } from '../../game/rando.js'
+
+const GROWTH_SCALE = 0.10
 
 const REWARDS_TYPES = {
   xp: 'int'
@@ -69,7 +73,7 @@ export async function finalizeResults(adventurerID, selectedBonuses){
   await Promise.all([saveAdventurer(), saveUser()])
 
   async function saveAdventurer(){
-    const xpAfter = adventurer.xp + dungeonRun.results.rewards.xp
+    const xpAfter = adventurer.xp + Math.floor(dungeonRun.results.rewards.xp)
 
     const bonuses = []
     dungeonRun.results.levelups.forEach((levelup, index) => {
@@ -78,13 +82,17 @@ export async function finalizeResults(adventurerID, selectedBonuses){
       bonuses.push(levelup.stats)
     })
 
-    const newStats = mergeStats(adventurer.baseStats, ...bonuses)
-    await Adventurers.update(adventurerID, {
+    const updates = {
       dungeonRunID: null,
-      xp: xpAfter,
-      baseStats: newStats,
-      level: advXpToLevel(xpAfter)
-    })
+      xp: xpAfter
+    }
+
+    if(bonuses.length){
+      updates.baseStats = mergeStats(adventurer.baseStats, ...bonuses)
+      updates.level = advXpToLevel(xpAfter)
+    }
+
+    await Adventurers.update(adventurerID, updates)
   }
 
   async function saveUser(){
@@ -100,25 +108,15 @@ export async function finalizeResults(adventurerID, selectedBonuses){
 
 function previewLevelup(adventurer, level){
 
-  const bonusOptions = []
   const stats = getStats(adventurer)
-
-  bonusOptions.push({
-    hpMax: Math.ceil(stats.getCompositeStat('hpMax') * 0.1)
-  })
-
-  bonusOptions.push({
-    attack: Math.ceil(stats.getCompositeStat('attack') * 0.1)
-  })
-
-  // TODO: add options provided by items
+  const growths = {
+    hpMax: Math.max(1, randomRound(stats.get('hpMax').value * GROWTH_SCALE)),
+    attack: Math.max(1, randomRound(stats.get('attack').value * GROWTH_SCALE))
+  }
 
   return {
-    stats: {
-      hpMax: Math.ceil(stats.getCompositeStat('hpMax') * 0.1),
-      attack: Math.ceil(stats.getCompositeStat('attack') * 0.1)
-    },
-    options: bonusOptions,
+    stats: growths,
+    options: calculateBonusOptions(stats, level),
     level
   }
 }

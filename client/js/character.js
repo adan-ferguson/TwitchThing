@@ -1,7 +1,7 @@
 import Item from '/game/item.js'
-import Stats from '/game/stats.js'
+import Stats from '/game/stats/stats.js'
 
-export default class Character {
+export default class Character{
 
   constructor(data){
     this.data = data

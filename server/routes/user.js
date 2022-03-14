@@ -4,16 +4,20 @@ import config from '../config.js'
 import Users from '../collections/users.js'
 import passport from 'passport'
 import { Strategy } from 'passport-magic'
+import { OAuthExtension } from '@magic-ext/oauth'
 
 const router = express.Router()
 
-const magic = new Magic(config.magic.secretKey)
+const magic = new Magic(config.magic.secretKey, {
+  extensions: [new OAuthExtension()]
+})
+
 const strategy = new Strategy(async function(magicUser, done){
   try {
     let user = await Users.loadFromMagicID(magicUser.issuer)
     if(!user){
       const userMetadata = await magic.users.getMetadataByIssuer(magicUser.issuer)
-      user = await Users.create(magicUser.issuer, magicUser.claim.iat, userMetadata.email)
+      user = await Users.create(magicUser.issuer, magicUser.claim.iat, userMetadata.email, userMetadata.oauthProvider || 'magiclink')
     }else{
       Users.login(user)
     }

@@ -29,6 +29,7 @@ module.exports = {
       'error',
       'always'
     ],
+    'no-unused-vars': ["error", { "args": "none" }],
     'space-before-blocks': ['error', 'never'],
     indent: ['error', 2]
   }

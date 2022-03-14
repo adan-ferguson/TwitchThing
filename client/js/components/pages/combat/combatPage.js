@@ -63,10 +63,8 @@ export default class CombatPage extends Page{
   }
 
   _setup(){
-    const prevEntry = this.timeline.prevEntry
-    this._applyEntry(prevEntry, false)
-    this.fighterPane1.advanceTime(this.timeline.timeSinceLastEntry)
-    this.fighterPane2.advanceTime(this.timeline.timeSinceLastEntry)
+    const currentEntry = this.timeline.currentEntry
+    this._applyEntry(currentEntry, false)
   }
 
   _run(){
@@ -76,17 +74,12 @@ export default class CombatPage extends Page{
   _tick(){
     const before = Date.now()
     requestAnimationFrame(() => {
-      const nextEntry = this.timeline.nextEntry
-      const msToAdvance = Date.now() - before
-      if(!nextEntry){
-        return this._finish()
-      }
-      if(nextEntry.time <= this.timeline.time + msToAdvance){
-        this._applyEntry(nextEntry)
+      this._advanceTime(Date.now() - before)
+      if(this.timeline.finished){
+        this._finish()
       }else{
-        this._advanceTime(msToAdvance)
+        this._tick()
       }
-      this._tick()
     })
   }
 
@@ -94,6 +87,8 @@ export default class CombatPage extends Page{
     this.timeline.time = timelineEntry.time
     this.fighterPane1.setState(timelineEntry.fighterState1, animate)
     this.fighterPane2.setState(timelineEntry.fighterState2, animate)
+    this.fighterPane1.advanceTime(this.timeline.timeSinceLastEntry)
+    this.fighterPane2.advanceTime(this.timeline.timeSinceLastEntry)
     this.combatFeed.setTime(this.timeline.time)
   }
 
@@ -101,9 +96,14 @@ export default class CombatPage extends Page{
     if(ms <= 0){
       return
     }
+    const prevEntry = this.timeline.currentEntry
     this.timeline.time += ms
-    this.fighterPane1.advanceTime(ms)
-    this.fighterPane2.advanceTime(ms)
+    if(prevEntry !== this.timeline.currentEntry){
+      this._applyEntry(this.timeline.currentEntry)
+    }else{
+      this.fighterPane1.advanceTime(ms)
+      this.fighterPane2.advanceTime(ms)
+    }
     this.combatFeed.setTime(this.timeline.time)
     // TODO: clock?
   }

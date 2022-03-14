@@ -1,5 +1,6 @@
 import FighterInstance from '../../../../../game/combat/fighterInstance.js'
 import { fadeOut } from '../../../animationHelper.js'
+import StatRow from '../../stats/statRow.js'
 
 const HTML = `
 <div class="flex-rows">
@@ -7,7 +8,7 @@ const HTML = `
     <div class="name"></div>
     <di-hp-bar></di-hp-bar>
     <di-bar class="action"></di-bar>
-    <div class="stats"></div>
+    <div class="stats-list"></div>
   </div>
   <di-loadout></di-loadout>
 </div>
@@ -23,7 +24,7 @@ export default class FighterPane extends HTMLElement{
     this.actionBar.showValueBeforeLabel = false
     this.loadout = this.querySelector('di-loadout')
     this.statsbox = this.querySelector('.stats-box')
-    this.stats = this.querySelector('.stats')
+    this.statsList = this.querySelector('.stats-list')
     this.fighterInstance = null
   }
 
@@ -75,13 +76,11 @@ export default class FighterPane extends HTMLElement{
     this.actionBar.setMax(this.fighterInstance.actionTime)
 
     // TODO: figure out this but better
-    this.stats.innerHTML = ''
-    const statsToShow = ['attack']
-    statsToShow.forEach(statName => {
-      const el = document.createElement('div')
-      el.innerHTML = `${statName} ${this.fighterInstance.stats.getCompositeStat(statName)}`
-      this.stats.appendChild(el)
-    })
+    this.statsList.innerHTML = ''
+    const statsToShow = this.fighterInstance.stats.getAll()
+    for(let key in statsToShow){
+      this.statsList.appendChild(new StatRow(statsToShow[key]))
+    }
 
     this._updateCooldowns()
 

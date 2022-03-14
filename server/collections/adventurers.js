@@ -9,7 +9,7 @@ const DEFAULTS = {
   loadout: [null, null, null, null, null, null, null, null],
   dungeonRunID: null,
   baseStats: {
-    hpMax: 100,
+    hpMax: 200,
     attack: 10
   }
 }

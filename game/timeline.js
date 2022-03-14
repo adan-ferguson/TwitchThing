@@ -16,23 +16,27 @@ export default class Timeline{
     this._time = Math.max(0, Math.min(this.duration, val))
   }
 
+  get finished(){
+    return this._time >= this.duration
+  }
+
   get timeSinceLastEntry(){
-    return Math.max(0, this.time - this.prevEntry.time)
+    return Math.max(0, this.time - this.currentEntry.time)
   }
 
   get firstEntry(){
     return this._entries[0]
   }
 
-  get prevEntry(){
-    return this._entries[this.prevEntryIndex]
+  get currentEntry(){
+    return this._entries[this.currentEntryIndex]
   }
 
   get nextEntry(){
-    return this._entries[this.prevEntryIndex + 1]
+    return this._entries[this.currentEntryIndex + 1]
   }
 
-  get prevEntryIndex(){
+  get currentEntryIndex(){
     let entryIndex = 0
     for(let i = 0; i < this._entries.length; i++){
       if(this._entries[i].time <= this.time){
