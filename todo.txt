@@ -396,6 +396,9 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 TODO Later
 -----------
+- Let me open adv in new tab from main page
+- Don't animate bars if we're tabbed out
+
 - On main page show when adventurer is in combat
 
 - Fix flex styling/loadouts

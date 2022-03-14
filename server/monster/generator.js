@@ -41,7 +41,7 @@ function skeleton(power){
     name: 'Skeleton',
     loadout: [],
     rewards: {
-      xp: Math.ceil(power * 20)
+      xp: Math.ceil(power * 40)
     },
     baseStats: {
       hpMax: Math.ceil(40 * power),
@@ -56,7 +56,7 @@ function bat(power){
     name: 'Bat',
     loadout: [],
     rewards: {
-      xp: Math.ceil(power * 25)
+      xp: Math.ceil(power * 50)
     },
     baseStats: {
       hpMax: Math.ceil(25 * power),
@@ -72,7 +72,7 @@ function golem(power){
     name: 'Iron Golem',
     loadout: [],
     rewards: {
-      xp: Math.ceil(power * 35)
+      xp: Math.ceil(power * 70)
     },
     baseStats: {
       hpMax: Math.ceil(50 * power),
@@ -89,7 +89,7 @@ function vampire(power){
     name: 'Vampire',
     loadout: [],
     rewards: {
-      xp: Math.ceil(power * 50)
+      xp: Math.ceil(power * 100)
     },
     baseStats: {
       hpMax: Math.ceil(40 * power),
@@ -105,7 +105,7 @@ function dragon(power){
     name: 'Dragon',
     loadout: [],
     rewards: {
-      xp: Math.ceil(power * 100)
+      xp: Math.ceil(power * 200)
     },
     baseStats: {
       hpMax: Math.ceil(50 * power),

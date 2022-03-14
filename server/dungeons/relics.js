@@ -19,7 +19,7 @@ export function generateRelicEvent(adventurerInstance, dungeonRun){
 }
 
 function minorRelic(adventurerInstance, dungeonRun){
-  const xp = scaledValue(VALUE_MULTIPLIER, dungeonRun.floor, 10)
+  const xp = scaledValue(VALUE_MULTIPLIER, dungeonRun.floor, 30)
   return {
     rewards: {
       xp: Math.floor(xp * (0.5 + Math.random() / 2))
@@ -29,7 +29,7 @@ function minorRelic(adventurerInstance, dungeonRun){
 }
 
 function majorRelic(adventurerInstance, dungeonRun){
-  const xp = scaledValue(VALUE_MULTIPLIER, dungeonRun.floor, 50)
+  const xp = scaledValue(VALUE_MULTIPLIER, dungeonRun.floor, 150)
   return {
     rewards: {
       xp: Math.floor(xp * (0.5 + Math.random() / 2))
