@@ -82,13 +82,17 @@ export async function finalizeResults(adventurerID, selectedBonuses){
       bonuses.push(levelup.stats)
     })
 
-    const newStats = mergeStats(adventurer.baseStats, ...bonuses)
-    await Adventurers.update(adventurerID, {
+    const updates = {
       dungeonRunID: null,
-      xp: xpAfter,
-      baseStats: newStats,
-      level: advXpToLevel(xpAfter)
-    })
+      xp: xpAfter
+    }
+
+    if(bonuses.length){
+      updates.baseStats = mergeStats(adventurer.baseStats, ...bonuses)
+      updates.level = advXpToLevel(xpAfter)
+    }
+
+    await Adventurers.update(adventurerID, updates)
   }
 
   async function saveUser(){

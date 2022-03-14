@@ -38,7 +38,7 @@ export default class MainPage extends Page{
     if(myContent.error){
       this._showError(myContent.error, true)
     }else{
-      this._populateAdventurers(myContent.adventurers)
+      this._populateAdventurers(myContent.adventurers, myContent.slots)
       myContent.dungeonRuns.forEach(dr => {
         this._dungeonRunUpdate(dr)
       })
@@ -50,7 +50,7 @@ export default class MainPage extends Page{
     getSocket().off('dungeon run update', this._dungeonRunUpdate)
   }
 
-  _populateAdventurers(adventurers = []){
+  _populateAdventurers(adventurers, slots){
     const adventurerList = this.querySelector('.adventurer-list')
     const rows = []
     adventurers.forEach(adventurer => {
@@ -59,14 +59,14 @@ export default class MainPage extends Page{
       }))
     })
 
-    // TODO: show each available slot
-    if(!adventurers.length){
+    for(let i = adventurers.length; i < slots; i++){
       const newAdventurerRow = new AdventurerRow()
       rows.push(newAdventurerRow)
       newAdventurerRow.addEventListener('click', () => {
         this._showNewAdventurerModal()
       })
     }
+
     adventurerList.setItems(rows)
   }
 

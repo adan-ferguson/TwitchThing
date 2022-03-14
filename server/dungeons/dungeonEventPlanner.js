@@ -45,6 +45,9 @@ export async function generateEvent(adventurerInstance, dungeonRun){
 }
 
 function foundStairs(floor, room, stairFind){
+  if(room <= 2){
+    return false
+  }
   const maxRooms = Math.floor(scaledValue(FLOOR_SIZE_SCALE, floor - 1, FLOOR_SIZE_BASE))
   const stairsChance = 1 / Math.max(1, maxRooms - room + 1)
   return Math.random() < stairsChance * stairFind

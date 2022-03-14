@@ -1,6 +1,6 @@
 import { chooseMulti, chooseOne, randomRound } from '../../game/rando.js'
 import scaledValue from '../../game/scaledValue.js'
-import { StatBonusCategory, StatDefinitions } from '../../game/stats/statDefinitions.js'
+import { StatBonusCategory, StatDefinitions, StatType } from '../../game/stats/statDefinitions.js'
 
 const BONUS_BASE_WEIGHT = 20
 const BONUS_WEIGHT_GROWTH = 0.1
@@ -65,7 +65,14 @@ export function calculateBonusOptions(stats, level){
     const randomOptions = {}
     picked.forEach(type => {
       const statDef = choices[type]
-      randomOptions[type] = Math.max(1, randomRound(bonusWeight * (statDef.scaling ? bonusScaling : 1) / statDef.weight))
+      const weightedVal = bonusWeight * (statDef.scaling ? bonusScaling : 1) / statDef.weight
+      if(statDef.type === StatType.COMPOSITE){
+        randomOptions[type] = Math.max(1, randomRound(weightedVal))
+      }else if(statDef.type === StatType.PERCENTAGE){
+        randomOptions[type] = weightedVal.toFixed(2)
+      }else{
+        randomOptions[type] = (1 + weightedVal).toFixed(2)
+      }
     })
 
     return randomOptions

@@ -169,6 +169,6 @@ class DungeonRunInstance{
     }
     event.adventurerState = fighter.endState
     event.pending = false
-    event.duration += 8000
+    event.duration += 6000
   }
 }

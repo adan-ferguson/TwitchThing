@@ -1,28 +1,24 @@
-import getStatDisplayInfo from '../../statsDisplayInfo.js'
+import { getStatDisplayInfo, StatsDisplayStyle } from '../../statsDisplayInfo.js'
 import tippy from 'tippy.js'
 import { makeStatObject } from '../../../../game/stats/stats.js'
 
 const HTML = (name, value, icon = '') => `
-<span>${icon}</span> <span>${name}</span> <span class="val">${value}</span>
+<span><span>${icon}</span> <span>${name}</span></span><span class="val">${value}</span>
 `
 
 export default class StatRow extends HTMLElement{
 
-  /**
-   * StatRow(stat)
-   * StatRow(name, val)
-   */
-  constructor(/****/){
+  static fromNameAndValue(name, val, options = {}){
+    return new StatRow(makeStatObject(name, val), options)
+  }
+
+  constructor(stat, options = {}){
     super()
-
-    let stat
-    if(arguments[1]){
-      stat = makeStatObject(arguments[0], arguments[1])
-    }else{
-      stat = arguments[0]
+    options = {
+      style: StatsDisplayStyle.CUMULATIVE,
+      ...options
     }
-
-    const statDisplayInfo = getStatDisplayInfo(stat)
+    const statDisplayInfo = getStatDisplayInfo(stat, options.style)
     this.innerHTML = HTML(statDisplayInfo.text, statDisplayInfo.displayedValue)
     tippy(this, {
       content: statDisplayInfo.description(stat)

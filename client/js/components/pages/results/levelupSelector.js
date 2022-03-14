@@ -1,5 +1,6 @@
 import * as AnimationHelper from '../../../animationHelper.js'
 import StatRow from '../../stats/statRow.js'
+import { StatsDisplayStyle } from '../../../statsDisplayInfo.js'
 
 const HTML = `
 <div>
@@ -33,19 +34,33 @@ export default class LevelupSelector extends HTMLElement{
     this.querySelector('.level').textContent = nextLevelup.level
 
     Object.entries(nextLevelup.stats).forEach(([key, val]) => {
-      this.statsList.appendChild(new StatRow(key, val))
+      this.statsList.appendChild(StatRow.fromNameAndValue(key, val, {
+        style: StatsDisplayStyle.ADDITIONAL
+      }))
     })
 
     Object.keys(nextLevelup.options).forEach((category) => {
+
       const options = nextLevelup.options[category]
+
       const optionEl = document.createElement('button')
-      optionEl.classList.add('option', 'stats-list')
+      optionEl.classList.add('option')
+
+      const statsList = document.createElement('div')
+      statsList.classList.add('stats-list')
+      optionEl.appendChild(statsList)
+
       Object.entries(options).forEach(([key, val]) => {
-        optionEl.appendChild(new StatRow(key, val))
+        statsList.appendChild(
+          this.statsList.appendChild(StatRow.fromNameAndValue(key, val, {
+            style: StatsDisplayStyle.ADDITIONAL
+          })))
       })
+
       optionEl.addEventListener('click', () => {
         this._selectOption(category)
       })
+
       this.options.appendChild(optionEl)
     })
   }

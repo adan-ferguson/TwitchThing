@@ -7,6 +7,8 @@ import Modal from '../../modal.js'
 import LevelupSelector from './levelupSelector.js'
 import { show as showLoader } from '../../../loader.js'
 
+const WAIT_TIME = 1250
+
 const HTML = `
 <div class='flex-columns'>
   <div class='content-well'>
@@ -48,30 +50,61 @@ export default class ResultsPage extends Page{
 
     this.selectedBonuses = []
     this.adventurerPane.setAdventurer(adventurer)
-    this.dungeonRun = dungeonRun
 
-    wait(500).then(async () => {
-      await Promise.all([this._adventurerXp(), this._userXp(), this._loot()])
-      this._enableButton(adventurer, this.dungeonRun.results.levelups)
+    this.dungeonRun = dungeonRun
+    this.adventurer = adventurer
+
+    const fns = [
+      this._showDungeonResult,
+      this._showMonstersKilled,
+      this._showRelicsFound,
+      this._adventurerXp,
+      this._userXp
+    ]
+
+    wait(WAIT_TIME).then(async () => {
+      for(let fn of fns){
+        await fn()
+      }
+      this._enableButton()
     })
   }
 
-  async _adventurerXp(){
-    const xpRow = document.createElement('div')
-    xpRow.textContent = `+${this.dungeonRun.results.rewards.xp} xp`
-    this.results.appendChild(xpRow)
+  _showDungeonResult = async () => {
+    this._addResultRow(`You were killed by a something on floor ${this.dungeonRun.floor}, room ${this.dungeonRun.room}`)
+    await wait(WAIT_TIME)
+  }
+
+  _showMonstersKilled = async () => {
+    this._addResultRow('Insert monsters killed here')
+    await wait(WAIT_TIME)
+  }
+
+  _showRelicsFound = async () => {
+    this._addResultRow('Insert relics found here')
+    await wait(WAIT_TIME)
+  }
+
+  _adventurerXp = async () => {
+    this._addResultRow(`+${this.dungeonRun.results.rewards.xp} xp`)
+    this.adventurerPane.xpBar.addEventListener('levelup', e => {
+      this._addResultRow(`${this.adventurer.name} leveled up to level ${e.detail.level}!`)
+    })
     await this.adventurerPane.addXp(this.dungeonRun.results.rewards.xp)
   }
 
-  async _userXp(){
+  _userXp = async () => {
     await this.app.header.addUserXp(this.dungeonRun.results.rewards.xp)
+    this.app.header.xpBar.addEventListener('levelup', e => {
+      this._addResultRow(`You leveled up to level ${e.detail.level}!`)
+      if(e.detail.level % 10 === 0){
+        this._addResultRow('You gained a new adventurer slot.')
+      }
+    })
   }
 
-  async _loot(){
-
-  }
-
-  _enableButton(adventurer, levelups){
+  _enableButton(){
+    const levelups = this.dungeonRun.results.levelups
     if(levelups.length){
       this.doneButton.textContent = 'Level up'
       this.doneButton.classList.add('levelup')
@@ -80,7 +113,7 @@ export default class ResultsPage extends Page{
     this.doneButton.addEventListener('click', async () => {
       if(levelups.length){
         const selector = new LevelupSelector()
-        selector.setLevelups(adventurer, levelups)
+        selector.setLevelups(this.adventurer, levelups)
         const modal = new Modal()
         modal.innerPane.appendChild(selector)
         modal.show()
@@ -103,6 +136,12 @@ export default class ResultsPage extends Page{
       this.app.setPage(new AdventurerPage(this.adventurerID))
     }
     // TODO: handle error, usually just shouldn't happen though
+  }
+
+  _addResultRow(text){
+    const xpRow = document.createElement('div')
+    xpRow.textContent = text
+    this.results.appendChild(xpRow)
   }
 }
 

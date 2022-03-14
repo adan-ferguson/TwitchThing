@@ -282,90 +282,115 @@ These are required before implementing items because...well, items without stats
 -------------------
 + tippy
 
-+ Add login providers for twitch & google
--- set them up on live
-
-- Fix the styling of the logout dropdown + modal
-
 + Remove font awesome react
 + Use font awesome regular
 
 + Scaling math, use Math.pow(<factor>, levels) and Math.log(<factor>, val)
 
-+ Prevent combat infinite loop
-++ Handle combat result without set winner server side
--- ...and client side
-
 + Don't send entire event array in socket update
--- test
+++ test
 
 + requestAnimationFrame doesn't work when alt-tabbed so be aware of that
--- test
-
-+ Stats should have the following things
-++ A stat type (flat, percentage, etc)
-++ Some sort of weight value for determining levelups (eg. 500 hp and 500 armor are not the same weight)
-++ Tags (defensive, offensive, magic, etc)
--- test
+++ test
 
 + Then for the clientside
 ++ A display string
 ++ A tooltip
 
-- Implement the following stats, fairly basic stuff but a variety
++ Implement the following stats, fairly basic stuff but a variety
 ++ Armor
---- Test
---- Clientside
++++ Test
++++ Clientside
 ++ Speed
 +++ Test
---- Clientside
++++ Clientside
 ++ Lifesteal
---- Test
---- Clientside
++++ Test
++++ Clientside
 ++ XP Gain
---- Test
---- Clientside
++++ Test
++++ Clientside
 ++ Adventuring Speed
---- Test
---- Clientside
++++ Test
++++ Clientside
 ++ Stair find chance
---- Test
---- Clientside
++++ Test
++++ Clientside
 ++ Relic find chance
---- Test
---- Clientside
++++ Test
++++ Clientside
 
 + When you level up it should pull more options
+
++ Make some monsters that are sort of a variety of these things
+++ Basic generator logic w/ minimum floors
+++ Skeleton
+++ Bat
+++ Golem
+++ Vampire
+++ Dragon
+
++ Make combats last a big longer by buffing HP
+
++ Levelups
+++ Have offensive/defensive/adventuring option groups
+++ Clientside
+
++ Stats should have the following things
+++ A stat type (flat, percentage, etc)
+++ Some sort of weight value for determining levelups (eg. 500 hp and 500 armor are not the same weight)
+++ Tags (defensive, offensive, magic, etc)
+++ test
 
 + Relics:
 ++ Small XP gain
 ++ Large XP gain
 ++ HP restore
--- test
+++ test
+++ HP restore doesn't seem to happen + doesn't show clientside
 
-- Have XP gain do the number tickup thing (dungeon run page)
++ User levelups should unlock new adventurer slots every 10 levels
 
-- Make some monsters that are sort of a variety of these things
-++ Basic generator logic w/ minimum floors
--- Skeleton
--- Bat
--- Golem
--- Vampire
--- Dragon
++ Clear all adventurers
 
-+ Make combats last a big longer by buffing HP
++ Results page:
+++ what floor/room
+++ Show level up! Message if adventurer/user levels up
+++ Show "you unlocked a new adventurer slot" if user levels up
 
-- Levelups
-++ Have offensive/defensive/adventuring option groups
--- Clientside
++ Add login providers for twitch & google
+++ set them up on live
 
-- User levelups should unlock new adventurer slots every 10 levels
+4.5
+---------
+- Results page
+-- Show what you died to
+-- Show # of monsters killed, relics found
+
+- Choose floor
+- Keep track of adv max floor
 
 - Admin page
 -- Clear all adventurers
 
+- Have XP gain do the number tickup thing (dungeon run page)
+
++ Prevent combat infinite loop
+++ Handle combat result without set winner server side
+-- ...and client side
+
+- Fix the styling of the logout dropdown +
+- Fix janky thing when first start dungeon run
+- Tooltips get stuck if they're showing when you get a dungeon run update
+- Heal animation looks wrong especially when near a damage animation
+
 TODO Later
 -----------
+- Fix flex styling/loadouts
+
+- Bonuses are +1, +2 -1, +3 -1 -1
+- StatList + buff + debuff display
+
 - Mobile considerations
 -- Tooltips
 

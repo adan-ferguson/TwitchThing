@@ -44,7 +44,17 @@ export default class AdventurerPane extends HTMLElement{
     // TODO: add affectors from effects
     const stats = getActiveStats(this.adventurer, this.state)
     this.hpBar.setRange(0, stats.get('hpMax').value)
-    this.hpBar.setValue(this.state.hp)
+
+    if(this.state.hp !== this.hpBar.value){
+      if(animateChanges){
+        this.hpBar.setValue(this.state.hp, {
+          animate: true,
+          flyingText: true
+        })
+      }else{
+        this.hpBar.setValue(this.state.hp)
+      }
+    }
 
     this.statsList.innerHTML = ''
 

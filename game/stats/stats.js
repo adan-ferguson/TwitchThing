@@ -39,8 +39,16 @@ export default class Stats{
     return allStats
   }
 
+  serialize(){
+    const serialized = {}
+    Object.entries(this.getAll()).forEach(([statName, statDef]) => {
+      serialized[statName] = statDef.value
+    })
+    return serialized
+  }
+
   _getCompositeValue(name){
-    const mods = this._getMods(name)
+    const mods = this._getCompositeMods(name)
     let value = 0
 
     value = mods.flatPlus.reduce((val, mod) => {
@@ -59,54 +67,51 @@ export default class Stats{
   }
 
   _getPercentageValue(name){
-    const mods = this._getMods(name)
+    const mods = this._getCompositeMods(name)
     let value = 0
 
     value = mods.flatPlus.reduce((val, mod) => {
-      return val + (1 - val) * (mod / 100)
+      return val + (1 - val) * mod
     }, value)
 
     value = mods.flatMinus.reduce((val, mod) => {
-      mod = Math.min(100, mod)
-      return val - val * (mod / 100)
+      return val * (1 + mod)
     }, value)
 
     return value
   }
 
   _getMultiplierValue(name){
-    const mods = this._getMods(name)
+    const mods = this._getPercentageMods(name)
     let value = 1
 
-    value = mods.flatPlus.reduce((val, mod) => {
-      return val * (1 + mod / 100)
+    value = mods.plus.reduce((val, mod) => {
+      return val * mod
     }, value)
 
-    value = mods.flatMinus.reduce((val, mod) => {
-      mod = Math.min(100, mod)
-      return val - val * mod / 100
+    value = mods.minus.reduce((val, mod) => {
+      return val * mod
     }, value)
 
     return value
   }
 
   _getAdditiveMultiplierValue(name){
-    const mods = this._getMods(name)
+    const mods = this._getPercentageMods(name)
     let value = 1
 
-    value = mods.flatPlus.reduce((val, mod) => {
-      return val + mod / 100
+    value = mods.plus.reduce((val, mod) => {
+      return val + (mod - 1)
     }, value)
 
-    value = mods.flatMinus.reduce((val, mod) => {
-      mod = Math.min(100, mod)
-      return val - val * mod / 100
+    value = mods.minus.reduce((val, mod) => {
+      return val * mod
     }, value)
 
     return value
   }
 
-  _getMods(name){
+  _getCompositeMods(name){
 
     const mods = {
       flatPlus: [],
@@ -133,6 +138,27 @@ export default class Stats{
 
     return mods
   }
+
+  _getPercentageMods(name){
+
+    const mods = {
+      plus: [],
+      minus: []
+    }
+
+    this._statAffectors.forEach(affector => {
+      if(name in affector){
+        const change = Math.max(0, affector[name])
+        if(change >= 1){
+          mods.plus.push(change)
+        }else{
+          mods.minus.push(change)
+        }
+      }
+    })
+
+    return mods
+  }
 }
 
 export function makeStatObject(name, value){
@@ -149,5 +175,5 @@ export function makeStatObject(name, value){
 
 export function mergeStats(...statsObjs){
   const stats = new Stats(statsObjs)
-  return stats.getAll()
+  return stats.serialize()
 }

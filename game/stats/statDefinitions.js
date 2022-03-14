@@ -19,7 +19,7 @@ const DEFAULT_DEFINITION = {
   weight: false,
   category: StatBonusCategory.NONE,
   type: StatType.COMPOSITE,
-  rarity: 999
+  rarity: 999 // Can't be randomly generated if this isn't defined
 }
 
 export const StatDefinitions = {
@@ -39,51 +39,54 @@ export const StatDefinitions = {
   },
   speed: {
     ...DEFAULT_DEFINITION,
-    weight: 2,
+    weight: 200,
     category: StatBonusCategory.OFFENSIVE,
     type: StatType.ADDITIVE_MULTIPLIER,
     rarity: 2
   },
   physDef: {
     ...DEFAULT_DEFINITION,
-    weight: 2,
+    weight: 200,
     type: StatType.PERCENTAGE,
     category: StatBonusCategory.DEFENSIVE,
     rarity: 2
   },
   lifesteal: {
     ...DEFAULT_DEFINITION,
-    weight: 2,
+    weight: 4,
     category: StatBonusCategory.DEFENSIVE,
     rarity: 3,
     minimum: 0
   },
   adventuringSpeed: {
     ...DEFAULT_DEFINITION,
-    weight: 2,
+    weight: 200,
     type: StatType.ADDITIVE_MULTIPLIER,
     category: StatBonusCategory.ADVENTURING,
     rarity: 3
   },
   xpGain: {
     ...DEFAULT_DEFINITION,
-    weight: 2,
+    weight: 200,
     type: StatType.ADDITIVE_MULTIPLIER,
     category: StatBonusCategory.ADVENTURING,
     rarity: 3
   },
   stairFind: {
     ...DEFAULT_DEFINITION,
-    weight: 2,
+    weight: 200,
     type: StatType.ADDITIVE_MULTIPLIER,
     category: StatBonusCategory.ADVENTURING,
     rarity: 2
   },
   relicFind: {
     ...DEFAULT_DEFINITION,
-    weight: 2,
+    weight: 200,
     type: StatType.ADDITIVE_MULTIPLIER,
     category: StatBonusCategory.ADVENTURING,
     rarity: 3
   },
+  power: {
+    ...DEFAULT_DEFINITION
+  }
 }

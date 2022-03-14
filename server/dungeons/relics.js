@@ -40,10 +40,10 @@ function majorRelic(adventurerInstance, dungeonRun){
 
 function healingRelic(adventurerInstance, dungeonRun){
   const newState = { ...adventurerInstance.adventurerState }
-  const gain = adventurerInstance.hpMax * (0.15 + Math.random() * 0.15)
+  const gain = Math.ceil(adventurerInstance.hpMax * (0.1 + Math.random() * 0.1))
   newState.hp = Math.min(adventurerInstance.hpMax, newState.hp + gain)
   return {
-    message: `${adventurerInstance.name} finds a healing relic and regains some health.`,
-    adventurerState: adventurerInstance.adventurerState
+    message: `${adventurerInstance.name} finds a healing relic and regains ${gain} health.`,
+    adventurerState: newState
   }
 }

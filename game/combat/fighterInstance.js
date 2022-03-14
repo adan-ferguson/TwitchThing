@@ -93,14 +93,14 @@ export default class FighterInstance{
   _lifesteal(damage){
     const lifesteal = Math.min(
       this.hpMax - this.hp,
-      Math.ceil(this.stats.get('lifesteal').value * damage)
+      Math.ceil(this.stats.get('lifesteal').value * damage / 100)
     )
     this.hp += lifesteal
     return lifesteal
   }
 
   _takeDamage(preMitigationDamage){
-    const blocked = preMitigationDamage * this.stats.get('physDef').value
+    const blocked = Math.floor(preMitigationDamage * this.stats.get('physDef').value)
     const finalDamage = Math.min(this.hp, preMitigationDamage - blocked)
     this.hp -= finalDamage
     return {

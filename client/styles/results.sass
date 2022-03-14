@@ -5,7 +5,10 @@ di-results-page
     padding-bottom: 1em
     flex-grow: 0 !important
 
-  .levelup
+  .results-list
+    line-height: 1.6em
+
+  .levelup, .done
     flex-grow: 0 !important
 
 di-adventurer-levelup-selector
@@ -28,4 +31,6 @@ di-adventurer-levelup-selector
       padding-left: $padding
       padding-right: $padding
       margin-bottom: $padding
-      align-items: start
+
+      .stats-list
+        width: 100%

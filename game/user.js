@@ -11,3 +11,7 @@ export function xpToLevel(xp){
 export function levelToXp(lvl){
   return calc.levelToXp(lvl)
 }
+
+export function levelToAdventurerSlots(lvl){
+  return 1 + Math.floor(lvl / 10)
+}

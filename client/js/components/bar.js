@@ -12,7 +12,7 @@ const innerHTML = `
 </div>
 `
 
-const ANIM_SPEED = 1000
+const ANIM_SPEED = 2000
 
 export default class Bar extends HTMLElement{
 
@@ -32,6 +32,10 @@ export default class Bar extends HTMLElement{
     this._showValueBeforeLabel = true
 
     this.setValue(0)
+  }
+
+  get animSpeed(){
+    return ANIM_SPEED
   }
 
   get value(){
@@ -147,7 +151,7 @@ export default class Bar extends HTMLElement{
       this._val = val
 
       this.animation = new CustomAnimation({
-        duration: ANIM_SPEED * Math.sqrt(Math.abs(targetWidth - currentWidth)),
+        duration: this.animSpeed * Math.sqrt(Math.abs(targetWidth - currentWidth)),
         easing: 'easeOut',
         start: () => {
           if(snappingBar){

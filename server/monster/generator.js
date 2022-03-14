@@ -23,15 +23,16 @@ export async function generateMonster(dungeonRun){
   const floor = dungeonRun.floor
   const power = scaledValue(POWER_MULTIPLIER, dungeonRun.floor - 1)
   const options = [
-    { weight: 10, value: bat },
-    { weight: floor >= 5 ? 10 : 0, value: skeleton },
-    { weight: floor >= 10 ? 9 : 0, value: bat },
+    { weight: 10, value: skeleton },
+    { weight: floor >= 5 ? 9 : 0, value: bat },
     { weight: floor >= 15 ? 8 : 0, value: golem },
-    { weight: floor >= 20 ? 7 : 0, value: vampire },
-    { weight: floor >= 25 ? 5 : 0, value: dragon }
+    { weight: floor >= 30 ? 7 : 0, value: vampire },
+    { weight: floor >= 50 ? 5 : 0, value: dragon }
   ]
   const fn = chooseOne(options)
-  return fn(power)
+  const monsterDef = fn(power)
+  monsterDef.baseStats.power = power
+  return monsterDef
 }
 
 function skeleton(power){
@@ -60,7 +61,7 @@ function bat(power){
     baseStats: {
       hpMax: Math.ceil(25 * power),
       attack: Math.ceil(2.5 * power),
-      speed: Math.ceil(40 + 1.5 * power)
+      speed: 1.5 + 0.05 * power
     }
   }
 }
@@ -76,8 +77,8 @@ function golem(power){
     baseStats: {
       hpMax: Math.ceil(50 * power),
       attack: Math.ceil(8 * power),
-      speed: -50,
-      physDef: defFlatToPct(20 + 1.5 * power).toFixed(1),
+      speed: 0.5,
+      physDef: defFlatToPct(20 + 1.5 * power),
     }
   }
 }
@@ -109,12 +110,12 @@ function dragon(power){
     baseStats: {
       hpMax: Math.ceil(50 * power),
       attack: Math.ceil(7 * power),
-      physDef: defFlatToPct(10 + 0.8 * power).toFixed(1),
-      speed: Math.ceil(10 + 0.4 * power)
+      physDef: defFlatToPct(10 + 0.8 * power),
+      speed: 1.1 + 0.02 * power
     }
   }
 }
 
 function defFlatToPct(flat){
-  return flat / (100 + flat)
+  return (flat / (100 + flat)).toFixed(1)
 }
