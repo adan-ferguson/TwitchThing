@@ -38,7 +38,7 @@ export default class LevelupSelector extends HTMLElement{
     this.querySelector('.level').textContent = nextLevelup.level
 
     const stats = new Stats(nextLevelup.stats)
-    this.statsList.updateList(stats)
+    this.statsList.setStats(stats)
 
     Object.keys(nextLevelup.options).forEach((category) => {
 

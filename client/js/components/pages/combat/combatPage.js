@@ -120,7 +120,7 @@ export default class CombatPage extends Page{
 
     setTimeout(() => {
       if(this.returnPage){
-        this.app.setPage(this.returnPage)
+        this.app?.setPage(this.returnPage)
       }
     }, 2200)
   }

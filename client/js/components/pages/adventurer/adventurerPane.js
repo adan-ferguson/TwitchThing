@@ -44,7 +44,7 @@ export default class AdventurerPane extends HTMLElement{
     // TODO: add affectors from items
     // TODO: add affectors from effects
     const stats = getStats(this.adventurer)
-    this.statsList.updateList(stats)
+    this.statsList.setStats(stats)
   }
 }
 customElements.define('di-adventurer-pane', AdventurerPane)

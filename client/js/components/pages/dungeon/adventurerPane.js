@@ -55,7 +55,7 @@ export default class AdventurerPane extends HTMLElement{
       }
     }
 
-    this.statsList.updateList(stats)
+    this.statsList.setStats(stats)
   }
 }
 

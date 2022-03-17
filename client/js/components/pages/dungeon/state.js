@@ -20,6 +20,7 @@ export default class State extends HTMLElement{
     this.innerHTML = innerHTML
     this.timer = this.querySelector('di-timer')
     this.xp = this.querySelector('.xp-reward')
+    this.xpVal = null
   }
 
   updateDungeonRun(dungeonRun, animate){
@@ -32,19 +33,24 @@ export default class State extends HTMLElement{
     this.timer.start()
   }
 
-  _setXP(xp, animate){
+  _setXP(xp){
+
+    const prevVal = this.xpVal
+    this.xpVal = xp = xp || 0
+
+    if(xp === prevVal){
+      return
+    }
 
     if(this._xpAnimation){
       this._xpAnimation.cancel()
       this._xpAnimation = null
     }
 
-    if(!animate){
-      this.xp.textContent = xp
+    if(prevVal === null){
+      this.xp.textContent = this.xpVal
       return
     }
-
-    const prevVal = parseInt(this.xp.textContent)
 
     this.animation = new CustomAnimation({
       duration: 1500,
@@ -56,7 +62,7 @@ export default class State extends HTMLElement{
         this._xpAnimation = null
       },
       tick: pct => {
-        this.xp.textContent = '' + Math.round(prevVal * (1 - pct) + xp * pct)
+        this.xp.textContent = '' + Math.round(prevVal * (1 - pct) + this.xpVal * pct)
       }
     })
   }

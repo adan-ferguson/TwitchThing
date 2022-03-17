@@ -13,6 +13,7 @@ import './stats/statsList.js'
 import './xpBar.js'
 import './hpBar.js'
 import './loadout.js'
+import { hideAll as hideAllTippys } from 'tippy.js'
 
 const HTML = `
 <di-header></di-header>
@@ -36,6 +37,7 @@ export default class App extends HTMLElement{
   async setPage(page){
 
     Loader.show()
+    hideAllTippys()
 
     // Update the user whenever we change pages
     this._fetchUser()

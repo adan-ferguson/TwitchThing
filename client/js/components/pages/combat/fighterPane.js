@@ -74,7 +74,7 @@ export default class FighterPane extends HTMLElement{
     }
 
     this.actionBar.setMax(this.fighterInstance.actionTime)
-    this.statsList.updateList(this.fighterInstance.stats)
+    this.statsList.setStats(this.fighterInstance.stats)
     this._updateCooldowns()
 
     if(!this.fighterInstance.hp){

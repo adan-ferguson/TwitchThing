@@ -64,7 +64,6 @@ export default class DungeonPage extends Page{
 
     // Don't animate adventurer pane after combat
     this.adventurerPane.setState(dungeonRun.adventurerState, animate && !currentEvent.combatID)
-
     this.stateEl.updateDungeonRun(dungeonRun, animate)
 
     if(dungeonRun.finished){
