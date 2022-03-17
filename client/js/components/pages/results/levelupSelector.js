@@ -1,12 +1,14 @@
 import * as AnimationHelper from '../../../animationHelper.js'
 import StatRow from '../../stats/statRow.js'
 import { StatsDisplayStyle } from '../../../statsDisplayInfo.js'
+import Stats from '../../../../../game/stats/stats.js'
+import StatsList from '../../stats/statsList.js'
 
 const HTML = `
 <div>
     <span class="name"></span> has reached level <span class="level"></span>
 </div>
-<div class="stats-list"></div>
+<di-stats-list></di-stats-list>
 <div>Select A Bonus:</div>
 <div class="options"></div>
 `
@@ -15,7 +17,10 @@ export default class LevelupSelector extends HTMLElement{
   constructor(){
     super()
     this.innerHTML = HTML
-    this.statsList = this.querySelector('.stats-list')
+    this.statsList = this.querySelector('di-stats-list')
+    this.statsList.setRowOptions({
+      style: StatsDisplayStyle.ADDITIONAL
+    })
     this.options = this.querySelector('.options')
   }
 
@@ -29,15 +34,11 @@ export default class LevelupSelector extends HTMLElement{
   async _showNextLevelup(){
     const nextLevelup = this._levelups.splice(0, 1)[0]
 
-    this.statsList.innerHTML = ''
     this.options.innerHTML = ''
     this.querySelector('.level').textContent = nextLevelup.level
 
-    Object.entries(nextLevelup.stats).forEach(([key, val]) => {
-      this.statsList.appendChild(StatRow.fromNameAndValue(key, val, {
-        style: StatsDisplayStyle.ADDITIONAL
-      }))
-    })
+    const stats = new Stats(nextLevelup.stats)
+    this.statsList.updateList(stats)
 
     Object.keys(nextLevelup.options).forEach((category) => {
 
@@ -46,16 +47,13 @@ export default class LevelupSelector extends HTMLElement{
       const optionEl = document.createElement('button')
       optionEl.classList.add('option')
 
-      const statsList = document.createElement('div')
-      statsList.classList.add('stats-list')
-      optionEl.appendChild(statsList)
-
-      Object.entries(options).forEach(([key, val]) => {
-        statsList.appendChild(
-          this.statsList.appendChild(StatRow.fromNameAndValue(key, val, {
-            style: StatsDisplayStyle.ADDITIONAL
-          })))
+      const stats = new Stats(options)
+      const statsList = new StatsList()
+      statsList.setRowOptions({
+        style: StatsDisplayStyle.ADDITIONAL
       })
+      statsList.setStats(stats)
+      optionEl.append(statsList)
 
       optionEl.addEventListener('click', () => {
         this._selectOption(category)

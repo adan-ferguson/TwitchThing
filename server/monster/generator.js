@@ -1,7 +1,7 @@
 import scaledValue from '../../game/scaledValue.js'
 import { chooseOne } from '../../game/rando.js'
 
-const POWER_MULTIPLIER = 0.15
+const POWER_MULTIPLIER = 0.20
 const MONSTER_BUFFER = 3 // Minimum rooms between monster encounters
 const MONSTER_CHANCE_INCREASE_PER_ROOM = 0.06
 

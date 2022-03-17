@@ -24,7 +24,7 @@ export default class Header extends HTMLElement{
     this.xpBar.setLevelFunctions(xpToLevel, levelToXp)
 
     Dropdown.create(this.xpBar, {
-      Settings: () => this.app.setPage(new SettingsPage()),
+      // Settings: () => this.app.setPage(new SettingsPage()),
       Logout: () => confirmLogout()
     })
 
@@ -42,7 +42,7 @@ export default class Header extends HTMLElement{
   async addUserXp(xpToAdd){
     this.user.xp += xpToAdd
     this.user.level = xpToLevel(this.user.xp)
-    this.xpBar.setValue(this.user.xp, { animate: true })
+    await this.xpBar.setValue(this.user.xp, { animate: true })
   }
 
   updateUserBar(){

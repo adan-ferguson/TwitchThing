@@ -6,7 +6,7 @@ const HTML = `
   <div class="stats-box">
     <div class="name"></div>
     <di-hp-bar></di-hp-bar>
-    <div class="stats-list"></div>
+    <di-stats-list></di-stats-list>
   </div>
   <di-loadout></di-loadout>
 </div>
@@ -21,7 +21,7 @@ export default class AdventurerPane extends HTMLElement{
     this.hpBar = this.querySelector('di-hp-bar')
     this.loadout = this.querySelector('di-loadout')
     this.statsbox = this.querySelector('.stats-box')
-    this.statsList = this.querySelector('.stats-list')
+    this.statsList = this.querySelector('di-stats-list')
     this.displayMode = 'normal'
   }
 
@@ -31,12 +31,11 @@ export default class AdventurerPane extends HTMLElement{
     this.querySelector('.name').textContent = adventurer.name
   }
 
-  setState(state = {}){
-    const animateChanges = this.state ? true : false
+  setState(state, animate = false){
     this.state = {
       hp: this.adventurer.baseStats.hpMax,
       ...state }
-    this._update(animateChanges)
+    this._update(animate)
   }
 
   _update(animateChanges){
@@ -56,12 +55,7 @@ export default class AdventurerPane extends HTMLElement{
       }
     }
 
-    this.statsList.innerHTML = ''
-
-    const statsToShow = stats.getAll()
-    for(let key in statsToShow){
-      this.statsList.appendChild(new StatRow(statsToShow[key]))
-    }
+    this.statsList.updateList(stats)
   }
 }
 

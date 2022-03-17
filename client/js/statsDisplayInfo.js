@@ -69,7 +69,7 @@ export function getStatDisplayInfo(stat, style){
 
 function toText(statType, value, style){
   if(statType === StatType.ADDITIVE_MULTIPLIER){
-    return `${value > 1 ? '+' : '-'}${Math.floor((value - 1) * 100)}%`
+    return `${value > 1 ? '+' : ''}${Math.floor((value - 1) * 100)}%`
   }else if(statType === StatType.PERCENTAGE){
     return `${value > 0 && style === StatsDisplayStyle.ADDITIONAL ? '+' : ''}${(value * 100).toFixed(1)}%`
   }

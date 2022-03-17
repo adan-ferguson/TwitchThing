@@ -31,7 +31,7 @@ export async function generateEvent(adventurerInstance, dungeonRun){
       duration: combat.duration,
       pending: true,
       combatID: combat._id,
-      monster: true
+      monster
     }
   }
 

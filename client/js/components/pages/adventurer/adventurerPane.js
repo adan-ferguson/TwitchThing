@@ -6,7 +6,7 @@ const HTML = `
   <div class="stats-box">
     <div class="name"></div>
     <di-xp-bar></di-xp-bar>
-    <div class="stats-list"></div>
+    <di-stats-list></di-stats-list>
   </div>
   <di-loadout></di-loadout>
 </div>
@@ -22,7 +22,7 @@ export default class AdventurerPane extends HTMLElement{
     this.xpBar.setLevelFunctions(xpToLevel, levelToXp)
     this.loadout = this.querySelector('di-loadout')
     this.statsbox = this.querySelector('.stats-box')
-    this.statsList = this.querySelector('.stats-list')
+    this.statsList = this.querySelector('di-stats-list')
   }
 
   setAdventurer(adventurer){
@@ -40,15 +40,11 @@ export default class AdventurerPane extends HTMLElement{
   _update(){
     this.xpBar.setValue(this.adventurer.xp)
 
+
     // TODO: add affectors from items
     // TODO: add affectors from effects
     const stats = getStats(this.adventurer)
-    this.statsList.innerHTML = ''
-
-    const statsToShow = stats.getAll()
-    for(let key in statsToShow){
-      this.statsList.appendChild(new StatRow(statsToShow[key]))
-    }
+    this.statsList.updateList(stats)
   }
 }
 customElements.define('di-adventurer-pane', AdventurerPane)

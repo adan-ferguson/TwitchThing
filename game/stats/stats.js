@@ -3,7 +3,7 @@ import { StatDefinitions, StatType } from './statDefinitions.js'
 export default class Stats{
 
   constructor(statAffectors){
-    this._statAffectors = statAffectors
+    this._statAffectors = Array.isArray(statAffectors) ? statAffectors : [statAffectors]
   }
 
   get(name){

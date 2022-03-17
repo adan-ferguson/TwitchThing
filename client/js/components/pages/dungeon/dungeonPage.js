@@ -44,27 +44,32 @@ export default class DungeonPage extends Page{
 
     requestAnimationFrame(() => {
       // Let the page attach so it can redirect
-      this._parseDungeonUpdate(dungeonRun)
+      this._parseDungeonUpdate(dungeonRun, false)
     })
 
-    getSocket()
-      .emit('view dungeon run', {
-        adventurerID: this.adventurerID
-      })
-      .on('dungeon run update', this._parseDungeonUpdate)
+    getSocket().on('dungeon run update', this._parseDungeonUpdate)
   }
 
   async unload(){
-    getSocket()
-      .off('dungeon run update', this._parseDungeonUpdate)
-      .emit('leave dungeon run', {
-        adventurerID: this.adventurerID
-      })
+    getSocket().off('dungeon run update', this._parseDungeonUpdate)
   }
 
-  _parseDungeonUpdate = dungeonRun => {
+  _parseDungeonUpdate = (dungeonRun, animate = true) => {
 
     const currentEvent = dungeonRun.currentEvent || dungeonRun.events.at(-1)
+
+    if(dungeonRun.adventurerID !== this.adventurerID){
+      return
+    }
+
+    // Don't animate adventurer pane after combat
+    this.adventurerPane.setState(dungeonRun.adventurerState, animate && !currentEvent.combatID)
+
+    this.stateEl.updateDungeonRun(dungeonRun, animate)
+
+    if(dungeonRun.finished){
+      this._finish()
+    }
 
     if(!currentEvent){
       return
@@ -74,13 +79,7 @@ export default class DungeonPage extends Page{
       return this.app.setPage(new CombatPage(currentEvent.combatID, true, this))
     }
 
-    this.adventurerPane.setState(dungeonRun.adventurerState)
-    this.stateEl.updateDungeonRun(dungeonRun)
     this.eventEl.update(currentEvent)
-
-    if(dungeonRun.finished){
-      this._finish()
-    }
   }
 
   _finish(){

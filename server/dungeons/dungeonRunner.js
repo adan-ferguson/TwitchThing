@@ -111,7 +111,7 @@ class DungeonRunInstance{
       ...this.doc
     }
     delete truncatedDoc.events
-    emit(this.doc.adventurerID, 'dungeon run update', this.doc)
+    emit(this.adventurer.userID, 'dungeon run update', truncatedDoc)
     DungeonRuns.save(this.doc)
   }
 
@@ -164,6 +164,7 @@ class DungeonRunInstance{
     }else if(!enemy.endState.hp){
       event.rewards = enemy.data.rewards
       event.message = `${fighter.data.name} defeated the ${enemy.data.name}.`
+      event.monster.defeated = true
     }else{
       event.message = 'That fight was going nowhere so you both just get bored and leave.'
     }

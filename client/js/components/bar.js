@@ -93,6 +93,11 @@ export default class Bar extends HTMLElement{
       ...options
     }
 
+    if(document.hidden){
+      options.animate = false
+      options.flyingText = false
+    }
+
     val = Math.min(this._max, Math.max(this._min, Math.round(val)))
 
     if(options.flyingText){
@@ -125,6 +130,7 @@ export default class Bar extends HTMLElement{
 
       if(this.animation){
         this.animation.cancel()
+        this.animation = null
       }
 
       const growing = val > this._val

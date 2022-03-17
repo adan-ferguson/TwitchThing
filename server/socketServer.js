@@ -25,18 +25,6 @@ export function setup(server, sessionMiddleware){
         }
       })
     }
-
-    socket.on('view dungeon run', ({ adventurerID }) => {
-      socket.join(adventurerID.toString())
-      io.to(adventurerID).emit('room joined', adventurerID)
-      log('User joined room', adventurerID)
-    })
-
-    socket.on('leave dungeon run', ({ adventurerID }) => {
-      socket.leave(adventurerID.toString())
-      io.to(adventurerID).emit('room left', adventurerID)
-      log('User left room', adventurerID)
-    })
   })
 }
 

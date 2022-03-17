@@ -363,64 +363,92 @@ These are required before implementing items because...well, items without stats
 
 4.5
 ---------
-- Don't animate hp bar after combat
++ Iron Golem showed "--50% Speed"
++ Don't animate hp bar after combat
++ Don't animate bars if we're tabbed out
++ Don't show text flying effects when tabbed out
 
-- Results page
--- Show what you died to
--- Show # of monsters killed, relics found
++ Fix janky thing when first start dungeon run
 
-- Choose floor
-- Keep track of adv max floor
++ VS is missing on combat page
 
-- Admin page
--- Clear all adventurers
++ Results page
+++ Show what you died to
+++ Show # of monsters killed, relics found
 
-- Have XP gain do the number tickup thing (dungeon run page)
++ Have XP gain do the number tickup thing (dungeon run page)
 
 + Prevent combat infinite loop
-++ Handle combat result without set winner server side
--- ...and client side
+++  Handle combat result without set winner server side
+++ ...and client side
 
-- Fix the styling of the logout dropdown +
-- Fix janky thing when first start dungeon run
-- Tooltips get stuck if they're showing when you get a dungeon run update
-- Heal animation looks wrong especially when near a damage animation
++ Fix the styling of the logout dropdown +
++ Heal animation looks wrong especially when near a damage animation
+
++ Tooltips get stuck if they're showing when you get a dungeon run update
+++ Dynamic update (partial)
 
 =============
-Milestone 5
+Milestone 5 - 2022-03-xx
 =============
 Loadout + Items for both adventurers and monsters.
 Adventurer levels up now depend on their held items.
 Item and Monsters should now use the generator.
 Test some monster mods for the monster loadouts. No base stats other than hp/attack.
 
-TODO Later
------------
-- Let me open adv in new tab from main page
-- Don't animate bars if we're tabbed out
+- Items
+-- Base items
+-- Item rewards/spawning, rare items w/ some mods
+-- Loadout editor
+-- Adventurers & loadout size
 
-- On main page show when adventurer is in combat
+- Item mods
+-- Rare items w/ some mods
 
-- Fix flex styling/loadouts
+- Monster mods
+-- Rare monsters w/ some mods
+-- Monsters in generator
+
+---------------------------
+
+- Choose floor
+-- Keep track of adv max floor
+
+- Let me open adventurer in new tab from main page
 
 - Bonuses are +1, +2 -1, +3 -1 -1
+
+- On main page show dungeon run data on adventurer row
+
+- Move monsters to generator
+
+- Janky going back from combat to dungeon run
+-- Don't have a combat page, instead have it on the dungeonRun page
+-- Combat replay page (same widget)
+
+- Timer at combat resets funny
+
+- Stupid webpack openssl thing, upgrade webpack or whatever
+
+- npm audit
+
+- View combat replays
+
+- Admin page
+-- Clear all adventurers
+-- List combats
+
+
+
+TODO Later
+-----------
 - StatList + buff + debuff display
 
 - Mobile considerations
 -- Tooltips
 
-- Move monsters to generator
+- Generally the visuals seem to jump
 - Big numbers will be a problem
-- Janky going back from combat to adv
--- Timer at combat resets funny
--- Generally the visuals seem to jump
-
-- Big numbers will be a problem
-- Back button browser acts like back button header?
-- Stupid webpack openssl thing, upgrade webpack or whatever
-- npm audit
-
-- Admin page bonus logs
 
 - Fix errors + targetPage redirects
 
@@ -433,3 +461,7 @@ TODO Later
 - Make a 404 page and/or just redirect
 - DB backups
 - Modal nice fadein effect
+
+- More detailed results
+-- Monsters killed list
+-- Relics found list

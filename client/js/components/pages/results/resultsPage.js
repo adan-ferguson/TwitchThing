@@ -6,8 +6,9 @@ import MainPage from '../main/mainPage.js'
 import Modal from '../../modal.js'
 import LevelupSelector from './levelupSelector.js'
 import { show as showLoader } from '../../../loader.js'
+import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
 
-const WAIT_TIME = 1250
+const WAIT_TIME = 500
 
 const HTML = `
 <div class='flex-columns'>
@@ -51,18 +52,17 @@ export default class ResultsPage extends Page{
     this.selectedBonuses = []
     this.adventurerPane.setAdventurer(adventurer)
 
-    this.dungeonRun = dungeonRun
     this.adventurer = adventurer
+    this.dungeonRun = dungeonRun
+    this.dungeonRunResults = new DungeonRunResults(dungeonRun)
 
     const fns = [
       this._showDungeonResult,
-      this._showMonstersKilled,
-      this._showRelicsFound,
       this._adventurerXp,
       this._userXp
     ]
 
-    wait(WAIT_TIME).then(async () => {
+    waitUntilDocumentVisible().then(async () => {
       for(let fn of fns){
         await fn()
       }
@@ -71,18 +71,19 @@ export default class ResultsPage extends Page{
   }
 
   _showDungeonResult = async () => {
-    this._addResultRow(`You were killed by a something on floor ${this.dungeonRun.floor}, room ${this.dungeonRun.room}`)
-    await wait(WAIT_TIME)
-  }
+    await this._addResultRow(`Floor: ${this.dungeonRun.floor}`)
+    await this._addResultRow(`Room: ${this.dungeonRun.room}`)
 
-  _showMonstersKilled = async () => {
-    this._addResultRow('Insert monsters killed here')
-    await wait(WAIT_TIME)
-  }
+    const monsterName = this.dungeonRunResults.lastEvent.monster?.name || 'something'
+    await this._addResultRow(`Killed By: ${monsterName}`)
 
-  _showRelicsFound = async () => {
-    this._addResultRow('Insert relics found here')
-    await wait(WAIT_TIME)
+    const monsterCount = this.dungeonRunResults.monstersKilled.count
+    await this._addResultRow(`Monsters Killed: ${monsterCount}`)
+
+    const relicCount = this.dungeonRunResults.relicsFound.count
+    await this._addResultRow(`Relics Found: ${relicCount}`)
+
+    this._addResultNewline()
   }
 
   _adventurerXp = async () => {
@@ -138,10 +139,16 @@ export default class ResultsPage extends Page{
     // TODO: handle error, usually just shouldn't happen though
   }
 
-  _addResultRow(text){
-    const xpRow = document.createElement('div')
-    xpRow.textContent = text
-    this.results.appendChild(xpRow)
+  async _addResultRow(text){
+    const row = document.createElement('div')
+    row.textContent = text
+    this.results.appendChild(row)
+    await wait(WAIT_TIME)
+  }
+
+  _addResultNewline(){
+    const row = document.createElement('br')
+    this.results.appendChild(row)
   }
 }
 
@@ -150,4 +157,19 @@ function wait(time = 0){
     setTimeout(res, time)
   })
 }
+
+function waitUntilDocumentVisible(){
+  return new Promise(res => {
+    if(!document.hidden){
+      return res()
+    }
+    const interval = setInterval(() => {
+      if(!document.hidden){
+        clearInterval(interval)
+        res()
+      }
+    })
+  })
+}
+
 customElements.define('di-results-page', ResultsPage )

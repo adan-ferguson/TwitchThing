@@ -109,12 +109,13 @@ export default class CombatPage extends Page{
   }
 
   _finish(){
-    const adventurerWon = this.combat.fighter1.endState.hp > 0
 
-    if(adventurerWon){
+    if(this.combat.fighter1.endState.hp){
       this.combatFeed.setText(`The ${this.combat.fighter2.data.name} has been defeated.`)
-    }else{
+    }else if(this.combat.fighter2.endState.hp){
       this.combatFeed.setText(`${this.combat.fighter1.data.name} has been defeated.`)
+    }else{
+      this.combatFeed.setText('Time is up, combat is not going anywhere.')
     }
 
     setTimeout(() => {
