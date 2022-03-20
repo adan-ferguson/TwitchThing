@@ -408,15 +408,14 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 - Monster mods
 -- Rare monsters w/ some mods
 -- Monsters in generator
-
----------------------------
+-- No more scaled
 
 - Choose floor
 -- Keep track of adv max floor
 
-- Let me open adventurer in new tab from main page
+- Level ups, not in modal anymore
 
-- Bonuses are +1, +2 -1, +3 -1 -1
+- Let me open adventurer in new tab from main page
 
 - On main page show dungeon run data on adventurer row
 
@@ -429,6 +428,7 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 - Timer at combat resets funny
 
 - Stupid webpack openssl thing, upgrade webpack or whatever
+- Put git pull in full build
 
 - npm audit
 
@@ -437,8 +437,6 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 - Admin page
 -- Clear all adventurers
 -- List combats
-
-
 
 TODO Later
 -----------

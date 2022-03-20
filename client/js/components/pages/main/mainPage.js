@@ -8,8 +8,8 @@ import { getSocket } from '../../../socketClient.js'
 import '../../list.js'
 
 const HTML = `
-<div class="flex-columns">
-  <div class="content-well">
+<div class="content-columns">
+  <div class="content-well fill-contents">
     <di-list class="adventurer-list"></di-list>
   </div>
   <div class="other-stuff content-well">Other stuff goes over here</div>

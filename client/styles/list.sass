@@ -1,4 +1,5 @@
-$margin: 30rem
+$margin: 6rem
+$itemsHeight: 30rem
 
 di-list
   display: flex
@@ -10,16 +11,16 @@ di-list
     flex-grow: 1
     display: flex
     flex-direction: column
-    margin-bottom: $margin
+    //margin-bottom: $itemsHeight
 
     > *
-      margin-bottom: 2%
+      margin-bottom: $margin
 
   .pagination-buttons
     display: flex
     flex-direction: row
     justify-content: space-evenly
-    margin-bottom: $margin
+    //margin-bottom: $itemsHeight
 
     button
       border: none

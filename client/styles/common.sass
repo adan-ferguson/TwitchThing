@@ -85,22 +85,6 @@ input
   left: 50%
   transform: translate(-50%, -50%)
 
-.fill-contents
-  display: flex
-  flex-direction: column
-
-  > *
-    flex-grow: 1
-
-.content-well
-  @extend .fill-contents
-  border: 1rem solid #BBB
-  padding: 10rem
-
-  &.clickable:hover
-    background-color: #F8F8F8
-    color: #6f46b0
-
 .clickable
   cursor: pointer
   &:hover
@@ -114,3 +98,20 @@ input
 
 .tippy-content
   white-space: pre-line
+
+.fill-contents
+  display: flex
+  flex-direction: column
+
+  > *
+    flex-grow: 1
+
+.flex-columns
+  display: flex
+  flex-direction: row
+  align-items: stretch
+
+.flex-rows
+  display: flex
+  flex-direction: column
+  align-items: stretch

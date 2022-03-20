@@ -3,7 +3,6 @@ import MainPage from './pages/main/mainPage.js'
 import fizzetch from '../fizzetch.js'
 
 import './header.js'
-import './pages/adventurer/adventurerPane.js'
 import './pages/combat/fighterPane.js'
 import './pages/combat/feed.js'
 import './pages/dungeon/adventurerPane.js'
@@ -12,7 +11,7 @@ import './pages/dungeon/state.js'
 import './stats/statsList.js'
 import './xpBar.js'
 import './hpBar.js'
-import './loadout.js'
+import './loadout/loadout.js'
 import { hideAll as hideAllTippys } from 'tippy.js'
 
 const HTML = `

@@ -64,8 +64,8 @@ export default class List extends HTMLElement{
     return mobileMode && this._options.mobilePageSize ? this._options.mobilePageSize : this._options.pageSize
   }
 
-  setOptions(options) {
-    for (let key in options) {
+  setOptions(options){
+    for (let key in options){
       this._options[key] = options[key]
     }
     this._update()
@@ -91,7 +91,7 @@ export default class List extends HTMLElement{
 
     this.itemsList.innerHTML = ''
     const start = (this._page - 1) * this._pageSize
-    const toDisplay = this._itemsCache.slice(start, start + this._pageSize - 1)
+    const toDisplay = this._itemsCache.slice(start, start + this._pageSize)
     toDisplay.forEach(el => {
       el.style.flexBasis = `${100 / this._pageSize}%`
     })
