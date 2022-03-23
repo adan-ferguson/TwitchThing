@@ -8,7 +8,7 @@ import VinylFile from 'vinyl'
 import path from 'path'
 
 const S = gulpSass(sass)
-const REGISTRIES = ['items', 'bonuses']
+const REGISTRIES = ['items', 'monsters', 'mods']
 
 function buildStyles(){
   return gulp.src('./client/styles/**/*.*ss')
@@ -58,7 +58,7 @@ function exporterConcater(targetFile){
     files.forEach(file => {
       str += `import ${file.name} from './${file.path}'\n`
     })
-    str += `export default { ${files.map(file => file.name).join(',')} }`
+    str += `export default { ${files.map(file => `${file.name.toUpperCase()}:${file.name}`).join(',')} }`
     return str
   }
 }
