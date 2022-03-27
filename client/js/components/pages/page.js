@@ -25,7 +25,7 @@ export default class Page extends HTMLElement{
   /**
    * Load page content here. Return false to prevent the page from loading (for example,
    * if an error occurred).
-   * @returns {Promise<{error,redirect}>}
+   * @returns {Promise<{error}>}
    */
   async load(){
 

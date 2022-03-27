@@ -11,7 +11,8 @@ const DEFAULTS = {
   xp: 0,
   level: 1,
   displayname: null,
-  adventurers: []
+  adventurers: [],
+  items: []
 }
 
 const Users = new Collection('users', DEFAULTS)

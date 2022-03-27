@@ -4,6 +4,7 @@ import DungeonRuns from '../../collections/dungeonRuns.js'
 import { addRun } from '../../dungeons/dungeonRunner.js'
 import { finalizeResults } from '../../dungeons/results.js'
 import db  from '../../db.js'
+import Users from '../../collections/users.js'
 const router = express.Router()
 const verifiedRouter = express.Router()
 
@@ -77,6 +78,16 @@ verifiedRouter.post('/confirmresults', async (req, res) => {
   try {
     await finalizeResults(req.adventurerID, req.body.selectedBonuses)
     res.status(200).send({ result: 'okay' })
+  }catch(error){
+    return res.status(error.code || 500).send({ error: error.message || error })
+  }
+})
+
+verifiedRouter.post('/editloadout', async (req, res) => {
+  try {
+    const adventurer = await Adventurers.findOne(req.adventurerID)
+    const user = await Users.gameData(req.user)
+    res.status(200).send({ adventurer, items: user.items })
   }catch(error){
     return res.status(error.code || 500).send({ error: error.message || error })
   }

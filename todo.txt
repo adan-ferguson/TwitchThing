@@ -396,21 +396,25 @@ Adventurer levels up now depend on their held items.
 Item and Monsters should now use the generator.
 Test some monster mods for the monster loadouts. No base stats other than hp/attack.
 
+- Loadout Editor
+-- Draggable and whatnot
+-- Back page needs a "confirm" dialog if changes are being lost
+
 - Items
 -- Base items
--- Item rewards/spawning, rare items w/ some mods
--- Loadout editor
+-- Item rewards/spawning
 -- Adventurers & loadout size
 
 - Item mods
 -- Rare items w/ some mods
 
 - Monster mods
--- Rare monsters w/ some mods
--- Monsters in generator
+++ Monsters in generator
+-- Some monsters with mod examples
 -- No more scaled
 
 - Choose floor
+-- Multiples of 10
 -- Keep track of adv max floor
 
 - Level ups, not in modal anymore

@@ -4,6 +4,7 @@ import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
 import fizzetch from '../../../fizzetch.js'
 import { getStats, levelToXp, xpToLevel } from '../../../../../game/adventurer.js'
 import AdventurerLoadoutPage from '../adventurerLoadout/adventurerLoadoutPage.js'
+import { OrbsDisplayStyles } from '../../loadout/loadout.js'
 
 const HTML = `
 <div class="content-columns">
@@ -36,6 +37,9 @@ export default class AdventurerPage extends Page{
     this.xpBar = this.querySelector('di-xp-bar')
     this.xpBar.setLevelFunctions(xpToLevel, levelToXp)
     this.loadout = this.querySelector('di-loadout')
+    this.loadout.setOptions({
+      orbsDisplayStyle: OrbsDisplayStyles.SHOW_MAXIMUM
+    })
     this.statsList = this.querySelector('di-stats-list')
   }
 
@@ -50,7 +54,7 @@ export default class AdventurerPage extends Page{
     this.name.textContent = this.adventurer.name
     this.xpBar.setValue(this.adventurer.xp)
     this.statsList.setStats(getStats(this.adventurer))
-    this.loadout.setLoadout(this.adventurer)
+    this.loadout.setAdventurer(this.adventurer)
     this.loadout.addEventListener('click', () => {
       this.app.setPage(new AdventurerLoadoutPage(this.adventurerID))
     })

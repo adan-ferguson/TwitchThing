@@ -1,11 +1,9 @@
 export default {
   name: 'Plate Mail',
-  statMods: {
-    physArmor: 3,
+  stats: {
+    physArmor: 0.25,
     health: 30,
-    speed: -20
+    speed: 0.75
   },
-  innates: [
-    'physDamage'
-  ]
+  orbs: 5
 }
