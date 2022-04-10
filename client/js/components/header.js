@@ -2,6 +2,7 @@ import SettingsPage from './pages/settings.js'
 import * as Dropdown  from './dropdown.js'
 import SimpleModal from './simpleModal.js'
 import { levelToXp, xpToLevel } from '/game/user.js'
+import AdminPage from './pages/admin/adminPage.js'
 
 const HTML = `
 <button class="back-button hidden"><- Back</button>
@@ -23,9 +24,17 @@ export default class Header extends HTMLElement{
     this.xpBar = this.querySelector('di-xp-bar')
     this.xpBar.setLevelFunctions(xpToLevel, levelToXp)
 
-    Dropdown.create(this.xpBar, {
-      // Settings: () => this.app.setPage(new SettingsPage()),
-      Logout: () => confirmLogout()
+    Dropdown.create(this.xpBar, () => {
+
+      const options = {
+        Logout: () => confirmLogout()
+      }
+
+      if(this.user.isAdmin){
+        options.Admin =  () => this.app.setPage(new AdminPage())
+      }
+
+      return options
     })
 
     this.app.addEventListener('pagechange', () => this.backButton.classList.toggle('hidden', !this.app.showBackButton))

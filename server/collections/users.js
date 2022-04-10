@@ -72,10 +72,18 @@ Users.isSetupComplete = function isSetupComplete(userDoc){
 
 Users.gameData = function(userDoc){
   const filteredData = { ...userDoc }
+  filteredData.isAdmin = Users.isAdmin(userDoc)
   delete filteredData.magicID
   delete filteredData.iat
   delete filteredData.auth
   return filteredData
+}
+
+Users.isAdmin = function(userDoc){
+  if(userDoc.auth.type === 'google' && userDoc.auth.email === 'mrdungeorama@gmail.com'){
+    return true
+  }
+  return false
 }
 
 export default Users

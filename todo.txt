@@ -442,6 +442,11 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 -- Clear all adventurers
 -- List combats
 
+- Tooltip over various clickable things
+
+- Add a page title
+-- Narrow the header
+
 TODO Later
 -----------
 - StatList + buff + debuff display
@@ -467,3 +472,5 @@ TODO Later
 - More detailed results
 -- Monsters killed list
 -- Relics found list
+
+- Next time ssl cert expires, get the auto-renewing working

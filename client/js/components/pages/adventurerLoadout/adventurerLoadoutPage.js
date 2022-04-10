@@ -3,13 +3,14 @@ import AdventurerPage from '../adventurer/adventurerPage.js'
 import fizzetch from '../../../fizzetch.js'
 import { OrbsDisplayStyles } from '../../loadout/loadout.js'
 import setupEditable from '../../loadout/setupEditable.js'
+import { getStats } from '../../../../../game/adventurer.js'
 
 const HTML = `
 <div class="content-columns">
-    <div class="content-well user-inventory">
-        <di-inventory></di-inventory>
+    <div class="content-well user-inventory fill-contents">
+        <di-inventory class="fill-contents"></di-inventory>
     </div>
-    <div class="flex-rows">
+    <div class="content-rows">
         <div class="content-well adventurer-info">
             <div class="flex-rows">
                 <div class="adventurer-name"></div>
@@ -19,7 +20,7 @@ const HTML = `
         <div class="content-well content-no-grow">
             <di-loadout></di-loadout>
         </div>
-        <button class="save" disabled="disabled">Save</button>
+        <button class="save content-no-grow" disabled="disabled">Save</button>
     </div>
 </div>
 `
@@ -46,15 +47,17 @@ export default class AdventurerLoadoutPage extends Page{
   }
 
   async load(){
-    debugger
     const { adventurer, items } = await fizzetch(`/game/adventurer/${this.adventurerID}/editloadout`)
     this.inventory.setItems(items)
     this.loadout.setAdventurer(adventurer)
-    // this.statsList.setAdventurer(adventurer)
+
+    this.querySelector('.adventurer-name').textContent = adventurer.name
+    this.statsList.setStats(getStats(adventurer))
 
     // TODO: make editable & draggable in such a way that this can be reused for other things
     setupEditable(this.inventory, this.loadout, {
       onChange: () => {
+        this.statsList.setStats()
         this._updateSaveButton()
       }
     })

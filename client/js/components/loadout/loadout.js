@@ -28,11 +28,12 @@ export default class Loadout extends HTMLElement{
       pageSize: 8
     })
 
-    this.options = {
+    this._options = {
       orbsDisplay: OrbsDisplayStyles.STANDARD,
       editable: false
     }
 
+    this.items = []
     this._updateRows()
   }
 
@@ -77,13 +78,8 @@ export default class Loadout extends HTMLElement{
     const rows = []
     for(let i = 0; i < 8; i++){
       const item = this.items[i] || null
-      if(!item){
-        const blankRow = document.createElement('div')
-        blankRow.classList.add('blank-row')
-        rows.push(blankRow)
-      }else{
-        const loadoutRow = new LoadoutRow(item)
-        rows.push(loadoutRow)
+      if(item){
+        rows[i] = new LoadoutRow(item)
       }
     }
     this.list.setItems(rows)
@@ -93,14 +89,14 @@ export default class Loadout extends HTMLElement{
     if(!this.adventurer){
       return
     }
+
     const orbsData = this.orbsData
 
-    if(this.options.style === OrbsDisplayStyles.STANDARD){
+    if(this._options.orbsDisplayStyle === OrbsDisplayStyles.STANDARD){
       this.orbsText.textContent = '' + orbsData.used
-    }else if(this.options.style === OrbsDisplayStyles.SHOW_MAXIMUM){
-      this.orbsText.textContent = `${orbsData.used} / ${orbsData.max}`
+    }else if(this._options.orbsDisplayStyle === OrbsDisplayStyles.SHOW_MAXIMUM){
+      this.orbsText.textContent = `${orbsData.used}/${orbsData.max}`
     }
-
   }
 }
 

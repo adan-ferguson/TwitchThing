@@ -92,6 +92,7 @@ export default class List extends HTMLElement{
     this.itemsList.innerHTML = ''
     const start = (this._page - 1) * this._pageSize
     const toDisplay = this._itemsCache.slice(start, start + this._pageSize)
+    fillWithBlanks(toDisplay, this._pageSize)
     toDisplay.forEach(el => {
       el.style.flexBasis = `${100 / this._pageSize}%`
     })
@@ -99,3 +100,14 @@ export default class List extends HTMLElement{
   }
 }
 customElements.define('di-list', List)
+
+function fillWithBlanks(arr, length){
+  for(let i = 0; i < length; i++){
+    if(!arr[i]){
+      const blankRow = document.createElement('div')
+      blankRow.classList.add('blank-row')
+      arr[i] = blankRow
+    }
+  }
+  return arr
+}

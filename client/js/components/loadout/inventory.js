@@ -1,8 +1,10 @@
 import LoadoutRow from './loadoutRow.js'
 
 const HTML = `
-<div class="flex-rows">
-    <div class="filtering-options"></div>
+<div class="content-rows">
+    <div class="filtering-options content-no-grow">
+        Filtering options here
+    </div>
     <di-list></di-list>
 </div>
 `
@@ -15,21 +17,21 @@ export default class Inventory extends HTMLElement{
 
     this.filteringOptions = this.querySelector('.filteringOptions')
     this.list = this.querySelector('di-list')
+    this.list.setOptions({
+      pageSize: 15
+    })
   }
 
   setItems(items){
-    // const rows = []
-    // for(let i = 0; i < 8; i++){
-    //   const item = items[i] || null
-    //   if(!item){
-    //     const blankRow = document.createElement('div')
-    //     blankRow.classList.add('blank-row')
-    //     rows.push(blankRow)
-    //   }else{
-    //     const loadoutRow = new LoadoutRow(item)
-    //     rows.push(loadoutRow)
-    //   }
-    // }
-    // this.list.setItems(rows)
+    const loadoutRows = []
+    items.forEach(item => {
+      if(item){
+        const row = new LoadoutRow(item)
+        loadoutRows.push(row)
+      }
+    })
+    this.list.setItems(loadoutRows)
   }
 }
+
+customElements.define('di-inventory', Inventory)

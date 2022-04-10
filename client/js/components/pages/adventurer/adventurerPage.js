@@ -36,8 +36,8 @@ export default class AdventurerPage extends Page{
     this.name = this.querySelector('.adventurer-name')
     this.xpBar = this.querySelector('di-xp-bar')
     this.xpBar.setLevelFunctions(xpToLevel, levelToXp)
-    this.loadout = this.querySelector('di-loadout')
-    this.loadout.setOptions({
+    this.loadoutEl = this.querySelector('di-loadout')
+    this.loadoutEl.setOptions({
       orbsDisplayStyle: OrbsDisplayStyles.SHOW_MAXIMUM
     })
     this.statsList = this.querySelector('di-stats-list')
@@ -54,9 +54,10 @@ export default class AdventurerPage extends Page{
     this.name.textContent = this.adventurer.name
     this.xpBar.setValue(this.adventurer.xp)
     this.statsList.setStats(getStats(this.adventurer))
-    this.loadout.setAdventurer(this.adventurer)
-    this.loadout.addEventListener('click', () => {
+    this.loadoutEl.setAdventurer(this.adventurer)
+    this.loadoutEl.addEventListener('click', () => {
       this.app.setPage(new AdventurerLoadoutPage(this.adventurerID))
+      this.statsList.setStats(getStats(this.adventurer, this.loadoutEl.items))
     })
 
     this._showDungeonButton()
