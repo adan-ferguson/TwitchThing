@@ -1,17 +1,25 @@
 di-loadout
   flex: 0 0 300rem !important
 
-  .orb-row
-    height: 14rem
-    display: flex
-    align-items: center
-
-    img
-      height: 60%
-      margin-right: 5rem
-
-  di-loadout-row
-    border: 0.5rem solid #CCC
-
   di-list
     flex-grow: 1
+
+di-loadout-row
+  border: 0.5rem solid #CCC
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+  align-items: center
+  padding: 0 5rem
+
+.orb-row
+  height: 20rem
+  display: flex
+  align-items: center
+
+  span
+    height: 50%
+
+  img
+    height: 50%
+    margin-right: 3rem

@@ -20,6 +20,7 @@ let initialPoint
  */
 export default function(inventoryEl, loadoutEl, options = {}){
 
+  return
   options = {
     onChange: () => undefined,
     ...options
