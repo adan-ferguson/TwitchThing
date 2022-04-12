@@ -54,10 +54,9 @@ export default class AdventurerLoadoutPage extends Page{
     this.querySelector('.adventurer-name').textContent = adventurer.name
     this.statsList.setStats(getStats(adventurer))
 
-    // TODO: make editable & draggable in such a way that this can be reused for other things
     setupEditable(this.inventory, this.loadout, {
       onChange: () => {
-        this.statsList.setStats()
+        this.statsList.setStats(getStats(adventurer, this.loadout.items))
         this._updateSaveButton()
       }
     })

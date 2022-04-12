@@ -65,7 +65,7 @@ export default class MainPage extends Page{
       })
     }
 
-    adventurerList.setItems(rows)
+    adventurerList.setRows(rows)
   }
 
   _showNewAdventurerModal(){

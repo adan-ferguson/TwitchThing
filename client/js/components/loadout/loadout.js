@@ -33,12 +33,20 @@ export default class Loadout extends HTMLElement{
       editable: false
     }
 
-    this.items = []
-    this._updateRows()
+    this._rows = []
+    for(let i = 0; i < 8; i++){
+      this._rows[i] = new LoadoutRow(i)
+    }
+
+    this._update()
+  }
+
+  get items(){
+    return this._rows.map(row => row.item)
   }
 
   get orbsData(){
-    if(this.adventurer && this.items){
+    if(this.adventurer){
       return new OrbsData(this.adventurer, this.items)
     }
     return null
@@ -55,14 +63,42 @@ export default class Loadout extends HTMLElement{
   setAdventurer(adventurer){
     this.adventurer = adventurer
     this._originalItems = adventurer.loadout.slice()
-    this.items = this._originalItems
-    this._updateRows()
+    for(let i = 0; i < 8; i++){
+      this._rows[i].setItem(this._originalItems[i])
+    }
     this._update()
   }
 
-  isValid(){
+  get isValid(){
     // TODO: other checks
     return this.orbsData.isValid ? true : false
+  }
+
+  get isFull(){
+    return this._rows.every(row => row.item)
+  }
+
+  addItem(item){
+    for(let i = 0; i < 8; i++){
+      if(!this.items[i]){
+        this._rows[i].setItem(item, i)
+        this._update()
+        return true
+      }
+    }
+    return false
+  }
+
+  setItem(index, item){
+    this._rows[index].setItem(item)
+    this._update()
+  }
+
+  swap(index1, index2){
+    const item1 = this._rows[index1].item
+    this._rows[index1].setItem(this._rows[index2].item)
+    this._rows[index2].setItem(item1)
+    this._update()
   }
 
   hasChanges(){
@@ -72,17 +108,6 @@ export default class Loadout extends HTMLElement{
       }
     }
     return false
-  }
-
-  _updateRows(){
-    const rows = []
-    for(let i = 0; i < 8; i++){
-      const item = this.items[i] || null
-      if(item){
-        rows[i] = new LoadoutRow(item)
-      }
-    }
-    this.list.setItems(rows)
   }
 
   _update(){
@@ -96,7 +121,10 @@ export default class Loadout extends HTMLElement{
       this.orbsText.textContent = '' + orbsData.used
     }else if(this._options.orbsDisplayStyle === OrbsDisplayStyles.SHOW_MAXIMUM){
       this.orbsText.textContent = `${orbsData.used}/${orbsData.max}`
+      this.orbsText.classList.toggle('error', orbsData.remaining < 0)
     }
+
+    this.list.setRows(this._rows)
   }
 }
 

@@ -59,8 +59,12 @@ export default class Stats{
       return val - mod
     }, value)
 
-    value = mods.pct.reduce((val, mod) => {
-      return val * mod
+    value = mods.pctPlus.reduce((val, mod) => {
+      return (1 + val) * mod
+    }, value)
+
+    value = mods.pctMinus.reduce((val, mod) => {
+      return (1 - val) * mod
     }, value)
 
     return value
@@ -70,11 +74,11 @@ export default class Stats{
     const mods = this._getCompositeMods(name)
     let value = 0
 
-    value = mods.flatPlus.reduce((val, mod) => {
+    value = [...mods.flatPlus, ...mods.pctPlus].reduce((val, mod) => {
       return val + (1 - val) * mod
     }, value)
 
-    value = mods.flatMinus.reduce((val, mod) => {
+    value = [...mods.flatMinus, ...mods.pctMinus].reduce((val, mod) => {
       return val * (1 + mod)
     }, value)
 
@@ -111,21 +115,38 @@ export default class Stats{
     return value
   }
 
+  /**
+   * flatPlus example: 5
+   * flatMinus example: -5
+   * pctPlus example: '5%', '+5%'
+   * pctMinus example: '-5%'
+   * @param name
+   * @returns {{pctMinus: *[], flatPlus: *[], flatMinus: *[], pctPlus: *[]}}
+   * @private
+   */
   _getCompositeMods(name){
 
     const mods = {
       flatPlus: [],
       flatMinus: [],
-      pct: []
+      pctPlus: [],
+      pctMinus: []
     }
 
     this._statAffectors.forEach(affector => {
       if(name in affector){
         const change = affector[name]
-        const changeStr = change + ''
+        let changeStr = change + ''
         if(changeStr.charAt(changeStr.length - 1) === '%'){
-          const value = (1 + parseFloat(changeStr) / 100)
-          mods.pct.push(value)
+          if(changeStr.charAt(0) === '+'){
+            changeStr = changeStr.slice(1)
+          }
+          const value = parseFloat(changeStr) / 100
+          if(value > 0){
+            mods.pctPlus.push(value)
+          }else if(value < 0){
+            mods.pctMinus.push(-value)
+          }
         }else{
           if(change > 0){
             mods.flatPlus.push(change)
@@ -139,6 +160,13 @@ export default class Stats{
     return mods
   }
 
+  /**
+   * plus examples: 1.1, '10%', '+10%'
+   * minus examples: 0.9, '-10%'
+   * @param name
+   * @returns {{minus: *[], plus: *[]}}
+   * @private
+   */
   _getPercentageMods(name){
 
     const mods = {
@@ -148,7 +176,18 @@ export default class Stats{
 
     this._statAffectors.forEach(affector => {
       if(name in affector){
-        const change = Math.max(0, affector[name])
+
+        let changeStr = affector[name] + ''
+        let change
+        if(changeStr.charAt(changeStr.length - 1) === '%'){
+          if(changeStr.charAt(0) === '+'){
+            changeStr = changeStr.slice(1)
+          }
+          change = (1 + parseFloat(changeStr) / 100)
+        }else{
+          change = Math.max(0, affector[name])
+        }
+
         if(change >= 1){
           mods.plus.push(change)
         }else{

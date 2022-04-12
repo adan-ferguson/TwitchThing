@@ -6,7 +6,7 @@ import fizzetch from '../../../fizzetch.js'
 const HTML = `
 <div class="fill-contents">
   <div class="command">
-      <input class="command-input" placeholder="enter command name">
+      <input class="command-input" placeholder="enter command name" autocomplete="organization">
       <textarea readonly class="command-output"></textarea>
   </div>
 </div>

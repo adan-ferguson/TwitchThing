@@ -1,7 +1,7 @@
 export default {
   name: 'Sword',
   stats: {
-    attack: 2
+    attack: '+10%'
   },
   orbs: 2
 }

@@ -1,9 +1,9 @@
-const DRAG_THRESHOLD = 8
+const DRAG_THRESHOLD = 12
 
 let draggedElement
 let hoveredElement
 let hoverables
-let started = false
+let dragStarted = false
 let initialPoint
 
 /**
@@ -20,7 +20,6 @@ let initialPoint
  */
 export default function(inventoryEl, loadoutEl, options = {}){
 
-  return
   options = {
     onChange: () => undefined,
     ...options
@@ -41,15 +40,23 @@ export default function(inventoryEl, loadoutEl, options = {}){
 
   function click(e){
     const row = e.target.closest('di-loadout-row')
-    if(row === draggedElement && started){
+    if(!row){
+      return
+    }
+    if(dragStarted){
       return
     }
     if(inventoryEl.contains(row)){
-      addToLoadout(row)
+      if(!loadoutEl.isFull){
+        inventoryEl.removeItem(row.item)
+        loadoutEl.addItem(row.item)
+        options.onChange()
+      }
     }else{
-      removeFromLoadout(row)
+      inventoryEl.addItem(row.item)
+      loadoutEl.setItem(row.index, null)
+      options.onChange()
     }
-    reset()
   }
 
   function pointerdown(e){
@@ -59,7 +66,8 @@ export default function(inventoryEl, loadoutEl, options = {}){
     }
     draggedElement = row
     hoveredElement = null
-    started = false
+    dragStarted = false
+    row.setPointerCapture(e.pointerId)
     initialPoint = {
       x: e.clientX,
       y: e.clientY
@@ -72,47 +80,50 @@ export default function(inventoryEl, loadoutEl, options = {}){
       return
     }
     const row = e.target.closest('di-loadout-row')
-    if(draggedElement !== row){
+    if(!draggedElement || draggedElement !== row){
       return
     }
-    if(!started){
+    if(!dragStarted){
       if(dist(initialPoint, { x: e.clientX, y: e.clientY }) >= DRAG_THRESHOLD){
-        started = true
+        dragStarted = true
         calcHoverables()
       }
     }
-    if(started){
+    if(dragStarted){
       const currentPoint = {
-        x: e.clientX - initialPoint.x,
-        y: e.clientY - initialPoint.y
+        x: e.clientX,
+        y: e.clientY
       }
       const hovered = getHoverableUnderPoint(currentPoint)
       if(hovered !== hoveredElement){
-        if(hoveredElement){
-          hoveredElement.classList.remove('hovered')
-        }
+        hoveredElement?.classList.remove('hovered')
+        hovered?.classList.add('hovered')
         hoveredElement = hovered
-        hoveredElement.classList.add('hovered')
       }
-      row.style.transform = `translate(${currentPoint.x}px, ${currentPoint.y}px)`
+      draggedElement.style.transform = `translate(${currentPoint.x - initialPoint.x}px, ${currentPoint.y - initialPoint.y}px)`
     }
   }
 
   function pointerup(e){
     const row = e.target.closest('di-loadout-row')
-    if(draggedElement !== row || !started){
+    if(draggedElement !== row || !dragStarted){
       return
     }
     if(hoveredElement){
       if(hoveredElement === inventoryEl){
-        removeFromLoadout(draggedElement)
+        inventoryEl.addItem(draggedElement.item)
+        loadoutEl.setItem(draggedElement.index, null)
+        options.onChange()
       }else if(loadoutEl.contains(draggedElement)){
-        swapLoadoutRows(draggedElement, hoveredElement)
+        loadoutEl.swap(draggedElement.index, hoveredElement.index)
+        options.onChange()
       }else{
-        if(!hoveredElement.classList.contains('blank-row')){
-          removeFromLoadout(hoveredElement)
+        inventoryEl.removeItem(draggedElement.item)
+        if(hoveredElement.item){
+          inventoryEl.addItem(hoveredElement.item)
         }
-        addToLoadout(draggedElement, hoveredElement)
+        loadoutEl.setItem(hoveredElement.index, draggedElement.item)
+        options.onChange()
       }
     }
     reset()
@@ -124,7 +135,7 @@ export default function(inventoryEl, loadoutEl, options = {}){
       inventoryEl.classList.add('hoverable')
     }
 
-    loadoutEl.list.itemsList.forEach(row => row.classList.add('hoverable'))
+    loadoutEl.querySelectorAll('di-loadout-row, .blank-row').forEach(row => row.classList.add('hoverable'))
     draggedElement.classList.remove('hoverable')
 
     hoverables = []
@@ -136,22 +147,10 @@ export default function(inventoryEl, loadoutEl, options = {}){
   function getHoverableUnderPoint(point){
     return hoverables.find(hoverable => contains(hoverable.rect, point))?.el
   }
-
-  function addToLoadout(row, toReplace = null){
-
-  }
-
-  function removeFromLoadout(row){
-
-  }
-
-  function swapLoadoutRows(row1, row2){
-
-  }
 }
 
 function dist(pointA, pointB){
-  return Math.sqrt(Math.pow(pointA.x + pointB.x, 2) + Math.pow(pointA.y + pointB.y, 2))
+  return Math.sqrt(Math.pow(pointA.x - pointB.x, 2) + Math.pow(pointA.y - pointB.y, 2))
 }
 
 function contains(rect, point){
@@ -162,15 +161,16 @@ function contains(rect, point){
 }
 
 function reset(){
-  hoverables.forEach(hoverable => {
-    hoverable.el.classList.remove('hoverable', 'hovered')
-  })
-  hoverables = null
-  if(draggedElement){
-    draggedElement.style.transform = null
+  if(hoverables){
+    hoverables.forEach(hoverable => {
+      hoverable.el.classList.remove('hoverable', 'hovered')
+    })
+    hoverables = null
   }
-  draggedElement = null
+  if(draggedElement){
+    draggedElement.style.transform = 'initial'
+    draggedElement = null
+  }
   hoveredElement = null
-  started = false
   initialPoint = null
 }

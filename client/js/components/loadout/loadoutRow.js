@@ -11,17 +11,36 @@ const HTML = (name, orbs, icon = '') => `
 `
 
 export default class LoadoutRow extends HTMLElement{
-  constructor(item){
+  constructor(index = -1, item = null){
     super()
+    this.tippy = tippy(this)
+    this.index = index
+    this.setItem(item)
+  }
+
+  setItem(item){
+    if(!item){
+      return this._setupBlank()
+    }
+    this.classList.remove('blank-row')
     this.item = item
-    this.tippy = tippy(this, {
-      content: () => this.itemTooltip
-    })
     this.innerHTML = HTML(item.name, item.orbs)
+    this.tippy.enable()
+    this.tippy.setContent(() => this.itemTooltip)
   }
 
   get itemTooltip(){
+    if(!this.item){
+      return ''
+    }
     return JSON.stringify(this.item.stats)
+  }
+
+  _setupBlank(){
+    this.classList.add('blank-row')
+    this.item = null
+    this.innerHTML = ''
+    this.tippy.disable()
   }
 }
 

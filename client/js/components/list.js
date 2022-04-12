@@ -18,8 +18,8 @@ export default class List extends HTMLElement{
   constructor(){
     super()
     this.innerHTML = HTML
-    this.itemsList = this.querySelector('.items')
-    this._itemsCache = []
+    this.rows = this.querySelector('.items')
+    this._rowsCache = []
     this._page = 1
     this._isMobile = mobileMode()
 
@@ -57,7 +57,7 @@ export default class List extends HTMLElement{
   }
 
   get _maxPage(){
-    return this._options.paginate ? Math.floor(1 + this._itemsCache.length / this._pageSize) : 1
+    return this._options.paginate ? Math.floor(1 + this._rowsCache.length / this._pageSize) : 1
   }
 
   get _pageSize(){
@@ -71,9 +71,26 @@ export default class List extends HTMLElement{
     this._update()
   }
 
-  setItems(items){
-    this._itemsCache = items.slice()
+  setRows(rows){
+    this._rowsCache = rows.slice()
     this._update()
+  }
+
+  addRow(row){
+    this._rowsCache.push(row)
+    this._update()
+  }
+
+  removeRow(row){
+    const index = this._rowsCache.findIndex(r => r === row)
+    if(index > -1){
+      this._rowsCache.splice(index, 1)
+      this._update()
+    }
+  }
+
+  findRow(fn){
+    return this._rowsCache.find(fn)
   }
 
   _update(){
@@ -89,14 +106,14 @@ export default class List extends HTMLElement{
     this.querySelector('.next').disabled = this._page === this._maxPage ? true : false
     this.querySelector('.last').disabled = this._page === this._maxPage ? true : false
 
-    this.itemsList.innerHTML = ''
+    this.rows.innerHTML = ''
     const start = (this._page - 1) * this._pageSize
-    const toDisplay = this._itemsCache.slice(start, start + this._pageSize)
+    const toDisplay = this._rowsCache.slice(start, start + this._pageSize)
     fillWithBlanks(toDisplay, this._pageSize)
     toDisplay.forEach(el => {
       el.style.flexBasis = `${100 / this._pageSize}%`
     })
-    this.itemsList.append(...toDisplay)
+    this.rows.append(...toDisplay)
   }
 }
 customElements.define('di-list', List)

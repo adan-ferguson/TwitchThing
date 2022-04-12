@@ -1,9 +1,8 @@
 export default {
   name: 'Plate Mail',
   stats: {
-    physArmor: 0.25,
-    health: 30,
-    speed: 0.75
+    physDef: '+25%',
+    speed: '-25%'
   },
-  orbs: 5
+  orbs: 25
 }

@@ -1,8 +1,8 @@
 export default {
   name: 'Boots',
   stats: {
-    speed: 1.2,
-    adventuringSpeed: 1.2
+    speed: '+25%',
+    adventuringSpeed: '+25%'
   },
   orbs: 3
 }

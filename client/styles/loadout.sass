@@ -4,6 +4,26 @@ di-loadout
   di-list
     flex-grow: 1
 
+di-inventory
+  .filtering-options
+    margin-bottom: 8rem !important
+    height: 100rem
+
+.editable
+  di-loadout-row
+    cursor: pointer
+    &:hover
+      background-color: #e9ffdf
+
+  .hoverable, &.hoverable
+    background-color: #f8f8ff
+
+  .hovered, &.hovered
+    background-color: #e1e7fa
+
+.popped-out
+  position: absolute
+
 di-loadout-row
   border: 0.5rem solid #CCC
   display: flex
@@ -16,6 +36,9 @@ di-loadout-row
   height: 20rem
   display: flex
   align-items: center
+
+  .error
+    color: red
 
   span
     height: 50%

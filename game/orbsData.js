@@ -6,7 +6,7 @@ export default class OrbsData{
 
   get used(){
     return this.items.reduce((val, item) => {
-      return val + item?.orbs || 0
+      return val + (item?.orbs || 0)
     }, 0)
   }
 

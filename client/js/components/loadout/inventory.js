@@ -14,7 +14,6 @@ export default class Inventory extends HTMLElement{
   constructor(){
     super()
     this.innerHTML = HTML
-
     this.filteringOptions = this.querySelector('.filteringOptions')
     this.list = this.querySelector('di-list')
     this.list.setOptions({
@@ -26,11 +25,26 @@ export default class Inventory extends HTMLElement{
     const loadoutRows = []
     items.forEach(item => {
       if(item){
-        const row = new LoadoutRow(item)
+        const row = new LoadoutRow()
+        row.setItem(item)
         loadoutRows.push(row)
       }
     })
-    this.list.setItems(loadoutRows)
+    this.list.setRows(loadoutRows)
+  }
+
+  addItem(item){
+    if(!item){
+      return
+    }
+    const row = new LoadoutRow()
+    row.setItem(item)
+    this.list.addRow(row)
+  }
+
+  removeItem(item){
+    const row = this.list.findRow(row => row.item === item)
+    this.list.removeRow(row)
   }
 }
 
