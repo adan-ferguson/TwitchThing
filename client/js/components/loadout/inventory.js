@@ -23,7 +23,7 @@ export default class Inventory extends HTMLElement{
 
   setItems(items){
     const loadoutRows = []
-    items.forEach(item => {
+    Object.values(items).forEach(item => {
       if(item){
         const row = new LoadoutRow()
         row.setItem(item)

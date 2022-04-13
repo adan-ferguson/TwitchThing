@@ -11,8 +11,10 @@ import OrbsData from '../../game/orbsData.js'
  */
 export async function saveAdventurerLoadout(adventurer, user, itemIDs){
 
+  validateDuplicates(itemIDs)
+
   const currentLoadout = adventurer.loadout
-  const currentInventory = user.items
+  const currentInventory = user.inventory.items
   const loadoutInfo = getItems(currentLoadout, itemIDs)
   const invInfo = getItems(currentInventory, loadoutInfo.missingIDs)
 
@@ -21,7 +23,7 @@ export async function saveAdventurerLoadout(adventurer, user, itemIDs){
   }
 
   updateLoadout(currentLoadout, currentInventory, itemIDs)
-  updateInventory(currentInventory, loadoutInfo.unmatchedItems, Object.keys(invInfo.matchedItems))
+  updateInventory(currentInventory, loadoutInfo.unmatchedItems, invInfo.matchedItems.map(item => item.id))
 
   validateLoadout(adventurer)
 
@@ -58,12 +60,25 @@ function updateInventory(inventory, itemsToAdd, idsToRemove){
 
 function updateLoadout(loadout, inventory, ids){
   const loadoutObj = toObj(loadout)
-  for(let i = 0; i < ids; i++){
+  for(let i = 0; i < ids.length; i++){
     const id = ids[i]
     if(!id){
       loadout[i] = null
     }else{
       loadout[i] = loadoutObj[id] || inventory[id]
+    }
+  }
+}
+
+function validateDuplicates(itemIDs){
+  const obj = {}
+  for(let i = 0; i < itemIDs.length; i++){
+    const id = itemIDs[i]
+    if(id){
+      if(obj[id]){
+        throw { code: 403, error: 'Duplication detected.' }
+      }
+      obj[id] = 1
     }
   }
 }
@@ -78,8 +93,8 @@ function validateLoadout(adventurer){
 function toObj(arrayOrObj, key = 'id'){
   if(Array.isArray(arrayOrObj)){
     const itemObj = {}
-    arrayOrObj.forEach(o => itemObj[o][key] = o)
+    arrayOrObj.filter(o => o).forEach(o => itemObj[o[key]] = o)
     return itemObj
   }
-  return arrayOrObj
+  return { ...arrayOrObj }
 }

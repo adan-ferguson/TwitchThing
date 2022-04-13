@@ -89,7 +89,7 @@ verifiedRouter.post('/editloadout', async (req, res) => {
   try {
     const adventurer = await Adventurers.findOne(req.adventurerID)
     const user = await Users.gameData(req.user)
-    res.status(200).send({ adventurer, items: user.items })
+    res.status(200).send({ adventurer, items: user.inventory.items })
   }catch(error){
     return res.status(error.code || 500).send({ error: error.message || error })
   }
@@ -99,8 +99,7 @@ verifiedRouter.post('/editloadout/save', async (req, res) => {
   try {
     const items = req.validateParam('items', { type: 'array' })
     const adventurer = await Adventurers.findOne(req.adventurerID)
-    const user = await Users.gameData(req.user)
-    await saveAdventurerLoadout(adventurer, user, items)
+    await saveAdventurerLoadout(adventurer, req.user, items)
     res.status(200).end()
   }catch(error){
     return res.status(error.code || 500).send({ error: error.message || error })

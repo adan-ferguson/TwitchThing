@@ -12,7 +12,9 @@ const DEFAULTS = {
   level: 1,
   displayname: null,
   adventurers: [],
-  items: []
+  inventory: {
+    items: []
+  }
 }
 
 const Users = new Collection('users', DEFAULTS)

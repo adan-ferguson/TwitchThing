@@ -6,24 +6,24 @@ export default function validations(req, res, next){
       type: null,
       ...options
     }
-    if(!(name in req.body)){
+    const val = req.body[name]
+    if(val === undefined){
       if(options.required){
         throw { code: 403, error: `Required parameter ${name} is missing.` }
       }
       return null
     }
-    if(options.type){
-      validateType(req.body[name], options.type)
+    validateType()
+    return val
+
+    function validateType(){
+      // TODO: make better
+      const type = options.type
+      if(type === 'array' && !Array.isArray(val)){
+        throw { code: 403, error: `Parameter ${name} is invalid type, expected ${type}.` }
+      }
     }
-    return req.body[name]
   }
 
   next()
-}
-
-function validateType(val, type){
-  // TODO: make better
-  if(typeof val !== type){
-    throw { code: 403, error: `Parameter ${name} is invalid type, expected ${type}.` }
-  }
 }

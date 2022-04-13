@@ -1,4 +1,5 @@
 export default async function(url, data = null){
+  let resp
   try {
     const obj = {
       method: 'post',
@@ -11,17 +12,12 @@ export default async function(url, data = null){
       obj.body = JSON.stringify(data)
     }
 
-    const resp = await fetch(url, obj)
-    return await getJson(resp)
-  }catch(ex){
-    return { error: `An error occurred during fizzetch of ${url}` }
-  }
-}
-
-async function getJson(resp){
-  try {
+    resp = await fetch(url, obj)
     return await resp.json()
   }catch(ex){
+    if(!resp || resp.status >= 400){
+      return { error: `An error occurred during fizzetch of ${url}` }
+    }
     return {}
   }
 }
