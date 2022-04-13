@@ -1,16 +1,19 @@
 import FighterInstance from '../../../../../game/combat/fighterInstance.js'
 import { fadeOut } from '../../../animationHelper.js'
-import StatRow from '../../stats/statRow.js'
 
 const HTML = `
-<div class="flex-rows">
-  <div class="stats-box">
-    <div class="name"></div>
-    <di-hp-bar></di-hp-bar>
-    <di-bar class="action"></di-bar>
-    <di-stats-list></di-stats-list>
+<div class="content-rows">
+  <div class="content-well">
+    <div class="flex-rows">
+      <div class="name"></div>
+      <di-hp-bar></di-hp-bar>
+      <di-bar class="action"></di-bar>
+      <di-stats-list></di-stats-list>
+    </div>
   </div>
-  <di-loadout></di-loadout>
+  <div class="content-well content-no-grow">
+    <di-loadout></di-loadout>       
+  </div>
 </div>
 `
 

@@ -3,14 +3,14 @@ import Collection from './collection.js'
 const DEFAULTS = {
   _id: null,
   name: null,
-  level: 1,
+  level: 0,
   xp: 0,
   userID: null,
   loadout: [null, null, null, null, null, null, null, null],
   dungeonRunID: null,
   baseStats: {
-    hpMax: 200,
-    attack: 10
+    hpMax: 40,
+    attack: 2
   }
 }
 

@@ -5,17 +5,15 @@ import ResultsPage from '../results/resultsPage.js'
 import CombatPage from '../combat/combatPage.js'
 
 const HTML = `
-<div class='flex-rows'>
-  <div class='flex-columns'>
-    <div class="content-well">
-        <di-dungeon-adventurer-pane></di-dungeon-adventurer-pane>
-    </div>
+<div class='content-columns'>
+  <di-dungeon-adventurer-pane></di-dungeon-adventurer-pane>
+  <div class="content-rows">
     <div class="content-well">
         <di-dungeon-event></di-dungeon-event>
     </div>
-  </div>
-  <div class="state content-well" style="flex-basis:125rem;flex-grow:0">
-      <di-dungeon-state></di-dungeon-state>
+    <div class="state content-well" style="flex-basis:125rem;flex-grow:0">
+        <di-dungeon-state></di-dungeon-state>
+    </div>
   </div>
 </div>
 `
@@ -27,9 +25,9 @@ export default class DungeonPage extends Page{
     this.adventurerID = adventurerID
     this.innerHTML = HTML
 
-    this.adventurerPane = this.querySelector('di-dungeons-adventurer-pane')
-    this.eventEl = this.querySelector('di-dungeons-event')
-    this.stateEl = this.querySelector('di-dungeons-state')
+    this.adventurerPane = this.querySelector('di-dungeon-adventurer-pane')
+    this.eventEl = this.querySelector('di-dungeon-event')
+    this.stateEl = this.querySelector('di-dungeon-state')
   }
 
   async load(){

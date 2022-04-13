@@ -1,5 +1,4 @@
 import scaledValue from '../../game/scaledValue.js'
-import { chooseOne } from '../../game/rando.js'
 import { getMonsterDefinition } from './library.js'
 
 const POWER_MULTIPLIER = 0.20

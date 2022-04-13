@@ -9,6 +9,10 @@ import AdventurerInstance from '../../game/adventurerInstance.js'
 let running = false
 let activeRuns = {}
 
+export function cancelAllRuns(){
+  this.activeRuns = {}
+}
+
 export async function start(){
 
   if(running){

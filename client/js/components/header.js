@@ -1,4 +1,3 @@
-import SettingsPage from './pages/settings.js'
 import * as Dropdown  from './dropdown.js'
 import SimpleModal from './simpleModal.js'
 import { levelToXp, xpToLevel } from '/game/user.js'

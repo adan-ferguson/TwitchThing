@@ -1,14 +1,17 @@
 import { getActiveStats } from '../../../../../game/adventurer.js'
-import StatRow from '../../stats/statRow.js'
 
 const HTML = `
-<div class="flex-rows">
-  <div class="stats-box">
-    <div class="name"></div>
-    <di-hp-bar></di-hp-bar>
-    <di-stats-list></di-stats-list>
+<div class="content-rows">
+  <div class="content-well adventurer-info">
+    <div class="flex-rows">
+      <div class="name"></div>
+      <di-hp-bar></di-hp-bar>
+      <di-stats-list></di-stats-list>
+    </div>
   </div>
-  <di-loadout></di-loadout>
+  <div class="content-well content-no-grow">
+    <di-loadout></di-loadout>
+  </div>
 </div>
 `
 
@@ -16,7 +19,6 @@ export default class AdventurerPane extends HTMLElement{
 
   constructor(){
     super()
-    this.classList.add('adventurer-pane')
     this.innerHTML = HTML
     this.hpBar = this.querySelector('di-hp-bar')
     this.loadout = this.querySelector('di-loadout')
@@ -39,8 +41,7 @@ export default class AdventurerPane extends HTMLElement{
   }
 
   _update(animateChanges){
-    // TODO: add affectors from items
-    // TODO: add affectors from effects
+
     const stats = getActiveStats(this.adventurer, this.state)
     this.hpBar.setRange(0, stats.get('hpMax').value)
 

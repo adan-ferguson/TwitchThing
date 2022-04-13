@@ -1,5 +1,6 @@
 import Stats from './stats/stats.js'
 import LevelCalculator from './levelCalculator.js'
+import Item from './item.js'
 
 const LEVEL_2_XP = 100
 const XP_MULTIPLIER = 0.25
@@ -19,7 +20,10 @@ export function levelToXp(lvl){
  * @returns {Stats}
  */
 export function getStats(adventurer, loadout = adventurer.loadout){
-  const loadoutStats = loadout.map(item => item?.stats).filter(item => item)
+  const loadoutStats = loadout.filter(itemDef => itemDef).map(itemDef => {
+    const item = new Item(itemDef)
+    return item.stats
+  })
   return new Stats([adventurer.baseStats, ...loadoutStats])
 }
 
@@ -29,5 +33,7 @@ export function getStats(adventurer, loadout = adventurer.loadout){
  * @returns {Stats}
  */
 export function getActiveStats(adventurer, state = {}){
-  return new Stats([adventurer.baseStats])
+  const stats = getStats(adventurer)
+  // TODO: add affectors from the state
+  return new Stats([...stats.affectors])
 }

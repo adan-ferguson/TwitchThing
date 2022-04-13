@@ -6,6 +6,10 @@ export default class Stats{
     this._statAffectors = Array.isArray(statAffectors) ? statAffectors : [statAffectors]
   }
 
+  get affectors(){
+    return [...this._statAffectors]
+  }
+
   get(name){
     let stat = StatDefinitions[name]
 

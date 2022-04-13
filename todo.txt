@@ -398,35 +398,38 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 + Loadout Editor
 ++ Draggable and whatnot
--- Saving
--- Back page needs a "confirm" dialog if changes are being lost
+++ Saving
+++ Back page needs a "confirm" dialog if changes are being lost
+++ Store inventory values as an object instead
 
-- Store inventory values as an object instead
++ Support for stat percentage format
++ Stat rows don't get remove if the stat gets removed
 
-- Items
--- Base items
--- Item rewards/spawning
--- Adventurers & loadout size
++ Admin page
+++ Run a command
 
-- Item mods
--- Rare items w/ some mods
++ Move monsters to generator
 
-- Monster mods
-++ Monsters in generator
--- Some monsters with mod examples
--- No more scaled
++ Start at level 0
++ Speed as a percentage is obtuse, show the action time?
++ Fix rounding error, 1.2 adventuring speed displays as 19%
++ Don't store base item stats in the DB, so if we change base item definition then it changes the item
+
+- Item drops
+-- They don't drop unless user level >= 1
+-- Monsters can drop
+-- Item relic
 
 - Choose floor
 -- Multiples of 10
 -- Keep track of adv max floor
 
 - Level ups, not in modal anymore
-
 - Let me open adventurer in new tab from main page
-
 - On main page show dungeon run data on adventurer row
 
-- Move monsters to generator
+- Make some simple items
+- Make some simple monsters
 
 - Janky going back from combat to dungeon run
 -- Don't have a combat page, instead have it on the dungeonRun page
@@ -439,35 +442,27 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 - npm audit
 
-- View combat replays
-
 - User levelup rewards show a popup
 -- multiples of 10 new slot
 -- level 1 sword
 -- other levels random item
 
-+ Admin page
-++ Run a command
--- List combats
--- Simulate a combat
-
-- Tooltip over various clickable things
+- After level 1, the "edit equipment" button should appear with a "NEW" effect
 
 - Add a page title
 -- Narrow the header
-
-- Start at level 0
-- Speed as a percentage is obtuse, show the action time?
-+ Support for stat percentage format
-- Fix rounding error, 1.2 adventuring speed displays as 19%
-+ Stat rows don't get remove if the stat gets removed
-- Don't store base item stats in the DB, so if we change base item definition then it changes the item
 
 TODO Later
 -----------
 - Admin page
 -- Show ajax errors which were thrown
 -- Show console logs
+-- List combats
+-- Simulate a combat
+
+- Classes
+
+- View combat replays
 
 - Right click item for more info in modal
 

@@ -3,14 +3,15 @@ import Collection from './collection.js'
 import { levelToAdventurerSlots } from '../../game/user.js'
 
 const DEFAULTS = {
+  _id: null,
   magicID: null,
   iat: 0,
   auth: {
     type: 'none'
   },
-  xp: 0,
-  level: 1,
   displayname: null,
+  xp: 0,
+  level: 0,
   adventurers: [],
   inventory: {
     items: []
@@ -86,6 +87,19 @@ Users.isAdmin = function(userDoc){
     return true
   }
   return false
+}
+
+Users.resetAll = async function(){
+  const users = await Users.find({})
+  await Promise.all(users.map(async userDoc => {
+    await Users.save({
+      _id: userDoc._id,
+      magicID: userDoc.magicID,
+      iat: userDoc.iat,
+      auth: userDoc.auth,
+      displayname: userDoc.displayname
+    })
+  }))
 }
 
 export default Users

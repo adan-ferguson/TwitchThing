@@ -1,6 +1,9 @@
 import express from 'express'
 import Users from '../collections/users.js'
-import { generateItem } from '../items/generator.js'
+import Adventurers from '../collections/adventurers.js'
+import DungeonRuns from '../collections/dungeonRuns.js'
+import Combats from '../collections/combats.js'
+import { cancelAllRuns } from '../dungeons/dungeonRunner.js'
 
 const router = express.Router()
 
@@ -24,20 +27,15 @@ router.post('/runcommand', async(req, res) => {
   req.validateParam('command')
   const cmd = req.body.command
   let result = 'Command not found'
-  if(cmd === 'reset items'){
-    const users = await Users.find({})
-    Promise.all(users.map(async user => {
-      user.inventory = { items: {} }
-      const items = [
-        generateItem('SWORD'),
-        generateItem('PLATEMAIL'),
-        generateItem('BOOTS')
-      ]
-      items.forEach(item => user.inventory.items[item.id] = item)
-      delete user.items
-      await Users.save(user)
-    }))
-    result = 'User items all reset.'
+  if(cmd === 'reset all'){
+    cancelAllRuns()
+    await Promise.all([
+      Users.resetAll(),
+      Adventurers.removeAll(),
+      DungeonRuns.removeAll(),
+      Combats.removeAll()
+    ])
+    result = 'Everything has been successfully reset.'
   }
   res.status(200).send({ result })
 })

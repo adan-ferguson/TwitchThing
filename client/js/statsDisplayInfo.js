@@ -1,4 +1,6 @@
 import { StatType } from '../../game/stats/statDefinitions.js'
+import { COMBAT_BASE_TURN_TIME } from '../../game/combat/fighterInstance.js'
+import { ADVENTURER_BASE_ROOM_TIME } from '../../game/adventurerInstance.js'
 
 export const StatsDisplayStyle = {
   CUMULATIVE: 0, // Eg. "50%", i.e. our total of this stat is 50%
@@ -16,7 +18,8 @@ const statDefinitionsInfo = {
   },
   speed: {
     text: 'Combat Speed',
-    description: stat => 'Time between actions during combat.'
+    description: stat => 'Time between actions during combat.',
+    valueFormat: speedFormat(COMBAT_BASE_TURN_TIME)
   },
   physDef: {
     text: 'Phys Defense',
@@ -29,7 +32,8 @@ const statDefinitionsInfo = {
   },
   adventuringSpeed: {
     text: 'Adventuring Speed',
-    description: stat => 'Time between rooms while adventuring.'
+    description: stat => 'Time between rooms while adventuring.',
+    valueFormat: speedFormat(ADVENTURER_BASE_ROOM_TIME)
   },
   xpGain: {
     text: 'XP Gain',
@@ -61,7 +65,8 @@ export function getStatDisplayInfo(stat, style){
   }
   if(info.valueFormat){
     info.displayedValue = info.valueFormat(stat.value, style)
-  }else{
+  }
+  if(info.displayedValue === undefined){
     info.displayedValue = toText(stat.type, stat.value, style)
   }
   return { ...DEFAULTS, ...(statDefinitionsInfo[stat.name] || {}) }
@@ -69,9 +74,25 @@ export function getStatDisplayInfo(stat, style){
 
 function toText(statType, value, style){
   if(statType === StatType.ADDITIVE_MULTIPLIER){
-    return `${value > 1 ? '+' : ''}${Math.floor((value - 1) * 100)}%`
+    return `${value > 1 ? '+' : ''}${Math.round((value - 1) * 100)}%`
   }else if(statType === StatType.PERCENTAGE){
-    return `${value > 0 && style === StatsDisplayStyle.ADDITIONAL ? '+' : ''}${(value * 100).toFixed(1)}%`
+    return `${value > 0 && style === StatsDisplayStyle.ADDITIONAL ? '+' : ''}${roundToFixed(value * 100, 1)}%`
   }
   return `${value > 0 && style === StatsDisplayStyle.ADDITIONAL ? '+' : ''}${value}`
+}
+
+function speedFormat(base){
+  return (val, style) => {
+    if(style === StatsDisplayStyle.ADDITIONAL){
+      return undefined
+    }
+    return roundToFixed(base * val, 2) + 's'
+  }
+}
+
+function roundToFixed(val, digits){
+  const multi = Math.pow(10, digits)
+  val *= multi
+  Math.round(val)
+  return val / multi
 }

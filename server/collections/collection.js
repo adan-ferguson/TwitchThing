@@ -28,4 +28,8 @@ export default class Collection{
   async update(_id, $set){
     await db.conn().collection(this.collectionName).updateOne({ _id }, { $set })
   }
+
+  async removeAll(){
+    await db.conn().collection(this.collectionName).deleteMany({})
+  }
 }
