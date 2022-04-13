@@ -17,7 +17,7 @@ router.use(async (req, res, next) => {
 })
 
 router.post('/', async(req, res) => {
-  res.status(200).send({})
+  res.status(200).end()
 })
 
 router.post('/runcommand', async(req, res) => {
@@ -27,11 +27,14 @@ router.post('/runcommand', async(req, res) => {
   if(cmd === 'reset items'){
     const users = await Users.find({})
     Promise.all(users.map(async user => {
-      user.items = [
+      user.inventory = { items: {} }
+      const items = [
         generateItem('SWORD'),
         generateItem('PLATEMAIL'),
         generateItem('BOOTS')
       ]
+      items.forEach(item => user.inventory.items[item.id] = item)
+      delete user.items
       await Users.save(user)
     }))
     result = 'User items all reset.'

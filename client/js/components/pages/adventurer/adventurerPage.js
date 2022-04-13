@@ -64,7 +64,7 @@ export default class AdventurerPage extends Page{
   }
 
   _showDungeonButton(){
-    this.querySelector('.basic-dungeons').addEventListener('click', () => {
+    this.querySelector('.basic-dungeon').addEventListener('click', () => {
       void this.app.setPage(new DungeonPickerPage(this.adventurerID))
     })
   }

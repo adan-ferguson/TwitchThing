@@ -58,7 +58,7 @@ Users.setDisplayname = async function(userDoc, displayname){
 Users.newAdventurer = async function(userDoc, adventurername){
   const availableSlots = levelToAdventurerSlots(userDoc.level)  - userDoc.adventurers.length
   if(availableSlots <= 0){
-    throw { message: 'No slots available.', code: 403 }
+    throw { error: 'No slots available.', code: 403 }
   }
   const adventurerDoc = await Adventurers.createNew(userDoc._id, adventurername)
   userDoc.adventurers.push(adventurerDoc._id)

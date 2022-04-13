@@ -1,5 +1,5 @@
 export default class OrbsData{
-  constructor(adventurer, items){
+  constructor(adventurer, items = adventurer.loadout){
     this.adventurer = adventurer
     this.items = items
   }

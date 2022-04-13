@@ -401,6 +401,8 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 -- Saving
 -- Back page needs a "confirm" dialog if changes are being lost
 
+- Store inventory values as an object instead
+
 - Items
 -- Base items
 -- Item rewards/spawning
@@ -462,6 +464,10 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 TODO Later
 -----------
+- Admin page
+-- Show ajax errors which were thrown
+-- Show console logs
+
 - Right click item for more info in modal
 
 - StatList + buff + debuff display
