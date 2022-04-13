@@ -41,11 +41,11 @@ export default class MainPage extends Page{
         this._dungeonRunUpdate(dr)
       })
     }
-    getSocket().on('dungeon run update', this._dungeonRunUpdate)
+    getSocket().on('dungeons run update', this._dungeonRunUpdate)
   }
 
   async unload(){
-    getSocket().off('dungeon run update', this._dungeonRunUpdate)
+    getSocket().off('dungeons run update', this._dungeonRunUpdate)
   }
 
   _populateAdventurers(adventurers, slots){

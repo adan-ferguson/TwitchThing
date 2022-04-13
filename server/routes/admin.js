@@ -21,7 +21,7 @@ router.post('/', async(req, res) => {
 })
 
 router.post('/runcommand', async(req, res) => {
-  req.validateParamExists('command')
+  req.validateParam('command')
   const cmd = req.body.command
   let result = 'Command not found'
   if(cmd === 'reset items'){

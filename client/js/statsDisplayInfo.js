@@ -45,7 +45,7 @@ const statDefinitionsInfo = {
   },
   power: {
     text: 'Power',
-    description: () => '\'Power weight of this monster, based on the current floor right now. This is a debugging value.'
+    description: () => '\'Power weight of this monsters, based on the current floor right now. This is a debugging value.'
   }
 }
 

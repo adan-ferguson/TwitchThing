@@ -52,6 +52,15 @@ export default class Loadout extends HTMLElement{
     return null
   }
 
+  get hasChanges(){
+    for(let i = 0; i < 8; i++){
+      if(this._originalItems[i] !== this.items[i]){
+        return true
+      }
+    }
+    return false
+  }
+
   setOptions(options = {}){
     for (let key in options){
       this._options[key] = options[key]
@@ -99,15 +108,6 @@ export default class Loadout extends HTMLElement{
     this._rows[index1].setItem(this._rows[index2].item)
     this._rows[index2].setItem(item1)
     this._update()
-  }
-
-  hasChanges(){
-    for(let i = 0; i < 8; i++){
-      if(this._originalItems[i] !== this.items[i]){
-        return true
-      }
-    }
-    return false
   }
 
   _update(){

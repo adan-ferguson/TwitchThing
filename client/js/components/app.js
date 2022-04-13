@@ -14,6 +14,7 @@ import './xpBar.js'
 import './hpBar.js'
 import './loadout/loadout.js'
 import { hideAll as hideAllTippys } from 'tippy.js'
+import SimpleModal from './simpleModal.js'
 
 const HTML = `
 <di-header></di-header>
@@ -70,16 +71,37 @@ export default class App extends HTMLElement{
     Loader.hide()
   }
 
-  back(){
-    if(this.currentPage.backPage){
-      this.setPage(this.currentPage.backPage())
+  async back(){
+    if(this.currentPage.confirmLeavePageMessage){
+      const confirmed = await this._confirmLeavePage(this.currentPage.confirmLeavePageMessage)
+      if(!confirmed){
+        return
+      }
     }
+    this.setPage(this.currentPage.backPage())
   }
 
   async _fetchUser(){
     // TODO: error handle
     this.user = await fizzetch('/user')
     this.header.updateUserBar()
+  }
+
+  _confirmLeavePage(message){
+    return new Promise(res => {
+      new SimpleModal(message, [{
+        text: 'Leave Page',
+        style: 'scary',
+        fn: () => {
+          res(true)
+        }
+      },{
+        text: 'Never Mind',
+        fn: () => {
+          res(false)
+        }
+      }]).show()
+    })
   }
 }
 

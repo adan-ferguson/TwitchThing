@@ -48,7 +48,7 @@ export async function start(){
 }
 
 /**
- * Start a dungeon run. It's assumed that all of the error-checking has been done beforehand
+ * Start a dungeons run. It's assumed that all of the error-checking has been done beforehand
  * and that this is a reasonable request. This should only be called from the Ventures file.
  * @param adventurerID
  * @param dungeonID
@@ -111,7 +111,7 @@ class DungeonRunInstance{
       ...this.doc
     }
     delete truncatedDoc.events
-    emit(this.adventurer.userID, 'dungeon run update', truncatedDoc)
+    emit(this.adventurer.userID, 'dungeons run update', truncatedDoc)
     DungeonRuns.save(this.doc)
   }
 

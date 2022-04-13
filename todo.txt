@@ -396,8 +396,9 @@ Adventurer levels up now depend on their held items.
 Item and Monsters should now use the generator.
 Test some monster mods for the monster loadouts. No base stats other than hp/attack.
 
-- Loadout Editor
--- Draggable and whatnot
++ Loadout Editor
+++ Draggable and whatnot
+-- Saving
 -- Back page needs a "confirm" dialog if changes are being lost
 
 - Items
@@ -438,6 +439,11 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 - View combat replays
 
+- User levelup rewards show a popup
+-- multiples of 10 new slot
+-- level 1 sword
+-- other levels random item
+
 + Admin page
 ++ Run a command
 -- List combats
@@ -451,6 +457,7 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 - Speed as a percentage is obtuse, show the action time?
 + Support for stat percentage format
 - Fix rounding error, 1.2 adventuring speed displays as 19%
++ Stat rows don't get remove if the stat gets removed
 - Don't store base item stats in the DB, so if we change base item definition then it changes the item
 
 TODO Later

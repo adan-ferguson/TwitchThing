@@ -14,6 +14,10 @@ export default class Page extends HTMLElement{
     return this.closest('di-app')
   }
 
+  showBackConfirm(){
+    return false
+  }
+
   /**
    * Page to go to if back button gets clicked. If null/false, back button will not be visible.
    * @returns {null|function(): Page}

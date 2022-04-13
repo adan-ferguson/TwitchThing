@@ -52,7 +52,7 @@ router.post('/main', async(req, res) => {
 
 router.post('/newadventurer', async(req, res) => {
   try {
-    req.validateParamExists('name')
+    req.validateParam('name')
     const adventurer = await Users.newAdventurer(req.user, req.body.name)
     res.send({ adventurerID: adventurer._id })
   }catch(error){

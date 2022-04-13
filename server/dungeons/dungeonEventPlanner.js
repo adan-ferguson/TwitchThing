@@ -1,4 +1,4 @@
-import { foundMonster, generateMonster } from '../monster/generator.js'
+import { foundMonster, generateMonster } from '../monsters/generator.js'
 import { generateCombat } from '../combat/combat.js'
 import { foundRelic, generateRelicEvent } from './relics.js'
 import scaledValue from '../../game/scaledValue.js'

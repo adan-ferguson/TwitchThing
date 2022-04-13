@@ -1,15 +1,29 @@
 export default function validations(req, res, next){
 
-  req.validateParamExists = name => {
+  req.validateParam = (name, options = {} ) => {
+    options = {
+      required: true,
+      type: null,
+      ...options
+    }
     if(!(name in req.body)){
-      throw { code: 403, error: `Required parameter ${name} is missing.` }
+      if(options.required){
+        throw { code: 403, error: `Required parameter ${name} is missing.` }
+      }
+      return null
     }
-  }
-  req.validateUserOwnsAdventurer = adventurerID => {
-    if(!req.user.adventurers.find(advID => advID === adventurerID)){
-      throw { code: 403, error: 'You do not own this adventurer.' }
+    if(options.type){
+      validateType(req.body[name], options.type)
     }
+    return req.body[name]
   }
 
   next()
+}
+
+function validateType(val, type){
+  // TODO: make better
+  if(typeof val !== type){
+    throw { code: 403, error: `Parameter ${name} is invalid type, expected ${type}.` }
+  }
 }

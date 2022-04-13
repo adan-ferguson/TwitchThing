@@ -53,7 +53,7 @@ export async function finalizeResults(adventurerID, selectedBonuses){
   const adventurer = await Adventurers.findOne(adventurerID)
 
   if(!adventurer.dungeonRunID){
-    throw { code: 401, error: 'Adventurer is not currently in a dungeon.', targetPage: 'Adventurer' }
+    throw { code: 401, error: 'Adventurer is not currently in a dungeons.', targetPage: 'Adventurer' }
   }
 
   const dungeonRun = await DungeonRuns.findOne(adventurer.dungeonRunID)

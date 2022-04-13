@@ -40,14 +40,14 @@ verifiedRouter.post('/dungeonrun', async(req, res) => {
   try {
     const adventurer = await Adventurers.findOne(req.adventurerID)
     if(!adventurer.dungeonRunID){
-      return res.status(404).send({ error: 'Adventurer is not currently in a dungeon run.' })
+      return res.status(404).send({ error: 'Adventurer is not currently in a dungeons run.' })
     }
     const dungeonRun = await DungeonRuns.findOne({
       _id: adventurer.dungeonRunID,
       adventurerID: req.adventurerID
     })
     if(!dungeonRun){
-      return res.status(500).send({ error: 'Could not load dungeon run.' })
+      return res.status(500).send({ error: 'Could not load dungeons run.' })
     }
     res.send({ adventurer, dungeonRun })
   }catch(error){
@@ -59,7 +59,7 @@ verifiedRouter.post('/results', async (req, res) => {
   try {
     const adventurer = await Adventurers.findOne(req.adventurerID)
     if(!adventurer.dungeonRunID){
-      return res.status(401).send({ error: 'Adventurer is not currently in a dungeon run.', targetPage: 'Adventurer' })
+      return res.status(401).send({ error: 'Adventurer is not currently in a dungeons run.', targetPage: 'Adventurer' })
     }
     const dungeonRun = await DungeonRuns.findOne(adventurer.dungeonRunID)
     if(!dungeonRun || !dungeonRun.finished){
@@ -76,6 +76,7 @@ verifiedRouter.post('/results', async (req, res) => {
 
 verifiedRouter.post('/confirmresults', async (req, res) => {
   try {
+    req.validateParam('selectedBonuses')
     await finalizeResults(req.adventurerID, req.body.selectedBonuses)
     res.status(200).send({ result: 'okay' })
   }catch(error){
@@ -93,11 +94,22 @@ verifiedRouter.post('/editloadout', async (req, res) => {
   }
 })
 
+verifiedRouter.post('/editloadout/save', async (req, res) => {
+  try {
+    const items = req.validateParam('items', { type: 'array' })
+    const adventurer = await Adventurers.findOne(req.adventurerID)
+    const user = await Users.gameData(req.user)
+    res.status(200).send({ adventurer, items: user.items })
+  }catch(error){
+    return res.status(error.code || 500).send({ error: error.message || error })
+  }
+})
+
 verifiedRouter.post('', async(req, res, next) => {
   try {
     const adventurer = await Adventurers.findOne(req.adventurerID)
     if(adventurer.dungeonRunID){
-      return res.status(401).send({ error: 'Adventurer is currently in a dungeon run.', targetPage: 'Dungeon' })
+      return res.status(401).send({ error: 'Adventurer is currently in a dungeons run.', targetPage: 'Dungeon' })
     }
     res.send({ adventurer })
   }catch(ex){

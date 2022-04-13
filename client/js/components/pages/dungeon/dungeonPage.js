@@ -27,9 +27,9 @@ export default class DungeonPage extends Page{
     this.adventurerID = adventurerID
     this.innerHTML = HTML
 
-    this.adventurerPane = this.querySelector('di-dungeon-adventurer-pane')
-    this.eventEl = this.querySelector('di-dungeon-event')
-    this.stateEl = this.querySelector('di-dungeon-state')
+    this.adventurerPane = this.querySelector('di-dungeons-adventurer-pane')
+    this.eventEl = this.querySelector('di-dungeons-event')
+    this.stateEl = this.querySelector('di-dungeons-state')
   }
 
   async load(){
@@ -47,11 +47,11 @@ export default class DungeonPage extends Page{
       this._parseDungeonUpdate(dungeonRun, false)
     })
 
-    getSocket().on('dungeon run update', this._parseDungeonUpdate)
+    getSocket().on('dungeons run update', this._parseDungeonUpdate)
   }
 
   async unload(){
-    getSocket().off('dungeon run update', this._parseDungeonUpdate)
+    getSocket().off('dungeons run update', this._parseDungeonUpdate)
   }
 
   _parseDungeonUpdate = (dungeonRun, animate = true) => {

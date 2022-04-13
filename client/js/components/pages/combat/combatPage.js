@@ -43,7 +43,7 @@ export default class CombatPage extends Page{
     this.combatFeed.setCombat(this.combat)
     this.combatFeed.setTimeline(this.timeline)
 
-    // TODO: This only makes sense in monster combat
+    // TODO: This only makes sense in monsters combat
     this.combatFeed.setText(`A ${combat.fighter2.data.name} draws near.`)
 
     if(state.status === 'live'){

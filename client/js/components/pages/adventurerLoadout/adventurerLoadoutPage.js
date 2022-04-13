@@ -46,6 +46,13 @@ export default class AdventurerLoadoutPage extends Page{
     return () => new AdventurerPage(this.adventurerID)
   }
 
+  get confirmLeavePageMessage(){
+    if(this.loadout.hasChanges){
+      return 'Your adventurer has unsaved changes.'
+    }
+    return null
+  }
+
   async load(){
     const { adventurer, items } = await fizzetch(`/game/adventurer/${this.adventurerID}/editloadout`)
     this.inventory.setItems(items)
@@ -60,10 +67,26 @@ export default class AdventurerLoadoutPage extends Page{
         this._updateSaveButton()
       }
     })
+
+    this.saveButton.addEventListener('click', async (e) => {
+      this._saving = true
+      this._updateSaveButton()
+      const items = this.loadout.items.map(item => item?.id)
+      const { error } = await fizzetch(`/game/adventurer/${this.adventurerID}/editloadout/save`, {
+        items
+      })
+      if(error){
+        this._showError(error)
+        this._saving = false
+        this._updateSaveButton()
+      }else{
+        this.setPage(new AdventurerPage(this.adventurerID))
+      }
+    })
   }
 
   _updateSaveButton(){
-    if(this.loadout.isValid && this.loadout.hasChanges){
+    if(this.loadout.isValid && this.loadout.hasChanges || this._saving){
       this.saveButton.removeAttribute('disabled')
     }else{
       this.saveButton.setAttribute('disabled', 'disabled')
