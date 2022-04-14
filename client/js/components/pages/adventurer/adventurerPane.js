@@ -33,7 +33,12 @@ export default class AdventurerPane extends HTMLElement{
     this.name.textContent = this.adventurer.name
     this.xpBar.setValue(this.adventurer.xp)
     this.statsList.setStats(getStats(this.adventurer))
-    this.loadoutEl.setAdventurer(this.adventurer)
+    this.loadoutEl.setFighter(this.adventurer)
+  }
+
+  addXp(toAdd){
+    this.adventurer.xp += toAdd
+    this.xpBar.setValue(this.adventurer.xp, { animate: true })
   }
 }
 

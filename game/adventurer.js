@@ -16,11 +16,11 @@ export function levelToXp(lvl){
 
 /**
  * @param adventurer
- * @param loadout
+ * @param items [itemDef]
  * @returns {Stats}
  */
-export function getStats(adventurer, loadout = adventurer.loadout){
-  const loadoutStats = loadout.filter(itemDef => itemDef).map(itemDef => {
+export function getStats(adventurer, items = adventurer.items){
+  const loadoutStats = items.filter(itemDef => itemDef).map(itemDef => {
     const item = new Item(itemDef)
     return item.stats
   })

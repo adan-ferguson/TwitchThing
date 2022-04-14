@@ -1,26 +1,24 @@
 import FighterInstance from '../../../../../game/combat/fighterInstance.js'
 import { fadeOut } from '../../../animationHelper.js'
+import { OrbsDisplayStyles } from '../../loadout/loadout.js'
 
 const HTML = `
-<div class="content-rows">
-  <div class="content-well">
-    <div class="flex-rows">
-      <div class="name"></div>
-      <di-hp-bar></di-hp-bar>
-      <di-bar class="action"></di-bar>
-      <di-stats-list></di-stats-list>
-    </div>
-  </div>
-  <div class="content-well content-no-grow">
-    <di-loadout></di-loadout>       
-  </div>
+<div class="flex-grow">
+  <div class="flex-rows">
+    <div class="name"></div>
+    <di-hp-bar></di-hp-bar>
+    <di-bar class="action"></di-bar>
+    <di-stats-list></di-stats-list>
+  </div>   
 </div>
+<di-loadout></di-loadout>    
 `
 
 export default class FighterPane extends HTMLElement{
 
   constructor(){
     super()
+    this.classList.add('content-well', 'flex-rows')
     this.innerHTML = HTML
     this.hpBar = this.querySelector('di-hp-bar')
     this.actionBar = this.querySelector('di-bar.action')
@@ -35,6 +33,7 @@ export default class FighterPane extends HTMLElement{
     this.fighter = fighter
     this.querySelector('.name').textContent = fighter.name
     this.hpBar.setBadge(fighter.level || '')
+    this.loadout.setFighter(fighter)
   }
 
   setState(state = {}, animate = false){

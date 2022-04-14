@@ -6,7 +6,7 @@ const DEFAULTS = {
   level: 0,
   xp: 0,
   userID: null,
-  loadout: [null, null, null, null, null, null, null, null],
+  items: [null, null, null, null, null, null, null, null],
   dungeonRunID: null,
   baseStats: {
     hpMax: 40,

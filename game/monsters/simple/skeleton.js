@@ -1,6 +1,6 @@
 export default {
   name: 'Skeleton',
-  loadout: [],
+  items: [],
   baseStats: {
     hpMax: 70,
     attack: 11

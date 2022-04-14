@@ -56,7 +56,7 @@ export default class AdventurerLoadoutPage extends Page{
   async load(){
     const { adventurer, items } = await fizzetch(`/game/adventurer/${this.adventurerID}/editloadout`)
     this.inventory.setItems(items)
-    this.loadout.setAdventurer(adventurer)
+    this.loadout.setFighter(adventurer)
 
     this.querySelector('.adventurer-name').textContent = adventurer.name
     this.statsList.setStats(getStats(adventurer))

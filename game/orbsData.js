@@ -1,6 +1,14 @@
 export default class OrbsData{
-  constructor(adventurer, items = adventurer.loadout){
-    this.adventurer = adventurer
+
+  static fromFighter(adventurer){
+    if(!adventurer){
+      return new OrbsData()
+    }
+    return new OrbsData(adventurer.level, adventurer.items)
+  }
+
+  constructor(maxOrbs = 0, items = []){
+    this.maxOrbs = maxOrbs
     this.items = items
   }
 
@@ -15,8 +23,7 @@ export default class OrbsData{
   }
 
   get max(){
-    // TODO: not this
-    return this.adventurer.level
+    return this.maxOrbs
   }
 
   get isValid(){

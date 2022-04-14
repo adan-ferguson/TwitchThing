@@ -46,10 +46,7 @@ export default class Loadout extends HTMLElement{
   }
 
   get orbsData(){
-    if(this.adventurer){
-      return new OrbsData(this.adventurer, this.items)
-    }
-    return null
+    return OrbsData.fromFighter(this._fighter)
   }
 
   get hasChanges(){
@@ -69,9 +66,9 @@ export default class Loadout extends HTMLElement{
     return this
   }
 
-  setAdventurer(adventurer){
-    this.adventurer = adventurer
-    this._originalItems = adventurer.loadout.slice()
+  setFighter(fighter){
+    this._fighter = fighter
+    this._originalItems = [...fighter.items]
     for(let i = 0; i < 8; i++){
       this._rows[i].setItem(this._originalItems[i])
     }
@@ -111,9 +108,6 @@ export default class Loadout extends HTMLElement{
   }
 
   _update(){
-    if(!this.adventurer){
-      return
-    }
 
     const orbsData = this.orbsData
 

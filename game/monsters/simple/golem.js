@@ -1,6 +1,6 @@
 export default {
   name: 'Iron Golem',
-  loadout: [],
+  items: [],
   baseStats: {
     hpMax: 100,
     attack: 20,

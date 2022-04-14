@@ -13,7 +13,7 @@ export async function saveAdventurerLoadout(adventurer, user, itemIDs){
 
   validateDuplicates(itemIDs)
 
-  const currentLoadout = adventurer.loadout
+  const currentLoadout = adventurer.items
   const currentInventory = user.inventory.items
   const loadoutInfo = getItems(currentLoadout, itemIDs)
   const invInfo = getItems(currentInventory, loadoutInfo.missingIDs)
@@ -84,7 +84,7 @@ function validateDuplicates(itemIDs){
 }
 
 function validateLoadout(adventurer){
-  const orbsData = new OrbsData(adventurer)
+  const orbsData = OrbsData.fromAdventurer(adventurer)
   if(!orbsData.isValid){
     throw { code: 403, error: 'Loadout orbs are invalid.' }
   }

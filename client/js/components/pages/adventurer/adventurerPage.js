@@ -35,7 +35,7 @@ export default class AdventurerPage extends Page{
       return { error }
     }
 
-    this.adventurerPane.setAdventurer(adventurer)
+    this.adventurerPane.setFighter(adventurer)
     this.querySelector('button.edit').addEventListener('click', () => {
       this.app.setPage(new AdventurerLoadoutPage(this.adventurerID))
     })

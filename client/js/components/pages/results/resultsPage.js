@@ -11,16 +11,12 @@ import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
 const WAIT_TIME = 500
 
 const HTML = `
-<div class='flex-columns'>
-  <div class='content-well'>
-    <di-adventurer-pane></di-adventurer-pane>
-  </div>
-  <div class='content-well results'>
-    <div class='flex-rows'>
-      <div class="title">Results</div>
-      <div class='results-list'></div>
-      <button class="done hidden">Okay</button>
-    </div>
+<div class='content-columns'>
+  <di-adventurer-pane></di-adventurer-pane>
+  <div class='content-rows results'>
+    <div class="title">Results</div>
+    <div class='results-list'></div>
+    <button class="done hidden">Okay</button>
   </div>
 </div>
 `

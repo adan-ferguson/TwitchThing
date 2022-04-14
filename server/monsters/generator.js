@@ -25,6 +25,7 @@ export async function generateMonster(dungeonRun){
   const monsterDefinition = getMonsterDefinition(floor)
   const rewardValue = scaledValue(POWER_MULTIPLIER, floor - 1)
   return {
+    items: [],
     ...monsterDefinition,
     rewards: generateRewards(rewardValue)
   }

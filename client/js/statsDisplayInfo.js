@@ -86,7 +86,8 @@ function speedFormat(base){
     if(style === StatsDisplayStyle.ADDITIONAL){
       return undefined
     }
-    return roundToFixed(base * val, 2) + 's'
+    debugger
+    return roundToFixed(base / val, 2) + 's'
   }
 }
 

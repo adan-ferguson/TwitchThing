@@ -3,15 +3,11 @@ import fizzetch from '../../../fizzetch.js'
 import Timeline from '../../../../../game/timeline.js'
 
 const HTML = `
-<div class='flex-rows'>
-  <div class='flex-columns'>
-    <div class="content-well">
-        <di-combat-fighter-pane class="fighter1"></di-combat-fighter-pane>
-    </div>
+<div class='content-rows'>
+  <div class='content-columns'>
+      <di-combat-fighter-pane class="fighter1"></di-combat-fighter-pane>
     <div class="mid-thing">VS</div>
-    <div class="content-well">
-        <di-combat-fighter-pane class="fighter2"></di-combat-fighter-pane>
-    </div>
+    <di-combat-fighter-pane class="fighter2"></di-combat-fighter-pane>
   </div>
   <div class="content-well">
     <di-combat-feed></di-combat-feed>

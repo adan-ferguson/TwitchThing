@@ -1,24 +1,21 @@
 import { getActiveStats } from '../../../../../game/adventurer.js'
 
 const HTML = `
-<div class="content-rows">
-  <div class="content-well adventurer-info">
-    <div class="flex-rows">
-      <div class="name"></div>
-      <di-hp-bar></di-hp-bar>
-      <di-stats-list></di-stats-list>
-    </div>
-  </div>
-  <div class="content-well content-no-grow">
-    <di-loadout></di-loadout>
+<div class="flex-grow">
+  <div class="flex-rows">
+    <div class="name"></div>
+    <di-hp-bar></di-hp-bar>
+    <di-stats-list></di-stats-list>
   </div>
 </div>
+<di-loadout></di-loadout>
 `
 
 export default class AdventurerPane extends HTMLElement{
 
   constructor(){
     super()
+    this.classList.add('content-well', 'flex-rows')
     this.innerHTML = HTML
     this.hpBar = this.querySelector('di-hp-bar')
     this.loadout = this.querySelector('di-loadout')
