@@ -1,15 +1,12 @@
-import * as AnimationHelper from '../../../animationHelper.js'
-import StatRow from '../../stats/statRow.js'
 import { StatsDisplayStyle } from '../../../statsDisplayInfo.js'
 import Stats from '../../../../../game/stats/stats.js'
 import StatsList from '../../stats/statsList.js'
 
 const HTML = `
 <div>
-    <span class="name"></span> has reached level <span class="level"></span>
+    <span class="name"></span> has reached Level <span class="level"></span>
 </div>
 <di-stats-list></di-stats-list>
-<div>Select A Bonus:</div>
 <div class="options"></div>
 `
 
@@ -18,66 +15,58 @@ export default class LevelupSelector extends HTMLElement{
     super()
     this.innerHTML = HTML
     this.statsList = this.querySelector('di-stats-list')
-    this.statsList.setRowOptions({
-      style: StatsDisplayStyle.ADDITIONAL
+    this.statsList.setOptions({
+      statsDisplayStyle: StatsDisplayStyle.ADDITIONAL,
+      inline: true
     })
     this.options = this.querySelector('.options')
+    this._levelupStats = null
+    this._selectedStats = null
   }
 
-  setLevelups(adventurer, levelups){
-    this._selectedOptions = []
-    this._levelups = levelups.slice()
+  get extraStats(){
+    const affectors = []
+    if(this._levelupStats){
+      affectors.push(...this._levelupStats.affectors)
+    }
+    if(this._selectedStats){
+      affectors.push(...this._selectedStats.affectors)
+    }
+    return affectors
+  }
+
+  setData(adventurer, levelup, callback){
     this.querySelector('.name').textContent = adventurer.name
-    this._showNextLevelup()
-  }
+    this.querySelector('.level').textContent = levelup.level
 
-  async _showNextLevelup(){
-    const nextLevelup = this._levelups.splice(0, 1)[0]
-
-    this.options.innerHTML = ''
-    this.querySelector('.level').textContent = nextLevelup.level
-
-    const stats = new Stats(nextLevelup.stats)
+    const stats = new Stats(levelup.stats)
     this.statsList.setStats(stats)
+    this._levelupStats = stats
 
-    Object.keys(nextLevelup.options).forEach((category) => {
+    const options = levelup.options
 
-      const options = nextLevelup.options[category]
+    Object.keys(options).forEach((category) => {
 
       const optionEl = document.createElement('button')
       optionEl.classList.add('option')
 
-      const stats = new Stats(options)
+      const stats = new Stats(options[category])
       const statsList = new StatsList()
-      statsList.setRowOptions({
-        style: StatsDisplayStyle.ADDITIONAL
+      statsList.setOptions({
+        statsDisplayStyle: StatsDisplayStyle.ADDITIONAL
       })
       statsList.setStats(stats)
       optionEl.append(statsList)
 
       optionEl.addEventListener('click', () => {
-        this._selectOption(category)
+        this.querySelectorAll('button').forEach(button => button.classList.remove('selected'))
+        optionEl.classList.add('selected')
+        this._selectedStats = stats
+        callback(category)
       })
 
       this.options.appendChild(optionEl)
     })
-  }
-
-  _selectOption(i){
-    this._selectedOptions.push(i)
-    if(this._levelups.length){
-      AnimationHelper.fadeOut(this).then(() => {
-        this._showNextLevelup()
-        AnimationHelper.fadeIn(this)
-      })
-    }else{
-      const e = new CustomEvent('finished', {
-        detail: {
-          selectedBonuses: this._selectedOptions
-        }
-      })
-      this.dispatchEvent(e)
-    }
   }
 }
 

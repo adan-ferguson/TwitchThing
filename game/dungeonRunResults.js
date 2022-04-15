@@ -4,6 +4,7 @@ export default class DungeonRunResults{
     this.lastEvent = new Ending(dungeonRun.events.at(-1))
     this.monstersKilled = new MonstersKilled(dungeonRun.events)
     this.relicsFound = new RelicsFound(dungeonRun.events)
+    this.chests =
   }
 }
 

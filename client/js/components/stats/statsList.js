@@ -1,16 +1,24 @@
 import StatRow from './statRow.js'
+import { StatsDisplayStyle } from '../../statsDisplayInfo.js'
 
 export default class StatsList extends HTMLElement{
 
   constructor(){
     super()
-    this.rowOptions = {}
+    this.options = {
+      statsDisplayStyle: StatsDisplayStyle.CUMULATIVE,
+      inline: false
+    }
+    this._update()
   }
 
-  setRowOptions(options){
+  setOptions(options){
     for (let key in options){
-      this.rowOptions[key] = options[key]
+      if(key in this.options){
+        this.options[key] = options[key]
+      }
     }
+    this._update()
   }
 
   setStats(stats){
@@ -39,10 +47,14 @@ export default class StatsList extends HTMLElement{
   _updateStat(stat){
     const row  = this.querySelector(`di-stat-row[stat-key="${stat.name}"]`)
     if(!row){
-      this.appendChild(new StatRow(stat, this.rowOptions))
+      this.appendChild(new StatRow(stat, { style: this.options.statsDisplayStyle }))
     }else{
       row.update(stat)
     }
+  }
+
+  _update(){
+    this.classList.toggle('inline', this.options.inline)
   }
 }
 

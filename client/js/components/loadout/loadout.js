@@ -29,7 +29,7 @@ export default class Loadout extends HTMLElement{
     })
 
     this._options = {
-      orbsDisplay: OrbsDisplayStyles.STANDARD,
+      orbsDisplayStyle: OrbsDisplayStyles.STANDARD,
       editable: false
     }
 

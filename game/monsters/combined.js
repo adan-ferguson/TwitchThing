@@ -1,5 +1,11 @@
-import bat from './simple/bat.js'
-import golem from './simple/golem.js'
-import rat from './simple/rat.js'
-import skeleton from './simple/skeleton.js'
-export default { BAT:bat,GOLEM:golem,RAT:rat,SKELETON:skeleton }
+import bat from './section1/bat.js'
+import kobold from './section1/kobold.js'
+import minotaur from './section1/minotaur.js'
+import ooze from './section1/ooze.js'
+import rat from './section1/rat.js'
+import rockgolem from './section1/rockgolem.js'
+import scorpion from './section1/scorpion.js'
+import sorcerer from './section1/sorcerer.js'
+import spider from './section1/spider.js'
+import troglodyte from './section1/troglodyte.js'
+export default { BAT:bat,KOBOLD:kobold,MINOTAUR:minotaur,OOZE:ooze,RAT:rat,ROCKGOLEM:rockgolem,SCORPION:scorpion,SORCERER:sorcerer,SPIDER:spider,TROGLODYTE:troglodyte }

@@ -44,7 +44,8 @@ export function calculateResults(adventurer, rewards){
   }
   return {
     rewards,
-    levelups
+    levelups,
+    userLevelups
   }
 }
 
@@ -96,7 +97,6 @@ export async function finalizeResults(adventurerID, selectedBonuses){
   }
 
   async function saveUser(){
-    // TODO: add level rewards
     const user = await Users.findOne(adventurer.userID)
     const xpAfter = user.xp + dungeonRun.results.rewards.xp
     await Users.update(adventurer.userID, {

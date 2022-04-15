@@ -28,8 +28,7 @@ export default class FighterInstance{
   }
 
   get stats(){
-    debugger
-    const itemStats = (this.baseFighter.items || []).filter(itemDef => itemDef).map(itemDef => {
+    const itemStats = this.baseFighter.items.filter(itemDef => itemDef).map(itemDef => {
       const item = new Item(itemDef)
       return item.stats
     })

@@ -8,10 +8,10 @@ const HTML = `
 <div class='content-columns'>
   <di-dungeon-adventurer-pane></di-dungeon-adventurer-pane>
   <div class="content-rows">
-    <div class="">
+    <div class="content-well">
         <di-dungeon-event></di-dungeon-event>
     </div>
-    <div class="state" style="flex-basis:125rem;flex-grow:0">
+    <div class="state content-well" style="flex-basis:125rem;flex-grow:0">
         <di-dungeon-state></di-dungeon-state>
     </div>
   </div>

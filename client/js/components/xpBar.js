@@ -32,7 +32,7 @@ export default class XpBar extends Bar{
 
     if(!options.animate){
       const level = this._xpToLevel(val)
-      super.setBadge(level)
+      super.setBadge(level + '')
       super.setRange(this._levelToXp(level), this._levelToXp(level + 1))
       super.setValue(val)
     }else{
@@ -42,7 +42,10 @@ export default class XpBar extends Bar{
         let toNextLevel = this._max - this._val
         if (xpToAdd >= toNextLevel){
           await super.setValue(this._max, { animate: true })
-          this._dispatchLevelupEvent(this._xpToLevel(this._val))
+          this._flyingText('Level Up!')
+          if(options.onLevelUp){
+            await options.onLevelUp(this._xpToLevel(this._val))
+          }
           xpToAdd -= toNextLevel
         }else{
           await super.setValue(val, { animate: true })
@@ -50,16 +53,6 @@ export default class XpBar extends Bar{
         }
       }
     }
-  }
-
-  _dispatchLevelupEvent(level){
-    this._flyingText('Level Up!')
-    const e = new CustomEvent('levelup', {
-      detail: {
-        level
-      }
-    })
-    this.dispatchEvent(e)
   }
 }
 

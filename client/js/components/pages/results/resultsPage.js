@@ -3,7 +3,6 @@ import AdventurerPage from '../adventurer/adventurerPage.js'
 import fizzetch from '../../../fizzetch.js'
 import DungeonPage from '../dungeon/dungeonPage.js'
 import MainPage from '../main/mainPage.js'
-import Modal from '../../modal.js'
 import LevelupSelector from './levelupSelector.js'
 import { show as showLoader } from '../../../loader.js'
 import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
@@ -13,7 +12,7 @@ const WAIT_TIME = 500
 const HTML = `
 <div class='content-columns'>
   <di-adventurer-pane></di-adventurer-pane>
-  <div class='content-rows results'>
+  <div class='content-rows results' style='flex-grow:1.5'>
     <div class="title">Results</div>
     <div class='results-list'></div>
     <button class="done hidden">Okay</button>
@@ -45,7 +44,7 @@ export default class ResultsPage extends Page{
       }
     }
 
-    this.selectedBonuses = []
+    this._selectedBonuses = []
     this.adventurerPane.setAdventurer(adventurer)
 
     this.adventurer = adventurer
@@ -67,67 +66,77 @@ export default class ResultsPage extends Page{
   }
 
   _showDungeonResult = async () => {
-    await this._addResultRow(`Floor: ${this.dungeonRun.floor}`)
-    await this._addResultRow(`Room: ${this.dungeonRun.room}`)
+    this._addResultText(`Floor: ${this.dungeonRun.floor}`)
+    await wait()
+    this._addResultText(`Room: ${this.dungeonRun.room}`)
+    await wait()
 
     const monsterName = this.dungeonRunResults.lastEvent.monster?.name || 'something'
-    await this._addResultRow(`Killed By: ${monsterName}`)
+    this._addResultText(`Killed By: ${monsterName}`)
+    await wait()
 
     const monsterCount = this.dungeonRunResults.monstersKilled.count
-    await this._addResultRow(`Monsters Killed: ${monsterCount}`)
+    this._addResultText(`Monsters Killed: ${monsterCount}`)
+    await wait()
 
     const relicCount = this.dungeonRunResults.relicsFound.count
-    await this._addResultRow(`Relics Found: ${relicCount}`)
+    this._addResultText(`Relics Found: ${relicCount}`)
+    await wait()
 
     this._addResultNewline()
   }
 
   _adventurerXp = async () => {
-    this._addResultRow(`+${this.dungeonRun.results.rewards.xp} xp`)
-    this.adventurerPane.xpBar.addEventListener('levelup', e => {
-      this._addResultRow(`${this.adventurer.name} leveled up to level ${e.detail.level}!`)
-    })
-    await this.adventurerPane.addXp(this.dungeonRun.results.rewards.xp)
+    this._addResultText(`${this.adventurer.name} gained +${this.dungeonRun.results.rewards.xp} xp`)
+    await this.adventurerPane.addXp(this.dungeonRun.results.rewards.xp, this._levelUp)
   }
 
   _userXp = async () => {
-    await this.app.header.addUserXp(this.dungeonRun.results.rewards.xp)
-    this.app.header.xpBar.addEventListener('levelup', e => {
-      this._addResultRow(`You leveled up to level ${e.detail.level}!`)
-      if(e.detail.level % 10 === 0){
-        this._addResultRow('You gained a new adventurer slot.')
-      }
+    this._addResultText(`You gained +${this.dungeonRun.results.rewards.xp} xp`)
+    await this.app.header.addUserXp(this.dungeonRun.results.rewards.xp, this._userLevelUp)
+  }
+
+  _levelUp = () => {
+    return new Promise((res) => {
+      const levelups = this.dungeonRun.results.levelups
+      const selector = new LevelupSelector()
+      const index = this._selectedBonuses.length
+      selector.setData(
+        this.adventurer,
+        levelups[index],
+        bonus => {
+          res()
+          row.parentElement?.removeChild(row)
+          this._selectedBonuses[index] = bonus
+          this._updateStats()
+        })
+      this._addResult(selector)
+      this._updateStats()
+      const row = this._addResultText('Choose a Bonus')
     })
+  }
+
+  _userLevelUp = level => {
+    this._addResultText(`You leveled up to level ${level}`)
+    // TODO: this should be calculated from server
+    if(level === 1){
+      this._addResultText('You\'ve been rewarded with a Starter\'s Chest')
+    }
+    if(level % 10 === 0){
+      this._addResultText('You\'ve unlocked a new adventurer slot')
+    }
   }
 
   _enableButton(){
-    const levelups = this.dungeonRun.results.levelups
-    if(levelups.length){
-      this.doneButton.textContent = 'Level up'
-      this.doneButton.classList.add('levelup')
-    }
     this.doneButton.classList.remove('hidden')
-    this.doneButton.addEventListener('click', async () => {
-      if(levelups.length){
-        const selector = new LevelupSelector()
-        selector.setLevelups(this.adventurer, levelups)
-        const modal = new Modal()
-        modal.innerPane.appendChild(selector)
-        modal.show()
-        selector.addEventListener('finished', e => {
-          modal.hide()
-          this._finish(e.detail.selectedBonuses)
-        })
-      }else{
-        this._finish()
-      }
-    })
+    this.doneButton.addEventListener('click', () => this._finish())
   }
 
-  async _finish(selectedBonuses = []){
+  async _finish(){
+    await showPopups(this.dungeonRunResults)
     showLoader()
     const results = await fizzetch(`/game/adventurer/${this.adventurerID}/confirmresults`, {
-      selectedBonuses
+      selectedBonuses: this._selectedBonuses
     })
     if(!results.error){
       this.app.setPage(new AdventurerPage(this.adventurerID))
@@ -135,20 +144,34 @@ export default class ResultsPage extends Page{
     // TODO: handle error, usually just shouldn't happen though
   }
 
-  async _addResultRow(text){
+  _addResult(row){
+    this.results.appendChild(row)
+    this.results.scrollTop = this.results.scrollHeight
+    return row
+  }
+
+  _addResultText(text){
     const row = document.createElement('div')
     row.textContent = text
-    this.results.appendChild(row)
-    await wait(WAIT_TIME)
+    return this._addResult(row)
   }
 
   _addResultNewline(){
     const row = document.createElement('br')
-    this.results.appendChild(row)
+    return this._addResult(row)
+  }
+
+  _updateStats(){
+    const selectors = [...this.querySelectorAll('di-adventurer-levelup-selector')]
+    const extraStats = selectors.reduce((val, selector) => {
+      val.push(...selector.extraStats)
+      return val
+    }, [])
+    this.adventurerPane.setExtraStats(extraStats)
   }
 }
 
-function wait(time = 0){
+function wait(time = WAIT_TIME){
   return new Promise(res => {
     setTimeout(res, time)
   })
@@ -166,6 +189,36 @@ function waitUntilDocumentVisible(){
       }
     })
   })
+}
+
+async function showPopups(dungeonRunResults){
+
+  if(!dungeonRunResults.chests.length){
+    return
+  }
+
+  const modal = new SimpleModal()
+  modal.show()
+
+  for(let i = 0; i < dungeonRunResults.chests; i++){
+    await showPopup(dungeonRunResults.chests[i], i < dungeonRunResults.length - 1)
+  }
+
+  function showPopup(chest, lastOne){
+    new Promise(res => {
+      modal.setContent(new ChestOpenage(chest))
+      modal.setButtons({
+        text: lastOne ? 'Okay' : 'Next',
+        fn: () => {
+          if(lastOne){
+            res()
+          }else{
+            return false
+          }
+        }
+      })
+    })
+  }
 }
 
 customElements.define('di-results-page', ResultsPage )

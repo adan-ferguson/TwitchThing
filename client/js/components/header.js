@@ -47,10 +47,11 @@ export default class Header extends HTMLElement{
     return this.app?.user
   }
 
-  async addUserXp(xpToAdd){
-    this.user.xp += xpToAdd
-    this.user.level = xpToLevel(this.user.xp)
-    await this.xpBar.setValue(this.user.xp, { animate: true })
+  async addUserXp(xpToAdd, onLevelUp){
+    await this.xpBar.setValue(this.user.xp + xpToAdd, {
+      animate: true,
+      onLevelUp
+    })
   }
 
   updateUserBar(){

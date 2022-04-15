@@ -430,6 +430,8 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 - Make some simple items
 - Make some simple monsters
+++  1 to 10 (cave)
+-- 11 to 20 (undead)
 
 - Janky going back from combat to dungeon run
 -- Don't have a combat page, instead have it on the dungeonRun page
@@ -454,6 +456,14 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 TODO Later
 -----------
+- Show a theme for each multiple of 10 floors
+
+- Growth: the main 2 stats are HP and Power
+-- Attack is equal to power possibly times a multiplier
+-- The result being if you have 20 Power * +50% attack, it's 30 attack, but attack doesn't scale the growth
+-- These are the only scaling things
+-- Displayed phys/mag power and phys/mag armor
+
 - Admin page
 -- Show ajax errors which were thrown
 -- Show console logs

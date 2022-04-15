@@ -5,7 +5,7 @@ import Timeline from '../../../../../game/timeline.js'
 const HTML = `
 <div class='content-rows'>
   <div class='content-columns'>
-      <di-combat-fighter-pane class="fighter1"></di-combat-fighter-pane>
+    <di-combat-fighter-pane class="fighter1"></di-combat-fighter-pane>
     <div class="mid-thing">VS</div>
     <di-combat-fighter-pane class="fighter2"></di-combat-fighter-pane>
   </div>

@@ -59,7 +59,7 @@ const DEFAULTS = {
 }
 
 export function getStatDisplayInfo(stat, style){
-  const info = statDefinitionsInfo[stat.name]
+  const info = { ...statDefinitionsInfo[stat.name] }
   if(!info){
     return null
   }
@@ -69,7 +69,7 @@ export function getStatDisplayInfo(stat, style){
   if(info.displayedValue === undefined){
     info.displayedValue = toText(stat.type, stat.value, style)
   }
-  return { ...DEFAULTS, ...(statDefinitionsInfo[stat.name] || {}) }
+  return { ...DEFAULTS, ...info }
 }
 
 function toText(statType, value, style){
@@ -86,14 +86,13 @@ function speedFormat(base){
     if(style === StatsDisplayStyle.ADDITIONAL){
       return undefined
     }
-    debugger
-    return roundToFixed(base / val, 2) + 's'
+    return roundToFixed(base / (1000 * val), 2) + 's'
   }
 }
 
 function roundToFixed(val, digits){
   const multi = Math.pow(10, digits)
   val *= multi
-  Math.round(val)
+  val = Math.round(val)
   return val / multi
 }

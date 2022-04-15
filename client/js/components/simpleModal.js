@@ -5,15 +5,33 @@ const SIMPLE_MODAL_HTML = `
   <div class='buttons'></div>
 `
 
-export default class SimpleModal extends Modal {
+export default class SimpleModal extends Modal{
 
-  constructor(content, buttons){
+  constructor(content = null, buttons = null){
     super()
     this.innerPane.innerHTML = SIMPLE_MODAL_HTML
+    if(content){
+      this.setContent(content)
+    }
+    if(buttons){
+      this.setButtons(buttons)
+    }
+  }
 
-    // TODO: escaped content if we want?
-    this.querySelector('.content').textContent = content
+  setContent(content){
+    const contentEl = this.querySelector('.content')
+    contentEl.innerHTML = ''
+    if(content instanceof HTMLElement){
+      contentEl.appendChild(content)
+    }else{
+      contentEl.textContent = content
+    }
+  }
+
+  setButtons(buttons){
+
     const buttonsEl = this.querySelector('.buttons')
+    buttonsEl.innerHTML = ''
 
     buttons.forEach(options => {
 
@@ -37,4 +55,5 @@ export default class SimpleModal extends Modal {
     })
   }
 }
+
 customElements.define('di-simple-modal', SimpleModal)

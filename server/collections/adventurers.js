@@ -9,8 +9,8 @@ const DEFAULTS = {
   items: [null, null, null, null, null, null, null, null],
   dungeonRunID: null,
   baseStats: {
-    hpMax: 40,
-    attack: 2
+    hpMax: 100,
+    attack: 5
   }
 }
 

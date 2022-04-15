@@ -3,11 +3,18 @@ import { StatDefinitions, StatType } from './statDefinitions.js'
 export default class Stats{
 
   constructor(statAffectors){
-    this._statAffectors = Array.isArray(statAffectors) ? statAffectors : [statAffectors]
+    this._statAffectors = []
+    this.addAffectors(statAffectors)
   }
 
   get affectors(){
     return [...this._statAffectors]
+  }
+
+  addAffectors(affectors){
+    affectors = Array.isArray(affectors) ? affectors : [affectors]
+    this._statAffectors.push(...affectors)
+    return this
   }
 
   get(name){

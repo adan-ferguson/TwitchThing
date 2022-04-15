@@ -5,12 +5,13 @@ import { addRewards, calculateResults } from './results.js'
 import { generateEvent } from './dungeonEventPlanner.js'
 import { emit } from '../socketServer.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
+import Users from '../collections/users.js'
 
 let running = false
 let activeRuns = {}
 
 export function cancelAllRuns(){
-  this.activeRuns = {}
+  activeRuns = {}
 }
 
 export async function start(){
@@ -24,6 +25,7 @@ export async function start(){
     finished: false
   })
   const adventurers = await Adventurers.findByIDs(dungeonRuns.map(dr => dr.adventurerID))
+  const users = await Users.findByIDs(adventurers.map(adv => adv.userID))
 
   dungeonRuns.forEach(dr => {
     const adventurer = adventurers.find(adv => adv._id.equals(dr.adventurerID))
@@ -31,7 +33,12 @@ export async function start(){
       console.error('Dungeon run in limbo, no adventurer')
       return
     }
-    activeRuns[dr._id] = new DungeonRunInstance(dr, adventurer)
+    const user = users.find(user => user._id.equals(adventurer._id))
+    if(!user){
+      console.log('Dungeon run in limbo, no user')
+      return
+    }
+    activeRuns[dr._id] = new DungeonRunInstance(dr, adventurer, user)
   })
 
   advanceTime(0)
@@ -59,6 +66,7 @@ export async function start(){
  */
 export async function addRun(adventurerID, dungeonID){
   const adventurerDoc = await Adventurers.findOne(adventurerID)
+  const userDoc = await Users.findOne(adventurerDoc.userID)
   const drDoc = await DungeonRuns.save({
     adventurerID,
     dungeonID,
@@ -70,16 +78,16 @@ export async function addRun(adventurerID, dungeonID){
   Adventurers.update(adventurerID, {
     dungeonRunID: drDoc._id
   })
-  activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, adventurerDoc)
+  activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, adventurerDoc, userDoc)
 }
 
 class DungeonRunInstance{
 
-  constructor(doc, adventurer){
+  constructor(doc, adventurer, user){
     this.doc = doc
     this.adventurer = adventurer
+    this.user = user
     this.timeSinceLastEvent = 0
-
     if(!this.currentEvent){
       this.doc.events = [{
         message: `${this.adventurer.name} enters the dungeon.`,
