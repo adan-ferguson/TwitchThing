@@ -1,5 +1,4 @@
 export default {
-  name: 'Troglodyte',
   unscaledStats: {
     hpMax: 35,
     attack: 7,

@@ -1,5 +1,4 @@
 export default {
-  name: 'Ooze',
   unscaledStats: {
     hpMax: 40,
     attack: 5,

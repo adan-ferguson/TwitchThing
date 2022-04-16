@@ -6,11 +6,15 @@ import { xpToLevel as userXpToLevel } from '../../game/user.js'
 import { mergeStats } from '../../game/stats/stats.js'
 import { calculateBonusOptions } from './bonuses.js'
 import { randomRound } from '../../game/rando.js'
+import { generateItemDef, generateRandomItemDef } from '../items/generator.js'
+import { toArray } from '../../game/utilFunctions.js'
+import { generateChest } from './chests.js'
 
 const GROWTH_SCALE = 0.10
 
 const REWARDS_TYPES = {
-  xp: 'int'
+  xp: 'int',
+  chests: 'array'
 }
 
 export function addRewards(rewards, toAdd){
@@ -30,22 +34,18 @@ export function addRewards(rewards, toAdd){
       if(!r[key]){
         r[key] = []
       }
-      r[key].push(toAdd[key])
+      r[key].push(...toArray(toAdd[key]))
     }
   }
   return r
 }
 
-export function calculateResults(adventurer, rewards){
-  const levelAfter = advXpToLevel(adventurer.xp + rewards.xp)
-  const levelups = []
-  for(let levelBefore = adventurer.level; levelBefore < levelAfter; levelBefore++){
-    levelups.push(previewLevelup(adventurer, levelBefore + 1))
-  }
+export async function calculateResults(adventurer, rewards){
+  const user = await Users.findOne(adventurer.userID)
   return {
     rewards,
-    levelups,
-    userLevelups
+    levelups: generateLevelups(user, adventurer, rewards.xp),
+    userLevelups: generateUserLevelups(user, rewards.xp)
   }
 }
 
@@ -119,4 +119,44 @@ function previewLevelup(adventurer, level){
     options: calculateBonusOptions(stats, level),
     level
   }
+}
+
+function previewUserLevelUp(user, level){
+  const obj = {}
+  if(level === 1){
+    obj.features = ['chests', 'items']
+    obj.chest = generateChest({
+      name: 'Level-Up Chest',
+      level: level,
+      contents: {
+        items: [generateItemDef('SWORD')]
+      },
+      tier: 2
+    })
+  }else{
+    obj.chest = generateChest({
+      name: 'Level-Up Chest',
+      level: level,
+      tier: 2
+    })
+  }
+  return obj
+}
+
+function generateLevelups(user, adventurer, xp){
+  const levelAfter = advXpToLevel(adventurer.xp + xp)
+  const levelups = []
+  for(let levelBefore = adventurer.level; levelBefore < levelAfter; levelBefore++){
+    levelups.push(previewLevelup(adventurer, levelBefore + 1))
+  }
+  return levelups
+}
+
+function generateUserLevelups(user, xp){
+  const levelAfter = userXpToLevel(user.xp + xp)
+  const levelups = []
+  for(let levelBefore = user.level; levelBefore < levelAfter; levelBefore++){
+    levelups.push(previewUserLevelUp(user, levelBefore + 1))
+  }
+  return levelups
 }

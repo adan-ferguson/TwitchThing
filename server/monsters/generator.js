@@ -1,8 +1,10 @@
 import scaledValue from '../../game/scaledValue.js'
 import { getMonsterDefinition } from './library.js'
 import { StatDefinitions, StatType } from '../../game/stats/statDefinitions.js'
+import { generateChest } from '../items/generator.js'
 
 const POWER_MULTIPLIER = 0.20
+const CHEST_DROP_CHANCE = 0.12
 const MONSTER_CHANCE_INCREASE_PER_ROOM = 0.06
 const FLOOR_RANGE = 5 // If we're on floor X, we'll get monsters of difficulty X - FLOOR_RANGE + 1 to X
 
@@ -28,13 +30,19 @@ export async function generateMonster(dungeonRun){
   return {
     items: [],
     ...monsterDefinition,
-    rewards: generateRewards(scalingValue)
+    rewards: generateRewards()
   }
-}
 
-function generateRewards(scalingValue){
-  return {
-    xp: 25 * scalingValue
+  function generateRewards(){
+    const rewards = {
+      xp: 25 * scalingValue
+    }
+    if(dungeonRun.user.features.find('items')){
+      if(Math.random() < CHEST_DROP_CHANCE){
+        rewards.chests = generateChest({ level: floor })
+      }
+    }
+    return rewards
   }
 }
 

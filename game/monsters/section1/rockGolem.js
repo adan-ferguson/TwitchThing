@@ -1,5 +1,4 @@
 export default {
-  name: 'Rock Golem',
   unscaledStats: {
     hpMax: 40,
     attack: 10,

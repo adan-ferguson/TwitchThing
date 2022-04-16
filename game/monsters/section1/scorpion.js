@@ -1,5 +1,4 @@
 export default {
-  name: 'Scorpion',
   unscaledStats: {
     hpMax: 35,
     attack: 5,

@@ -1,5 +1,4 @@
 export default {
-  name: 'Kobold',
   unscaledStats: {
     hpMax: 30,
     attack: 4,

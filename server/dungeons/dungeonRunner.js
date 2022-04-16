@@ -160,7 +160,7 @@ class DungeonRunInstance{
     }
     if(event.runFinished){
       this.doc.finished = true
-      this.doc.results = calculateResults(this.adventurer, this.doc.rewards)
+      this.doc.results = await calculateResults(this.adventurer, this.doc.rewards)
       delete activeRuns[this.doc._id]
     }
     this.doc.elapsedTime += event.duration
