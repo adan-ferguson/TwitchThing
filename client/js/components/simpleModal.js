@@ -1,4 +1,5 @@
 import Modal from './modal.js'
+import { toArray } from '../../../game/utilFunctions.js'
 
 const SIMPLE_MODAL_HTML = `
   <div class='content'></div>
@@ -33,12 +34,13 @@ export default class SimpleModal extends Modal{
     const buttonsEl = this.querySelector('.buttons')
     buttonsEl.innerHTML = ''
 
-    buttons.forEach(options => {
+    toArray(buttons).forEach(options => {
 
       options = {
         text: 'text',
         style: 'normal',
-        fn: () => {}, // Called on click. If it returns false, the modal won't close after clicking.
+        fn: () => {
+        }, // Called on click. If it returns false, the modal won't close after clicking.
         ...options
       }
 
@@ -47,7 +49,7 @@ export default class SimpleModal extends Modal{
       btn.textContent = options.text
       btn.addEventListener('click', () => {
         const ret = options.fn()
-        if(ret !== false){
+        if (ret !== false){
           this.hide()
         }
       })

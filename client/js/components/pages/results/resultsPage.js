@@ -4,9 +4,10 @@ import fizzetch from '../../../fizzetch.js'
 import DungeonPage from '../dungeon/dungeonPage.js'
 import MainPage from '../main/mainPage.js'
 import LevelupSelector from './levelupSelector.js'
-import { show as showLoader } from '../../../loader.js'
 import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
-import Stats, { mergeStats } from '../../../../../game/stats/stats.js'
+import { mergeStats } from '../../../../../game/stats/stats.js'
+import SimpleModal from '../../simpleModal.js'
+import ChestOpenage from './chestOpenage.js'
 
 const WAIT_TIME = 500
 
@@ -97,11 +98,12 @@ export default class ResultsPage extends Page{
     await this.app.header.addUserXp(this.dungeonRun.results.rewards.xp, this._userLevelUp)
   }
 
-  _levelUp = () => {
+  _levelUp = level => {
     return new Promise((res) => {
       const levelups = this.dungeonRun.results.levelups
       const selector = new LevelupSelector()
       const index = this._selectedBonuses.length
+      this.adventurer.level = level
       selector.setData(
         this.adventurer,
         levelups[index],
@@ -135,13 +137,13 @@ export default class ResultsPage extends Page{
 
   async _finish(){
     await showPopups(this.dungeonRunResults)
-    showLoader()
-    const results = await fizzetch(`/game/adventurer/${this.adventurerID}/confirmresults`, {
-      selectedBonuses: this._selectedBonuses
-    })
-    if(!results.error){
-      this.app.setPage(new AdventurerPage(this.adventurerID))
-    }
+    // showLoader()
+    // const results = await fizzetch(`/game/adventurer/${this.adventurerID}/confirmresults`, {
+    //   selectedBonuses: this._selectedBonuses
+    // })
+    // if(!results.error){
+    //   this.app.setPage(new AdventurerPage(this.adventurerID))
+    // }
     // TODO: handle error, usually just shouldn't happen though
   }
 
@@ -196,25 +198,25 @@ async function showPopups(dungeonRunResults){
   }
 
   const modal = new SimpleModal()
-  modal.show()
+  modal.setOptions({ closeOnUnderlayClick: false })
 
-  for(let i = 0; i < dungeonRunResults.chests; i++){
+  for(let i = 0; i < dungeonRunResults.chests.length; i++){
     await showPopup(dungeonRunResults.chests[i], i < dungeonRunResults.length - 1)
   }
 
+  modal.hide(true)
+
   function showPopup(chest, lastOne){
-    new Promise(res => {
+    return new Promise(res => {
       modal.setContent(new ChestOpenage(chest))
       modal.setButtons({
-        text: lastOne ? 'Okay' : 'Next',
+        text: lastOne ? 'Finish' : 'Next',
         fn: () => {
-          if(lastOne){
-            res()
-          }else{
-            return false
-          }
+          res()
+          return false
         }
       })
+      modal.show()
     })
   }
 }

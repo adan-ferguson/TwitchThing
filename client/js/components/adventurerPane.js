@@ -48,6 +48,7 @@ export default class AdventurerPane extends HTMLElement{
       bonus: this._bonusStats
     })
     this.statsList.setStats(stats)
+    this.loadoutEl.update()
   }
 
   async addXp(toAdd, onLevelUp){

@@ -1,18 +1,24 @@
 import tippy from 'tippy.js'
-import orbImg from '/client/assets/icons/orb.svg'
 
-const HTML = (name, orbs, icon = '') => `
+const HTML = `
 <div>
-    <span>${icon}</span> <span>${name}</span>
+    <span class="icon"></span> <span class="name"></span>
 </div>
-<div class="orb-row">
-    <img alt="Orbs" src="${orbImg}"> <span class="orbs-text">${orbs}</span>
-</div>
+<di-orb-row></di-orb-row>
 `
 
 export default class LoadoutRow extends HTMLElement{
+
+  _iconEl
+  _nameEl
+  _orbRow
+
   constructor(index = -1, item = null){
     super()
+    this.innerHTML = HTML
+    this._iconEl = this.querySelector('.icon')
+    this._nameEl = this.querySelector('.name')
+    this._orbRow = this.querySelector('di-orb-row')
     this.tippy = tippy(this)
     this.index = index
     this.setItem(item)
@@ -31,7 +37,8 @@ export default class LoadoutRow extends HTMLElement{
     }
     this.classList.remove('blank-row')
     this.item = item
-    this.innerHTML = HTML(item.name, item.orbs)
+    this._nameEl.textContent = this.item.name
+    this._orbRow.setValue(item.orbs)
     this.tippy.enable()
     this.tippy.setContent(() => this.itemTooltip)
   }
@@ -39,7 +46,6 @@ export default class LoadoutRow extends HTMLElement{
   _setupBlank(){
     this.classList.add('blank-row')
     this.item = null
-    this.innerHTML = ''
     this.tippy.disable()
   }
 }

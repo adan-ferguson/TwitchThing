@@ -1,9 +1,13 @@
 import Items from './items/combined.js'
+import Stats from './stats/stats.js'
 
 export default class Item{
   constructor(itemDef){
-    if(!this.baseType){
-      throw `Invalid itemDef, invalid baseType ${this.baseType}.`
+    if(itemDef instanceof Item){
+      itemDef = itemDef.itemDef
+    }
+    if(!itemDef.baseType){
+      throw `Invalid itemDef, invalid baseType ${itemDef.baseType}.`
     }
     this.itemDef = itemDef
   }
@@ -16,7 +20,15 @@ export default class Item{
     return this.itemDef.id
   }
 
+  get name(){
+    return this.itemDef.name
+  }
+
+  get orbs(){
+    return this.baseType.orbs
+  }
+
   get stats(){
-    return this.baseType.stats
+    return new Stats(this.baseType.stats)
   }
 }
