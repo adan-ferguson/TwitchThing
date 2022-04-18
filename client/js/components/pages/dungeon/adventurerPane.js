@@ -1,4 +1,3 @@
-import { getActiveStats } from '../../../../../game/adventurer.js'
 
 const HTML = `
 <div class="flex-grow">
@@ -39,8 +38,8 @@ export default class AdventurerPane extends HTMLElement{
 
   _update(animateChanges){
 
-    const stats = getActiveStats(this.adventurer, this.state)
-    this.hpBar.setRange(0, stats.get('hpMax').value)
+    const instance = new AdventurerInstance(this.adventurer, this.state)
+    this.hpBar.setRange(0, instance.stats.get('hpMax').value)
 
     if(this.state.hp !== this.hpBar.value){
       if(animateChanges){
@@ -53,7 +52,7 @@ export default class AdventurerPane extends HTMLElement{
       }
     }
 
-    this.statsList.setStats(stats)
+    this.statsList.setStats(instance.stats)
   }
 }
 

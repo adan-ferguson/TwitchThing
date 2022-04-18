@@ -1,5 +1,5 @@
-import { getStats, levelToXp, xpToLevel } from '../../../../../game/adventurer.js'
-import { OrbsDisplayStyles } from '../../loadout/loadout.js'
+import { getIdleAdventurerStats, levelToXp, xpToLevel } from '../../../game/adventurer.js'
+import { OrbsDisplayStyles } from './loadout/loadout.js'
 
 const HTML = `
 <div class="flex-grow">
@@ -32,12 +32,22 @@ export default class AdventurerPane extends HTMLElement{
     this.adventurer = adventurer
     this.name.textContent = this.adventurer.name
     this.xpBar.setValue(this.adventurer.xp)
-    this.statsList.setStats(getStats(this.adventurer))
     this.loadoutEl.setFighter(this.adventurer)
+    this.update()
   }
 
-  setExtraStats(extraStats){
-    this.statsList.setStats(getStats(this.adventurer).addAffectors(extraStats))
+  setBonusStats(bonusStats){
+    this._bonusStats = bonusStats
+    this.update()
+  }
+
+  update(){
+    const stats = getIdleAdventurerStats({
+      adventurer: this.adventurer,
+      items: this.loadoutEl.items,
+      bonus: this._bonusStats
+    })
+    this.statsList.setStats(stats)
   }
 
   async addXp(toAdd, onLevelUp){

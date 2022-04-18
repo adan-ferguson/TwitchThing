@@ -4,7 +4,7 @@ import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
 import fizzetch from '../../../fizzetch.js'
 import AdventurerLoadoutPage from '../adventurerLoadout/adventurerLoadoutPage.js'
 
-import './adventurerPane.js'
+import '../../adventurerPane.js'
 
 const HTML = `
 <div class="content-columns">

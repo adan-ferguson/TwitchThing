@@ -57,6 +57,7 @@ function exporterConcater(targetFile){
     let str = ''
     files.forEach(file => {
       str += `import ${file.name} from './${file.path}'\n`
+      str += `${file.name}.name = '${file.name}'\n`
     })
     str += `export default { ${files.map(file => `${file.name.toUpperCase()}:${file.name}`).join(',')} }`
     return str

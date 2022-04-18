@@ -1,5 +1,5 @@
 import { StatsDisplayStyle } from '../../../statsDisplayInfo.js'
-import Stats from '../../../../../game/stats/stats.js'
+import Stats, { mergeStats } from '../../../../../game/stats/stats.js'
 import StatsList from '../../stats/statsList.js'
 
 const HTML = `
@@ -11,6 +11,10 @@ const HTML = `
 `
 
 export default class LevelupSelector extends HTMLElement{
+
+  _levelupStats = null
+  _selectedStats = null
+
   constructor(){
     super()
     this.innerHTML = HTML
@@ -20,19 +24,10 @@ export default class LevelupSelector extends HTMLElement{
       inline: true
     })
     this.options = this.querySelector('.options')
-    this._levelupStats = null
-    this._selectedStats = null
   }
 
   get extraStats(){
-    const affectors = []
-    if(this._levelupStats){
-      affectors.push(...this._levelupStats.affectors)
-    }
-    if(this._selectedStats){
-      affectors.push(...this._selectedStats.affectors)
-    }
-    return affectors
+    return mergeStats(this._levelupStats, this._selectedStats)
   }
 
   setData(adventurer, levelup, callback){
@@ -59,6 +54,9 @@ export default class LevelupSelector extends HTMLElement{
       optionEl.append(statsList)
 
       optionEl.addEventListener('click', () => {
+        if(optionEl.classList.contains('selected')){
+          return
+        }
         this.querySelectorAll('button').forEach(button => button.classList.remove('selected'))
         optionEl.classList.add('selected')
         this._selectedStats = stats

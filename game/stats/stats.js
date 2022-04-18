@@ -1,46 +1,46 @@
 import { StatDefinitions, StatType } from './statDefinitions.js'
+import statValueFns from './statValueFns.js'
+import { calcStatDiff } from './statDiff.js'
 
 export default class Stats{
 
-  constructor(statAffectors){
-    this._statAffectors = []
-    this.addAffectors(statAffectors)
+  baseAffectors = []
+  bonusAffectors = []
+
+  /**
+   * @param baseStats {[object],object,Stats}
+   * @param bonusStats {[object],object,Stats}
+   */
+  constructor(baseStats, bonusStats = []){
+    this.baseAffectors = toArray(baseStats)
+    this.bonusAffectors = toArray(bonusStats)
   }
 
   get affectors(){
-    return [...this._statAffectors]
-  }
-
-  addAffectors(affectors){
-    affectors = Array.isArray(affectors) ? affectors : [affectors]
-    this._statAffectors.push(...affectors)
-    return this
+    return this.baseAffectors.concat(this.bonusAffectors)
   }
 
   get(name){
     let stat = StatDefinitions[name]
 
     if(!stat){
-      throw 'Unknown stat type: ' + name
+      throw 'Unknown stat name: ' + name
     }
 
-    let value
-    if(stat.type === StatType.COMPOSITE){
-      value = this._getCompositeValue(name)
-    }else if(stat.type === StatType.PERCENTAGE){
-      value = this._getPercentageValue(name)
-    }else if(stat.type === StatType.ADDITIVE_MULTIPLIER){
-      value = this._getAdditiveMultiplierValue(name)
-    }else if(stat.type === StatType.MULTIPLIER){
-      value = this._getMultiplierValue(name)
+    const fn = statValueFns[stat.type]
+
+    if(!fn){
+      throw 'Missing value function for stat type: ' + stat.type
     }
 
-    return makeStatObject(name, value)
+    const baseValue = fn(this.baseAffectors, name)
+    const totalValue = fn(this.affectors, name)
+    return makeStatObject(name, baseValue, totalValue)
   }
 
   getAll(){
     const all = {}
-    this._statAffectors.forEach(affector => {
+    this.affectors.forEach(affector => {
       Object.keys(affector).forEach(key => {
         all[key] = true
       })
@@ -57,173 +57,54 @@ export default class Stats{
     })
     return serialized
   }
-
-  _getCompositeValue(name){
-    const mods = this._getCompositeMods(name)
-    let value = 0
-
-    value = mods.flatPlus.reduce((val, mod) => {
-      return val + mod
-    }, value)
-
-    value = mods.flatMinus.reduce((val, mod) => {
-      return val - mod
-    }, value)
-
-    value = mods.pctPlus.reduce((val, mod) => {
-      return (1 + val) * mod
-    }, value)
-
-    value = mods.pctMinus.reduce((val, mod) => {
-      return (1 - val) * mod
-    }, value)
-
-    return value
-  }
-
-  _getPercentageValue(name){
-    const mods = this._getCompositeMods(name)
-    let value = 0
-
-    value = [...mods.flatPlus, ...mods.pctPlus].reduce((val, mod) => {
-      return val + (1 - val) * mod
-    }, value)
-
-    value = [...mods.flatMinus, ...mods.pctMinus].reduce((val, mod) => {
-      return val * (1 + mod)
-    }, value)
-
-    return value
-  }
-
-  _getMultiplierValue(name){
-    const mods = this._getPercentageMods(name)
-    let value = 1
-
-    value = mods.plus.reduce((val, mod) => {
-      return val * mod
-    }, value)
-
-    value = mods.minus.reduce((val, mod) => {
-      return val * mod
-    }, value)
-
-    return value
-  }
-
-  _getAdditiveMultiplierValue(name){
-    const mods = this._getPercentageMods(name)
-    let value = 1
-
-    value = mods.plus.reduce((val, mod) => {
-      return val + (mod - 1)
-    }, value)
-
-    value = mods.minus.reduce((val, mod) => {
-      return val * mod
-    }, value)
-
-    return value
-  }
-
-  /**
-   * flatPlus example: 5
-   * flatMinus example: -5
-   * pctPlus example: '5%', '+5%'
-   * pctMinus example: '-5%'
-   * @param name
-   * @returns {{pctMinus: *[], flatPlus: *[], flatMinus: *[], pctPlus: *[]}}
-   * @private
-   */
-  _getCompositeMods(name){
-
-    const mods = {
-      flatPlus: [],
-      flatMinus: [],
-      pctPlus: [],
-      pctMinus: []
-    }
-
-    this._statAffectors.forEach(affector => {
-      if(name in affector){
-        const change = affector[name]
-        let changeStr = change + ''
-        if(changeStr.charAt(changeStr.length - 1) === '%'){
-          if(changeStr.charAt(0) === '+'){
-            changeStr = changeStr.slice(1)
-          }
-          const value = parseFloat(changeStr) / 100
-          if(value > 0){
-            mods.pctPlus.push(value)
-          }else if(value < 0){
-            mods.pctMinus.push(-value)
-          }
-        }else{
-          if(change > 0){
-            mods.flatPlus.push(change)
-          }else if(change < 0){
-            mods.flatMinus.push(-change)
-          }
-        }
-      }
-    })
-
-    return mods
-  }
-
-  /**
-   * plus examples: 1.1, '10%', '+10%'
-   * minus examples: 0.9, '-10%'
-   * @param name
-   * @returns {{minus: *[], plus: *[]}}
-   * @private
-   */
-  _getPercentageMods(name){
-
-    const mods = {
-      plus: [],
-      minus: []
-    }
-
-    this._statAffectors.forEach(affector => {
-      if(name in affector){
-
-        let changeStr = affector[name] + ''
-        let change
-        if(changeStr.charAt(changeStr.length - 1) === '%'){
-          if(changeStr.charAt(0) === '+'){
-            changeStr = changeStr.slice(1)
-          }
-          change = (1 + parseFloat(changeStr) / 100)
-        }else{
-          change = Math.max(0, affector[name])
-        }
-
-        if(change >= 1){
-          mods.plus.push(change)
-        }else{
-          mods.minus.push(change)
-        }
-      }
-    })
-
-    return mods
-  }
 }
 
-export function makeStatObject(name, value){
+export function makeStatObject(name, baseValue, totalValue){
   const stat = StatDefinitions[name]
   if('minimum' in stat){
-    value = Math.max(0, value)
+    baseValue = Math.max(0, baseValue)
+    totalValue = Math.max(0, totalValue)
   }
   return {
     ...stat,
     name,
-    value
+    diff: calcStatDiff(defaultValue(stat), baseValue, totalValue),
+    baseValue,
+    value: totalValue
   }
 }
 
 export function mergeStats(...statsObjs){
-  const stats = new Stats(statsObjs)
-  return stats.serialize()
+  return new Stats(
+    merge('baseAffectors'),
+    merge('bonusAffectors')
+  )
+  function merge(propName){
+    return statsObjs
+      .filter(o => o)
+      .reduce((arr, statsObj) => {
+        return [...arr, ...statsObj[propName]]
+      }, [])
+  }
+}
+
+/**
+ * @param val {object,[object],Stats}
+ * @returns [object]
+ */
+function toArray(val){
+  if(Array.isArray(val)){
+    return val
+  }else if(val instanceof Stats){
+    return val.affectors
+  }else{
+    return [val]
+  }
+}
+
+function defaultValue(stat){
+  if(stat.type === StatType.ADDITIVE_MULTIPLIER){
+    return 1
+  }
+  return 0
 }

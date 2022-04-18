@@ -1,12 +1,12 @@
 import Adventurers from '../collections/adventurers.js'
 import DungeonRuns from '../collections/dungeonRuns.js'
 import Users from '../collections/users.js'
-import { getStats, xpToLevel as advXpToLevel } from '../../game/adventurer.js'
+import { getIdleAdventurerStats, xpToLevel as advXpToLevel } from '../../game/adventurer.js'
 import { xpToLevel as userXpToLevel } from '../../game/user.js'
 import { mergeStats } from '../../game/stats/stats.js'
 import { calculateBonusOptions } from './bonuses.js'
 import { randomRound } from '../../game/rando.js'
-import { generateItemDef, generateRandomItemDef } from '../items/generator.js'
+import { generateItemDef } from '../items/generator.js'
 import { toArray } from '../../game/utilFunctions.js'
 import { generateChest } from './chests.js'
 
@@ -40,12 +40,11 @@ export function addRewards(rewards, toAdd){
   return r
 }
 
-export async function calculateResults(adventurer, rewards){
-  const user = await Users.findOne(adventurer.userID)
+export function calculateResults(dungeonRun){
   return {
-    rewards,
-    levelups: generateLevelups(user, adventurer, rewards.xp),
-    userLevelups: generateUserLevelups(user, rewards.xp)
+    rewards: dungeonRun.rewards,
+    levelups: generateLevelups(dungeonRun),
+    userLevelups: generateUserLevelups(dungeonRun)
   }
 }
 
@@ -89,7 +88,7 @@ export async function finalizeResults(adventurerID, selectedBonuses){
     }
 
     if(bonuses.length){
-      updates.baseStats = mergeStats(adventurer.baseStats, ...bonuses)
+      updates.baseStats = mergeStats(adventurer.baseStats, ...bonuses).serialize()
       updates.level = advXpToLevel(xpAfter)
     }
 
@@ -108,7 +107,7 @@ export async function finalizeResults(adventurerID, selectedBonuses){
 
 function previewLevelup(adventurer, level){
 
-  const stats = getStats(adventurer)
+  const stats = getIdleAdventurerStats({  adventurer })
   const growths = {
     hpMax: Math.max(1, randomRound(stats.get('hpMax').value * GROWTH_SCALE)),
     attack: Math.max(1, randomRound(stats.get('attack').value * GROWTH_SCALE))
@@ -143,8 +142,10 @@ function previewUserLevelUp(user, level){
   return obj
 }
 
-function generateLevelups(user, adventurer, xp){
-  const levelAfter = advXpToLevel(adventurer.xp + xp)
+function generateLevelups(dungeonRun){
+  const adventurer = dungeonRun.adventurer
+  const xp = dungeonRun.rewards.xp
+  const levelAfter = advXpToLevel(adventurer.xp + dungeonRun.rewards.xp)
   const levelups = []
   for(let levelBefore = adventurer.level; levelBefore < levelAfter; levelBefore++){
     levelups.push(previewLevelup(adventurer, levelBefore + 1))
@@ -152,8 +153,9 @@ function generateLevelups(user, adventurer, xp){
   return levelups
 }
 
-function generateUserLevelups(user, xp){
-  const levelAfter = userXpToLevel(user.xp + xp)
+function generateUserLevelups(dungeonRun){
+  const user = dungeonRun.user
+  const levelAfter = userXpToLevel(user.xp + dungeonRun.rewards.xp)
   const levelups = []
   for(let levelBefore = user.level; levelBefore < levelAfter; levelBefore++){
     levelups.push(previewUserLevelUp(user, levelBefore + 1))

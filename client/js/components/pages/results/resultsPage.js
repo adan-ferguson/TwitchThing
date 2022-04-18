@@ -6,6 +6,7 @@ import MainPage from '../main/mainPage.js'
 import LevelupSelector from './levelupSelector.js'
 import { show as showLoader } from '../../../loader.js'
 import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
+import Stats, { mergeStats } from '../../../../../game/stats/stats.js'
 
 const WAIT_TIME = 500
 
@@ -163,11 +164,8 @@ export default class ResultsPage extends Page{
 
   _updateStats(){
     const selectors = [...this.querySelectorAll('di-adventurer-levelup-selector')]
-    const extraStats = selectors.reduce((val, selector) => {
-      val.push(...selector.extraStats)
-      return val
-    }, [])
-    this.adventurerPane.setExtraStats(extraStats)
+    const extraStats = selectors.map(selector => selector.extraStats)
+    this.adventurerPane.setBonusStats(mergeStats(...extraStats))
   }
 }
 

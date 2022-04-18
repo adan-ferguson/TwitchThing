@@ -11,9 +11,10 @@ di-inventory
 
 .editable
   di-loadout-row
-    cursor: pointer
-    &:hover
-      background-color: #e9ffdf
+    &:not(.blank-row)
+      cursor: pointer
+      &:hover
+        background-color: #e9ffdf
 
   .hoverable, &.hoverable
     background-color: #f8f8ff

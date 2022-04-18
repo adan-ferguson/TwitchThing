@@ -1,6 +1,6 @@
 export default {
   unscaledStats: {
-    hpMax: 35,
-    attack: 7
+    hpMax: 48,
+    attack: 8
   }
 }

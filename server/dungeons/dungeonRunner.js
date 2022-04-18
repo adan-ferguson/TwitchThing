@@ -33,7 +33,7 @@ export async function start(){
       console.error('Dungeon run in limbo, no adventurer')
       return
     }
-    const user = users.find(user => user._id.equals(adventurer._id))
+    const user = users.find(user => user._id.equals(adventurer.userID))
     if(!user){
       console.log('Dungeon run in limbo, no user')
       return
@@ -96,6 +96,22 @@ class DungeonRunInstance{
     }
   }
 
+  get floor(){
+    return this.doc.floor
+  }
+
+  get room(){
+    return this.doc.room
+  }
+
+  get events(){
+    return this.doc.events
+  }
+
+  get rewards(){
+    return this.doc.rewards
+  }
+
   get currentEvent(){
     return this.doc.events.at(-1)
   }
@@ -141,7 +157,7 @@ class DungeonRunInstance{
       floor: this.doc.floor,
       startTime: this.doc.elapsedTime,
       duration: this.adventurerInstance.standardRoomDuration,
-      ...(await generateEvent(this.adventurerInstance, this.doc))
+      ...(await generateEvent(this))
     }
     this.doc.events.push(nextEvent)
     this.timeSinceLastEvent = 0
@@ -160,7 +176,7 @@ class DungeonRunInstance{
     }
     if(event.runFinished){
       this.doc.finished = true
-      this.doc.results = await calculateResults(this.adventurer, this.doc.rewards)
+      this.doc.results = calculateResults(this)
       delete activeRuns[this.doc._id]
     }
     this.doc.elapsedTime += event.duration

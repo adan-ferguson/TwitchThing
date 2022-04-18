@@ -25,7 +25,7 @@ export function generateChest(options = {}){
 }
 
 function generateContents(level, tier, enabledFeatures, stats){
-  if(enabledFeatures && enabledFeatures.indexOf('items') === -1){
+  if(!enabledFeatures['items']){
     return []
   }
   // TODO: something that doesn't suck here

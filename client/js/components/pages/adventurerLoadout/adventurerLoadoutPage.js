@@ -1,9 +1,7 @@
 import Page from '../page.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import fizzetch from '../../../fizzetch.js'
-import { OrbsDisplayStyles } from '../../loadout/loadout.js'
 import setupEditable from '../../loadout/setupEditable.js'
-import { getStats } from '../../../../../game/adventurer.js'
 
 const HTML = `
 <div class="content-columns">
@@ -11,15 +9,7 @@ const HTML = `
         <di-inventory class="fill-contents"></di-inventory>
     </div>
     <div class="content-rows">
-        <div class="content-well adventurer-info">
-            <div class="flex-rows">
-                <div class="adventurer-name"></div>
-                <di-stats-list></di-stats-list>
-            </div>
-        </div>
-        <div class="content-well content-no-grow">
-            <di-loadout></di-loadout>
-        </div>
+        <di-adventurer-pane></di-adventurer-pane>
         <button class="save content-no-grow" disabled="disabled">Save</button>
     </div>
 </div>
@@ -32,13 +22,8 @@ export default class AdventurerLoadoutPage extends Page{
     this.adventurerID = adventurerID
     this.innerHTML = HTML
 
+    this.adventurerPane = this.querySelector('di-adventurer-pane')
     this.inventory = this.querySelector('di-inventory')
-    this.loadout = this.querySelector('di-loadout')
-    this.loadout.setOptions({
-      orbsDisplayStyle: OrbsDisplayStyles.SHOW_MAXIMUM,
-      editable: true
-    })
-    this.statsList = this.querySelector('di-stats-list')
     this.saveButton = this.querySelector('button.save')
   }
 
@@ -47,7 +32,7 @@ export default class AdventurerLoadoutPage extends Page{
   }
 
   get confirmLeavePageMessage(){
-    if(this.loadout.hasChanges){
+    if(this.adventurerPane.loadoutEl.hasChanges){
       return 'Your adventurer has unsaved changes.'
     }
     return null
@@ -56,14 +41,11 @@ export default class AdventurerLoadoutPage extends Page{
   async load(){
     const { adventurer, items } = await fizzetch(`/game/adventurer/${this.adventurerID}/editloadout`)
     this.inventory.setItems(items)
-    this.loadout.setFighter(adventurer)
+    this.adventurerPane.setAdventurer(adventurer)
 
-    this.querySelector('.adventurer-name').textContent = adventurer.name
-    this.statsList.setStats(getStats(adventurer))
-
-    setupEditable(this.inventory, this.loadout, {
+    setupEditable(this.inventory, this.adventurerPane.loadoutEl, {
       onChange: () => {
-        this.statsList.setStats(getStats(adventurer, this.loadout.items))
+        this.adventurerPane.update()
         this._updateSaveButton()
       }
     })
@@ -71,7 +53,7 @@ export default class AdventurerLoadoutPage extends Page{
     this.saveButton.addEventListener('click', async (e) => {
       this._saving = true
       this._updateSaveButton()
-      const items = this.loadout.items.map(item => item?.id)
+      const items = this.adventurerPane.loadoutEl.items.map(item => item?.id)
       const { error } = await fizzetch(`/game/adventurer/${this.adventurerID}/editloadout/save`, {
         items
       })
@@ -86,7 +68,7 @@ export default class AdventurerLoadoutPage extends Page{
   }
 
   _updateSaveButton(){
-    if(this.loadout.isValid && this.loadout.hasChanges || this._saving){
+    if(this.adventurerPane.loadoutEl.isValid && this.adventurerPane.loadoutEl.hasChanges || this._saving){
       this.saveButton.removeAttribute('disabled')
     }else{
       this.saveButton.setAttribute('disabled', 'disabled')

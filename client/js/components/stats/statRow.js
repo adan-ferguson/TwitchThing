@@ -29,6 +29,8 @@ export default class StatRow extends HTMLElement{
     const statDisplayInfo = getStatDisplayInfo(stat, this.options.style)
     this.innerHTML = HTML(statDisplayInfo.text, statDisplayInfo.displayedValue)
     this.tippy.setContent(statDisplayInfo.description(stat))
+
+    this.setAttribute('diff', stat.diff)
   }
 }
 

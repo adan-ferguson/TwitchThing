@@ -26,7 +26,9 @@ export default function(inventoryEl, loadoutEl, options = {}){
   }
 
   inventoryEl.classList.add('editable')
-  loadoutEl.classList.add('editable')
+  loadoutEl.setOptions({
+    editable: true
+  })
 
   inventoryEl.addEventListener('click', click)
   inventoryEl.addEventListener('pointerdown', pointerdown)
@@ -40,7 +42,7 @@ export default function(inventoryEl, loadoutEl, options = {}){
 
   function click(e){
     const row = e.target.closest('di-loadout-row')
-    if(!row){
+    if(!row?.item){
       return
     }
     if(dragStarted){
@@ -61,7 +63,7 @@ export default function(inventoryEl, loadoutEl, options = {}){
 
   function pointerdown(e){
     const row = e.target.closest('di-loadout-row')
-    if(!row){
+    if(!row?.item){
       return
     }
     draggedElement = row

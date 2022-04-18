@@ -10,7 +10,7 @@ const DEFAULTS = {
   dungeonRunID: null,
   baseStats: {
     hpMax: 100,
-    attack: 5
+    attack: 10
   }
 }
 

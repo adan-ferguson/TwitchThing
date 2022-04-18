@@ -4,7 +4,7 @@ export default class DungeonRunResults{
     this.lastEvent = new Ending(dungeonRun.events.at(-1))
     this.monstersKilled = new MonstersKilled(dungeonRun.events)
     this.relicsFound = new RelicsFound(dungeonRun.events)
-    this.chests = [...dungeonRun.results.rewards.chests]
+    this.chests = (dungeonRun.results.rewards.chests || []).slice()
     dungeonRun.results.userLevelups.forEach(levelup => {
       if(levelup.chest){
         this.chests.push(levelup.chest)

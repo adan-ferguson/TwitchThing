@@ -423,6 +423,9 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 - Choose floor
 -- Multiples of 10
 -- Keep track of adv max floor
+-- Floors get larger and larger from 1 to 10, 10 is very big
+-- Skew slightly towards the higher number monster rank
+-- Monsters only appear in their own block
 
 - Level ups, not in modal anymore
 - Let me open adventurer in new tab from main page
@@ -454,8 +457,17 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 - Add a page title
 -- Narrow the header
 
+- Don't show the combat speed stat inside of combat
+- Shrink the combat footer size
+- toDisplayName wherever we use monster/items names: 'monsterName' => 'Monster Name'
+- Show collected chests on dungeon page
+- no relics until level 1 either
+- results screen: show green/red on stats list for bonus stats
+
 TODO Later
 -----------
+- Show time meter on dungeon page
+
 - Show a theme for each multiple of 10 floors
 
 - Growth: the main 2 stats are HP and Power

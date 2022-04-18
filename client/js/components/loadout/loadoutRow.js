@@ -18,6 +18,13 @@ export default class LoadoutRow extends HTMLElement{
     this.setItem(item)
   }
 
+  get itemTooltip(){
+    if(!this.item){
+      return ''
+    }
+    return JSON.stringify(this.item.stats)
+  }
+
   setItem(item){
     if(!item){
       return this._setupBlank()
@@ -27,13 +34,6 @@ export default class LoadoutRow extends HTMLElement{
     this.innerHTML = HTML(item.name, item.orbs)
     this.tippy.enable()
     this.tippy.setContent(() => this.itemTooltip)
-  }
-
-  get itemTooltip(){
-    if(!this.item){
-      return ''
-    }
-    return JSON.stringify(this.item.stats)
   }
 
   _setupBlank(){

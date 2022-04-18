@@ -35,9 +35,7 @@ export default class StatsList extends HTMLElement{
     }
 
     Object.values(unusedStats).forEach(
-      /**
-       * @param row {Node}
-       */
+      /** @param row {Node} */
       (row) => {
         this.removeChild(row)
       }
@@ -45,7 +43,7 @@ export default class StatsList extends HTMLElement{
   }
 
   _updateStat(stat){
-    const row  = this.querySelector(`di-stat-row[stat-key="${stat.name}"]`)
+    const row = this.querySelector(`di-stat-row[stat-key="${stat.name}"]`)
     if(!row){
       this.appendChild(new StatRow(stat, { style: this.options.statsDisplayStyle }))
     }else{

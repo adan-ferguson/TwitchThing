@@ -17,23 +17,13 @@ export function levelToXp(lvl){
 /**
  * @param adventurer
  * @param items [itemDef]
+ * @param bonus
  * @returns {Stats}
  */
-export function getStats(adventurer, items = adventurer.items){
+export function getIdleAdventurerStats({ adventurer, items = adventurer.items, bonus = [] }){
   const loadoutStats = items.filter(itemDef => itemDef).map(itemDef => {
     const item = new Item(itemDef)
     return item.stats
   })
-  return new Stats([adventurer.baseStats, ...loadoutStats])
-}
-
-/**
- * @param adventurer
- * @param state
- * @returns {Stats}
- */
-export function getActiveStats(adventurer, state = {}){
-  const stats = getStats(adventurer)
-  // TODO: add affectors from the state
-  return new Stats([...stats.affectors])
+  return new Stats([adventurer.baseStats, ...loadoutStats], bonus.affectors)
 }

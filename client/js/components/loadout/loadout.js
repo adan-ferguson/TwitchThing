@@ -16,6 +16,11 @@ export const OrbsDisplayStyles = {
 
 export default class Loadout extends HTMLElement{
 
+  _options = {
+    orbsDisplayStyle: OrbsDisplayStyles.STANDARD,
+    editable: false
+  }
+
   constructor(){
     super()
     this.innerHTML = HTML
@@ -27,11 +32,6 @@ export default class Loadout extends HTMLElement{
       paginate: false,
       pageSize: 8
     })
-
-    this._options = {
-      orbsDisplayStyle: OrbsDisplayStyles.STANDARD,
-      editable: false
-    }
 
     this._rows = []
     for(let i = 0; i < 8; i++){
@@ -58,6 +58,15 @@ export default class Loadout extends HTMLElement{
     return false
   }
 
+  get isValid(){
+    // TODO: other checks
+    return this.orbsData.isValid ? true : false
+  }
+
+  get isFull(){
+    return this._rows.every(row => row.item)
+  }
+
   setOptions(options = {}){
     for (let key in options){
       this._options[key] = options[key]
@@ -73,15 +82,6 @@ export default class Loadout extends HTMLElement{
       this._rows[i].setItem(this._originalItems[i])
     }
     this._update()
-  }
-
-  get isValid(){
-    // TODO: other checks
-    return this.orbsData.isValid ? true : false
-  }
-
-  get isFull(){
-    return this._rows.every(row => row.item)
   }
 
   addItem(item){
@@ -108,17 +108,20 @@ export default class Loadout extends HTMLElement{
   }
 
   _update(){
+    this._updateOrbs()
+    this.classList.toggle('editable', this._options.editable)
+    this.list.setRows(this._rows)
+  }
 
+  _updateOrbs(){
     const orbsData = this.orbsData
-
-    if(this._options.orbsDisplayStyle === OrbsDisplayStyles.STANDARD){
-      this.orbsText.textContent = '' + orbsData.used
-    }else if(this._options.orbsDisplayStyle === OrbsDisplayStyles.SHOW_MAXIMUM){
+    const showMax = this._options.editable || this._options.orbsDisplayStyle === OrbsDisplayStyles.SHOW_MAXIMUM
+    if(showMax){
       this.orbsText.textContent = `${orbsData.used}/${orbsData.max}`
       this.orbsText.classList.toggle('error', orbsData.remaining < 0)
+    }else{
+      this.orbsText.textContent = '' + orbsData.used
     }
-
-    this.list.setRows(this._rows)
   }
 }
 

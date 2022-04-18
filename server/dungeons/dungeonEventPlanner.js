@@ -7,14 +7,14 @@ const FLOOR_SIZE_BASE = 10
 const FLOOR_SIZE_SCALE = 0.05
 
 /**
- * @param adventurerInstance
- * @param dungeonRun
+ * @param dungeonRun {DungeonRunInstance}
  * @returns {Event|null} If it's a new event, return it, otherwise return null.
  */
-export async function generateEvent(adventurerInstance, dungeonRun){
+export async function generateEvent(dungeonRun){
 
   const floor = dungeonRun.floor
   const room = dungeonRun.room
+  const adventurerInstance = dungeonRun.adventurerInstance
 
   if(foundStairs(floor, room, adventurerInstance.stats.get('stairFind').value)){
     return {
@@ -35,8 +35,8 @@ export async function generateEvent(adventurerInstance, dungeonRun){
     }
   }
 
-  if(foundRelic(adventurerInstance, dungeonRun)){
-    return generateRelicEvent(adventurerInstance, dungeonRun)
+  if(foundRelic(dungeonRun)){
+    return generateRelicEvent(dungeonRun)
   }
 
   return {

@@ -13,6 +13,7 @@ const DEFAULTS = {
   xp: 0,
   level: 0,
   adventurers: [],
+  unlockedFeatures: {},
   inventory: {
     items: []
   }
