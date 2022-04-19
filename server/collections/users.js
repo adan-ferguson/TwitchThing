@@ -15,7 +15,8 @@ const DEFAULTS = {
   adventurers: [],
   features: { // featureName: 0 = locked, 1 = unlocked & brand new, 2 = unlocked
     items: 0,
-    chests: 0
+    chests: 0,
+    relics: 0
   },
   inventory: {
     items: []

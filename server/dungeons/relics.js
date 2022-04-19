@@ -6,6 +6,9 @@ const RELIC_CHANCE_SCALE = 0.03
 const VALUE_MULTIPLIER = 0.15
 
 export function foundRelic(dungeonRun){
+  if(!dungeonRun.user.features.relics){
+    return
+  }
   const relicChance = dungeonRun.adventurerInstance.stats.get('relicFind').value * BASE_RELIC_CHANCE / scaledValue(RELIC_CHANCE_SCALE, dungeonRun.floor - 1)
   return Math.random() <= relicChance
 }

@@ -95,20 +95,25 @@ export async function finalizeResults(user, adventurer, selectedBonuses){
   }
 
   async function saveUser(){
-    const user = await Users.findOne(adventurer.userID)
-    const xpAfter = user.xp + dungeonRun.results.rewards.xp
-    const setObj = {
-      xp: xpAfter,
-      level: userXpToLevel(xpAfter)
-    }
+    const userDoc = await Users.findOne(adventurer.userID)
+    const xpAfter = userDoc.xp + dungeonRun.results.rewards.xp
+    userDoc.xp = xpAfter
+    userDoc.level = userXpToLevel(xpAfter)
 
     dungeonRun.results.userLevelups.forEach(ulvl => {
       if(ulvl.features){
-        ulvl.features.forEach(featureName => setObj['features.' + featureName] = 1)
+        ulvl.features.forEach(featureName => userDoc.features[featureName] = 1)
+      }
+      if(ulvl.chests){
+        ulvl.chests.forEach(chest => {
+          if(chest.contents.items){
+            userDoc.inventory.items = userDoc.inventory.items.concat(chest.contents.items)
+          }
+        })
       }
     })
 
-    await Users.update(adventurer.userID, setObj)
+    await Users.save(userDoc)
   }
 }
 
@@ -130,7 +135,7 @@ function previewLevelup(adventurer, level){
 function previewUserLevelUp(user, level){
   const obj = {}
   if(level === 1){
-    obj.features = ['chests', 'items']
+    obj.features = ['chests', 'items', 'relics']
     obj.chest = generateChest({
       name: 'Level-Up Chest',
       level: level,
