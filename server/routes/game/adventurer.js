@@ -78,7 +78,8 @@ verifiedRouter.post('/results', async (req, res) => {
 verifiedRouter.post('/confirmresults', async (req, res) => {
   try {
     req.validateParam('selectedBonuses')
-    await finalizeResults(req.adventurerID, req.body.selectedBonuses)
+    const adventurer = await Adventurers.findOne(req.adventurerID)
+    await finalizeResults(req.user, adventurer, req.body.selectedBonuses)
     res.status(200).send({ result: 'okay' })
   }catch(error){
     return res.status(error.code || 500).send({ error: error.message || error })
@@ -112,7 +113,12 @@ verifiedRouter.post('', async(req, res, next) => {
     if(adventurer.dungeonRunID){
       return res.status(401).send({ error: 'Adventurer is currently in a dungeons run.', targetPage: 'Dungeon' })
     }
-    res.send({ adventurer })
+    const ctas = {}
+    if(req.user.features.items === 1){
+      ctas.itemFeature = true
+      Users.update(req.user._id, { 'features.items' : 2 })
+    }
+    res.send({ adventurer, ctas })
   }catch(ex){
     return res.status(ex.code || 401).send(ex.error || ex)
   }

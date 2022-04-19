@@ -37,7 +37,7 @@ export async function generateMonster(dungeonRun){
     const rewards = {
       xp: 50 * scalingValue
     }
-    if(dungeonRun.user.unlockedFeatures['items']){
+    if(dungeonRun.user.features.items){
       if(Math.random() < CHEST_DROP_CHANCE){
         rewards.chests = generateChest({ level: floor })
       }

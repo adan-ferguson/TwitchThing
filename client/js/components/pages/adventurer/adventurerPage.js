@@ -30,17 +30,31 @@ export default class AdventurerPage extends Page{
 
   async load(){
 
-    const { adventurer, error } = await fizzetch(`/game/adventurer/${this.adventurerID}`)
+    const { adventurer, ctas, error } = await fizzetch(`/game/adventurer/${this.adventurerID}`)
     if(error){
       return { error }
     }
 
     this.adventurerPane.setAdventurer(adventurer)
-    this.querySelector('button.edit').addEventListener('click', () => {
+
+    this._setupEditEquipmentButton(ctas?.itemFeature)
+    this._showDungeonButton()
+  }
+
+  _setupEditEquipmentButton(itemFeatureIsNew = false){
+
+    const btn = this.querySelector('button.edit')
+    if(!this.user.features.items){
+      btn.classList.add('displaynone')
+      return
+    }else if(itemFeatureIsNew){
+      btn.classList.add('glow')
+    }
+
+    btn.addEventListener('click', () => {
       this.app.setPage(new AdventurerLoadoutPage(this.adventurerID))
     })
 
-    this._showDungeonButton()
   }
 
   _showDungeonButton(){

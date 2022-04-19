@@ -1,17 +1,17 @@
 import MainPage from './main/mainPage.js'
 
 export default class Page extends HTMLElement{
+
+  app
+
   constructor(){
     super()
     this.classList.add('page')
   }
 
   get user(){
+    console.log('user')
     return this.app?.user
-  }
-
-  get app(){
-    return this.closest('di-app')
   }
 
   showBackConfirm(){

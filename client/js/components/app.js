@@ -53,6 +53,7 @@ export default class App extends HTMLElement{
     }
 
     this.currentPage = page
+    page.app = this
     const { error } = (await page.load() || {})
 
     if(this.currentPage !== page){

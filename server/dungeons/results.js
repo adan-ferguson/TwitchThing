@@ -3,7 +3,7 @@ import DungeonRuns from '../collections/dungeonRuns.js'
 import Users from '../collections/users.js'
 import { getIdleAdventurerStats, xpToLevel as advXpToLevel } from '../../game/adventurer.js'
 import { xpToLevel as userXpToLevel } from '../../game/user.js'
-import Stats, { mergeStats } from '../../game/stats/stats.js'
+import Stats from '../../game/stats/stats.js'
 import { calculateBonusOptions } from './bonuses.js'
 import { randomRound } from '../../game/rando.js'
 import { generateItemDef } from '../items/generator.js'
@@ -48,9 +48,7 @@ export function calculateResults(dungeonRun){
   }
 }
 
-export async function finalizeResults(adventurerID, selectedBonuses){
-
-  const adventurer = await Adventurers.findOne(adventurerID)
+export async function finalizeResults(user, adventurer, selectedBonuses){
 
   if(!adventurer.dungeonRunID){
     throw { code: 401, error: 'Adventurer is not currently in a dungeons.', targetPage: 'Adventurer' }
@@ -70,7 +68,8 @@ export async function finalizeResults(adventurerID, selectedBonuses){
     return { code: 401, error: 'Selected bonuses array length mismatched' }
   }
 
-  await Promise.all([saveAdventurer(), saveUser()])
+  await saveAdventurer()
+  await saveUser()
 
   async function saveAdventurer(){
     const xpAfter = adventurer.xp + Math.floor(dungeonRun.results.rewards.xp)
@@ -92,16 +91,24 @@ export async function finalizeResults(adventurerID, selectedBonuses){
       updates.level = advXpToLevel(xpAfter)
     }
 
-    await Adventurers.update(adventurerID, updates)
+    await Adventurers.update(adventurer._id, updates)
   }
 
   async function saveUser(){
     const user = await Users.findOne(adventurer.userID)
     const xpAfter = user.xp + dungeonRun.results.rewards.xp
-    await Users.update(adventurer.userID, {
+    const setObj = {
       xp: xpAfter,
       level: userXpToLevel(xpAfter)
+    }
+
+    dungeonRun.results.userLevelups.forEach(ulvl => {
+      if(ulvl.features){
+        ulvl.features.forEach(featureName => setObj['features.' + featureName] = 1)
+      }
     })
+
+    await Users.update(adventurer.userID, setObj)
   }
 }
 
