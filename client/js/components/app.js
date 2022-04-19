@@ -37,7 +37,7 @@ export default class App extends HTMLElement{
 
   async setPage(page){
 
-    Loader.show()
+    Loader.showLoader()
     hideAllTippys()
 
     // Update the user whenever we change pages
@@ -68,7 +68,7 @@ export default class App extends HTMLElement{
     page.classList.add('fade-in')
     this.dispatchEvent(new Event('pagechange'))
 
-    Loader.hide()
+    Loader.hideLoader()
   }
 
   async back(){

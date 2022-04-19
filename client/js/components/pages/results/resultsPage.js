@@ -8,6 +8,8 @@ import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
 import { mergeStats } from '../../../../../game/stats/stats.js'
 import SimpleModal from '../../simpleModal.js'
 import ChestOpenage from './chestOpenage.js'
+import { showLoader } from '../../../loader.js'
+import { toDisplayName } from '../../../../../game/utilFunctions.js'
 
 const WAIT_TIME = 500
 
@@ -74,7 +76,7 @@ export default class ResultsPage extends Page{
     await wait()
 
     const monsterName = this.dungeonRunResults.lastEvent.monster?.name || 'something'
-    this._addResultText(`Killed By: ${monsterName}`)
+    this._addResultText(`Killed By: ${toDisplayName(monsterName)}`)
     await wait()
 
     const monsterCount = this.dungeonRunResults.monstersKilled.count
@@ -121,10 +123,7 @@ export default class ResultsPage extends Page{
 
   _userLevelUp = level => {
     this._addResultText(`You leveled up to level ${level}`)
-    // TODO: this should be calculated from server
-    if(level === 1){
-      this._addResultText('You\'ve been rewarded with a Starter\'s Chest')
-    }
+    // TODO: use server data for this
     if(level % 10 === 0){
       this._addResultText('You\'ve unlocked a new adventurer slot')
     }
@@ -137,13 +136,13 @@ export default class ResultsPage extends Page{
 
   async _finish(){
     await showPopups(this.dungeonRunResults)
-    // showLoader()
-    // const results = await fizzetch(`/game/adventurer/${this.adventurerID}/confirmresults`, {
-    //   selectedBonuses: this._selectedBonuses
-    // })
-    // if(!results.error){
-    //   this.app.setPage(new AdventurerPage(this.adventurerID))
-    // }
+    showLoader()
+    const results = await fizzetch(`/game/adventurer/${this.adventurerID}/confirmresults`, {
+      selectedBonuses: this._selectedBonuses
+    })
+    if(!results.error){
+      this.app.setPage(new AdventurerPage(this.adventurerID))
+    }
     // TODO: handle error, usually just shouldn't happen though
   }
 
@@ -201,7 +200,7 @@ async function showPopups(dungeonRunResults){
   modal.setOptions({ closeOnUnderlayClick: false })
 
   for(let i = 0; i < dungeonRunResults.chests.length; i++){
-    await showPopup(dungeonRunResults.chests[i], i < dungeonRunResults.length - 1)
+    await showPopup(dungeonRunResults.chests[i], i === dungeonRunResults.chests.length - 1)
   }
 
   modal.hide(true)

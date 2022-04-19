@@ -1,16 +1,24 @@
 import ItemDetails from '../../itemDetails.js'
 
 const HTML = `
-<div>
+<h3>Opening Chests</h3>
+<div class="chest-description">
     Lv. <span class="level"></span> <span class="name"></span>
 </div>
 <div class="contents"></div>
 `
 
 export default class ChestOpenage extends HTMLElement{
+
+  _description
+  _level
+  _name
+  _contents
+
   constructor(chest = null){
     super()
     this.innerHTML = HTML
+    this._description = this.querySelector('.chest-description')
     this._level = this.querySelector('.level')
     this._name = this.querySelector('.name')
     this._contents = this.querySelector('.contents')

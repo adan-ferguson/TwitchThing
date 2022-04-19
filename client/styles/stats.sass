@@ -13,6 +13,8 @@ di-stats-list
     display: flex
     flex-direction: row
     justify-content: space-between
+    $buffColor: #6ee16e
+    $debuffColor: #ff8c8c
 
     .val
       padding-left: 10rem
@@ -23,13 +25,13 @@ di-stats-list
       font-weight: bold
 
     &[diff='1'] .val
-      color: #92e092
+      color: $buffColor
 
     &[diff='2'] .val
-      color: #ffaeae
+      color: $debuffColor
 
     &[diff='3']
-      color: #92e092
+      color: $buffColor
 
     &[diff='4']
-      color: #ffaeae
+      color: $debuffColor

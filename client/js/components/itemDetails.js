@@ -29,7 +29,6 @@ export default class ItemDetails extends HTMLElement{
 
   setItem(itemDef){
     const item = new Item(itemDef)
-    debugger
     this._loadoutRow.setItem(item)
     this._statsList.setStats(item.stats)
   }

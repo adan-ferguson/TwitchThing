@@ -15,7 +15,6 @@ export default class Modal extends HTMLElement{
     this.innerHTML = HTML
     this.underlay = this.querySelector('.underlay')
     this.underlay.addEventListener('click', () => {
-      debugger
       if(!this._options.closeOnUnderlayClick){
         return
       }

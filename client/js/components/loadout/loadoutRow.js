@@ -19,7 +19,10 @@ export default class LoadoutRow extends HTMLElement{
     this._iconEl = this.querySelector('.icon')
     this._nameEl = this.querySelector('.name')
     this._orbRow = this.querySelector('di-orb-row')
-    this.tippy = tippy(this)
+    this.tippy = tippy(this, {
+      content: () => this.itemTooltip
+    })
+    this.tippy.disable()
     this.index = index
     this.setItem(item)
   }
@@ -31,7 +34,7 @@ export default class LoadoutRow extends HTMLElement{
     return JSON.stringify(this.item.stats)
   }
 
-  setItem(item){
+  setItem(item, enableTooltip = true){
     if(!item){
       return this._setupBlank()
     }
@@ -39,8 +42,10 @@ export default class LoadoutRow extends HTMLElement{
     this.item = item
     this._nameEl.textContent = this.item.name
     this._orbRow.setValue(item.orbs)
-    this.tippy.enable()
-    this.tippy.setContent(() => this.itemTooltip)
+
+    if(enableTooltip){
+      this.tippy.enable()
+    }
   }
 
   _setupBlank(){

@@ -3,7 +3,7 @@ import DungeonRuns from '../collections/dungeonRuns.js'
 import Users from '../collections/users.js'
 import { getIdleAdventurerStats, xpToLevel as advXpToLevel } from '../../game/adventurer.js'
 import { xpToLevel as userXpToLevel } from '../../game/user.js'
-import { mergeStats } from '../../game/stats/stats.js'
+import Stats, { mergeStats } from '../../game/stats/stats.js'
 import { calculateBonusOptions } from './bonuses.js'
 import { randomRound } from '../../game/rando.js'
 import { generateItemDef } from '../items/generator.js'
@@ -88,7 +88,7 @@ export async function finalizeResults(adventurerID, selectedBonuses){
     }
 
     if(bonuses.length){
-      updates.baseStats = mergeStats(adventurer.baseStats, ...bonuses).serialize()
+      updates.baseStats = new Stats([adventurer.baseStats, ...bonuses]).serialize()
       updates.level = advXpToLevel(xpAfter)
     }
 
