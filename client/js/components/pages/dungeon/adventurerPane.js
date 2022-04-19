@@ -39,6 +39,8 @@ export default class AdventurerPane extends HTMLElement{
 
   _update(animateChanges){
 
+    const instance = new AdventurerInstance(this.adventurer, this.state)
+
     this.hpBar.setRange(0, instance.stats.get('hpMax').value)
 
     if(this.state.hp !== this.hpBar.value){

@@ -121,12 +121,15 @@ export default class ResultsPage extends Page{
     })
   }
 
-  _userLevelUp = level => {
-    this._addResultText(`You leveled up to level ${level}`)
-    // TODO: use server data for this
-    if(level % 10 === 0){
+  _userLevelUp = obj => {
+    this._addResultText(`You leveled up to level ${obj.level}`)
+    if(obj.level % 10 === 0){
       this._addResultText('You\'ve unlocked a new adventurer slot')
     }
+    const features = obj.features || []
+    features.forEach(featureName => {
+      this._addResultText(`New feature unlocked: ${featureName}`)
+    })
   }
 
   _enableButton(){

@@ -90,6 +90,9 @@ verifiedRouter.post('/editloadout', async (req, res) => {
   try {
     const adventurer = await Adventurers.findOne(req.adventurerID)
     const user = await Users.gameData(req.user)
+    if(user.features.items === 1){
+      Users.update(user._id, { ['features.items']: 2 })
+    }
     res.status(200).send({ adventurer, items: user.inventory.items })
   }catch(error){
     return res.status(error.code || 500).send({ error: error.message || error })
@@ -116,7 +119,6 @@ verifiedRouter.post('', async(req, res, next) => {
     const ctas = {}
     if(req.user.features.items === 1){
       ctas.itemFeature = true
-      Users.update(req.user._id, { 'features.items' : 2 })
     }
     res.send({ adventurer, ctas })
   }catch(ex){

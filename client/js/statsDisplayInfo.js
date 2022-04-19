@@ -17,7 +17,7 @@ const statDefinitionsInfo = {
     description: () => 'Maximum health.'
   },
   speed: {
-    text: 'Combat Speed',
+    text: 'Combat Turn Time',
     description: stat => 'Time between actions during combat.',
     valueFormat: speedFormat(COMBAT_BASE_TURN_TIME)
   },
@@ -31,7 +31,7 @@ const statDefinitionsInfo = {
     description: () => 'Gain health when dealing physical damage.'
   },
   adventuringSpeed: {
-    text: 'Adventuring Speed',
+    text: 'Adventuring Room Time',
     description: stat => 'Time between rooms while adventuring.',
     valueFormat: speedFormat(ADVENTURER_BASE_ROOM_TIME)
   },
