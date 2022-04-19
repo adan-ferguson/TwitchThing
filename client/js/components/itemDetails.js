@@ -2,26 +2,21 @@ import Item from '../../../game/item.js'
 import { StatsDisplayStyle } from '../statsDisplayInfo.js'
 
 const HTML = `
-<div class='item-description'>
-    <span class='item-name'></span>
-</div>
-<di-orb-row></di-orb-row>
+<di-loadout-row></di-loadout-row>
 <di-stats-list></di-stats-list>
 <div class='item-abilities'>-- TODO: add other abilities here --</div>
 `
 
 export default class ItemDetails extends HTMLElement{
 
-  _name
-  _orbRow
+  _loadoutRow
   _statsList
   _abilitiesList
 
   constructor(item = null){
     super()
     this.innerHTML = HTML
-    this._name = this.querySelector('.name')
-    this._orbRow = this.querySelector('di-orb-row')
+    this._loadoutRow = this.querySelector('di-loadout-row')
     this._statsList = this.querySelector('di-stats-list')
     this._statsList.setOptions({
       statsDisplayStyle: StatsDisplayStyle.ADDITIONAL
@@ -34,8 +29,8 @@ export default class ItemDetails extends HTMLElement{
 
   setItem(itemDef){
     const item = new Item(itemDef)
-    this._name = item.name
-    this._orbRow.setValue(item.orbs)
+    debugger
+    this._loadoutRow.setItem(item)
     this._statsList.setStats(item.stats)
   }
 }

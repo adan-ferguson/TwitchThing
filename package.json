@@ -14,7 +14,8 @@
     "watch": "webpack --watch",
     "gulpwatch": "gulp watch",
     "startdb": "mongod --dbpath db/data",
-    "ngrok": "ngrok start --all"
+    "ngrok": "ngrok start --all",
+    "test": "mocha --recursive --reporter spec"
   },
   "author": "Me LOL",
   "license": "ISC",
@@ -26,7 +27,6 @@
     "@webpack-cli/generators": "^2.2.0",
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
-    "chai": "^4.3.4",
     "connect-mongo": "^4.6.0",
     "css-loader": "^5.2.6",
     "dateformat": "^5.0.2",
@@ -42,7 +42,6 @@
     "html-webpack-plugin": "^5.3.2",
     "magic-sdk": "^6.2.1",
     "merge-stream": "^2.0.0",
-    "mocha": "^9.0.2",
     "mongodb": "^3.6.9",
     "node-fetch": "^2.6.1",
     "passport": "^0.5.0",
@@ -67,5 +66,9 @@
     "webpack": "^5.40.0",
     "webpack-cli": "^4.7.2",
     "webpack-node-externals": "^3.0.0"
+  },
+  "devDependencies": {
+    "chai": "^4.3.6",
+    "mocha": "^9.2.2"
   }
 }

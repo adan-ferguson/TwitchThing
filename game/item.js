@@ -1,5 +1,6 @@
 import Items from './items/combined.js'
 import Stats from './stats/stats.js'
+import { toDisplayName } from './utilFunctions.js'
 
 export default class Item{
   constructor(itemDef){
@@ -21,7 +22,7 @@ export default class Item{
   }
 
   get name(){
-    return this.itemDef.name
+    return this.itemDef.name || toDisplayName(this.baseType.name)
   }
 
   get orbs(){

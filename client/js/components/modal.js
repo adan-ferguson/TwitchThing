@@ -5,13 +5,18 @@ const HTML = `Mo
 
 export default class Modal extends HTMLElement{
 
+  _options = {
+    closeOnUnderlayClick: true
+  }
+
   constructor(){
     super()
     this.classList.add('modal')
     this.innerHTML = HTML
     this.underlay = this.querySelector('.underlay')
     this.underlay.addEventListener('click', () => {
-      if(this._options.closeOnUnderlayClick){
+      debugger
+      if(!this._options.closeOnUnderlayClick){
         return
       }
       this.hide()
@@ -20,9 +25,10 @@ export default class Modal extends HTMLElement{
   }
 
   setOptions(options = {}){
-    this._options = {
-      closeOnUnderlayClick: true,
-      ...options
+    for (let key in options){
+      if(key in this._options){
+        this._options[key] = options[key]
+      }
     }
   }
 
