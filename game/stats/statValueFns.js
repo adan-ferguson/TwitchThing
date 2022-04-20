@@ -31,26 +31,26 @@ function compositeValue(values, defaultValue){
   return value
 }
 
-function percentageValue(stat, values){
+function percentageValue(values, defaultValue){
 
   const mods = compositeMods(values)
-  let value = stat.defaultValue || 0
+  let value = defaultValue
 
   value = [...mods.flatPlus, ...mods.pctPlus].reduce((val, mod) => {
     return val + (1 - val) * mod
   }, value)
 
   value = [...mods.flatMinus, ...mods.pctMinus].reduce((val, mod) => {
-    return val * (1 + mod)
+    return val * (1 - mod)
   }, value)
 
   return value
 }
 
-function additiveMultiplierValue(stat, values){
+function additiveMultiplierValue(values, defaultValue){
 
   const mods = percentageMods(values)
-  let value = stat.defaultValue || 0
+  let value = defaultValue
 
   value = mods.plus.reduce((val, mod) => {
     return val + (mod - 1)
@@ -63,10 +63,10 @@ function additiveMultiplierValue(stat, values){
   return value
 }
 
-function multiplierValue(stat, values){
+function multiplierValue(values, defaultValue){
 
   const mods = percentageMods(values)
-  let value = stat.defaultValue || 1
+  let value = defaultValue
 
   value = mods.plus.reduce((val, mod) => {
     return val * mod
