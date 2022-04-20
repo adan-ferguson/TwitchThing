@@ -13,13 +13,13 @@ export const StatDiff = {
  * @param totalValue {number}
  * @return {number} A StatDiff.[something] value.
  */
-export function calcStatDiff(defaultValue, baseValue, totalValue){
-  if(baseValue === totalValue){
+export function calcStatDiff({ defaultValue, baseValue, value }){
+  if(baseValue === value){
     return StatDiff.NONE
   }
   if(baseValue === defaultValue){
-    return totalValue > defaultValue ? StatDiff.NEW_BUFF : StatDiff.NEW_DEBUFF
+    return value > defaultValue ? StatDiff.NEW_BUFF : StatDiff.NEW_DEBUFF
   }else{
-    return totalValue > baseValue ? StatDiff.BUFF : StatDiff.DEBUFF
+    return value > baseValue ? StatDiff.BUFF : StatDiff.DEBUFF
   }
 }

@@ -21,3 +21,10 @@ export function toDisplayName(str){
   }
   return displayName
 }
+
+export function roundToFixed(val, digits){
+  const multi = Math.pow(10, digits)
+  val *= multi
+  val = Math.round(val)
+  return val / multi
+}

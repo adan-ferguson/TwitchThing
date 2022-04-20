@@ -1,4 +1,5 @@
 import tippy from 'tippy.js'
+import Item from '../../../../game/item.js'
 
 const HTML = `
 <div>
@@ -20,7 +21,7 @@ export default class LoadoutRow extends HTMLElement{
     this._nameEl = this.querySelector('.name')
     this._orbRow = this.querySelector('di-orb-row')
     this.tippy = tippy(this, {
-      content: () => this.itemTooltip
+      allowHTML: false
     })
     this.tippy.disable()
     this.index = index
@@ -38,6 +39,7 @@ export default class LoadoutRow extends HTMLElement{
     if(!item){
       return this._setupBlank()
     }
+    item = new Item(item)
     this.classList.remove('blank-row')
     this.item = item
     this._nameEl.textContent = this.item.name
@@ -45,6 +47,7 @@ export default class LoadoutRow extends HTMLElement{
 
     if(enableTooltip){
       this.tippy.enable()
+      this.tippy.setContent(this.itemTooltip)
     }
   }
 

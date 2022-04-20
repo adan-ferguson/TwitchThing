@@ -11,6 +11,10 @@ export default class DungeonRunResults{
       }
     })
   }
+
+  getUserLevelup(level){
+    return this.dungeonRun.results.userLevelups.find(levelup => levelup.level === level)
+  }
 }
 
 class Ending{

@@ -104,12 +104,10 @@ export async function finalizeResults(user, adventurer, selectedBonuses){
       if(ulvl.features){
         ulvl.features.forEach(featureName => userDoc.features[featureName] = 1)
       }
-      if(ulvl.chests){
-        ulvl.chests.forEach(chest => {
-          if(chest.contents.items){
-            userDoc.inventory.items = userDoc.inventory.items.concat(chest.contents.items)
-          }
-        })
+      if(ulvl.chest){
+        if(ulvl.chest.contents.items){
+          userDoc.inventory.items = userDoc.inventory.items.concat(ulvl.chest.contents.items)
+        }
       }
     })
 
@@ -133,7 +131,7 @@ function previewLevelup(adventurer, level){
 }
 
 function previewUserLevelUp(user, level){
-  const obj = {}
+  const obj = { level, features: [] }
   if(level === 1){
     obj.features = ['chests', 'items', 'relics']
     obj.chest = generateChest({

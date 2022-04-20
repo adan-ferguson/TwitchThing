@@ -89,10 +89,3 @@ function speedFormat(base){
     return roundToFixed(base / (1000 * val), 2) + 's'
   }
 }
-
-function roundToFixed(val, digits){
-  const multi = Math.pow(10, digits)
-  val *= multi
-  val = Math.round(val)
-  return val / multi
-}

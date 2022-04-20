@@ -57,8 +57,8 @@ export default class ResultsPage extends Page{
 
     const fns = [
       this._showDungeonResult,
-      this._adventurerXp,
-      this._userXp
+      this._userXp,
+      this._adventurerXp
     ]
 
     waitUntilDocumentVisible().then(async () => {
@@ -121,13 +121,13 @@ export default class ResultsPage extends Page{
     })
   }
 
-  _userLevelUp = obj => {
-    this._addResultText(`You leveled up to level ${obj.level}`)
-    if(obj.level % 10 === 0){
+  _userLevelUp = level => {
+    const obj = this.dungeonRunResults.getUserLevelup(level)
+    this._addResultText(`You leveled up to level ${level}`)
+    if(level % 10 === 0){
       this._addResultText('You\'ve unlocked a new adventurer slot')
     }
-    const features = obj.features || []
-    features.forEach(featureName => {
+    obj.features.forEach(featureName => {
       this._addResultText(`New feature unlocked: ${featureName}`)
     })
   }

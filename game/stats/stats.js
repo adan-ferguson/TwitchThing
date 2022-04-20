@@ -1,6 +1,7 @@
 import { StatDefinitions, StatType } from './statDefinitions.js'
 import statValueFns from './statValueFns.js'
 import { calcStatDiff } from './statDiff.js'
+import { roundToFixed } from '../utilFunctions.js'
 
 export default class Stats{
 
@@ -12,8 +13,8 @@ export default class Stats{
    * @param bonusStats {[object],object,Stats}
    */
   constructor(baseStats, bonusStats = []){
-    this.baseAffectors = toArray(baseStats)
-    this.bonusAffectors = toArray(bonusStats)
+    this.baseAffectors = toAffectorsArray(baseStats)
+    this.bonusAffectors = toAffectorsArray(bonusStats)
   }
 
   get affectors(){
@@ -21,21 +22,39 @@ export default class Stats{
   }
 
   get(name){
-    let stat = StatDefinitions[name]
+    const statObj = makeStatObject(name)
 
-    if(!stat){
-      throw 'Unknown stat name: ' + name
-    }
-
-    const fn = statValueFns[stat.type]
+    const fn = statValueFns[statObj.type]
 
     if(!fn){
-      throw 'Missing value function for stat type: ' + stat.type
+      throw 'Missing value function for stat type: ' + statObj.type
     }
 
-    const baseValue = fn(this.baseAffectors, name)
-    const totalValue = fn(this.affectors, name)
-    return makeStatObject(name, baseValue, totalValue)
+    statObj.baseValue = shine(fn(extractValues(this.baseAffectors, name), statObj.defaultValue))
+    statObj.value = shine(fn(extractValues(this.affectors, name), statObj.defaultValue))
+
+    statObj.baseValue = shine(statObj.baseValue)
+    statObj.value = shine(statObj.value)
+
+    statObj.diff = calcStatDiff(statObj)
+
+    return statObj
+
+    function extractValues(affectors, name){
+      return affectors
+        .map(affector => affector[name] || null)
+        .filter(val => val)
+    }
+
+    function shine(val){
+      if(statObj.minValue !== null){
+        val = Math.max(statObj.minValue, val)
+      }
+      if(statObj.maxValue !== null){
+        val = Math.min(statObj.maxValue, val)
+      }
+      return roundToFixed(val, statObj.roundingDecimals)
+    }
   }
 
   getAll(){
@@ -59,18 +78,15 @@ export default class Stats{
   }
 }
 
-export function makeStatObject(name, baseValue, totalValue){
+export function makeStatObject(name){
   const stat = StatDefinitions[name]
-  if('minimum' in stat){
-    baseValue = Math.max(0, baseValue)
-    totalValue = Math.max(0, totalValue)
+  if(!stat){
+    throw 'Unknown stat name: ' + name
   }
   return {
     ...stat,
     name,
-    diff: calcStatDiff(defaultValue(stat), baseValue, totalValue),
-    baseValue,
-    value: totalValue
+    defaultValue: defaultValue(stat)
   }
 }
 
@@ -89,20 +105,26 @@ export function mergeStats(...statsObjs){
 }
 
 /**
- * @param val {object,[object],Stats}
+ * @param val Turn whatever nonsense into a nice affectors array.
  * @returns [object]
  */
-function toArray(val){
-  if(Array.isArray(val)){
-    return val
-  }else if(val instanceof Stats){
-    return val.affectors
-  }else{
-    return [val]
-  }
+function toAffectorsArray(val){
+  const arr = Array.isArray(val) ? val : [val]
+  const affectors = []
+  arr.forEach(value => {
+    if(value instanceof Stats){
+      affectors.push(...value.affectors)
+    }else{
+      affectors.push(value)
+    }
+  })
+  return affectors
 }
 
 function defaultValue(stat){
+  if(stat.defaultValue !== null){
+    return stat.defaultValue
+  }
   if(stat.type === StatType.ADDITIVE_MULTIPLIER){
     return 1
   }

@@ -16,10 +16,15 @@ export const StatBonusCategory = {
 }
 
 const DEFAULT_DEFINITION = {
-  weight: false,
   category: StatBonusCategory.NONE,
   type: StatType.COMPOSITE,
-  rarity: 999 // Can't be randomly generated if this isn't defined
+  weight: 1,
+  scaling: null,
+  minValue: null,           // derived from type if not defined
+  maxValue: null,           // derived from type if not defined
+  defaultValue: null,       // derived from type if not defined
+  roundingDecimals: 3,
+  rarity: null              // Can't be randomly generated if null
 }
 
 export const StatDefinitions = {
@@ -56,7 +61,7 @@ export const StatDefinitions = {
     weight: 4,
     category: StatBonusCategory.DEFENSIVE,
     rarity: 3,
-    minimum: 0
+    minValue: 0
   },
   adventuringSpeed: {
     ...DEFAULT_DEFINITION,

@@ -415,10 +415,21 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 + Fix rounding error, 1.2 adventuring speed displays as 19%
 + Don't store base item stats in the DB, so if we change base item definition then it changes the item
 
-- Item drops
--- They don't drop unless user level >= 1
--- Monsters can drop
--- Item relic
+
++ User levelup rewards show a popup
+++ multiples of 10 new slot
+++ level 1 sword
+++ other levels random item
+
++ After level 1, the "edit equipment" button should appear with a "NEW" effect
+
++ Item drops
+++ They don't drop unless user level >= 1
+++ Monsters can drop
+-- Chest relic
+
+- Tests for composite stats because they display incorrectly with attack +10%
+- "Combat Turn Time" is backwards description, it should say "Combat Speed" if additive
 
 - Choose floor
 -- Multiples of 10
@@ -427,7 +438,7 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 -- Skew slightly towards the higher number monster rank
 -- Monsters only appear in their own block
 
-- Level ups, not in modal anymore
++ Level ups, not in modal anymore
 - Let me open adventurer in new tab from main page
 - On main page show dungeon run data on adventurer row
 
@@ -447,13 +458,6 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 - npm audit
 
-- User levelup rewards show a popup
--- multiples of 10 new slot
--- level 1 sword
--- other levels random item
-
-- After level 1, the "edit equipment" button should appear with a "NEW" effect
-
 - Add a page title
 -- Narrow the header
 
@@ -461,8 +465,10 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 - Shrink the combat footer size
 - toDisplayName wherever we use monster/items names: 'monsterName' => 'Monster Name'
 - Show collected chests on dungeon page
-- no relics until level 1 either
-- results screen: show green/red on stats list for bonus stats
++ no relics until level 1 either
++ results screen: show green/red on stats list for bonus stats
+- Chest UI is still a bit weird, not obvious it's new loot? Make it say "new items" at least
+- Loadout edit page: show "new" effect for new items first time you enter
 
 TODO Later
 -----------

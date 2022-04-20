@@ -7,10 +7,10 @@ export default {
   [StatType.MULTIPLIER]: multiplierValue
 }
 
-function compositeValue(affectors, name){
+function compositeValue(values, defaultValue){
 
-  const mods = compositeMods(affectors, name)
-  let value = 0
+  const mods = compositeMods(values)
+  let value = defaultValue
 
   value = mods.flatPlus.reduce((val, mod) => {
     return val + mod
@@ -21,20 +21,20 @@ function compositeValue(affectors, name){
   }, value)
 
   value = mods.pctPlus.reduce((val, mod) => {
-    return (1 + val) * mod
+    return val + mod * value
   }, value)
 
   value = mods.pctMinus.reduce((val, mod) => {
-    return (1 - val) * mod
+    return (1 - mod) * val
   }, value)
 
   return value
 }
 
-function percentageValue(affectors, name){
+function percentageValue(stat, values){
 
-  const mods = compositeMods(affectors, name)
-  let value = 0
+  const mods = compositeMods(values)
+  let value = stat.defaultValue || 0
 
   value = [...mods.flatPlus, ...mods.pctPlus].reduce((val, mod) => {
     return val + (1 - val) * mod
@@ -47,10 +47,10 @@ function percentageValue(affectors, name){
   return value
 }
 
-function additiveMultiplierValue(affectors, name){
+function additiveMultiplierValue(stat, values){
 
-  const mods = percentageMods(affectors, name)
-  let value = 1
+  const mods = percentageMods(values)
+  let value = stat.defaultValue || 0
 
   value = mods.plus.reduce((val, mod) => {
     return val + (mod - 1)
@@ -63,10 +63,10 @@ function additiveMultiplierValue(affectors, name){
   return value
 }
 
-function multiplierValue(affectors, name){
+function multiplierValue(stat, values){
 
-  const mods = percentageMods(affectors, name)
-  let value = 1
+  const mods = percentageMods(values)
+  let value = stat.defaultValue || 1
 
   value = mods.plus.reduce((val, mod) => {
     return val * mod
@@ -85,12 +85,11 @@ function multiplierValue(affectors, name){
  * flatMinus example: -5
  * pctPlus example: '5%', '+5%'
  * pctMinus example: '-5%'
- * @param affectors [statAffector]
- * @param name
+ * @param values [number|string]
  * @returns {{pctMinus: *[], flatPlus: *[], flatMinus: *[], pctPlus: *[]}}
  * @private
  */
-function compositeMods(affectors, name){
+function compositeMods(values){
 
   const mods = {
     flatPlus: [],
@@ -99,26 +98,23 @@ function compositeMods(affectors, name){
     pctMinus: []
   }
 
-  affectors.forEach(affector => {
-    if(name in affector){
-      const change = affector[name]
-      let changeStr = change + ''
-      if(changeStr.charAt(changeStr.length - 1) === '%'){
-        if(changeStr.charAt(0) === '+'){
-          changeStr = changeStr.slice(1)
-        }
-        const value = parseFloat(changeStr) / 100
-        if(value > 0){
-          mods.pctPlus.push(value)
-        }else if(value < 0){
-          mods.pctMinus.push(-value)
-        }
-      }else{
-        if(change > 0){
-          mods.flatPlus.push(change)
-        }else if(change < 0){
-          mods.flatMinus.push(-change)
-        }
+  values.forEach(change => {
+    let changeStr = change + ''
+    if(changeStr.charAt(changeStr.length - 1) === '%'){
+      if(changeStr.charAt(0) === '+'){
+        changeStr = changeStr.slice(1)
+      }
+      const value = parseFloat(changeStr) / 100
+      if(value > 0){
+        mods.pctPlus.push(value)
+      }else if(value < 0){
+        mods.pctMinus.push(-value)
+      }
+    }else{
+      if(change > 0){
+        mods.flatPlus.push(change)
+      }else if(change < 0){
+        mods.flatMinus.push(-change)
       }
     }
   })
@@ -130,37 +126,32 @@ function compositeMods(affectors, name){
 /**
  * plus examples: 1.1, '10%', '+10%'
  * minus examples: 0.9, '-10%'
- * @param affectors
- * @param name
+ * @param values [number|string]
  * @returns {{minus: *[], plus: *[]}}
  * @private
  */
-function percentageMods(affectors, name){
+function percentageMods(values){
 
   const mods = {
     plus: [],
     minus: []
   }
 
-  affectors.forEach(affector => {
-    if(name in affector){
-
-      let changeStr = affector[name] + ''
-      let change
-      if(changeStr.charAt(changeStr.length - 1) === '%'){
-        if(changeStr.charAt(0) === '+'){
-          changeStr = changeStr.slice(1)
-        }
-        change = (1 + parseFloat(changeStr) / 100)
-      }else{
-        change = Math.max(0, affector[name])
+  values.forEach(change => {
+    let changeStr = change + ''
+    if(changeStr.charAt(changeStr.length - 1) === '%'){
+      if(changeStr.charAt(0) === '+'){
+        changeStr = changeStr.slice(1)
       }
+      change = (1 + parseFloat(changeStr) / 100)
+    }else{
+      change = Math.max(0, change)
+    }
 
-      if(change >= 1){
-        mods.plus.push(change)
-      }else{
-        mods.minus.push(change)
-      }
+    if(change >= 1){
+      mods.plus.push(change)
+    }else{
+      mods.minus.push(change)
     }
   })
 
