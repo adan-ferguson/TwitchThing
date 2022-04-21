@@ -32,6 +32,7 @@ export const StatDefinitions = {
     ...DEFAULT_DEFINITION,
     weight: 20,
     category: StatBonusCategory.OFFENSIVE,
+    roundingDecimals: 0,
     scaling: true,
     rarity: 1
   },

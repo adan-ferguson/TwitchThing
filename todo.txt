@@ -428,8 +428,12 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 ++ Monsters can drop
 -- Chest relic
 
-- Tests for composite stats because they display incorrectly with attack +10%
-- "Combat Turn Time" is backwards description, it should say "Combat Speed" if additive
++ Tests for composite stats because they display incorrectly with attack +10%
++ "Combat Turn Time" is backwards description, it should say "Combat Speed" if additive
+
+- Quick animation between chest openages
+-- Level-up chests not showing up anymore
+-- Rewards didn't apply correctly
 
 - Choose floor
 -- Multiples of 10
@@ -457,6 +461,10 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 - Put git pull in full build
 
 - npm audit
+
+- Right click item for more info in modal
+- Item tooltip says this + better info
+- Item tooltips seem to bug while being moved
 
 - Add a page title
 -- Narrow the header
@@ -491,8 +499,6 @@ TODO Later
 - Classes
 
 - View combat replays
-
-- Right click item for more info in modal
 
 - StatList + buff + debuff display
 

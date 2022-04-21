@@ -21,6 +21,7 @@ export default class LoadoutRow extends HTMLElement{
     this._nameEl = this.querySelector('.name')
     this._orbRow = this.querySelector('di-orb-row')
     this.tippy = tippy(this, {
+      theme: 'light',
       allowHTML: false
     })
     this.tippy.disable()

@@ -19,7 +19,7 @@ const DEFAULTS = {
     relics: 0
   },
   inventory: {
-    items: []
+    items: {}
   }
 }
 

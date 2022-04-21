@@ -6,6 +6,7 @@ import { generateEvent } from './dungeonEventPlanner.js'
 import { emit } from '../socketServer.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 import Users from '../collections/users.js'
+import { getIdleAdventurerStats } from '../../game/adventurer.js'
 
 let running = false
 let activeRuns = {}

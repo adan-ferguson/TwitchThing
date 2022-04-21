@@ -31,8 +31,7 @@ export default class Picker{
         value: key,
         weight: this._options.weightFormula(this._registry[key])
       }
-    })
-    ).value
+    }))
   }
 }
 

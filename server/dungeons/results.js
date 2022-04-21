@@ -106,7 +106,9 @@ export async function finalizeResults(user, adventurer, selectedBonuses){
       }
       if(ulvl.chest){
         if(ulvl.chest.contents.items){
-          userDoc.inventory.items = userDoc.inventory.items.concat(ulvl.chest.contents.items)
+          ulvl.chest.contents.items.forEach(item => {
+            userDoc.inventory.items[item.id] = item
+          })
         }
       }
     })

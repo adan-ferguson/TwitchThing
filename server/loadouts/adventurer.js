@@ -9,7 +9,7 @@ import OrbsData from '../../game/orbsData.js'
  * @param user [UserDoc]
  * @param itemIDs [string]
  */
-export async function saveAdventurerLoadout(adventurer, user, itemIDs){
+export function commitAdventurerLoadout(adventurer, user, itemIDs){
 
   validateDuplicates(itemIDs)
 
@@ -26,11 +26,6 @@ export async function saveAdventurerLoadout(adventurer, user, itemIDs){
   updateInventory(currentInventory, loadoutInfo.unmatchedItems, invInfo.matchedItems.map(item => item.id))
 
   validateLoadout(adventurer)
-
-  await Promise.all([
-    Adventurers.save(adventurer),
-    Users.save(user)
-  ])
 }
 
 function getItems(itemArrayOrObj, ids){
@@ -84,7 +79,7 @@ function validateDuplicates(itemIDs){
 }
 
 function validateLoadout(adventurer){
-  const orbsData = OrbsData.fromAdventurer(adventurer)
+  const orbsData = OrbsData.fromFighter(adventurer)
   if(!orbsData.isValid){
     throw { code: 403, error: 'Loadout orbs are invalid.' }
   }

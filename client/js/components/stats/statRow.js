@@ -13,7 +13,9 @@ export default class StatRow extends HTMLElement{
       style: StatsDisplayStyle.CUMULATIVE,
       ...options
     }
-    this.tippy = tippy(this)
+    this.tippy = tippy(this, {
+      theme: 'light'
+    })
     this.update(stat)
     this.setAttribute('stat-key', stat.name)
   }

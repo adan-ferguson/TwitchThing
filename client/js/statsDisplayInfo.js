@@ -1,6 +1,7 @@
 import { StatType } from '../../game/stats/statDefinitions.js'
 import { COMBAT_BASE_TURN_TIME } from '../../game/combat/fighterInstance.js'
 import { ADVENTURER_BASE_ROOM_TIME } from '../../game/adventurerInstance.js'
+import { roundToFixed } from '../../game/utilFunctions.js'
 
 export const StatsDisplayStyle = {
   CUMULATIVE: 0, // Eg. "50%", i.e. our total of this stat is 50%

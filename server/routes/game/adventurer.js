@@ -5,7 +5,7 @@ import { addRun } from '../../dungeons/dungeonRunner.js'
 import { finalizeResults } from '../../dungeons/results.js'
 import db  from '../../db.js'
 import Users from '../../collections/users.js'
-import { saveAdventurerLoadout } from '../../loadouts/adventurer.js'
+import { commitAdventurerLoadout } from '../../loadouts/adventurer.js'
 const router = express.Router()
 const verifiedRouter = express.Router()
 
@@ -103,7 +103,9 @@ verifiedRouter.post('/editloadout/save', async (req, res) => {
   try {
     const items = req.validateParam('items', { type: 'array' })
     const adventurer = await Adventurers.findOne(req.adventurerID)
-    await saveAdventurerLoadout(adventurer, req.user, items)
+    await commitAdventurerLoadout(adventurer, req.user, items)
+    await Adventurers.save(adventurer)
+    await Users.save(req.user)
     res.status(200).end()
   }catch(error){
     return res.status(error.code || 500).send({ error: error.message || error })
