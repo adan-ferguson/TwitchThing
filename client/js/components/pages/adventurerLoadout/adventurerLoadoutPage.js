@@ -45,7 +45,7 @@ export default class AdventurerLoadoutPage extends Page{
 
     setupEditable(this.inventory, this.adventurerPane.loadoutEl, {
       onChange: () => {
-        this.adventurerPane.update()
+        this.adventurerPane.updateStats()
         this._updateSaveButton()
       }
     })

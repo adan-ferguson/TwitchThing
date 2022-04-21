@@ -52,12 +52,12 @@ export default function(inventoryEl, loadoutEl, options = {}){
       if(!loadoutEl.isFull){
         inventoryEl.removeItem(row.item)
         loadoutEl.addItem(row.item)
-        options.onChange()
+        changed()
       }
     }else{
       inventoryEl.addItem(row.item)
       loadoutEl.setItem(row.index, null)
-      options.onChange()
+      changed()
     }
   }
 
@@ -115,17 +115,17 @@ export default function(inventoryEl, loadoutEl, options = {}){
       if(hoveredElement === inventoryEl){
         inventoryEl.addItem(draggedElement.item)
         loadoutEl.setItem(draggedElement.index, null)
-        options.onChange()
+        changed()
       }else if(loadoutEl.contains(draggedElement)){
         loadoutEl.swap(draggedElement.index, hoveredElement.index)
-        options.onChange()
+        changed()
       }else{
         inventoryEl.removeItem(draggedElement.item)
         if(hoveredElement.item){
           inventoryEl.addItem(hoveredElement.item)
         }
         loadoutEl.setItem(hoveredElement.index, draggedElement.item)
-        options.onChange()
+        changed()
       }
     }
     reset()
@@ -148,6 +148,11 @@ export default function(inventoryEl, loadoutEl, options = {}){
 
   function getHoverableUnderPoint(point){
     return hoverables.find(hoverable => contains(hoverable.rect, point))?.el
+  }
+
+  function changed(){
+    loadoutEl.updateOrbs()
+    options.onChange()
   }
 }
 

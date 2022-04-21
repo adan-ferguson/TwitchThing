@@ -1,5 +1,6 @@
 import Modal from './modal.js'
 import { toArray } from '../../../game/utilFunctions.js'
+import { fadeIn, fadeOut } from '../animationHelper.js'
 
 const SIMPLE_MODAL_HTML = `
   <div class='content'></div>
@@ -19,13 +20,25 @@ export default class SimpleModal extends Modal{
     }
   }
 
-  setContent(content){
+  setContent(content, fadeTransition = false){
     const contentEl = this.querySelector('.content')
-    contentEl.innerHTML = ''
-    if(content instanceof HTMLElement){
-      contentEl.appendChild(content)
+
+    if(contentEl.innerHTML && fadeTransition){
+      fadeOut(contentEl).then(() => {
+        set()
+        fadeIn(contentEl)
+      })
     }else{
-      contentEl.textContent = content
+      set()
+    }
+
+    function set(){
+      contentEl.innerHTML = ''
+      if(content instanceof HTMLElement){
+        contentEl.appendChild(content)
+      }else{
+        contentEl.textContent = content
+      }
     }
   }
 

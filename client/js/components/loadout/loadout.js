@@ -50,7 +50,7 @@ export default class Loadout extends HTMLElement{
   }
 
   get orbsData(){
-    return OrbsData.fromFighter(this._fighter)
+    return OrbsData.fromFighter(this._fighter, this.items)
   }
 
   get hasChanges(){
@@ -112,12 +112,12 @@ export default class Loadout extends HTMLElement{
   }
 
   update(){
-    this._updateOrbs()
+    this.updateOrbs()
     this.classList.toggle('editable', this._options.editable)
     this.list.setRows(this._rows)
   }
 
-  _updateOrbs(){
+  updateOrbs(){
     const showMax = this._options.editable || this._options.orbsDisplayStyle === OrbsDisplayStyles.SHOW_MAXIMUM
     this._orbRow.setData(this.orbsData, showMax)
   }

@@ -431,6 +431,9 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 + Tests for composite stats because they display incorrectly with attack +10%
 + "Combat Turn Time" is backwards description, it should say "Combat Speed" if additive
 
++ Illegal loadout possible to save
++ Orbs don't update on loadouts
+
 - Quick animation between chest openages
 -- Level-up chests not showing up anymore
 -- Rewards didn't apply correctly
@@ -438,6 +441,7 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 - Choose floor
 -- Multiples of 10
 -- Keep track of adv max floor
+-- Fix styling on dungeon choose page
 -- Floors get larger and larger from 1 to 10, 10 is very big
 -- Skew slightly towards the higher number monster rank
 -- Monsters only appear in their own block
@@ -477,6 +481,11 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 + results screen: show green/red on stats list for bonus stats
 - Chest UI is still a bit weird, not obvious it's new loot? Make it say "new items" at least
 - Loadout edit page: show "new" effect for new items first time you enter
+- Results stats lists text align left, uniform column size
+
+- Have loadout rows contain an inner element
+-- So it's easier to click/hover them
+-- So the inner part can be used on item details page
 
 TODO Later
 -----------

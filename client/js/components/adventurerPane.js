@@ -42,13 +42,17 @@ export default class AdventurerPane extends HTMLElement{
   }
 
   update(){
+    this.updateStats()
+    this.loadoutEl.update()
+  }
+
+  updateStats(){
     const stats = getIdleAdventurerStats({
       adventurer: this.adventurer,
       items: this.loadoutEl.items,
       bonus: this._bonusStats
     })
     this.statsList.setStats(stats)
-    this.loadoutEl.update()
   }
 
   async addXp(toAdd, onLevelUp){

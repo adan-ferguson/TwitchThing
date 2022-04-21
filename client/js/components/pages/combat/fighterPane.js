@@ -1,6 +1,5 @@
 import FighterInstance from '../../../../../game/combat/fighterInstance.js'
 import { fadeOut } from '../../../animationHelper.js'
-import { OrbsDisplayStyles } from '../../loadout/loadout.js'
 
 const HTML = `
 <div class="flex-grow">

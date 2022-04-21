@@ -8,7 +8,7 @@ import { calculateBonusOptions } from './bonuses.js'
 import { randomRound } from '../../game/rando.js'
 import { generateItemDef } from '../items/generator.js'
 import { toArray } from '../../game/utilFunctions.js'
-import { generateChest } from './chests.js'
+import { generateChest, generateRandomChest } from './chests.js'
 
 const GROWTH_SCALE = 0.10
 
@@ -132,20 +132,19 @@ function previewLevelup(adventurer, level){
   }
 }
 
-function previewUserLevelUp(user, level){
+function previewUserLevelUp(dungeonRun, level){
   const obj = { level, features: [] }
   if(level === 1){
     obj.features = ['chests', 'items', 'relics']
     obj.chest = generateChest({
+      items: [generateItemDef('SWORD')]
+    }, {
       name: 'Level-Up Chest',
       level: level,
-      contents: {
-        items: [generateItemDef('SWORD')]
-      },
       tier: 2
     })
   }else{
-    obj.chest = generateChest({
+    obj.chest = generateRandomChest(dungeonRun, {
       name: 'Level-Up Chest',
       level: level,
       tier: 2
@@ -170,7 +169,7 @@ function generateUserLevelups(dungeonRun){
   const levelAfter = userXpToLevel(user.xp + dungeonRun.rewards.xp)
   const levelups = []
   for(let levelBefore = user.level; levelBefore < levelAfter; levelBefore++){
-    levelups.push(previewUserLevelUp(user, levelBefore + 1))
+    levelups.push(previewUserLevelUp(dungeonRun, levelBefore + 1))
   }
   return levelups
 }

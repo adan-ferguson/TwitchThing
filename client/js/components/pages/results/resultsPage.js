@@ -210,7 +210,7 @@ async function showPopups(dungeonRunResults){
 
   function showPopup(chest, lastOne){
     return new Promise(res => {
-      modal.setContent(new ChestOpenage(chest))
+      modal.setContent(new ChestOpenage(chest), true)
       modal.setButtons({
         text: lastOne ? 'Finish' : 'Next',
         fn: () => {

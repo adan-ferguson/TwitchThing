@@ -1,15 +1,17 @@
+import Item from './item.js'
+
 export default class OrbsData{
 
-  static fromFighter(adventurer){
+  static fromFighter(adventurer, items = adventurer.items){
     if(!adventurer){
       return new OrbsData()
     }
-    return new OrbsData(adventurer.level, adventurer.items)
+    return new OrbsData(adventurer.level, items)
   }
 
   constructor(maxOrbs = 0, items = []){
     this.maxOrbs = maxOrbs
-    this.items = items
+    this.items = items.map(itemDef => itemDef ? new Item(itemDef) : null)
   }
 
   get used(){
