@@ -100,6 +100,12 @@ export async function finalizeResults(user, adventurer, selectedBonuses){
     userDoc.xp = xpAfter
     userDoc.level = userXpToLevel(xpAfter)
 
+    dungeonRun.results.rewards.chests.forEach(chest => {
+      chest.contents.items?.forEach(item => {
+        userDoc.inventory.items[item.id] = item
+      })
+    })
+
     dungeonRun.results.userLevelups.forEach(ulvl => {
       if(ulvl.features){
         ulvl.features.forEach(featureName => userDoc.features[featureName] = 1)

@@ -4,7 +4,7 @@ import { generateRandomChest } from './chests.js'
 
 const BASE_RELIC_CHANCE = 0.2
 const RELIC_CHANCE_SCALE = 0.03
-const VALUE_MULTIPLIER = 0.15
+const VALUE_MULTIPLIER = 0.2
 
 export function foundRelic(dungeonRun){
   if(!dungeonRun.user.features.relics){

@@ -55,11 +55,20 @@ export default class Loadout extends HTMLElement{
 
   get hasChanges(){
     for(let i = 0; i < 8; i++){
-      if(this._originalItems[i] !== this.items[i]){
+      const originalDef = toDef(this._originalItems[i])
+      const currentDef = toDef(this.items[i])
+      if(originalDef !== currentDef){
         return true
       }
     }
     return false
+
+    function toDef(val){
+      if(!val){
+        return null
+      }
+      return val.itemDef || val
+    }
   }
 
   get isValid(){
