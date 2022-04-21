@@ -426,7 +426,7 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 + Item drops
 ++ They don't drop unless user level >= 1
 ++ Monsters can drop
--- Chest relic
+++ Chest relic
 
 + Tests for composite stats because they display incorrectly with attack +10%
 + "Combat Turn Time" is backwards description, it should say "Combat Speed" if additive
@@ -506,6 +506,7 @@ TODO Later
 -- Simulate a combat
 
 - Classes
+-- Results page: Double level-ups cause a weird situation where you want to make sure we can't choose 4 classes.
 
 - View combat replays
 

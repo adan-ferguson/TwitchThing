@@ -1,5 +1,6 @@
 import scaledValue from '../../game/scaledValue.js'
 import { chooseOne } from '../../game/rando.js'
+import { generateRandomChest } from './chests.js'
 
 const BASE_RELIC_CHANCE = 0.2
 const RELIC_CHANCE_SCALE = 0.03
@@ -17,7 +18,8 @@ export function generateRelicEvent(dungeonRun){
   return chooseOne([
     { weight: 40, value: minorRelic },
     { weight: 10, value: majorRelic },
-    { weight: 50 - 50 * dungeonRun.adventurerInstance.hpPct, value: healingRelic }
+    { weight: 50 - 50 * dungeonRun.adventurerInstance.hpPct, value: healingRelic },
+    { weight: 10, value: chestRelic }
   ])(dungeonRun)
 }
 
@@ -51,5 +53,18 @@ function healingRelic(dungeonRun){
     relic: 'Healing',
     message: `${dungeonRun.adventurerInstance.name} finds a healing relic and regains ${gain} health.`,
     adventurerState: newState
+  }
+}
+
+function chestRelic(dungeonRun){
+  const newState = { ...dungeonRun.adventurerInstance.adventurerState }
+  const gain = Math.ceil(dungeonRun.adventurerInstance.hpMax * (0.1 + Math.random() * 0.1))
+  newState.hp = Math.min(dungeonRun.adventurerInstance.hpMax, newState.hp + gain)
+  return {
+    relic: 'Chest',
+    rewards: {
+      chests: generateRandomChest(dungeonRun)
+    },
+    message: `${dungeonRun.adventurerInstance.name} finds an abandoned relic with a treasure chest just sitting there.`,
   }
 }

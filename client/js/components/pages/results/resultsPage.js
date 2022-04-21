@@ -111,7 +111,11 @@ export default class ResultsPage extends Page{
         levelups[index],
         bonus => {
           res()
-          row.parentElement?.removeChild(row)
+          if(level === 1){
+            row.textContent = '^ You can change your mind until you click the "Okay" button below.'
+          }else{
+            row.parentElement?.removeChild(row)
+          }
           this._selectedBonuses[index] = bonus
           this._updateStats()
         })

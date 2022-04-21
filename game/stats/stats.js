@@ -109,6 +109,9 @@ export function mergeStats(...statsObjs){
  * @returns [object]
  */
 function toAffectorsArray(val){
+  if(!val){
+    return []
+  }
   const arr = Array.isArray(val) ? val : [val]
   const affectors = []
   arr.forEach(value => {
