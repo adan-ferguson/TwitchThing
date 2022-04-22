@@ -439,12 +439,21 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 + no relics until level 1 either
 + results screen: show green/red on stats list for bonus stats
++ Speed stats have shouldn't show their cumulative name when being additive, 'combat speed' +10%, 'combat turn time' 2.7s
++ Results stats lists text align left
 
-- Adventurer page doesn't show items
-- Speed stats have shouldn't show their cumulative name when being additive, 'combat speed' +10%, 'combat turn time' 2.7s
-- Show collected chests on dungeon page
-- Results stats lists text align left, uniform column size
-- Chest UI is still a bit weird, not obvious it's new loot? Make it say "new items" at least
++ Dungeon page doesn't show items
++ Show collected chests on dungeon page
++ Show message when monster drops chest
++ Pagination doesn't display correct numbers
++ The first event message doesn't show
+
+- get rid of adventuring speed because the dissonance between adv speed and combat speed is annoying
+
+- Make some simple items
+- Make some simple monsters
+++  1 to 10 (cave)
+-- 11 to 20 (undead)
 
 - Choose floor
 -- Multiples of 10
@@ -457,11 +466,6 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 + Level ups, not in modal anymore
 - Let me open adventurer in new tab from main page
 - On main page show dungeon run data on adventurer row
-
-- Make some simple items
-- Make some simple monsters
-++  1 to 10 (cave)
--- 11 to 20 (undead)
 
 - Janky going back from combat to dungeon run
 -- Don't have a combat page, instead have it on the dungeonRun page
@@ -490,8 +494,24 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 -- So it's easier to click/hover them
 -- So the inner part can be used on item details page
 
+- ChestOpenage UI is still a bit weird, not obvious it's new loot? Make it say "new items" at least
+
+- Loadout editor, add an element in-between that's like
+-- "--> move item here LOL"
+
+- Just show all the char levelups dont pause between, pause at end though
+
+- Test on firefox
+
 TODO Later
 -----------
+- Dungeon page chests display
+-- Animate the addition of chests
+-- Have chest icons for tiers
+
+- Resting, food
+
+- The monospaced font just looks weird with multiline
 - Show time meter on dungeon page
 
 - Show a theme for each multiple of 10 floors
@@ -501,6 +521,9 @@ TODO Later
 -- The result being if you have 20 Power * +50% attack, it's 30 attack, but attack doesn't scale the growth
 -- These are the only scaling things
 -- Displayed phys/mag power and phys/mag armor
+
+- Monsters just use a default calculated HP and Power (which gets scaled up)
+-- Their first slot in loadout will describe their specializations
 
 - Admin page
 -- Show ajax errors which were thrown

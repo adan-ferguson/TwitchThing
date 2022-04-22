@@ -1,6 +1,6 @@
 export default {
   stats: {
-    attack: '+10%'
+    lifesteal: '+10%'
   },
-  orbs: 1
+  orbs: 3
 }

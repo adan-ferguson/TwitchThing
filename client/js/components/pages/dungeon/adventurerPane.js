@@ -28,6 +28,7 @@ export default class AdventurerPane extends HTMLElement{
     this.adventurer = adventurer
     this.hpBar.setBadge(adventurer.level)
     this.querySelector('.name').textContent = adventurer.name
+    this.loadout.setFighter(adventurer)
   }
 
   setState(state, animate = false){

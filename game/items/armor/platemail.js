@@ -1,8 +1,7 @@
 export default {
-  name: 'Plate Mail',
   stats: {
-    physDef: '+25%',
-    speed: '-25%'
+    physDef: '+40%',
+    speed: '-20%'
   },
-  orbs: 25
+  orbs: 6
 }

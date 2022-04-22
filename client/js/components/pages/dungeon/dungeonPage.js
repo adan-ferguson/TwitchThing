@@ -39,6 +39,7 @@ export default class DungeonPage extends Page{
     }
 
     this.adventurerPane.setAdventurer(adventurer)
+    this.eventEl.setAdventurer(adventurer)
 
     requestAnimationFrame(() => {
       // Let the page attach so it can redirect

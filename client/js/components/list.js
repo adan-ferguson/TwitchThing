@@ -105,6 +105,8 @@ export default class List extends HTMLElement{
     this.querySelector('.prev').disabled = this._page === 1 ? true : false
     this.querySelector('.next').disabled = this._page === this._maxPage ? true : false
     this.querySelector('.last').disabled = this._page === this._maxPage ? true : false
+    this.querySelector('.page-number').textContent = this._page + ''
+    this.querySelector('.page-count').textContent = this._maxPage + ''
 
     this.rows.innerHTML = ''
     const start = (this._page - 1) * this._pageSize

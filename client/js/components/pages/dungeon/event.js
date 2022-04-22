@@ -1,43 +1,56 @@
+import { toArray } from '../../../../../game/utilFunctions.js'
+
 const innerHTML = `
 <div class="message"></div>
 <div class="rewards"></div>
 `
 
-const REWARD_TYPES = {
-  xp: {
-    type: 'integer'
-  }
-}
+export default class Event extends HTMLElement{
 
-export default class Event extends HTMLElement {
+  _rewards
+  _message
+
+  _adventurer
 
   constructor(){
     super()
     this.innerHTML = innerHTML
+    this._rewards = this.querySelector('.rewards')
+    this._message = this.querySelector('.message')
+  }
+
+  setAdventurer(adventurer){
+    this._adventurer = adventurer
   }
 
   update(dungeonEvent){
-    if(!dungeonEvent){
-      return
-    }
     this.classList.add('fade-out')
     setTimeout(() => {
       this.classList.remove('fade-out')
-      this.querySelector('.message').textContent = dungeonEvent.message
+      if(!dungeonEvent){
+        this._message.textContent = `${this._adventurer.name} enters the dungeon.`
+        return
+      }
+      this._message.textContent = dungeonEvent.message
       this._addRewards(dungeonEvent.rewards)
     }, 400)
   }
 
   _addRewards(rewards){
-    const rewardsEl = this.querySelector('.rewards')
+    if(!rewards){
+      this._rewards.innerHTML = ''
+      return
+    }
     let html = ''
     for(let key in rewards){
-      const rewardType = REWARD_TYPES[key]
-      if(rewardType){
-        html += `<div>+${rewards[key]} xp</div>`
+      let val = rewards[key]
+      if(key === 'chests'){
+        html += '<div>${this._adventurer.name} found a treasure chest</div>'
+      }else{
+        html += `<div>+${val} ${key}</div>`
       }
     }
-    rewardsEl.innerHTML = html
+    this._rewards.innerHTML = html
   }
 }
 

@@ -73,6 +73,5 @@ export const watch =  () => {
 export const build = gulp.series(buildStyles, copyAssets, generateRegistries)
 
 function toClassName(filename){
-  let name = filename.split('.')[0]
-  return name.toLowerCase()
+  return filename.split('.')[0]
 }

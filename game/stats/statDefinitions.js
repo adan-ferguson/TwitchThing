@@ -9,7 +9,7 @@ export const StatType = {
  * Where the stat shows up during levelup bonus
  */
 export const StatBonusCategory = {
-  NONE: 0,
+  NONE: 0, // Can't be offered in levelups
   OFFENSIVE: 1,
   DEFENSIVE: 2,
   ADVENTURING: 3
@@ -60,7 +60,7 @@ export const StatDefinitions = {
   lifesteal: {
     ...DEFAULT_DEFINITION,
     weight: 4,
-    category: StatBonusCategory.DEFENSIVE,
+    category: StatBonusCategory.NONE,
     rarity: 3,
     minValue: 0
   },

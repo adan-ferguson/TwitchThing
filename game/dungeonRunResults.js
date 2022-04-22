@@ -4,6 +4,7 @@ export default class DungeonRunResults{
     this.lastEvent = new Ending(dungeonRun.events.at(-1))
     this.monstersKilled = new MonstersKilled(dungeonRun.events)
     this.relicsFound = new RelicsFound(dungeonRun.events)
+    this.chestsFound = new ChestsFound(dungeonRun.results.rewards.chests)
     this.chests = (dungeonRun.results.rewards.chests || []).slice()
     dungeonRun.results.userLevelups.forEach(levelup => {
       if(levelup.chest){
@@ -50,5 +51,18 @@ class RelicsFound{
 
   get count(){
     return this.relics.length
+  }
+}
+
+class ChestsFound{
+  constructor(chests){
+    if(!chests){
+      chests = []
+    }
+    this.chests = chests
+  }
+
+  get count(){
+    return this.chests.length
   }
 }

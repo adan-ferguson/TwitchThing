@@ -100,13 +100,13 @@ export async function finalizeResults(user, adventurer, selectedBonuses){
     userDoc.xp = xpAfter
     userDoc.level = userXpToLevel(xpAfter)
 
-    dungeonRun.results.rewards.chests.forEach(chest => {
+    dungeonRun.results.rewards.chests?.forEach(chest => {
       chest.contents.items?.forEach(item => {
         userDoc.inventory.items[item.id] = item
       })
     })
 
-    dungeonRun.results.userLevelups.forEach(ulvl => {
+    dungeonRun.results.userLevelups?.forEach(ulvl => {
       if(ulvl.features){
         ulvl.features.forEach(featureName => userDoc.features[featureName] = 1)
       }
@@ -161,7 +161,6 @@ function previewUserLevelUp(dungeonRun, level){
 
 function generateLevelups(dungeonRun){
   const adventurer = dungeonRun.adventurer
-  const xp = dungeonRun.rewards.xp
   const levelAfter = advXpToLevel(adventurer.xp + dungeonRun.rewards.xp)
   const levelups = []
   for(let levelBefore = adventurer.level; levelBefore < levelAfter; levelBefore++){

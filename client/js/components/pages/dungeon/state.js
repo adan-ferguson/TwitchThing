@@ -6,7 +6,10 @@ const innerHTML = `
     Floor <span class="floor"></span> - Room <span class="room"></span>
 </div>
 <div>
-    xp: <span class="xp-reward">0</span>
+    XP: <span class="xp-reward">0</span>
+</div>
+<div>
+    Chests: <span class="chests">0</span>
 </div>
 `
 
@@ -15,12 +18,15 @@ const innerHTML = `
  */
 export default class State extends HTMLElement{
 
+  _chests
+
   constructor(){
     super()
     this.innerHTML = innerHTML
     this.timer = this.querySelector('di-timer')
     this.xp = this.querySelector('.xp-reward')
     this.xpVal = null
+    this._chests = this.querySelector('.chests')
   }
 
   updateDungeonRun(dungeonRun, animate){
@@ -28,6 +34,7 @@ export default class State extends HTMLElement{
     this.querySelector('.room').textContent = dungeonRun.room
 
     this._setXP(dungeonRun.rewards.xp, animate)
+    this._updateChests(dungeonRun.rewards.chests, animate)
 
     this.timer.time = dungeonRun.elapsedTime
     this.timer.start()
@@ -65,6 +72,10 @@ export default class State extends HTMLElement{
         this.xp.textContent = '' + Math.round(prevVal * (1 - pct) + this.xpVal * pct)
       }
     })
+  }
+
+  _updateChests(chests, animate){
+    this._chests.textContent = (chests?.length || 0) + ''
   }
 }
 

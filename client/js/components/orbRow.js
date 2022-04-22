@@ -20,12 +20,16 @@ export default class OrbRow extends HTMLElement{
   }
 
   setData(orbsData, showMax = false){
+    let empty
     if(showMax){
       this._text.textContent = `${orbsData.used}/${orbsData.max}`
       this._text.classList.toggle('error', orbsData.remaining < 0)
+      empty = !orbsData.max
     }else{
       this._text.textContent = '' + orbsData.used
+      empty = !orbsData.used
     }
+    this.classList.toggle('hidden', empty)
   }
 }
 

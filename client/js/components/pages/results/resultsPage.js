@@ -80,12 +80,22 @@ export default class ResultsPage extends Page{
     await wait()
 
     const monsterCount = this.dungeonRunResults.monstersKilled.count
-    this._addResultText(`Monsters Killed: ${monsterCount}`)
-    await wait()
+    if(monsterCount){
+      this._addResultText(`Monsters Killed: ${monsterCount}`)
+      await wait()
+    }
 
     const relicCount = this.dungeonRunResults.relicsFound.count
-    this._addResultText(`Relics Found: ${relicCount}`)
-    await wait()
+    if(relicCount){
+      this._addResultText(`Relics Found: ${relicCount}`)
+      await wait()
+    }
+
+    const chestCount = this.dungeonRunResults.chestsFound.count
+    if(chestCount){
+      this._addResultText(`Chests Found: ${chestCount}`)
+      await wait()
+    }
 
     this._addResultNewline()
   }

@@ -4,7 +4,7 @@ import { StatDefinitions, StatType } from '../../game/stats/statDefinitions.js'
 import { generateRandomChest } from '../dungeons/chests.js'
 
 const POWER_MULTIPLIER = 0.30
-const CHEST_DROP_CHANCE = 1 // 0.125
+const CHEST_DROP_CHANCE = 0.1
 const MONSTER_CHANCE_INCREASE_PER_ROOM = 0.06
 const FLOOR_RANGE = 5 // If we're on floor X, we'll get monsters of difficulty X - FLOOR_RANGE + 1 to X
 

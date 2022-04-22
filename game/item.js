@@ -22,7 +22,7 @@ export default class Item{
   }
 
   get name(){
-    return this.itemDef.name || toDisplayName(this.baseType.name)
+    return this.itemDef.displayName || this.baseType.displayName || toDisplayName(this.baseType.name)
   }
 
   get orbs(){
