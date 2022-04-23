@@ -1,17 +1,14 @@
-import ResultsPage from '../results/resultsPage.js'
-import DungeonPage from '../dungeon/dungeonPage.js'
-import AdventurerPage from '../adventurer/adventurerPage.js'
-
 import '../../timer.js'
 
 const HTML = `
-<div>
+<div class="inner">
     Lvl <span class="level"></span> - <span class="name"></span> <span class="status"></span> <di-timer class="displaynone"></di-timer>
 </div>
+<a class="new-tab" target="_blank">[->]</a>
 `
 
 export default class AdventurerRow extends HTMLElement{
-  constructor(adventurer, setPageFn){
+  constructor(adventurer){
     super()
 
     if(!adventurer){
@@ -26,7 +23,11 @@ export default class AdventurerRow extends HTMLElement{
     this.querySelector('.name').textContent = this.adventurer.name
     this.querySelector('.level').textContent = this.adventurer.level
 
-    this._events(setPageFn)
+    const newTab = this.querySelector('.new-tab')
+    newTab.setAttribute('href', `/game#adventurer=${adventurer._id}`)
+    newTab.addEventListener('click', e => {
+      e.stopPropagation()
+    })
   }
 
   setDungeonRun(dungeonRun){
@@ -59,22 +60,6 @@ export default class AdventurerRow extends HTMLElement{
     const timer = this.querySelector('di-timer')
     timer.time = time
     timer.run()
-  }
-
-  _events(setPageFn){
-    this.addEventListener('click', () => {
-      let page
-      if(this.dungeonRun){
-        if(this.dungeonRun.finished){
-          page = new ResultsPage(this.adventurer._id)
-        }else{
-          page = new DungeonPage(this.adventurer._id)
-        }
-      }else{
-        page = new AdventurerPage(this.adventurer._id)
-      }
-      setPageFn(page)
-    })
   }
 }
 

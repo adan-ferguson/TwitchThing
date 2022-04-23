@@ -3,6 +3,7 @@ import MainPage from './main/mainPage.js'
 export default class Page extends HTMLElement{
 
   app
+  unloaded = false
 
   constructor(){
     super()
@@ -18,6 +19,13 @@ export default class Page extends HTMLElement{
     return false
   }
 
+  redirectTo(page){
+    if(this.unloaded){
+      return
+    }
+    this.app.setPage(page, this)
+  }
+
   /**
    * Page to go to if back button gets clicked. If null/false, back button will not be visible.
    * @returns {null|function(): Page}
@@ -29,7 +37,7 @@ export default class Page extends HTMLElement{
   /**
    * Load page content here. Return false to prevent the page from loading (for example,
    * if an error occurred).
-   * @returns {Promise<{error}>}
+   * @returns {Promise<string|void>}
    */
   async load(){
 

@@ -62,7 +62,7 @@ export default class AdventurerLoadoutPage extends Page{
         this._saving = false
         this._updateSaveButton()
       }else{
-        this.app.setPage(new AdventurerPage(this.adventurerID))
+        this.redirectTo(new AdventurerPage(this.adventurerID))
       }
     })
   }

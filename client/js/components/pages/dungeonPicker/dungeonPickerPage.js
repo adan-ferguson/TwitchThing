@@ -10,7 +10,7 @@ const HTML = `
 </div>
 `
 
-export default class DungeonPickerPage extends Page {
+export default class DungeonPickerPage extends Page{
 
   constructor(adventurerID){
     super()
@@ -21,7 +21,7 @@ export default class DungeonPickerPage extends Page {
       async: true,
       action: `/game/adventurer/${this.adventurerID}/enterdungeon/main`,
       submitText: 'Go!',
-      success: () => this.app.setPage(new DungeonPage(this.adventurerID))
+      success: () => this.redirectTo(new DungeonPage(this.adventurerID))
     })
 
     this.querySelector('.stuff').appendChild(form)

@@ -1,6 +1,11 @@
 import * as Loader from '../loader.js'
 import MainPage from './pages/main/mainPage.js'
 import fizzetch from '../fizzetch.js'
+import { hideAll as hideAllTippys } from 'tippy.js'
+import SimpleModal from './simpleModal.js'
+import AdventurerPage from './pages/adventurer/adventurerPage.js'
+import DungeonPage from './pages/dungeon/dungeonPage.js'
+import ResultsPage from './pages/results/resultsPage.js'
 
 import './header.js'
 import './pages/combat/fighterPane.js'
@@ -13,13 +18,18 @@ import './stats/statsList.js'
 import './xpBar.js'
 import './hpBar.js'
 import './loadout/loadout.js'
-import { hideAll as hideAllTippys } from 'tippy.js'
-import SimpleModal from './simpleModal.js'
 
 const HTML = `
 <di-header></di-header>
 <div class="content"></div>
 `
+
+const PAGES = {
+  adventurer: AdventurerPage,
+  results: ResultsPage,
+  dungeon: DungeonPage
+}
+
 export default class App extends HTMLElement{
 
   constructor(user){
@@ -28,7 +38,7 @@ export default class App extends HTMLElement{
     this.innerHTML = HTML
     this.currentPage = null
     this.header = this.querySelector('di-header')
-    this.setPage(new MainPage())
+    this.setInitialPage()
   }
 
   get showBackButton(){
@@ -48,13 +58,14 @@ export default class App extends HTMLElement{
       if(preventUnload){
         return
       }
+      this.currentPage.unloaded = true
       this.currentPage.classList.add('fade-out')
       this.currentPage.remove()
     }
 
     this.currentPage = page
     page.app = this
-    const { error } = (await page.load() || {})
+    const error = await page.load()
 
     if(this.currentPage !== page){
       // The page.load() caused a redirect, so this setPage is no longer relevant.
@@ -82,6 +93,15 @@ export default class App extends HTMLElement{
     this.setPage(this.currentPage.backPage())
   }
 
+  setInitialPage(){
+    const [pageStr, arg] = window.location.hash.substring(1).split('=')
+    let initialPage = new MainPage()
+    if(pageStr){
+      initialPage = pageFromString(pageStr, [arg])
+    }
+    this.setPage(initialPage)
+  }
+
   async _fetchUser(){
     // TODO: error handle
     this.user = await fizzetch('/user')
@@ -107,3 +127,11 @@ export default class App extends HTMLElement{
 }
 
 customElements.define('di-app', App)
+
+function pageFromString(name, args){
+  const page = PAGES[name.toLowerCase()]
+  if(page){
+    return new page(...args)
+  }
+  return null
+}

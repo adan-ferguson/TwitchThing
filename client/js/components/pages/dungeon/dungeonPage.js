@@ -76,13 +76,13 @@ export default class DungeonPage extends Page{
     this.eventEl.update(currentEvent)
 
     if(currentEvent.combatID && currentEvent.pending){
-      return this.app.setPage(new CombatPage(currentEvent.combatID, true, this))
+      return this.redirectTo(new CombatPage(currentEvent.combatID, true, this))
     }
   }
 
   _finish(){
     setTimeout(() => {
-      this.app.setPage(new ResultsPage(this.adventurerID))
+      this.redirectTo(new ResultsPage(this.adventurerID))
     }, 5000)
   }
 }

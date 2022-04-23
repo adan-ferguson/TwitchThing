@@ -461,16 +461,20 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 -- Keep track of adventurer maximum floor
 -- Fix styling on dungeon choose page
 
-
 + Level ups, not in modal anymore
-- Let me open adventurer in new tab from main page
-- On main page show dungeon run data on adventurer row
+
+- adventurer rows
+-- let me open in new tab
+-- show dungeon run data (hp, floor, room, fighting)
+
++ Make sure pages can't redirect if they've been unloaded
+
+- Main page actually show the error
 
 - Janky going back from combat to dungeon run
 -- Don't have a combat page, instead have it on the dungeonRun page
 -- Combat replay page (same widget)
 -- Make sure combat stops if you leave it
--- Make sure pages can't redirect if they're not the active page
 
 - Timer at combat resets funny
 

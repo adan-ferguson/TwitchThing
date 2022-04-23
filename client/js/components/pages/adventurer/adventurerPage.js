@@ -5,6 +5,9 @@ import fizzetch from '../../../fizzetch.js'
 import AdventurerLoadoutPage from '../adventurerLoadout/adventurerLoadoutPage.js'
 
 import '../../adventurerPane.js'
+import DungeonPage from '../dungeon/dungeonPage.js'
+import MainPage from '../main/mainPage.js'
+import ResultsPage from '../results/resultsPage.js'
 
 const HTML = `
 <div class="content-columns">
@@ -30,9 +33,21 @@ export default class AdventurerPage extends Page{
 
   async load(){
 
-    const { adventurer, ctas, error } = await fizzetch(`/game/adventurer/${this.adventurerID}`)
+    const { adventurer, ctas, error, targetPage } = await fizzetch(`/game/adventurer/${this.adventurerID}`)
+    if(targetPage){
+      if(targetPage === 'Adventurer'){
+        this.redirectTo(new AdventurerPage(this.adventurerID))
+      }else if(targetPage === 'Dungeon'){
+        this.redirectTo(new DungeonPage(this.adventurerID))
+      }else if(targetPage === 'Results'){
+        this.redirectTo(new ResultsPage(this.adventurerID))
+      }else{
+        return 'Invalid targetPage redirection'
+      }
+      return
+    }
     if(error){
-      return { error }
+      return error
     }
 
     this.adventurerPane.setAdventurer(adventurer)
@@ -52,14 +67,14 @@ export default class AdventurerPage extends Page{
     }
 
     btn.addEventListener('click', () => {
-      this.app.setPage(new AdventurerLoadoutPage(this.adventurerID))
+      this.redirectTo(new AdventurerLoadoutPage(this.adventurerID))
     })
 
   }
 
   _showDungeonButton(){
     this.querySelector('.basic-dungeon').addEventListener('click', () => {
-      void this.app.setPage(new DungeonPickerPage(this.adventurerID))
+      this.redirectTo(new DungeonPickerPage(this.adventurerID))
     })
   }
 }

@@ -37,15 +37,11 @@ export default class ResultsPage extends Page{
 
   async load(){
 
-    const { dungeonRun, adventurer, error } = await fizzetch(`/game/adventurer/${this.adventurerID}/results`)
-    if(error){
-      if(error.targetPage === 'Adventurer'){
-        this.app.setPage(new AdventurerPage(this.adventurerID))
-      }else if(error.targetPage === 'Dungeon'){
-        this.app.setPage(new DungeonPage(this.adventurerID))
-      }else{
-        this.app.setPage(new MainPage(error))
-      }
+    const { dungeonRun, adventurer, error, targetPage } = await fizzetch(`/game/adventurer/${this.adventurerID}/results`)
+    if(targetPage){
+      return this.redirectTo(targetPage, [this.adventurerID])
+    }else if(error){
+      return error
     }
 
     this._selectedBonuses = []
@@ -158,7 +154,7 @@ export default class ResultsPage extends Page{
       selectedBonuses: this._selectedBonuses
     })
     if(!results.error){
-      this.app.setPage(new AdventurerPage(this.adventurerID))
+      this.redirectTo(new AdventurerPage(this.adventurerID))
     }
     // TODO: handle error, usually just shouldn't happen though
   }

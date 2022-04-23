@@ -47,7 +47,7 @@ function majorRelic(dungeonRun){
 
 function healingRelic(dungeonRun){
   const newState = { ...dungeonRun.adventurerInstance.adventurerState }
-  const gain = Math.ceil(dungeonRun.adventurerInstance.hpMax * (0.1 + Math.random() * 0.1))
+  const gain = Math.floor(scaledValue(VALUE_MULTIPLIER, dungeonRun.floor, 25) * (0.5 + Math.random() / 2))
   newState.hp = Math.min(dungeonRun.adventurerInstance.hpMax, newState.hp + gain)
   return {
     relic: 'Healing',

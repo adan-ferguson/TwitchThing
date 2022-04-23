@@ -52,15 +52,17 @@ export default class MainPage extends Page{
     const adventurerList = this.querySelector('.adventurer-list')
     const rows = []
     adventurers.forEach(adventurer => {
-      rows.push(new AdventurerRow(adventurer, page => {
-        this.app.setPage(page)
-      }))
+      const row = new AdventurerRow(adventurer)
+      row.addEventListener('click', e => {
+        this.redirectTo(new AdventurerPage(row.adventurer._id))
+      })
+      rows.push(row)
     })
 
     for(let i = adventurers.length; i < slots; i++){
       const newAdventurerRow = new AdventurerRow()
       rows.push(newAdventurerRow)
-      newAdventurerRow.addEventListener('click', () => {
+      newAdventurerRow.addEventListener('click', e => {
         this._showNewAdventurerModal()
       })
     }
@@ -74,7 +76,7 @@ export default class MainPage extends Page{
       async: true,
       action: '/game/newadventurer',
       submitText: 'Create',
-      success: result => this.app.setPage(new AdventurerPage(result.adventurerID))
+      success: result => this.redirectTo(new AdventurerPage(result.adventurerID))
     })
 
     form.addInput({
