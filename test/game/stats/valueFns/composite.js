@@ -26,9 +26,9 @@ describe('composite valueFn', () => {
     expect(val).to.closeTo(0.6, 0.001, 'Sum values')
   })
 
-  it('Should be additive with positive percentage values', () => {
-    const val = compositeValue(['10%', '+20%'], 10)
-    expect(val).to.closeTo(13, 0.001, '10 times 1.3')
+  it('Should be multiplicative with positive percentage values', () => {
+    const val = compositeValue(['10%', '+20%'], 100)
+    expect(val).to.closeTo(132, 0.001, '10 times 1.1 times 1.2')
   })
 
   it('Should be multiplicative with negative percentage values', () => {
@@ -36,13 +36,13 @@ describe('composite valueFn', () => {
     expect(val).to.closeTo(72, 0.001, '100 times 0.9 times 0.8')
   })
 
-  it('Should work with both pct types', () => {
-    const val = compositeValue(['10%', '-20%', '+10%'], 100)
-    expect(val).to.closeTo(96, 0.001, '10 times 1.2 times 0.8')
+  it('Pct types do not really cancel out', () => {
+    const val = compositeValue(['10%', '-20%', '+10%'], 1000)
+    expect(val).to.closeTo(968, 0.001, '1000 * 1.1 * 1.1 * 0.8')
   })
 
   it('Should ignore order of flat and percentage', () => {
-    const val = compositeValue(['-10%', 10, '+10%', -20, '10%'], 110)
-    expect(val).to.closeTo(108, 0.001, '(110 - 20 + 10) * 1.2 * 0.9')
+    const val = compositeValue(['-20%', 10, '+10%', -20, '10%'], 1010)
+    expect(val).to.closeTo(968, 0.001, '(1010 - 20 + 10) * 1.1 * 1.1 * 0.8')
   })
 })

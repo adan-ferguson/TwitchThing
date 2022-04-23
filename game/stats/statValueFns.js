@@ -21,7 +21,7 @@ function compositeValue(values, defaultValue){
   }, value)
 
   value = mods.pctPlus.reduce((val, mod) => {
-    return val + mod * value
+    return val * (1 + mod)
   }, value)
 
   value = mods.pctMinus.reduce((val, mod) => {
