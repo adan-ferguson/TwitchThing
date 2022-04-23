@@ -1,7 +1,7 @@
 import { generateFloorChoices } from '../../../../server/monsters/generator.js'
 import { expect } from 'chai'
 
-describe('toDisplayName function', () => {
+describe('generateFloorChoices function', () => {
 
   it('Should handle trivial case', () => {
     const choices = generateFloorChoices(1)

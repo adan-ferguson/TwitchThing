@@ -6,7 +6,6 @@ import { generateEvent } from './dungeonEventPlanner.js'
 import { emit } from '../socketServer.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 import Users from '../collections/users.js'
-import { getIdleAdventurerStats } from '../../game/adventurer.js'
 
 let running = false
 let activeRuns = {}
@@ -94,6 +93,7 @@ class DungeonRunInstance{
         message: `${this.adventurer.name} enters the dungeon.`,
         duration: this.adventurerInstance.standardRoomDuration
       }]
+      this.advance()
     }
   }
 
@@ -140,7 +140,7 @@ class DungeonRunInstance{
       ...this.doc
     }
     delete truncatedDoc.events
-    emit(this.adventurer.userID, 'dungeons run update', truncatedDoc)
+    emit(this.adventurer.userID, 'dungeon run update', truncatedDoc)
     DungeonRuns.save(this.doc)
   }
 

@@ -128,7 +128,7 @@ function defaultValue(stat){
   if(stat.defaultValue !== null){
     return stat.defaultValue
   }
-  if(stat.type === StatType.ADDITIVE_MULTIPLIER){
+  if(stat.type === StatType.ADDITIVE_MULTIPLIER || stat.type === StatType.MULTIPLIER){
     return 1
   }
   return 0

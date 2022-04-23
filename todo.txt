@@ -453,13 +453,14 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 ++  1 to 10 (cave)
 ++ 11 to 20 (undead)
 
-- Choose floor
--- Multiples of 10
--- Keep track of adv max floor
+- zones
+++ Floors now only get larger per zone, also multiples of 10 are double sized
+++ Skew slightly towards the higher number monster rank
+++ Monsters only appear in their own zone
+-- Choose zone
+-- Keep track of adventurer maximum floor
 -- Fix styling on dungeon choose page
--- Floors get larger and larger from 1 to 10, 10 is very big
--- Skew slightly towards the higher number monster rank
--- Monsters only appear in their own block
+
 
 + Level ups, not in modal anymore
 - Let me open adventurer in new tab from main page
@@ -468,6 +469,8 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 - Janky going back from combat to dungeon run
 -- Don't have a combat page, instead have it on the dungeonRun page
 -- Combat replay page (same widget)
+-- Make sure combat stops if you leave it
+-- Make sure pages can't redirect if they're not the active page
 
 - Timer at combat resets funny
 

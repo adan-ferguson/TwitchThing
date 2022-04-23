@@ -46,11 +46,11 @@ export default class DungeonPage extends Page{
       this._parseDungeonUpdate(dungeonRun, false)
     })
 
-    getSocket().on('dungeons run update', this._parseDungeonUpdate)
+    getSocket().on('dungeon run update', this._parseDungeonUpdate)
   }
 
   async unload(){
-    getSocket().off('dungeons run update', this._parseDungeonUpdate)
+    getSocket().off('dungeon run update', this._parseDungeonUpdate)
   }
 
   _parseDungeonUpdate = (dungeonRun, animate = true) => {
@@ -73,11 +73,11 @@ export default class DungeonPage extends Page{
       return
     }
 
+    this.eventEl.update(currentEvent)
+
     if(currentEvent.combatID && currentEvent.pending){
       return this.app.setPage(new CombatPage(currentEvent.combatID, true, this))
     }
-
-    this.eventEl.update(currentEvent)
   }
 
   _finish(){
