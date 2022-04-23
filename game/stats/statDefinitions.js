@@ -47,7 +47,7 @@ export const StatDefinitions = {
     ...DEFAULT_DEFINITION,
     weight: 200,
     category: StatBonusCategory.OFFENSIVE,
-    type: StatType.ADDITIVE_MULTIPLIER,
+    type: StatType.MULTIPLIER,
     rarity: 2
   },
   physDef: {
@@ -67,7 +67,7 @@ export const StatDefinitions = {
   adventuringSpeed: {
     ...DEFAULT_DEFINITION,
     weight: 200,
-    type: StatType.ADDITIVE_MULTIPLIER,
+    type: StatType.MULTIPLIER,
     category: StatBonusCategory.ADVENTURING,
     rarity: 3
   },

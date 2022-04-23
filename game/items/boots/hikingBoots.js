@@ -1,6 +1,6 @@
 export default {
   stats: {
-    adventuringSpeed: '+40%'
+    adventuringSpeed: '+30%'
   },
   orbs: 3
 }

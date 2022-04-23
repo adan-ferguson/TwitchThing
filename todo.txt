@@ -448,9 +448,7 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 + Pagination doesn't display correct numbers
 + The first event message doesn't show
 
-- get rid of adventuring speed because the dissonance between adv speed and combat speed is annoying
-
-- Make some simple items
++ Make some simple items
 - Make some simple monsters
 ++  1 to 10 (cave)
 -- 11 to 20 (undead)
@@ -505,6 +503,8 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 TODO Later
 -----------
+- get rid of adventuring speed because the dissonance between adv speed and combat speed is annoying
+
 - Dungeon page chests display
 -- Animate the addition of chests
 -- Have chest icons for tiers

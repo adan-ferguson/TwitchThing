@@ -1,7 +1,7 @@
 export default {
   stats: {
-    physDef: '+40%',
+    physDef: '+50%',
     speed: '-20%'
   },
-  orbs: 6
+  orbs: 5
 }

@@ -1,6 +1,7 @@
 import Monsters from '../../game/monsters/combined.js'
 
 const monstersByFloor = {
+  // Caves
   1: Monsters.RAT,
   2: Monsters.TROGLODYTE,
   3: Monsters.BAT,
@@ -10,7 +11,18 @@ const monstersByFloor = {
   7: Monsters.SCORPION,
   8: Monsters.ROCKGOLEM,
   9: Monsters.SORCERER,
-  10: Monsters.MINOTAUR
+  10: Monsters.MINOTAUR,
+  // Crypt
+  11: Monsters.SKELETON,
+  12: Monsters.ZOMBIE,
+  13: Monsters.SPECTRE,
+  14: Monsters.SHADE,
+  15: Monsters.BANSHEE,
+  16: Monsters.WRAITH,
+  17: Monsters.LICH,
+  18: Monsters.VAMPIRE,
+  19: Monsters.ABOMINATION,
+  20: Monsters.BONEDRAGON
 }
 
 export function getMonsterDefinition(floor, rarity = 1){
