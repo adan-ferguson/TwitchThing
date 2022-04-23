@@ -71,25 +71,21 @@ function scaleUpStats(unscaledStats, scalingValue){
  * @param floor
  */
 function floorToLevel(floor){
-  const base = Math.floor((floor - 1) / 10)
-  const minVal = Math.max(base + 1, floor - 5)
-  const maxVal = floor - base
-  const choices = generateFloorChoices(minVal, maxVal, FLOOR_RANGE, FLOOR_SKEW)
-  return chooseOne(choices)
+  return chooseOne(generateFloorChoices(floor, FLOOR_RANGE, FLOOR_SKEW))
 }
 
 /**
  * Generate choices based on
- * @param minVal
- * @param maxVal
+ * @param floor
  * @param range
  * @param skew
  * @returns {*[]}
  */
-export function generateFloorChoices(minVal, maxVal, range, skew){
+export function generateFloorChoices(floor, range = 1, skew = 0){
+  const minVal = Math.floor((floor - 1) / 10) * 10 + 1
   const choices = []
   for(let i = 0; i < range; i++){
-    const val = Math.max(minVal, maxVal - range + i + 1)
+    const val = Math.max(minVal, floor - range + i + 1)
     choices.push({ weight: 100 * (1 + skew * i), value: val })
   }
   return choices
