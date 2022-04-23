@@ -449,9 +449,9 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 + The first event message doesn't show
 
 + Make some simple items
-- Make some simple monsters
++ Make some simple monsters
 ++  1 to 10 (cave)
--- 11 to 20 (undead)
+++ 11 to 20 (undead)
 
 - Choose floor
 -- Multiples of 10
