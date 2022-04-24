@@ -83,7 +83,8 @@ export async function finalizeResults(user, adventurer, selectedBonuses){
 
     const updates = {
       dungeonRunID: null,
-      xp: xpAfter
+      xp: xpAfter,
+      'accomplishments.highestFloor': Math.max(dungeonRun.floor, adventurer.accomplishments.highestFloor)
     }
 
     if(bonuses.length){

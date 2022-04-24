@@ -11,6 +11,9 @@ const DEFAULTS = {
   baseStats: {
     hpMax: 100,
     attack: 10
+  },
+  accomplishments: {
+    highestFloor: 1
   }
 }
 

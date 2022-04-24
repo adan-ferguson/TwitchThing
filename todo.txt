@@ -457,8 +457,8 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 ++ Floors now only get larger per zone, also multiples of 10 are double sized
 ++ Skew slightly towards the higher number monster rank
 ++ Monsters only appear in their own zone
+++ Keep track of adventurer maximum floor
 -- Choose zone
--- Keep track of adventurer maximum floor
 -- Fix styling on dungeon choose page
 
 + Level ups, not in modal anymore
@@ -471,12 +471,14 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 - Main page actually show the error
 
-- Janky going back from combat to dungeon run
+- Combat page jank
 -- Don't have a combat page, instead have it on the dungeonRun page
 -- Combat replay page (same widget)
 -- Make sure combat stops if you leave it
-
-- Timer at combat resets funny
+-- Timer at combat resets funny
+-- Shrink the combat footer size
+-- Don't show irrelevant stats inside of combat
+-- Prevent double fades or whatever
 
 - Stupid webpack openssl thing, upgrade webpack or whatever
 - Put git pull in full build
@@ -490,8 +492,6 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 - Add a page title
 -- Narrow the header
 
-- Don't show the combat speed stat inside of combat
-- Shrink the combat footer size
 - toDisplayName wherever we use monster/items names: 'monsterName' => 'Monster Name'
 - Loadout edit page: show "new" effect for new items first time you enter
 
