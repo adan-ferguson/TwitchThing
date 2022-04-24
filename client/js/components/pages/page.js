@@ -11,7 +11,6 @@ export default class Page extends HTMLElement{
   }
 
   get user(){
-    console.log('user')
     return this.app?.user
   }
 
@@ -23,7 +22,7 @@ export default class Page extends HTMLElement{
     if(this.unloaded){
       return
     }
-    this.app.setPage(page, this)
+    this.app.setPage(page)
   }
 
   /**

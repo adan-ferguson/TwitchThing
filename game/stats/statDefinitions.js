@@ -41,6 +41,7 @@ export const StatDefinitions = {
     weight: 1,
     category: StatBonusCategory.DEFENSIVE,
     scaling: true,
+    roundingDecimals: 0,
     rarity: 1
   },
   speed: {

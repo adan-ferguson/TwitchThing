@@ -1,6 +1,6 @@
 import { getIdleAdventurerStats } from './adventurer.js'
 
-export const ADVENTURER_BASE_ROOM_TIME = 3000
+export const ADVENTURER_BASE_ROOM_TIME = 5000
 
 export default class AdventurerInstance{
   constructor(adventurer, adventurerState){

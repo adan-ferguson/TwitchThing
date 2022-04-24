@@ -5,9 +5,7 @@ import fizzetch from '../../../fizzetch.js'
 import AdventurerLoadoutPage from '../adventurerLoadout/adventurerLoadoutPage.js'
 
 import '../../adventurerPane.js'
-import DungeonPage from '../dungeon/dungeonPage.js'
-import MainPage from '../main/mainPage.js'
-import ResultsPage from '../results/resultsPage.js'
+import { pageFromString } from '../../app.js'
 
 const HTML = `
 <div class="content-columns">
@@ -35,16 +33,7 @@ export default class AdventurerPage extends Page{
 
     const { adventurer, ctas, error, targetPage } = await fizzetch(`/game/adventurer/${this.adventurerID}`)
     if(targetPage){
-      if(targetPage === 'Adventurer'){
-        this.redirectTo(new AdventurerPage(this.adventurerID))
-      }else if(targetPage === 'Dungeon'){
-        this.redirectTo(new DungeonPage(this.adventurerID))
-      }else if(targetPage === 'Results'){
-        this.redirectTo(new ResultsPage(this.adventurerID))
-      }else{
-        return 'Invalid targetPage redirection'
-      }
-      return
+      return this.redirectTo(pageFromString(targetPage, [this.adventurerID]))
     }
     if(error){
       return error

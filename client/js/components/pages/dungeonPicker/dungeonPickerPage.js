@@ -5,7 +5,7 @@ import DIForm from '../../form.js'
 import fizzetch from '../../../fizzetch.js'
 
 const HTML = `
-<div class="flex-columns">
+<div class="content-columns">
   <div class="content-well stuff">Blah blah blah, select dungeon + time here</div>
 </div>
 `

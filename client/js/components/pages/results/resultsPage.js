@@ -1,8 +1,6 @@
 import Page from '../page.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import fizzetch from '../../../fizzetch.js'
-import DungeonPage from '../dungeon/dungeonPage.js'
-import MainPage from '../main/mainPage.js'
 import LevelupSelector from './levelupSelector.js'
 import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
 import { mergeStats } from '../../../../../game/stats/stats.js'
@@ -10,6 +8,7 @@ import SimpleModal from '../../simpleModal.js'
 import ChestOpenage from './chestOpenage.js'
 import { showLoader } from '../../../loader.js'
 import { toDisplayName } from '../../../../../game/utilFunctions.js'
+import { pageFromString } from '../../app.js'
 
 const WAIT_TIME = 500
 
@@ -39,7 +38,7 @@ export default class ResultsPage extends Page{
 
     const { dungeonRun, adventurer, error, targetPage } = await fizzetch(`/game/adventurer/${this.adventurerID}/results`)
     if(targetPage){
-      return this.redirectTo(targetPage, [this.adventurerID])
+      return this.redirectTo(pageFromString(targetPage, [this.adventurerID]))
     }else if(error){
       return error
     }
@@ -61,7 +60,6 @@ export default class ResultsPage extends Page{
       for(let fn of fns){
         await fn()
       }
-      this._enableButton()
     })
   }
 
@@ -98,7 +96,11 @@ export default class ResultsPage extends Page{
 
   _adventurerXp = async () => {
     this._addResultText(`${this.adventurer.name} gained +${this.dungeonRun.results.rewards.xp} xp`)
-    await this.adventurerPane.addXp(this.dungeonRun.results.rewards.xp, this._levelUp)
+    await this.adventurerPane.addXp(this.dungeonRun.results.rewards.xp)
+    for(let i = 0; i < this.dungeonRun.results.levelups.length; i++){
+      this._showLevelUp(i)
+      await wait()
+    }
   }
 
   _userXp = async () => {
@@ -106,29 +108,26 @@ export default class ResultsPage extends Page{
     await this.app.header.addUserXp(this.dungeonRun.results.rewards.xp, this._userLevelUp)
   }
 
-  _levelUp = level => {
-    return new Promise((res) => {
-      const levelups = this.dungeonRun.results.levelups
-      const selector = new LevelupSelector()
-      const index = this._selectedBonuses.length
-      this.adventurer.level = level
-      selector.setData(
-        this.adventurer,
-        levelups[index],
-        bonus => {
-          res()
-          if(level === 1){
-            row.textContent = '^ You can change your mind until you click the "Okay" button below.'
-          }else{
-            row.parentElement?.removeChild(row)
-          }
-          this._selectedBonuses[index] = bonus
-          this._updateStats()
-        })
-      this._addResult(selector)
-      this._updateStats()
-      const row = this._addResultText('Choose a Bonus')
-    })
+  _showLevelUp = index => {
+    const levelup = this.dungeonRun.results.levelups[index]
+    const selector = new LevelupSelector()
+    this.adventurer.level = levelup.level
+    selector.setData(
+      this.adventurer,
+      levelup,
+      bonus => {
+        if(levelup.level === 1){
+          row.textContent = '^ You can change your mind until you click the "Okay" button below.'
+        }else{
+          row.parentElement?.removeChild(row)
+        }
+        this._selectedBonuses[index] = bonus
+        this._updateStats()
+        this._updateButton()
+      })
+    this._addResult(selector)
+    this._updateStats()
+    const row = this._addResultText('Choose a Bonus')
   }
 
   _userLevelUp = level => {
@@ -142,9 +141,17 @@ export default class ResultsPage extends Page{
     })
   }
 
-  _enableButton(){
-    this.doneButton.classList.remove('hidden')
-    this.doneButton.addEventListener('click', () => this._finish())
+  _updateButton(){
+    if(!this.doneButton.classList.contains('hidden')){
+      return
+    }
+    if(this._selectedBonuses.length === this.dungeonRun.results.levelups.length){
+      if(this._selectedBonuses.find(bonus => !bonus)){
+        return
+      }
+      this.doneButton.classList.remove('hidden')
+      this.doneButton.addEventListener('click', () => this._finish())
+    }
   }
 
   async _finish(){

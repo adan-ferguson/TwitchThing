@@ -568,3 +568,6 @@ TODO Later
 -- Relics found list
 
 - Next time ssl cert expires, get the auto-renewing working
+
+- Specialized dungeons
+-- The goal is to incentivize different builds

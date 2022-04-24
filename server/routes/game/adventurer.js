@@ -116,7 +116,11 @@ verifiedRouter.post('', async(req, res, next) => {
   try {
     const adventurer = await Adventurers.findOne(req.adventurerID)
     if(adventurer.dungeonRunID){
-      return res.status(401).send({ error: 'Adventurer is currently in a dungeons run.', targetPage: 'Dungeon' })
+      const run = await DungeonRuns.findOne(adventurer.dungeonRunID)
+      if(!run){
+        return res.status(500).send({ error: 'Dungeon run not found, uh oh.' })
+      }
+      return res.status(200).send({ targetPage: run.finished ? 'results' : 'dungeon' })
     }
     const ctas = {}
     if(req.user.features.items === 1){

@@ -2,22 +2,29 @@ import '../../timer.js'
 
 const HTML = `
 <div class="inner">
-    Lvl <span class="level"></span> - <span class="name"></span> <span class="status"></span> <di-timer class="displaynone"></di-timer>
+    <span>
+        Lvl.<span class="level"></span>
+    </span>
+    <span class="name"></span>
+    <span class="status"></span>
+    <di-timer class="displaynone"></di-timer>
 </div>
-<a class="new-tab" target="_blank">[->]</a>
+<a class="new-tab" target="_blank" title="Open in new tab">[->]</a>
 `
 
 export default class AdventurerRow extends HTMLElement{
   constructor(adventurer){
     super()
 
+    this.innerHTML = HTML
+
     if(!adventurer){
-      this.innerHTML = 'Create a new Adventurer'
+      this.querySelector('.inner').textContent = 'Create a new Adventurer'
+      this.querySelector('.new-tab').classList.add('hidden')
       return
     }
 
     this.setAttribute('adventurer-id', adventurer._id)
-    this.innerHTML = HTML
     this.adventurer = adventurer
 
     this.querySelector('.name').textContent = this.adventurer.name

@@ -3,6 +3,7 @@ import fizzetch from '../../../fizzetch.js'
 import { getSocket } from '../../../socketClient.js'
 import ResultsPage from '../results/resultsPage.js'
 import CombatPage from '../combat/combatPage.js'
+import { pageFromString } from '../../app.js'
 
 const HTML = `
 <div class='content-columns'>
@@ -32,8 +33,11 @@ export default class DungeonPage extends Page{
 
   async load(){
 
-    const { adventurer, dungeonRun, error } = await fizzetch(`/game/adventurer/${this.adventurerID}/dungeonrun`)
+    const { adventurer, dungeonRun, error, targetPage } = await fizzetch(`/game/adventurer/${this.adventurerID}/dungeonrun`)
 
+    if(targetPage){
+      return this.redirectTo(pageFromString(targetPage, [this.adventurerID]))
+    }
     if(error){
       throw error
     }

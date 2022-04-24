@@ -38,13 +38,17 @@ export default class App extends HTMLElement{
     this.innerHTML = HTML
     this.currentPage = null
     this.header = this.querySelector('di-header')
-    this.setInitialPage()
+    this._setInitialPage()
   }
 
   get showBackButton(){
     return this.currentPage?.backPage ? true : false
   }
 
+  /**
+   * @param page {Page}
+   * @returns {Promise<undefined|*>}
+   */
   async setPage(page){
 
     Loader.showLoader()
@@ -76,6 +80,7 @@ export default class App extends HTMLElement{
       return this.setPage(new MainPage({ error }))
     }
 
+    page.unloaded = false
     this.querySelector(':scope > .content').appendChild(page)
     page.classList.add('fade-in')
     this.dispatchEvent(new Event('pagechange'))
@@ -93,13 +98,9 @@ export default class App extends HTMLElement{
     this.setPage(this.currentPage.backPage())
   }
 
-  setInitialPage(){
+  _setInitialPage(){
     const [pageStr, arg] = window.location.hash.substring(1).split('=')
-    let initialPage = new MainPage()
-    if(pageStr){
-      initialPage = pageFromString(pageStr, [arg])
-    }
-    this.setPage(initialPage)
+    this.setPage(pageFromString(pageStr, [arg]) || new MainPage())
   }
 
   async _fetchUser(){
@@ -128,8 +129,8 @@ export default class App extends HTMLElement{
 
 customElements.define('di-app', App)
 
-function pageFromString(name, args){
-  const page = PAGES[name.toLowerCase()]
+export function pageFromString(name, args){
+  const page = PAGES[name?.toLowerCase()]
   if(page){
     return new page(...args)
   }
