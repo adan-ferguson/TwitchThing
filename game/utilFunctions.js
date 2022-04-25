@@ -28,3 +28,8 @@ export function roundToFixed(val, digits){
   val = Math.round(val)
   return val / multi
 }
+
+export function isObject(val){
+  if (val === null){ return false}
+  return ( (typeof val === 'function') || (typeof val === 'object') )
+}

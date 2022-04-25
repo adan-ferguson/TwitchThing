@@ -453,13 +453,13 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 ++  1 to 10 (cave)
 ++ 11 to 20 (undead)
 
-- zones
++ zones
 ++ Floors now only get larger per zone, also multiples of 10 are double sized
 ++ Skew slightly towards the higher number monster rank
 ++ Monsters only appear in their own zone
 ++ Keep track of adventurer maximum floor
--- Choose zone
--- Fix styling on dungeon choose page
+++ Choose zone
+++ Fix styling on dungeon choose page
 
 + Level ups, not in modal anymore
 + Make adventurer pages + page validation more sane

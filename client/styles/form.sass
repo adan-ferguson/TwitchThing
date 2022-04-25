@@ -1,8 +1,17 @@
-form
+.di-form
   padding: 20rem 30rem
   text-align: left
   display: flex
   flex-direction: column
+  justify-content: space-between
+
+  select, input
+    font-family: 'Main Font', Arial, serif
+    font-size: 13rem
+
+  .bottom
+    display: flex
+    flex-direction: column
 
   input
     text-align: center
@@ -15,12 +24,10 @@ form
 
     span
       margin-bottom: 5rem
-      font-size: 0.8em
 
   .error-message
     color: red
     display: block
-    font-size: 0.8em
     margin-top: 1.5rem
 
 di-modal form

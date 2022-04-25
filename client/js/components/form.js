@@ -1,9 +1,29 @@
 import fizzetch from '../fizzetch.js'
 
+const HTML = `
+<div class="inputs"></div>
+<div class="bottom">
+  <button type="submit"></button>
+  <div class="error-message hidden"></div>
+</div>
+`
+
 export default class DIForm extends HTMLFormElement{
+
+  _inputs
+  _submitButton
+  _errorMessage
 
   constructor(options){
     super()
+
+    this.classList.add('di-form')
+
+    this.innerHTML = HTML
+    this._inputs = this.querySelector('.inputs')
+    this._submitButton = this.querySelector('button')
+    this._submitButton.textContent = options.submitText
+    this._errorMessage = this.querySelector('.error-message')
 
     options = {
       async: false,
@@ -34,18 +54,6 @@ export default class DIForm extends HTMLFormElement{
         }
       })
     }
-
-    this.inputs = document.createElement('div')
-    this.appendChild(this.inputs)
-
-    this.submitButton = document.createElement('button')
-    this.submitButton.setAttribute('type', 'submit')
-    this.submitButton.textContent = options.submitText
-    this.appendChild(this.submitButton)
-
-    this.errorMessage = document.createElement('div')
-    this.errorMessage.classList.add('error-message', 'hidden')
-    this.appendChild(this.errorMessage)
   }
 
   data(){
@@ -75,7 +83,7 @@ export default class DIForm extends HTMLFormElement{
     }
     label.appendChild(input)
 
-    this.inputs.appendChild(label)
+    this._inputs.appendChild(label)
 
     return input
   }
@@ -84,6 +92,7 @@ export default class DIForm extends HTMLFormElement{
 
     options = {
       label: null,
+      name: '',
       optionsList: [],
       ...options
     }
@@ -94,22 +103,35 @@ export default class DIForm extends HTMLFormElement{
       span.textContent = options.label
       label.appendChild(span)
     }
+
+    const select = document.createElement('select')
+    select.setAttribute('name', options.name)
+    options.optionsList.forEach(({ value, name }) => {
+      const options = document.createElement('option')
+      options.value = value
+      options.textContent = name
+      select.appendChild(options)
+    })
+    label.appendChild(select)
+
+    this._inputs.appendChild(label)
+    return select
   }
 
   error(message){
-    this.errorMessage.textContent = message
-    this.errorMessage.classList.remove('hidden')
+    this._errorMessage.textContent = message
+    this._errorMessage.classList.remove('hidden')
   }
 
   _loading(){
-    this.errorMessage.classList.add('hidden')
-    this.submitButton.disabled = true
-    this.submitButton.innerHTML = '<span class="spin-effect">DI</span>'
+    this._errorMessage.classList.add('hidden')
+    this._submitButton.disabled = true
+    this._submitButton.innerHTML = '<span class="spin-effect">DI</span>'
   }
 
   _loadingFinished(){
-    this.submitButton.disabled = false
-    this.submitButton.textContent = this.options.submitText
+    this._submitButton.disabled = false
+    this._submitButton.textContent = this.options.submitText
   }
 }
 

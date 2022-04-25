@@ -62,14 +62,21 @@ export async function start(){
  * Start a dungeons run. It's assumed that all of the error-checking has been done beforehand
  * and that this is a reasonable request. This should only be called from the Ventures file.
  * @param adventurerID
- * @param dungeonID
+ * @param dungeonOptions {}
  */
-export async function addRun(adventurerID, dungeonID){
+export async function addRun(adventurerID, dungeonOptions){
+
+  const startingFloor = parseInt(dungeonOptions.startingFloor) || 1
+  if(startingFloor > dungeonOptions.accomplishments.highestFloor || startingFloor % 10 !== 1){
+    throw 'Invalid starting floor'
+  }
+
   const adventurerDoc = await Adventurers.findOne(adventurerID)
   const userDoc = await Users.findOne(adventurerDoc.userID)
   const drDoc = await DungeonRuns.save({
     adventurerID,
-    dungeonID,
+    dungeonOptions,
+    floor: startingFloor,
     events: [],
     adventurerState: {
       hp: adventurerDoc.baseStats.hpMax

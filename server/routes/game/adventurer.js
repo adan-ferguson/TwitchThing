@@ -32,12 +32,11 @@ verifiedRouter.post('/dungeonpicker', validatePage('idle'), async(req, res) => {
 })
 
 verifiedRouter.post('/enterdungeon', validatePage('idle'), async(req, res) => {
-  req.validateParam('dungeonOptions', {
-    type: {
-      zone: true
-    }
+  const startingFloor = req.validateParam('startingFloor')
+  const dungeonRun = addRun(req.adventurerID, {
+    startingFloor
   })
-  res.send({ dungeonRun: addRun(req.adventurerID, req.body.dungeonOptions) })
+  res.send({ dungeonRun })
 })
 
 verifiedRouter.post('/dungeonrun', validatePage('dungeon'), async(req, res) => {

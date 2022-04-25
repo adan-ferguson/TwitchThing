@@ -6,9 +6,7 @@ import fizzetch from '../../../fizzetch.js'
 import zones from '../../../../../game/zones.js'
 
 const HTML = `
-<div class="content-well">
-  <div class="content-well stuff"></div>
-</div>
+<div class="content-well stuff fill-contents"></div>
 `
 
 export default class DungeonPickerPage extends Page{
@@ -19,15 +17,16 @@ export default class DungeonPickerPage extends Page{
     super()
     this.adventurerID = adventurerID
     this.innerHTML = HTML
+    this.classList.add('flex-no-grow')
 
     this.form = new DIForm({
       async: true,
-      action: `/game/adventurer/${this.adventurerID}/enterdungeon/main`,
+      action: `/game/adventurer/${this.adventurerID}/enterdungeon`,
       submitText: 'Go!',
       success: () => this.redirectTo(new DungeonPage(this.adventurerID))
     })
 
-    this.querySelector('.stuff').appendChild(form)
+    this.querySelector('.stuff').appendChild(this.form)
   }
 
   get backPage(){
@@ -41,9 +40,9 @@ export default class DungeonPickerPage extends Page{
       return error
     }
 
-    debugger
     this.form.addSelect({
       label: 'Select starting floor',
+      name: 'startingFloor',
       optionsList: startingZoneOptions(adventurer.accomplishments.highestFloor)
     })
   }
@@ -52,10 +51,11 @@ export default class DungeonPickerPage extends Page{
 customElements.define('di-dungeon-picker-page', DungeonPickerPage )
 
 function startingZoneOptions(topFloor){
-  const maxZone = Math.min(zones.length - 1, Math.floor(topFloor - 1 / 10))
+  const maxZone = Math.min(zones.length - 1, Math.floor((topFloor - 1) / 10))
   const options = []
   for(let i = maxZone; i >= 0; i--){
-    options.push({ value: i, name: `${zones[i]} (${i * 10 + 1})` })
+    const floor = i * 10 + 1
+    options.push({ value: floor, name: `${zones[i]} (${floor})` })
   }
   return options
 }
