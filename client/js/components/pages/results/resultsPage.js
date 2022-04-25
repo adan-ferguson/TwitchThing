@@ -60,6 +60,7 @@ export default class ResultsPage extends Page{
       for(let fn of fns){
         await fn()
       }
+      this._updateButton()
     })
   }
 

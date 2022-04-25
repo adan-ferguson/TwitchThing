@@ -1,6 +1,6 @@
 import fizzetch from '../fizzetch.js'
 
-export default class DIForm extends HTMLFormElement {
+export default class DIForm extends HTMLFormElement{
 
   constructor(options){
     super()
@@ -78,6 +78,22 @@ export default class DIForm extends HTMLFormElement {
     this.inputs.appendChild(label)
 
     return input
+  }
+
+  addSelect(options){
+
+    options = {
+      label: null,
+      optionsList: [],
+      ...options
+    }
+
+    const label = document.createElement('label')
+    if(options.label){
+      const span = document.createElement('span')
+      span.textContent = options.label
+      label.appendChild(span)
+    }
   }
 
   error(message){

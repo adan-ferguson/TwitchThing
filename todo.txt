@@ -462,6 +462,7 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 -- Fix styling on dungeon choose page
 
 + Level ups, not in modal anymore
++ Make adventurer pages + page validation more sane
 
 - adventurer rows
 -- let me open in new tab
@@ -478,7 +479,9 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 -- Timer at combat resets funny
 -- Shrink the combat footer size
 -- Don't show irrelevant stats inside of combat
--- Prevent double fades or whatever
+-- Prevent combat from being stuck if tabbed out
+
+- Add a lvl 10 item
 
 - Stupid webpack openssl thing, upgrade webpack or whatever
 - Put git pull in full build
