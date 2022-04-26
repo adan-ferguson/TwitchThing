@@ -24,36 +24,35 @@ router.use('/:adventurerID', asyncHandler(async (req, res, next) => {
   next()
 }))
 
-// TODO is this really the only way to do this
 router.use('/:adventurerID', verifiedRouter)
 
-verifiedRouter.post('/dungeonpicker', validatePage('idle'), async(req, res) => {
+verifiedRouter.post('/dungeonpicker', validatePage('adventurer'), async(req, res) => {
   res.send({ adventurer: req.adventurer })
 })
 
-verifiedRouter.post('/enterdungeon', validatePage('idle'), async(req, res) => {
+verifiedRouter.post('/enterdungeon', validatePage('adventurer'), async(req, res) => {
   const startingFloor = req.validateParam('startingFloor')
-  const dungeonRun = addRun(req.adventurerID, {
+  const dungeonRun = addRun(req.adventurer._id, {
     startingFloor
   })
   res.send({ dungeonRun })
 })
 
 verifiedRouter.post('/dungeonrun', validatePage('dungeon'), async(req, res) => {
-  res.send({ adventurer: req.adventurer, dungeonRun: req.dungeonRun })
+  res.send({ adventurer: req.adventurer, dungeonRun: await DungeonRuns.findOne(req.adventurer.dungeonRunID) })
 })
 
-verifiedRouter.post('/results', validatePage('finished'), async (req, res) => {
-  res.send({ adventurer: req.adventurer, dungeonRun: req.dungeonRun })
+verifiedRouter.post('/results', validatePage('dungeon'), async (req, res) => {
+  res.send({ adventurer: req.adventurer, dungeonRun: await DungeonRuns.findOne(req.adventurer.dungeonRunID) })
 })
 
-verifiedRouter.post('/confirmresults', validatePage('finished'), async (req, res) => {
+verifiedRouter.post('/confirmresults', validatePage('dungeon'), async (req, res) => {
   req.validateParam('selectedBonuses')
   await finalizeResults(req.user, req.adventurer, req.body.selectedBonuses)
   res.status(200).send({ result: 'okay' })
 })
 
-verifiedRouter.post('/editloadout', validatePage('idle'), async (req, res) => {
+verifiedRouter.post('/editloadout', validatePage('adventurer'), async (req, res) => {
   const user = await Users.gameData(req.user)
   if(user.features.items === 1){
     Users.update(user._id, { ['features.items']: 2 })
@@ -61,7 +60,7 @@ verifiedRouter.post('/editloadout', validatePage('idle'), async (req, res) => {
   res.status(200).send({ adventurer: req.adventurer, items: user.inventory.items })
 })
 
-verifiedRouter.post('/editloadout/save', validatePage('idle'), async (req, res) => {
+verifiedRouter.post('/editloadout/save', validatePage('adventurer'), async (req, res) => {
   const items = req.validateParam('items', { type: 'array' })
   await commitAdventurerLoadout(req.adventurer, req.user, items)
   await Adventurers.save(req.adventurer)
@@ -69,7 +68,7 @@ verifiedRouter.post('/editloadout/save', validatePage('idle'), async (req, res) 
   res.status(200).end()
 })
 
-verifiedRouter.post('', validatePage('idle'), async(req, res, next) => {
+verifiedRouter.post('', validatePage('adventurer'), async(req, res, next) => {
   const ctas = {}
   if(req.user.features.items === 1){
     ctas.itemFeature = true
@@ -80,16 +79,11 @@ verifiedRouter.post('', validatePage('idle'), async(req, res, next) => {
 /**
  * Throw exception with "targetPage" value if the target page doesn't match the adventurer state.
  * Otherwise, return the loaded adventurer.
- * @param requiredPage {'idle'|'results'|'dungeon'}
+ * @param requiredPage {'adventurer'|'results'|'dungeon'}
  */
 function validatePage(requiredPage){
   return asyncHandler(async (req, res, next) => {
-    let correctPage = 'idle'
-    if (req.adventurer.dungeonRunID){
-      const run = await DungeonRuns.findOne(req.adventurer.dungeonRunID)
-      req.dungeonRun = run
-      correctPage = run.finished ? 'results' : 'dungeon'
-    }
+    const correctPage = req.adventurer.dungeonRunID ? 'dungeon' : 'adventurer'
     if (requiredPage !== correctPage){
       // res.redirect something something
       res.status(400).send({ targetPage: correctPage })

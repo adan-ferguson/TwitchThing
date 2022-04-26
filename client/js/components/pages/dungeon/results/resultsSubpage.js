@@ -1,14 +1,13 @@
-import Page from '../page.js'
-import AdventurerPage from '../adventurer/adventurerPage.js'
-import fizzetch from '../../../fizzetch.js'
+import AdventurerPage from '../../adventurer/adventurerPage.js'
+import fizzetch from '../../../../fizzetch.js'
 import LevelupSelector from './levelupSelector.js'
-import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
-import { mergeStats } from '../../../../../game/stats/stats.js'
-import SimpleModal from '../../simpleModal.js'
+import DungeonRunResults from '../../../../../../game/dungeonRunResults.js'
+import { mergeStats } from '../../../../../../game/stats/stats.js'
+import SimpleModal from '../../../simpleModal.js'
 import ChestOpenage from './chestOpenage.js'
-import { showLoader } from '../../../loader.js'
-import { toDisplayName } from '../../../../../game/utilFunctions.js'
-import { pageFromString } from '../../app.js'
+import { showLoader } from '../../../../loader.js'
+import { toDisplayName } from '../../../../../../game/utilFunctions.js'
+import Subpage from '../subpage.js'
 
 const WAIT_TIME = 500
 
@@ -23,25 +22,14 @@ const HTML = `
 </div>
 `
 
-export default class ResultsPage extends Page{
+export default class ResultsSubpage extends Subpage{
 
-  constructor(adventurerID){
-    super()
+  constructor(page, adventurer, dungeonRun){
+    super(page, adventurer, dungeonRun)
     this.innerHTML = HTML
-    this.adventurerID = adventurerID
     this.adventurerPane = this.querySelector('di-adventurer-pane')
     this.results = this.querySelector('.results-list')
     this.doneButton = this.querySelector('.done')
-  }
-
-  async load(){
-
-    const { dungeonRun, adventurer, error, targetPage } = await fizzetch(`/game/adventurer/${this.adventurerID}/results`)
-    if(targetPage){
-      return this.redirectTo(pageFromString(targetPage, [this.adventurerID]))
-    }else if(error){
-      return error
-    }
 
     this._selectedBonuses = []
     this.adventurerPane.setAdventurer(adventurer)
@@ -158,11 +146,11 @@ export default class ResultsPage extends Page{
   async _finish(){
     await showPopups(this.dungeonRunResults)
     showLoader()
-    const results = await fizzetch(`/game/adventurer/${this.adventurerID}/confirmresults`, {
+    const results = await fizzetch(`/game/adventurer/${this.adventurer._id}/confirmresults`, {
       selectedBonuses: this._selectedBonuses
     })
     if(!results.error){
-      this.redirectTo(new AdventurerPage(this.adventurerID))
+      this.page.redirectTo(new AdventurerPage(this.adventurer._id))
     }
     // TODO: handle error, usually just shouldn't happen though
   }
@@ -241,4 +229,4 @@ async function showPopups(dungeonRunResults){
   }
 }
 
-customElements.define('di-results-page', ResultsPage )
+customElements.define('di-results-subpage', ResultsSubpage)

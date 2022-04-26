@@ -464,8 +464,12 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 + Level ups, not in modal anymore
 + Make adventurer pages + page validation more sane
 
-- adventurer rows
--- let me open in new tab
+- Instead of dungeonRun and results page states, just have the 1.
+-- Adventurer is either in a dungeon or is idle.
+-- You're considered in a dungeon if you haven't confirmed results.
+
++ adventurer rows
+++ let me open in new tab
 -- show dungeon run data (hp, floor, room, fighting)
 
 + Make sure pages can't redirect if they've been unloaded
@@ -513,6 +517,8 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 TODO Later
 -----------
+- scaling: don't be 1:1 floor to adv level, be more like 2:1
+
 - get rid of adventuring speed because the dissonance between adv speed and combat speed is annoying
 
 - Dungeon page chests display

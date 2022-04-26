@@ -1,4 +1,6 @@
 import '../../timer.js'
+import AdventurerPage from '../adventurer/adventurerPage.js'
+import DungeonPage from '../dungeon/dungeonPage.js'
 
 const HTML = `
 <div class="inner">
@@ -35,6 +37,14 @@ export default class AdventurerRow extends HTMLElement{
     newTab.addEventListener('click', e => {
       e.stopPropagation()
     })
+  }
+
+  get targetPage(){
+    if(!this.dungeonRun){
+      return new AdventurerPage(this.adventurer._id)
+    }else{
+      return new DungeonPage(this.adventurer._id)
+    }
   }
 
   setDungeonRun(dungeonRun){

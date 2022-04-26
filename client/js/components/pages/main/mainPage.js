@@ -54,7 +54,7 @@ export default class MainPage extends Page{
     adventurers.forEach(adventurer => {
       const row = new AdventurerRow(adventurer)
       row.addEventListener('click', e => {
-        this.redirectTo(new AdventurerPage(row.adventurer._id))
+        this.redirectTo(row.targetPage)
       })
       rows.push(row)
     })

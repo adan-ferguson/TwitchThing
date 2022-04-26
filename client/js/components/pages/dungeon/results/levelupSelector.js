@@ -1,6 +1,6 @@
-import { StatsDisplayStyle } from '../../../statsDisplayInfo.js'
-import Stats, { mergeStats } from '../../../../../game/stats/stats.js'
-import StatsList from '../../stats/statsList.js'
+import { StatsDisplayStyle } from '../../../../statsDisplayInfo.js'
+import Stats, { mergeStats } from '../../../../../../game/stats/stats.js'
+import StatsList from '../../../stats/statsList.js'
 
 const HTML = `
 <div>

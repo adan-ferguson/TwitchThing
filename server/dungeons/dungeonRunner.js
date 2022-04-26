@@ -30,11 +30,15 @@ export async function start(){
   dungeonRuns.forEach(dr => {
     const adventurer = adventurers.find(adv => adv._id.equals(dr.adventurerID))
     if(!adventurer){
+      dr.finished = true
+      DungeonRuns.save(dr)
       console.error('Dungeon run in limbo, no adventurer')
       return
     }
     const user = users.find(user => user._id.equals(adventurer.userID))
     if(!user){
+      dr.finished = true
+      DungeonRuns.save(dr)
       console.log('Dungeon run in limbo, no user')
       return
     }
@@ -62,16 +66,21 @@ export async function start(){
  * Start a dungeons run. It's assumed that all of the error-checking has been done beforehand
  * and that this is a reasonable request. This should only be called from the Ventures file.
  * @param adventurerID
- * @param dungeonOptions {}
+ * @param dungeonOptions
  */
 export async function addRun(adventurerID, dungeonOptions){
 
+  const adventurerDoc = await Adventurers.findOne(adventurerID)
+
   const startingFloor = parseInt(dungeonOptions.startingFloor) || 1
-  if(startingFloor > dungeonOptions.accomplishments.highestFloor || startingFloor % 10 !== 1){
+  if(startingFloor > adventurerDoc.accomplishments.highestFloor || startingFloor % 10 !== 1){
     throw 'Invalid starting floor'
   }
 
-  const adventurerDoc = await Adventurers.findOne(adventurerID)
+  if(!adventurerID){
+    throw 'No adventurer ID'
+  }
+
   const userDoc = await Users.findOne(adventurerDoc.userID)
   const drDoc = await DungeonRuns.save({
     adventurerID,
@@ -96,10 +105,6 @@ class DungeonRunInstance{
     this.user = user
     this.timeSinceLastEvent = 0
     if(!this.currentEvent){
-      this.doc.events = [{
-        message: `${this.adventurer.name} enters the dungeon.`,
-        duration: this.adventurerInstance.standardRoomDuration
-      }]
       this.advance()
     }
   }
@@ -134,6 +139,18 @@ class DungeonRunInstance{
 
   async advance(){
     process.stdout.write(this.doc.floor + '')
+    if(!this.currentEvent){
+      this.doc.events = [{
+        message: `${this.adventurer.name} enters the dungeon.`,
+        duration: this.adventurerInstance.standardRoomDuration
+      }]
+    }
+    if(this.currentEvent.runFinished){
+      this.doc.finished = true
+      this.doc.results = calculateResults(this)
+      delete activeRuns[this.doc._id]
+      return
+    }
     if(this.currentEvent.pending){
       await this._continueEvent(this.currentEvent)
     }else{
@@ -181,11 +198,6 @@ class DungeonRunInstance{
         event.rewards.xp = Math.ceil(event.rewards.xp)
       }
       this.doc.rewards = addRewards(this.doc.rewards, event.rewards)
-    }
-    if(event.runFinished){
-      this.doc.finished = true
-      this.doc.results = calculateResults(this)
-      delete activeRuns[this.doc._id]
     }
     this.doc.elapsedTime += event.duration
   }

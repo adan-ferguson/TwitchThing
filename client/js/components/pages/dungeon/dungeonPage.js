@@ -1,93 +1,82 @@
 import Page from '../page.js'
 import fizzetch from '../../../fizzetch.js'
 import { getSocket } from '../../../socketClient.js'
-import ResultsPage from '../results/resultsPage.js'
-import CombatPage from '../combat/combatPage.js'
 import { pageFromString } from '../../app.js'
-
-const HTML = `
-<div class='content-columns'>
-  <di-dungeon-adventurer-pane></di-dungeon-adventurer-pane>
-  <div class="content-rows">
-    <div class="content-well">
-        <di-dungeon-event></di-dungeon-event>
-    </div>
-    <div class="state content-well" style="flex-basis:125rem;flex-grow:0">
-        <di-dungeon-state></di-dungeon-state>
-    </div>
-  </div>
-</div>
-`
+import ExploringSubpage from './exploring/exploringSubpage.js'
+import CombatSubpage from './combat/combatSubpage.js'
+import ResultsSubpage from './results/resultsSubpage.js'
+import { fadeIn, fadeOut } from '../../../animationHelper.js'
 
 export default class DungeonPage extends Page{
+
+  subpage
 
   constructor(adventurerID){
     super()
     this.adventurerID = adventurerID
-    this.innerHTML = HTML
+  }
 
-    this.adventurerPane = this.querySelector('di-dungeon-adventurer-pane')
-    this.eventEl = this.querySelector('di-dungeon-event')
-    this.stateEl = this.querySelector('di-dungeon-state')
+  get currentEvent(){
+    return this.dungeonRun.currentEvent || this.dungeonRun.events.at(-1)
   }
 
   async load(){
 
-    const { adventurer, dungeonRun, error, targetPage } = await fizzetch(`/game/adventurer/${this.adventurerID}/dungeonrun`)
+    const {
+      adventurer,
+      dungeonRun,
+      error,
+      targetPage
+    } = await fizzetch(`/game/adventurer/${this.adventurerID}/dungeonrun`)
 
-    if(targetPage){
+    if (targetPage){
       return this.redirectTo(pageFromString(targetPage, [this.adventurerID]))
     }
-    if(error){
+
+    if (error){
       throw error
     }
 
-    this.adventurerPane.setAdventurer(adventurer)
-    this.eventEl.setAdventurer(adventurer)
-
-    requestAnimationFrame(() => {
-      // Let the page attach so it can redirect
-      this._parseDungeonUpdate(dungeonRun, false)
-    })
+    this.dungeonRun = dungeonRun
+    this.adventurer = adventurer
 
     getSocket().on('dungeon run update', this._parseDungeonUpdate)
+
+    if(this.currentEvent.combatID && this.currentEvent.pending){
+      this.setSubpage(CombatSubpage)
+    } else if (dungeonRun.finished){
+      this.setSubpage(ResultsSubpage)
+    } else {
+      this.setSubpage(ExploringSubpage)
+    }
+  }
+
+  async setSubpage(SubpageType){
+    const previousPage = this.subpage
+    this.subpage = new SubpageType(this, this.adventurer, this.dungeonRun)
+    this.subpage.update(this.dungeonRun, {
+      source: previousPage?.name || 'initial'
+    })
+    if(previousPage){
+      await fadeOut(previousPage)
+    }
+    this.innerHTML = ''
+    this.appendChild(this.subpage)
+    fadeIn(this.subpage)
   }
 
   async unload(){
     getSocket().off('dungeon run update', this._parseDungeonUpdate)
   }
 
-  _parseDungeonUpdate = (dungeonRun, animate = true) => {
-
-    const currentEvent = dungeonRun.currentEvent || dungeonRun.events.at(-1)
-
+  _parseDungeonUpdate = (dungeonRun) => {
     if(dungeonRun.adventurerID !== this.adventurerID){
       return
     }
-
-    // Don't animate adventurer pane after combat
-    this.adventurerPane.setState(dungeonRun.adventurerState, animate && !currentEvent.combatID)
-    this.stateEl.updateDungeonRun(dungeonRun, animate)
-
-    if(dungeonRun.finished){
-      this._finish()
-    }
-
-    if(!currentEvent){
-      return
-    }
-
-    this.eventEl.update(currentEvent)
-
-    if(currentEvent.combatID && currentEvent.pending){
-      return this.redirectTo(new CombatPage(currentEvent.combatID, true, this))
-    }
-  }
-
-  _finish(){
-    setTimeout(() => {
-      this.redirectTo(new ResultsPage(this.adventurerID))
-    }, 5000)
+    this.dungeonRun = dungeonRun
+    this.subpage?.update(dungeonRun, {
+      source: 'socket'
+    })
   }
 }
 

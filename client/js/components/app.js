@@ -5,14 +5,13 @@ import { hideAll as hideAllTippys } from 'tippy.js'
 import SimpleModal from './simpleModal.js'
 import AdventurerPage from './pages/adventurer/adventurerPage.js'
 import DungeonPage from './pages/dungeon/dungeonPage.js'
-import ResultsPage from './pages/results/resultsPage.js'
 
 import './header.js'
-import './pages/combat/fighterPane.js'
-import './pages/combat/feed.js'
-import './pages/dungeon/adventurerPane.js'
-import './pages/dungeon/event.js'
-import './pages/dungeon/state.js'
+import './pages/dungeon/combat/fighterPane.js'
+import './pages/dungeon/combat/feed.js'
+import './pages/dungeon/exploring/adventurerPane.js'
+import './pages/dungeon/exploring/event.js'
+import './pages/dungeon/exploring/state.js'
 import './loadout/inventory.js'
 import './stats/statsList.js'
 import './xpBar.js'
@@ -26,7 +25,6 @@ const HTML = `
 
 const PAGES = {
   adventurer: AdventurerPage,
-  results: ResultsPage,
   dungeon: DungeonPage
 }
 
@@ -50,6 +48,10 @@ export default class App extends HTMLElement{
    * @returns {Promise<undefined|*>}
    */
   async setPage(page){
+
+    if(!page){
+      throw 'Attempted to set null page'
+    }
 
     Loader.showLoader()
     hideAllTippys()

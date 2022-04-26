@@ -1,6 +1,7 @@
-import Page from '../page.js'
-import fizzetch from '../../../fizzetch.js'
-import Timeline from '../../../../../game/timeline.js'
+import fizzetch from '../../../../fizzetch.js'
+import Timeline from '../../../../../../game/timeline.js'
+import Subpage from '../subpage.js'
+import ExploringSubpage from '../exploring/exploringSubpage.js'
 
 const HTML = `
 <div class='content-rows'>
@@ -15,22 +16,20 @@ const HTML = `
 </div>
 `
 
-export default class CombatPage extends Page{
+export default class CombatSubpage extends Subpage{
 
-  constructor(combatID, forceLive = true, returnPage = null){
-    super()
-    this.combatID = combatID
-    this.returnPage = returnPage
-    this.forceLive = forceLive
+  constructor(page, adventurer, dungeonRun){
+    super(page, adventurer, dungeonRun)
     this.innerHTML = HTML
     this.fighterPane1 = this.querySelector('.fighter1')
     this.fighterPane2 = this.querySelector('.fighter2')
     this.combatFeed = this.querySelector('di-combat-feed')
+
+    fizzetch(`/game/combat/${dungeonRun.combatID}`).then(this.load)
   }
 
-  async load(){
+  load = async ({ combat, state }) => {
 
-    const { combat, state } = await fizzetch(`/game/combat/${this.combatID}`)
     this.timeline = new Timeline(combat.timeline)
     this.combat = combat
 
@@ -42,29 +41,15 @@ export default class CombatPage extends Page{
     // TODO: This only makes sense in monsters combat
     this.combatFeed.setText(`A ${combat.fighter2.data.name} draws near.`)
 
-    if(state.status === 'live'){
-      this.timeline.time = state.currentTime - this.combat.startTime
-    }else if(this.forceLive){
-      this.timeline.time = this.combat.duration
-    }else{
-      this.timeline.time = 0
-    }
+    this.timeline.time = state.currentTime - this.combat.startTime
 
-    this._setup()
+    const currentEntry = this.timeline.currentEntry
+    this._applyEntry(currentEntry, false)
 
     const waitUntilStartTime = Math.max(1000, this.combat.startTime - state.currentTime)
     setTimeout(() => {
-      this._run()
+      this._tick()
     }, waitUntilStartTime)
-  }
-
-  _setup(){
-    const currentEntry = this.timeline.currentEntry
-    this._applyEntry(currentEntry, false)
-  }
-
-  _run(){
-    this._tick()
   }
 
   _tick(){
@@ -115,11 +100,9 @@ export default class CombatPage extends Page{
     }
 
     setTimeout(() => {
-      if(this.returnPage){
-        this.app?.setPage(this.returnPage)
-      }
+      this.page.setSubpage(ExploringSubpage)
     }, 2200)
   }
 }
 
-customElements.define('di-combat-page', CombatPage )
+customElements.define('di-combat-subpage', CombatSubpage)
