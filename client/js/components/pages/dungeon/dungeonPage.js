@@ -16,6 +16,10 @@ export default class DungeonPage extends Page{
     this.adventurerID = adventurerID
   }
 
+  get titleText(){
+    return this.subpage.titleText
+  }
+
   get currentEvent(){
     return this.dungeonRun.currentEvent || this.dungeonRun.events.at(-1)
   }
@@ -63,6 +67,7 @@ export default class DungeonPage extends Page{
     }
     this.innerHTML = ''
     this.appendChild(this.subpage)
+    this.app.updateTitle()
     fadeIn(this.subpage)
   }
 

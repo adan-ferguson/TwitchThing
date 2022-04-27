@@ -27,6 +27,10 @@ export default class AdventurerLoadoutPage extends Page{
     this.saveButton = this.querySelector('button.save')
   }
 
+  get titleText(){
+    return this.adventurer.name + ' - Edit Equipment'
+  }
+
   get backPage(){
     return () => new AdventurerPage(this.adventurerID)
   }
@@ -40,6 +44,7 @@ export default class AdventurerLoadoutPage extends Page{
 
   async load(){
     const { adventurer, items } = await fizzetch(`/game/adventurer/${this.adventurerID}/editloadout`)
+    this.adventurer = adventurer
     this.inventory.setItems(items)
     this.adventurerPane.setAdventurer(adventurer)
 

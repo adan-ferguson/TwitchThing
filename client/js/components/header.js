@@ -5,6 +5,7 @@ import AdminPage from './pages/admin/adminPage.js'
 
 const HTML = `
 <button class="back-button hidden"><- Back</button>
+<div class="page-title"></div>
 <div>
     <div class="displayname"></div>
     <di-xp-bar class="clickable"></di-xp-bar>
@@ -13,12 +14,16 @@ const HTML = `
 
 export default class Header extends HTMLElement{
 
+  _pageTitle
+
   constructor(){
     super()
     this.innerHTML = HTML
 
     this.backButton = this.querySelector('.back-button')
     this.backButton.addEventListener('click', () => this.app.back())
+
+    this._pageTitle = this.querySelector('.page-title')
 
     this.xpBar = this.querySelector('di-xp-bar')
     this.xpBar.setLevelFunctions(xpToLevel, levelToXp)
@@ -45,6 +50,10 @@ export default class Header extends HTMLElement{
 
   get user(){
     return this.app?.user
+  }
+
+  set titleText(val){
+    this._pageTitle.textContent = val
   }
 
   async addUserXp(xpToAdd, onLevelUp){

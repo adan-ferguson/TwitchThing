@@ -10,6 +10,13 @@ export default class Page extends HTMLElement{
     this.classList.add('page')
   }
 
+  /**
+   * @return string
+   */
+  get titleText(){
+    return ''
+  }
+
   get user(){
     return this.app?.user
   }

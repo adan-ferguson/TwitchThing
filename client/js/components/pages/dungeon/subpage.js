@@ -13,6 +13,10 @@ export default class Subpage extends HTMLElement{
     this.dungeonRun = dungeonRun
   }
 
+  get titleText(){
+    return ''
+  }
+
   get app(){
     return this.page.app
   }
@@ -22,6 +26,6 @@ export default class Subpage extends HTMLElement{
   }
 
   destroy(){
-    
+
   }
 }

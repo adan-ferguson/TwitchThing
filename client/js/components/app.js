@@ -30,6 +30,8 @@ const PAGES = {
 
 export default class App extends HTMLElement{
 
+  currentPage
+
   constructor(user){
     super()
     this.user = user
@@ -41,6 +43,10 @@ export default class App extends HTMLElement{
 
   get showBackButton(){
     return this.currentPage?.backPage ? true : false
+  }
+
+  updateTitle(){
+    this.header.titleText = this.currentPage.titleText
   }
 
   /**
@@ -86,6 +92,7 @@ export default class App extends HTMLElement{
     this.querySelector(':scope > .content').appendChild(page)
     page.classList.add('fade-in')
     this.dispatchEvent(new Event('pagechange'))
+    this.updateTitle()
 
     Loader.hideLoader()
   }

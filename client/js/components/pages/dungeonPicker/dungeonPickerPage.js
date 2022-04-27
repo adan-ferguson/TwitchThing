@@ -29,6 +29,10 @@ export default class DungeonPickerPage extends Page{
     this.querySelector('.stuff').appendChild(this.form)
   }
 
+  get titleText(){
+    return this.adventurer.name + ' - Entering Dungeon'
+  }
+
   get backPage(){
     return () => new AdventurerPage(this.adventurerID)
   }
@@ -40,6 +44,7 @@ export default class DungeonPickerPage extends Page{
       return error
     }
 
+    this.adventurer = adventurer
     this.form.addSelect({
       label: 'Select starting zone',
       name: 'startingFloor',

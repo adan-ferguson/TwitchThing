@@ -34,6 +34,10 @@ export default class ExploringSubpage extends Subpage{
     this.eventEl.setAdventurer(adventurer)
   }
 
+  get titleText(){
+    return 'Exploring'
+  }
+
   update(dungeonRun, options = {}){
 
     options = {
@@ -41,19 +45,19 @@ export default class ExploringSubpage extends Subpage{
       ...options
     }
 
-    this.adventurerPane.setState(dungeonRun.adventurerState, options.animate)
-    this.stateEl.updateDungeonRun(dungeonRun, options.animate)
-    this.eventEl.update(this.page.currentEvent)
-
     if(options.source === 'socket'){
       if(dungeonRun.finished){
-        this.page.setSubpage(ResultsSubpage)
+        return this.page.setSubpage(ResultsSubpage)
       }
       if(this.page.currentEvent.combatID){
         // If from a socket event, transition to socket event
-        this.page.setSubpage(CombatSubpage)
+        return this.page.setSubpage(CombatSubpage)
       }
     }
+
+    this.adventurerPane.setState(dungeonRun.adventurerState, options.animate)
+    this.stateEl.updateDungeonRun(dungeonRun, options.animate)
+    this.eventEl.update(this.page.currentEvent)
   }
 }
 

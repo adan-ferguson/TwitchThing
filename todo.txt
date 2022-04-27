@@ -476,30 +476,39 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 + Just show all the char levelups dont pause between, pause at end though
 
-- Main page actually show the error
++ Main page actually show the error
+
++ header
+++ Add page title
+++ Narrow the header
+
++ Transition from dungeon end to results not working
 
 + Combat page jank
 ++ Don't have a combat page, instead have it on the dungeonRun page
--- Timer after combat resets funny
+++ Timer before combat goes down a bit
+++ Timer after combat does not start
 ++ Shrink the combat footer size
 ++ Don't show irrelevant stats inside of combat/outside of combat
 -- Prevent combat from being stuck if tabbed out
--- Prevent immediately combat on dungeon start
+
+- Prevent immediate event on dungeon start
+
++ adventurer row timers need timeSinceLastEvent added
+
+- Show blocked damage
 
 - Exploring subpage not animating relics, xp gain
 
 - Public dungeon page
 - Public combat page
-- Going back to main page has to clear the hash query value
+- Clear hash query value after loading
 
 - Add a lvl 10 item
 
 - Right click item for more info in modal
 - Item tooltip says this + better info
 - Item tooltips seem to bug while being moved
-
-- Add a page title
--- Narrow the header
 
 - toDisplayName wherever we use monster/items names: 'monsterName' => 'Monster Name'
 - Loadout edit page: show "new" effect for new items first time you enter

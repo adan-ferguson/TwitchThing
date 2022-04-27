@@ -86,7 +86,7 @@ export default class AdventurerRow extends HTMLElement{
       }
       const currentEvent = dungeonRun.currentEvent || dungeonRun.events.at(-1)
       if(currentEvent?.monster){
-        return `Fighting a ${currentEvent.monster.name}`
+        return `VS. ${currentEvent.monster.name}`
       }
       return 'Exploring'
     }

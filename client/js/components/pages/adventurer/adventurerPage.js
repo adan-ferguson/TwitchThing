@@ -29,6 +29,10 @@ export default class AdventurerPage extends Page{
     this.adventurerPane = this.querySelector('di-adventurer-pane')
   }
 
+  get titleText(){
+    return this.adventurer.name
+  }
+
   async load(){
 
     const { adventurer, ctas, error, targetPage } = await fizzetch(`/game/adventurer/${this.adventurerID}`)
@@ -39,6 +43,7 @@ export default class AdventurerPage extends Page{
       return error
     }
 
+    this.adventurer = adventurer
     this.adventurerPane.setAdventurer(adventurer)
 
     this._setupEditEquipmentButton(ctas?.itemFeature)

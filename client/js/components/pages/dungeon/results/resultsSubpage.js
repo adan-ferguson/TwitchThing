@@ -52,6 +52,10 @@ export default class ResultsSubpage extends Subpage{
     })
   }
 
+  get titleText(){
+    return 'Results'
+  }
+
   _showDungeonResult = async () => {
     this._addResultText(`Floor: ${this.dungeonRun.floor}`)
     await wait()

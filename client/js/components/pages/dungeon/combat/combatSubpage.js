@@ -35,6 +35,9 @@ export default class CombatSubpage extends Subpage{
       this.load(result)
     })
   }
+  get titleText(){
+    return 'Fight!'
+  }
 
   destroy(){
     this._cancelled = true

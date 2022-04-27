@@ -8,23 +8,32 @@ import { getSocket } from '../../../socketClient.js'
 import '../../list.js'
 
 const HTML = `
-<div class="content-columns">
-  <div class="content-well fill-contents">
-    <di-list class="adventurer-list"></di-list>
+<div class="content-rows">
+  <div class="displaynone error-message"></div>
+  <div class="content-columns">
+    <div class="content-well fill-contents">
+      <di-list class="adventurer-list"></di-list>
+    </div>
+    <div class="other-stuff content-well">Other stuff goes over here</div>
   </div>
-  <div class="other-stuff content-well">Other stuff goes over here</div>
 </div>
 `
 
 export default class MainPage extends Page{
 
+  _error
+
   constructor({ error } = {}){
     super()
     this.innerHTML = HTML
+    this._error = this.querySelector('.error-message')
     if(error){
       this._showError(error)
     }
-    // TODO: handle error
+  }
+
+  get titleText(){
+    return 'Home Page'
   }
 
   get backPage(){
@@ -98,7 +107,10 @@ export default class MainPage extends Page{
    * @private
    */
   _showError(message, critical = false){
-
+    if(message){
+      this._error.classList.remove('displaynone')
+      this._error.textContent = message
+    }
   }
 
   _dungeonRunUpdate = dungeonRun => {

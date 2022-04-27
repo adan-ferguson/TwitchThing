@@ -1,5 +1,4 @@
 import Page from '../page.js'
-import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
 
 import fizzetch from '../../../fizzetch.js'
 
@@ -19,6 +18,10 @@ export default class AdminPage extends Page{
     this.innerHTML = HTML
     this.input = this.querySelector('.command-input')
     this.output = this.querySelector('.command-output')
+  }
+
+  get titleText(){
+    return 'Admin Control Panel'
   }
 
   async load(){

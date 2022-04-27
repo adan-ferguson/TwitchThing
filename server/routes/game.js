@@ -5,8 +5,8 @@ import Combats from '../collections/combats.js'
 
 import adventurerRouter from './game/adventurer.js'
 import Adventurers from '../collections/adventurers.js'
-import DungeonRuns from '../collections/dungeonRuns.js'
 import { levelToAdventurerSlots } from '../../game/user.js'
+import { getRunDataMulti } from '../dungeons/dungeonRunner.js'
 
 const router = express.Router()
 
@@ -43,7 +43,7 @@ router.use('/adventurer', adventurerRouter)
 router.post('/main', async(req, res) => {
   try {
     const adventurers = await Adventurers.findByIDs(req.user.adventurers)
-    const dungeonRuns = await DungeonRuns.findByIDs(adventurers.map(adv => adv.dungeonRunID).filter(id => id))
+    const dungeonRuns = await getRunDataMulti(adventurers.map(adv => adv.dungeonRunID).filter(id => id))
     res.send({  adventurers, dungeonRuns, slots: levelToAdventurerSlots(req.user.level) })
   }catch(ex){
     return res.status(ex.code || 401).send(ex.error || ex)
