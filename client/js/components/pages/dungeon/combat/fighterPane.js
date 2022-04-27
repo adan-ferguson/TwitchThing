@@ -1,5 +1,6 @@
 import FighterInstance from '../../../../../../game/combat/fighterInstance.js'
 import { fadeOut } from '../../../../animationHelper.js'
+import { StatsDisplayScope } from '../../../../statsDisplayInfo.js'
 
 const HTML = `
 <div class="flex-grow">
@@ -25,6 +26,10 @@ export default class FighterPane extends HTMLElement{
     this.loadout = this.querySelector('di-loadout')
     this.statsbox = this.querySelector('.stats-box')
     this.statsList = this.querySelector('di-stats-list')
+    this.statsList.setOptions({
+      statsDisplayScope: StatsDisplayScope.COMBAT,
+      noHP: true
+    })
     this.fighterInstance = null
   }
 

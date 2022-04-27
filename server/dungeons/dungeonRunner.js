@@ -149,30 +149,33 @@ class DungeonRunInstance{
 
   async advance(){
     process.stdout.write(this.doc.floor + '')
+
     if(!this.currentEvent){
       this.doc.events = [{
         message: `${this.adventurer.name} enters the dungeon.`,
         duration: this.adventurerInstance.standardRoomDuration
       }]
     }
+
     if(this.currentEvent.runFinished){
-      this.doc.finished = true
-      this.doc.results = calculateResults(this)
-      delete activeRuns[this.doc._id]
-    }else{
-      if(this.currentEvent.pending){
-        await this._continueEvent(this.currentEvent)
-      }else{
-        await this._newEvent()
-      }
-      if(!this.currentEvent.pending){
-        this._resolveEvent(this.currentEvent)
-      }
+      return this._finish()
     }
+
+    if(this.currentEvent.pending){
+      await this._continueEvent(this.currentEvent)
+    }else{
+      await this._newEvent()
+    }
+
+    if(!this.currentEvent.pending){
+      this._resolveEvent(this.currentEvent)
+    }
+
     const truncatedDoc = {
       currentEvent: this.currentEvent,
       ...this.doc
     }
+
     delete truncatedDoc.events
     emit(this.adventurer.userID, 'dungeon run update', truncatedDoc)
     DungeonRuns.save(this.doc)
@@ -229,5 +232,13 @@ class DungeonRunInstance{
     event.adventurerState = fighter.endState
     event.pending = false
     event.duration += 8000
+  }
+
+  _finish(){
+    this.doc.finished = true
+    this.doc.results = calculateResults(this)
+    delete activeRuns[this.doc._id]
+    emit(this.adventurer.userID, 'dungeon run update', this.doc)
+    DungeonRuns.save(this.doc)
   }
 }

@@ -1,4 +1,5 @@
 import AdventurerInstance from '../../../../../../game/adventurerInstance.js'
+import { StatsDisplayScope } from '../../../../statsDisplayInfo.js'
 
 const HTML = `
 <div class="flex-grow">
@@ -21,6 +22,10 @@ export default class AdventurerPane extends HTMLElement{
     this.loadout = this.querySelector('di-loadout')
     this.statsbox = this.querySelector('.stats-box')
     this.statsList = this.querySelector('di-stats-list')
+    this.statsList.setOptions({
+      statsDisplayScope: StatsDisplayScope.EXPLORING,
+      noHP: true
+    })
     this.displayMode = 'normal'
   }
 

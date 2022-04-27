@@ -41,7 +41,7 @@ export default class DungeonPickerPage extends Page{
     }
 
     this.form.addSelect({
-      label: 'Select starting floor',
+      label: 'Select starting zone',
       name: 'startingFloor',
       optionsList: startingZoneOptions(adventurer.accomplishments.highestFloor)
     })

@@ -8,8 +8,14 @@ const HTML = `
         Lvl.<span class="level"></span>
     </span>
     <span class="name"></span>
-    <span class="status"></span>
-    <di-timer class="displaynone"></di-timer>
+    <div class="flex-rows displaynone dungeon-status">
+        <span class="event"></span>
+        <di-timer class="displaynone"></di-timer>
+        <span class="status"> 
+            Floor: <span class="floor"></span>
+            Room: <span class="room"></span>
+        </span>
+    </div>
 </div>
 <a class="new-tab" target="_blank" title="Open in new tab">[->]</a>
 `
@@ -32,6 +38,12 @@ export default class AdventurerRow extends HTMLElement{
     this.querySelector('.name').textContent = this.adventurer.name
     this.querySelector('.level').textContent = this.adventurer.level
 
+    this._dungeonStatus = this.querySelector('.dungeon-status')
+    this._floor = this.querySelector('.floor')
+    this._room = this.querySelector('.room')
+    this._timer = this.querySelector('di-timer')
+    this._event = this.querySelector('.event')
+
     const newTab = this.querySelector('.new-tab')
     newTab.setAttribute('href', `/game#adventurer=${adventurer._id}`)
     newTab.addEventListener('click', e => {
@@ -50,33 +62,34 @@ export default class AdventurerRow extends HTMLElement{
   setDungeonRun(dungeonRun){
 
     this.dungeonRun = dungeonRun
+    this._dungeonStatus.classList.toggle('displaynone', dungeonRun ? false : true)
 
-    const timer = this.querySelector('di-timer')
-    this.querySelector('.status').textContent = statusText()
-    updateTimer()
-
-    function updateTimer(){
-      if(!dungeonRun.finished){
-        timer.time = dungeonRun.elapsedTime
-        timer.classList.remove('displaynone')
-        timer.start()
-      }else{
-        timer.classList.add('displaynone')
-      }
+    if(!dungeonRun){
+      return
     }
 
-    function statusText(){
-      if(!dungeonRun){
-        return ''
-      }
-      return dungeonRun.finished ? 'Finished' : 'In Dungeon Run'
-    }
-  }
+    this._floor.textContent = dungeonRun.floor
+    this._room.textContent = dungeonRun.room
+    this._event.textContent = eventText()
 
-  _setTimer(time){
-    const timer = this.querySelector('di-timer')
-    timer.time = time
-    timer.run()
+    if(!dungeonRun.finished){
+      this._timer.time = dungeonRun.elapsedTime
+      this._timer.classList.remove('displaynone')
+      this._timer.start()
+    }else{
+      this._timer.classList.add('displaynone')
+    }
+
+    function eventText(){
+      if(dungeonRun.finished){
+        return 'Finished'
+      }
+      const currentEvent = dungeonRun.currentEvent || dungeonRun.events.at(-1)
+      if(currentEvent?.monster){
+        return `Fighting a ${currentEvent.monster.name}`
+      }
+      return 'Exploring'
+    }
   }
 }
 

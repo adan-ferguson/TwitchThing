@@ -1,5 +1,5 @@
 import StatRow from './statRow.js'
-import { StatsDisplayStyle } from '../../statsDisplayInfo.js'
+import { getStatDisplayInfo, scopesMatch, StatsDisplayScope, StatsDisplayStyle } from '../../statsDisplayInfo.js'
 
 export default class StatsList extends HTMLElement{
 
@@ -7,7 +7,9 @@ export default class StatsList extends HTMLElement{
     super()
     this.options = {
       statsDisplayStyle: StatsDisplayStyle.CUMULATIVE,
-      inline: false
+      statsDisplayScope: StatsDisplayScope.ALL,
+      inline: false,
+      noHP: false
     }
     this._update()
   }
@@ -30,6 +32,9 @@ export default class StatsList extends HTMLElement{
 
     const statsToShow = stats.getAll()
     for(let key in statsToShow){
+      if(key === 'hpMax' && this.options.noHP){
+        continue
+      }
       this._updateStat(statsToShow[key])
       delete unusedStats[key]
     }
@@ -43,11 +48,15 @@ export default class StatsList extends HTMLElement{
   }
 
   _updateStat(stat){
+    const statDisplayInfo = getStatDisplayInfo(stat, this.options.statsDisplayStyle)
+    if(!scopesMatch(statDisplayInfo.scope, this.options.statsDisplayScope)){
+      return
+    }
     const row = this.querySelector(`di-stat-row[stat-key="${stat.name}"]`)
     if(!row){
-      this.appendChild(new StatRow(stat, { style: this.options.statsDisplayStyle }))
+      this.appendChild(new StatRow(statDisplayInfo))
     }else{
-      row.update(stat)
+      row.update(statDisplayInfo)
     }
   }
 

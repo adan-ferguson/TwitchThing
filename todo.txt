@@ -470,29 +470,29 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 + adventurer rows
 ++ let me open in new tab
--- show dungeon run data (hp, floor, room, fighting)
+++ show dungeon run data (hp, floor, room, fighting)
 
 + Make sure pages can't redirect if they've been unloaded
+
++ Just show all the char levelups dont pause between, pause at end though
 
 - Main page actually show the error
 
 + Combat page jank
 ++ Don't have a combat page, instead have it on the dungeonRun page
 -- Timer after combat resets funny
--- Shrink the combat footer size
--- Don't show irrelevant stats inside of combat/outside of combat
+++ Shrink the combat footer size
+++ Don't show irrelevant stats inside of combat/outside of combat
 -- Prevent combat from being stuck if tabbed out
+-- Prevent immediately combat on dungeon start
+
+- Exploring subpage not animating relics, xp gain
 
 - Public dungeon page
 - Public combat page
 - Going back to main page has to clear the hash query value
 
 - Add a lvl 10 item
-
-- Stupid webpack openssl thing, upgrade webpack or whatever
-- Put git pull in full build
-
-- npm audit
 
 - Right click item for more info in modal
 - Item tooltip says this + better info
@@ -513,9 +513,11 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 - Loadout editor, add an element in-between that's like
 -- "--> move item here LOL"
 
-- Just show all the char levelups dont pause between, pause at end though
-
 - Test on firefox
+
+- Stupid webpack openssl thing, upgrade webpack or whatever
+- Put git pull in full build
+- npm audit
 
 TODO Later
 -----------
