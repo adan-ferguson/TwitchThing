@@ -1,7 +1,6 @@
 import express from 'express'
 import Adventurers from '../../collections/adventurers.js'
-import DungeonRuns from '../../collections/dungeonRuns.js'
-import { addRun } from '../../dungeons/dungeonRunner.js'
+import { addRun, getRunData } from '../../dungeons/dungeonRunner.js'
 import { finalizeResults } from '../../dungeons/results.js'
 import db  from '../../db.js'
 import Users from '../../collections/users.js'
@@ -39,11 +38,17 @@ verifiedRouter.post('/enterdungeon', validatePage('adventurer'), async(req, res)
 })
 
 verifiedRouter.post('/dungeonrun', validatePage('dungeon'), async(req, res) => {
-  res.send({ adventurer: req.adventurer, dungeonRun: await DungeonRuns.findOne(req.adventurer.dungeonRunID) })
+  res.send({
+    adventurer: req.adventurer,
+    dungeonRun: await getRunData(req.adventurer.dungeonRunID)
+  })
 })
 
 verifiedRouter.post('/results', validatePage('dungeon'), async (req, res) => {
-  res.send({ adventurer: req.adventurer, dungeonRun: await DungeonRuns.findOne(req.adventurer.dungeonRunID) })
+  res.send({
+    adventurer: req.adventurer,
+    dungeonRun: await getRunData(req.adventurer.dungeonRunID)
+  })
 })
 
 verifiedRouter.post('/confirmresults', validatePage('dungeon'), async (req, res) => {
@@ -66,6 +71,10 @@ verifiedRouter.post('/editloadout/save', validatePage('adventurer'), async (req,
   await Adventurers.save(req.adventurer)
   await Users.save(req.user)
   res.status(200).end()
+})
+
+verifiedRouter.post('/status', async(req, res, next) => {
+  res.send({ status: req.adventurer.dungeonRunID ? 'dungeon' : 'idle' })
 })
 
 verifiedRouter.post('', validatePage('adventurer'), async(req, res, next) => {

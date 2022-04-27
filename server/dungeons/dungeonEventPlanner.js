@@ -27,6 +27,7 @@ export async function generateEvent(dungeonRun){
     return {
       duration: combat.duration,
       pending: true,
+      message: `${dungeonRun.adventurer.name} is fighting a ${monster.name}.`,
       combatID: combat._id,
       monster
     }

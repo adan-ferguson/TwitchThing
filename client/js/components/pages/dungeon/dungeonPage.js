@@ -59,6 +59,7 @@ export default class DungeonPage extends Page{
     })
     if(previousPage){
       await fadeOut(previousPage)
+      previousPage.destroy()
     }
     this.innerHTML = ''
     this.appendChild(this.subpage)

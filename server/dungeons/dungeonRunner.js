@@ -97,6 +97,16 @@ export async function addRun(adventurerID, dungeonOptions){
   activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, adventurerDoc, userDoc)
 }
 
+export async function getRunData(dungeonRunID){
+  const run = activeRuns[dungeonRunID]
+  if(!run){
+    return await DungeonRuns.findOne(dungeonRunID)
+  }
+  const runDoc = { ...run.doc }
+  runDoc.elapsedTime += run.timeSinceLastEvent
+  return runDoc
+}
+
 class DungeonRunInstance{
 
   constructor(doc, adventurer, user){
@@ -149,15 +159,15 @@ class DungeonRunInstance{
       this.doc.finished = true
       this.doc.results = calculateResults(this)
       delete activeRuns[this.doc._id]
-      return
-    }
-    if(this.currentEvent.pending){
-      await this._continueEvent(this.currentEvent)
     }else{
-      await this._newEvent()
-    }
-    if(!this.currentEvent.pending){
-      this._resolveEvent(this.currentEvent)
+      if(this.currentEvent.pending){
+        await this._continueEvent(this.currentEvent)
+      }else{
+        await this._newEvent()
+      }
+      if(!this.currentEvent.pending){
+        this._resolveEvent(this.currentEvent)
+      }
     }
     const truncatedDoc = {
       currentEvent: this.currentEvent,

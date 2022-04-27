@@ -1,5 +1,9 @@
 export default class Subpage extends HTMLElement{
 
+  page
+  adventurer
+  dungeonRun
+
   constructor(page, adventurer, dungeonRun){
     super()
     this.classList.add('subpage')
@@ -17,4 +21,7 @@ export default class Subpage extends HTMLElement{
 
   }
 
+  destroy(){
+    
+  }
 }

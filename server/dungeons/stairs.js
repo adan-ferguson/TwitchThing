@@ -1,7 +1,7 @@
 import scaledValue from '../../game/scaledValue.js'
 
-const SIZE_BASE = 10
-const SCALE_PER_FLOOR = 0.1
+const SIZE_BASE = 12
+const SCALE_PER_FLOOR = 0.13
 const SCALE_PER_ZONE = 0.25
 
 // Final floor gets this bonus size

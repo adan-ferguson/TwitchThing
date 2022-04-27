@@ -10,13 +10,15 @@ const HTML = `
     <div class="mid-thing">VS</div>
     <di-combat-fighter-pane class="fighter2"></di-combat-fighter-pane>
   </div>
-  <div class="content-well">
+  <div class="content-well feed">
     <di-combat-feed></di-combat-feed>
   </div>
 </div>
 `
 
 export default class CombatSubpage extends Subpage{
+
+  _cancelled = false
 
   constructor(page, adventurer, dungeonRun){
     super(page, adventurer, dungeonRun)
@@ -25,7 +27,26 @@ export default class CombatSubpage extends Subpage{
     this.fighterPane2 = this.querySelector('.fighter2')
     this.combatFeed = this.querySelector('di-combat-feed')
 
-    fizzetch(`/game/combat/${dungeonRun.combatID}`).then(this.load)
+    if(!page.currentEvent.combatID){
+      page.setSubpage(ExploringSubpage)
+    }
+
+    fizzetch(`/game/combat/${page.currentEvent.combatID}`).then(result => {
+      this.load(result)
+    })
+  }
+
+  destroy(){
+    this._cancelled = true
+  }
+
+  update(dungeonRun, options){
+    // Get out of here if we were tabbed out
+    if(options.source === 'socket'){
+      if(!this.page.currentEvent.combatID){
+        this._backToExploringPage()
+      }
+    }
   }
 
   load = async ({ combat, state }) => {
@@ -55,6 +76,9 @@ export default class CombatSubpage extends Subpage{
   _tick(){
     const before = Date.now()
     requestAnimationFrame(() => {
+      if(this._cancelled){
+        return
+      }
       this._advanceTime(Date.now() - before)
       if(this.timeline.finished){
         this._finish()
@@ -100,8 +124,16 @@ export default class CombatSubpage extends Subpage{
     }
 
     setTimeout(() => {
-      this.page.setSubpage(ExploringSubpage)
+      this._backToExploringPage()
     }, 2200)
+  }
+
+  _backToExploringPage(){
+    if(this._cancelled){
+      return
+    }
+    this._cancelled = true
+    this.page.setSubpage(ExploringSubpage)
   }
 }
 

@@ -464,9 +464,9 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 + Level ups, not in modal anymore
 + Make adventurer pages + page validation more sane
 
-- Instead of dungeonRun and results page states, just have the 1.
--- Adventurer is either in a dungeon or is idle.
--- You're considered in a dungeon if you haven't confirmed results.
++ Instead of dungeonRun and results page states, just have the 1.
+++ Adventurer is either in a dungeon or is idle.
+++ You're considered in a dungeon if you haven't confirmed results.
 
 + adventurer rows
 ++ let me open in new tab
@@ -476,14 +476,15 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 - Main page actually show the error
 
-- Combat page jank
--- Don't have a combat page, instead have it on the dungeonRun page
--- Combat replay page (same widget)
--- Make sure combat stops if you leave it
--- Timer at combat resets funny
++ Combat page jank
+++ Don't have a combat page, instead have it on the dungeonRun page
+-- Timer after combat resets funny
 -- Shrink the combat footer size
--- Don't show irrelevant stats inside of combat
+-- Don't show irrelevant stats inside of combat/outside of combat
 -- Prevent combat from being stuck if tabbed out
+
+- Public dungeon page
+- Public combat page
 
 - Add a lvl 10 item
 
@@ -517,7 +518,12 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 TODO Later
 -----------
-- scaling: don't be 1:1 floor to adv level, be more like 2:1
+- XP gain, stair find chance, etc probably all need to be multiplicative
+- XP gain should only boost for adventurer
+
+- Scaling: don't be 1:1 floor to adv level, be more like 2:1
+-- Relics too
+-- Chest scaling needs fixing badly
 
 - get rid of adventuring speed because the dissonance between adv speed and combat speed is annoying
 

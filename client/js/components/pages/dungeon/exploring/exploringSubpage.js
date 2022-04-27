@@ -1,6 +1,7 @@
 import Subpage from '../subpage.js'
 import DungeonPage from '../dungeonPage.js'
 import CombatSubpage from '../combat/combatSubpage.js'
+import ResultsSubpage from '../results/resultsSubpage.js'
 
 const HTML = `
 <div class='content-columns'>
@@ -18,12 +19,9 @@ const HTML = `
 
 export default class ExploringSubpage extends Subpage{
 
-  page
-  adventurer
-  dungeonRun
   adventurerPane
   eventEl
-  stateEL
+  stateEl
 
   constructor(page, adventurer, dungeonRun){
     super(page, adventurer, dungeonRun)
@@ -45,19 +43,18 @@ export default class ExploringSubpage extends Subpage{
 
     this.adventurerPane.setState(dungeonRun.adventurerState, options.animate)
     this.stateEl.updateDungeonRun(dungeonRun, options.animate)
-    this.eventEl.update(this.currentEvent)
+    this.eventEl.update(this.page.currentEvent)
 
     if(options.source === 'socket'){
-      if(dungeonRun.combatID){
-        // If from a socket event, transition to socket event
-        this.page.setSubpage(CombatSubpage)
-      }
       if(dungeonRun.finished){
         this.page.setSubpage(ResultsSubpage)
       }
+      if(this.page.currentEvent.combatID){
+        // If from a socket event, transition to socket event
+        this.page.setSubpage(CombatSubpage)
+      }
     }
   }
-
 }
 
 customElements.define('di-exploring-subpage', ExploringSubpage)

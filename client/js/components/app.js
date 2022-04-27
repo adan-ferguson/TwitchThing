@@ -100,9 +100,14 @@ export default class App extends HTMLElement{
     this.setPage(this.currentPage.backPage())
   }
 
-  _setInitialPage(){
+  async _setInitialPage(){
     const [pageStr, arg] = window.location.hash.substring(1).split('=')
-    this.setPage(pageFromString(pageStr, [arg]) || new MainPage())
+    if(pageStr === 'adventurer' && arg){
+      if(await this._setAdventurerPage(arg)){
+        return
+      }
+    }
+    this.setPage(new MainPage())
   }
 
   async _fetchUser(){
@@ -126,6 +131,19 @@ export default class App extends HTMLElement{
         }
       }]).show()
     })
+  }
+
+  async _setAdventurerPage(adventurerID){
+    const { error, status } = await fizzetch(`/game/adventurer/${adventurerID}/status`)
+    if(error){
+      return false
+    }
+    if(status === 'idle'){
+      this.setPage(new AdventurerPage(adventurerID))
+    }else{
+      this.setPage(new DungeonPage(adventurerID))
+    }
+    return true
   }
 }
 

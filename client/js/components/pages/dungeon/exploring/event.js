@@ -1,5 +1,3 @@
-import { toArray } from '../../../../../../game/utilFunctions.js'
-
 const innerHTML = `
 <div class="message"></div>
 <div class="rewards"></div>
