@@ -5,7 +5,7 @@ import { generateRandomChest } from '../dungeons/chests.js'
 import { chooseOne } from '../../game/rando.js'
 
 const POWER_MULTIPLIER = 0.3
-const ZONE_SCALING_INCREMENT = 0.02
+const ZONE_RAMP_UP_BONUS = 0.1
 const CHEST_DROP_CHANCE = 0.08
 const MONSTER_CHANCE_INCREASE_PER_ROOM = 0.06
 
@@ -30,10 +30,6 @@ export function foundMonster(dungeonRun){
 }
 
 export async function generateMonster(dungeonRun){
-
-  for(let i = 0; i <= 100; i++){
-    console.log(getScalingValue(i))
-  }
 
   const level = floorToLevel(dungeonRun.floor)
   const monsterDefinition = getMonsterDefinition(level)
@@ -99,7 +95,11 @@ export function generateFloorChoices(floor, range = 1, skew = 0){
 }
 
 function getScalingValue(level){
+  return scaledValue(POWER_MULTIPLIER, iterations(level))
+}
+
+export function iterations(level){
   const zones = Math.floor(level / 10)
-  const iterations = level - 2 * zones
-  return scaledValue(POWER_MULTIPLIER + zones * ZONE_SCALING_INCREMENT, iterations)
+  const floors = level % 10
+  return floors * (1 + zones * ZONE_RAMP_UP_BONUS) + zones * (8 + 4 * ZONE_RAMP_UP_BONUS * (zones - 1))
 }

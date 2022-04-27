@@ -485,6 +485,7 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 - Public dungeon page
 - Public combat page
+- Going back to main page has to clear the hash query value
 
 - Add a lvl 10 item
 
