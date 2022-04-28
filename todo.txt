@@ -490,7 +490,12 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 ++ Timer after combat does not start
 ++ Shrink the combat footer size
 ++ Don't show irrelevant stats inside of combat/outside of combat
--- Prevent combat from being stuck if tabbed out
+++ Timer before combat gets reduced by ~5000 for some reason
+++ Prevent combat from being stuck if tabbed out
+
+- exploring time meter (start time -> virtual time -> elapsed time)
+
+- mousewheel on lists
 
 - Prevent immediate event on dungeon start
 

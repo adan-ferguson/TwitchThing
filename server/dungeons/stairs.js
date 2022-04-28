@@ -5,7 +5,7 @@ const SCALE_PER_FLOOR = 0.08
 const SCALE_PER_ZONE = 0.25
 
 // Final floor gets this bonus size
-const FINAL_FLOOR_BONUS = 2.0
+const FINAL_FLOOR_BONUS = 3.0
 
 export function foundStairs(floor, room, stairFind){
   if(room <= 2){

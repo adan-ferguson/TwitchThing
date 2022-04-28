@@ -36,7 +36,7 @@ export default class State extends HTMLElement{
     this._setXP(dungeonRun.rewards.xp, animate)
     this._updateChests(dungeonRun.rewards.chests, animate)
 
-    this.timer.time = dungeonRun.elapsedTime
+    this.timer.time = dungeonRun.virtualTime
     this.timer.start()
   }
 

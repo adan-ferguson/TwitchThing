@@ -73,7 +73,7 @@ export default class AdventurerRow extends HTMLElement{
     this._event.textContent = eventText()
 
     if(!dungeonRun.finished){
-      this._timer.time = dungeonRun.elapsedTime
+      this._timer.time = dungeonRun.virtualTime
       this._timer.classList.remove('displaynone')
       this._timer.start()
     }else{

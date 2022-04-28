@@ -57,7 +57,7 @@ export default class ExploringSubpage extends Subpage{
 
     this.adventurerPane.setState(dungeonRun.adventurerState, options.animate)
     this.stateEl.updateDungeonRun(dungeonRun, options.animate)
-    this.eventEl.update(this.page.currentEvent)
+    this.eventEl.update(this.page.currentEvent, dungeonRun.virtualTime)
   }
 }
 

@@ -78,7 +78,7 @@ export default class CombatSubpage extends Subpage{
 
   _tick(){
     const before = Date.now()
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       if(this._cancelled){
         return
       }

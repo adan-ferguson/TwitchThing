@@ -16,6 +16,8 @@ const ANIM_SPEED = 2000
 
 export default class Bar extends HTMLElement{
 
+  _showLabel = true
+
   constructor(){
     super()
     this.innerHTML = innerHTML
@@ -40,6 +42,10 @@ export default class Bar extends HTMLElement{
 
   get value(){
     return this._val
+  }
+
+  set showLabel(val){
+    this._showLabel = val
   }
 
   set showValueBeforeLabel(val){
@@ -171,7 +177,7 @@ export default class Bar extends HTMLElement{
         finish: () => {
           this.animation = null
           this.setValue(val)
-          res()
+          res(true)
         },
         tick: pct => {
           currentWidth = startWidth * (1 - pct) + targetWidth * pct
@@ -193,6 +199,7 @@ export default class Bar extends HTMLElement{
   }
 
   _setLabel(val){
+    this._barLabel.classList.toggle('hidden', !this._showLabel)
     const valueText = this._showValueBeforeLabel ? `${val} / ${this._max} ` : ''
     this._barLabel.textContent = `${valueText}${this._label || ''}`
   }

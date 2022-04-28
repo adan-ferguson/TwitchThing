@@ -1,7 +1,18 @@
 di-dungeon-event
-  display: inline-block
+  display: flex
+  flex-direction: column
   opacity: 1
   transition: opacity 0.3s
+
+  > *
+    margin-top: 6rem
+
+  .time-bar
+    width: 100%
+    height: 4rem
+
+    .bar-border
+      border: none
 
   &.fade-out
     opacity: 0

@@ -97,13 +97,21 @@ export async function addRun(adventurerID, dungeonOptions){
   activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, adventurerDoc, userDoc)
 }
 
+export async function getRunDataMulti(dungeonRunIDs){
+  const runs = []
+  for(let i = 0; i < dungeonRunIDs.length; i++){
+    runs.push(await getRunData(dungeonRunIDs[i]))
+  }
+  return runs
+}
+
 export async function getRunData(dungeonRunID){
   const run = activeRuns[dungeonRunID]
   if(!run){
     return await DungeonRuns.findOne(dungeonRunID)
   }
   const runDoc = { ...run.doc }
-  runDoc.elapsedTime += run.timeSinceLastEvent
+  runDoc.virtualTime = run.virtualTime
   return runDoc
 }
 
@@ -117,6 +125,10 @@ class DungeonRunInstance{
     if(!this.currentEvent){
       this.advance()
     }
+  }
+
+  get virtualTime(){
+    return this.currentEvent.startTime + this.timeSinceLastEvent
   }
 
   get floor(){
@@ -172,8 +184,9 @@ class DungeonRunInstance{
     }
 
     const truncatedDoc = {
+      ...this.doc,
       currentEvent: this.currentEvent,
-      ...this.doc
+      virtualTime: this.virtualTime
     }
 
     delete truncatedDoc.events
@@ -207,7 +220,6 @@ class DungeonRunInstance{
     }
     if(event.rewards){
       if(event.rewards.xp){
-        event.rewards.xp *= this.adventurerInstance.stats.get('xpGain').value
         event.rewards.xp = Math.ceil(event.rewards.xp)
       }
       this.doc.rewards = addRewards(this.doc.rewards, event.rewards)

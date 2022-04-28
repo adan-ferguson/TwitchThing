@@ -185,7 +185,9 @@ export default class ResultsSubpage extends Subpage{
 
 function wait(time = WAIT_TIME){
   return new Promise(res => {
-    setTimeout(res, time)
+    setTimeout(() => {
+      res()
+    }, time)
   })
 }
 

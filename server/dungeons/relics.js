@@ -19,7 +19,7 @@ export function generateRelicEvent(dungeonRun){
     { weight: 40, value: minorRelic },
     { weight: 9, value: majorRelic },
     { weight: 50 - 50 * dungeonRun.adventurerInstance.hpPct, value: healingRelic },
-    { weight: 7, value: chestRelic }
+    { weight: 4, value: chestRelic }
   ])(dungeonRun)
 }
 
