@@ -29,6 +29,19 @@ export default class List extends HTMLElement{
       mobilePageSize: null
     }
 
+    this.addEventListener('wheel', e => {
+      if(!this._options.paginate){
+        return
+      }
+      if(e.deltaY < 0 && this._page > 1){
+        this._page--
+        this._update()
+      }else if(e.deltaY > 0 && this._page < this._maxPage){
+        this._page++
+        this._update()
+      }
+    })
+
     window.addEventListener('resize', () => {
       if(this._isMobile !== mobileMode()){
         this._update()

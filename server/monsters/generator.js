@@ -4,7 +4,7 @@ import { StatDefinitions, StatType } from '../../game/stats/statDefinitions.js'
 import { generateRandomChest } from '../dungeons/chests.js'
 import { chooseOne } from '../../game/rando.js'
 
-const POWER_MULTIPLIER = 0.25
+const POWER_MULTIPLIER = 0.20
 const ZONE_RAMP_UP_BONUS = 0.1
 const CHEST_DROP_CHANCE = 0.09
 const MONSTER_CHANCE_INCREASE_PER_ROOM = 0.06

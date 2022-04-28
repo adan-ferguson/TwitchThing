@@ -493,11 +493,11 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 ++ Timer before combat gets reduced by ~5000 for some reason
 ++ Prevent combat from being stuck if tabbed out
 
-- exploring time meter (start time -> virtual time -> elapsed time)
++ exploring time meter (start time -> virtual time -> elapsed time)
 
-- mousewheel on lists
++ mousewheel on lists
 
-- Prevent immediate event on dungeon start
++ Prevent immediate event on dungeon start
 
 + adventurer row timers need timeSinceLastEvent added
 

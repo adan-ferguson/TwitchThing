@@ -123,7 +123,9 @@ class DungeonRunInstance{
     this.user = user
     this.timeSinceLastEvent = 0
     if(!this.currentEvent){
-      this.advance()
+      this.advance({
+        message: `${this.adventurer.name} enters the dungeon.`
+      })
     }
   }
 
@@ -159,22 +161,17 @@ class DungeonRunInstance{
     return this.adventurer = await Adventurers.findOne(this.doc.adventurerID)
   }
 
-  async advance(){
+  async advance(nextEvent){
     process.stdout.write(this.doc.floor + '')
 
-    if(!this.currentEvent){
-      this.doc.events = [{
-        message: `${this.adventurer.name} enters the dungeon.`,
-        duration: this.adventurerInstance.standardRoomDuration
-      }]
-    }
-
-    if(this.currentEvent.runFinished){
+    if(this.currentEvent?.runFinished){
       return this._finish()
     }
 
-    if(this.currentEvent.pending){
+    if(this.currentEvent?.pending){
       await this._continueEvent(this.currentEvent)
+    }else if(nextEvent){
+      this._addEvent(nextEvent)
     }else{
       await this._newEvent()
     }
@@ -201,14 +198,18 @@ class DungeonRunInstance{
   }
 
   async _newEvent(){
-    this.doc.room = this.currentEvent.nextRoom || this.doc.room + 1
-    this.doc.floor = this.currentEvent.nextFloor || this.doc.floor
+    this._addEvent(await generateEvent(this))
+  }
+
+  async _addEvent(event){
+    this.doc.room = this.currentEvent?.nextRoom || this.doc.room + 1
+    this.doc.floor = this.currentEvent?.nextFloor || this.doc.floor
     const nextEvent = {
       room: this.doc.room,
       floor: this.doc.floor,
       startTime: this.doc.elapsedTime,
       duration: this.adventurerInstance.standardRoomDuration,
-      ...(await generateEvent(this))
+      ...event
     }
     this.doc.events.push(nextEvent)
     this.timeSinceLastEvent = 0

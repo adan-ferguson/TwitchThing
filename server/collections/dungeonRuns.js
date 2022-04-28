@@ -8,7 +8,7 @@ const DEFAULTS = {
   },
   finished: false,
   floor: 1,
-  room: 1,
+  room: 0,
   rewards: {},
   events: [],
   timeSinceLastEvent: 0,
