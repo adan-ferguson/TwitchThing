@@ -494,26 +494,33 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 ++ Prevent combat from being stuck if tabbed out
 
 + exploring time meter (start time -> virtual time -> elapsed time)
-
 + mousewheel on lists
-
 + Prevent immediate event on dungeon start
-
 + adventurer row timers need timeSinceLastEvent added
++ Show blocked damage
 
-- Show blocked damage
++ Exploring subpage not animating relics, xp gain
 
-- Exploring subpage not animating relics, xp gain
++ Public dungeon page
++ Public pages need to subscribe to socket events correctly
++ Clear hash query value after going back to main
 
-- Public dungeon page
-- Public combat page
-- Clear hash query value after loading
++ No stairs on floor 20
 
-- Add a lvl 10 item
++ Add a few more items
+++ Level 2 weapon (machete)
+++ Level 3 weapon (+attack -def)
+++ Level 6 weapon (+attack -xp gain)
+++ A level 10 item
+
+- Sometimes fake results page?
+- Sometimes bugged going to results page
 
 - Right click item for more info in modal
-- Item tooltip says this + better info
-- Item tooltips seem to bug while being moved
+- Improve information on item tooltip
+-- Should say "right-click for more info"
+- Fix some bugs with item tooltips
+-- Don't make x scrollbar appear
 
 - toDisplayName wherever we use monster/items names: 'monsterName' => 'Monster Name'
 - Loadout edit page: show "new" effect for new items first time you enter
@@ -535,6 +542,9 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 TODO Later
 -----------
+- Public combat page
+- Don't use hash queries because browsers seem to not like them
+
 - XP gain, stair find chance, etc probably all need to be multiplicative
 - XP gain should only boost for adventurer
 

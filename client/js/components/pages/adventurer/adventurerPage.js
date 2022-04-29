@@ -37,7 +37,7 @@ export default class AdventurerPage extends Page{
 
     const { adventurer, ctas, error, targetPage } = await fizzetch(`/game/adventurer/${this.adventurerID}`)
     if(targetPage){
-      return this.redirectTo(pageFromString(targetPage, [this.adventurerID]))
+      return this.redirectTo(pageFromString({ name: targetPage.name, args: targetPage.args }))
     }
     if(error){
       return error

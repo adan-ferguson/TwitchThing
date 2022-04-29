@@ -32,12 +32,12 @@ export default class App extends HTMLElement{
 
   currentPage
 
-  constructor(user){
+  constructor(startupParams = {}){
     super()
-    this.user = user
     this.innerHTML = HTML
     this.currentPage = null
     this.header = this.querySelector('di-header')
+    this.startupParams = startupParams || {}
     this._setInitialPage()
   }
 
@@ -54,6 +54,10 @@ export default class App extends HTMLElement{
    * @returns {Promise<undefined|*>}
    */
   async setPage(page){
+
+    if(this.currentPage && this.startupParams.watch){
+      throw 'Can not change pages in watch mode'
+    }
 
     if(!page){
       throw 'Attempted to set null page'
@@ -114,11 +118,13 @@ export default class App extends HTMLElement{
         return
       }
     }
+    if(this.startupParams.watch?.page === 'dungeonrun'){
+      return this.setPage(new DungeonPage(this.startupParams.watch.id, true))
+    }
     this.setPage(new MainPage())
   }
 
   async _fetchUser(){
-    // TODO: error handle
     this.user = await fizzetch('/user')
     this.header.updateUserBar()
   }

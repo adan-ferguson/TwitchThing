@@ -81,6 +81,7 @@ export default class Bar extends HTMLElement{
   setRange(min, max){
     this._min = min
     this._max = max
+    this._setLabel(this._val)
   }
 
   async setValue(val, options = {}){

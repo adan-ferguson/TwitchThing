@@ -1,5 +1,4 @@
 import Subpage from '../subpage.js'
-import DungeonPage from '../dungeonPage.js'
 import CombatSubpage from '../combat/combatSubpage.js'
 import ResultsSubpage from '../results/resultsSubpage.js'
 
@@ -34,6 +33,10 @@ export default class ExploringSubpage extends Subpage{
     this.eventEl.setAdventurer(adventurer)
   }
 
+  get name(){
+    return 'exploring'
+  }
+
   get titleText(){
     return 'Exploring'
   }
@@ -55,9 +58,10 @@ export default class ExploringSubpage extends Subpage{
       }
     }
 
-    this.adventurerPane.setState(dungeonRun.adventurerState, options.animate)
-    this.stateEl.updateDungeonRun(dungeonRun, options.animate)
+    const animate = options.source === 'socket'
+    this.adventurerPane.setState(dungeonRun.adventurerState, animate)
     this.eventEl.update(this.page.currentEvent, dungeonRun.virtualTime)
+    this.stateEl.updateDungeonRun(dungeonRun, animate || options.source === 'combat')
   }
 }
 

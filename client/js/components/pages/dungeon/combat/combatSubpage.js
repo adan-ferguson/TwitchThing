@@ -31,10 +31,15 @@ export default class CombatSubpage extends Subpage{
       page.setSubpage(ExploringSubpage)
     }
 
-    fizzetch(`/game/combat/${page.currentEvent.combatID}`).then(result => {
+    fizzetch(`/watch/combat/${page.currentEvent.combatID}`).then(result => {
       this.load(result)
     })
   }
+
+  get name(){
+    return 'combat'
+  }
+
   get titleText(){
     return 'Fight!'
   }
@@ -93,6 +98,14 @@ export default class CombatSubpage extends Subpage{
 
   _applyEntry(timelineEntry, animate = true){
     this.timeline.time = timelineEntry.time
+
+    if(timelineEntry.fighterAction1){
+      this._performAction(timelineEntry.fighterAction1, this.fighterPane1, this.fighterPane2)
+    }
+    if(timelineEntry.fighterAction2){
+      this._performAction(timelineEntry.fighterAction2, this.fighterPane2, this.fighterPane1)
+    }
+
     this.fighterPane1.setState(timelineEntry.fighterState1, animate)
     this.fighterPane2.setState(timelineEntry.fighterState2, animate)
     this.fighterPane1.advanceTime(this.timeline.timeSinceLastEntry)
@@ -137,6 +150,15 @@ export default class CombatSubpage extends Subpage{
     }
     this._cancelled = true
     this.page.setSubpage(ExploringSubpage)
+  }
+
+  _performAction(action, actorPane, enemyPane){
+    if(action.actionType === 'attack'){
+      enemyPane.displayDamageTaken(action.result)
+      if(action.result.lifesteal){
+        actorPane.displayLifeGained(action.result.lifesteal)
+      }
+    }
   }
 }
 

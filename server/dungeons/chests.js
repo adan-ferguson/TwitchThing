@@ -8,7 +8,7 @@ export function generateRandomChest(dungeonRun, options = {}){
   const tier = options.tier || 1
 
   // TODO: something that doesn't suck here
-  const val = tier > 1 ? level : Math.ceil(level * Math.random())
+  const val = Math.ceil((tier > 1 ? level : Math.ceil(level * Math.random())) * 0.6)
   if(features['items']){
     contents.items = [generateRandomItemDef(val)]
   }

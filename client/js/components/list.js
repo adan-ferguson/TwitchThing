@@ -40,7 +40,7 @@ export default class List extends HTMLElement{
         this._page++
         this._update()
       }
-    })
+    }, { passive: true })
 
     window.addEventListener('resize', () => {
       if(this._isMobile !== mobileMode()){

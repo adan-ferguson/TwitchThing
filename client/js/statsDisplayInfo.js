@@ -47,12 +47,12 @@ const statDefinitionsInfo = {
     text: style => style === StatsDisplayStyle.ADDITIONAL ? 'Adventuring Speed' : 'Adventuring Room Time',
     description: stat => 'Time between rooms while adventuring.',
     valueFormat: speedFormat(ADVENTURER_BASE_ROOM_TIME),
-    scope: StatsDisplayScope.COMBAT
+    scope: StatsDisplayScope.EXPLORING
   },
   xpGain: {
     text: 'XP Gain',
     description: () => 'Increases XP gained by adventurer.',
-    scope: StatsDisplayScope.EXPLORING
+    scope: StatsDisplayScope.ALL
   },
   stairFind: {
     text: 'Stair Find Chance',

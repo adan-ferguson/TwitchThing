@@ -1,6 +1,7 @@
 import FighterInstance from '../../../../../../game/combat/fighterInstance.js'
 import { fadeOut } from '../../../../animationHelper.js'
 import { StatsDisplayScope } from '../../../../statsDisplayInfo.js'
+import FlyingTextEffect from '../../../../effects/flyingTextEffect.js'
 
 const HTML = `
 <div class="flex-grow">
@@ -60,6 +61,23 @@ export default class FighterPane extends HTMLElement{
     this._updateCooldowns()
   }
 
+  displayDamageTaken(damageResult){
+
+    let html = `<span class="damage">-${damageResult.damage}</span>`
+
+    if(damageResult.blocked){
+      html += `<span class="blocked">(${damageResult.blocked} blocked)</span>`
+    }
+
+    new FlyingTextEffect(this.hpBar, html, {
+      html: true
+    })
+  }
+
+  displayLifeGained(amount){
+    new FlyingTextEffect(this.hpBar, amount)
+  }
+
   _update(animate = false){
 
     if(this._finished){
@@ -71,8 +89,7 @@ export default class FighterPane extends HTMLElement{
     if(this.fighterInstance.hp !== this.hpBar.value){
       if(animate){
         this.hpBar.setValue(this.fighterInstance.hp, {
-          animate: true,
-          flyingText: true
+          animate: true
         })
       }else{
         this.hpBar.setValue(this.fighterInstance.hp)

@@ -11,9 +11,21 @@ export default class DungeonPage extends Page{
 
   subpage
 
-  constructor(adventurerID){
+  _adventurerID
+  _dungeonRunID
+  _watchView
+
+  adventurer
+  dungeonRun
+
+  constructor(ID, watchView = false){
     super()
-    this.adventurerID = adventurerID
+    if(!watchView){
+      this._adventurerID = ID
+    }else{
+      this._dungeonRunID = ID
+      this._watchView = true
+    }
   }
 
   get titleText(){
@@ -26,49 +38,41 @@ export default class DungeonPage extends Page{
 
   async load(){
 
-    const {
-      adventurer,
-      dungeonRun,
-      error,
-      targetPage
-    } = await fizzetch(`/game/adventurer/${this.adventurerID}/dungeonrun`)
-
-    if (targetPage){
-      return this.redirectTo(pageFromString(targetPage, [this.adventurerID]))
+    const redirect = await this._fetch()
+    if(redirect){
+      return redirect
     }
 
-    if (error){
-      throw error
-    }
-
-    this.dungeonRun = dungeonRun
-    this.adventurer = adventurer
-
-    getSocket().on('dungeon run update', this._parseDungeonUpdate)
+    getSocket()
+      .emit('join dungeon run room', this.dungeonRun._id)
+      .on('dungeon run update', this._parseDungeonUpdate)
 
     if(this.currentEvent.combatID && this.currentEvent.pending){
       this.setSubpage(CombatSubpage)
-    } else if (dungeonRun.finished){
+    }else if(this.dungeonRun.finished && !this._watchView){
       this.setSubpage(ResultsSubpage)
-    } else {
+    }else {
       this.setSubpage(ExploringSubpage)
     }
   }
 
   async setSubpage(SubpageType){
+    if(this._watchView && SubpageType === ResultsSubpage){
+      return
+    }
     const previousPage = this.subpage
     this.subpage = new SubpageType(this, this.adventurer, this.dungeonRun)
-    this.subpage.update(this.dungeonRun, {
-      source: previousPage?.name || 'initial'
-    })
     if(previousPage){
       await fadeOut(previousPage)
       previousPage.destroy()
     }
     this.innerHTML = ''
     this.appendChild(this.subpage)
-    this.app.updateTitle()
     fadeIn(this.subpage)
+    this.app.updateTitle()
+    this.subpage.update(this.dungeonRun, {
+      source: previousPage?.name || 'initial'
+    })
   }
 
   async unload(){
@@ -76,13 +80,36 @@ export default class DungeonPage extends Page{
   }
 
   _parseDungeonUpdate = (dungeonRun) => {
-    if(dungeonRun.adventurerID !== this.adventurerID){
+    if(dungeonRun.adventurerID !== this.adventurer._id){
       return
     }
     this.dungeonRun = dungeonRun
     this.subpage?.update(dungeonRun, {
       source: 'socket'
     })
+  }
+
+  async _fetch(){
+
+    const url =
+      this._watchView ?
+        `/watch/dungeonrun/${this._dungeonRunID}` :
+        `/game/adventurer/${this._adventurerID}/dungeonrun`
+
+    const {
+      adventurer,
+      dungeonRun,
+      error,
+      targetPage
+    } = await fizzetch(url)
+    if(targetPage){
+      return this.redirectTo(pageFromString(targetPage.name, targetPage.args))
+    }
+    if(error){
+      throw error
+    }
+    this.adventurer = adventurer
+    this.dungeonRun = dungeonRun
   }
 }
 

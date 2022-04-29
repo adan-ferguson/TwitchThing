@@ -9,6 +9,7 @@ import gameRouter from './routes/game.js'
 import userRouter from './routes/user.js'
 import adminRouter from './routes/admin.js'
 import publicRouter from './routes/public.js'
+import watchRouter from './routes/watch.js'
 
 import { setup as setupSocketServer } from './socketServer.js'
 import config from './config.js'
@@ -54,6 +55,7 @@ async function init(){
     .use('/game', gameRouter)
     .use('/user', userRouter)
     .use('/admin', adminRouter)
+    .use('/watch', watchRouter)
     .use('/', publicRouter)
     .use('/', express.static('client_dist'))
 

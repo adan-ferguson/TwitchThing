@@ -15,7 +15,6 @@ const HTML = `
 <div class='content-columns'>
   <di-adventurer-pane></di-adventurer-pane>
   <div class='content-rows results' style='flex-grow:1.5'>
-    <div class="title">Results</div>
     <div class='results-list'></div>
     <button class="done hidden">Okay</button>
   </div>
@@ -50,6 +49,10 @@ export default class ResultsSubpage extends Subpage{
       }
       this._updateButton()
     })
+  }
+
+  get name(){
+    return 'results'
   }
 
   get titleText(){
@@ -129,7 +132,7 @@ export default class ResultsSubpage extends Subpage{
     if(level % 10 === 0){
       this._addResultText('You\'ve unlocked a new adventurer slot')
     }
-    obj.features.forEach(featureName => {
+    obj?.features.forEach(featureName => {
       this._addResultText(`New feature unlocked: ${featureName}`)
     })
   }

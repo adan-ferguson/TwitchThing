@@ -1,5 +1,8 @@
 import express from 'express'
 import config from '../config.js'
+import { getRunData } from '../dungeons/dungeonRunner.js'
+import db from '../db.js'
+import Adventurers from '../collections/adventurers.js'
 
 const router = express.Router()
 

@@ -23,7 +23,6 @@ export default class AdventurerPane extends HTMLElement{
     this.statsbox = this.querySelector('.stats-box')
     this.statsList = this.querySelector('di-stats-list')
     this.statsList.setOptions({
-      statsDisplayScope: StatsDisplayScope.EXPLORING,
       noHP: true
     })
     this.displayMode = 'normal'

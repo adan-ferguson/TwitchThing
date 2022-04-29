@@ -79,6 +79,9 @@ Users.isSetupComplete = function isSetupComplete(userDoc){
 }
 
 Users.gameData = function(userDoc){
+  if(!userDoc){
+    return null
+  }
   const filteredData = { ...userDoc }
   filteredData.isAdmin = Users.isAdmin(userDoc)
   delete filteredData.magicID

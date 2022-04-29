@@ -11,14 +11,13 @@ const innerHTML = `
 <div>
     Chests: <span class="chests">0</span>
 </div>
+<a target="_blank" class="share-link">Permalink</a>
 `
 
-/**
- * Show either the run/venture state
- */
 export default class State extends HTMLElement{
 
   _chests
+  _shareLink
 
   constructor(){
     super()
@@ -27,39 +26,43 @@ export default class State extends HTMLElement{
     this.xp = this.querySelector('.xp-reward')
     this.xpVal = null
     this._chests = this.querySelector('.chests')
+    this._shareLink = this.querySelector('.share-link')
   }
 
   updateDungeonRun(dungeonRun, animate){
     this.querySelector('.floor').textContent = dungeonRun.floor
     this.querySelector('.room').textContent = dungeonRun.room
 
-    this._setXP(dungeonRun.rewards.xp, animate)
+    this._setXP(dungeonRun, animate)
     this._updateChests(dungeonRun.rewards.chests, animate)
 
-    this.timer.time = dungeonRun.virtualTime
-    this.timer.start()
+    this.timer.time = dungeonRun.virtualTime || dungeonRun.elapsedTime
+    if(dungeonRun.finished){
+      this.timer.stop()
+    }else{
+      this.timer.start()
+    }
+
+    this._shareLink.setAttribute('href', '/watch/dungeonrun/' + dungeonRun._id)
   }
 
-  _setXP(xp){
+  _setXP(dungeonRun, animate){
 
-    const prevVal = this.xpVal
-    this.xpVal = xp = xp || 0
+    const total = dungeonRun.rewards.xp
+    const reward = dungeonRun.currentEvent?.rewards?.xp
 
-    if(xp === prevVal){
+    if(!animate || !reward){
+      if(!this.xp.textContent){
+        this.xp.textContent = total
+        this._xpAnimation?.cancel()
+      }
       return
     }
 
-    if(this._xpAnimation){
-      this._xpAnimation.cancel()
-      this._xpAnimation = null
-    }
+    this._xpAnimation?.cancel()
 
-    if(prevVal === null){
-      this.xp.textContent = this.xpVal
-      return
-    }
-
-    this.animation = new CustomAnimation({
+    const prevVal = total - reward
+    this._xpAnimation = new CustomAnimation({
       duration: 1500,
       easing: 'easeOut',
       cancel: () => {
@@ -69,7 +72,7 @@ export default class State extends HTMLElement{
         this._xpAnimation = null
       },
       tick: pct => {
-        this.xp.textContent = '' + Math.round(prevVal * (1 - pct) + this.xpVal * pct)
+        this.xp.textContent = '' + Math.round(prevVal * (1 - pct) + total * pct)
       }
     })
   }

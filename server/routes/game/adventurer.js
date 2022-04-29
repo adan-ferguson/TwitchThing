@@ -95,7 +95,7 @@ function validatePage(requiredPage){
     const correctPage = req.adventurer.dungeonRunID ? 'dungeon' : 'adventurer'
     if (requiredPage !== correctPage){
       // res.redirect something something
-      res.status(400).send({ targetPage: correctPage })
+      res.status(400).send({ targetPage: { name: correctPage, args: [req.adventurer._id] } })
     }else{
       next()
     }

@@ -8,6 +8,10 @@ const SCALE_PER_ZONE = 0.25
 const FINAL_FLOOR_BONUS = 3.0
 
 export function foundStairs(floor, room, stairFind){
+  if(floor === 20){
+    // TODO: remove this restriction
+    return false
+  }
   if(room <= 2){
     return false
   }

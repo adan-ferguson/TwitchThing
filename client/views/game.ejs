@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>Secret Project DI</title>
     <link rel="stylesheet" href="/styles/style.css">
-    <link rel="stylesheet" href=""
+    <script src="https://kit.fontawesome.com/d486ec65d1.js" crossorigin="anonymous"></script>
 </head>
 <body>
     <div id="root"></div>
@@ -15,6 +15,9 @@
             <div class="spin-effect spinner">DI</div>
         </div>
     </div>
+    <script>
+      window.STARTUP_PARAMS = <%- locals.startupParams ? JSON.stringify(locals.startupParams) : "null" %>
+    </script>
     <script defer src="/scripts/game.js"></script>
 </body>
 </html>

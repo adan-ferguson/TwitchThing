@@ -50,11 +50,12 @@ export default class MainPage extends Page{
         this._dungeonRunUpdate(dr)
       })
     }
-    getSocket().on('dungeon run update', this._dungeonRunUpdate)
+    history.replaceState(null, null, ' ')
+    getSocket().on('user dungeon run update', this._dungeonRunUpdate)
   }
 
   async unload(){
-    getSocket().off('dungeon run update', this._dungeonRunUpdate)
+    getSocket().off('user dungeon run update', this._dungeonRunUpdate)
   }
 
   _populateAdventurers(adventurers, slots){

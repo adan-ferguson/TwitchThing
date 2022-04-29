@@ -1,6 +1,6 @@
 export default {
   stats: {
-    attack: '+10%'
+    attack: '+8%'
   },
   orbs: 1
 }

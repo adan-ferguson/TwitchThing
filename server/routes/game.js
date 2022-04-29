@@ -1,7 +1,5 @@
 import express from 'express'
-import db from '../db.js'
 import Users from '../collections/users.js'
-import Combats from '../collections/combats.js'
 
 import adventurerRouter from './game/adventurer.js'
 import Adventurers from '../collections/adventurers.js'
@@ -57,20 +55,6 @@ router.post('/newadventurer', async(req, res) => {
     res.send({ adventurerID: adventurer._id })
   }catch(error){
     return res.status(error.code || 500).send({ error: error.message || error })
-  }
-})
-
-router.post('/combat/:combatID', async(req, res) => {
-  try {
-    const combat = await Combats.findOne(db.id(req.params.combatID))
-    if(!combat){
-      return res.status(404).send('Combat not found.')
-    }
-    const currentTime = Date.now()
-    const state = combat.startTime + combat.duration < currentTime ? { status: 'finished' } : { status: 'live', currentTime }
-    res.send({ combat, state })
-  }catch(ex){
-    return res.status(ex.code || 401).send(ex.error || ex)
   }
 })
 

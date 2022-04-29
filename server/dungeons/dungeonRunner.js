@@ -187,7 +187,8 @@ class DungeonRunInstance{
     }
 
     delete truncatedDoc.events
-    emit(this.adventurer.userID, 'dungeon run update', truncatedDoc)
+    emit(this.adventurer.userID, 'user dungeon run update', truncatedDoc)
+    emit(this.doc._id, 'dungeon run update', truncatedDoc)
     DungeonRuns.save(this.doc)
   }
 

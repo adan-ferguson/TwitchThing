@@ -15,10 +15,10 @@ const monstersByFloor = {
   // Crypt
   11: Monsters.SKELETON,
   12: Monsters.ZOMBIE,
-  13: Monsters.SPECTRE,
+  13: Monsters.WRAITH,
   14: Monsters.SHADE,
-  15: Monsters.BANSHEE,
-  16: Monsters.WRAITH,
+  15: Monsters.NECROMANCER,
+  16: Monsters.BANSHEE,
   17: Monsters.LICH,
   18: Monsters.VAMPIRE,
   19: Monsters.ABOMINATION,
