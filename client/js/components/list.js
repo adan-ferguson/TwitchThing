@@ -1,4 +1,5 @@
 import { mobileMode } from '../mobile.js'
+import { hideAll as hideAllTippys } from 'tippy.js'
 
 const HTML = `
 <div class='items'></div>
@@ -129,6 +130,7 @@ export default class List extends HTMLElement{
       el.style.flexBasis = `${100 / this._pageSize}%`
     })
     this.rows.append(...toDisplay)
+    hideAllTippys()
   }
 }
 customElements.define('di-list', List)

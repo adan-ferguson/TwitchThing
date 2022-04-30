@@ -13,6 +13,16 @@ export default class Item{
     this.itemDef = itemDef
   }
 
+  get HTML(){
+    const stats = this.baseType.stats
+    let html = '<div>'
+    for(let key in stats){
+      html += `<div>${key}: ${stats[key]}</div>`
+    }
+    html += '</div>'
+    return html
+  }
+
   get baseType(){
     return Items[this.itemDef.baseType]
   }

@@ -26,6 +26,6 @@ export default class AdventurerInstance{
   }
 
   get standardRoomDuration(){
-    return ADVENTURER_BASE_ROOM_TIME / this.stats.get('adventuringSpeed').value
+    return ADVENTURER_BASE_ROOM_TIME
   }
 }

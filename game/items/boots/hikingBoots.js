@@ -1,6 +1,6 @@
 export default {
   stats: {
-    adventuringSpeed: '+30%'
+    stairFind: '+30%'
   },
   orbs: 3
 }

@@ -22,7 +22,9 @@ export default class LoadoutRow extends HTMLElement{
     this._orbRow = this.querySelector('di-orb-row')
     this.tippy = tippy(this, {
       theme: 'light',
-      allowHTML: false
+      allowHTML: true,
+      onShown: () => {
+      }
     })
     this.tippy.disable()
     this.index = index
@@ -33,7 +35,14 @@ export default class LoadoutRow extends HTMLElement{
     if(!this.item){
       return ''
     }
-    return JSON.stringify(this.item.stats)
+    const tooltip = document.createElement('div')
+    tooltip.innerHTML = this.item.HTML
+
+    const right = document.createElement('div')
+    right.classList.add('right-click')
+    right.innerHTML = 'right-click for more info'
+    tooltip.appendChild(right)
+    return tooltip
   }
 
   setItem(item, enableTooltip = true){

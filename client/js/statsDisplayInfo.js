@@ -1,6 +1,5 @@
 import { StatType } from '../../game/stats/statDefinitions.js'
 import { COMBAT_BASE_TURN_TIME } from '../../game/combat/fighterInstance.js'
-import { ADVENTURER_BASE_ROOM_TIME } from '../../game/adventurerInstance.js'
 import { roundToFixed } from '../../game/utilFunctions.js'
 
 export const StatsDisplayStyle = {
@@ -42,12 +41,6 @@ const statDefinitionsInfo = {
     valueFormat: value => `${Math.floor(value)}%`,
     description: () => 'Gain health when dealing physical damage.',
     scope: StatsDisplayScope.COMBAT
-  },
-  adventuringSpeed: {
-    text: style => style === StatsDisplayStyle.ADDITIONAL ? 'Adventuring Speed' : 'Adventuring Room Time',
-    description: stat => 'Time between rooms while adventuring.',
-    valueFormat: speedFormat(ADVENTURER_BASE_ROOM_TIME),
-    scope: StatsDisplayScope.EXPLORING
   },
   xpGain: {
     text: 'XP Gain',

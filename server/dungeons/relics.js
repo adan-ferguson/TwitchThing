@@ -4,7 +4,7 @@ import { generateRandomChest } from './chests.js'
 
 const BASE_RELIC_CHANCE = 0.2
 const RELIC_CHANCE_SCALE = 0.03
-const VALUE_MULTIPLIER = 0.20
+const VALUE_MULTIPLIER = 0.25
 
 export function foundRelic(dungeonRun){
   if(!dungeonRun.user.features.relics){
@@ -17,9 +17,9 @@ export function foundRelic(dungeonRun){
 export function generateRelicEvent(dungeonRun){
   return chooseOne([
     { weight: 40, value: minorRelic },
-    { weight: 9, value: majorRelic },
+    { weight: 8, value: majorRelic },
     { weight: 50 - 50 * dungeonRun.adventurerInstance.hpPct, value: healingRelic },
-    { weight: 3, value: chestRelic }
+    { weight: 4, value: chestRelic }
   ])(dungeonRun)
 }
 
@@ -47,7 +47,7 @@ function majorRelic(dungeonRun){
 
 function healingRelic(dungeonRun){
   const newState = { ...dungeonRun.adventurerInstance.adventurerState }
-  const gain = Math.floor(scaledValue(VALUE_MULTIPLIER, dungeonRun.floor, 12) * (0.5 + Math.random() / 2))
+  const gain = Math.floor(scaledValue(VALUE_MULTIPLIER, dungeonRun.floor, 10) * (0.5 + Math.random() / 2))
   newState.hp = Math.min(dungeonRun.adventurerInstance.hpMax, newState.hp + gain)
   return {
     relic: 'Healing',

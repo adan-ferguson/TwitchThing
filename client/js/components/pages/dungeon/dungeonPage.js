@@ -3,6 +3,7 @@ import fizzetch from '../../../fizzetch.js'
 import { getSocket } from '../../../socketClient.js'
 import { pageFromString } from '../../app.js'
 import ExploringSubpage from './exploring/exploringSubpage.js'
+import { hideAll as hideAllTippys } from 'tippy.js'
 import CombatSubpage from './combat/combatSubpage.js'
 import ResultsSubpage from './results/resultsSubpage.js'
 import { fadeIn, fadeOut } from '../../../animationHelper.js'
@@ -66,6 +67,7 @@ export default class DungeonPage extends Page{
       await fadeOut(previousPage)
       previousPage.destroy()
     }
+    hideAllTippys()
     this.innerHTML = ''
     this.appendChild(this.subpage)
     fadeIn(this.subpage)

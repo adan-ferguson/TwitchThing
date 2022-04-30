@@ -52,10 +52,8 @@ export default class State extends HTMLElement{
     const reward = dungeonRun.currentEvent?.rewards?.xp
 
     if(!animate || !reward){
-      if(!this.xp.textContent){
-        this.xp.textContent = total
-        this._xpAnimation?.cancel()
-      }
+      this.xp.textContent = total
+      this._xpAnimation?.cancel()
       return
     }
 

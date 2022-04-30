@@ -65,31 +65,24 @@ export const StatDefinitions = {
     rarity: 3,
     minValue: 0
   },
-  adventuringSpeed: {
+  xpGain: {
     ...DEFAULT_DEFINITION,
     weight: 200,
     type: StatType.MULTIPLIER,
     category: StatBonusCategory.ADVENTURING,
     rarity: 3
   },
-  xpGain: {
-    ...DEFAULT_DEFINITION,
-    weight: 200,
-    type: StatType.ADDITIVE_MULTIPLIER,
-    category: StatBonusCategory.ADVENTURING,
-    rarity: 3
-  },
   stairFind: {
     ...DEFAULT_DEFINITION,
     weight: 200,
-    type: StatType.ADDITIVE_MULTIPLIER,
+    type: StatType.MULTIPLIER,
     category: StatBonusCategory.ADVENTURING,
     rarity: 2
   },
   relicFind: {
     ...DEFAULT_DEFINITION,
     weight: 200,
-    type: StatType.ADDITIVE_MULTIPLIER,
+    type: StatType.MULTIPLIER,
     category: StatBonusCategory.ADVENTURING,
     rarity: 3
   },
