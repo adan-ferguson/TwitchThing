@@ -6,6 +6,7 @@ import { generateEvent } from './dungeonEventPlanner.js'
 import { emit } from '../socketServer.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 import Users from '../collections/users.js'
+import { toDisplayName } from '../../game/utilFunctions.js'
 
 let running = false
 let activeRuns = {}
@@ -238,7 +239,7 @@ class DungeonRunInstance{
       event.message = `${fighter.data.name} has fallen, and got kicked out of the dungeon by some mysterious entity.`
     }else if(!enemy.endState.hp){
       event.rewards = enemy.data.rewards
-      event.message = `${fighter.data.name} defeated the ${enemy.data.name}.`
+      event.message = `${fighter.data.name} defeated the ${toDisplayName(enemy.data.name)}.`
       event.monster.defeated = true
     }else{
       event.message = 'That fight was going nowhere so you both just get bored and leave.'

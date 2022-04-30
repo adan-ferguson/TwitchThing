@@ -2,6 +2,7 @@ import FighterInstance from '../../../../../../game/combat/fighterInstance.js'
 import { fadeOut } from '../../../../animationHelper.js'
 import { StatsDisplayScope } from '../../../../statsDisplayInfo.js'
 import FlyingTextEffect from '../../../../effects/flyingTextEffect.js'
+import { toDisplayName } from '../../../../../../game/utilFunctions.js'
 
 const HTML = `
 <div class="flex-grow">
@@ -36,7 +37,7 @@ export default class FighterPane extends HTMLElement{
 
   setFighter(fighter){
     this.fighter = fighter
-    this.querySelector('.name').textContent = fighter.name
+    this.querySelector('.name').textContent = fighter.displayname || toDisplayName(fighter.name)
     this.hpBar.setBadge(fighter.level || '')
     this.loadout.setFighter(fighter)
   }

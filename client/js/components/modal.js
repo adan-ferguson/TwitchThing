@@ -1,4 +1,4 @@
-const HTML = `Mo
+const HTML = `
 <div class='underlay'></div>
 <div class='inner-pane'></div>
 `

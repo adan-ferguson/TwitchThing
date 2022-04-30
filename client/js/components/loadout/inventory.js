@@ -27,6 +27,7 @@ export default class Inventory extends HTMLElement{
       if(item){
         const row = new LoadoutRow()
         row.setItem(item)
+        row.showNewBadge(item.itemDef.isNew)
         loadoutRows.push(row)
       }
     })

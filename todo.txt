@@ -521,13 +521,13 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 - Sometimes fake results page?
 - Sometimes bugged going to results page
 
-- Right click item for more info in modal
++ Right click item for more info in modal
 + Improve information on item tooltip
 ++ Should say "right-click for more info"
 ++ Fix some bugs with item tooltips sticking
 ++ Don't make x scrollbar appear
 
-- toDisplayName wherever we use monster/items names: 'monsterName' => 'Monster Name'
++ toDisplayName wherever we use monster/items names: 'monsterName' => 'Monster Name'
 - Loadout edit page: show "new" effect for new items first time you enter
 
 - Have loadout rows contain an inner element
@@ -589,6 +589,8 @@ TODO Later
 
 - Classes
 -- Results page: Double level-ups cause a weird situation where you want to make sure we can't choose 4 classes.
+
+- fighter toDisplayName probably bugged
 
 - View combat replays
 

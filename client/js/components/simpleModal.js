@@ -4,7 +4,7 @@ import { fadeIn, fadeOut } from '../animationHelper.js'
 
 const SIMPLE_MODAL_HTML = `
   <div class='content'></div>
-  <div class='buttons'></div>
+  <div class='buttons displaynone'></div>
 `
 
 export default class SimpleModal extends Modal{
@@ -44,10 +44,13 @@ export default class SimpleModal extends Modal{
 
   setButtons(buttons){
 
+    buttons = toArray(buttons)
+
     const buttonsEl = this.querySelector('.buttons')
+    buttonsEl.classList.toggle('displaynone', !buttons.length)
     buttonsEl.innerHTML = ''
 
-    toArray(buttons).forEach(options => {
+    buttons.forEach(options => {
 
       options = {
         text: 'text',

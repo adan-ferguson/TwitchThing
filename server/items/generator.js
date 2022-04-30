@@ -12,6 +12,8 @@ export function generateItemDef(baseTypeName){
   }
   return {
     id: v4(),
+    created: new Date(),
+    isNew: true,
     baseType: baseTypeName
   }
 }

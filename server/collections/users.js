@@ -25,6 +25,12 @@ const DEFAULTS = {
 
 const Users = new Collection('users', DEFAULTS)
 
+Users.validateSave = function(userDoc){
+  if(userDoc.gameData){
+    throw 'Tried to save a gameData user document'
+  }
+}
+
 Users.loadFromMagicID = async function(magicID){
   return await Users.findOne({
     magicID
@@ -82,7 +88,11 @@ Users.gameData = function(userDoc){
   if(!userDoc){
     return null
   }
-  const filteredData = { ...userDoc }
+  const filteredData = {
+    ...userDoc,
+    isAdmin: Users.isAdmin(userDoc),
+    gameData: true
+  }
   filteredData.isAdmin = Users.isAdmin(userDoc)
   delete filteredData.magicID
   delete filteredData.iat
@@ -108,6 +118,16 @@ Users.resetAll = async function(){
       displayname: userDoc.displayname
     })
   }))
+}
+
+/**
+ * Clear the "new" status of all of this user's items.
+ * @param userDoc
+ * @returns {Promise<void>}
+ */
+Users.clearNewItems = async function(userDoc){
+  Object.values(userDoc.inventory.items).forEach(item => item.isNew = false)
+  await Users.save(userDoc)
 }
 
 export default Users

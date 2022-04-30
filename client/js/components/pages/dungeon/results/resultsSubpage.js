@@ -1,4 +1,3 @@
-import AdventurerPage from '../../adventurer/adventurerPage.js'
 import fizzetch from '../../../../fizzetch.js'
 import LevelupSelector from './levelupSelector.js'
 import DungeonRunResults from '../../../../../../game/dungeonRunResults.js'
@@ -8,6 +7,7 @@ import ChestOpenage from './chestOpenage.js'
 import { showLoader } from '../../../../loader.js'
 import { toDisplayName } from '../../../../../../game/utilFunctions.js'
 import Subpage from '../subpage.js'
+import AdventurerPage from '../../adventurer/adventurerPage.js'
 
 const WAIT_TIME = 500
 

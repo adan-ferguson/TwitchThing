@@ -59,10 +59,26 @@ verifiedRouter.post('/confirmresults', validatePage('dungeon'), async (req, res)
 
 verifiedRouter.post('/editloadout', validatePage('adventurer'), async (req, res) => {
   const user = await Users.gameData(req.user)
+  res.status(200).send({
+    adventurer: req.adventurer,
+    items: user.inventory.items
+  })
+
+  // Clear the new feature + items
+  let updated = false
   if(user.features.items === 1){
-    Users.update(user._id, { ['features.items']: 2 })
+    updated = true
+    req.user.features.items = 2
   }
-  res.status(200).send({ adventurer: req.adventurer, items: user.inventory.items })
+  Object.values(req.user.inventory.items).forEach(item => {
+    if(item.isNew){
+      item.isNew = false
+      updated = true
+    }
+  })
+  if(updated){
+    Users.save(req.user)
+  }
 })
 
 verifiedRouter.post('/editloadout/save', validatePage('adventurer'), async (req, res) => {
