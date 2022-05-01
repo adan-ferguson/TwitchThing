@@ -67,8 +67,8 @@ export default class LoadoutRow extends HTMLElement{
     return tooltip
   }
 
-  showNewBadge(){
-    this._newBadge.classList.remove('hidden')
+  showNewBadge(show){
+    this._newBadge.classList.toggle('hidden', !show)
   }
 
   setItem(item, enableTooltip = true){

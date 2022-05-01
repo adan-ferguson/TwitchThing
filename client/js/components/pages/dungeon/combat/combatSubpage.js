@@ -32,6 +32,10 @@ export default class CombatSubpage extends Subpage{
     }
 
     fizzetch(`/watch/combat/${page.currentEvent.combatID}`).then(result => {
+      if(!result.combat){
+        debugger
+        // retry?
+      }
       this.load(result)
     })
   }

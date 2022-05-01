@@ -517,10 +517,6 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 + multiplicative relic find, stair find, xp gain
 + XP: 0 sometimes
 
-- Combat load fails sometimes
-- Sometimes fake results page?
-- Sometimes bugged going to results page
-
 + Right click item for more info in modal
 + Improve information on item tooltip
 ++ Should say "right-click for more info"
@@ -528,14 +524,16 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 ++ Don't make x scrollbar appear
 
 + toDisplayName wherever we use monster/items names: 'monsterName' => 'Monster Name'
-- Loadout edit page: show "new" effect for new items first time you enter
++ Loadout edit page: show "new" effect for new items first time you enter
++ ChestOpenage UI is still a bit weird, not obvious it's new loot? Make it say "new items" at least
 
-- Have loadout rows contain an inner element
--- So it's easier to click/hover them
--- So the inner part can be used on item details page
+? Sometimes bugged going to results page (when tabbed out?)
 
-- ChestOpenage UI is still a bit weird, not obvious it's new loot? Make it say "new items" at least
++ +hpMax items don't start you at full hp
++ nextroom/nextfloor should affect NEXT event not this one
++ load fails sometimes
 
+- loadoout editor tooltips not working
 - Loadout editor, add an element in-between that's like
 -- "--> move item here LOL"
 
@@ -547,6 +545,17 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 TODO Later
 -----------
+- Random crashes?
+- See loot before picking bonuses
+- Page name in header needs to be centered, not flex centered
+
+- Combat load fails sometimes
+- Sometimes fake results page?
+
+- Have loadout rows contain an inner element
+-- So it's easier to click/hover them
+-- So the inner part can be used on item details page
+
 - get rid of composite percentages -> flat
 - get rid of variant adventuring speed from the dungeonrunner
 - Public combat page

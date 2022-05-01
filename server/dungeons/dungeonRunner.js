@@ -30,7 +30,7 @@ export async function start(){
 
   dungeonRuns.forEach(dr => {
     const adventurer = adventurers.find(adv => adv._id.equals(dr.adventurerID))
-    if(!adventurer){
+    if(!adventurer || !adventurer.dungeonRunID.equals(dr._id)){
       dr.finished = true
       DungeonRuns.save(dr)
       console.error('Dungeon run in limbo, no adventurer')
@@ -86,11 +86,7 @@ export async function addRun(adventurerID, dungeonOptions){
   const drDoc = await DungeonRuns.save({
     adventurerID,
     dungeonOptions,
-    floor: startingFloor,
-    events: [],
-    adventurerState: {
-      hp: adventurerDoc.baseStats.hpMax
-    }
+    floor: startingFloor
   })
   Adventurers.update(adventurerID, {
     dungeonRunID: drDoc._id
@@ -127,6 +123,9 @@ class DungeonRunInstance{
       this.advance({
         message: `${this.adventurer.name} enters the dungeon.`
       })
+    }
+    if(!('hpMax' in doc.adventurerState)){
+      doc.adventurerState.hpMax = this.adventurerInstance.stats.get('hpMax').value
     }
   }
 
@@ -204,15 +203,15 @@ class DungeonRunInstance{
   }
 
   async _addEvent(event){
-    this.doc.room = this.currentEvent?.nextRoom || this.doc.room + 1
-    this.doc.floor = this.currentEvent?.nextFloor || this.doc.floor
     const nextEvent = {
-      room: this.doc.room,
-      floor: this.doc.floor,
+      room: this.currentEvent?.nextRoom || this.doc.room + 1,
+      floor: this.currentEvent?.nextFloor || this.doc.floor,
       startTime: this.doc.elapsedTime,
       duration: this.adventurerInstance.standardRoomDuration,
       ...event
     }
+    this.doc.room = nextEvent.room
+    this.doc.floor = nextEvent.floor
     this.doc.events.push(nextEvent)
     this.timeSinceLastEvent = 0
   }

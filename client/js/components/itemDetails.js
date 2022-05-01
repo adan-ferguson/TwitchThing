@@ -1,7 +1,7 @@
 import Item from '../../../game/item.js'
-import { StatsDisplayStyle } from '../statsDisplayInfo.js'
 
 const HTML = `
+<div class="inset-title">Item</div>
 <di-loadout-row></di-loadout-row>
 <div class="stats-text"></div>
 <!--<di-stats-list></di-stats-list>-->

@@ -1,5 +1,4 @@
 import AdventurerInstance from '../../../../../../game/adventurerInstance.js'
-import { StatsDisplayScope } from '../../../../statsDisplayInfo.js'
 
 const HTML = `
 <div class="flex-grow">
@@ -36,9 +35,7 @@ export default class AdventurerPane extends HTMLElement{
   }
 
   setState(state, animate = false){
-    this.state = {
-      hp: this.adventurer.baseStats.hpMax,
-      ...state }
+    this.state = { ...state }
     this._update(animate)
   }
 

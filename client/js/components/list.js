@@ -71,7 +71,7 @@ export default class List extends HTMLElement{
   }
 
   get _maxPage(){
-    return this._options.paginate ? Math.floor(1 + this._rowsCache.length / this._pageSize) : 1
+    return this._options.paginate ? Math.floor(1 + (this._rowsCache.length - 1) / this._pageSize) : 1
   }
 
   get _pageSize(){

@@ -17,8 +17,12 @@ export default class AdventurerInstance{
     return getIdleAdventurerStats({ adventurer: this.adventurer })
   }
 
+  get hp(){
+    return 'hp' in this.adventurerState ? this.adventurerState.hp : this.hpMax
+  }
+
   get hpPct(){
-    return this.adventurerState.hp / this.hpMax
+    return this.hp / this.hpMax
   }
 
   get hpMax(){

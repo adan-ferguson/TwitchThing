@@ -70,11 +70,11 @@ export default class DungeonPage extends Page{
     hideAllTippys()
     this.innerHTML = ''
     this.appendChild(this.subpage)
-    fadeIn(this.subpage)
     this.app.updateTitle()
     this.subpage.update(this.dungeonRun, {
       source: previousPage?.name || 'initial'
     })
+    fadeIn(this.subpage)
   }
 
   async unload(){

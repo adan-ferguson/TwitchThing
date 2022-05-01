@@ -8,6 +8,11 @@ const HTML = `
     <div class="content-well user-inventory fill-contents">
         <di-inventory class="fill-contents"></di-inventory>
     </div>
+    <div class="edit-hinter">
+        <div><--</div>
+        <div>Click or drag items to swap</div>
+        <div>--></div>
+    </div>
     <div class="content-rows">
         <di-adventurer-pane></di-adventurer-pane>
         <button class="save content-no-grow" disabled="disabled">Save</button>

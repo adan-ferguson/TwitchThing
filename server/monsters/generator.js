@@ -16,7 +16,7 @@ const FLOOR_RANGE = 4
 const FLOOR_SKEW = 0.1
 
 export function foundMonster(dungeonRun){
-  const monsterChance = roomsSinceMonster() * MONSTER_CHANCE_INCREASE_PER_ROOM
+  const monsterChance = (roomsSinceMonster() - 1) * MONSTER_CHANCE_INCREASE_PER_ROOM
   return Math.random() < monsterChance
   function roomsSinceMonster(){
     let i

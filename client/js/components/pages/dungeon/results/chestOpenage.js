@@ -5,7 +5,8 @@ const HTML = `
 <div class="chest-description">
     Lv. <span class="level"></span> <span class="name"></span>
 </div>
-<div class="contents"></div>
+<div class="contents">
+</div>
 `
 
 export default class ChestOpenage extends HTMLElement{

@@ -3,5 +3,5 @@ export default {
     attack: '+10%',
     stairFind: '+20%'
   },
-  orbs: 1
+  orbs: 3
 }
