@@ -3,9 +3,12 @@ import { getIdleAdventurerStats } from './adventurer.js'
 export const ADVENTURER_BASE_ROOM_TIME = 5000
 
 export default class AdventurerInstance{
-  constructor(adventurer, adventurerState){
+  constructor(adventurer, adventurerState = {}){
     this.adventurer = adventurer
-    this.adventurerState = adventurerState
+    this.adventurerState = { ...adventurerState }
+    if(!('hp' in adventurerState)){
+      adventurerState.hp = this.hpMax
+    }
   }
 
   get name(){
@@ -18,7 +21,7 @@ export default class AdventurerInstance{
   }
 
   get hp(){
-    return 'hp' in this.adventurerState ? this.adventurerState.hp : this.hpMax
+    return this.adventurerState.hp
   }
 
   get hpPct(){

@@ -36,6 +36,7 @@ export async function generateMonster(dungeonRun){
   const scalingValue = getScalingValue(level - 1)
 
   monsterDefinition.baseStats = scaleUpStats(monsterDefinition.unscaledStats, scalingValue)
+  console.log('Vs.', monsterDefinition.name, scalingValue)
   return {
     items: [],
     ...monsterDefinition,

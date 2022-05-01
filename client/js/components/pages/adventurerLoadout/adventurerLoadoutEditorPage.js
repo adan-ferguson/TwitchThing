@@ -20,7 +20,7 @@ const HTML = `
 </div>
 `
 
-export default class AdventurerLoadoutPage extends Page{
+export default class AdventurerLoadoutEditorPage extends Page{
 
   constructor(adventurerID){
     super()
@@ -86,4 +86,4 @@ export default class AdventurerLoadoutPage extends Page{
   }
 }
 
-customElements.define('di-adventurer-loadout-page', AdventurerLoadoutPage)
+customElements.define('di-adventurer-loadout-editor-page', AdventurerLoadoutEditorPage)

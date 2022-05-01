@@ -30,7 +30,7 @@ export async function start(){
 
   dungeonRuns.forEach(dr => {
     const adventurer = adventurers.find(adv => adv._id.equals(dr.adventurerID))
-    if(!adventurer || !adventurer.dungeonRunID.equals(dr._id)){
+    if(!adventurer || !adventurer.dungeonRunID?.equals(dr._id)){
       dr.finished = true
       DungeonRuns.save(dr)
       console.error('Dungeon run in limbo, no adventurer')
@@ -83,14 +83,15 @@ export async function addRun(adventurerID, dungeonOptions){
   }
 
   const userDoc = await Users.findOne(adventurerDoc.userID)
+  const adventurerInstance = new AdventurerInstance(adventurerDoc)
   const drDoc = await DungeonRuns.save({
     adventurerID,
     dungeonOptions,
+    adventurerState: adventurerInstance.adventurerState,
     floor: startingFloor
   })
-  Adventurers.update(adventurerID, {
-    dungeonRunID: drDoc._id
-  })
+  adventurerDoc.dungeonRunID = drDoc._id
+  await Adventurers.save(adventurerDoc)
   activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, adventurerDoc, userDoc)
 }
 
@@ -117,15 +118,18 @@ class DungeonRunInstance{
   constructor(doc, adventurer, user){
     this.doc = doc
     this.adventurer = adventurer
+    if(!this.doc.adventurerID.equals(adventurer._id)){
+      throw 'Adventurer mismatch in dungeonRun instance'
+    }
+    if(!adventurer.userID.equals(user._id)){
+      throw 'User mismatch in dungeonRun instance'
+    }
     this.user = user
     this.timeSinceLastEvent = 0
     if(!this.currentEvent){
       this.advance({
         message: `${this.adventurer.name} enters the dungeon.`
       })
-    }
-    if(!('hpMax' in doc.adventurerState)){
-      doc.adventurerState.hpMax = this.adventurerInstance.stats.get('hpMax').value
     }
   }
 
@@ -141,6 +145,9 @@ class DungeonRunInstance{
     return this.doc.room
   }
 
+  /**
+   * @returns {array}
+   */
   get events(){
     return this.doc.events
   }
@@ -150,15 +157,11 @@ class DungeonRunInstance{
   }
 
   get currentEvent(){
-    return this.doc.events.at(-1)
+    return this.events.at(-1)
   }
 
   get adventurerInstance(){
     return new AdventurerInstance(this.adventurer, this.doc.adventurerState)
-  }
-
-  async loadAdventurer(){
-    return this.adventurer = await Adventurers.findOne(this.doc.adventurerID)
   }
 
   async advance(nextEvent){

@@ -527,17 +527,22 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 + Loadout edit page: show "new" effect for new items first time you enter
 + ChestOpenage UI is still a bit weird, not obvious it's new loot? Make it say "new items" at least
 
-? Sometimes bugged going to results page (when tabbed out?)
++ Sometimes bugged going to results page (when tabbed out?)
 
 + +hpMax items don't start you at full hp
 + nextroom/nextfloor should affect NEXT event not this one
 + load fails sometimes
 
-- loadoout editor tooltips not working
-- Loadout editor, add an element in-between that's like
--- "--> move item here LOL"
++ Loadout editor, add an element in-between that's like
+++ "--> move item here LOL"
+
++ intertwining of dungeonruns
++ no instant-stairs
++ loadoout editor tooltips not working on 1st slot of loadout
+- things still get stuck a lot while tabbed out
 
 - Test on firefox
+- Test make sure users aren't mingling
 
 - Stupid webpack openssl thing, upgrade webpack or whatever
 - Put git pull in full build
@@ -545,8 +550,12 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 TODO Later
 -----------
+- Reconnection of sockets on server reload
 - Random crashes?
-- See loot before picking bonuses
+
+- Award user levelup loot before picking bonuses
+-- This should be saved immediately or else you could get levelup loot multiple times with different adventurers
+
 - Page name in header needs to be centered, not flex centered
 
 - Combat load fails sometimes

@@ -2,7 +2,7 @@ import Page from '../page.js'
 import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
 
 import fizzetch from '../../../fizzetch.js'
-import AdventurerLoadoutPage from '../adventurerLoadout/adventurerLoadoutPage.js'
+import AdventurerLoadoutEditorPage from '../adventurerLoadout/adventurerLoadoutEditorPage.js'
 
 import '../../adventurerPane.js'
 import { pageFromString } from '../../app.js'
@@ -61,7 +61,7 @@ export default class AdventurerPage extends Page{
     }
 
     btn.addEventListener('click', () => {
-      this.redirectTo(new AdventurerLoadoutPage(this.adventurerID))
+      this.redirectTo(new AdventurerLoadoutEditorPage(this.adventurerID))
     })
 
   }

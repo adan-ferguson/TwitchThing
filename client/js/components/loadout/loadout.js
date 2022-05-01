@@ -100,7 +100,7 @@ export default class Loadout extends HTMLElement{
   addItem(item){
     for(let i = 0; i < 8; i++){
       if(!this.items[i]){
-        this._rows[i].setItem(item, i)
+        this._rows[i].setItem(item)
         this.update()
         return true
       }
