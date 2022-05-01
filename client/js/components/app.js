@@ -20,6 +20,7 @@ import './loadout/loadout.js'
 
 const HTML = `
 <di-header></di-header>
+<div class="page-title"></div>
 <div class="content"></div>
 `
 
@@ -31,10 +32,12 @@ const PAGES = {
 export default class App extends HTMLElement{
 
   currentPage
+  _pageTitle
 
   constructor(startupParams = {}){
     super()
     this.innerHTML = HTML
+    this._pageTitle = this.querySelector('.page-title')
     this.currentPage = null
     this.header = this.querySelector('di-header')
     this.startupParams = startupParams || {}
@@ -46,13 +49,9 @@ export default class App extends HTMLElement{
   }
 
   updateTitle(){
-    this.header.titleText = this.currentPage.titleText
+    this._pageTitle.textContent = this.currentPage.titleText
   }
 
-  /**
-   * @param page {Page}
-   * @returns {Promise<undefined|*>}
-   */
   async setPage(page){
 
     if(this.currentPage && this.startupParams.watch){

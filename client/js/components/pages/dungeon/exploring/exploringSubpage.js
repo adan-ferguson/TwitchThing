@@ -58,6 +58,13 @@ export default class ExploringSubpage extends Subpage{
       }
     }
 
+    // TODO: Weird ordering thing can happen
+    if(options.source ==='combat' && dungeonRun.finished){
+      setTimeout(() => {
+        return this.page.setSubpage(ResultsSubpage)
+      }, 3000)
+    }
+
     const animate = options.source === 'socket'
     this.adventurerPane.setState(dungeonRun.adventurerState, animate)
     this.eventEl.update(this.page.currentEvent, dungeonRun.virtualTime)

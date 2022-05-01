@@ -252,6 +252,7 @@ class DungeonRunInstance{
   }
 
   _finish(){
+    console.log('run finished', this.adventurer.name)
     this.doc.finished = true
     this.doc.results = calculateResults(this)
     delete activeRuns[this.doc._id]

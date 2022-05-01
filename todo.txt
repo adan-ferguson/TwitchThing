@@ -539,14 +539,15 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 + intertwining of dungeonruns
 + no instant-stairs
 + loadoout editor tooltips not working on 1st slot of loadout
-- things still get stuck a lot while tabbed out
++ things still get stuck a lot while tabbed out
 
-- Test on firefox
-- Test make sure users aren't mingling
++ Test on firefox
++ Test make sure users aren't mingling
++ No page name in header
 
-- Stupid webpack openssl thing, upgrade webpack or whatever
-- Put git pull in full build
-- npm audit
++ Stupid webpack openssl thing, upgrade webpack & node locally + on server
++ Put git pull in full build
++ npm audit
 
 TODO Later
 -----------
@@ -555,8 +556,6 @@ TODO Later
 
 - Award user levelup loot before picking bonuses
 -- This should be saved immediately or else you could get levelup loot multiple times with different adventurers
-
-- Page name in header needs to be centered, not flex centered
 
 - Combat load fails sometimes
 - Sometimes fake results page?
@@ -637,6 +636,8 @@ TODO Later
 -- Relics found list
 
 - Next time ssl cert expires, get the auto-renewing working
+
+- Do some lazy loading later?
 
 - Specialized dungeons
 -- The goal is to incentivize different builds

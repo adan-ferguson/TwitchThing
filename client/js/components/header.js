@@ -5,7 +5,6 @@ import AdminPage from './pages/admin/adminPage.js'
 
 const HTML = `
 <button class="back-button hidden"><- Back</button>
-<div class="page-title"></div>
 <div class="user-info">
     <div class="displayname"></div>
     <di-xp-bar class="clickable"></di-xp-bar>
@@ -14,7 +13,6 @@ const HTML = `
 
 export default class Header extends HTMLElement{
 
-  _pageTitle
   _userInfo
 
   _anonymousMode = false
@@ -32,7 +30,6 @@ export default class Header extends HTMLElement{
       }
     })
 
-    this._pageTitle = this.querySelector('.page-title')
     this._userInfo = this.querySelector('.user-info')
 
     this.xpBar = this.querySelector('di-xp-bar')
@@ -60,10 +57,6 @@ export default class Header extends HTMLElement{
 
   get user(){
     return this.app?.user
-  }
-
-  set titleText(val){
-    this._pageTitle.textContent = val
   }
 
   async addUserXp(xpToAdd, onLevelUp){
