@@ -1,6 +1,6 @@
 export default {
   stats: {
-    speed: '+15%'
+    speed: '+20%'
   },
   orbs: 2
 }

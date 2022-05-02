@@ -1,6 +1,6 @@
 export default {
   stats: {
-    stairFind: '+30%'
+    stairFind: '+50%'
   },
   orbs: 3
 }

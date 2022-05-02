@@ -1,8 +1,8 @@
 export default {
   stats: {
-    attack: '+30%',
-    relicFind: '+30%',
-    stairFind: '+30%'
+    attack: '+40%',
+    relicFind: '+40%',
+    stairFind: '+40%'
   },
   orbs: 7
 }

@@ -1,6 +1,6 @@
 export default {
   stats: {
-    attack: '+10%',
+    attack: '+20%',
     stairFind: '+20%'
   },
   orbs: 3

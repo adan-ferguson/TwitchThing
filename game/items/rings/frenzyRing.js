@@ -1,8 +1,8 @@
 export default {
   stats: {
-    attack: '+20%',
-    speed: '+20%',
-    hpMax: '-20%'
+    attack: '+30%',
+    speed: '+30%',
+    hpMax: '-30%'
   },
   orbs: 3
 }

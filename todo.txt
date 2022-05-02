@@ -549,8 +549,21 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 + Put git pull in full build
 + npm audit
 
+
+5.5
+-----------
+- Buff items
+-- Heavy axe
+-- Steel boots
+-- Legendary armor
+-- Whip
+
+- Show everyone's adventurers in admin page, can view their pane or their active dungeonrun
+
 TODO Later
 -----------
+- Show time on results page
+- Dragged items have to z-index on top
 - Reconnection of sockets on server reload
 - Random crashes?
 

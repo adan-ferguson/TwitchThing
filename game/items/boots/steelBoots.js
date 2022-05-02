@@ -1,7 +1,7 @@
 export default {
   stats: {
-    speed: '-10%',
-    stairFind: '-10%',
+    speed: '-5%',
+    stairFind: '-20%',
     physDef: '+30%'
   },
   orbs: 3
