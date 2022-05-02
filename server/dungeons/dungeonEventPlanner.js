@@ -13,6 +13,13 @@ export async function generateEvent(dungeonRun){
   const room = dungeonRun.room
   const adventurerInstance = dungeonRun.adventurerInstance
 
+  if(floor === 20 && room >= 100){
+    return {
+      message: `${adventurerInstance.name} gets bored and leaves.`,
+      runFinished: true
+    }
+  }
+
   if(foundStairs(floor, room, adventurerInstance.stats.get('stairFind').value)){
     return {
       nextRoom: 1,

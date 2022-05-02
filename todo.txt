@@ -552,16 +552,14 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 
 5.5
 -----------
-- Buff items
--- Heavy axe
--- Steel boots
--- Legendary armor
--- Whip
++ Buff items
+- Limit lvl 20 time
 
 - Show everyone's adventurers in admin page, can view their pane or their active dungeonrun
 
 TODO Later
 -----------
+- Have monsters just be a flat pct (increases per zone)
 - Show time on results page
 - Dragged items have to z-index on top
 - Reconnection of sockets on server reload
