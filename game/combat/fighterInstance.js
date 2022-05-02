@@ -1,4 +1,5 @@
 import Stats from '../stats/stats.js'
+import Item from '../item.js'
 
 const STATE_DEFAULTS = {
   timeSinceLastAction: 0
@@ -27,9 +28,12 @@ export default class FighterInstance{
   }
 
   get stats(){
-    // TODO: add affectors from items
+    const itemStats = this.baseFighter.items.filter(itemDef => itemDef).map(itemDef => {
+      const item = new Item(itemDef)
+      return item.stats
+    })
     // TODO: add affectors from effects
-    return new Stats([ this.baseFighter.baseStats ])
+    return new Stats([ this.baseFighter.baseStats, ...itemStats])
   }
 
   get currentState(){
@@ -119,8 +123,5 @@ function checkValidity(fighter){
   }
   if(!fighter.baseStats?.attack){
     throw 'fighter attack is required'
-  }
-  if(!fighter.loadout){
-    throw 'fighter loadout is required'
   }
 }

@@ -396,52 +396,221 @@ Adventurer levels up now depend on their held items.
 Item and Monsters should now use the generator.
 Test some monster mods for the monster loadouts. No base stats other than hp/attack.
 
-- Items
--- Base items
--- Item rewards/spawning, rare items w/ some mods
--- Loadout editor
--- Adventurers & loadout size
++ Loadout Editor
+++ Draggable and whatnot
+++ Saving
+++ Back page needs a "confirm" dialog if changes are being lost
+++ Store inventory values as an object instead
 
-- Item mods
--- Rare items w/ some mods
++ Support for stat percentage format
++ Stat rows don't get remove if the stat gets removed
 
-- Monster mods
--- Rare monsters w/ some mods
--- Monsters in generator
++ Admin page
+++ Run a command
 
----------------------------
++ Move monsters to generator
 
-- Choose floor
--- Keep track of adv max floor
++ Start at level 0
++ Speed as a percentage is obtuse, show the action time?
++ Fix rounding error, 1.2 adventuring speed displays as 19%
++ Don't store base item stats in the DB, so if we change base item definition then it changes the item
 
-- Let me open adventurer in new tab from main page
++ User levelup rewards show a popup
+++ multiples of 10 new slot
+++ level 1 sword
+++ other levels random item
 
-- Bonuses are +1, +2 -1, +3 -1 -1
++ After level 1, the "edit equipment" button should appear with a "NEW" effect
 
-- On main page show dungeon run data on adventurer row
++ Item drops
+++ They don't drop unless user level >= 1
+++ Monsters can drop
+++ Chest relic
 
-- Move monsters to generator
++ Tests for composite stats because they display incorrectly with attack +10%
++ "Combat Turn Time" is backwards description, it should say "Combat Speed" if additive
 
-- Janky going back from combat to dungeon run
--- Don't have a combat page, instead have it on the dungeonRun page
--- Combat replay page (same widget)
++ Illegal loadout possible to save
++ Orbs don't update on loadouts
 
-- Timer at combat resets funny
++ Quick animation between chest openages
+++ Level-up chests not showing up anymore
+++ Rewards didn't apply correctly (not applying either level or regular)
 
-- Stupid webpack openssl thing, upgrade webpack or whatever
++ no relics until level 1 either
++ results screen: show green/red on stats list for bonus stats
++ Speed stats have shouldn't show their cumulative name when being additive, 'combat speed' +10%, 'combat turn time' 2.7s
++ Results stats lists text align left
 
-- npm audit
++ Dungeon page doesn't show items
++ Show collected chests on dungeon page
++ Show message when monster drops chest
++ Pagination doesn't display correct numbers
++ The first event message doesn't show
 
-- View combat replays
++ Make some simple items
++ Make some simple monsters
+++  1 to 10 (cave)
+++ 11 to 20 (undead)
 
-- Admin page
--- Clear all adventurers
--- List combats
++ zones
+++ Floors now only get larger per zone, also multiples of 10 are double sized
+++ Skew slightly towards the higher number monster rank
+++ Monsters only appear in their own zone
+++ Keep track of adventurer maximum floor
+++ Choose zone
+++ Fix styling on dungeon choose page
 
++ Level ups, not in modal anymore
++ Make adventurer pages + page validation more sane
 
++ Instead of dungeonRun and results page states, just have the 1.
+++ Adventurer is either in a dungeon or is idle.
+++ You're considered in a dungeon if you haven't confirmed results.
+
++ adventurer rows
+++ let me open in new tab
+++ show dungeon run data (hp, floor, room, fighting)
+
++ Make sure pages can't redirect if they've been unloaded
+
++ Just show all the char levelups dont pause between, pause at end though
+
++ Main page actually show the error
+
++ header
+++ Add page title
+++ Narrow the header
+
++ Transition from dungeon end to results not working
+
++ Combat page jank
+++ Don't have a combat page, instead have it on the dungeonRun page
+++ Timer before combat goes down a bit
+++ Timer after combat does not start
+++ Shrink the combat footer size
+++ Don't show irrelevant stats inside of combat/outside of combat
+++ Timer before combat gets reduced by ~5000 for some reason
+++ Prevent combat from being stuck if tabbed out
+
++ exploring time meter (start time -> virtual time -> elapsed time)
++ mousewheel on lists
++ Prevent immediate event on dungeon start
++ adventurer row timers need timeSinceLastEvent added
++ Show blocked damage
+
++ Exploring subpage not animating relics, xp gain
+
++ Public dungeon page
++ Public pages need to subscribe to socket events correctly
++ Clear hash query value after going back to main
+
++ No stairs on floor 20
+
++ Add a few more items
+++ Level 2 weapon (machete)
+++ Level 3 weapon (+attack -def)
+++ Level 6 weapon (+attack -xp gain)
+++ A level 10 item
+
++ get rid of variant adventuring speed
++ multiplicative relic find, stair find, xp gain
++ XP: 0 sometimes
+
++ Right click item for more info in modal
++ Improve information on item tooltip
+++ Should say "right-click for more info"
+++ Fix some bugs with item tooltips sticking
+++ Don't make x scrollbar appear
+
++ toDisplayName wherever we use monster/items names: 'monsterName' => 'Monster Name'
++ Loadout edit page: show "new" effect for new items first time you enter
++ ChestOpenage UI is still a bit weird, not obvious it's new loot? Make it say "new items" at least
+
++ Sometimes bugged going to results page (when tabbed out?)
+
++ +hpMax items don't start you at full hp
++ nextroom/nextfloor should affect NEXT event not this one
++ load fails sometimes
+
++ Loadout editor, add an element in-between that's like
+++ "--> move item here LOL"
+
++ intertwining of dungeonruns
++ no instant-stairs
++ loadoout editor tooltips not working on 1st slot of loadout
++ things still get stuck a lot while tabbed out
+
++ Test on firefox
++ Test make sure users aren't mingling
++ No page name in header
+
++ Stupid webpack openssl thing, upgrade webpack & node locally + on server
++ Put git pull in full build
++ npm audit
 
 TODO Later
 -----------
+- Reconnection of sockets on server reload
+- Random crashes?
+
+- Award user levelup loot before picking bonuses
+-- This should be saved immediately or else you could get levelup loot multiple times with different adventurers
+
+- Combat load fails sometimes
+- Sometimes fake results page?
+
+- Have loadout rows contain an inner element
+-- So it's easier to click/hover them
+-- So the inner part can be used on item details page
+
+- get rid of composite percentages -> flat
+- get rid of variant adventuring speed from the dungeonrunner
+- Public combat page
+- Don't use hash queries because browsers seem to not like them
+
+- XP gain, stair find chance, etc probably all need to be multiplicative
+- XP gain should only boost for adventurer
+
+- Scaling: don't be 1:1 floor to adv level, be more like 2:1
+-- Relics too
+-- Chest scaling needs fixing badly
+
+- get rid of adventuring speed because the dissonance between adv speed and combat speed is annoying
+
+- Dungeon page chests display
+-- Animate the addition of chests
+-- Have chest icons for tiers
+
+- Resting, food
+
+- The monospaced font just looks weird with multiline
+- Show time meter on dungeon page
+
+- Show a theme for each multiple of 10 floors
+
+- Growth: the main 2 stats are HP and Power
+-- Attack is equal to power possibly times a multiplier
+-- The result being if you have 20 Power * +50% attack, it's 30 attack, but attack doesn't scale the growth
+-- These are the only scaling things
+-- Displayed phys/mag power and phys/mag armor
+
+- Monsters just use a default calculated HP and Power (which gets scaled up)
+-- Their first slot in loadout will describe their specializations
+
+- Admin page
+-- Show ajax errors which were thrown
+-- Show console logs
+-- List combats
+-- Simulate a combat
+
+- Classes
+-- Results page: Double level-ups cause a weird situation where you want to make sure we can't choose 4 classes.
+
+- fighter toDisplayName probably bugged
+
+- View combat replays
+
 - StatList + buff + debuff display
 
 - Mobile considerations
@@ -465,3 +634,10 @@ TODO Later
 - More detailed results
 -- Monsters killed list
 -- Relics found list
+
+- Next time ssl cert expires, get the auto-renewing working
+
+- Do some lazy loading later?
+
+- Specialized dungeons
+-- The goal is to incentivize different builds

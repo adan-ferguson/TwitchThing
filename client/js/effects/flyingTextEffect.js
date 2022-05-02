@@ -34,7 +34,7 @@ export default class FlyingTextEffect{
 
     document.querySelector('body').appendChild(this.el)
 
-    requestAnimationFrame(() => {
+    setTimeout(() => {
       this._start()
       setTimeout(() => {
         this.el.remove()

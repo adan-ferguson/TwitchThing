@@ -2,13 +2,18 @@ import Page from '../page.js'
 import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
 
 import fizzetch from '../../../fizzetch.js'
+import AdventurerLoadoutEditorPage from '../adventurerLoadout/adventurerLoadoutEditorPage.js'
+
+import '../../adventurerPane.js'
+import { pageFromString } from '../../app.js'
 
 const HTML = `
-<div class="flex-columns">
-  <div class="content-well">
+<div class="content-columns">
+  <div class="content-rows">
     <di-adventurer-pane></di-adventurer-pane>
+    <button class="edit content-no-grow">Edit Equipment</button>
   </div>
-  <div class="flex-rows dungeons">
+  <div class="content-rows dungeons">
       <div class="basic-dungeon content-well clickable">Enter Dungeon</div>
       <div class="something-else content-well">Something Else Goes Here</div>
   </div>
@@ -24,28 +29,46 @@ export default class AdventurerPage extends Page{
     this.adventurerPane = this.querySelector('di-adventurer-pane')
   }
 
+  get titleText(){
+    return this.adventurer.name
+  }
+
   async load(){
-    const result = await fizzetch(`/game/adventurer/${this.adventurerID}`)
-    if(result.error){
-      return result
-    }else{
-      this.adventurer = result.adventurer
-      this.adventurerPane.setAdventurer(this.adventurer)
-      // this.adventurerWell.statsbox.classList.add('clickable')
-      this.adventurerPane.statsbox.addEventListener('click', () => {
-        // void this.app.setPage(new AdventurerStatsPage(this.adventurerID))
-      })
-      // this.adventurerWell.loadout.classList.add('clickable')
-      this.adventurerPane.loadout.addEventListener('click', () => {
-        // void this.app.setPage(new AdventurerStatsPage(this.adventurerID))
-      })
-      this._showDungeonButton()
+
+    const { adventurer, ctas, error, targetPage } = await fizzetch(`/game/adventurer/${this.adventurerID}`)
+    if(targetPage){
+      return this.redirectTo(pageFromString({ name: targetPage.name, args: targetPage.args }))
     }
+    if(error){
+      return error
+    }
+
+    this.adventurer = adventurer
+    this.adventurerPane.setAdventurer(adventurer)
+
+    this._setupEditEquipmentButton(ctas?.itemFeature)
+    this._showDungeonButton()
+  }
+
+  _setupEditEquipmentButton(itemFeatureIsNew = false){
+
+    const btn = this.querySelector('button.edit')
+    if(!this.user.features.items){
+      btn.classList.add('displaynone')
+      return
+    }else if(itemFeatureIsNew){
+      btn.classList.add('glow')
+    }
+
+    btn.addEventListener('click', () => {
+      this.redirectTo(new AdventurerLoadoutEditorPage(this.adventurerID))
+    })
+
   }
 
   _showDungeonButton(){
     this.querySelector('.basic-dungeon').addEventListener('click', () => {
-      void this.app.setPage(new DungeonPickerPage(this.adventurerID))
+      this.redirectTo(new DungeonPickerPage(this.adventurerID))
     })
   }
 }

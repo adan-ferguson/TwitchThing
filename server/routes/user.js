@@ -75,7 +75,7 @@ router.get('/newuser', async (req, res) => {
 })
 
 router.post('', async (req, res) => {
-  res.send(Users.gameData(req.user))
+  res.send(Users.gameData(req.user) || { anonymous: true })
 })
 
 export default router

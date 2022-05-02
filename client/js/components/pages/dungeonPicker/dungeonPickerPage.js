@@ -3,28 +3,34 @@ import DungeonPage from '../dungeon/dungeonPage.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import DIForm from '../../form.js'
 import fizzetch from '../../../fizzetch.js'
+import zones from '../../../../../game/zones.js'
 
 const HTML = `
-<div class="flex-columns">
-  <div class="content-well stuff">Blah blah blah, select dungeon + time here</div>
-</div>
+<div class="content-well stuff fill-contents"></div>
 `
 
-export default class DungeonPickerPage extends Page {
+export default class DungeonPickerPage extends Page{
+
+  form
 
   constructor(adventurerID){
     super()
     this.adventurerID = adventurerID
     this.innerHTML = HTML
+    this.classList.add('flex-no-grow')
 
-    const form = new DIForm({
+    this.form = new DIForm({
       async: true,
-      action: `/game/adventurer/${this.adventurerID}/enterdungeon/main`,
+      action: `/game/adventurer/${this.adventurerID}/enterdungeon`,
       submitText: 'Go!',
-      success: () => this.app.setPage(new DungeonPage(this.adventurerID))
+      success: () => this.redirectTo(new DungeonPage(this.adventurerID))
     })
 
-    this.querySelector('.stuff').appendChild(form)
+    this.querySelector('.stuff').appendChild(this.form)
+  }
+
+  get titleText(){
+    return this.adventurer.name + ' - Entering Dungeon'
   }
 
   get backPage(){
@@ -32,13 +38,29 @@ export default class DungeonPickerPage extends Page {
   }
 
   async load(){
-    const result = await fizzetch(`/game/adventurer/${this.adventurerID}/dungeonpicker`)
-    if(result.error){
-      return result.error
-    }else{
-      // TODO: something lol
+
+    const { adventurer, error } = await fizzetch(`/game/adventurer/${this.adventurerID}/dungeonpicker`)
+    if(error){
+      return error
     }
+
+    this.adventurer = adventurer
+    this.form.addSelect({
+      label: 'Select starting zone',
+      name: 'startingFloor',
+      optionsList: startingZoneOptions(adventurer.accomplishments.highestFloor)
+    })
   }
 }
 
 customElements.define('di-dungeon-picker-page', DungeonPickerPage )
+
+function startingZoneOptions(topFloor){
+  const maxZone = Math.min(zones.length - 1, Math.floor((topFloor - 1) / 10))
+  const options = []
+  for(let i = maxZone; i >= 0; i--){
+    const floor = i * 10 + 1
+    options.push({ value: floor, name: `${zones[i]} (${floor})` })
+  }
+  return options
+}

@@ -5,9 +5,11 @@ export default class Collection{
   constructor(collectionName, defaults = {}){
     this.collectionName = collectionName
     this.defaults = defaults
+    this.validateSave = () => {}
   }
 
   async save(doc){
+    this.validateSave(doc)
     return await db.save(db.fix(doc, this.defaults), this.collectionName)
   }
 
@@ -27,5 +29,9 @@ export default class Collection{
 
   async update(_id, $set){
     await db.conn().collection(this.collectionName).updateOne({ _id }, { $set })
+  }
+
+  async removeAll(){
+    await db.conn().collection(this.collectionName).deleteMany({})
   }
 }

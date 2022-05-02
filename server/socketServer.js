@@ -20,11 +20,19 @@ export function setup(server, sessionMiddleware){
         if(user){
           const id = user._id.toString()
           socket.join(id)
-          io.to(id).emit('user connect', id)
+          socket.emit('user connect', id)
           log('User joined room', id)
         }
       })
+    }else{
+      socket.emit('anonymous connect')
+      log('Anonymous user connected')
     }
+
+    socket.on('join dungeon run room', dungeonRunID => {
+      socket.join(dungeonRunID)
+      socket.emit('room joined', dungeonRunID)
+    })
   })
 }
 

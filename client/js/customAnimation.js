@@ -38,7 +38,8 @@ export default class CustomAnimation{
 
   async _go(){
 
-    await frame()
+    // Wait for one frame but, don't be blocked by being tabbed out
+    await new Promise(res => setTimeout(res))
 
     let starttime = new Date()
     let now = starttime

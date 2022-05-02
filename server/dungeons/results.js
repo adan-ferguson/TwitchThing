@@ -1,16 +1,20 @@
 import Adventurers from '../collections/adventurers.js'
 import DungeonRuns from '../collections/dungeonRuns.js'
 import Users from '../collections/users.js'
-import { getStats, xpToLevel as advXpToLevel } from '../../game/adventurer.js'
+import { getIdleAdventurerStats, xpToLevel as advXpToLevel } from '../../game/adventurer.js'
 import { xpToLevel as userXpToLevel } from '../../game/user.js'
-import { mergeStats } from '../../game/stats/stats.js'
+import Stats from '../../game/stats/stats.js'
 import { calculateBonusOptions } from './bonuses.js'
 import { randomRound } from '../../game/rando.js'
+import { generateItemDef } from '../items/generator.js'
+import { toArray } from '../../game/utilFunctions.js'
+import { generateChest, generateRandomChest } from './chests.js'
 
 const GROWTH_SCALE = 0.10
 
 const REWARDS_TYPES = {
-  xp: 'int'
+  xp: 'int',
+  chests: 'array'
 }
 
 export function addRewards(rewards, toAdd){
@@ -30,30 +34,24 @@ export function addRewards(rewards, toAdd){
       if(!r[key]){
         r[key] = []
       }
-      r[key].push(toAdd[key])
+      r[key].push(...toArray(toAdd[key]))
     }
   }
   return r
 }
 
-export function calculateResults(adventurer, rewards){
-  const levelAfter = advXpToLevel(adventurer.xp + rewards.xp)
-  const levelups = []
-  for(let levelBefore = adventurer.level; levelBefore < levelAfter; levelBefore++){
-    levelups.push(previewLevelup(adventurer, levelBefore + 1))
-  }
+export function calculateResults(dungeonRun){
   return {
-    rewards,
-    levelups
+    rewards: dungeonRun.rewards,
+    levelups: generateLevelups(dungeonRun),
+    userLevelups: generateUserLevelups(dungeonRun)
   }
 }
 
-export async function finalizeResults(adventurerID, selectedBonuses){
-
-  const adventurer = await Adventurers.findOne(adventurerID)
+export async function finalizeResults(user, adventurer, selectedBonuses){
 
   if(!adventurer.dungeonRunID){
-    throw { code: 401, error: 'Adventurer is not currently in a dungeon.', targetPage: 'Adventurer' }
+    throw { code: 401, error: 'Adventurer is not currently in a dungeons.', targetPage: 'Adventurer' }
   }
 
   const dungeonRun = await DungeonRuns.findOne(adventurer.dungeonRunID)
@@ -70,7 +68,8 @@ export async function finalizeResults(adventurerID, selectedBonuses){
     return { code: 401, error: 'Selected bonuses array length mismatched' }
   }
 
-  await Promise.all([saveAdventurer(), saveUser()])
+  await saveAdventurer()
+  await saveUser()
 
   async function saveAdventurer(){
     const xpAfter = adventurer.xp + Math.floor(dungeonRun.results.rewards.xp)
@@ -84,31 +83,50 @@ export async function finalizeResults(adventurerID, selectedBonuses){
 
     const updates = {
       dungeonRunID: null,
-      xp: xpAfter
+      xp: xpAfter,
+      'accomplishments.highestFloor': Math.max(dungeonRun.floor, adventurer.accomplishments.highestFloor)
     }
 
     if(bonuses.length){
-      updates.baseStats = mergeStats(adventurer.baseStats, ...bonuses)
+      updates.baseStats = new Stats([adventurer.baseStats, ...bonuses]).serialize()
       updates.level = advXpToLevel(xpAfter)
     }
 
-    await Adventurers.update(adventurerID, updates)
+    await Adventurers.update(adventurer._id, updates)
   }
 
   async function saveUser(){
-    // TODO: add level rewards
-    const user = await Users.findOne(adventurer.userID)
-    const xpAfter = user.xp + dungeonRun.results.rewards.xp
-    await Users.update(adventurer.userID, {
-      xp: xpAfter,
-      level: userXpToLevel(xpAfter)
+    const userDoc = await Users.findOne(adventurer.userID)
+    const xpAfter = userDoc.xp + dungeonRun.results.rewards.xp
+    userDoc.xp = xpAfter
+    userDoc.level = userXpToLevel(xpAfter)
+
+    dungeonRun.results.rewards.chests?.forEach(chest => {
+      chest.contents.items?.forEach(item => {
+        userDoc.inventory.items[item.id] = item
+      })
     })
+
+    dungeonRun.results.userLevelups?.forEach(ulvl => {
+      if(ulvl.features){
+        ulvl.features.forEach(featureName => userDoc.features[featureName] = 1)
+      }
+      if(ulvl.chest){
+        if(ulvl.chest.contents.items){
+          ulvl.chest.contents.items.forEach(item => {
+            userDoc.inventory.items[item.id] = item
+          })
+        }
+      }
+    })
+
+    await Users.save(userDoc)
   }
 }
 
 function previewLevelup(adventurer, level){
 
-  const stats = getStats(adventurer)
+  const stats = getIdleAdventurerStats({  adventurer })
   const growths = {
     hpMax: Math.max(1, randomRound(stats.get('hpMax').value * GROWTH_SCALE)),
     attack: Math.max(1, randomRound(stats.get('attack').value * GROWTH_SCALE))
@@ -119,4 +137,45 @@ function previewLevelup(adventurer, level){
     options: calculateBonusOptions(stats, level),
     level
   }
+}
+
+function previewUserLevelUp(dungeonRun, level){
+  const obj = { level, features: [] }
+  if(level === 1){
+    obj.features = ['chests', 'items', 'relics']
+    obj.chest = generateChest({
+      items: [generateItemDef('SWORD')]
+    }, {
+      name: 'Level-Up Chest',
+      level: level,
+      tier: 2
+    })
+  }else{
+    obj.chest = generateRandomChest(dungeonRun, {
+      name: 'Level-Up Chest',
+      level: level,
+      tier: 2
+    })
+  }
+  return obj
+}
+
+function generateLevelups(dungeonRun){
+  const adventurer = dungeonRun.adventurer
+  const levelAfter = advXpToLevel(adventurer.xp + dungeonRun.rewards.xp)
+  const levelups = []
+  for(let levelBefore = adventurer.level; levelBefore < levelAfter; levelBefore++){
+    levelups.push(previewLevelup(adventurer, levelBefore + 1))
+  }
+  return levelups
+}
+
+function generateUserLevelups(dungeonRun){
+  const user = dungeonRun.user
+  const levelAfter = userXpToLevel(user.xp + dungeonRun.rewards.xp)
+  const levelups = []
+  for(let levelBefore = user.level; levelBefore < levelAfter; levelBefore++){
+    levelups.push(previewUserLevelUp(dungeonRun, levelBefore + 1))
+  }
+  return levelups
 }

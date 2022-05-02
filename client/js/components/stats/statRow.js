@@ -7,28 +7,27 @@ const HTML = (name, value, icon = '') => `
 
 export default class StatRow extends HTMLElement{
 
-  constructor(stat, options = {}){
+  constructor(statsDisplayInfo){
     super()
-    this.options = {
-      style: StatsDisplayStyle.CUMULATIVE,
-      ...options
-    }
-    this.tippy = tippy(this)
-    this.update(stat)
-    this.setAttribute('stat-key', stat.name)
+    this.tippy = tippy(this, {
+      theme: 'light'
+    })
+    this.update(statsDisplayInfo)
+    this.setAttribute('stat-key', statsDisplayInfo.stat.name)
   }
 
-  update(stat){
+  update(statsDisplayInfo){
 
-    if(this.prevStat?.value === stat.value){
+    if(this.prevStat?.value === statsDisplayInfo.stat.value){
       return
     }
 
-    this.prevStat = stat
+    this.prevStat = statsDisplayInfo.stat
 
-    const statDisplayInfo = getStatDisplayInfo(stat, this.options.style)
-    this.innerHTML = HTML(statDisplayInfo.text, statDisplayInfo.displayedValue)
-    this.tippy.setContent(statDisplayInfo.description(stat))
+    this.innerHTML = HTML(statsDisplayInfo.text, statsDisplayInfo.displayedValue)
+    this.tippy.setContent(statsDisplayInfo.description(statsDisplayInfo.stat))
+
+    this.setAttribute('diff', statsDisplayInfo.stat.diff)
   }
 }
 

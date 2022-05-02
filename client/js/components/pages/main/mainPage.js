@@ -8,23 +8,32 @@ import { getSocket } from '../../../socketClient.js'
 import '../../list.js'
 
 const HTML = `
-<div class="flex-columns">
-  <div class="content-well">
-    <di-list class="adventurer-list"></di-list>
+<div class="content-rows">
+  <div class="displaynone error-message"></div>
+  <div class="content-columns">
+    <div class="content-well fill-contents">
+      <di-list class="adventurer-list"></di-list>
+    </div>
+    <div class="other-stuff content-well">Other stuff goes over here</div>
   </div>
-  <div class="other-stuff content-well">Other stuff goes over here</div>
 </div>
 `
 
 export default class MainPage extends Page{
 
+  _error
+
   constructor({ error } = {}){
     super()
     this.innerHTML = HTML
+    this._error = this.querySelector('.error-message')
     if(error){
       this._showError(error)
     }
-    // TODO: handle error
+  }
+
+  get titleText(){
+    return 'Home Page'
   }
 
   get backPage(){
@@ -41,31 +50,34 @@ export default class MainPage extends Page{
         this._dungeonRunUpdate(dr)
       })
     }
-    getSocket().on('dungeon run update', this._dungeonRunUpdate)
+    history.replaceState(null, null, ' ')
+    getSocket().on('user dungeon run update', this._dungeonRunUpdate)
   }
 
   async unload(){
-    getSocket().off('dungeon run update', this._dungeonRunUpdate)
+    getSocket().off('user dungeon run update', this._dungeonRunUpdate)
   }
 
   _populateAdventurers(adventurers, slots){
     const adventurerList = this.querySelector('.adventurer-list')
     const rows = []
     adventurers.forEach(adventurer => {
-      rows.push(new AdventurerRow(adventurer, page => {
-        this.app.setPage(page)
-      }))
+      const row = new AdventurerRow(adventurer)
+      row.addEventListener('click', e => {
+        this.redirectTo(row.targetPage)
+      })
+      rows.push(row)
     })
 
     for(let i = adventurers.length; i < slots; i++){
       const newAdventurerRow = new AdventurerRow()
       rows.push(newAdventurerRow)
-      newAdventurerRow.addEventListener('click', () => {
+      newAdventurerRow.addEventListener('click', e => {
         this._showNewAdventurerModal()
       })
     }
 
-    adventurerList.setItems(rows)
+    adventurerList.setRows(rows)
   }
 
   _showNewAdventurerModal(){
@@ -74,7 +86,7 @@ export default class MainPage extends Page{
       async: true,
       action: '/game/newadventurer',
       submitText: 'Create',
-      success: result => this.app.setPage(new AdventurerPage(result.adventurerID))
+      success: result => this.redirectTo(new AdventurerPage(result.adventurerID))
     })
 
     form.addInput({
@@ -96,7 +108,10 @@ export default class MainPage extends Page{
    * @private
    */
   _showError(message, critical = false){
-
+    if(message){
+      this._error.classList.remove('displaynone')
+      this._error.textContent = message
+    }
   }
 
   _dungeonRunUpdate = dungeonRun => {

@@ -1,11 +1,14 @@
-import { getActiveStats } from './adventurer.js'
+import { getIdleAdventurerStats } from './adventurer.js'
 
-export const ADVENTURER_BASE_ROOM_TIME = 3000
+export const ADVENTURER_BASE_ROOM_TIME = 5000
 
 export default class AdventurerInstance{
-  constructor(adventurer, adventurerState){
+  constructor(adventurer, adventurerState = {}){
     this.adventurer = adventurer
-    this.adventurerState = adventurerState
+    this.adventurerState = { ...adventurerState }
+    if(!('hp' in adventurerState)){
+      adventurerState.hp = this.hpMax
+    }
   }
 
   get name(){
@@ -13,11 +16,16 @@ export default class AdventurerInstance{
   }
 
   get stats(){
-    return getActiveStats(this.adventurer, this.adventurerState)
+    // TODO: apply state
+    return getIdleAdventurerStats({ adventurer: this.adventurer })
+  }
+
+  get hp(){
+    return this.adventurerState.hp
   }
 
   get hpPct(){
-    return this.adventurerState.hp / this.hpMax
+    return this.hp / this.hpMax
   }
 
   get hpMax(){
@@ -25,6 +33,6 @@ export default class AdventurerInstance{
   }
 
   get standardRoomDuration(){
-    return ADVENTURER_BASE_ROOM_TIME / this.stats.get('adventuringSpeed').value
+    return ADVENTURER_BASE_ROOM_TIME
   }
 }

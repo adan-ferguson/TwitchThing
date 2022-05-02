@@ -1,6 +1,56 @@
 di-loadout
-  flex: 0 0 285rem !important
-  display: none !important
+  flex: 0 0 300rem !important
 
-  .blank-row
-    border: 0.5rem dashed #CCC
+  di-list
+    flex-grow: 1
+
+di-inventory
+  .filtering-options
+    margin-bottom: 8rem !important
+    height: 100rem
+
+.editable
+  di-loadout-row
+    &:not(.blank-row)
+      cursor: pointer
+      &:hover
+        background-color: #e9ffdf
+
+  .hoverable, &.hoverable
+    background-color: #f8f8ff
+
+  .hovered, &.hovered
+    background-color: #e1e7fa
+
+.popped-out
+  position: absolute
+
+di-loadout-row
+  border: 0.5rem solid #CCC
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+  align-items: center
+  padding: 0 5rem
+  position: relative
+
+  .new-badge
+    position: absolute
+    top: -6rem
+    left: -12rem
+    width: 20rem
+    height: 12rem
+    border-radius: 50%
+    font-size: 10rem
+    color: white
+    background-color: red
+    font-family: Arial, serif
+
+di-adventurer-loadout-editor-page
+  .edit-hinter
+    width: 140rem
+    display: flex
+    flex-direction: column
+    flex: 0 0 73rem !important
+    text-align: center
+    justify-content: center

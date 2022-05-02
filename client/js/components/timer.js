@@ -1,10 +1,14 @@
 import dateformat from 'dateformat'
 
+const DISCONNECT_TIMEOUT = 5000
+
 /**
  * Timer that ticks up in seconds.
  * TODO: more options at we required more timer functionality
  */
 export default class Timer extends HTMLElement{
+
+  _lastTick
 
   constructor(){
     super()
@@ -39,13 +43,19 @@ export default class Timer extends HTMLElement{
   }
 
   _tick = () => {
-    if(!this.isConnected || !this.isRunning){
-      this.stop()
-      return // Stop ticking if we're not attached to DOM
+    if(!this.isRunning){
+      return this.stop()
     }
-    const diff = new Date() - this._lastTickDatetime
-    this.time += diff
-    this._lastTickDatetime = new Date()
+    if(!this.isConnected){
+      if(new Date() - this._lastTickDatetime > DISCONNECT_TIMEOUT){
+        // Stop ticking if we're not attached to DOM
+        return this.stop()
+      }
+    }else{
+      const diff = new Date() - this._lastTickDatetime
+      this.time += diff
+      this._lastTickDatetime = new Date()
+    }
     requestAnimationFrame(this._tick)
   }
 }

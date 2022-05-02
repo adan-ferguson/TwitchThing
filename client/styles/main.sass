@@ -1,28 +1,49 @@
 $margin: 25rem
-$rowMargin: 10rem
 
 di-main-page
+
+  .error-message
+    flex-grow: 0 !important
+    margin-bottom: 10rem !important
+    color: red
+    text-align: center
 
   > *
     flex-basis: 440rem
     margin: 0 $margin 0 0
 
   di-main-adventurer-row
+    position: relative
     height: 52rem
-    margin: $rowMargin $rowMargin 0
     font-size: 1em
     border: 1rem solid black
-    cursor: pointer
-    display: flex
-    align-items: center
-    justify-content: center
 
-    &:hover
-      background-color: #EEE
+    .inner
+      position: absolute
+      top: 0
+      right: 0
+      left: 0
+      bottom: 0
+      cursor: pointer
+      display: flex
+      align-items: center
+      justify-content: center
 
-    .status
+      > *
+        margin-right: 14rem
+
+      &:hover
+        background-color: #EEE
+
+    .event
       color: red
 
+    .new-tab
+      text-decoration: none
+      position: absolute
+      top: 50%
+      right: 10rem
+      transform: translateY(-50%)
 
 @media (max-aspect-ratio: 1/1)
 

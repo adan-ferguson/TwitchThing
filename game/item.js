@@ -1,32 +1,45 @@
 import Items from './items/combined.js'
-import { v4 as uuid } from 'uuid'
+import Stats from './stats/stats.js'
+import { toDisplayName } from './utilFunctions.js'
 
-export default class Item {
-  constructor(data){
-    this.data = Object.assign({
-      uuid: uuid(),
-      baseItemID: null,
-      baseCost: 1,
-      name: null,
-      username: null,
-      charactername: null,
-      date: new Date(),
-      tier: 1,
-      bonuses: []
-    }, data)
-    if(!Items[this.data.baseItemName]){
-      throw 'Invalid item ID: ' + this.data.baseItemName
+export default class Item{
+  constructor(itemDef){
+    if(itemDef instanceof Item){
+      itemDef = itemDef.itemDef
     }
-    if(!this.data.name){
-      throw 'Missing item name.'
+    if(!itemDef.baseType){
+      throw `Invalid itemDef, invalid baseType ${itemDef.baseType}.`
     }
-    if(this.data.username){
-      this.data.username = this.data.username.toLowerCase()
-    }
-    this.baseItem = Items[this.data.baseItemName]
+    this.itemDef = itemDef
   }
 
-  scrapValue(){
-    return 1 // TODO: calc
+  get HTML(){
+    const stats = this.baseType.stats
+    let html = '<div>'
+    for(let key in stats){
+      html += `<div>${key}: ${stats[key]}</div>`
+    }
+    html += '</div>'
+    return html
+  }
+
+  get baseType(){
+    return Items[this.itemDef.baseType]
+  }
+
+  get id(){
+    return this.itemDef.id
+  }
+
+  get name(){
+    return this.itemDef.displayName || this.baseType.displayName || toDisplayName(this.baseType.name)
+  }
+
+  get orbs(){
+    return this.baseType.orbs
+  }
+
+  get stats(){
+    return new Stats(this.baseType.stats)
   }
 }

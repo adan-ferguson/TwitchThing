@@ -1,7 +1,7 @@
 import DIForm from '../components/form.js'
 
 const diform = new DIForm({
-  submitButton: 'Save'
+  submitText: 'Save'
 })
 diform.addInput({
   type: 'text',

@@ -1,17 +1,35 @@
 import MainPage from './main/mainPage.js'
 
 export default class Page extends HTMLElement{
+
+  app
+  unloaded = false
+
   constructor(){
     super()
     this.classList.add('page')
+  }
+
+  /**
+   * @return string
+   */
+  get titleText(){
+    return ''
   }
 
   get user(){
     return this.app?.user
   }
 
-  get app(){
-    return this.closest('di-app')
+  showBackConfirm(){
+    return false
+  }
+
+  redirectTo(page){
+    if(this.unloaded){
+      return
+    }
+    this.app.setPage(page)
   }
 
   /**
@@ -25,7 +43,7 @@ export default class Page extends HTMLElement{
   /**
    * Load page content here. Return false to prevent the page from loading (for example,
    * if an error occurred).
-   * @returns {Promise<{error,redirect}>}
+   * @returns {Promise<string|void>}
    */
   async load(){
 

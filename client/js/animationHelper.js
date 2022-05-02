@@ -1,5 +1,9 @@
 export function fadeOut(el, speed = 200){
   return new Promise(res => {
+    if(document.hidden){
+      el.style.opacity = 0
+      return res()
+    }
     el.animate([
       { opacity: 0 }
     ], {
@@ -14,6 +18,10 @@ export function fadeOut(el, speed = 200){
 
 export function fadeIn(el){
   return new Promise(res => {
+    if(document.hidden){
+      el.style.opacity = 1
+      return res()
+    }
     el.animate([
       { opacity: 1 }
     ], {

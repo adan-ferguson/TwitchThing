@@ -9,7 +9,7 @@ di-app .page
   > *
     flex: 1 1
 
-  .flex-columns
+  .content-columns
     display: flex
     flex-direction: row
     align-items: stretch
@@ -17,10 +17,11 @@ di-app .page
 
     > *
       margin-right: $margin
-      flex: 1 0
-      overflow: hidden
+      flex-grow: 1
+      flex-shrink: 0
+      flex-basis: 0
 
-  .flex-rows
+  .content-rows
     display: flex
     flex-direction: column
     align-items: stretch
@@ -28,5 +29,23 @@ di-app .page
 
     > *
       margin-bottom: $margin
-      flex: 1 0
-      overflow: hidden
+      flex-grow: 1
+      flex-shrink: 0
+      flex-basis: 0
+
+  .content-well
+    //display: flex
+    //flex-direction: column
+    border: 1rem solid #BBB
+    padding: 6rem
+
+    &.grow
+      flex-grow: 1 !important
+
+    &.clickable:hover
+      background-color: #F8F8F8
+      color: #6f46b0
+
+  .content-no-grow
+    flex-grow: 0
+    flex-basis: initial

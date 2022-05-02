@@ -1,35 +1,65 @@
 import { StatDefinitions, StatType } from './statDefinitions.js'
+import statValueFns from './statValueFns.js'
+import { calcStatDiff } from './statDiff.js'
+import { roundToFixed } from '../utilFunctions.js'
 
 export default class Stats{
 
-  constructor(statAffectors){
-    this._statAffectors = Array.isArray(statAffectors) ? statAffectors : [statAffectors]
+  baseAffectors = []
+  bonusAffectors = []
+
+  /**
+   * @param baseStats {[object],object,Stats}
+   * @param bonusStats {[object],object,Stats}
+   */
+  constructor(baseStats, bonusStats = []){
+    this.baseAffectors = toAffectorsArray(baseStats)
+    this.bonusAffectors = toAffectorsArray(bonusStats)
+  }
+
+  get affectors(){
+    return this.baseAffectors.concat(this.bonusAffectors)
   }
 
   get(name){
-    let stat = StatDefinitions[name]
+    const statObj = makeStatObject(name)
 
-    if(!stat){
-      throw 'Unknown stat type: ' + name
+    const fn = statValueFns[statObj.type]
+
+    if(!fn){
+      throw 'Missing value function for stat type: ' + statObj.type
     }
 
-    let value
-    if(stat.type === StatType.COMPOSITE){
-      value = this._getCompositeValue(name)
-    }else if(stat.type === StatType.PERCENTAGE){
-      value = this._getPercentageValue(name)
-    }else if(stat.type === StatType.ADDITIVE_MULTIPLIER){
-      value = this._getAdditiveMultiplierValue(name)
-    }else if(stat.type === StatType.MULTIPLIER){
-      value = this._getMultiplierValue(name)
+    statObj.baseValue = shine(fn(extractValues(this.baseAffectors, name), statObj.defaultValue))
+    statObj.value = shine(fn(extractValues(this.affectors, name), statObj.defaultValue))
+
+    statObj.baseValue = shine(statObj.baseValue)
+    statObj.value = shine(statObj.value)
+
+    statObj.diff = calcStatDiff(statObj)
+
+    return statObj
+
+    function extractValues(affectors, name){
+      return affectors
+        .map(affector => affector[name] || null)
+        .filter(val => val)
     }
 
-    return makeStatObject(name, value)
+    function shine(val){
+      if(statObj.minValue !== null){
+        val = Math.max(statObj.minValue, val)
+      }
+      if(statObj.maxValue !== null){
+        val = Math.min(statObj.maxValue, val)
+      }
+      return roundToFixed(val, statObj.roundingDecimals)
+    }
   }
 
   getAll(){
     const all = {}
-    this._statAffectors.forEach(affector => {
+    this.affectors.forEach(affector => {
       Object.keys(affector).forEach(key => {
         all[key] = true
       })
@@ -46,134 +76,60 @@ export default class Stats{
     })
     return serialized
   }
-
-  _getCompositeValue(name){
-    const mods = this._getCompositeMods(name)
-    let value = 0
-
-    value = mods.flatPlus.reduce((val, mod) => {
-      return val + mod
-    }, value)
-
-    value = mods.flatMinus.reduce((val, mod) => {
-      return val - mod
-    }, value)
-
-    value = mods.pct.reduce((val, mod) => {
-      return val * mod
-    }, value)
-
-    return value
-  }
-
-  _getPercentageValue(name){
-    const mods = this._getCompositeMods(name)
-    let value = 0
-
-    value = mods.flatPlus.reduce((val, mod) => {
-      return val + (1 - val) * mod
-    }, value)
-
-    value = mods.flatMinus.reduce((val, mod) => {
-      return val * (1 + mod)
-    }, value)
-
-    return value
-  }
-
-  _getMultiplierValue(name){
-    const mods = this._getPercentageMods(name)
-    let value = 1
-
-    value = mods.plus.reduce((val, mod) => {
-      return val * mod
-    }, value)
-
-    value = mods.minus.reduce((val, mod) => {
-      return val * mod
-    }, value)
-
-    return value
-  }
-
-  _getAdditiveMultiplierValue(name){
-    const mods = this._getPercentageMods(name)
-    let value = 1
-
-    value = mods.plus.reduce((val, mod) => {
-      return val + (mod - 1)
-    }, value)
-
-    value = mods.minus.reduce((val, mod) => {
-      return val * mod
-    }, value)
-
-    return value
-  }
-
-  _getCompositeMods(name){
-
-    const mods = {
-      flatPlus: [],
-      flatMinus: [],
-      pct: []
-    }
-
-    this._statAffectors.forEach(affector => {
-      if(name in affector){
-        const change = affector[name]
-        const changeStr = change + ''
-        if(changeStr.charAt(changeStr.length - 1) === '%'){
-          const value = (1 + parseFloat(changeStr) / 100)
-          mods.pct.push(value)
-        }else{
-          if(change > 0){
-            mods.flatPlus.push(change)
-          }else if(change < 0){
-            mods.flatMinus.push(-change)
-          }
-        }
-      }
-    })
-
-    return mods
-  }
-
-  _getPercentageMods(name){
-
-    const mods = {
-      plus: [],
-      minus: []
-    }
-
-    this._statAffectors.forEach(affector => {
-      if(name in affector){
-        const change = Math.max(0, affector[name])
-        if(change >= 1){
-          mods.plus.push(change)
-        }else{
-          mods.minus.push(change)
-        }
-      }
-    })
-
-    return mods
-  }
 }
 
-export function makeStatObject(name, value){
+export function makeStatObject(name){
   const stat = StatDefinitions[name]
-  if('minimum' in stat){
-    value = Math.max(0, value)
+  if(!stat){
+    throw 'Unknown stat name: ' + name
   }
   return {
     ...stat,
     name,
-    value
+    defaultValue: defaultValue(stat)
   }
 }
 
 export function mergeStats(...statsObjs){
-  const stats = new Stats(statsObjs)
-  return stats.serialize()
+  return new Stats(
+    merge('baseAffectors'),
+    merge('bonusAffectors')
+  )
+  function merge(propName){
+    return statsObjs
+      .filter(o => o)
+      .reduce((arr, statsObj) => {
+        return [...arr, ...statsObj[propName]]
+      }, [])
+  }
+}
+
+/**
+ * @param val Turn whatever nonsense into a nice affectors array.
+ * @returns [object]
+ */
+function toAffectorsArray(val){
+  if(!val){
+    return []
+  }
+  const arr = Array.isArray(val) ? val : [val]
+  const affectors = []
+  arr.forEach(value => {
+    if(value instanceof Stats){
+      affectors.push(...value.affectors)
+    }else{
+      affectors.push(value)
+    }
+  })
+  return affectors
+}
+
+function defaultValue(stat){
+  if(stat.defaultValue !== null){
+    return stat.defaultValue
+  }
+  if(stat.type === StatType.ADDITIVE_MULTIPLIER || stat.type === StatType.MULTIPLIER){
+    return 1
+  }
+  return 0
 }

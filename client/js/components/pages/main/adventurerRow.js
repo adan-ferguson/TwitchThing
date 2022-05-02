@@ -1,80 +1,95 @@
-import ResultsPage from '../results/resultsPage.js'
-import DungeonPage from '../dungeon/dungeonPage.js'
-import AdventurerPage from '../adventurer/adventurerPage.js'
-
 import '../../timer.js'
+import AdventurerPage from '../adventurer/adventurerPage.js'
+import DungeonPage from '../dungeon/dungeonPage.js'
 
 const HTML = `
-<div>
-    Lvl <span class="level"></span> - <span class="name"></span> <span class="status"></span> <di-timer class="displaynone"></di-timer>
+<div class="inner">
+    <span>
+        Lvl.<span class="level"></span>
+    </span>
+    <span class="name"></span>
+    <div class="flex-rows displaynone dungeon-status">
+        <span class="event"></span>
+        <di-timer class="displaynone"></di-timer>
+        <span class="status"> 
+            Floor: <span class="floor"></span>
+            Room: <span class="room"></span>
+        </span>
+    </div>
 </div>
+<a class="new-tab" target="_blank" title="Open in new tab">[->]</a>
 `
 
 export default class AdventurerRow extends HTMLElement{
-  constructor(adventurer, setPageFn){
+  constructor(adventurer){
     super()
 
+    this.innerHTML = HTML
+
     if(!adventurer){
-      this.innerHTML = 'Create a new Adventurer'
+      this.querySelector('.inner').textContent = 'Create a new Adventurer'
+      this.querySelector('.new-tab').classList.add('hidden')
       return
     }
 
     this.setAttribute('adventurer-id', adventurer._id)
-    this.innerHTML = HTML
     this.adventurer = adventurer
 
     this.querySelector('.name').textContent = this.adventurer.name
     this.querySelector('.level').textContent = this.adventurer.level
 
-    this._events(setPageFn)
+    this._dungeonStatus = this.querySelector('.dungeon-status')
+    this._floor = this.querySelector('.floor')
+    this._room = this.querySelector('.room')
+    this._timer = this.querySelector('di-timer')
+    this._event = this.querySelector('.event')
+
+    const newTab = this.querySelector('.new-tab')
+    newTab.setAttribute('href', `/game#adventurer=${adventurer._id}`)
+    newTab.addEventListener('click', e => {
+      e.stopPropagation()
+    })
+  }
+
+  get targetPage(){
+    if(!this.dungeonRun){
+      return new AdventurerPage(this.adventurer._id)
+    }else{
+      return new DungeonPage(this.adventurer._id)
+    }
   }
 
   setDungeonRun(dungeonRun){
 
     this.dungeonRun = dungeonRun
+    this._dungeonStatus.classList.toggle('displaynone', dungeonRun ? false : true)
 
-    const timer = this.querySelector('di-timer')
-    this.querySelector('.status').textContent = statusText()
-    updateTimer()
-
-    function updateTimer(){
-      if(!dungeonRun.finished){
-        timer.time = dungeonRun.elapsedTime
-        timer.classList.remove('displaynone')
-        timer.start()
-      }else{
-        timer.classList.add('displaynone')
-      }
+    if(!dungeonRun){
+      return
     }
 
-    function statusText(){
-      if(!dungeonRun){
-        return ''
-      }
-      return dungeonRun.finished ? 'Finished' : 'In Dungeon Run'
+    this._floor.textContent = dungeonRun.floor
+    this._room.textContent = dungeonRun.room
+    this._event.textContent = eventText()
+
+    if(!dungeonRun.finished){
+      this._timer.time = dungeonRun.virtualTime
+      this._timer.classList.remove('displaynone')
+      this._timer.start()
+    }else{
+      this._timer.classList.add('displaynone')
     }
-  }
 
-  _setTimer(time){
-    const timer = this.querySelector('di-timer')
-    timer.time = time
-    timer.run()
-  }
-
-  _events(setPageFn){
-    this.addEventListener('click', () => {
-      let page
-      if(this.dungeonRun){
-        if(this.dungeonRun.finished){
-          page = new ResultsPage(this.adventurer._id)
-        }else{
-          page = new DungeonPage(this.adventurer._id)
-        }
-      }else{
-        page = new AdventurerPage(this.adventurer._id)
+    function eventText(){
+      if(dungeonRun.finished){
+        return 'Finished'
       }
-      setPageFn(page)
-    })
+      const currentEvent = dungeonRun.currentEvent || dungeonRun.events.at(-1)
+      if(currentEvent?.monster){
+        return `VS. ${currentEvent.monster.name}`
+      }
+      return 'Exploring'
+    }
   }
 }
 
