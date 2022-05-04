@@ -103,14 +103,18 @@ export async function getRunDataMulti(dungeonRunIDs){
   return runs
 }
 
-export async function getRunData(dungeonRunID){
+export function getActiveRunData(dungeonRunID){
   const run = activeRuns[dungeonRunID]
   if(!run){
-    return await DungeonRuns.findOne(dungeonRunID)
+    return null
   }
   const runDoc = { ...run.doc }
   runDoc.virtualTime = run.virtualTime
   return runDoc
+}
+
+export async function getRunData(dungeonRunID){
+  return getActiveRunData(dungeonRunID) || await DungeonRuns.findOne(dungeonRunID)
 }
 
 class DungeonRunInstance{

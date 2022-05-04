@@ -1,6 +1,6 @@
 import Page from '../page.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
-import AdventurerRow from './adventurerRow.js'
+import AdventurerRow from '../../adventurerRow.js'
 import fizzetch from '../../../fizzetch.js'
 import DIForm from '../../form.js'
 import FormModal from '../../formModal.js'
@@ -41,14 +41,11 @@ export default class MainPage extends Page{
   }
 
   async load(){
-    const myContent = await fizzetch('/game/main')
-    if(myContent.error){
-      this._showError(myContent.error, true)
+    const { error, adventurers, slots } = await fizzetch('/game/main')
+    if(error){
+      this._showError(error, true)
     }else{
-      this._populateAdventurers(myContent.adventurers, myContent.slots)
-      myContent.dungeonRuns.forEach(dr => {
-        this._dungeonRunUpdate(dr)
-      })
+      this._populateAdventurers(adventurers, slots)
     }
     history.replaceState(null, null, ' ')
     getSocket().on('user dungeon run update', this._dungeonRunUpdate)
@@ -115,7 +112,7 @@ export default class MainPage extends Page{
   }
 
   _dungeonRunUpdate = dungeonRun => {
-    const row = this.querySelector(`di-main-adventurer-row[adventurer-id="${dungeonRun.adventurerID}"]`)
+    const row = this.querySelector(`di-adventurer-row[adventurer-id="${dungeonRun.adventurerID}"]`)
     if(row){
       row.setDungeonRun(dungeonRun)
     }

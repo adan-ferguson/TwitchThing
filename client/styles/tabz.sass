@@ -1,0 +1,28 @@
+di-tabz
+  display: flex
+  flex-direction: column
+
+  > .tabz-list
+    display: flex
+    flex-direction: row
+    border-bottom: 0.25rem solid #CCC
+
+    > .tab
+      padding: 5rem 10rem
+
+      &.active
+        color: #12c712
+
+  > .tabz-content
+
+    flex-grow: 1
+    padding: 15rem
+
+    display: flex
+    flex-direction: column
+
+    > *
+      flex-grow: 1
+
+      &:not(.active)
+        display: none

@@ -1,6 +1,6 @@
-import '../../timer.js'
-import AdventurerPage from '../adventurer/adventurerPage.js'
-import DungeonPage from '../dungeon/dungeonPage.js'
+import './timer.js'
+import AdventurerPage from './pages/adventurer/adventurerPage.js'
+import DungeonPage from './pages/dungeon/dungeonPage.js'
 
 const HTML = `
 <div class="inner">
@@ -11,7 +11,7 @@ const HTML = `
     <div class="flex-rows displaynone dungeon-status">
         <span class="event"></span>
         <di-timer class="displaynone"></di-timer>
-        <span class="status"> 
+        <span class="depth"> 
             Floor: <span class="floor"></span>
             Room: <span class="room"></span>
         </span>
@@ -21,8 +21,17 @@ const HTML = `
 `
 
 export default class AdventurerRow extends HTMLElement{
-  constructor(adventurer){
+
+  _options
+  _depth
+
+  constructor(adventurer, options = {}){
     super()
+
+    this._options = {
+      newTab: `/game#adventurer=${adventurer._id}`,
+      ...options
+    }
 
     this.innerHTML = HTML
 
@@ -39,16 +48,21 @@ export default class AdventurerRow extends HTMLElement{
     this.querySelector('.level').textContent = this.adventurer.level
 
     this._dungeonStatus = this.querySelector('.dungeon-status')
+    this._depth = this.querySelector('.depth')
     this._floor = this.querySelector('.floor')
     this._room = this.querySelector('.room')
     this._timer = this.querySelector('di-timer')
     this._event = this.querySelector('.event')
 
-    const newTab = this.querySelector('.new-tab')
-    newTab.setAttribute('href', `/game#adventurer=${adventurer._id}`)
-    newTab.addEventListener('click', e => {
-      e.stopPropagation()
-    })
+    this._setupNewTabLink()
+
+    if(adventurer.dungeonRun){
+      this.setDungeonRun(adventurer.dungeonRun)
+    }else if(adventurer.dungeonRunID){
+      this.setDungeonRun({
+        finished: true
+      })
+    }
   }
 
   get targetPage(){
@@ -68,16 +82,15 @@ export default class AdventurerRow extends HTMLElement{
       return
     }
 
-    this._floor.textContent = dungeonRun.floor
-    this._room.textContent = dungeonRun.room
     this._event.textContent = eventText()
+    this._timer.classList.toggle('displaynone', dungeonRun.finished)
+    this._depth.classList.toggle('displaynone', dungeonRun.finished)
 
     if(!dungeonRun.finished){
+      this._room.textContent = dungeonRun.room
+      this._floor.textContent = dungeonRun.floor
       this._timer.time = dungeonRun.virtualTime
-      this._timer.classList.remove('displaynone')
       this._timer.start()
-    }else{
-      this._timer.classList.add('displaynone')
     }
 
     function eventText(){
@@ -91,6 +104,18 @@ export default class AdventurerRow extends HTMLElement{
       return 'Exploring'
     }
   }
+
+  _setupNewTabLink(){
+    const newTab = this.querySelector('.new-tab')
+    if(this._options.newTab){
+      newTab.setAttribute('href', this._options.newTab)
+      newTab.addEventListener('click', e => {
+        e.stopPropagation()
+      })
+    }else{
+      newTab.classList.add('hidden')
+    }
+  }
 }
 
-customElements.define('di-main-adventurer-row', AdventurerRow)
+customElements.define('di-adventurer-row', AdventurerRow)

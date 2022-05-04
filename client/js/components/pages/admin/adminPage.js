@@ -1,13 +1,16 @@
 import Page from '../page.js'
 
 import fizzetch from '../../../fizzetch.js'
+import '../../tabz.js'
+import './adventurersTab.js'
+import './commandTab.js'
 
 const HTML = `
 <div class="fill-contents">
-  <div class="command">
-      <input class="command-input" placeholder="enter command name" autocomplete="organization">
-      <textarea readonly class="command-output"></textarea>
-  </div>
+    <di-tabz>
+        <di-admin-command-tab data-tab-name="Command"></di-admin-command-tab>
+        <di-admin-adventurer-tab data-tab-name="Adventurer"></di-admin-adventurer-tab>
+    </di-tabz>
 </div>
 `
 
@@ -16,8 +19,8 @@ export default class AdminPage extends Page{
   constructor(adventurerID){
     super()
     this.innerHTML = HTML
-    this.input = this.querySelector('.command-input')
-    this.output = this.querySelector('.command-output')
+    this._commandTab = this.querySelector('di-admin-command-tab')
+    this._adventurerTab = this.querySelector('di-admin-adventurer-tab')
   }
 
   get titleText(){
@@ -25,28 +28,13 @@ export default class AdminPage extends Page{
   }
 
   async load(){
-    const result = await fizzetch('/admin')
-    if(result.error){
-      return result
+
+    const { adventurers, error } = await fizzetch('/admin')
+    if(error){
+      return error
     }
 
-    this.input.addEventListener('keydown', e => {
-      if(e.key === 'Enter'){
-        this._runCommand()
-      }
-    })
-  }
-
-  async _runCommand(){
-    const command = this.input.value
-    if(!command){
-      return
-    }
-    this.input.value = ''
-    this.output.value = `Running command "${command}":`
-
-    const { result } = await fizzetch('/admin/runcommand', { command })
-    this.output.value += '\n' + result
+    this._adventurerTab.setAdventurers(adventurers)
   }
 }
 

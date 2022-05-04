@@ -3,7 +3,7 @@ import Users from '../collections/users.js'
 import Adventurers from '../collections/adventurers.js'
 import DungeonRuns from '../collections/dungeonRuns.js'
 import Combats from '../collections/combats.js'
-import { cancelAllRuns } from '../dungeons/dungeonRunner.js'
+import { cancelAllRuns, getActiveRunData, getRunDataMulti } from '../dungeons/dungeonRunner.js'
 
 const router = express.Router()
 
@@ -20,7 +20,9 @@ router.use(async (req, res, next) => {
 })
 
 router.post('/', async(req, res) => {
-  res.status(200).end()
+  const adventurers = await Adventurers.find({})
+  adventurers.forEach(adv => adv.dungeonRun = getActiveRunData(adv.dungeonRunID))
+  res.status(200).send({ adventurers })
 })
 
 router.post('/runcommand', async(req, res) => {

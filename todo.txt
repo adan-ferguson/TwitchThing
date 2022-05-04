@@ -553,16 +553,25 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 5.5
 -----------
 + Buff items
-- Limit lvl 20 time
-
-- Show everyone's adventurers in admin page, can view their pane or their active dungeonrun
++ Limit lvl 20 time
++ Show everyone's adventurers in admin page, can view their pane or their active dungeonrun
 
 TODO Later
 -----------
+- AdventurerRow
+-- Enemy displayname
+-- Red for combat
+
+- Make combat page redder in general
+- Fake double stairs
+- Make checkpoints more difficult (lvl 11, 21, etc)
+- Gussy up the tabz to make easier to use, di-tab-content
+- di-adventurer-list
+- Go back to adventurer page not having subpages, page.load() contains source info
 - Have monsters just be a flat pct (increases per zone)
 - Show time on results page
 - Dragged items have to z-index on top
-- Reconnection of sockets on server reload
+- Socket disconnect/reconnect rejoin room
 - Random crashes?
 
 - Award user levelup loot before picking bonuses
