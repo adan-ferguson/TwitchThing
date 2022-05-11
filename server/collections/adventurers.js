@@ -3,15 +3,12 @@ import Collection from './collection.js'
 const DEFAULTS = {
   _id: null,
   name: null,
-  level: 0,
+  level: 1,
   xp: 0,
   userID: null,
   items: [null, null, null, null, null, null, null, null],
   dungeonRunID: null,
-  baseStats: {
-    hpMax: 100,
-    attack: 10
-  },
+  bonuses: [],
   accomplishments: {
     highestFloor: 1
   }

@@ -1,4 +1,4 @@
-import { getIdleAdventurerStats } from './adventurer.js'
+import { getIdleAdventurerStats, levelToHp } from './adventurer.js'
 
 export const ADVENTURER_BASE_ROOM_TIME = 5000
 
@@ -29,7 +29,7 @@ export default class AdventurerInstance{
   }
 
   get hpMax(){
-    return this.stats.get('hpMax').value
+    return Math.ceil(levelToHp(this.adventurer.level) * this.stats.get('hpMax').value)
   }
 
   get standardRoomDuration(){

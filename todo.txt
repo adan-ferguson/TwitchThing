@@ -557,68 +557,37 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 + Show everyone's adventurers in admin page, can view their pane or their active dungeonrun
 - gitignore not ignoring combined files
 
-TODO Later
------------
+*****************************************
+    Milestone 6
+    - Classes
+    - Resting
+    - 3rd zone
+    - Enemy items
+    - Simple active items
+    - Item ordering matters
+*****************************************
 
-- AdventurerRow
--- Enemy displayname
--- Red for combat
+New Features:
+- Replay combat
+- Combat permalinks
+- Adventure log (viewable on results page or inside of exploring page)
+- HP + Power as all base values
+- Resting
+- Classes
 
-- Make combat page redder in general
-- Fake double stairs
-- Make checkpoints more difficult (lvl 11, 21, etc)
-- Gussy up the tabz to make easier to use, di-tab-content
-- di-adventurer-list
+Component Changes:
+- More icons in general
+- Don't use hash queries for adventurer new tab
 - Go back to adventurer page not having subpages, page.load() contains source info
-- Have monsters just be a flat pct (increases per zone)
-- Show time on results page
-- Dragged items have to z-index on top
-- Socket disconnect/reconnect rejoin room
-- Random crashes?
+- Show loot before showing bonuses
+-- Prevent double-ups
 
-- Award user levelup loot before picking bonuses
--- This should be saved immediately or else you could get levelup loot multiple times with different adventurers
+- Socket reconnection should rejoin rooms, maybe even reload the current page?
 
-- Combat load fails sometimes
-- Sometimes fake results page?
+- Show name of zone while exploring
+-- Show a theme for each multiple of 10 floors (background texture)
 
-- Have loadout rows contain an inner element
--- So it's easier to click/hover them
--- So the inner part can be used on item details page
-
-- get rid of composite percentages -> flat
-- get rid of variant adventuring speed from the dungeonrunner
-- Public combat page
-- Don't use hash queries because browsers seem to not like them
-
-- XP gain, stair find chance, etc probably all need to be multiplicative
-- XP gain should only boost for adventurer
-
-- Scaling: don't be 1:1 floor to adv level, be more like 2:1
--- Relics too
--- Chest scaling needs fixing badly
-
-- get rid of adventuring speed because the dissonance between adv speed and combat speed is annoying
-
-- Dungeon page chests display
--- Animate the addition of chests
--- Have chest icons for tiers
-
-- Resting, food
-
-- The monospaced font just looks weird with multiline
-- Show time meter on dungeon page
-
-- Show a theme for each multiple of 10 floors
-
-- Growth: the main 2 stats are HP and Power
--- Attack is equal to power possibly times a multiplier
--- The result being if you have 20 Power * +50% attack, it's 30 attack, but attack doesn't scale the growth
--- These are the only scaling things
--- Displayed phys/mag power and phys/mag armor
-
-- Monsters just use a default calculated HP and Power (which gets scaled up)
--- Their first slot in loadout will describe their specializations
+- StatDisplayInfo for additionals if they're percentages (removal of composites should help this)
 
 - Admin page
 -- Show ajax errors which were thrown
@@ -626,8 +595,50 @@ TODO Later
 -- List combats
 -- Simulate a combat
 
-- Classes
--- Results page: Double level-ups cause a weird situation where you want to make sure we can't choose 4 classes.
+Game Systems/Balance:
+- Remove user xp
+-- New slot when you unlock a new zone
+
+- Instead of dipping difficulty at start of a new zone, make it spike
+- Make monster chance a flat pct (with buffer between fights), 30%? increase per zone?
+- get rid of composite percentages -> flat or multipliers
+- get rid of variant adventuring speed from the dungeonrunner
+
+- Monsters just use a default calculated HP and Power (which gets scaled up)
+-- Their first slot in loadout will describe their specializations
+
+Bugs/UI Tweaks:
+- Make the glow effect much more obvious
+- Get a new font
+
+- AdventurerRow
+-- Enemy displayname
+-- Red for combat
+- Show time on results page
+
+- Have loadout rows contain an inner element
+-- So it's easier to click/hover them
+-- So the inner part can be used on item details page
+
+- Make combat page redder in general
+
+- Fix fake double stairs
+
+- Dragged items have z-index on top
+
+TODO Later
+-----------
+- Gussy up the tabz to make easier to use, di-tab-content
+- di-adventurer-list
+- Socket disconnect/reconnect rejoin room
+- Random crashes?
+
+- Combat load fails sometimes
+- Sometimes fake results page?
+
+- Dungeon page chests display
+-- Animate the addition of chests
+-- Have chest icons for tiers
 
 - fighter toDisplayName probably bugged
 
@@ -638,7 +649,6 @@ TODO Later
 - Mobile considerations
 -- Tooltips
 
-- Generally the visuals seem to jump
 - Big numbers will be a problem
 
 - Fix errors + targetPage redirects

@@ -1,6 +1,3 @@
 export default {
-  unscaledStats: {
-    hpMax: 40,
-    attack: 10
-  }
+  description: 'Pretty big for a rat, but otherwise unremarkable.'
 }

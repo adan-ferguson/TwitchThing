@@ -35,5 +35,11 @@ export function getMonsterDefinition(floor, rarity = 1){
 
 export function getBasicMonsterDefinition(floor){
   floor = ((floor - 1) % 100) + 1
-  return monstersByFloor[floor] || getBasicMonsterDefinition(floor - 1)
+  if(!monstersByFloor[floor]){
+    throw `Could not find monster for floor ${floor}`
+  }
+  return {
+    level: floor,
+    definition: monstersByFloor[floor]
+  }
 }

@@ -116,12 +116,12 @@ export default class FighterInstance{
 
 function checkValidity(fighter){
   if(!fighter.name){
-    throw 'fighter name is required'
+    throw 'warrior name is required'
   }
   if(!fighter.baseStats?.hpMax){
-    throw 'fighter hpMax is required'
+    throw 'warrior hpMax is required'
   }
   if(!fighter.baseStats?.attack){
-    throw 'fighter attack is required'
+    throw 'warrior attack is required'
   }
 }

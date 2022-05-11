@@ -8,7 +8,7 @@ import VinylFile from 'vinyl'
 import path from 'path'
 
 const S = gulpSass(sass)
-const REGISTRIES = ['items', 'monsters', 'mods']
+const REGISTRIES = ['items', 'monsters', 'mods', 'bonuses']
 
 function buildStyles(){
   return gulp.src('./client/styles/**/*.*ss')
@@ -36,8 +36,10 @@ function exporterConcater(targetFile){
 
   return through.obj(function(file, encoding, callback){
     if(!file.isNull()){
+      const relPath = path.relative(path.dirname(targetFile), file.path).split(path.sep)
       files.push({
-        path: path.relative(path.dirname(targetFile), file.path).split(path.sep).join(path.posix.sep),
+        path: relPath.join(path.posix.sep),
+        group: relPath[0],
         name: toClassName(path.basename(file.path))
       })
     }
@@ -55,11 +57,20 @@ function exporterConcater(targetFile){
 
   function combinedFileContents(){
     let str = ''
-    files.forEach(file => {
-      str += `import ${file.name} from './${file.path}'\n`
-      str += `${file.name}.name = '${file.name}'\n`
+    const groups = {}
+    files.forEach(({ name, path, group }) => {
+      str += `import ${name} from './${path}'\n`
+      str += `${name}.name = '${name}'\n`
+      if(!groups[group]){
+        groups[group] = []
+      }
+      groups[group].push(name)
     })
-    str += `export default { ${files.map(file => `${file.name.toUpperCase()}:${file.name}`).join(',')} }`
+    str += 'export default {\n'
+    for(let groupName in groups){
+      str += `  ${groupName}: { ${groups[groupName].map(name => `${name.toUpperCase()}:${name}`).join(',')} },\n`
+    }
+    str += '}'
     return str
   }
 }
@@ -70,7 +81,7 @@ export const watch =  () => {
   gulp.watch(['./game/*/**/*.js', '!./game/**/combined.js'], { ignoreInitial: false }, generateRegistries)
 }
 
-export const build = gulp.series(buildStyles, copyAssets, generateRegistries)
+export default gulp.series(buildStyles, copyAssets, generateRegistries)
 
 function toClassName(filename){
   return filename.split('.')[0]
