@@ -1,80 +1,41 @@
 import { chooseMulti, chooseOne, randomRound } from '../../game/rando.js'
 import scaledValue from '../../game/scaledValue.js'
-import { StatBonusCategory, StatDefinitions, StatType } from '../../game/stats/statDefinitions.js'
+import { StatDefinitions, StatType } from '../../game/stats/statDefinitions.js'
+import OrbsData from '../../game/orbsData.js'
+import Users from '../collections/users.js'
 
-const BONUS_BASE_WEIGHT = 20
-const BONUS_WEIGHT_GROWTH = 0.1
+export async function generateBonusOptions(dungeonRun, level){
 
-const RARITY_TO_BONUS_CHANCE = {
-  1: 60,
-  2: 30,
-  3: 10
-}
+  const user = await Users.findOne(dungeonRun.userID)
+  const orbsData = OrbsData.fromAdventurer(dungeonRun.adventurer, null)
+  const classOptions = orbsData.classes.slice(0,3)
 
-const NUM_BONUS_CHOICES_CHANCE = {
-  1: 60,
-  2: 30,
-  3: 10
-}
-
-const NUM_BONUS_CHOICES_WEIGHT = {
-  1: 1,
-  2: 1.1,
-  3: 1.2
-}
-
-export function calculateBonusOptions(stats, level){
-
-  const allBonusOptions = {
-    [StatBonusCategory.OFFENSIVE]: {},
-    [StatBonusCategory.DEFENSIVE]: {},
-    [StatBonusCategory.ADVENTURING]: {}
+  for(let i = classOptions.length; i < 3; i++){
+    classOptions[i] = randomClass()
   }
 
-  // TODO: just use relevant stats to the adventurer
-  for(let type in StatDefinitions){
-    const stat = StatDefinitions[type]
-    if(allBonusOptions[stat.category]){
-      allBonusOptions[stat.category][type] = stat
+  return classOptions.map(className => {
+    return {
+      className,
+      bonus: generateBonus(className, orbsData.max(className))
     }
+  })
+
+  function randomClass(){
+    const exclude = orbsData.classes
+    const choices = []
+    Object.keys(user.features.advClasses)
+      .filter(className => user.features.advClasses[className] > 0)
+      .forEach(className => {
+        if(exclude.indexOf(className) > -1){
+          return
+        }
+        choices.push(className)
+      })
+    return chooseOne(choices)
   }
 
-  const randomlySelectedBonusOptions = {}
+  function generateBonus(className, orbCount){
 
-  for(let type in allBonusOptions){
-    randomlySelectedBonusOptions[type] = pickSome(allBonusOptions[type])
-  }
-
-  return randomlySelectedBonusOptions
-
-  function pickSome(choices){
-
-    let numChoices = chooseOne(NUM_BONUS_CHOICES_CHANCE)
-    numChoices = Math.min(Object.keys(choices).length, numChoices)
-
-    const weightedChoices = Object.keys(choices).map(type => {
-      return {
-        weight: RARITY_TO_BONUS_CHANCE[choices[type].rarity] || 0, value: type
-      }
-    })
-
-    const picked = chooseMulti(weightedChoices, numChoices)
-    const bonusScaling = scaledValue(BONUS_WEIGHT_GROWTH, level)
-    const bonusWeight = BONUS_BASE_WEIGHT * NUM_BONUS_CHOICES_WEIGHT[numChoices] / numChoices
-
-    const randomOptions = {}
-    picked.forEach(type => {
-      const statDef = choices[type]
-      const weightedVal = bonusWeight * (statDef.scaling ? bonusScaling : 1) / statDef.weight
-      if(statDef.type === StatType.COMPOSITE){
-        randomOptions[type] = Math.max(1, randomRound(weightedVal))
-      }else if(statDef.type === StatType.PERCENTAGE){
-        randomOptions[type] = weightedVal.toFixed(2)
-      }else{
-        randomOptions[type] = (1 + weightedVal).toFixed(2)
-      }
-    })
-
-    return randomOptions
   }
 }

@@ -19,8 +19,12 @@ export default class FighterInstance{
       ...fighterStartState
     }
     if(!('hp' in this._currentState)){
-      this._currentState.hp = this.stats.get('hpMax').value
+      this._currentState.hp = fighter.baseHp * this.stats.get('hpMax').value
     }
+  }
+
+  get power(){
+    return this.baseFighter.basePower
   }
 
   get fighterType(){
@@ -69,7 +73,7 @@ export default class FighterInstance{
   }
 
   performAction(enemy){
-    let baseDamage = this.stats.get('attack').value
+    let baseDamage = Math.ceil(this.power * this.stats.get('physPower').value)
     const damageResult = this._dealDamage(baseDamage, enemy)
     this._currentState.timeSinceLastAction = 0
 
@@ -116,12 +120,12 @@ export default class FighterInstance{
 
 function checkValidity(fighter){
   if(!fighter.name){
-    throw 'warrior name is required'
+    throw 'Fighter name is required'
   }
-  if(!fighter.baseStats?.hpMax){
-    throw 'warrior hpMax is required'
+  if(!fighter.baseHp){
+    throw 'Fighter baseHp is required'
   }
-  if(!fighter.baseStats?.attack){
-    throw 'warrior attack is required'
+  if(!fighter.basePower){
+    throw 'Fighter basePower is required'
   }
 }

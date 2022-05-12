@@ -71,7 +71,7 @@ export default class CombatSubpage extends Subpage{
     this.combatFeed.setCombat(this.combat)
     this.combatFeed.setTimeline(this.timeline)
 
-    // TODO: This only makes sense in monsters combat
+    // TODO: This only makes sense in monster combat
     this.combatFeed.setText(`A ${combat.fighter2.data.name} draws near.`)
 
     this.timeline.time = state.currentTime - this.combat.startTime

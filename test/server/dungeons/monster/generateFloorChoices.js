@@ -1,4 +1,4 @@
-import { generateFloorChoices } from '../../../../server/monsters/generator.js'
+import { generateFloorChoices } from '../../../../server/dungeons/monsters.js'
 import { expect } from 'chai'
 
 describe('generateFloorChoices function', () => {

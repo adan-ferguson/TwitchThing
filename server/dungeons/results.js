@@ -1,16 +1,13 @@
 import Adventurers from '../collections/adventurers.js'
 import DungeonRuns from '../collections/dungeonRuns.js'
 import Users from '../collections/users.js'
-import { getIdleAdventurerStats, xpToLevel as advXpToLevel } from '../../game/adventurer.js'
-import { xpToLevel as userXpToLevel } from '../../game/user.js'
+import { xpToLevel, xpToLevel as advXpToLevel } from '../../game/adventurer.js'
 import Stats from '../../game/stats/stats.js'
-import { calculateBonusOptions } from './bonuses.js'
+import { generateBonusOptions } from './bonuses.js'
 import { randomRound } from '../../game/rando.js'
 import { generateItemDef } from '../items/generator.js'
 import { toArray } from '../../game/utilFunctions.js'
 import { generateChest, generateRandomChest } from './chests.js'
-
-const GROWTH_SCALE = 0.10
 
 const REWARDS_TYPES = {
   xp: 'int',
@@ -40,142 +37,79 @@ export function addRewards(rewards, toAdd){
   return r
 }
 
-export function calculateResults(dungeonRun){
-  return {
-    rewards: dungeonRun.rewards,
-    levelups: generateLevelups(dungeonRun),
-    userLevelups: generateUserLevelups(dungeonRun)
+export async function calculateResults(dungeonRunDoc){
+  dungeonRunDoc.results = {
+    rewards: dungeonRunDoc.rewards,
+    nextLevelup: generateLevelup(dungeonRunDoc),
+    selectedBonuses: []
+  }
+  if(!dungeonRunDoc.results.nextLevelup){
+    finalizeResults(dungeonRunDoc)
   }
 }
 
-export async function finalizeResults(user, adventurer, selectedBonuses){
+export async  function selectBonus(dungeonRunDoc, index){
+  dungeonRunDoc.selectedBonuses.push(dungeonRunDoc.nextLevelup.options[index])
+  const nextLevelup = generateLevelup(dungeonRunDoc)
+  if(!nextLevelup){
+    finalizeResults(dungeonRunDoc)
+  }else{
+    dungeonRunDoc.nextLevelup = nextLevelup
+  }
+  return nextLevelup
+}
 
-  if(!adventurer.dungeonRunID){
-    throw { code: 401, error: 'Adventurer is not currently in a dungeons.', targetPage: 'Adventurer' }
+export async function finalizeResults(dungeonRunDoc){
+
+  if(dungeonRunDoc.finalized){
+    throw { error: 'Dungeon run has already been finalized' }
   }
 
-  const dungeonRun = await DungeonRuns.findOne(adventurer.dungeonRunID)
-
-  if(!dungeonRun){
-    throw { code: 401, error: 'Dungeon run not found.', targetPage: 'Adventurer' }
+  if(!dungeonRunDoc.results){
+    throw { error: 'Dungeon run is not finished yet.' }
   }
 
-  if(!dungeonRun.finished){
-    return { code: 401, error: 'Dungeon run is not finished yet.', targetPage: 'Dungeon' }
-  }
-
-  if(selectedBonuses.length !== dungeonRun.results.levelups.length){
-    return { code: 401, error: 'Selected bonuses array length mismatched' }
+  if(dungeonRunDoc.results.nextLevelup){
+    throw { error: 'Levelup has not been resolved yet.' }
   }
 
   await saveAdventurer()
   await saveUser()
 
   async function saveAdventurer(){
-    const xpAfter = adventurer.xp + Math.floor(dungeonRun.results.rewards.xp)
-
-    const bonuses = []
-    dungeonRun.results.levelups.forEach((levelup, index) => {
-      const selectedOption = levelup.options[selectedBonuses[index]]
-      bonuses.push(selectedOption)
-      bonuses.push(levelup.stats)
-    })
-
-    const updates = {
-      dungeonRunID: null,
-      xp: xpAfter,
-      'accomplishments.highestFloor': Math.max(dungeonRun.floor, adventurer.accomplishments.highestFloor)
-    }
-
-    if(bonuses.length){
-      updates.baseStats = new Stats([adventurer.baseStats, ...bonuses]).serialize()
-      updates.level = advXpToLevel(xpAfter)
-    }
-
-    await Adventurers.update(adventurer._id, updates)
+    const adventurerDoc = Adventurers.findOne(dungeonRunDoc.adventurer._id)
+    const xpAfter = adventurerDoc.xp + dungeonRunDoc.results.rewards.xp
+    adventurerDoc.bonuses.push(...dungeonRunDoc.results.selectedBonuses)
+    adventurerDoc.dungeonRunID = null
+    adventurerDoc.xp = xpAfter
+    adventurerDoc.level = advXpToLevel(xpAfter)
+    adventurerDoc.accomplishments.highestFloor =
+      Math.max(dungeonRunDoc.floor, adventurerDoc.accomplishments.highestFloor)
+    await Adventurers.save(adventurerDoc)
   }
 
   async function saveUser(){
-    const userDoc = await Users.findOne(adventurer.userID)
-    const xpAfter = userDoc.xp + dungeonRun.results.rewards.xp
-    userDoc.xp = xpAfter
-    userDoc.level = userXpToLevel(xpAfter)
-
-    dungeonRun.results.rewards.chests?.forEach(chest => {
+    const userDoc = await Users.findOne(dungeonRunDoc.userID)
+    dungeonRunDoc.results.rewards.chests?.forEach(chest => {
       chest.contents.items?.forEach(item => {
         userDoc.inventory.items[item.id] = item
       })
     })
-
-    dungeonRun.results.userLevelups?.forEach(ulvl => {
-      if(ulvl.features){
-        ulvl.features.forEach(featureName => userDoc.features[featureName] = 1)
-      }
-      if(ulvl.chest){
-        if(ulvl.chest.contents.items){
-          ulvl.chest.contents.items.forEach(item => {
-            userDoc.inventory.items[item.id] = item
-          })
-        }
-      }
-    })
-
+    // TODO: if new slot unlocked, emit an update
+    userDoc.accomplishments.highestFloor =
+      Math.max(dungeonRunDoc.floor, userDoc.accomplishments.highestFloor)
     await Users.save(userDoc)
   }
 }
 
-function previewLevelup(adventurer, level){
-
-  const stats = getIdleAdventurerStats({  adventurer })
-  const growths = {
-    hpMax: Math.max(1, randomRound(stats.get('hpMax').value * GROWTH_SCALE)),
-    attack: Math.max(1, randomRound(stats.get('attack').value * GROWTH_SCALE))
+async function generateLevelup(dungeonRun){
+  const levelAfter = xpToLevel(dungeonRun.adventurer.xp + dungeonRun.rewards.xp)
+  const nextLevel = dungeonRun.adventurer.level + 1 + (dungeonRun.results?.selectedBonuses.length || 0)
+  if(levelAfter < nextLevel){
+    return null
   }
-
   return {
-    stats: growths,
-    options: calculateBonusOptions(stats, level),
-    level
+    options: await generateBonusOptions(dungeonRun, nextLevel),
+    level: nextLevel
   }
-}
-
-function previewUserLevelUp(dungeonRun, level){
-  const obj = { level, features: [] }
-  if(level === 1){
-    obj.features = ['chests', 'items', 'relics']
-    obj.chest = generateChest({
-      items: [generateItemDef('SWORD')]
-    }, {
-      name: 'Level-Up Chest',
-      level: level,
-      tier: 2
-    })
-  }else{
-    obj.chest = generateRandomChest(dungeonRun, {
-      name: 'Level-Up Chest',
-      level: level,
-      tier: 2
-    })
-  }
-  return obj
-}
-
-function generateLevelups(dungeonRun){
-  const adventurer = dungeonRun.adventurer
-  const levelAfter = advXpToLevel(adventurer.xp + dungeonRun.rewards.xp)
-  const levelups = []
-  for(let levelBefore = adventurer.level; levelBefore < levelAfter; levelBefore++){
-    levelups.push(previewLevelup(adventurer, levelBefore + 1))
-  }
-  return levelups
-}
-
-function generateUserLevelups(dungeonRun){
-  const user = dungeonRun.user
-  const levelAfter = userXpToLevel(user.xp + dungeonRun.rewards.xp)
-  const levelups = []
-  for(let levelBefore = user.level; levelBefore < levelAfter; levelBefore++){
-    levelups.push(previewUserLevelUp(dungeonRun, levelBefore + 1))
-  }
-  return levelups
 }

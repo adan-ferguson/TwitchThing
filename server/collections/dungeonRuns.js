@@ -2,11 +2,12 @@ import Collection from './collection.js'
 
 const DEFAULTS = {
   _id: null,
-  adventurerID: null,
+  adventurer: null,
   dungeonOptions: {
     startingFloor: 1
   },
   finished: false,
+  finalized: false,
   floor: 1,
   room: 0,
   rewards: {},

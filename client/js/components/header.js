@@ -1,6 +1,5 @@
 import * as Dropdown  from './dropdown.js'
 import SimpleModal from './simpleModal.js'
-import { levelToXp, xpToLevel } from '/game/user.js'
 import AdminPage from './pages/admin/adminPage.js'
 
 const HTML = `

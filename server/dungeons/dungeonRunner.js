@@ -7,6 +7,7 @@ import { emit } from '../socketServer.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 import Users from '../collections/users.js'
 import { toDisplayName } from '../../game/utilFunctions.js'
+import { levelToHp, levelToPower } from '../../game/adventurer.js'
 
 let running = false
 let activeRuns = {}
@@ -25,11 +26,11 @@ export async function start(){
   const dungeonRuns = await DungeonRuns.find({
     finished: false
   })
-  const adventurers = await Adventurers.findByIDs(dungeonRuns.map(dr => dr.adventurerID))
+  const adventurers = await Adventurers.findByIDs(dungeonRuns.map(dr => dr.adventurer._id))
   const users = await Users.findByIDs(adventurers.map(adv => adv.userID))
 
   dungeonRuns.forEach(dr => {
-    const adventurer = adventurers.find(adv => adv._id.equals(dr.adventurerID))
+    const adventurer = adventurers.find(adv => adv._id.equals(dr.adventurer._id))
     if(!adventurer || !adventurer.dungeonRunID?.equals(dr._id)){
       dr.finished = true
       DungeonRuns.save(dr)
@@ -71,28 +72,29 @@ export async function start(){
  */
 export async function addRun(adventurerID, dungeonOptions){
 
-  const adventurerDoc = await Adventurers.findOne(adventurerID)
+  const adventurer = await Adventurers.findOne(adventurerID)
 
   const startingFloor = parseInt(dungeonOptions.startingFloor) || 1
-  if(startingFloor > adventurerDoc.accomplishments.highestFloor || startingFloor % 10 !== 1){
+  if(startingFloor > adventurer.accomplishments.highestFloor || startingFloor % 10 !== 1){
     throw 'Invalid starting floor'
   }
-
   if(!adventurerID){
     throw 'No adventurer ID'
   }
 
-  const userDoc = await Users.findOne(adventurerDoc.userID)
-  const adventurerInstance = new AdventurerInstance(adventurerDoc)
+  adventurer.baseHp = levelToHp(adventurer.level)
+  adventurer.basePower = levelToPower(adventurer.level)
+
+  const userDoc = await Users.findOne(adventurer.userID)
   const drDoc = await DungeonRuns.save({
-    adventurerID,
+    adventurer,
     dungeonOptions,
-    adventurerState: adventurerInstance.adventurerState,
+    adventurerState: AdventurerInstance.initialState(adventurer),
     floor: startingFloor
   })
-  adventurerDoc.dungeonRunID = drDoc._id
-  await Adventurers.save(adventurerDoc)
-  activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, adventurerDoc, userDoc)
+  adventurer.dungeonRunID = drDoc._id
+  await Adventurers.save(adventurer)
+  activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, userDoc)
 }
 
 export async function getRunDataMulti(dungeonRunIDs){
@@ -119,13 +121,9 @@ export async function getRunData(dungeonRunID){
 
 class DungeonRunInstance{
 
-  constructor(doc, adventurer, user){
+  constructor(doc, user){
     this.doc = doc
-    this.adventurer = adventurer
-    if(!this.doc.adventurerID.equals(adventurer._id)){
-      throw 'Adventurer mismatch in dungeonRun instance'
-    }
-    if(!adventurer.userID.equals(user._id)){
+    if(!this.adventurer.userID.equals(user._id)){
       throw 'User mismatch in dungeonRun instance'
     }
     this.user = user
@@ -135,6 +133,10 @@ class DungeonRunInstance{
         message: `${this.adventurer.name} enters the dungeon.`
       })
     }
+  }
+
+  get adventurer(){
+    return this.doc.adventurer
   }
 
   get virtualTime(){
@@ -238,8 +240,8 @@ class DungeonRunInstance{
 
   async _applyCombatResult(event){
     const combat = await Combats.findOne(event.combatID)
-    const fighter = combat.fighter1.data._id.equals(this.doc.adventurerID) ? combat.fighter1 : combat.fighter2
-    const enemy = combat.fighter1.data._id.equals(this.doc.adventurerID) ? combat.fighter2 : combat.fighter1
+    const fighter = combat.fighter1.data._id.equals(this.adventurer._id) ? combat.fighter1 : combat.fighter2
+    const enemy = combat.fighter1.data._id.equals(this.adventurer._id) ? combat.fighter2 : combat.fighter1
     if(!fighter.endState.hp){
       event.runFinished = true
       event.message = `${fighter.data.name} has fallen, and got kicked out of the dungeon by some mysterious entity.`
@@ -258,7 +260,7 @@ class DungeonRunInstance{
   _finish(){
     console.log('run finished', this.adventurer.name)
     this.doc.finished = true
-    this.doc.results = calculateResults(this)
+    calculateResults(this.doc)
     delete activeRuns[this.doc._id]
     emit(this.adventurer.userID, 'dungeon run update', this.doc)
     DungeonRuns.save(this.doc)

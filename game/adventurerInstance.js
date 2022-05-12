@@ -1,9 +1,18 @@
-import { getIdleAdventurerStats, levelToHp } from './adventurer.js'
+import { getIdleAdventurerStats } from './adventurer.js'
 
 export const ADVENTURER_BASE_ROOM_TIME = 5000
 
 export default class AdventurerInstance{
+
+  static initialState(adventurer){
+    const ai = new AdventurerInstance(adventurer)
+    return ai.adventurerState
+  }
+
   constructor(adventurer, adventurerState = {}){
+    if(!adventurer.baseHp || !adventurer.basePower){
+      throw 'adventurer doc requires baseHp and basePower properties.'
+    }
     this.adventurer = adventurer
     this.adventurerState = { ...adventurerState }
     if(!('hp' in adventurerState)){
@@ -29,7 +38,11 @@ export default class AdventurerInstance{
   }
 
   get hpMax(){
-    return Math.ceil(levelToHp(this.adventurer.level) * this.stats.get('hpMax').value)
+    return Math.ceil(this.adventurer.baseHp * this.stats.get('hpMax').value)
+  }
+
+  get power(){
+    return this.adventurer.basePower
   }
 
   get standardRoomDuration(){

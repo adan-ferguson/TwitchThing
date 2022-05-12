@@ -1,11 +1,35 @@
 import scaledValue from '../../game/scaledValue.js'
-import { getMonsterDefinition } from './library.js'
 import { StatDefinitions, StatType } from '../../game/stats/statDefinitions.js'
-import { generateRandomChest } from '../dungeons/chests.js'
+import { generateRandomChest } from './chests.js'
 import { chooseOne } from '../../game/rando.js'
+import Monsters from '../../game/monsters/combined.js'
+import { levelToHp, levelToPower, levelToXpReward } from '../../game/monster.js'
 
-const POWER_MULTIPLIER = 0.25
-const ZONE_RAMP_UP_BONUS = 0.1
+const monstersByFloor = {
+  // Caves
+  1: Monsters.RAT,
+  2: Monsters.TROGLODYTE,
+  3: Monsters.BAT,
+  4: Monsters.KOBOLD,
+  5: Monsters.OOZE,
+  6: Monsters.SPIDER,
+  7: Monsters.SCORPION,
+  8: Monsters.ROCKGOLEM,
+  9: Monsters.SORCERER,
+  10: Monsters.MINOTAUR,
+  // Crypt
+  11: Monsters.SKELETON,
+  12: Monsters.ZOMBIE,
+  13: Monsters.WRAITH,
+  14: Monsters.SHADE,
+  15: Monsters.NECROMANCER,
+  16: Monsters.BANSHEE,
+  17: Monsters.LICH,
+  18: Monsters.VAMPIRE,
+  19: Monsters.ABOMINATION,
+  20: Monsters.BONEDRAGON
+}
+
 const CHEST_DROP_CHANCE = 0.05
 const MONSTER_CHANCE_INCREASE_PER_ROOM = 0.06
 
@@ -33,18 +57,17 @@ export async function generateMonster(dungeonRun){
 
   const level = floorToLevel(dungeonRun.floor)
   const monsterDefinition = getMonsterDefinition(level)
-  const scalingValue = getScalingValue(level - 1)
 
   return {
-    items: [],
-    level:
     ...monsterDefinition,
+    baseHp: levelToHp(level),
+    basePower: levelToPower(level),
     rewards: generateRewards()
   }
 
   function generateRewards(){
     const rewards = {
-      xp: 50 * scalingValue
+      xp: levelToXpReward(level)
     }
     if(dungeonRun.user.features.items){
       if(Math.random() < CHEST_DROP_CHANCE){
@@ -53,19 +76,6 @@ export async function generateMonster(dungeonRun){
     }
     return rewards
   }
-}
-
-function scaleUpStats(unscaledStats, scalingValue){
-  const scaledStats = {}
-  Object.keys(unscaledStats).forEach(statName => {
-    const def = StatDefinitions[statName]
-    let val = unscaledStats[statName] * (def.scaling ? scalingValue : 1)
-    if(def.type === StatType.COMPOSITE){
-      val = Math.round(val)
-    }
-    scaledStats[statName] = val
-  })
-  return scaledStats
 }
 
 /**
@@ -94,12 +104,21 @@ export function generateFloorChoices(floor, range = 1, skew = 0){
   return choices
 }
 
-function getScalingValue(level){
-  return scaledValue(POWER_MULTIPLIER, iterations(level))
+function getMonsterDefinition(floor, rarity = 1){
+  floor = Math.max(1, floor)
+  if(rarity === 1){
+    return getBasicMonsterDefinition(floor)
+  }
+  throw 'Non-basic monster not implemented yet'
 }
 
-export function iterations(level){
-  const zones = Math.floor(level / 10)
-  const floors = level % 10
-  return floors * (1 + zones * ZONE_RAMP_UP_BONUS) + zones * (8 + 4 * ZONE_RAMP_UP_BONUS * (zones - 1))
+function getBasicMonsterDefinition(floor){
+  floor = ((floor - 1) % 100) + 1
+  if(!monstersByFloor[floor]){
+    throw `Could not find monster for floor ${floor}`
+  }
+  return {
+    level: floor,
+    ...monstersByFloor[floor]
+  }
 }

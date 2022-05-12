@@ -604,6 +604,10 @@ Game Systems/Balance:
 - get rid of composite percentages -> flat or multipliers
 - get rid of variant adventuring speed from the dungeonrunner
 
+- DungeonRun stores adventurer doc in it so old ones can be viewed
+-- This doc also needs hpMax + power in case their formulas get changed
+-- Combat also needs the same treatment
+
 - Monsters just use a default calculated HP and Power (which gets scaled up)
 -- Their first slot in loadout will describe their specializations
 

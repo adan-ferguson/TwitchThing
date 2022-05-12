@@ -15,25 +15,23 @@ export const StatsDisplayScope = {
 }
 
 const statDefinitionsInfo = {
-  attack: {
-    text: 'Attack',
-    description: () => 'Physical damage dealt while attacking.',
+  hpMax: false,
+  physPower: false,
+  magicPower: false,
+  physDef: {
+    text: 'Phys Defense',
+    description: stat => 'Blocks physical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
     scope: StatsDisplayScope.COMBAT
   },
-  hpMax: {
-    text: 'HP',
-    description: () => 'Maximum health.',
-    scope: StatsDisplayScope.ALL
+  magicDef: {
+    text: 'Magic Defense',
+    description: stat => '',
+    scope: StatsDisplayScope.COMBAT
   },
   speed: {
     text: style => style === StatsDisplayStyle.ADDITIONAL ? 'Combat Speed' : 'Combat Turn Time',
     description: stat => 'Time between actions during combat.',
     valueFormat: speedFormat(COMBAT_BASE_TURN_TIME),
-    scope: StatsDisplayScope.COMBAT
-  },
-  physDef: {
-    text: 'Phys Defense',
-    description: stat => 'Blocks physical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
     scope: StatsDisplayScope.COMBAT
   },
   lifesteal: {
@@ -93,10 +91,8 @@ export function scopesMatch(scope1, scope2){
 }
 
 function toText(statType, value, style){
-  if(statType === StatType.ADDITIVE_MULTIPLIER || statType === StatType.MULTIPLIER){
+  if(statType === StatType.MULTIPLIER){
     return `${value > 1 ? '+' : ''}${Math.round((value - 1) * 100)}%`
-  }else if(statType === StatType.PERCENTAGE){
-    return `${value > 0 && style === StatsDisplayStyle.ADDITIONAL ? '+' : ''}${roundToFixed(value * 100, 1)}%`
   }
   return `${value > 0 && style === StatsDisplayStyle.ADDITIONAL ? '+' : ''}${value}`
 }

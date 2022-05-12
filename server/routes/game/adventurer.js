@@ -1,12 +1,12 @@
 import express from 'express'
 import Adventurers from '../../collections/adventurers.js'
 import { addRun, getRunData } from '../../dungeons/dungeonRunner.js'
-import { finalizeResults } from '../../dungeons/results.js'
+import { finalizeResults, selectBonus } from '../../dungeons/results.js'
 import db  from '../../db.js'
 import Users from '../../collections/users.js'
 import { commitAdventurerLoadout } from '../../loadouts/adventurer.js'
-import asyncHandler from 'express-async-handler'
 import createError from 'http-errors'
+import asyncHandler from '../../asyncHandler.js'
 
 const router = express.Router()
 const verifiedRouter = express.Router()
@@ -45,10 +45,17 @@ verifiedRouter.post('/dungeonrun', validatePage('dungeon'), async(req, res) => {
 })
 
 verifiedRouter.post('/results', validatePage('dungeon'), async (req, res) => {
-  res.send({
-    adventurer: req.adventurer,
-    dungeonRun: await getRunData(req.adventurer.dungeonRunID)
-  })
+  const dungeonRun = await getRunData(req.adventurer.dungeonRunID)
+  if(!dungeonRun.results){
+    throw { code: 400, message: 'Can not show results, dungeon run results not calculated yet.' }
+  }
+  res.send({ dungeonRun })
+})
+
+verifiedRouter.post('/selectbonus/:index', validatePage('dungeon'), async (req, res) => {
+  const dungeonRun = await getRunData(req.adventurer.dungeonRunID)
+  const nextLevelup = await selectBonus(dungeonRun, req.params.index)
+  res.status(200).send({ nextLevelup })
 })
 
 verifiedRouter.post('/confirmresults', validatePage('dungeon'), async (req, res) => {

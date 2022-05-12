@@ -82,7 +82,7 @@ export default class DungeonPage extends Page{
   }
 
   _parseDungeonUpdate = (dungeonRun) => {
-    if(dungeonRun.adventurerID !== this.adventurer._id){
+    if(this.dungeonRun._id !== dungeonRun._id){
       return
     }
     this.dungeonRun = dungeonRun

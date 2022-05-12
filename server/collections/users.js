@@ -1,6 +1,5 @@
 import Adventurers from './adventurers.js'
 import Collection from './collection.js'
-import { levelToAdventurerSlots } from '../../game/user.js'
 
 const DEFAULTS = {
   _id: null,
@@ -11,12 +10,21 @@ const DEFAULTS = {
   },
   displayname: null,
   adventurers: [],
+  accomplishments: {
+    highestFloor: 0
+  },
   features: { // featureName: 0 = locked, 1 = unlocked & brand new, 2 = unlocked
     items: 0,
     chests: 0,
-    relics: 0
+    relics: 0,
+    advClasses: {
+      warrior: 2,
+      mage: 2,
+      ranger: 2
+    }
   },
   inventory: {
+    adventurerSlots: 1,
     items: {}
   }
 }
@@ -68,7 +76,7 @@ Users.setDisplayname = async function(userDoc, displayname){
 }
 
 Users.newAdventurer = async function(userDoc, adventurername){
-  const availableSlots = levelToAdventurerSlots(userDoc.level)  - userDoc.adventurers.length
+  const availableSlots = userDoc.inventory.adventurerSlots - userDoc.adventurers.length
   if(availableSlots <= 0){
     throw { error: 'No slots available.', code: 403 }
   }
