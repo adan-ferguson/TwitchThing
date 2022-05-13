@@ -79,7 +79,7 @@ function validateDuplicates(itemIDs){
 }
 
 function validateLoadout(adventurer){
-  const orbsData = OrbsData.fromFighter(adventurer)
+  const orbsData = OrbsData.fromAdventurer(adventurer)
   if(!orbsData.isValid){
     throw { code: 403, error: 'Loadout orbs are invalid.' }
   }

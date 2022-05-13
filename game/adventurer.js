@@ -2,6 +2,7 @@ import Stats from './stats/stats.js'
 import LevelCalculator from './levelCalculator.js'
 import Item from './item.js'
 import scaledValue from './scaledValue.js'
+import OrbsData from './orbsData.js'
 
 const LEVEL_2_XP = 100
 const XP_MULTIPLIER = 0.4
@@ -29,14 +30,37 @@ export function levelToPower(lvl){
 
 /**
  * @param adventurer
- * @param items [itemDef]
- * @param bonus
+ * @param extraStats
  * @returns {Stats}
  */
-export function getIdleAdventurerStats({ adventurer, items = adventurer.items, bonus = [] }){
-  const loadoutStats = items.filter(itemDef => itemDef).map(itemDef => {
+export function getAdventurerStats(adventurer, extraStats = null){
+  const loadoutStats = adventurer.items.filter(itemDef => itemDef).map(itemDef => {
     const item = new Item(itemDef)
     return item.stats
   })
-  return new Stats([adventurer.baseStats, ...loadoutStats], bonus.affectors)
+  return new Stats([
+    ...adventurer.bonuses.map(bonus => bonus.stats).filter(s => s),
+    ...loadoutStats
+  ], extraStats)
+}
+
+export function getAdventurerOrbsData(adventurer){
+
+  const maxOrbs = {}
+  adventurer.bonuses.forEach(bonus => {
+    if(!bonus.orbs){
+      return
+    }
+    for(let className of bonus.orbs){
+      if(!maxOrbs[className]){
+        maxOrbs[className] = 0
+      }
+      maxOrbs[className] += bonus.orbs[className]
+    }
+  })
+
+  // TODO: items -> usedOrbs
+  // TODO: items might affect maxOrbs as well
+  // TODO: adventurer slots might affect usedOrbs
+  return new OrbsData(maxOrbs)
 }

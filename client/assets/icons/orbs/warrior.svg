@@ -1,0 +1,23 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+    <ellipse
+            stroke="black"
+            cx="25"
+            cy="25"
+            rx="22"
+            ry="22
+    "/>
+    <ellipse
+            stroke="white"
+            stroke-opacity="0.75"
+            fill="#B30"
+            cx="25"
+            cy="25"
+            rx="21"
+            ry="21
+    "/>
+    <path
+            fill="white"
+            fill-opacity="0.75"
+            d="M25,10 l15,15 l-15,15 l-15,-15 Z"
+    />
+</svg>

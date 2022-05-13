@@ -1,13 +1,16 @@
-import { chooseMulti, chooseOne, randomRound } from '../../game/rando.js'
-import scaledValue from '../../game/scaledValue.js'
-import { StatDefinitions, StatType } from '../../game/stats/statDefinitions.js'
+import { chooseOne } from '../../game/rando.js'
 import OrbsData from '../../game/orbsData.js'
 import Users from '../collections/users.js'
+import Bonuses from '../../game/bonuses/combined.js'
 
 export async function generateBonusOptions(dungeonRun, level){
 
   const user = await Users.findOne(dungeonRun.userID)
-  const orbsData = OrbsData.fromAdventurer(dungeonRun.adventurer, null)
+
+  const copyAdv = { ...dungeonRun.adventurer }
+  copyAdv.bonuses = [...dungeonRun.adventurer.bonuses, ...dungeonRun.results.selectedBonuses]
+  const orbsData = OrbsData.fromAdventurer(copyAdv)
+
   const classOptions = orbsData.classes.slice(0,3)
 
   for(let i = classOptions.length; i < 3; i++){
@@ -17,7 +20,7 @@ export async function generateBonusOptions(dungeonRun, level){
   return classOptions.map(className => {
     return {
       className,
-      bonus: generateBonus(className, orbsData.max(className))
+      bonus: generateBonus(className)
     }
   })
 
@@ -35,7 +38,25 @@ export async function generateBonusOptions(dungeonRun, level){
     return chooseOne(choices)
   }
 
-  function generateBonus(className, orbCount){
+  function generateBonus(className){
+    const choices = Bonuses[className].map(bonus => {
+      return { weight: calcBonusWeight(bonus), value: bonus }
+    })
+    return chooseOne(choices)
+  }
 
+  function calcBonusWeight(bonus){
+    const orbCount = orbsData.max(bonus.group)
+    if(bonus.minOrbs > orbCount){
+      return 0
+    }
+    if(bonus.unique){
+      if(copyAdv.bonuses.find(existingBonus => {
+        return existingBonus.name === bonus.name && existingBonus.group === bonus.group
+      }))
+        return 0
+    }
+    // TODO: not sure what to do for this exactly
+    return 1
   }
 }

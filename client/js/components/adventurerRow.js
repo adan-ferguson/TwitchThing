@@ -29,7 +29,7 @@ export default class AdventurerRow extends HTMLElement{
     super()
 
     this._options = {
-      newTab: `/game#adventurer=${adventurer._id}`,
+      newTab: adventurer ? `/game?adventurer=${adventurer._id}` : null,
       ...options
     }
 

@@ -1,5 +1,6 @@
 import App from '../components/app.js'
 import * as SocketClient from '../socketClient.js'
+import '../componentImporter.js'
 
 let app
 

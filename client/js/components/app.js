@@ -6,18 +6,6 @@ import SimpleModal from './simpleModal.js'
 import AdventurerPage from './pages/adventurer/adventurerPage.js'
 import DungeonPage from './pages/dungeon/dungeonPage.js'
 
-import './header.js'
-import './pages/dungeon/combat/fighterPane.js'
-import './pages/dungeon/combat/feed.js'
-import './pages/dungeon/exploring/adventurerPane.js'
-import './pages/dungeon/exploring/event.js'
-import './pages/dungeon/exploring/state.js'
-import './loadout/inventory.js'
-import './stats/statsList.js'
-import './xpBar.js'
-import './hpBar.js'
-import './loadout/loadout.js'
-
 const HTML = `
 <di-header></di-header>
 <div class="page-title"></div>

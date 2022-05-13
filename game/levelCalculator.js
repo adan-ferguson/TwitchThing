@@ -12,13 +12,13 @@ export default class LevelCalculator{
 
   static levelToXp(level2xp, xpMultiplier, lvl){
 
-    if(lvl <= 0){
+    if(lvl <= 1){
       return 0
     }
 
     let xp = level2xp
-    for(let i = 1; i < lvl; i++){
-      xp += scaledValue(xpMultiplier, i - 1, level2xp)
+    for(let i = 2; i < lvl; i++){
+      xp += scaledValue(xpMultiplier, i - 2, level2xp)
       xp = toThreeDigits(xp)
     }
     return xp

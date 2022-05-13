@@ -576,6 +576,9 @@ New Features:
 - Classes
 
 Component Changes:
+
+- OrbsData w/ classes
+
 - More icons in general
 - Don't use hash queries for adventurer new tab
 - Go back to adventurer page not having subpages, page.load() contains source info

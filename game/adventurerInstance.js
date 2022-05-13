@@ -1,4 +1,4 @@
-import { getIdleAdventurerStats } from './adventurer.js'
+import { getAdventurerStats } from './adventurer.js'
 
 export const ADVENTURER_BASE_ROOM_TIME = 5000
 
@@ -26,7 +26,7 @@ export default class AdventurerInstance{
 
   get stats(){
     // TODO: apply state
-    return getIdleAdventurerStats({ adventurer: this.adventurer })
+    return getAdventurerStats(this.adventurer)
   }
 
   get hp(){

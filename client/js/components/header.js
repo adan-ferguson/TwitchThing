@@ -4,9 +4,8 @@ import AdminPage from './pages/admin/adminPage.js'
 
 const HTML = `
 <button class="back-button hidden"><- Back</button>
-<div class="user-info">
-    <div class="displayname"></div>
-    <di-xp-bar class="clickable"></di-xp-bar>
+<div class="user-info clickable">
+    <span class="displayname"></span> <i class="fa-solid fa-caret-down"></i>
 </div>
 `
 
@@ -31,19 +30,13 @@ export default class Header extends HTMLElement{
 
     this._userInfo = this.querySelector('.user-info')
 
-    this.xpBar = this.querySelector('di-xp-bar')
-    this.xpBar.setLevelFunctions(xpToLevel, levelToXp)
-
-    Dropdown.create(this.xpBar, () => {
-
+    Dropdown.create(this._userInfo, () => {
       const options = {
         Logout: () => confirmLogout()
       }
-
       if(this.user.isAdmin){
         options.Admin =  () => this.app.setPage(new AdminPage())
       }
-
       return options
     })
 
@@ -58,22 +51,11 @@ export default class Header extends HTMLElement{
     return this.app?.user
   }
 
-  async addUserXp(xpToAdd, onLevelUp){
-    if(this.user.anonymous){
-      return
-    }
-    await this.xpBar.setValue(this.user.xp + xpToAdd, {
-      animate: true,
-      onLevelUp
-    })
-  }
-
   updateUserBar(){
     if(this.user.anonymous){
       return this._setAnonymousMode()
     }
     this.querySelector('.displayname').textContent = this.user.displayname
-    this.xpBar.setValue(this.user.xp)
   }
 
   _setAnonymousMode(){

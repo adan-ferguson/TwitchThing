@@ -1,4 +1,4 @@
-import CustomAnimation from '../customAnimation.js'
+import CustomAnimation from '../../customAnimation.js'
 import FlyingTextEffect from '../effects/flyingTextEffect.js'
 
 const innerHTML = `
@@ -42,6 +42,10 @@ export default class Bar extends HTMLElement{
 
   get value(){
     return this._val
+  }
+
+  get max(){
+    return this._max
   }
 
   set showLabel(val){

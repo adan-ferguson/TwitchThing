@@ -6,19 +6,19 @@ import { roundToFixed } from '../utilFunctions.js'
 export default class Stats{
 
   baseAffectors = []
-  bonusAffectors = []
+  additionalAffectors = []
 
   /**
    * @param baseStats {[object],object,Stats}
-   * @param bonusStats {[object],object,Stats}
+   * @param additionalStats {[object],object,Stats}
    */
-  constructor(baseStats, bonusStats = []){
+  constructor(baseStats, additionalStats = null){
     this.baseAffectors = toAffectorsArray(baseStats)
-    this.bonusAffectors = toAffectorsArray(bonusStats)
+    this.additionalAffectors = toAffectorsArray(additionalStats)
   }
 
   get affectors(){
-    return this.baseAffectors.concat(this.bonusAffectors)
+    return this.baseAffectors.concat(this.additionalAffectors)
   }
 
   get(name){
@@ -93,7 +93,7 @@ export function makeStatObject(name){
 export function mergeStats(...statsObjs){
   return new Stats(
     merge('baseAffectors'),
-    merge('bonusAffectors')
+    merge('additionalAffectors')
   )
   function merge(propName){
     return statsObjs
@@ -128,7 +128,7 @@ function defaultValue(stat){
   if(stat.defaultValue !== null){
     return stat.defaultValue
   }
-  if(stat.type === StatType.ADDITIVE_MULTIPLIER || stat.type === StatType.MULTIPLIER){
+  if(stat.type === StatType.MULTIPLIER){
     return 1
   }
   return 0

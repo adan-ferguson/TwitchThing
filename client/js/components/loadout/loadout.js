@@ -1,8 +1,8 @@
 import LoadoutRow from './loadoutRow.js'
-import orb from '/client/assets/icons/orb.svg'
 import OrbsData from '../../../../game/orbsData.js'
 
 import '../orbRow.js'
+import { getAdventurerOrbsData } from '../../../../game/adventurer.js'
 
 const HTML = `
 <div class="flex-rows">
@@ -45,12 +45,20 @@ export default class Loadout extends HTMLElement{
     this.update()
   }
 
+  get type(){
+    return this.getAttribute('type')
+  }
+
   get items(){
     return this._rows.map(row => row.item)
   }
 
   get orbsData(){
-    return OrbsData.fromFighter(this._fighter, this.items)
+    if(this.type === 'adventurer'){
+      const copyAdventurer = { ...this._fighter, items: this.items }
+      return getAdventurerOrbsData(copyAdventurer)
+    }
+    return new OrbsData()
   }
 
   get hasChanges(){

@@ -31,6 +31,12 @@ function generateRegistries(){
   return merge(...pipes)
 }
 
+function importComponents(){
+  return gulp.src('./client/js/components/**/*.js')
+    .pipe(makeComponentImporter('./client/js/'))
+    .pipe(gulp.dest('.'))
+}
+
 function exporterConcater(targetFile){
   const files = []
 
@@ -61,6 +67,7 @@ function exporterConcater(targetFile){
     files.forEach(({ name, path, group }) => {
       str += `import ${name} from './${path}'\n`
       str += `${name}.name = '${name}'\n`
+      str += `${name}.group = '${group}'\n`
       if(!groups[group]){
         groups[group] = []
       }
@@ -75,13 +82,45 @@ function exporterConcater(targetFile){
   }
 }
 
+function makeComponentImporter(targetPath){
+
+  const files = []
+
+  return through.obj(function(file, encoding, callback){
+    if(!file.isNull()){
+      const relPath = path.relative(path.dirname(targetPath), file.path).split(path.sep)
+      relPath[0] = '.'
+      files.push(relPath.join(path.posix.sep))
+    }
+    callback()
+  }, function(callback){
+    if(!files.length){
+      return callback()
+    }
+    let outputFile = new VinylFile()
+    outputFile.path = path.resolve(targetPath, 'componentImporter.js')
+    outputFile.contents = Buffer.from(combinedFileContents())
+    this.push(outputFile)
+    callback()
+  })
+
+  function combinedFileContents(){
+    let str = ''
+    files.forEach(file => {
+      str += `import '${file}'\n`
+    })
+    return str
+  }
+}
+
 export const watch =  () => {
+  gulp.watch('./client/js/components/**/*.js', { ignoreInitial: false }, importComponents)
   gulp.watch('./client/styles/**/*.sass', { ignoreInitial: false }, buildStyles)
   gulp.watch('./client/assets/**/*', { ignoreInitial: false }, copyAssets)
   gulp.watch(['./game/*/**/*.js', '!./game/**/combined.js'], { ignoreInitial: false }, generateRegistries)
 }
 
-export default gulp.series(buildStyles, copyAssets, generateRegistries)
+export default gulp.series(importComponents, buildStyles, copyAssets, generateRegistries)
 
 function toClassName(filename){
   return filename.split('.')[0]

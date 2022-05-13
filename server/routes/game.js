@@ -41,7 +41,7 @@ router.post('/main', async(req, res) => {
   try {
     const adventurers = await Adventurers.findByIDs(req.user.adventurers)
     adventurers.forEach(adv => adv.dungeonRun = getActiveRunData(adv.dungeonRunID))
-    res.send({  adventurers, slots: levelToAdventurerSlots(req.user.level) })
+    res.send({  adventurers, slots: req.user.inventory.adventurerSlots })
   }catch(ex){
     return res.status(ex.code || 401).send(ex.error || ex)
   }

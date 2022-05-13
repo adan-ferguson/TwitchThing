@@ -1,4 +1,4 @@
-import { getIdleAdventurerStats, levelToXp, xpToLevel } from '../../../game/adventurer.js'
+import { getAdventurerStats, levelToHp, levelToXp, xpToLevel } from '../../../game/adventurer.js'
 import { OrbsDisplayStyles } from './loadout/loadout.js'
 
 const HTML = `
@@ -6,6 +6,8 @@ const HTML = `
   <div class="flex-rows">
     <div class="name"></div>
     <di-xp-bar></di-xp-bar>
+    <di-hp-bar></di-hp-bar>
+    <di-action-bar></di-action-bar>
     <di-stats-list></di-stats-list>
   </div>
 </div>
@@ -14,6 +16,11 @@ const HTML = `
 
 export default class AdventurerPane extends HTMLElement{
 
+  _hpBar
+  _actionBar
+
+  _extraStats
+
   constructor(){
     super()
     this.classList.add('content-well', 'flex-rows')
@@ -21,6 +28,8 @@ export default class AdventurerPane extends HTMLElement{
     this.name = this.querySelector('.name')
     this.xpBar = this.querySelector('di-xp-bar')
     this.xpBar.setLevelFunctions(xpToLevel, levelToXp)
+    this._hpBar = this.querySelector('di-hp-bar')
+    this._actionBar = this.querySelector('di-bar.action')
     this.loadoutEl = this.querySelector('di-loadout')
     this.loadoutEl.setOptions({
       orbsDisplayStyle: OrbsDisplayStyles.SHOW_MAXIMUM
@@ -32,12 +41,13 @@ export default class AdventurerPane extends HTMLElement{
     this.adventurer = adventurer
     this.name.textContent = this.adventurer.name
     this.xpBar.setValue(this.adventurer.xp)
+
     this.loadoutEl.setFighter(this.adventurer)
     this.update()
   }
 
-  setBonusStats(bonusStats){
-    this._bonusStats = bonusStats
+  setExtraStats(extraStats){
+    this._extraStats = extraStats
     this.update()
   }
 
@@ -47,12 +57,14 @@ export default class AdventurerPane extends HTMLElement{
   }
 
   updateStats(){
-    const stats = getIdleAdventurerStats({
-      adventurer: this.adventurer,
-      items: this.loadoutEl.items,
-      bonus: this._bonusStats
-    })
+    const advCopy = { ...this.adventurer, items: this.loadoutEl.items }
+    const stats = getAdventurerStats(advCopy, this._extraStats)
     this.statsList.setStats(stats)
+
+    this._hpBar.setMax(levelToHp(advCopy.level) * stats.get('hpMax').value)
+    this._hpBar.setValue(this._hpBar.max)
+    this._actionBar.setMax()
+    this._actionBar.setValue(0)
   }
 
   async addXp(toAdd){

@@ -1,8 +1,19 @@
-import orbImg from '/client/assets/icons/orb.svg'
+import defaultOrbIcon from '/client/assets/icons/orbs/default.svg'
+import classDisplayInfo from '../classDisplayInfo.js'
+//
+// const HTML = `
+// <span class="orb" data-orb-index="1"></span>
+// <span class="orb" data-orb-index="2"></span>
+// <span class="orb" data-orb-index="3"></span>
+// `
+//
+// const ORB_HTML = (type, text) => `
+//   <img alt="Orbs" src="${orbImg}">
+//   <span class="orbs-text"></span>
+// `
 
-const HTML = `
-<img alt="Orbs" src="${orbImg}">
-<span class="orbs-text"></span>
+const ORB_ENTRY_HTML = (src, text) => `
+  <img src="${src}"> <span>${text}</span>
 `
 
 export default class OrbRow extends HTMLElement{
@@ -11,26 +22,34 @@ export default class OrbRow extends HTMLElement{
 
   constructor(){
     super()
-    this.innerHTML = HTML
-    this._text = this.querySelector('.orbs-text')
-  }
-
-  setValue(value){
-    this._text.textContent = '' + value
+    // this.innerHTML = HTML
+    // this._text = this.querySelector('.orbs-text')
   }
 
   setData(orbsData, showMax = false){
-    let empty
+    this.innerHTML = ''
+    orbsData.list.forEach(orbDatum => {
+      this.appendChild(new OrbEntry(orbDatum, showMax))
+    })
+  }
+}
+customElements.define('di-orb-row', OrbRow)
+
+class OrbEntry extends HTMLElement{
+  constructor(orbDatum, showMax = false){
+    super()
+
+    let text
     if(showMax){
-      this._text.textContent = `${orbsData.used}/${orbsData.max}`
-      this._text.classList.toggle('error', orbsData.remaining < 0)
-      empty = !orbsData.max
+      text = `${orbDatum.used}/${orbDatum.max}`
+      this.classList.add('error')
     }else{
-      this._text.textContent = '' + orbsData.used
-      empty = !orbsData.used
+      text = '' + orbDatum.used
     }
-    this.classList.toggle('hidden', empty)
+
+    const classInfo = classDisplayInfo(orbDatum.className)
+    this.innerHTML = ORB_ENTRY_HTML(classInfo.orbIcon || defaultOrbIcon, text)
   }
 }
 
-customElements.define('di-orb-row', OrbRow)
+customElements.define('di-orb-entry', OrbEntry)

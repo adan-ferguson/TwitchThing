@@ -9,3 +9,5 @@ client_dist
 ngrok.*
 
 game/**/combined.js
+
+client/js/componentImporter.js
