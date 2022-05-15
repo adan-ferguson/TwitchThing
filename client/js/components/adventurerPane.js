@@ -1,13 +1,12 @@
-import { getAdventurerStats, levelToHp, levelToXp, xpToLevel } from '../../../game/adventurer.js'
+import { levelToXp, xpToLevel } from '../../../game/adventurer.js'
 import { OrbsDisplayStyles } from './loadout/loadout.js'
+import AdventurerInstance from '../../../game/adventurerInstance.js'
 
 const HTML = `
 <div class="flex-grow">
-  <div class="flex-rows">
-    <div class="name"></div>
+  <div class="flex-rows top-section">
+    <div class="name displaynone"></div>
     <di-xp-bar></di-xp-bar>
-    <di-hp-bar></di-hp-bar>
-    <di-action-bar></di-action-bar>
     <di-stats-list></di-stats-list>
   </div>
 </div>
@@ -28,13 +27,14 @@ export default class AdventurerPane extends HTMLElement{
     this.name = this.querySelector('.name')
     this.xpBar = this.querySelector('di-xp-bar')
     this.xpBar.setLevelFunctions(xpToLevel, levelToXp)
-    this._hpBar = this.querySelector('di-hp-bar')
-    this._actionBar = this.querySelector('di-bar.action')
     this.loadoutEl = this.querySelector('di-loadout')
     this.loadoutEl.setOptions({
       orbsDisplayStyle: OrbsDisplayStyles.SHOW_MAXIMUM
     })
     this.statsList = this.querySelector('di-stats-list')
+    this.statsList.setOptions({
+      forcedStats: ['hpMax', 'speed', 'physPower']
+    })
   }
 
   setAdventurer(adventurer){
@@ -57,14 +57,8 @@ export default class AdventurerPane extends HTMLElement{
   }
 
   updateStats(){
-    const advCopy = { ...this.adventurer, items: this.loadoutEl.items }
-    const stats = getAdventurerStats(advCopy, this._extraStats)
-    this.statsList.setStats(stats)
-
-    this._hpBar.setMax(levelToHp(advCopy.level) * stats.get('hpMax').value)
-    this._hpBar.setValue(this._hpBar.max)
-    this._actionBar.setMax()
-    this._actionBar.setValue(0)
+    const adventurerInstance = new AdventurerInstance({ ...this.adventurer, items: this.loadoutEl.items }, this._extraStats)
+    this.statsList.setStats(adventurerInstance.stats, adventurerInstance)
   }
 
   async addXp(toAdd){

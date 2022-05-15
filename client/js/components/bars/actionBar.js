@@ -1,13 +1,19 @@
 import Bar from './bar.js'
+import actionIcon from '../../../assets/icons/action.svg'
 
 export default class ActionBar extends Bar{
   constructor(){
     super()
-    this.setLabel('hp')
-    this.color = GREEN
-    this.increaserColor = BRIGHT_GREEN
-    this.decreaserColor = RED
+    this.showValueBeforeLabel = false
+    this.setBadge(`<img src="${actionIcon}">`)
+  }
+
+  setTime(elapsed, remaining){
+    const timeInSeconds = (Math.ceil(remaining / 100) / 10).toFixed(1) + 's'
+    this.setValue(elapsed)
+    this.setLabel(timeInSeconds)
+    this.setOptions({ max: elapsed + remaining })
   }
 }
 
-customElements.define('di-action-bar', HpBar)
+customElements.define('di-action-bar', ActionBar)

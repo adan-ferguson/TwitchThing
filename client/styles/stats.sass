@@ -1,22 +1,27 @@
 di-stats-list
   display: flex
-  flex-direction: column
-  padding: 6rem 0
+  flex-direction: row
+  padding: 0
+  margin-right: -6rem
 
-  &.inline
-    flex-direction: row
-    padding: 0
+  > *
+    margin-right: 6rem
 
   di-stat-row
-    padding: 4rem
+    padding: 4rem 6rem 0
     transition: background-color 0.3s ease
     display: flex
     flex-direction: row
     justify-content: space-between
     text-align: left
-    align-items: center
     $buffColor: #6ee16e
     $debuffColor: #ff8c8c
+
+    &.no-icon
+      width: 100%
+
+    img
+      height: 1em
 
     .val
       padding-left: 10rem

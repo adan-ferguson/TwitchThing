@@ -4,7 +4,8 @@ export default class XpBar extends Bar{
 
   constructor(){
     super()
-    this._label = 'xp'
+    this._options.label = 'xp'
+    this._options.showLabel = true
   }
 
   get animSpeed(){
@@ -13,10 +14,6 @@ export default class XpBar extends Bar{
 
   setBadge(){
     throw 'Do not call setBadge on levelBar, call setValue'
-  }
-
-  setRange(){
-    throw 'Do not call setRange on levelBar, call setValue and setLevelFunctions'
   }
 
   setLevelFunctions(xpToLevel, levelToXp){
@@ -33,7 +30,7 @@ export default class XpBar extends Bar{
     if(!options.animate){
       const level = this._xpToLevel(val)
       this._setLevel(level)
-      super.setBadge(level + '')
+      super.setBadge(level)
       super.setValue(val)
     }else{
       let xpToAdd = val - this._val
@@ -59,7 +56,10 @@ export default class XpBar extends Bar{
   }
 
   _setLevel(level){
-    super.setRange(this._levelToXp(level), this._levelToXp(level + 1))
+    super.setOptions({
+      min: this._levelToXp(level),
+      max: this._levelToXp(level + 1)
+    })
   }
 }
 

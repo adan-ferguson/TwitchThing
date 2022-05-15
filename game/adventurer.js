@@ -21,27 +21,27 @@ export function levelToXp(lvl){
 }
 
 export function levelToHp(lvl){
-  return Math.ceil(scaledValue(HP_GROWTH_PCT, lvl, HP_BASE))
+  return Math.ceil(scaledValue(HP_GROWTH_PCT, lvl - 1, HP_BASE))
 }
 
 export function levelToPower(lvl){
-  return Math.ceil(scaledValue(POWER_GROWTH_PCT, lvl, POWER_BASE))
+  return Math.ceil(scaledValue(POWER_GROWTH_PCT, lvl - 1, POWER_BASE))
 }
 
 /**
  * @param adventurer
- * @param extraStats
+ * @param state
  * @returns {Stats}
  */
-export function getAdventurerStats(adventurer, extraStats = null){
-  const loadoutStats = adventurer.items.filter(itemDef => itemDef).map(itemDef => {
+export function getAdventurerStats(adventurer, state = null){
+  const loadoutStatAffectors = adventurer.items.filter(itemDef => itemDef).map(itemDef => {
     const item = new Item(itemDef)
     return item.stats
   })
   return new Stats([
     ...adventurer.bonuses.map(bonus => bonus.stats).filter(s => s),
-    ...loadoutStats
-  ], extraStats)
+    ...loadoutStatAffectors
+  ], state)
 }
 
 export function getAdventurerOrbsData(adventurer){

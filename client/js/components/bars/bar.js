@@ -1,9 +1,9 @@
 import CustomAnimation from '../../customAnimation.js'
 import FlyingTextEffect from '../effects/flyingTextEffect.js'
+import { mergeElementOptions, wrap } from '../../../../game/utilFunctions.js'
 
 const innerHTML = `
 <div class="bar-badge displaynone">
-    <span></span>
 </div>
 <div class="bar-border">
     <div class="bar-fill bar-background"></div>
@@ -16,23 +16,31 @@ const ANIM_SPEED = 2000
 
 export default class Bar extends HTMLElement{
 
-  _showLabel = true
+  _options = {
+    label: '',
+    color: '#DDD',
+    showLabel: true,
+    showValue: true,
+    showMax: true,
+    increaserColor: null,
+    decreaserColor: null,
+    min: 0,
+    max: 100
+  }
+
+  _barLabel
+  _barBackground
+  _barForeground
+
+  _val = 0
 
   constructor(){
     super()
+    this.classList.add('di-bar')
     this.innerHTML = innerHTML
-    this._val = 0
-    this._min = 0
-    this._max = 100
-    this._label = ''
-    this._color = '#DDD'
-    this._increaserColor = null
-    this._decreaserColor = null
     this._barLabel = this.querySelector('.bar-label')
     this._barBackground = this.querySelector('.bar-background')
     this._barForeground = this.querySelector('.bar-foreground')
-    this._showValueBeforeLabel = true
-
     this.setValue(0)
   }
 
@@ -44,48 +52,23 @@ export default class Bar extends HTMLElement{
     return this._val
   }
 
-  get max(){
-    return this._max
+  setLabel(label){
+    this.setOptions({ label })
   }
 
-  set showLabel(val){
-    this._showLabel = val
+  setOptions(options){
+    this.options = mergeElementOptions(this.options, options)
+    this._update()
   }
 
-  set showValueBeforeLabel(val){
-    this._showValueBeforeLabel = val ? true : false
-  }
-
-  set color(val){
-    this._color = val
-  }
-
-  set increaserColor(val){
-    this._increaserColor = val
-  }
-
-  set decreaserColor(val){
-    this._decreaserColor = val
-  }
-
-  setBadge(text){
+  setBadge(html){
     const badge = this.querySelector('.bar-badge')
-    if(text){
+    if(html){
       badge.classList.remove('displaynone')
-      badge.querySelector('span').textContent = text
+      badge.innerHTML = html
     }else{
       badge.classList.add('displaynone')
     }
-  }
-
-  setMax(val){
-    this.setRange(0, val)
-  }
-
-  setRange(min, max){
-    this._min = min
-    this._max = max
-    this._setLabel(this._val)
   }
 
   async setValue(val, options = {}){
@@ -109,7 +92,7 @@ export default class Bar extends HTMLElement{
       options.flyingText = false
     }
 
-    val = Math.min(this._max, Math.max(this._min, Math.round(val)))
+    val = Math.min(this._options.max, Math.max(this._options.min, Math.round(val)))
 
     if(options.flyingText){
       this._flyingText(val - this._val)
@@ -117,18 +100,14 @@ export default class Bar extends HTMLElement{
 
     if(!options.animate){
       this._val = val
-      this._setLabel(this._val)
+      this.setLabel(this._val)
       this._barBackground.classList.add('hidden')
       this._barBackground.style.width = `${this._pct(val) * 100}%`
       this._barForeground.style.width = `${this._pct(val) * 100}%`
-      this._barForeground.style.backgroundColor = this._color
+      this._barForeground.style.backgroundColor = this._options.color
     }else {
       await this._animateToValue(val)
     }
-  }
-
-  setLabel(label = null){
-    this._label = label
   }
 
   _animateToValue(val){
@@ -145,7 +124,7 @@ export default class Bar extends HTMLElement{
       }
 
       const growing = val > this._val
-      const secondaryColor = growing ? this._increaserColor : this._decreaserColor
+      const secondaryColor = growing ? this._options.increaserColor : this._options.decreaserColor
 
       let animatingBar
       let snappingBar
@@ -187,37 +166,48 @@ export default class Bar extends HTMLElement{
         tick: pct => {
           currentWidth = startWidth * (1 - pct) + targetWidth * pct
           setWidth(animatingBar, currentWidth)
-          this._setLabel(Math.round(this._pctToVal(currentWidth)))
+          this.setLabel(Math.round(this._pctToVal(currentWidth)))
         }
       })
     })
   }
 
   _pct(val){
-    const pct = (val - this._min) / (this._max - this._min)
+    const pct = (val - this._options.min) / (this._options.max - this._options.min)
     return Math.min(1, Math.max(0, pct))
   }
 
   _pctToVal(pct){
     pct = Math.min(1, Math.max(0, pct))
-    return this._min * (1 - pct) + this._max * pct
-  }
-
-  _setLabel(val){
-    this._barLabel.classList.toggle('hidden', !this._showLabel)
-    const valueText = this._showValueBeforeLabel ? `${val} / ${this._max} ` : ''
-    this._barLabel.textContent = `${valueText}${this._label || ''}`
+    return this._options.min * (1 - pct) + this._options.max * pct
   }
 
   _valToColor(val){
-    if(typeof(this._color) === 'function'){
-      return this._color(this._pct(val))
+    if(typeof(this._options.color) === 'function'){
+      return this._options.color(this._pct(val))
     }
-    return this._color
+    return this._options.color
   }
 
   _flyingText(text, options = {}){
     new FlyingTextEffect(this, text, options)
+  }
+
+  _update(){
+    this._barLabel.classList.toggle('hidden', !this._options.showLabel)
+
+    let html = ''
+    if(this._options.showValue){
+      html += wrap('span', this._val)
+      if(this._options.showMax){
+        html += wrap('span', '/')
+        html += wrap('span', this._options.max)
+      }
+    }
+    if(this._options.showLabel){
+      html += wrap('span', this._options.label)
+    }
+    this._barLabel.innerHTML = html
   }
 }
 

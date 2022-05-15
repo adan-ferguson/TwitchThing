@@ -1,16 +1,19 @@
 import Bar from './bar.js'
+import healthIcon from '../../../assets/icons/health.svg'
 
-const RED = '#ffadad'
-const BRIGHT_GREEN = '#67ff67'
-const GREEN = '#c3ffc3'
+const DECREASER = '#ec0000'
+const INCREASER = '#3fef3f'
+const HP = '#93e078'
 
 export default class HpBar extends Bar{
   constructor(){
     super()
-    this.setLabel('hp')
-    this.color = GREEN
-    this.increaserColor = BRIGHT_GREEN
-    this.decreaserColor = RED
+    this.setBadge(`<img src="${healthIcon}">`)
+    this.setOptions({
+      color: HP,
+      increaserColor: INCREASER,
+      decreaserColor: DECREASER
+    })
   }
 }
 

@@ -8,10 +8,8 @@ export default class StatsList extends HTMLElement{
     this.options = {
       statsDisplayStyle: StatsDisplayStyle.CUMULATIVE,
       statsDisplayScope: StatsDisplayScope.ALL,
-      inline: false,
-      noHP: false
+      forcedStats: []
     }
-    this._update()
   }
 
   setOptions(options){
@@ -20,22 +18,19 @@ export default class StatsList extends HTMLElement{
         this.options[key] = options[key]
       }
     }
-    this._update()
   }
 
-  setStats(stats){
+  setStats(stats, owner = null){
 
     const unusedStats = {}
     this.querySelectorAll('di-stat-row').forEach(row => {
       unusedStats[row.getAttribute('stat-key')] = row
     })
 
-    const statsToShow = stats.getAll()
+    const statsToShow = stats.getAll(this.options.forcedStats)
+
     for(let key in statsToShow){
-      if(key === 'hpMax' && this.options.noHP){
-        continue
-      }
-      this._updateStat(statsToShow[key])
+      this._updateStat(statsToShow[key], owner)
       delete unusedStats[key]
     }
 
@@ -47,8 +42,11 @@ export default class StatsList extends HTMLElement{
     )
   }
 
-  _updateStat(stat){
-    const statDisplayInfo = getStatDisplayInfo(stat, this.options.statsDisplayStyle)
+  _updateStat(stat, owner = null){
+    const statDisplayInfo = getStatDisplayInfo(stat, {
+      owner,
+      style: this.options.statsDisplayStyle
+    })
     if(!scopesMatch(statDisplayInfo.scope, this.options.statsDisplayScope)){
       return
     }
@@ -58,10 +56,6 @@ export default class StatsList extends HTMLElement{
     }else{
       row.update(statDisplayInfo)
     }
-  }
-
-  _update(){
-    this.classList.toggle('inline', this.options.inline)
   }
 }
 

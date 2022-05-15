@@ -33,3 +33,25 @@ export function isObject(val){
   if (val === null){ return false}
   return ( (typeof val === 'function') || (typeof val === 'object') )
 }
+
+export function mergeElementOptions(currentOptions, newOptions){
+  const options = { ...currentOptions }
+  for(let key in newOptions){
+    if(key in options){
+      options[key] = newOptions[key]
+    }
+  }
+  return options
+}
+
+export function wrap(elementName, content, html = false){
+  const el = document.createElement(elementName)
+  if(html){
+    el.innerHTML = content
+  }else{
+    el.textContent = content
+  }
+  const parentEl = document.createElement('div')
+  parentEl.appendChild(el)
+  return parentEl.innerHTML
+}

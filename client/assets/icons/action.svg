@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+    <path
+            fill="#48F"
+            d="
+            M22,4
+            L42,4
+            L28,22
+            L40,22
+            L12,46
+            L22,27
+            L12,27
+            Z"
+    />
+</svg>

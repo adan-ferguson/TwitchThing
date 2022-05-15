@@ -1,4 +1,5 @@
-import { getAdventurerStats } from './adventurer.js'
+import { getAdventurerStats, levelToHp, levelToPower } from './adventurer.js'
+import { COMBAT_BASE_TURN_TIME } from './combat/fighterInstance.js'
 
 export const ADVENTURER_BASE_ROOM_TIME = 5000
 
@@ -10,9 +11,8 @@ export default class AdventurerInstance{
   }
 
   constructor(adventurer, adventurerState = {}){
-    if(!adventurer.baseHp || !adventurer.basePower){
-      throw 'adventurer doc requires baseHp and basePower properties.'
-    }
+    adventurer.baseHp = adventurer.baseHp ?? levelToHp(adventurer.level)
+    adventurer.basePower = adventurer.basePower ?? levelToPower(adventurer.level)
     this.adventurer = adventurer
     this.adventurerState = { ...adventurerState }
     if(!('hp' in adventurerState)){
@@ -20,13 +20,20 @@ export default class AdventurerInstance{
     }
   }
 
+  get baseHp(){
+    return this.adventurer.baseHp
+  }
+
+  get basePower(){
+    return this.adventurer.basePower
+  }
+
   get name(){
     return this.adventurer.name
   }
 
   get stats(){
-    // TODO: apply state
-    return getAdventurerStats(this.adventurer)
+    return getAdventurerStats(this.adventurer, this.adventurerState)
   }
 
   get hp(){
@@ -38,11 +45,11 @@ export default class AdventurerInstance{
   }
 
   get hpMax(){
-    return Math.ceil(this.adventurer.baseHp * this.stats.get('hpMax').value)
+    return Math.ceil(this.baseHp * this.stats.get('hpMax').value)
   }
 
-  get power(){
-    return this.adventurer.basePower
+  get actionTime(){
+    return COMBAT_BASE_TURN_TIME / this.stats.get('speed').value
   }
 
   get standardRoomDuration(){

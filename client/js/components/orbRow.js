@@ -1,4 +1,4 @@
-import defaultOrbIcon from '/client/assets/icons/orbs/default.svg'
+import defaultOrbImg from '/client/assets/icons/orbs/default.svg'
 import classDisplayInfo from '../classDisplayInfo.js'
 //
 // const HTML = `
@@ -48,7 +48,7 @@ class OrbEntry extends HTMLElement{
     }
 
     const classInfo = classDisplayInfo(orbDatum.className)
-    this.innerHTML = ORB_ENTRY_HTML(classInfo.orbIcon || defaultOrbIcon, text)
+    this.innerHTML = ORB_ENTRY_HTML(classInfo.orbIcon || defaultOrbImg, text)
   }
 }
 

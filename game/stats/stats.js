@@ -57,8 +57,9 @@ export default class Stats{
     }
   }
 
-  getAll(){
+  getAll(forced = []){
     const all = {}
+    forced.forEach(name => all[name] = true)
     this.affectors.forEach(affector => {
       Object.keys(affector).forEach(key => {
         all[key] = true

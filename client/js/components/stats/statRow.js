@@ -1,8 +1,7 @@
-import { getStatDisplayInfo, StatsDisplayStyle } from '../../statsDisplayInfo.js'
 import tippy from 'tippy.js'
 
-const HTML = (name, value, icon = '') => `
-<span><span>${icon}</span> <span>${name}</span></span><span class="val">${value}</span>
+const HTML = ({ text, displayedValue, icon }) => `
+<span>${icon ? `<img src="${icon}">` : text}</span> <span class="val">${displayedValue}</span>
 `
 
 export default class StatRow extends HTMLElement{
@@ -22,12 +21,15 @@ export default class StatRow extends HTMLElement{
       return
     }
 
+    this.classList.toggle('no-icon', statsDisplayInfo.icon ? false : true)
+
     this.prevStat = statsDisplayInfo.stat
 
-    this.innerHTML = HTML(statsDisplayInfo.text, statsDisplayInfo.displayedValue)
-    this.tippy.setContent(statsDisplayInfo.description(statsDisplayInfo.stat))
+    this.innerHTML = HTML(statsDisplayInfo)
+    this.tippy.setContent(statsDisplayInfo.description)
 
     this.setAttribute('diff', statsDisplayInfo.stat.diff)
+    this.style.order = statsDisplayInfo.order
   }
 }
 

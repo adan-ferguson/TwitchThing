@@ -1,6 +1,10 @@
 import { StatType } from '../../game/stats/statDefinitions.js'
 import { COMBAT_BASE_TURN_TIME } from '../../game/combat/fighterInstance.js'
 import { roundToFixed } from '../../game/utilFunctions.js'
+import healthIcon from '../assets/icons/health.svg'
+import actionIcon from '../assets/icons/action.svg'
+import physPowerIcon from '../assets/icons/physPower.svg'
+import magicPowerIcon from '../assets/icons/magicPower.svg'
 
 export const StatsDisplayStyle = {
   CUMULATIVE: 0, // Eg. "50%", i.e. our total of this stat is 50%
@@ -15,69 +19,118 @@ export const StatsDisplayScope = {
 }
 
 const statDefinitionsInfo = {
-  hpMax: false,
-  physPower: false,
-  magicPower: false,
+  hpMax: {
+    icon: healthIcon,
+    displayedValueFn: (value, { style, owner }) => {
+      if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
+        return value * owner.baseHp
+      }
+    },
+    descriptionFn: (value, { style, owner }) => {
+      if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
+        return `(Base Health = ${owner.baseHp}) + (Bonus from items, traits, etc = ${value * 100 - 100}%)`
+      }
+      return 'Max Health'
+    },
+    scope: StatsDisplayScope.ALL
+  },
+  speed: {
+    icon: actionIcon,
+    displayedValueFn: (value, { style }) => {
+      if(style === StatsDisplayStyle.CUMULATIVE){
+        return roundToFixed(COMBAT_BASE_TURN_TIME / (1000 * value), 2) + 's'
+      }
+    },
+    description: 'Combat action time',
+    scope: StatsDisplayScope.COMBAT
+  },
+  physPower: {
+    icon: physPowerIcon,
+    displayedValueFn: (value, { style, owner }) => {
+      if(style === StatsDisplayStyle.CUMULATIVE && owner?.basePower){
+        return value * owner.basePower
+      }
+    },
+    description: 'Phys power / basic attack damage',
+    scope: StatsDisplayScope.COMBAT
+  },
+  magicPower: {
+    icon: magicPowerIcon,
+    displayedValueFn: (value, { style, owner }) => {
+      if(style === StatsDisplayStyle.CUMULATIVE && owner?.basePower){
+        return value * owner.basePower
+      }
+    },
+    description: 'Magic power',
+    scope: StatsDisplayScope.COMBAT
+  },
   physDef: {
     text: 'Phys Defense',
-    description: stat => 'Blocks physical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
+    description: 'Blocks physical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
     scope: StatsDisplayScope.COMBAT
   },
   magicDef: {
     text: 'Magic Defense',
-    description: stat => '',
-    scope: StatsDisplayScope.COMBAT
-  },
-  speed: {
-    text: style => style === StatsDisplayStyle.ADDITIONAL ? 'Combat Speed' : 'Combat Turn Time',
-    description: stat => 'Time between actions during combat.',
-    valueFormat: speedFormat(COMBAT_BASE_TURN_TIME),
+    description: '',
     scope: StatsDisplayScope.COMBAT
   },
   lifesteal: {
     text: 'Lifesteal',
     valueFormat: value => `${Math.floor(value)}%`,
-    description: () => 'Gain health when dealing physical damage.',
+    description: 'Gain health when dealing physical damage.',
     scope: StatsDisplayScope.COMBAT
   },
   xpGain: {
     text: 'XP Gain',
-    description: () => 'Increases XP gained by adventurer.',
+    description: 'Increases XP gained by adventurer.',
     scope: StatsDisplayScope.ALL
   },
   stairFind: {
     text: 'Stair Find Chance',
-    description: () => 'Find stairs faster. Important as floors contain more and more rooms the deeper you go.',
+    description: 'Find stairs faster. Important as floors contain more and more rooms the deeper you go.',
     scope: StatsDisplayScope.EXPLORING
   },
   relicFind: {
     text: 'Relic Find Chance',
-    description: () => 'Increased chance to find relics. Relics get more powerful but are harder to find the deeper you go.',
+    description: 'Increased chance to find relics. Relics get more powerful but are harder to find the deeper you go.',
     scope: StatsDisplayScope.EXPLORING
   }
 }
 
 const DEFAULTS = {
+  scope: StatsDisplayScope.NONE,
   description: null,
-  displayedValue: null,
-  scope: StatsDisplayScope.NONE
+  text: null,
+  icon: null
 }
 
-export function getStatDisplayInfo(stat, style){
+export function getStatDisplayInfo(stat, options = {}){
+  options = {
+    style: StatsDisplayStyle.CUMULATIVE,
+    owner: null,
+    ...options
+  }
   const info = { ...statDefinitionsInfo[stat.name] }
   if(!info){
     return null
   }
-  if(info.valueFormat){
-    info.displayedValue = info.valueFormat(stat.value, style)
+  if(info.displayedValueFn){
+    info.displayedValue = info.displayedValueFn(stat.value, options)
   }
   if(info.displayedValue === undefined){
-    info.displayedValue = toText(stat.type, stat.value, style)
+    info.displayedValue = toText(stat.type, stat.value, options)
   }
-  if(typeof info.text === 'function'){
-    info.text = info.text(style)
+  if(info.descriptionFn){
+    info.description = info.descriptionFn(stat.value, options)
   }
-  return { ...DEFAULTS, ...info, stat }
+  delete info.descriptionFn
+  delete info.displayedValueFn
+  return {
+    ...DEFAULTS,
+    ...info,
+    stat,
+    order: Object.keys(statDefinitionsInfo).indexOf(stat.name)
+  }
 }
 
 export function scopesMatch(scope1, scope2){
@@ -95,13 +148,4 @@ function toText(statType, value, style){
     return `${value > 1 ? '+' : ''}${Math.round((value - 1) * 100)}%`
   }
   return `${value > 0 && style === StatsDisplayStyle.ADDITIONAL ? '+' : ''}${value}`
-}
-
-function speedFormat(base){
-  return (val, style) => {
-    if(style === StatsDisplayStyle.ADDITIONAL){
-      return undefined
-    }
-    return roundToFixed(base / (1000 * val), 2) + 's'
-  }
 }

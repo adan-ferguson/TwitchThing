@@ -9,7 +9,7 @@ const HTML = `
   <div class="flex-rows">
     <div class="name"></div>
     <di-hp-bar></di-hp-bar>
-    <di-bar class="action"></di-bar>
+    <di-action-bar></di-bar>
     <di-stats-list></di-stats-list>
   </div>   
 </div>
@@ -23,8 +23,7 @@ export default class FighterPane extends HTMLElement{
     this.classList.add('content-well', 'flex-rows')
     this.innerHTML = HTML
     this.hpBar = this.querySelector('di-hp-bar')
-    this.actionBar = this.querySelector('di-bar.action')
-    this.actionBar.showValueBeforeLabel = false
+    this.actionBar = this.querySelector('di-action-bar')
     this.loadout = this.querySelector('di-loadout')
     this.statsbox = this.querySelector('.stats-box')
     this.statsList = this.querySelector('di-stats-list')
@@ -85,7 +84,7 @@ export default class FighterPane extends HTMLElement{
       return
     }
 
-    this.hpBar.setMax(this.fighterInstance.hpMax)
+    this.hpBar.setOptions({ max: this.fighterInstance.hpMax })
 
     if(this.fighterInstance.hp !== this.hpBar.value){
       if(animate){
@@ -97,7 +96,6 @@ export default class FighterPane extends HTMLElement{
       }
     }
 
-    this.actionBar.setMax(this.fighterInstance.actionTime)
     this.statsList.setStats(this.fighterInstance.stats)
     this._updateCooldowns()
 
@@ -108,9 +106,10 @@ export default class FighterPane extends HTMLElement{
   }
 
   _updateCooldowns(){
-    const timeInSeconds = Math.ceil(this.fighterInstance.timeUntilNextAction / 100) / 10
-    this.actionBar.setValue(this.fighterInstance.currentState.timeSinceLastAction)
-    this.actionBar.setLabel(timeInSeconds.toFixed(1))
+    this.actionBar.setTime(
+      this.fighterInstance.currentState.timeSinceLastAction,
+      this.fighterInstance.timeUntilNextAction
+    )
     // TODO: update cooldowns for items and effects
   }
 }

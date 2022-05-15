@@ -67,7 +67,7 @@ export default class Event extends HTMLElement{
     if(this._timeBarAnimation){
       this._timeBarAnimation.cancel()
     }
-    this._timeBar.setMax(maxTime)
+    this._timeBar.setOptions({ max: maxTime })
     this._timeBar.setValue(currentTime)
     this._timeBarAnimation = new CustomAnimation({
       duration: maxTime - currentTime,
