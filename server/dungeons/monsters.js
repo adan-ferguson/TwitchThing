@@ -1,5 +1,3 @@
-import scaledValue from '../../game/scaledValue.js'
-import { StatDefinitions, StatType } from '../../game/stats/statDefinitions.js'
 import { generateRandomChest } from './chests.js'
 import { chooseOne } from '../../game/rando.js'
 import Monsters from '../../game/monsters/combined.js'
@@ -7,27 +5,27 @@ import { levelToHp, levelToPower, levelToXpReward } from '../../game/monster.js'
 
 const monstersByFloor = {
   // Caves
-  1: Monsters.RAT,
-  2: Monsters.TROGLODYTE,
-  3: Monsters.BAT,
-  4: Monsters.KOBOLD,
-  5: Monsters.OOZE,
-  6: Monsters.SPIDER,
-  7: Monsters.SCORPION,
-  8: Monsters.ROCKGOLEM,
-  9: Monsters.SORCERER,
-  10: Monsters.MINOTAUR,
+  1: Monsters.caves.RAT,
+  2: Monsters.caves.TROGLODYTE,
+  3: Monsters.caves.BAT,
+  4: Monsters.caves.KOBOLD,
+  5: Monsters.caves.OOZE,
+  6: Monsters.caves.SPIDER,
+  7: Monsters.caves.SCORPION,
+  8: Monsters.caves.ROCKGOLEM,
+  9: Monsters.caves.SORCERER,
+  10: Monsters.caves.MINOTAUR,
   // Crypt
-  11: Monsters.SKELETON,
-  12: Monsters.ZOMBIE,
-  13: Monsters.WRAITH,
-  14: Monsters.SHADE,
-  15: Monsters.NECROMANCER,
-  16: Monsters.BANSHEE,
-  17: Monsters.LICH,
-  18: Monsters.VAMPIRE,
-  19: Monsters.ABOMINATION,
-  20: Monsters.BONEDRAGON
+  11: Monsters.crypt.SKELETON,
+  12: Monsters.crypt.ZOMBIE,
+  13: Monsters.crypt.WRAITH,
+  14: Monsters.crypt.SHADE,
+  15: Monsters.crypt.NECROMANCER,
+  16: Monsters.crypt.BANSHEE,
+  17: Monsters.crypt.LICH,
+  18: Monsters.crypt.VAMPIRE,
+  19: Monsters.crypt.ABOMINATION,
+  20: Monsters.crypt.BONEDRAGON
 }
 
 const CHEST_DROP_CHANCE = 0.05

@@ -172,7 +172,6 @@ class DungeonRunInstance{
   }
 
   async advance(nextEvent){
-    process.stdout.write(this.doc.floor + '')
 
     if(this.currentEvent?.runFinished){
       return this._finish()

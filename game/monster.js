@@ -1,4 +1,6 @@
 import scaledValue from './scaledValue.js'
+import Item from './item.js'
+import Stats from './stats/stats.js'
 
 const POWER_MULTIPLIER = 0.25
 
@@ -13,13 +15,27 @@ export function getScalingValue(lvl){
 }
 
 export function levelToXpReward(lvl){
-  return getScalingValue(lvl) * XP_BASE
+  return Math.ceil(getScalingValue(lvl) * XP_BASE)
 }
 
 export function levelToHp(lvl){
-  return getScalingValue(lvl) * HP_BASE
+  return Math.ceil(getScalingValue(lvl) * HP_BASE)
 }
 
 export function levelToPower(lvl){
-  return getScalingValue(lvl) * POWER_BASE
+  return Math.ceil(getScalingValue(lvl) * POWER_BASE)
+}
+
+/**
+ * @param monster
+ * @param state
+ * @returns {Stats}
+ */
+export function getMonsterStats(monster, state = null){
+  const loadoutStatAffectors = (monster.mods || [])
+    .map(modDef => modDef?.stats)
+    .filter(s => s)
+  // TODO: extraz
+  const stateAffectors = null
+  return new Stats(loadoutStatAffectors, stateAffectors)
 }

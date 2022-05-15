@@ -1,5 +1,7 @@
 import Stats from '../stats/stats.js'
 import Item from '../item.js'
+import { getAdventurerStats } from '../adventurer.js'
+import { getMonsterStats } from '../monster.js'
 
 const STATE_DEFAULTS = {
   timeSinceLastAction: 0
@@ -32,12 +34,11 @@ export default class FighterInstance{
   }
 
   get stats(){
-    const itemStats = this.baseFighter.items.filter(itemDef => itemDef).map(itemDef => {
-      const item = new Item(itemDef)
-      return item.stats
-    })
-    // TODO: add affectors from effects
-    return new Stats([ this.baseFighter.baseStats, ...itemStats])
+    if(this.fighterType === 'adventurer'){
+      return getAdventurerStats(this.baseFighter, this.currentState)
+    }else{
+      return getMonsterStats(this.baseFighter, this.currentState)
+    }
   }
 
   get currentState(){
@@ -65,7 +66,7 @@ export default class FighterInstance{
   }
 
   get hpMax(){
-    return this.stats.get('hpMax').value
+    return this.baseFighter.baseHp * this.stats.get('hpMax').value
   }
 
   advanceTime(ms){
@@ -107,9 +108,10 @@ export default class FighterInstance{
     return lifesteal
   }
 
-  _takeDamage(preMitigationDamage){
-    const blocked = Math.floor(preMitigationDamage * this.stats.get('physDef').value)
-    const finalDamage = Math.min(this.hp, preMitigationDamage - blocked)
+  _takeDamage(dmgBeforeDefense){
+    const dmgAfterDefense = dmgBeforeDefense * this.stats.get('physDef').value
+    const blocked = Math.max(0, dmgBeforeDefense - dmgAfterDefense)
+    const finalDamage = Math.min(this.hp, dmgAfterDefense)
     this.hp -= finalDamage
     return {
       damage: finalDamage,

@@ -1,15 +1,13 @@
 import { StatType } from './statDefinitions.js'
 
 export default {
-  [StatType.COMPOSITE]: compositeValue,
-  [StatType.PERCENTAGE]: percentageValue,
-  [StatType.ADDITIVE_MULTIPLIER]: additiveMultiplierValue,
+  [StatType.FLAT]: flatValue,
   [StatType.MULTIPLIER]: multiplierValue
 }
 
-function compositeValue(values, defaultValue){
+function flatValue(values, defaultValue){
 
-  const mods = compositeMods(values)
+  const mods = flatMods(values)
   let value = defaultValue
 
   value = mods.flatPlus.reduce((val, mod) => {
@@ -18,46 +16,6 @@ function compositeValue(values, defaultValue){
 
   value = mods.flatMinus.reduce((val, mod) => {
     return val - mod
-  }, value)
-
-  value = mods.pctPlus.reduce((val, mod) => {
-    return val * (1 + mod)
-  }, value)
-
-  value = mods.pctMinus.reduce((val, mod) => {
-    return (1 - mod) * val
-  }, value)
-
-  return value
-}
-
-function percentageValue(values, defaultValue){
-
-  const mods = compositeMods(values)
-  let value = defaultValue
-
-  value = [...mods.flatPlus, ...mods.pctPlus].reduce((val, mod) => {
-    return val + (1 - val) * mod
-  }, value)
-
-  value = [...mods.flatMinus, ...mods.pctMinus].reduce((val, mod) => {
-    return val * (1 - mod)
-  }, value)
-
-  return value
-}
-
-function additiveMultiplierValue(values, defaultValue){
-
-  const mods = percentageMods(values)
-  let value = defaultValue
-
-  value = mods.plus.reduce((val, mod) => {
-    return val + (mod - 1)
-  }, value)
-
-  value = mods.minus.reduce((val, mod) => {
-    return val * mod
   }, value)
 
   return value
@@ -83,39 +41,22 @@ function multiplierValue(values, defaultValue){
 /**
  * flatPlus example: 5
  * flatMinus example: -5
- * pctPlus example: '5%', '+5%'
- * pctMinus example: '-5%'
  * @param values [number|string]
- * @returns {{pctMinus: *[], flatPlus: *[], flatMinus: *[], pctPlus: *[]}}
+ * @returns {{flatPlus: *[], flatMinus: *[]}}
  * @private
  */
-function compositeMods(values){
+function flatMods(values){
 
   const mods = {
     flatPlus: [],
     flatMinus: [],
-    pctPlus: [],
-    pctMinus: []
   }
 
   values.forEach(change => {
-    let changeStr = change + ''
-    if(changeStr.charAt(changeStr.length - 1) === '%'){
-      if(changeStr.charAt(0) === '+'){
-        changeStr = changeStr.slice(1)
-      }
-      const value = parseFloat(changeStr) / 100
-      if(value > 0){
-        mods.pctPlus.push(value)
-      }else if(value < 0){
-        mods.pctMinus.push(-value)
-      }
-    }else{
-      if(change > 0){
-        mods.flatPlus.push(change)
-      }else if(change < 0){
-        mods.flatMinus.push(-change)
-      }
+    if(change > 0){
+      mods.flatPlus.push(change)
+    }else if(change < 0){
+      mods.flatMinus.push(-change)
     }
   })
 

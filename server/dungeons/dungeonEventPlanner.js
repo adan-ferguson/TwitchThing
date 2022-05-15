@@ -13,7 +13,7 @@ export async function generateEvent(dungeonRun){
   const room = dungeonRun.room
   const adventurerInstance = dungeonRun.adventurerInstance
 
-  if(floor === 20 && room >= 100){
+  if(floor === 30 && room >= 100){
     return {
       message: `${adventurerInstance.name} gets bored and leaves.`,
       runFinished: true
