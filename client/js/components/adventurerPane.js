@@ -5,7 +5,6 @@ import AdventurerInstance from '../../../game/adventurerInstance.js'
 const HTML = `
 <div class="flex-grow">
   <div class="flex-rows top-section">
-    <div class="name displaynone"></div>
     <di-xp-bar></di-xp-bar>
     <di-stats-list></di-stats-list>
   </div>
@@ -24,7 +23,6 @@ export default class AdventurerPane extends HTMLElement{
     super()
     this.classList.add('content-well', 'flex-rows')
     this.innerHTML = HTML
-    this.name = this.querySelector('.name')
     this.xpBar = this.querySelector('di-xp-bar')
     this.xpBar.setLevelFunctions(xpToLevel, levelToXp)
     this.loadoutEl = this.querySelector('di-loadout')
@@ -39,7 +37,6 @@ export default class AdventurerPane extends HTMLElement{
 
   setAdventurer(adventurer){
     this.adventurer = adventurer
-    this.name.textContent = this.adventurer.name
     this.xpBar.setValue(this.adventurer.xp)
 
     this.loadoutEl.setFighter(this.adventurer)
