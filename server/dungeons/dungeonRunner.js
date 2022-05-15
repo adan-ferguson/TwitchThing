@@ -8,8 +8,12 @@ import AdventurerInstance from '../../game/adventurerInstance.js'
 import Users from '../collections/users.js'
 import { toDisplayName } from '../../game/utilFunctions.js'
 import { levelToHp, levelToPower } from '../../game/adventurer.js'
+import log from 'fancy-log'
+
+const ADVANCEMENT_INTERVAL = 5000
 
 let running = false
+let lastAdvancement = new Date()
 let activeRuns = {}
 
 export function cancelAllRuns(){
@@ -41,27 +45,25 @@ export async function start(){
     if(!user){
       dr.finished = true
       DungeonRuns.save(dr)
-      console.log('Dungeon run in limbo, no user')
+      log('Dungeon run in limbo, no user')
       return
     }
-    activeRuns[dr._id] = new DungeonRunInstance(dr, adventurer, user)
+    activeRuns[dr._id] = new DungeonRunInstance(dr, user)
   })
 
-  advanceTime(0)
+  advance()
+}
 
-  async function advanceTime(ms){
-    for(const id in activeRuns){
-      const activeRun = activeRuns[id]
-      activeRun.timeSinceLastEvent += ms
-      if(activeRun.currentEvent.duration <= activeRun.timeSinceLastEvent){
-        await activeRun.advance()
-      }
-    }
-    const before = Date.now()
-    setTimeout(() => {
-      advanceTime(Date.now() - before)
-    })
+async function advance(){
+  const numRuns = Object.keys(activeRuns).length
+  if(numRuns){
+    console.log('advancing, number of runs:', numRuns)
   }
+  lastAdvancement = new Date()
+  for(const id in activeRuns){
+    await activeRuns[id].advance()
+  }
+  setTimeout(advance, ADVANCEMENT_INTERVAL)
 }
 
 /**
@@ -127,7 +129,6 @@ class DungeonRunInstance{
       throw 'User mismatch in dungeonRun instance'
     }
     this.user = user
-    this.timeSinceLastEvent = 0
     if(!this.currentEvent){
       this.advance({
         message: `${this.adventurer.name} enters the dungeon.`
@@ -140,7 +141,7 @@ class DungeonRunInstance{
   }
 
   get virtualTime(){
-    return this.currentEvent.startTime + this.timeSinceLastEvent
+    return this.currentEvent.startTime + (new Date() - lastAdvancement)
   }
 
   get floor(){
@@ -222,7 +223,6 @@ class DungeonRunInstance{
     this.doc.room = nextEvent.room
     this.doc.floor = nextEvent.floor
     this.doc.events.push(nextEvent)
-    this.timeSinceLastEvent = 0
   }
 
   async _resolveEvent(event){

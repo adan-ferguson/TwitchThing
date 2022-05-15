@@ -12,7 +12,6 @@ const DEFAULTS = {
   room: 0,
   rewards: {},
   events: [],
-  timeSinceLastEvent: 0,
   elapsedTime: 0,
   adventurerState: {}
 }

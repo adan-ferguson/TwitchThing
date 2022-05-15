@@ -38,10 +38,12 @@ export function getAdventurerStats(adventurer, state = null){
     const item = new Item(itemDef)
     return item.stats
   })
+  // TODO: extraz
+  const stateAffectors = null
   return new Stats([
     ...adventurer.bonuses.map(bonus => bonus.stats).filter(s => s),
     ...loadoutStatAffectors
-  ], state)
+  ], stateAffectors)
 }
 
 export function getAdventurerOrbsData(adventurer){

@@ -16,7 +16,7 @@ export default class AdventurerInstance{
     this.adventurer = adventurer
     this.adventurerState = { ...adventurerState }
     if(!('hp' in adventurerState)){
-      adventurerState.hp = this.hpMax
+      this.adventurerState.hp = this.hpMax
     }
   }
 
