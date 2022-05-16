@@ -109,9 +109,8 @@ export default class FighterInstance{
   }
 
   _takeDamage(dmgBeforeDefense){
-    const dmgAfterDefense = dmgBeforeDefense * this.stats.get('physDef').value
-    const blocked = Math.max(0, dmgBeforeDefense - dmgAfterDefense)
-    const finalDamage = Math.min(this.hp, dmgAfterDefense)
+    const blocked = Math.floor(dmgBeforeDefense * this.stats.get('physDef').value)
+    const finalDamage = Math.min(this.hp, dmgBeforeDefense - blocked)
     this.hp -= finalDamage
     return {
       damage: finalDamage,

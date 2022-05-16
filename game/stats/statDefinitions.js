@@ -1,6 +1,7 @@
 export const StatType = {
-  FLAT: 0, // Can add both flat and percentage
+  FLAT: 0,
   MULTIPLIER: 1, // 0 to infinity, default is 1
+  PERCENTAGE: 2, // 0 to 1, default is 0
 }
 
 const DEFAULT_DEFINITION = {
@@ -32,13 +33,11 @@ export const StatDefinitions = {
   },
   physDef: {
     ...DEFAULT_DEFINITION,
-    type: StatType.MULTIPLIER,
-    inverted: true
+    type: StatType.PERCENTAGE
   },
   magicDef: {
     ...DEFAULT_DEFINITION,
-    type: StatType.MULTIPLIER,
-    inverted: true
+    type: StatType.PERCENTAGE
   },
   lifesteal: {
     ...DEFAULT_DEFINITION,

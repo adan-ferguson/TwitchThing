@@ -6,15 +6,6 @@ export default class DungeonRunResults{
     this.relicsFound = new RelicsFound(dungeonRun.events)
     this.chestsFound = new ChestsFound(dungeonRun.results.rewards.chests)
     this.chests = (dungeonRun.results.rewards.chests || []).slice()
-    dungeonRun.results.userLevelups.forEach(levelup => {
-      if(levelup.chest){
-        this.chests.push(levelup.chest)
-      }
-    })
-  }
-
-  getUserLevelup(level){
-    return this.dungeonRun.results.userLevelups.find(levelup => levelup.level === level)
   }
 }
 

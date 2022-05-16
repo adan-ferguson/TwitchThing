@@ -571,15 +571,15 @@ New Features:
 - Replay combat
 - Combat permalinks
 - Adventure log (viewable on results page or inside of exploring page)
-- HP + Power as all base values
++ HP + Power as all base values
 - Resting
-- Classes
++ Classes
 
 Component Changes:
 
-- OrbsData w/ classes
++ OrbsData w/ classes
 
-- More icons in general
++ More icons in general
 - Don't use hash queries for adventurer new tab
 - Go back to adventurer page not having subpages, page.load() contains source info
 - Show loot before showing bonuses
@@ -590,7 +590,7 @@ Component Changes:
 - Show name of zone while exploring
 -- Show a theme for each multiple of 10 floors (background texture)
 
-- StatDisplayInfo for additionals if they're percentages (removal of composites should help this)
++ StatDisplayInfo for additionals if they're percentages (removal of composites should help this)
 
 - Admin page
 -- Show ajax errors which were thrown
@@ -599,20 +599,31 @@ Component Changes:
 -- Simulate a combat
 
 Game Systems/Balance:
-- Remove user xp
++ Remove user xp
 -- New slot when you unlock a new zone
 
-- Instead of dipping difficulty at start of a new zone, make it spike
++ Instead of dipping difficulty at start of a new zone, make it spike
 - Make monster chance a flat pct (with buffer between fights), 30%? increase per zone?
-- get rid of composite percentages -> flat or multipliers
-- get rid of variant adventuring speed from the dungeonrunner
++ get rid of composite percentages -> flat or multipliers
++ get rid of variant adventuring speed from the dungeonrunner
 
-- DungeonRun stores adventurer doc in it so old ones can be viewed
--- This doc also needs hpMax + power in case their formulas get changed
--- Combat also needs the same treatment
++ DungeonRun stores adventurer doc in it so old ones can be viewed
+++ This doc also needs hpMax + power in case their formulas get changed
+++ Combat also needs the same treatment
 
-- Monsters just use a default calculated HP and Power (which gets scaled up)
--- Their first slot in loadout will describe their specializations
++ Monsters just use a default calculated HP and Power (which gets scaled up)
+++ Their first slot in loadout will describe their specializations
+
+- Monster mods
+-- Make 3rd zone of monsters
+
+- Class bonuses
+
+- Class items
+
+- Active items
+
+- Magic damage
 
 Bugs/UI Tweaks:
 - Make the glow effect much more obvious

@@ -39,7 +39,6 @@ export default class ResultsSubpage extends Subpage{
 
     const fns = [
       this._showDungeonResult,
-      this._userXp,
       this._adventurerXp
     ]
 
@@ -99,11 +98,6 @@ export default class ResultsSubpage extends Subpage{
     }
   }
 
-  _userXp = async () => {
-    this._addResultText(`You gained +${this.dungeonRun.results.rewards.xp} xp`)
-    await this.app.header.addUserXp(this.dungeonRun.results.rewards.xp, this._userLevelUp)
-  }
-
   _showLevelUp = index => {
     const levelup = this.dungeonRun.results.levelups[index]
     const selector = new LevelupSelector()
@@ -124,17 +118,6 @@ export default class ResultsSubpage extends Subpage{
     this._addResult(selector)
     this._updateStats()
     const row = this._addResultText('Choose a Bonus')
-  }
-
-  _userLevelUp = level => {
-    const obj = this.dungeonRunResults.getUserLevelup(level)
-    this._addResultText(`You leveled up to level ${level}`)
-    if(level % 10 === 0){
-      this._addResultText('You\'ve unlocked a new adventurer slot')
-    }
-    obj?.features.forEach(featureName => {
-      this._addResultText(`New feature unlocked: ${featureName}`)
-    })
   }
 
   _updateButton(){
