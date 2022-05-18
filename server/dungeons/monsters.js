@@ -29,7 +29,8 @@ const monstersByFloor = {
 }
 
 const CHEST_DROP_CHANCE = 0.05
-const MONSTER_CHANCE_INCREASE_PER_ROOM = 0.06
+const MONSTER_CHANCE = 0.3
+const MONSTER_ROOM_BUFFER = 2
 
 // Monsters of level [currentFloor - FLOOR_RANGE] to [currentFloor] will spawn (both inclusive).
 const FLOOR_RANGE = 4
@@ -38,8 +39,8 @@ const FLOOR_RANGE = 4
 const FLOOR_SKEW = 0.1
 
 export function foundMonster(dungeonRun){
-  const monsterChance = (roomsSinceMonster() - 1) * MONSTER_CHANCE_INCREASE_PER_ROOM
-  return Math.random() < monsterChance
+  const monsterChance = MONSTER_CHANCE
+  return roomsSinceMonster() > MONSTER_ROOM_BUFFER && Math.random() < monsterChance
   function roomsSinceMonster(){
     let i
     for(i = 1; i <= dungeonRun.events.length; i++){

@@ -1,4 +1,4 @@
-import AdventurerInstance from '../../../../../../game/adventurerInstance.js'
+import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 
 const HTML = `
 <div class="flex-grow">

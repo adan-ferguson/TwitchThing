@@ -1,7 +1,6 @@
-import fizzetch from '../../../../fizzetch.js'
-import Timeline from '../../../../../../game/timeline.js'
-import Subpage from '../subpage.js'
-import ExploringSubpage from '../exploring/exploringSubpage.js'
+import Timeline from '../../../../../game/timeline.js'
+import Page from '../page.js'
+import { mergeElementOptions } from '../../../../../game/utilFunctions.js'
 
 const HTML = `
 <div class='content-rows'>
@@ -16,52 +15,37 @@ const HTML = `
 </div>
 `
 
-export default class CombatSubpage extends Subpage{
+export default class CombatPage extends Page{
 
   _cancelled = false
+  _options = {
+    live: true,
+    returnPage: null
+  }
 
-  constructor(page, adventurer, dungeonRun){
-    super(page, adventurer, dungeonRun)
+  constructor(combatID, options = {}){
+    super()
     this.innerHTML = HTML
     this.fighterPane1 = this.querySelector('.fighter1')
     this.fighterPane2 = this.querySelector('.fighter2')
     this.combatFeed = this.querySelector('di-combat-feed')
 
-    if(!page.currentEvent.combatID){
-      page.setSubpage(ExploringSubpage)
-    }
-
-    fizzetch(`/watch/combat/${page.currentEvent.combatID}`).then(result => {
-      if(!result.combat){
-        debugger
-        // retry?
-      }
-      this.load(result)
-    })
-  }
-
-  get name(){
-    return 'combat'
+    this._combatID = combatID
+    this._options = mergeElementOptions(this._options, options)
   }
 
   get titleText(){
     return 'Fight!'
   }
 
-  destroy(){
-    this._cancelled = true
-  }
+  async load(previousPage){
+    const { combat, state } = await this.fetchData(`/watch/combat/${this._combatID}`)
 
-  update(dungeonRun, options){
-    // Get out of here if we were tabbed out
-    if(options.source === 'socket'){
-      if(!this.page.currentEvent.combatID){
-        this._backToExploringPage()
-      }
+    // If it's live but the combat's already done, just get outta here
+    if(state.status === 'finished' && !this._options.live && this._options.returnPage){
+      this.app.setPage(this._options.returnPage)
+      return
     }
-  }
-
-  load = async ({ combat, state }) => {
 
     this.timeline = new Timeline(combat.timeline)
     this.combat = combat
@@ -83,6 +67,10 @@ export default class CombatSubpage extends Subpage{
     setTimeout(() => {
       this._tick()
     }, waitUntilStartTime)
+  }
+
+  async unload(){
+    this._cancelled = true
   }
 
   _tick(){
@@ -143,17 +131,11 @@ export default class CombatSubpage extends Subpage{
       this.combatFeed.setText('Time is up, combat is not going anywhere.')
     }
 
-    setTimeout(() => {
-      this._backToExploringPage()
-    }, 2200)
-  }
-
-  _backToExploringPage(){
-    if(this._cancelled){
-      return
+    if(this._options.returnPage){
+      setTimeout(() => {
+        this.app.setPage(this._options.returnPage)
+      }, 2200)
     }
-    this._cancelled = true
-    this.page.setSubpage(ExploringSubpage)
   }
 
   _performAction(action, actorPane, enemyPane){
@@ -166,4 +148,4 @@ export default class CombatSubpage extends Subpage{
   }
 }
 
-customElements.define('di-combat-subpage', CombatSubpage)
+customElements.define('di-combat-page', CombatPage)

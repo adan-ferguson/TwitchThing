@@ -7,6 +7,18 @@ export default class DungeonRunResults{
     this.chestsFound = new ChestsFound(dungeonRun.results.rewards.chests)
     this.chests = (dungeonRun.results.rewards.chests || []).slice()
   }
+
+  getSelectedBonusForLevel(level){
+    // const selectedBonus = this.dungeonRun.results.selectedBonuses.find(bonus => bonus.level === level)
+  }
+
+  getLevelUpOptions(level){
+
+  }
+
+  setNextLevelUp(levelUp){
+
+  }
 }
 
 class Ending{

@@ -42,8 +42,8 @@ export default class XpBar extends Bar{
           await super.setValue(this._max, { animate: true })
           this._flyingText('Level Up!')
           currentLevel++
-          if(options.onLevelUp){
-            await options.onLevelUp(currentLevel)
+          if(options.onLevelup){
+            await options.onLevelup(currentLevel)
           }
           this._setLevel(currentLevel)
           xpToAdd -= toNextLevel

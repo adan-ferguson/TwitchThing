@@ -1,13 +1,13 @@
-import fizzetch from '../../../../fizzetch.js'
+import fizzetch from '../../../fizzetch.js'
 import LevelupSelector from './levelupSelector.js'
-import DungeonRunResults from '../../../../../../game/dungeonRunResults.js'
-import { mergeStats } from '../../../../../../game/stats/stats.js'
-import SimpleModal from '../../../simpleModal.js'
+import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
+import { mergeStats } from '../../../../../game/stats/stats.js'
+import SimpleModal from '../../simpleModal.js'
 import ChestOpenage from './chestOpenage.js'
-import { showLoader } from '../../../../loader.js'
-import { toDisplayName } from '../../../../../../game/utilFunctions.js'
-import Subpage from '../subpage.js'
-import AdventurerPage from '../../adventurer/adventurerPage.js'
+import { showLoader } from '../../../loader.js'
+import { toDisplayName } from '../../../../../game/utilFunctions.js'
+import AdventurerPage from '../adventurer/adventurerPage.js'
+import Page from '../page.js'
 
 const WAIT_TIME = 500
 
@@ -21,20 +21,30 @@ const HTML = `
 </div>
 `
 
-export default class ResultsSubpage extends Subpage{
+export default class ResultsPage extends Page{
 
-  constructor(page, adventurer, dungeonRun){
-    super(page, adventurer, dungeonRun)
+  constructor(adventurerID){
+    super()
     this.innerHTML = HTML
     this.adventurerPane = this.querySelector('di-adventurer-pane')
     this.results = this.querySelector('.results-list')
     this.doneButton = this.querySelector('.done')
 
     this._selectedBonuses = []
-    this.adventurerPane.setAdventurer(adventurer)
+    this._adventurerID = adventurerID
+  }
 
-    this.adventurer = adventurer
+  get titleText(){
+    return 'Results'
+  }
+
+  async load(source){
+
+    const { dungeonRun } = await this.fetchData(`/game/adventurer/${this._adventurerID}/results`)
+
+    this.adventurer = dungeonRun.adventurer
     this.dungeonRun = dungeonRun
+    this.adventurerPane.setAdventurer(dungeonRun.adventurer)
     this.dungeonRunResults = new DungeonRunResults(dungeonRun)
 
     const fns = [
@@ -46,16 +56,8 @@ export default class ResultsSubpage extends Subpage{
       for(let fn of fns){
         await fn()
       }
-      this._updateButton()
+      this._showButton()
     })
-  }
-
-  get name(){
-    return 'results'
-  }
-
-  get titleText(){
-    return 'Results'
   }
 
   _showDungeonResult = async () => {
@@ -91,58 +93,49 @@ export default class ResultsSubpage extends Subpage{
 
   _adventurerXp = async () => {
     this._addResultText(`${this.adventurer.name} gained +${this.dungeonRun.results.rewards.xp} xp`)
-    await this.adventurerPane.addXp(this.dungeonRun.results.rewards.xp)
-    for(let i = 0; i < this.dungeonRun.results.levelups.length; i++){
-      this._showLevelUp(i)
-      await wait()
-    }
+
+    await this.adventurerPane.addXp(this.dungeonRun.results.rewards.xp, async level => {
+      const selectedBonus = this.dungeonRunResults.getSelectedBonusForLevel(level)
+      if(selectedBonus){
+        // Show the bonus and continue
+      }
+
+      const nextLevelUp = this.dungeonRunResults.getLevelUpOptions(level)
+      if(!nextLevelUp){
+        console.error('Levelup mismatch? Results do not have a nextLevelup defined, or the level number is wrong.')
+      }else{
+        this.dungeonRunResults.setNextLevelUp(await this._nextLevelup(nextLevelUp))
+      }
+    })
   }
 
-  _showLevelUp = index => {
-    const levelup = this.dungeonRun.results.levelups[index]
+  _nextLevelup = async nextLevelup => {
     const selector = new LevelupSelector()
-    this.adventurer.level = levelup.level
     selector.setData(
       this.adventurer,
-      levelup,
-      bonus => {
-        if(levelup.level === 1){
-          row.textContent = '^ You can change your mind until you click the "Okay" button below.'
-        }else{
-          row.parentElement?.removeChild(row)
-        }
-        this._selectedBonuses[index] = bonus
-        this._updateStats()
-        this._updateButton()
-      })
+      nextLevelup
+    )
     this._addResult(selector)
+    const selection = await selector.awaitSelection()
+    this.adventurer.level = nextLevelup.level
     this._updateStats()
-    const row = this._addResultText('Choose a Bonus')
+    return await fizzetch(`/game/adventurer/${this.adventurer._id}/selectbonus/${selection}`)
   }
 
-  _updateButton(){
+  _showButton(){
     if(!this.doneButton.classList.contains('hidden')){
       return
     }
-    if(this._selectedBonuses.length === this.dungeonRun.results.levelups.length){
-      if(this._selectedBonuses.find(bonus => !bonus)){
-        return
-      }
-      this.doneButton.classList.remove('hidden')
-      this.doneButton.addEventListener('click', () => this._finish())
-    }
+    this.doneButton.classList.remove('hidden')
+    this.doneButton.addEventListener('click', () => this._finish())
   }
 
   async _finish(){
-    await showPopups(this.dungeonRunResults)
     showLoader()
-    const results = await fizzetch(`/game/adventurer/${this.adventurer._id}/confirmresults`, {
-      selectedBonuses: this._selectedBonuses
-    })
+    const results = await fizzetch(`/game/adventurer/${this.adventurer._id}/finalizeresults`)
     if(!results.error){
       this.page.redirectTo(new AdventurerPage(this.adventurer._id))
     }
-    // TODO: handle error, usually just shouldn't happen though
   }
 
   _addResult(row){
@@ -165,7 +158,7 @@ export default class ResultsSubpage extends Subpage{
   _updateStats(){
     const selectors = [...this.querySelectorAll('di-adventurer-levelup-selector')]
     const extraStats = selectors.map(selector => selector.extraStats)
-    this.adventurerPane.setBonusStats(mergeStats(...extraStats))
+    this.adventurerPane.setExtraStats(mergeStats(...extraStats))
   }
 }
 
@@ -221,4 +214,4 @@ async function showPopups(dungeonRunResults){
   }
 }
 
-customElements.define('di-results-subpage', ResultsSubpage)
+customElements.define('di-results-page', ResultsPage)

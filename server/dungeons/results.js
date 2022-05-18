@@ -35,21 +35,16 @@ export function addRewards(rewards, toAdd){
 export async function calculateResults(dungeonRunDoc){
   dungeonRunDoc.results = {
     rewards: dungeonRunDoc.rewards,
-    nextLevelup: generateLevelup(dungeonRunDoc),
+    nextLevelup: await generateLevelup(dungeonRunDoc),
     selectedBonuses: []
-  }
-  if(!dungeonRunDoc.results.nextLevelup){
-    finalizeResults(dungeonRunDoc)
   }
 }
 
-export async  function selectBonus(dungeonRunDoc, index){
-  dungeonRunDoc.selectedBonuses.push(dungeonRunDoc.nextLevelup.options[index])
-  const nextLevelup = generateLevelup(dungeonRunDoc)
-  if(!nextLevelup){
-    finalizeResults(dungeonRunDoc)
-  }else{
-    dungeonRunDoc.nextLevelup = nextLevelup
+export async function selectBonus(dungeonRunDoc, index){
+  dungeonRunDoc.results.selectedBonuses.push(dungeonRunDoc.results.nextLevelup.options[index])
+  const nextLevelup = await generateLevelup(dungeonRunDoc)
+  if(nextLevelup){
+    dungeonRunDoc.results.nextLevelup = nextLevelup
   }
   return nextLevelup
 }

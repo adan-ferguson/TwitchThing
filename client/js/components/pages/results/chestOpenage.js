@@ -1,4 +1,4 @@
-import ItemDetails from '../../../itemDetails.js'
+import ItemDetails from '../../itemDetails.js'
 
 const HTML = `
 <h3>Opening Chests</h3>

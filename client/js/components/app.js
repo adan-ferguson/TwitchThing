@@ -56,27 +56,34 @@ export default class App extends HTMLElement{
     // Update the user whenever we change pages
     this._fetchUser()
 
-    if(this.currentPage){
-      const preventUnload = await this.currentPage.unload()
+    const previousPage = this.currentPage
+    if(previousPage){
+      const preventUnload = await previousPage.unload()
       if(preventUnload){
         return
       }
-      this.currentPage.unloaded = true
-      this.currentPage.classList.add('fade-out')
-      this.currentPage.remove()
+      previousPage.unloaded = true
+      previousPage.classList.add('fade-out')
+      previousPage.remove()
     }
 
     this.currentPage = page
     page.app = this
-    const error = await page.load()
+    try {
+      await page.load(previousPage)
+    }catch(ex){
+      const { error, targetPage } = ex
+      console.error(ex)
+      if(targetPage){
+        this.setPage(pageFromString(targetPage.name, targetPage.args))
+      }else{
+        this.setPage(new MainPage({ error }))
+      }
+    }
 
     if(this.currentPage !== page){
       // The page.load() caused a redirect, so this setPage is no longer relevant.
       return
-    }
-
-    if(error){
-      return this.setPage(new MainPage({ error }))
     }
 
     page.unloaded = false

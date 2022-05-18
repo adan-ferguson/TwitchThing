@@ -1,5 +1,5 @@
-import CustomAnimation from '../../../../customAnimation.js'
-import { fadeIn, fadeOut } from '../../../../animationHelper.js'
+import CustomAnimation from '../../../customAnimation.js'
+import { fadeIn, fadeOut } from '../../../animationHelper.js'
 
 const innerHTML = `
 <di-bar class="time-bar"></di-bar>

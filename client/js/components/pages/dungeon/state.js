@@ -1,4 +1,4 @@
-import CustomAnimation from '../../../../customAnimation.js'
+import CustomAnimation from '../../../customAnimation.js'
 
 const innerHTML = `
 <di-timer></di-timer><br/>

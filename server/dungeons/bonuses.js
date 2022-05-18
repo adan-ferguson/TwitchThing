@@ -20,7 +20,8 @@ export async function generateBonusOptions(dungeonRun, level){
   return classOptions.map(className => {
     return {
       className,
-      bonus: generateBonus(className)
+      bonus: generateBonus(className),
+      level
     }
   })
 

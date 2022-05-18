@@ -1,6 +1,6 @@
-import { StatsDisplayStyle } from '../../../../statsDisplayInfo.js'
-import Stats, { mergeStats } from '../../../../../../game/stats/stats.js'
-import StatsList from '../../../stats/statsList.js'
+import { StatsDisplayStyle } from '../../../statsDisplayInfo.js'
+import Stats, { mergeStats } from '../../../../../game/stats/stats.js'
+import StatsList from '../../stats/statsList.js'
 
 const HTML = `
 <div>
@@ -14,6 +14,7 @@ export default class LevelupSelector extends HTMLElement{
 
   _levelupStats = null
   _selectedStats = null
+  _cb = () => {}
 
   constructor(){
     super()
@@ -30,7 +31,7 @@ export default class LevelupSelector extends HTMLElement{
     return mergeStats(this._levelupStats, this._selectedStats)
   }
 
-  setData(adventurer, levelup, callback){
+  setData(adventurer, levelup){
     this.querySelector('.name').textContent = adventurer.name
     this.querySelector('.level').textContent = levelup.level
 
@@ -54,16 +55,23 @@ export default class LevelupSelector extends HTMLElement{
       optionEl.append(statsList)
 
       optionEl.addEventListener('click', () => {
-        if(optionEl.classList.contains('selected')){
+        if(this.options.classList.contains('bonus-selected')){
           return
         }
+        this.options.classList.add('bonus-selected')
         this.querySelectorAll('button').forEach(button => button.classList.remove('selected'))
         optionEl.classList.add('selected')
         this._selectedStats = stats
-        callback(category)
+        this._cb(category)
       })
 
       this.options.appendChild(optionEl)
+    })
+  }
+
+  awaitSelection(){
+    return new Promise(res => {
+      this._cb = res
     })
   }
 }

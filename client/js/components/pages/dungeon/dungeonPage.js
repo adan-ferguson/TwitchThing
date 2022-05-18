@@ -1,20 +1,32 @@
 import Page from '../page.js'
-import fizzetch from '../../../fizzetch.js'
 import { getSocket } from '../../../socketClient.js'
-import { pageFromString } from '../../app.js'
-import ExploringSubpage from './exploring/exploringSubpage.js'
-import { hideAll as hideAllTippys } from 'tippy.js'
-import CombatSubpage from './combat/combatSubpage.js'
-import ResultsSubpage from './results/resultsSubpage.js'
-import { fadeIn, fadeOut } from '../../../animationHelper.js'
+import CombatPage from '../combat/combatPage.js'
+import ResultsPage from '../results/resultsPage.js'
+import { zoneNameFromFloor } from '../../../../../game/zones.js'
+
+const HTML = `
+<div class='content-columns'>
+  <di-dungeon-adventurer-pane></di-dungeon-adventurer-pane>
+  <div class="content-rows">
+    <div class="content-well">
+        <di-dungeon-event></di-dungeon-event>
+    </div>
+    <div class="state content-well" style="flex-basis:125rem;flex-grow:0">
+        <di-dungeon-state></di-dungeon-state>
+    </div>
+  </div>
+</div>
+`
 
 export default class DungeonPage extends Page{
-
-  subpage
 
   _adventurerID
   _dungeonRunID
   _watchView
+
+  _adventurerPane
+  _eventEl
+  _stateEl
 
   adventurer
   dungeonRun
@@ -27,71 +39,23 @@ export default class DungeonPage extends Page{
       this._dungeonRunID = ID
       this._watchView = true
     }
+
+    this.innerHTML = HTML
+
+    this._adventurerPane = this.querySelector('di-dungeon-adventurer-pane')
+    this._eventEl = this.querySelector('di-dungeon-event')
+    this._stateEl = this.querySelector('di-dungeon-state')
   }
 
   get titleText(){
-    return this.subpage.titleText
+    return 'Exploring' + this.dungeonRun ? ' ' + zoneNameFromFloor(this.dungeonRun.floor) : ''
   }
 
   get currentEvent(){
     return this.dungeonRun.currentEvent || this.dungeonRun.events.at(-1)
   }
 
-  async load(){
-
-    const redirect = await this._fetch()
-    if(redirect){
-      return redirect
-    }
-
-    getSocket()
-      .emit('join dungeon run room', this.dungeonRun._id)
-      .on('dungeon run update', this._parseDungeonUpdate)
-
-    if(this.currentEvent.combatID && this.currentEvent.pending){
-      this.setSubpage(CombatSubpage)
-    }else if(this.dungeonRun.finished && !this._watchView){
-      this.setSubpage(ResultsSubpage)
-    }else {
-      this.setSubpage(ExploringSubpage)
-    }
-  }
-
-  async setSubpage(SubpageType){
-    if(this._watchView && SubpageType === ResultsSubpage){
-      return
-    }
-    const previousPage = this.subpage
-    this.subpage = new SubpageType(this, this.adventurer, this.dungeonRun)
-    if(previousPage){
-      await fadeOut(previousPage)
-      previousPage.destroy()
-    }
-    hideAllTippys()
-    this.innerHTML = ''
-    this.appendChild(this.subpage)
-    this.app.updateTitle()
-    this.subpage.update(this.dungeonRun, {
-      source: previousPage?.name || 'initial'
-    })
-    fadeIn(this.subpage)
-  }
-
-  async unload(){
-    getSocket().off('dungeon run update', this._parseDungeonUpdate)
-  }
-
-  _parseDungeonUpdate = (dungeonRun) => {
-    if(this.dungeonRun._id !== dungeonRun._id){
-      return
-    }
-    this.dungeonRun = dungeonRun
-    this.subpage?.update(dungeonRun, {
-      source: 'socket'
-    })
-  }
-
-  async _fetch(){
+  async load(previousPage){
 
     const url =
       this._watchView ?
@@ -100,18 +64,65 @@ export default class DungeonPage extends Page{
 
     const {
       adventurer,
-      dungeonRun,
-      error,
-      targetPage
-    } = await fizzetch(url)
-    if(targetPage){
-      return this.redirectTo(pageFromString(targetPage.name, targetPage.args))
-    }
-    if(error){
-      throw error
-    }
+      dungeonRun
+    } = await this.fetchData(url)
+
     this.adventurer = adventurer
     this.dungeonRun = dungeonRun
+
+    if(this.currentEvent.combatID && this.currentEvent.pending && !(previousPage instanceof CombatPage)){
+      return this.app.setPage(new CombatPage(this.currentEvent.combatID, {
+        live: true,
+        returnPage: this
+      }))
+    }
+    if(this.dungeonRun.finished && !this._watchView){
+      return this.app.setPage(new ResultsPage(this.adventurer._id))
+    }
+
+    getSocket()
+      .emit('join dungeon run room', this.dungeonRun._id)
+      .on('dungeon run update', this._socketUpdate)
+
+    this._adventurerPane.setAdventurer(adventurer)
+    this._eventEl.setAdventurer(adventurer)
+    this._update(previousPage)
+  }
+
+  async unload(){
+    getSocket().off('dungeon run update', this._socketUpdate)
+  }
+
+  _socketUpdate = (dungeonRun) => {
+    if(this.dungeonRun._id !== dungeonRun._id){
+      return
+    }
+    this._update(dungeonRun, 'socket')
+  }
+
+  _update(dungeonRun, source){
+
+    if(source === 'socket'){
+      if(dungeonRun.finished){
+        return this.redirectTo(new ResultsPage(this.adventurer._id))
+      }
+      if(this.currentEvent.combatID){
+        // If from a socket event, transition to combat
+        return this.redirectTo(new CombatPage())
+      }
+    }
+
+    if(source instanceof CombatPage && !this._watchView){
+      setTimeout(() => {
+        this.redirectTo(new ResultsPage(this.adventurer._id))
+      }, 3000)
+    }
+
+    const animate = source === 'socket'
+    this._adventurerPane.setState(dungeonRun.adventurerState, animate)
+    this._eventEl.update(this.currentEvent, dungeonRun.virtualTime)
+    this._stateEl.updateDungeonRun(dungeonRun, animate || source instanceof CombatPage)
+
   }
 }
 
