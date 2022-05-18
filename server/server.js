@@ -5,7 +5,7 @@ import passport from 'passport'
 import log from 'fancy-log'
 import validations from './validations.js'
 
-import gameRouter from './routes/game.js'
+import gameRouter from './routes/game/index.js'
 import userRouter from './routes/user.js'
 import adminRouter from './routes/admin.js'
 import publicRouter from './routes/public.js'
@@ -58,6 +58,7 @@ async function init(){
     .use('/watch', watchRouter)
     .use('/', publicRouter)
     .use('/', express.static('client_dist'))
+    .use(errorHandler)
 
   try {
     const server = app.listen(config.port, () => {
