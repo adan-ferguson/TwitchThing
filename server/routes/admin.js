@@ -4,6 +4,7 @@ import Adventurers from '../collections/adventurers.js'
 import DungeonRuns from '../collections/dungeonRuns.js'
 import Combats from '../collections/combats.js'
 import { cancelAllRuns, getActiveRunData, getRunDataMulti } from '../dungeons/dungeonRunner.js'
+import { validateParam } from '../validations.js'
 
 const router = express.Router()
 
@@ -26,8 +27,7 @@ router.post('/', async(req, res) => {
 })
 
 router.post('/runcommand', async(req, res) => {
-  req.validateParam('command')
-  const cmd = req.body.command
+  const cmd = validateParam(req.body.command)
   let result = 'Command not found'
   if(cmd === 'reset all'){
     cancelAllRuns()

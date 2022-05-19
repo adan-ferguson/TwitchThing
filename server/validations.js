@@ -13,8 +13,9 @@ export function validateParam(val, options){
       throw { code: 400, message:  `Required parameter ${name} is missing.` }
     }
   }else{
-    return validateType()
+    validateType()
   }
+  return val
 
   function validateType(){
     const type = options.type
