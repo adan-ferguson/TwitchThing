@@ -28,7 +28,7 @@ const statDefinitionsInfo = {
     },
     descriptionFn: (value, { style, owner }) => {
       if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
-        return `(Base Health = ${owner.baseHp}) + (Bonus from items, traits, etc = ${value * 100 - 100}%)`
+        return `Max Health (${owner.baseHp} + ${value * 100 - 100}%)`
       }
       return 'Max Health'
     },

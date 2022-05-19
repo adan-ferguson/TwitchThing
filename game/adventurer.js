@@ -53,7 +53,7 @@ export function getAdventurerOrbsData(adventurer){
     if(!bonus.orbs){
       return
     }
-    for(let className of bonus.orbs){
+    for(let className in bonus.orbs){
       if(!maxOrbs[className]){
         maxOrbs[className] = 0
       }

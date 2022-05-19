@@ -46,7 +46,11 @@ export default class Loadout extends HTMLElement{
   }
 
   get type(){
-    return this.getAttribute('type')
+    // TODO: this sucks
+    if(this._fighter?.xp !== undefined){
+      return 'adventurer'
+    }
+    return 'unknown'
   }
 
   get items(){

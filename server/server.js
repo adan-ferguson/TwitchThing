@@ -3,7 +3,6 @@ import session from 'express-session'
 import passport from 'passport'
 
 import log from 'fancy-log'
-import validations from './validations.js'
 
 import gameRouter from './routes/game/index.js'
 import userRouter from './routes/user.js'
@@ -52,7 +51,6 @@ async function init(){
     .use(express.json())
     .use(passport.initialize({}))
     .use(passport.session({}))
-    .use(validations)
     .use('/game', gameRouter)
     .use('/user', userRouter)
     .use('/admin', adminRouter)

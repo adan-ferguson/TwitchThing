@@ -35,7 +35,7 @@ const fix = (doc, defaults, projection = null) => {
 
 const qoid = queryOrID => {
   if(typeof(queryOrID) === 'string' || queryOrID instanceof MongoDB.ObjectID){
-    queryOrID = { _id : queryOrID }
+    queryOrID = { _id : id(queryOrID) }
   }
   return queryOrID
 }

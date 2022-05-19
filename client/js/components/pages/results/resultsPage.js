@@ -23,26 +23,29 @@ const HTML = `
 
 export default class ResultsPage extends Page{
 
-  constructor(adventurerID){
+  _dungeonRunID
+
+  constructor(dungeonRunID){
     super()
     this.innerHTML = HTML
     this.adventurerPane = this.querySelector('di-adventurer-pane')
     this.results = this.querySelector('.results-list')
     this.doneButton = this.querySelector('.done')
-
-    this._selectedBonuses = []
-    this._adventurerID = adventurerID
+    this._dungeonRunID = dungeonRunID
   }
 
   get titleText(){
     return 'Results'
   }
 
+  get adventurer(){
+    return this.dungeonRun.adventurer
+  }
+
   async load(source){
 
-    const { dungeonRun } = await this.fetchData(`/game/adventurer/${this._adventurerID}/results`)
+    const { dungeonRun } = await this.fetchData(`/game/dungeonRun/${this._dungeonRunID}/results`)
 
-    this.adventurer = dungeonRun.adventurer
     this.dungeonRun = dungeonRun
     this.adventurerPane.setAdventurer(dungeonRun.adventurer)
     this.dungeonRunResults = new DungeonRunResults(dungeonRun)
@@ -132,7 +135,7 @@ export default class ResultsPage extends Page{
 
   async _finish(){
     showLoader()
-    const results = await fizzetch(`/game/adventurer/${this.adventurer._id}/finalize`)
+    const results = await fizzetch(`/game/dungeonrun/${this._dungeonRunID}/finalize`)
     if(!results.error){
       this.page.redirectTo(new AdventurerPage(this.adventurer._id))
     }

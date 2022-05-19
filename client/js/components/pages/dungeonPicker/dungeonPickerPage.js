@@ -23,7 +23,7 @@ export default class DungeonPickerPage extends Page{
       async: true,
       action: `/game/adventurer/${this.adventurerID}/enterdungeon`,
       submitText: 'Go!',
-      success: () => this.redirectTo(new DungeonPage(this.adventurerID))
+      success: dungeonRun => this.redirectTo(new DungeonPage(dungeonRun._id))
     })
 
     this.querySelector('.stuff').appendChild(this.form)

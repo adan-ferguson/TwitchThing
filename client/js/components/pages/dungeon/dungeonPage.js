@@ -20,7 +20,6 @@ const HTML = `
 
 export default class DungeonPage extends Page{
 
-  _adventurerID
   _dungeonRunID
   _watchView
 
@@ -31,28 +30,26 @@ export default class DungeonPage extends Page{
   adventurer
   dungeonRun
 
-  constructor(ID, watchView = false){
+  constructor(dungeonRunID, watchView = false){
     super()
-    if(!watchView){
-      this._adventurerID = ID
-    }else{
-      this._dungeonRunID = ID
-      this._watchView = true
-    }
-
+    this._dungeonRunID = dungeonRunID
+    this._watchView = watchView
     this.innerHTML = HTML
-
     this._adventurerPane = this.querySelector('di-dungeon-adventurer-pane')
     this._eventEl = this.querySelector('di-dungeon-event')
     this._stateEl = this.querySelector('di-dungeon-state')
   }
 
   get titleText(){
-    return 'Exploring' + this.dungeonRun ? ' ' + zoneNameFromFloor(this.dungeonRun.floor) : ''
+    return 'Exploring' + this.dungeonRun ? '' : ' ' + zoneNameFromFloor(this.dungeonRun.floor)
   }
 
   get currentEvent(){
     return this.dungeonRun.currentEvent || this.dungeonRun.events.at(-1)
+  }
+
+  get adventurer(){
+    return this.dungeonRun.adventurer
   }
 
   async load(previousPage){
@@ -60,14 +57,10 @@ export default class DungeonPage extends Page{
     const url =
       this._watchView ?
         `/watch/dungeonrun/${this._dungeonRunID}` :
-        `/game/adventurer/${this._adventurerID}/dungeonrun`
+        `/game/dungeonrun/${this._dungeonRunID}`
 
-    const {
-      adventurer,
-      dungeonRun
-    } = await this.fetchData(url)
-
-    this.adventurer = adventurer
+    debugger
+    const { dungeonRun } = await this.fetchData(url)
     this.dungeonRun = dungeonRun
 
     if(this.currentEvent.combatID && this.currentEvent.pending && !(previousPage instanceof CombatPage)){
@@ -84,8 +77,8 @@ export default class DungeonPage extends Page{
       .emit('join dungeon run room', this.dungeonRun._id)
       .on('dungeon run update', this._socketUpdate)
 
-    this._adventurerPane.setAdventurer(adventurer)
-    this._eventEl.setAdventurer(adventurer)
+    this._adventurerPane.setAdventurer(this.adventurer)
+    this._eventEl.setAdventurer(this.adventurer)
     this._update(previousPage)
   }
 

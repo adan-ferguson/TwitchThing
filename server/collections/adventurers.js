@@ -16,8 +16,9 @@ const DEFAULTS = {
 
 const Adventurers = new Collection('adventurers', DEFAULTS)
 
-Adventurers.createNew = async function(userID, name){
-  return await Adventurers.save({ name, userID })
+Adventurers.createNew = async function(userID, name, startingClass){
+  const bonuses = [{ orbs: { [startingClass] : 1 } }]
+  return await Adventurers.save({ name, userID, bonuses })
 }
 
 export default Adventurers

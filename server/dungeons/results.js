@@ -1,7 +1,6 @@
 import Adventurers from '../collections/adventurers.js'
 import Users from '../collections/users.js'
-import { xpToLevel, xpToLevel as advXpToLevel } from '../../game/adventurer.js'
-import { generateBonusOptions } from './bonuses.js'
+import { xpToLevel as advXpToLevel } from '../../game/adventurer.js'
 import { toArray } from '../../game/utilFunctions.js'
 import { generateLevelup } from '../adventurer/levelup.js'
 
@@ -47,7 +46,7 @@ export async function finalize(dungeonRunDoc){
   await saveUser()
 
   async function saveAdventurer(){
-    const adventurerDoc = Adventurers.findOne(dungeonRunDoc.adventurer._id)
+    const adventurerDoc = await Adventurers.findOne(dungeonRunDoc.adventurer._id)
     const xpAfter = adventurerDoc.xp + dungeonRunDoc.rewards.xp
     adventurerDoc.dungeonRunID = null
     adventurerDoc.xp = xpAfter

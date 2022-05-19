@@ -1,5 +1,5 @@
 import Bar from './bar.js'
-import actionIcon from '../../../assets/icons/action.svg'
+import actionIcon from '../../../assets/icons/magicPower.svg'
 
 export default class ActionBar extends Bar{
   constructor(){

@@ -1,6 +1,7 @@
 import './timer.js'
 import AdventurerPage from './pages/adventurer/adventurerPage.js'
 import DungeonPage from './pages/dungeon/dungeonPage.js'
+import ResultsPage from './pages/results/resultsPage.js'
 
 const HTML = `
 <div class="inner">
@@ -60,6 +61,7 @@ export default class AdventurerRow extends HTMLElement{
       this.setDungeonRun(adventurer.dungeonRun)
     }else if(adventurer.dungeonRunID){
       this.setDungeonRun({
+        _id: adventurer.dungeonRunID,
         finished: true
       })
     }
@@ -68,8 +70,10 @@ export default class AdventurerRow extends HTMLElement{
   get targetPage(){
     if(!this.dungeonRun){
       return new AdventurerPage(this.adventurer._id)
+    }else if(this.dungeonRun.finished){
+      return new ResultsPage(this.dungeonRun._id)
     }else{
-      return new DungeonPage(this.adventurer._id)
+      return new DungeonPage(this.dungeonRun._id)
     }
   }
 
