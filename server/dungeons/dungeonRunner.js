@@ -1,7 +1,7 @@
 import DungeonRuns from '../collections/dungeonRuns.js'
 import Combats from '../collections/combats.js'
 import Adventurers from '../collections/adventurers.js'
-import { addRewards, calculateResults } from './results.js'
+import { addRewards } from './results.js'
 import { generateEvent } from './dungeonEventPlanner.js'
 import { emit } from '../socketServer.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
@@ -259,7 +259,6 @@ class DungeonRunInstance{
   _finish(){
     console.log('run finished', this.adventurer.name)
     this.doc.finished = true
-    calculateResults(this.doc)
     delete activeRuns[this.doc._id]
     emit(this.adventurer.userID, 'dungeon run update', this.doc)
     DungeonRuns.save(this.doc)

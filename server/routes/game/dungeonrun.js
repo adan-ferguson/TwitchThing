@@ -1,5 +1,5 @@
 import { getRunData } from '../../dungeons/dungeonRunner.js'
-import { finalizeResults, selectBonus } from '../../dungeons/results.js'
+import { finalize, selectBonus } from '../../dungeons/results.js'
 import express from 'express'
 import db from '../../db.js'
 import { validateParam } from '../../validations.js'
@@ -27,21 +27,21 @@ verifiedRouter.post('/dungeonrun', async(req, res) => {
 })
 
 verifiedRouter.post('/results', async (req, res) => {
-  if(!req.dungeonRun.results){
-    throw { code: 400, message: 'Can not show results, dungeon run results not calculated yet.' }
+  if(!req.dungeonRun.finished){
+    throw { code: 400, message: 'Can not show results, dungeon run is not finished yet.' }
   }
   res.send({
     dungeonRun: req.dungeonRun
   })
 })
 
-verifiedRouter.post('/selectbonus/:index', async (req, res) => {
-  const nextLevelup = await selectBonus(req.dungeonRun, validateParam(req.params.index))
-  res.status(200).send({ nextLevelup })
-})
+// verifiedRouter.post('/selectbonus/:index', async (req, res) => {
+//   const nextLevelup = await selectBonus(req.dungeonRun, validateParam(req.params.index))
+//   res.status(200).send({ nextLevelup })
+// })
 
-verifiedRouter.post('/finalizeresults', async (req, res) => {
-  await finalizeResults(req.dungeonRun)
+verifiedRouter.post('/finalize', async (req, res) => {
+  await finalize(req.dungeonRun)
   res.status(200).send({ result: 'okay' })
 })
 

@@ -4,8 +4,8 @@ export default class DungeonRunResults{
     this.lastEvent = new Ending(dungeonRun.events.at(-1))
     this.monstersKilled = new MonstersKilled(dungeonRun.events)
     this.relicsFound = new RelicsFound(dungeonRun.events)
-    this.chestsFound = new ChestsFound(dungeonRun.results.rewards.chests)
-    this.chests = (dungeonRun.results.rewards.chests || []).slice()
+    this.chestsFound = new ChestsFound(dungeonRun.rewards.chests)
+    this.chests = (dungeonRun.rewards.chests || []).slice()
   }
 
   getSelectedBonusForLevel(level){

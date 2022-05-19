@@ -92,9 +92,9 @@ export default class ResultsPage extends Page{
   }
 
   _adventurerXp = async () => {
-    this._addResultText(`${this.adventurer.name} gained +${this.dungeonRun.results.rewards.xp} xp`)
+    this._addResultText(`${this.adventurer.name} gained +${this.dungeonRun.rewards.xp} xp`)
 
-    await this.adventurerPane.addXp(this.dungeonRun.results.rewards.xp, async level => {
+    await this.adventurerPane.addXp(this.dungeonRun.rewards.xp, async level => {
       const selectedBonus = this.dungeonRunResults.getSelectedBonusForLevel(level)
       if(selectedBonus){
         // Show the bonus and continue
@@ -132,7 +132,7 @@ export default class ResultsPage extends Page{
 
   async _finish(){
     showLoader()
-    const results = await fizzetch(`/game/adventurer/${this.adventurer._id}/finalizeresults`)
+    const results = await fizzetch(`/game/adventurer/${this.adventurer._id}/finalize`)
     if(!results.error){
       this.page.redirectTo(new AdventurerPage(this.adventurer._id))
     }

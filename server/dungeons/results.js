@@ -3,6 +3,7 @@ import Users from '../collections/users.js'
 import { xpToLevel, xpToLevel as advXpToLevel } from '../../game/adventurer.js'
 import { generateBonusOptions } from './bonuses.js'
 import { toArray } from '../../game/utilFunctions.js'
+import { generateLevelup } from '../adventurer/levelup.js'
 
 const REWARDS_TYPES = {
   xp: 'int',
@@ -32,35 +33,14 @@ export function addRewards(rewards, toAdd){
   return r
 }
 
-export async function calculateResults(dungeonRunDoc){
-  dungeonRunDoc.results = {
-    rewards: dungeonRunDoc.rewards,
-    nextLevelup: await generateLevelup(dungeonRunDoc),
-    selectedBonuses: []
-  }
-}
-
-export async function selectBonus(dungeonRunDoc, index){
-  dungeonRunDoc.results.selectedBonuses.push(dungeonRunDoc.results.nextLevelup.options[index])
-  const nextLevelup = await generateLevelup(dungeonRunDoc)
-  if(nextLevelup){
-    dungeonRunDoc.results.nextLevelup = nextLevelup
-  }
-  return nextLevelup
-}
-
-export async function finalizeResults(dungeonRunDoc){
+export async function finalize(dungeonRunDoc){
 
   if(dungeonRunDoc.finalized){
     throw { error: 'Dungeon run has already been finalized' }
   }
 
-  if(!dungeonRunDoc.results){
+  if(!dungeonRunDoc.finished){
     throw { error: 'Dungeon run is not finished yet.' }
-  }
-
-  if(dungeonRunDoc.results.nextLevelup){
-    throw { error: 'Levelup has not been resolved yet.' }
   }
 
   await saveAdventurer()
@@ -68,19 +48,23 @@ export async function finalizeResults(dungeonRunDoc){
 
   async function saveAdventurer(){
     const adventurerDoc = Adventurers.findOne(dungeonRunDoc.adventurer._id)
-    const xpAfter = adventurerDoc.xp + dungeonRunDoc.results.rewards.xp
-    adventurerDoc.bonuses.push(...dungeonRunDoc.results.selectedBonuses)
+    const xpAfter = adventurerDoc.xp + dungeonRunDoc.rewards.xp
     adventurerDoc.dungeonRunID = null
     adventurerDoc.xp = xpAfter
     adventurerDoc.level = advXpToLevel(xpAfter)
     adventurerDoc.accomplishments.highestFloor =
       Math.max(dungeonRunDoc.floor, adventurerDoc.accomplishments.highestFloor)
+
+    if(adventurerDoc.level > adventurerDoc.bonuses.length){
+      adventurerDoc.nextLevelUp = generateLevelup(adventurerDoc)
+    }
+
     await Adventurers.save(adventurerDoc)
   }
 
   async function saveUser(){
     const userDoc = await Users.findOne(dungeonRunDoc.userID)
-    dungeonRunDoc.results.rewards.chests?.forEach(chest => {
+    dungeonRunDoc.rewards.chests?.forEach(chest => {
       chest.contents.items?.forEach(item => {
         userDoc.inventory.items[item.id] = item
       })
@@ -89,17 +73,5 @@ export async function finalizeResults(dungeonRunDoc){
     userDoc.accomplishments.highestFloor =
       Math.max(dungeonRunDoc.floor, userDoc.accomplishments.highestFloor)
     await Users.save(userDoc)
-  }
-}
-
-async function generateLevelup(dungeonRun){
-  const levelAfter = xpToLevel(dungeonRun.adventurer.xp + dungeonRun.rewards.xp)
-  const nextLevel = dungeonRun.adventurer.level + 1 + (dungeonRun.results?.selectedBonuses.length || 0)
-  if(levelAfter < nextLevel){
-    return null
-  }
-  return {
-    options: await generateBonusOptions(dungeonRun, nextLevel),
-    level: nextLevel
   }
 }
