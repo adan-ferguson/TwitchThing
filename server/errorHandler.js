@@ -1,10 +1,6 @@
-export default function(fn){
-  return function asyncUtilWrap(...args){
-    const fnReturn = fn(...args)
-    const res = args[1]
-    return Promise.resolve(fnReturn).catch(data => {
-      console.error(data)
-      res.status(data.code || 500).send(data)
-    })
+export default function(error, req, res, next){
+  if(req.method === 'GET' && error.redirect){
+    return res.redirect(error.redirect)
   }
+  res.status(error.code || 500).send({ error })
 }

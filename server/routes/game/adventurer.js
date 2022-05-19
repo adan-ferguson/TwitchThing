@@ -1,70 +1,41 @@
 import express from 'express'
 import Adventurers from '../../collections/adventurers.js'
-import { addRun, getRunData } from '../../dungeons/dungeonRunner.js'
-import { finalizeResults, selectBonus } from '../../dungeons/results.js'
+import { addRun } from '../../dungeons/dungeonRunner.js'
 import db  from '../../db.js'
 import Users from '../../collections/users.js'
 import { commitAdventurerLoadout } from '../../loadouts/adventurer.js'
-import createError from 'http-errors'
-import asyncHandler from '../../errorHandler.js'
+import { validateParam } from '../../validations.js'
 
 const router = express.Router()
 const verifiedRouter = express.Router()
 
-router.use('/:adventurerID', asyncHandler(async (req, res, next) => {
+router.use('/:adventurerID', async (req, res, next) => {
   const adventurerID = db.id(req.params.adventurerID)
   if(!req.user.adventurers.find(adv => adv.equals(adventurerID))){
-    throw createError(400, 'Invalid adventurer ID')
+    throw { code: 400, message: 'Invalid adventurer ID' }
   }
   req.adventurer = await Adventurers.findOne(adventurerID)
   if(!req.adventurer){
-    throw createError(400, 'Invalid adventurer ID')
+    throw { code: 400, message: 'Invalid adventurer ID' }
   }
   next()
-}))
+})
 
 router.use('/:adventurerID', verifiedRouter)
 
-verifiedRouter.post('/dungeonpicker', validatePage('adventurer'), async(req, res) => {
+verifiedRouter.post('/dungeonpicker', validateIdle, async(req, res) => {
   res.send({ adventurer: req.adventurer })
 })
 
-verifiedRouter.post('/enterdungeon', validatePage('adventurer'), async(req, res) => {
-  const startingFloor = req.validateParam('startingFloor')
+verifiedRouter.post('/enterdungeon', validateIdle, async(req, res) => {
+  const startingFloor = validateParam(req.body.startingFloor)
   const dungeonRun = addRun(req.adventurer._id, {
     startingFloor
   })
   res.send({ dungeonRun })
 })
 
-verifiedRouter.post('/dungeonrun', validatePage('dungeon'), async(req, res) => {
-  res.send({
-    adventurer: req.adventurer,
-    dungeonRun: await getRunData(req.adventurer.dungeonRunID)
-  })
-})
-
-verifiedRouter.post('/results', validatePage('dungeon'), asyncHandler(async (req, res) => {
-  const dungeonRun = await getRunData(req.adventurer.dungeonRunID)
-  if(!dungeonRun.results){
-    throw { code: 400, message: 'Can not show results, dungeon run results not calculated yet.' }
-  }
-  res.send({ dungeonRun })
-}))
-
-verifiedRouter.post('/selectbonus/:index', validatePage('dungeon'), asyncHandler(async (req, res) => {
-  const dungeonRun = await getRunData(req.adventurer.dungeonRunID)
-  const nextLevelup = await selectBonus(dungeonRun, req.params.index)
-  res.status(200).send({ nextLevelup })
-}))
-
-verifiedRouter.post('/finalizeresults', validatePage('dungeon'), asyncHandler(async (req, res) => {
-  const dungeonRun = await getRunData(req.adventurer.dungeonRunID)
-  await finalizeResults(dungeonRun)
-  res.status(200).send({ result: 'okay' })
-}))
-
-verifiedRouter.post('/editloadout', validatePage('adventurer'), async (req, res) => {
+verifiedRouter.post('/editloadout', validateIdle, async (req, res) => {
   const user = await Users.gameData(req.user)
   res.status(200).send({
     adventurer: req.adventurer,
@@ -88,8 +59,8 @@ verifiedRouter.post('/editloadout', validatePage('adventurer'), async (req, res)
   }
 })
 
-verifiedRouter.post('/editloadout/save', validatePage('adventurer'), async (req, res) => {
-  const items = req.validateParam('items', { type: 'array' })
+verifiedRouter.post('/editloadout/save', validateIdle, async (req, res) => {
+  const items = validateParam(req.items, { type: 'array' })
   await commitAdventurerLoadout(req.adventurer, req.user, items)
   await Adventurers.save(req.adventurer)
   await Users.save(req.user)
@@ -100,7 +71,7 @@ verifiedRouter.post('/status', async(req, res, next) => {
   res.send({ status: req.adventurer.dungeonRunID ? 'dungeon' : 'idle' })
 })
 
-verifiedRouter.post('', validatePage('adventurer'), async(req, res, next) => {
+verifiedRouter.post('', validateIdle, async(req, res, next) => {
   const ctas = {}
   if(req.user.features.items === 1){
     ctas.itemFeature = true
@@ -108,21 +79,14 @@ verifiedRouter.post('', validatePage('adventurer'), async(req, res, next) => {
   res.send({ adventurer: req.adventurer, ctas })
 })
 
-/**
- * Throw exception with "targetPage" value if the target page doesn't match the adventurer state.
- * Otherwise, return the loaded adventurer.
- * @param requiredPage {'adventurer'|'results'|'dungeon'}
- */
-function validatePage(requiredPage){
-  return asyncHandler(async (req, res, next) => {
-    const correctPage = req.adventurer.dungeonRunID ? 'dungeon' : 'adventurer'
-    if (requiredPage !== correctPage){
-      // res.redirect something something
-      res.status(400).send({ targetPage: { name: correctPage, args: [req.adventurer._id] } })
-    }else{
-      next()
+async function validateIdle(req, res, next){
+  if(req.adventurer.dungeonRunID){
+    throw {
+      status: 400,
+      message: 'Adventurer is in a dungeon run and can not perform this action.'
     }
-  })
+  }
+  next()
 }
 
 export default router

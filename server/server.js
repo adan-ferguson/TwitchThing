@@ -17,6 +17,7 @@ import { fileURLToPath } from 'url'
 import path from 'path'
 import DB from './db.js'
 import MongoStore from 'connect-mongo'
+import errorHandler from './errorHandler.js'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
