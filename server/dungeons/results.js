@@ -2,7 +2,7 @@ import Adventurers from '../collections/adventurers.js'
 import Users from '../collections/users.js'
 import { xpToLevel as advXpToLevel } from '../../game/adventurer.js'
 import { toArray } from '../../game/utilFunctions.js'
-import { generateLevelup } from '../adventurer/levelup.js'
+import { generateLevelup } from '../adventurer/bonuses.js'
 
 const REWARDS_TYPES = {
   xp: 'int',
@@ -55,7 +55,7 @@ export async function finalize(dungeonRunDoc){
       Math.max(dungeonRunDoc.floor, adventurerDoc.accomplishments.highestFloor)
 
     if(adventurerDoc.level > adventurerDoc.bonuses.length){
-      adventurerDoc.nextLevelUp = generateLevelup(adventurerDoc)
+      adventurerDoc.nextLevelUp = await generateLevelup(adventurerDoc)
     }
 
     await Adventurers.save(adventurerDoc)

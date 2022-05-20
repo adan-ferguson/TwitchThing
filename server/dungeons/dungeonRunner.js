@@ -75,34 +75,27 @@ async function advance(){
 export async function addRun(adventurerID, dungeonOptions){
 
   const adventurer = await Adventurers.findOne(adventurerID)
-
   const startingFloor = parseInt(dungeonOptions.startingFloor) || 1
-  if(startingFloor > adventurer.accomplishments.highestFloor || startingFloor % 10 !== 1){
-    throw 'Invalid starting floor'
-  }
-  if(!adventurerID){
-    throw 'No adventurer ID'
-  }
-  if(adventurer.dungeonRun){
-    throw 'Adventurer already in dungeon'
-  }
-  if(adventurer.nextLevelUp){
-    throw 'Adventurer can not enter dungeon, they have a pending levelup'
-  }
+  validateNew(adventurer, dungeonOptions)
 
-  adventurer.baseHp = levelToHp(adventurer.level)
-  adventurer.basePower = levelToPower(adventurer.level)
-
-  const userDoc = await Users.findOne(adventurer.userID)
   const drDoc = await DungeonRuns.save({
-    adventurer,
+    adventurer: {
+      ...adventurer,
+      baseHp: levelToHp(adventurer.level),
+      basePower: levelToPower(adventurer.level)
+    },
     dungeonOptions,
     adventurerState: AdventurerInstance.initialState(adventurer),
     floor: startingFloor
   })
+
   adventurer.dungeonRunID = drDoc._id
   await Adventurers.save(adventurer)
+
+  const userDoc = await Users.findOne(adventurer.userID)
   activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, userDoc)
+
+  return drDoc
 }
 
 export async function getRunDataMulti(dungeonRunIDs){
@@ -268,5 +261,20 @@ class DungeonRunInstance{
     delete activeRuns[this.doc._id]
     emit(this.adventurer.userID, 'dungeon run update', this.doc)
     DungeonRuns.save(this.doc)
+  }
+}
+
+function validateNew(adventurer, { startingFloor }){
+  if(!adventurer){
+    throw 'Adventurer not found'
+  }
+  if(startingFloor > adventurer.accomplishments.highestFloor || startingFloor % 10 !== 1){
+    throw 'Invalid starting floor'
+  }
+  if(adventurer.dungeonRun){
+    throw 'Adventurer already in dungeon'
+  }
+  if(adventurer.nextLevelUp){
+    throw 'Adventurer can not enter dungeon, they have a pending levelup'
   }
 }

@@ -75,7 +75,7 @@ function exporterConcater(targetFile){
     })
     str += 'export default {\n'
     for(let groupName in groups){
-      str += `  ${groupName}: { ${groups[groupName].map(name => `${name.toUpperCase()}:${name}`).join(',')} },\n`
+      str += `  ${groupName}: { ${groups[groupName].map(name => `${name}`).join(',')} },\n`
     }
     str += '}'
     return str

@@ -14,6 +14,10 @@ export async function generateLevelup(adventurerDoc){
   }
 }
 
+export function firstLevelBonus(className){
+  return { className, type: null, level: 1 }
+}
+
 async function generateBonusOptions(adventurerDoc, level){
 
   const user = await Users.findOne(adventurerDoc.userID)
@@ -27,7 +31,7 @@ async function generateBonusOptions(adventurerDoc, level){
   return classOptions.map(className => {
     return {
       className,
-      bonus: generateBonus(className),
+      type: chooseBonusType(className),
       level
     }
   })
@@ -46,11 +50,11 @@ async function generateBonusOptions(adventurerDoc, level){
     return chooseOne(choices)
   }
 
-  function generateBonus(className){
-    const choices = Bonuses[className].map(bonus => {
+  function chooseBonusType(className){
+    const choices = Object.values(Bonuses[className]).map(bonus => {
       return { weight: calcBonusWeight(bonus), value: bonus }
     })
-    return chooseOne(choices)
+    return chooseOne(choices).name
   }
 
   function calcBonusWeight(bonus){

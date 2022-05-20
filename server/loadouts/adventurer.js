@@ -1,6 +1,7 @@
 import Adventurers from '../collections/adventurers.js'
 import Users from '../collections/users.js'
 import OrbsData from '../../game/orbsData.js'
+import { getAdventurerOrbsData } from '../../game/adventurer.js'
 
 /**
  * Throw an http exception if this loadout transaction is invalid. The parameters are all
@@ -79,7 +80,7 @@ function validateDuplicates(itemIDs){
 }
 
 function validateLoadout(adventurer){
-  const orbsData = OrbsData.fromAdventurer(adventurer)
+  const orbsData = getAdventurerOrbsData(adventurer)
   if(!orbsData.isValid){
     throw { code: 403, error: 'Loadout orbs are invalid.' }
   }

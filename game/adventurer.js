@@ -50,6 +50,7 @@ export function getAdventurerOrbsData(adventurer){
 
   const maxOrbs = {}
   adventurer.bonuses.forEach(bonus => {
+    maxOrbs[bonus.className]++
     if(!bonus.orbs){
       return
     }

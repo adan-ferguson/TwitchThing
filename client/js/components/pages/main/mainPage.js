@@ -100,14 +100,18 @@ export default class MainPage extends Page{
   }
 
   /**
-   * @param message {string}
+   * @param error {string|object}
    * @param critical {boolean} If true, then the main page itself failed to load.
    * @private
    */
-  _showError(message, critical = false){
+  _showError(error, critical = false){
+    if(!error){
+      return
+    }
+    const message = typeof(error) === 'string' ? error : error.message
     if(message){
       this._error.classList.remove('displaynone')
-      this._error.textContent = message
+      this._error.textContent = message || 'An error occurred'
     }
   }
 

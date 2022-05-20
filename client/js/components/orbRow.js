@@ -31,7 +31,7 @@ class OrbEntry extends HTMLElement{
     let text
     if(showMax){
       text = `${orbDatum.used}/${orbDatum.max}`
-      this.classList.add('error')
+      this.classList.toggle('error', orbDatum.remaining < 0)
     }else{
       text = '' + orbDatum.used
     }

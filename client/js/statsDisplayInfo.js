@@ -34,16 +34,6 @@ const statDefinitionsInfo = {
     },
     scope: StatsDisplayScope.ALL
   },
-  speed: {
-    icon: actionIcon,
-    displayedValueFn: (value, { style }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE){
-        return roundToFixed(COMBAT_BASE_TURN_TIME / (1000 * value), 2) + 's'
-      }
-    },
-    description: 'Combat action time (speed)',
-    scope: StatsDisplayScope.COMBAT
-  },
   physPower: {
     icon: physPowerIcon,
     displayedValueFn: (value, { style, owner }) => {
@@ -62,6 +52,16 @@ const statDefinitionsInfo = {
       }
     },
     description: 'Magic power',
+    scope: StatsDisplayScope.COMBAT
+  },
+  speed: {
+    icon: actionIcon,
+    displayedValueFn: (value, { style }) => {
+      if(style === StatsDisplayStyle.CUMULATIVE){
+        return roundToFixed(COMBAT_BASE_TURN_TIME / (1000 * value), 2) + 's'
+      }
+    },
+    description: 'Combat action time (speed)',
     scope: StatsDisplayScope.COMBAT
   },
   physDef: {

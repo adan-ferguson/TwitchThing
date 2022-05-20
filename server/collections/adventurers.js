@@ -1,4 +1,5 @@
 import Collection from './collection.js'
+import { firstLevelBonus } from '../adventurer/bonuses.js'
 
 const DEFAULTS = {
   _id: null,
@@ -17,8 +18,7 @@ const DEFAULTS = {
 const Adventurers = new Collection('adventurers', DEFAULTS)
 
 Adventurers.createNew = async function(userID, name, startingClass){
-  const bonuses = [{ orbs: { [startingClass] : 1 } }]
-  return await Adventurers.save({ name, userID, bonuses })
+  return await Adventurers.save({ name, userID, bonuses: [firstLevelBonus(startingClass)] })
 }
 
 export default Adventurers

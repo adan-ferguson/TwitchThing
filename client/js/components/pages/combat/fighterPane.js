@@ -20,12 +20,12 @@ export default class FighterPane extends HTMLElement{
 
   constructor(){
     super()
+    debugger
     this.classList.add('content-well', 'flex-rows')
     this.innerHTML = HTML
     this.hpBar = this.querySelector('di-hp-bar')
     this.actionBar = this.querySelector('di-action-bar')
     this.loadout = this.querySelector('di-loadout')
-    this.statsbox = this.querySelector('.stats-box')
     this.statsList = this.querySelector('di-stats-list')
     this.statsList.setOptions({
       statsDisplayScope: StatsDisplayScope.COMBAT,

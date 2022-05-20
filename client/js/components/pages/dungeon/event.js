@@ -25,7 +25,9 @@ export default class Event extends HTMLElement{
     this._rewards = this.querySelector('.rewards')
     this._message = this.querySelector('.message')
     this._timeBar = this.querySelector('.time-bar')
-    this._timeBar.showLabel = false
+    this._timeBar.setOptions({
+      showLabel: false
+    })
   }
 
   setAdventurer(adventurer){

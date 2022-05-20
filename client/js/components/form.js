@@ -44,6 +44,7 @@ export default class DIForm extends HTMLFormElement{
       this.addEventListener('submit', async e => {
         e.preventDefault()
         this._loading()
+        debugger
         const result = options.action instanceof Function ? await options.action() : await fizzetch(options.action, this.data())
         this._loadingFinished()
         if(result.error){

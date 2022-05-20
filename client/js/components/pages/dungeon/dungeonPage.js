@@ -77,7 +77,7 @@ export default class DungeonPage extends Page{
 
     this._adventurerPane.setAdventurer(this.adventurer)
     this._eventEl.setAdventurer(this.adventurer)
-    this._update(previousPage)
+    this._update(dungeonRun, previousPage)
   }
 
   async unload(){
@@ -93,9 +93,11 @@ export default class DungeonPage extends Page{
 
   _update(dungeonRun, source){
 
+    this.dungeonRun = dungeonRun
+
     if(source === 'socket'){
       if(dungeonRun.finished){
-        return this.redirectTo(new ResultsPage(this.adventurer._id))
+        return this.redirectTo(new ResultsPage(this.dungeonRun._id))
       }
       if(this.currentEvent.combatID){
         // If from a socket event, transition to combat

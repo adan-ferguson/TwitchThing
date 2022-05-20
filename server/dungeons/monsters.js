@@ -5,27 +5,27 @@ import { levelToHp, levelToPower, levelToXpReward } from '../../game/monster.js'
 
 const monstersByFloor = {
   // Caves
-  1: Monsters.caves.RAT,
-  2: Monsters.caves.TROGLODYTE,
-  3: Monsters.caves.BAT,
-  4: Monsters.caves.KOBOLD,
-  5: Monsters.caves.OOZE,
-  6: Monsters.caves.SPIDER,
-  7: Monsters.caves.SCORPION,
-  8: Monsters.caves.ROCKGOLEM,
-  9: Monsters.caves.SORCERER,
-  10: Monsters.caves.MINOTAUR,
+  1: Monsters.caves.bat,
+  2: Monsters.caves.troglodyte,
+  3: Monsters.caves.bat,
+  4: Monsters.caves.kobold,
+  5: Monsters.caves.ooze,
+  6: Monsters.caves.spider,
+  7: Monsters.caves.scorpion,
+  8: Monsters.caves.rockGolem,
+  9: Monsters.caves.sorcerer,
+  10: Monsters.caves.minotaur,
   // Crypt
-  11: Monsters.crypt.SKELETON,
-  12: Monsters.crypt.ZOMBIE,
-  13: Monsters.crypt.WRAITH,
-  14: Monsters.crypt.SHADE,
-  15: Monsters.crypt.NECROMANCER,
-  16: Monsters.crypt.BANSHEE,
-  17: Monsters.crypt.LICH,
-  18: Monsters.crypt.VAMPIRE,
-  19: Monsters.crypt.ABOMINATION,
-  20: Monsters.crypt.BONEDRAGON
+  11: Monsters.crypt.skeleton,
+  12: Monsters.crypt.zombie,
+  13: Monsters.crypt.wraith,
+  14: Monsters.crypt.shade,
+  15: Monsters.crypt.necromancer,
+  16: Monsters.crypt.banshee,
+  17: Monsters.crypt.lich,
+  18: Monsters.crypt.vampire,
+  19: Monsters.crypt.abomination,
+  20: Monsters.crypt.boneDragon
 }
 
 const CHEST_DROP_CHANCE = 0.05

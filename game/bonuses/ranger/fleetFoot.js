@@ -1,5 +1,5 @@
 export default {
   stats: {
-    physPower: '+10%'
+    speed: '+10%'
   }
 }

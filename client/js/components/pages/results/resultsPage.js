@@ -43,7 +43,7 @@ export default class ResultsPage extends Page{
 
   async load(source){
 
-    const { dungeonRun } = await this.fetchData(`/game/dungeonRun/${this._dungeonRunID}/results`)
+    const { dungeonRun } = await this.fetchData(`/game/dungeonrun/${this._dungeonRunID}/results`)
 
     this.dungeonRun = dungeonRun
     this.adventurerPane.setAdventurer(dungeonRun.adventurer)
@@ -129,7 +129,7 @@ export default class ResultsPage extends Page{
     showLoader()
     const results = await fizzetch(`/game/dungeonrun/${this._dungeonRunID}/finalize`)
     if(!results.error){
-      this.page.redirectTo(new AdventurerPage(this.adventurer._id))
+      this.redirectTo(new AdventurerPage(this.adventurer._id))
     }
   }
 
