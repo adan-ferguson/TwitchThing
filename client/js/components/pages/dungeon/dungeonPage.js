@@ -27,7 +27,6 @@ export default class DungeonPage extends Page{
   _eventEl
   _stateEl
 
-  adventurer
   dungeonRun
 
   constructor(dungeonRunID, watchView = false){
@@ -59,7 +58,6 @@ export default class DungeonPage extends Page{
         `/watch/dungeonrun/${this._dungeonRunID}` :
         `/game/dungeonrun/${this._dungeonRunID}`
 
-    debugger
     const { dungeonRun } = await this.fetchData(url)
     this.dungeonRun = dungeonRun
 

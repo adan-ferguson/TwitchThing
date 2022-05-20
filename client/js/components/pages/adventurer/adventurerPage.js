@@ -54,7 +54,7 @@ export default class AdventurerPage extends Page{
 
     const btn = this.querySelector('button.edit')
     if(!this.user.features.items){
-      btn.classList.add('displaynone')
+      btn.disabled = true
       return
     }else if(itemFeatureIsNew){
       btn.classList.add('glow')
@@ -63,7 +63,6 @@ export default class AdventurerPage extends Page{
     btn.addEventListener('click', () => {
       this.redirectTo(new AdventurerLoadoutEditorPage(this.adventurerID))
     })
-
   }
 
   _showDungeonButton(){

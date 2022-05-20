@@ -1,5 +1,4 @@
 import fizzetch from '../../../fizzetch.js'
-import LevelupSelector from './levelupSelector.js'
 import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
 import { mergeStats } from '../../../../../game/stats/stats.js'
 import SimpleModal from '../../simpleModal.js'
@@ -96,34 +95,27 @@ export default class ResultsPage extends Page{
 
   _adventurerXp = async () => {
     this._addResultText(`${this.adventurer.name} gained +${this.dungeonRun.rewards.xp} xp`)
-
-    await this.adventurerPane.addXp(this.dungeonRun.rewards.xp, async level => {
-      const selectedBonus = this.dungeonRunResults.getSelectedBonusForLevel(level)
-      if(selectedBonus){
-        // Show the bonus and continue
-      }
-
-      const nextLevelUp = this.dungeonRunResults.getLevelUpOptions(level)
-      if(!nextLevelUp){
-        console.error('Levelup mismatch? Results do not have a nextLevelup defined, or the level number is wrong.')
-      }else{
-        this.dungeonRunResults.setNextLevelUp(await this._nextLevelup(nextLevelUp))
-      }
-    })
+    await this.adventurerPane.addXp(this.dungeonRun.rewards.xp)
   }
 
-  _nextLevelup = async nextLevelup => {
-    const selector = new LevelupSelector()
-    selector.setData(
-      this.adventurer,
-      nextLevelup
-    )
-    this._addResult(selector)
-    const selection = await selector.awaitSelection()
-    this.adventurer.level = nextLevelup.level
-    this._updateStats()
-    return await fizzetch(`/game/adventurer/${this.adventurer._id}/selectbonus/${selection}`)
-  }
+  // _nextLevelup = async nextLevelup => {
+  //   const selector = new LevelupSelector()
+  //   selector.setData(
+  //     this.adventurer,
+  //     nextLevelup
+  //   )
+  //   this._addResult(selector)
+  //   const selection = await selector.awaitSelection()
+  //   this.adventurer.level = nextLevelup.level
+  //   this._updateStats()
+  //   return await fizzetch(`/game/adventurer/${this.adventurer._id}/selectbonus/${selection}`)
+  // }
+
+  // _updateStats(){
+  //   const selectors = [...this.querySelectorAll('di-adventurer-levelup-selector')]
+  //   const extraStats = selectors.map(selector => selector.extraStats)
+  //   this.adventurerPane.setExtraStats(mergeStats(...extraStats))
+  // }
 
   _showButton(){
     if(!this.doneButton.classList.contains('hidden')){
@@ -156,12 +148,6 @@ export default class ResultsPage extends Page{
   _addResultNewline(){
     const row = document.createElement('br')
     return this._addResult(row)
-  }
-
-  _updateStats(){
-    const selectors = [...this.querySelectorAll('di-adventurer-levelup-selector')]
-    const extraStats = selectors.map(selector => selector.extraStats)
-    this.adventurerPane.setExtraStats(mergeStats(...extraStats))
   }
 }
 

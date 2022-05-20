@@ -16,18 +16,9 @@ export default class StatRow extends HTMLElement{
   }
 
   update(statsDisplayInfo){
-
-    if(this.prevStat?.value === statsDisplayInfo.stat.value){
-      return
-    }
-
     this.classList.toggle('no-icon', statsDisplayInfo.icon ? false : true)
-
-    this.prevStat = statsDisplayInfo.stat
-
     this.innerHTML = HTML(statsDisplayInfo)
     this.tippy.setContent(statsDisplayInfo.description)
-
     this.setAttribute('diff', statsDisplayInfo.stat.diff)
     this.style.order = statsDisplayInfo.order
   }

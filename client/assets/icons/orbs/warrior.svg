@@ -1,20 +1,14 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
     <ellipse
             stroke="black"
-            cx="25"
-            cy="25"
-            rx="22"
-            ry="22
-    "/>
-    <ellipse
-            stroke="white"
-            stroke-opacity="0.75"
+            stroke-width="2"
+            stroke-opacity="0.3"
             fill="#B30"
             cx="25"
             cy="25"
-            rx="21"
-            ry="21
-    "/>
+            rx="23"
+            ry="23"
+    />
     <path
             fill="white"
             fill-opacity="0.75"

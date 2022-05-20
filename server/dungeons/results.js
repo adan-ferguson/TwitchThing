@@ -68,9 +68,16 @@ export async function finalize(dungeonRunDoc){
         userDoc.inventory.items[item.id] = item
       })
     })
-    // TODO: if new slot unlocked, emit an update
+
+    // TODO: Emit when new things get unlocked
     userDoc.accomplishments.highestFloor =
       Math.max(dungeonRunDoc.floor, userDoc.accomplishments.highestFloor)
+
+    if(!userDoc.features.items){
+      // TODO: emit notification + give the user an item
+      userDoc.features.items = 1
+    }
+
     await Users.save(userDoc)
   }
 }

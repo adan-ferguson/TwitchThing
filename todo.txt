@@ -581,13 +581,12 @@ Component Changes:
 
 + More icons in general
 - Don't use hash queries for adventurer new tab
-- Go back to adventurer page not having subpages, page.load() contains source info
-- Show loot before showing bonuses
--- Prevent double-ups
++ Go back to adventurer page not having subpages, page.load() contains source info
+- Detach user levelups from dungeon results page
 
 - Socket reconnection should rejoin rooms, maybe even reload the current page?
 
-- Show name of zone while exploring
++ Show name of zone while exploring
 -- Show a theme for each multiple of 10 floors (background texture)
 
 + StatDisplayInfo for additionals if they're percentages (removal of composites should help this)
@@ -603,7 +602,7 @@ Game Systems/Balance:
 -- New slot when you unlock a new zone
 
 + Instead of dipping difficulty at start of a new zone, make it spike
-- Make monster chance a flat pct (with buffer between fights), 30%? increase per zone?
++ Make monster chance a flat pct (with buffer between fights), 30%? increase per zone?
 + get rid of composite percentages -> flat or multipliers
 + get rid of variant adventuring speed from the dungeonrunner
 

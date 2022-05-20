@@ -41,7 +41,7 @@ const statDefinitionsInfo = {
         return roundToFixed(COMBAT_BASE_TURN_TIME / (1000 * value), 2) + 's'
       }
     },
-    description: 'Combat action time',
+    description: 'Combat action time (speed)',
     scope: StatsDisplayScope.COMBAT
   },
   physPower: {
@@ -51,7 +51,7 @@ const statDefinitionsInfo = {
         return value * owner.basePower
       }
     },
-    description: 'Phys power / basic attack damage',
+    description: 'Phys power (basic attack damage)',
     scope: StatsDisplayScope.COMBAT
   },
   magicPower: {

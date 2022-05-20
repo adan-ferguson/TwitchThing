@@ -1,16 +1,5 @@
 import defaultOrbImg from '/client/assets/icons/orbs/default.svg'
 import classDisplayInfo from '../classDisplayInfo.js'
-//
-// const HTML = `
-// <span class="orb" data-orb-index="1"></span>
-// <span class="orb" data-orb-index="2"></span>
-// <span class="orb" data-orb-index="3"></span>
-// `
-//
-// const ORB_HTML = (type, text) => `
-//   <img alt="Orbs" src="${orbImg}">
-//   <span class="orbs-text"></span>
-// `
 
 const ORB_ENTRY_HTML = (src, text) => `
   <img src="${src}"> <span>${text}</span>

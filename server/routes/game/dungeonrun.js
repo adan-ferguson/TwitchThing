@@ -18,7 +18,7 @@ router.use('/:dungeonRunID', async (req, res, next) => {
 
 router.use('/:dungeonRunID', verifiedRouter)
 
-verifiedRouter.post('/dungeonrun', async(req, res) => {
+verifiedRouter.post('', async(req, res) => {
   res.send({
     dungeonRun: req.dungeonRun
   })

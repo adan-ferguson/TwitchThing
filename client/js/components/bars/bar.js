@@ -52,12 +52,23 @@ export default class Bar extends HTMLElement{
     return this._val
   }
 
-  setLabel(label){
-    this.setOptions({ label })
+  setLabel(val = this._val){
+    let html = ''
+    if(this._options.showValue){
+      html += wrap('span', val)
+      if(this._options.showMax){
+        html += wrap('span', '/')
+        html += wrap('span', this._options.max)
+      }
+    }
+    if(this._options.showLabel){
+      html += wrap('span', this._options.label)
+    }
+    this._barLabel.innerHTML = html
   }
 
   setOptions(options){
-    this.options = mergeElementOptions(this.options, options)
+    this._options = mergeElementOptions(this._options, options)
     this._update()
   }
 
@@ -195,19 +206,7 @@ export default class Bar extends HTMLElement{
 
   _update(){
     this._barLabel.classList.toggle('hidden', !this._options.showLabel)
-
-    let html = ''
-    if(this._options.showValue){
-      html += wrap('span', this._val)
-      if(this._options.showMax){
-        html += wrap('span', '/')
-        html += wrap('span', this._options.max)
-      }
-    }
-    if(this._options.showLabel){
-      html += wrap('span', this._options.label)
-    }
-    this._barLabel.innerHTML = html
+    this.setLabel()
   }
 }
 

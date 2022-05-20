@@ -83,6 +83,12 @@ export async function addRun(adventurerID, dungeonOptions){
   if(!adventurerID){
     throw 'No adventurer ID'
   }
+  if(adventurer.dungeonRun){
+    throw 'Adventurer already in dungeon'
+  }
+  if(adventurer.nextLevelUp){
+    throw 'Adventurer can not enter dungeon, they have a pending levelup'
+  }
 
   adventurer.baseHp = levelToHp(adventurer.level)
   adventurer.basePower = levelToPower(adventurer.level)
