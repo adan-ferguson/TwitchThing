@@ -1,6 +1,6 @@
 import Bar from './bar.js'
 
-const ACTION_BAR_COLOR = '#FF9955'
+const ACTION_BAR_COLOR = '#FFCCAA'
 
 export default class ActionBar extends Bar{
   constructor(){

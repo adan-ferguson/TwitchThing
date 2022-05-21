@@ -32,7 +32,7 @@ export default class FighterPane extends HTMLElement{
     this.statsList = this.querySelector('di-stats-list')
     this.statsList.setOptions({
       statsDisplayScope: StatsDisplayScope.COMBAT,
-      noHP: true
+      forcedStats: ['physPower']
     })
     this.fighterInstance = null
   }
@@ -107,7 +107,7 @@ export default class FighterPane extends HTMLElement{
       }
     }
 
-    this.statsList.setStats(this.fighterInstance.stats)
+    this.statsList.setStats(this.fighterInstance.stats, this.fighterInstance.baseFighter)
     this._updateCooldowns()
 
     if(!this.fighterInstance.hp){

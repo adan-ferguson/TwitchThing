@@ -32,7 +32,7 @@ const statDefinitionsInfo = {
       }
       return 'Max Health'
     },
-    scope: StatsDisplayScope.ALL
+    scope: StatsDisplayScope.NONE
   },
   physPower: {
     icon: physPowerIcon,
@@ -62,7 +62,7 @@ const statDefinitionsInfo = {
       }
     },
     description: 'Combat action time (speed)',
-    scope: StatsDisplayScope.COMBAT
+    scope: StatsDisplayScope.NONE
   },
   physDef: {
     text: 'Phys Defense',

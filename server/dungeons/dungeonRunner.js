@@ -133,6 +133,7 @@ class DungeonRunInstance{
         message: `${this.adventurer.name} enters the dungeon.`
       })
     }
+    this._time = this.currentEvent.startTime
   }
 
   get adventurer(){
@@ -170,7 +171,18 @@ class DungeonRunInstance{
     return new AdventurerInstance(this.adventurer, this.doc.adventurerState)
   }
 
+  get nextEventTime(){
+    return this.currentEvent ? this.currentEvent.startTime + this.currentEvent.duration : 0
+  }
+
   async advance(nextEvent){
+
+    if(this._time + ADVANCEMENT_INTERVAL < this.nextEventTime){
+      this._time += ADVANCEMENT_INTERVAL
+      return
+    }else{
+      this._time = this.nextEventTime
+    }
 
     if(this.currentEvent?.runFinished){
       return this._finish()
@@ -217,7 +229,7 @@ class DungeonRunInstance{
       room: this.doc.room,
       floor: this.doc.floor,
       startTime: this.doc.elapsedTime,
-      duration: this.adventurerInstance.standardRoomDuration,
+      duration: ADVANCEMENT_INTERVAL,
       ...event
     }
     this.doc.room = nextEvent.room

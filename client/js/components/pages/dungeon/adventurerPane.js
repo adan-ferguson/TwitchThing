@@ -1,5 +1,6 @@
 import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 import { adventurerLoadoutContents } from '../../../adventurer.js'
+import { StatsDisplayScope } from '../../../statsDisplayInfo.js'
 
 const HTML = `
 <div class="flex-grow">
@@ -23,7 +24,8 @@ export default class AdventurerPane extends HTMLElement{
     this.statsbox = this.querySelector('.stats-box')
     this.statsList = this.querySelector('di-stats-list')
     this.statsList.setOptions({
-      noHP: true
+      forcedStats: ['physPower'],
+      statsDisplayScope: StatsDisplayScope.EXPLORING
     })
     this.displayMode = 'normal'
   }
@@ -58,7 +60,7 @@ export default class AdventurerPane extends HTMLElement{
       }
     }
 
-    this.statsList.setStats(instance.stats)
+    this.statsList.setStats(instance.stats, this.adventurer)
   }
 }
 

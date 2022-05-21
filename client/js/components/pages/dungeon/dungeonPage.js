@@ -68,7 +68,7 @@ export default class DungeonPage extends Page{
       }))
     }
     if(this.dungeonRun.finished && !this._watchView){
-      return this.redirectTo(new ResultsPage(this.adventurer._id))
+      return this.redirectTo(new ResultsPage(this._dungeonRunID))
     }
 
     getSocket()
@@ -97,7 +97,7 @@ export default class DungeonPage extends Page{
 
     if(source === 'socket'){
       if(dungeonRun.finished){
-        return this.redirectTo(new ResultsPage(this.dungeonRun._id))
+        return this._finish()
       }
       if(this.currentEvent.combatID){
         // If from a socket event, transition to combat
@@ -110,9 +110,7 @@ export default class DungeonPage extends Page{
     }
 
     if(source instanceof CombatPage && !this._watchView){
-      setTimeout(() => {
-        this.redirectTo(new ResultsPage(this.adventurer._id))
-      }, 3000)
+      this._finish()
     }
 
     const animate = source === 'socket'
@@ -120,6 +118,13 @@ export default class DungeonPage extends Page{
     this._eventEl.update(this.currentEvent, dungeonRun.virtualTime)
     this._stateEl.updateDungeonRun(dungeonRun, animate || source instanceof CombatPage)
 
+  }
+
+  _finish(){
+    debugger
+    setTimeout(() => {
+      this.redirectTo(new ResultsPage(this.dungeonRun._id))
+    }, 3000)
   }
 }
 

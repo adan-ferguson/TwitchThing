@@ -4,9 +4,9 @@ import OrbsData from './orbsData.js'
 
 const POWER_MULTIPLIER = 0.25
 
-const HP_BASE = 4000
+const HP_BASE = 40
 const XP_BASE = 50
-const POWER_BASE = 1
+const POWER_BASE = 10
 
 export function getScalingValue(lvl){
   const zones = Math.floor((lvl - 1) / 10)

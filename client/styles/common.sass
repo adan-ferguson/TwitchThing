@@ -49,8 +49,12 @@ button
   align-items: center
   justify-content: center
 
-  &:hover
+  &:hover:not(:disabled)
     background-color: #EEE
+
+  &:disabled
+    border-color: currentColor
+    cursor: default
 
 input
   padding: 9rem 18rem

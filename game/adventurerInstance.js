@@ -1,8 +1,6 @@
 import { getAdventurerStats, levelToHp, levelToPower } from './adventurer.js'
 import { COMBAT_BASE_TURN_TIME } from './combat/fighterInstance.js'
 
-export const ADVENTURER_BASE_ROOM_TIME = 5000
-
 export default class AdventurerInstance{
 
   static initialState(adventurer){
@@ -50,9 +48,5 @@ export default class AdventurerInstance{
 
   get actionTime(){
     return COMBAT_BASE_TURN_TIME / this.stats.get('speed').value
-  }
-
-  get standardRoomDuration(){
-    return ADVENTURER_BASE_ROOM_TIME
   }
 }
