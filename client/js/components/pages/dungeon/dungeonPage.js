@@ -62,10 +62,7 @@ export default class DungeonPage extends Page{
     this.dungeonRun = dungeonRun
 
     if(this.currentEvent.combatID && this.currentEvent.pending && !(previousPage instanceof CombatPage)){
-      return this.redirectTo(new CombatPage(this.currentEvent.combatID, {
-        live: true,
-        returnPage: this
-      }))
+      return this._goToCombat()
     }
     if(this.dungeonRun.finished && !this._watchView){
       return this.redirectTo(new ResultsPage(this._dungeonRunID))
@@ -95,22 +92,13 @@ export default class DungeonPage extends Page{
 
     this.dungeonRun = dungeonRun
 
-    if(source === 'socket'){
-      if(dungeonRun.finished){
-        return this._finish()
-      }
-      if(this.currentEvent.combatID){
-        // If from a socket event, transition to combat
-        return this.redirectTo(
-          new CombatPage(this.currentEvent.combatID, {
-            returnPage: this
-          })
-        )
-      }
+    if(source === 'socket' && this.currentEvent.combatID){
+      return this._goToCombat()
     }
 
-    if(source instanceof CombatPage && !this._watchView){
-      this._finish()
+    if(dungeonRun.finished && !this._watchView){
+      const delayedFinish = source === 'socket' || source instanceof CombatPage
+      this._finish(delayedFinish)
     }
 
     const animate = source === 'socket'
@@ -120,11 +108,20 @@ export default class DungeonPage extends Page{
 
   }
 
-  _finish(){
+  async _finish(delay){
     debugger
-    setTimeout(() => {
-      this.redirectTo(new ResultsPage(this.dungeonRun._id))
-    }, 3000)
+    if(delay){
+      await new Promise(res => setTimeout(res, 3000))
+    }
+    this.redirectTo(new ResultsPage(this.dungeonRun._id))
+  }
+
+  _goToCombat(){
+    debugger
+    return this.redirectTo(new CombatPage(this.currentEvent.combatID, {
+      live: true,
+      returnPage: this
+    }))
   }
 }
 

@@ -9,21 +9,22 @@ const XP_BASE = 50
 const POWER_BASE = 10
 
 export function getScalingValue(lvl){
-  const zones = Math.floor((lvl - 1) / 10)
+  lvl = lvl - 1
+  const zones = Math.floor(lvl / 10)
   const iterations = lvl + zones
   return scaledValue(POWER_MULTIPLIER, iterations)
 }
 
 export function levelToXpReward(lvl){
-  return Math.ceil(getScalingValue(lvl - 1) * XP_BASE)
+  return Math.ceil(getScalingValue(lvl) * XP_BASE)
 }
 
 export function levelToHp(lvl){
-  return Math.ceil(getScalingValue(lvl - 1) * HP_BASE)
+  return Math.ceil(getScalingValue(lvl) * HP_BASE)
 }
 
 export function levelToPower(lvl){
-  return Math.ceil(getScalingValue(lvl - 1) * POWER_BASE)
+  return Math.ceil(getScalingValue(lvl) * POWER_BASE)
 }
 
 /**

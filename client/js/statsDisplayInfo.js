@@ -42,7 +42,7 @@ const statDefinitionsInfo = {
       }
     },
     description: 'Phys power (basic attack damage)',
-    scope: StatsDisplayScope.COMBAT
+    scope: StatsDisplayScope.ALL
   },
   magicPower: {
     icon: magicPowerIcon,
@@ -52,7 +52,7 @@ const statDefinitionsInfo = {
       }
     },
     description: 'Magic power',
-    scope: StatsDisplayScope.COMBAT
+    scope: StatsDisplayScope.ALL
   },
   speed: {
     icon: actionIcon,
