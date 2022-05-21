@@ -67,16 +67,12 @@ verifiedRouter.post('/editloadout/save', validateIdle, async (req, res) => {
   res.status(200).end()
 })
 
-verifiedRouter.post('/status', async(req, res, next) => {
-  res.send({ status: req.adventurer.dungeonRunID ? 'dungeon' : 'idle' })
+verifiedRouter.post('', async(req, res, next) => {
+  res.send({ adventurer: req.adventurer })
 })
 
-verifiedRouter.post('', validateIdle, async(req, res, next) => {
-  const ctas = {}
-  if(req.user.features.items === 1){
-    ctas.itemFeature = true
-  }
-  res.send({ adventurer: req.adventurer, ctas })
+verifiedRouter.post('/status', async(req, res, next) => {
+  res.send({ status: req.adventurer.dungeonRunID ? 'dungeon' : 'idle' })
 })
 
 async function validateIdle(req, res, next){

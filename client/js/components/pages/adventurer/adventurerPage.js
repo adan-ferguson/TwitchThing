@@ -6,6 +6,7 @@ import AdventurerLoadoutEditorPage from '../adventurerLoadout/adventurerLoadoutE
 
 import '../../adventurerPane.js'
 import { pageFromString } from '../../app.js'
+import LevelupPage from '../levelup/levelupPage.js'
 
 const HTML = `
 <div class="content-columns">
@@ -14,28 +15,31 @@ const HTML = `
     <button class="edit content-no-grow">Edit Equipment</button>
   </div>
   <div class="content-rows dungeons">
-      <div class="basic-dungeon content-well clickable">Enter Dungeon</div>
-      <div class="something-else content-well">Something Else Goes Here</div>
+      <div class="top-right content-well center-contents clickable"></div>
+      <div class="something-else content-well center-contents">Something Else Goes Here</div>
   </div>
 </div>
 `
 
 export default class AdventurerPage extends Page{
 
+  _topRightButton
+
   constructor(adventurerID){
     super()
     this.innerHTML = HTML
     this.adventurerID = adventurerID
     this.adventurerPane = this.querySelector('di-adventurer-pane')
+    this._topRightButton = this.querySelector('.top-right')
   }
 
   get titleText(){
     return this.adventurer.name
   }
 
-  async load(){
+  async load(previousPage){
 
-    const { adventurer, ctas, error, targetPage } = await fizzetch(`/game/adventurer/${this.adventurerID}`)
+    const { adventurer, error, targetPage } = await fizzetch(`/game/adventurer/${this.adventurerID}`)
     if(targetPage){
       return this.redirectTo(pageFromString({ name: targetPage.name, args: targetPage.args }))
     }
@@ -46,17 +50,18 @@ export default class AdventurerPage extends Page{
     this.adventurer = adventurer
     this.adventurerPane.setAdventurer(adventurer)
 
-    this._setupEditEquipmentButton(ctas?.itemFeature)
-    this._showDungeonButton()
+    this._setupEditEquipmentButton()
+    this._setupTopRightButton()
   }
 
-  _setupEditEquipmentButton(itemFeatureIsNew = false){
+  _setupEditEquipmentButton(){
 
     const btn = this.querySelector('button.edit')
-    if(!this.user.features.items){
+    const featureStatus = this.user.features.items
+    if(!featureStatus){
       btn.disabled = true
       return
-    }else if(itemFeatureIsNew){
+    }else if(featureStatus === 1){
       btn.classList.add('glow')
     }
 
@@ -65,10 +70,19 @@ export default class AdventurerPage extends Page{
     })
   }
 
-  _showDungeonButton(){
-    this.querySelector('.basic-dungeon').addEventListener('click', () => {
-      this.redirectTo(new DungeonPickerPage(this.adventurerID))
-    })
+  _setupTopRightButton(){
+    if(this.adventurer.nextLevelUp){
+      this._topRightButton.classList.add('highlight')
+      this._topRightButton.innerHTML = '<div>Choose Levelup Bonus<div/>'
+      this._topRightButton.addEventListener('click', () => {
+        this.redirectTo(new LevelupPage(this.adventurerID))
+      })
+    }else{
+      this._topRightButton.innerHTML = '<div>Enter Dungeon<div/>'
+      this._topRightButton.addEventListener('click', () => {
+        this.redirectTo(new DungeonPickerPage(this.adventurerID))
+      })
+    }
   }
 }
 

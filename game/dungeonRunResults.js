@@ -11,18 +11,6 @@ export default class DungeonRunResults{
   get xp(){
     return this.dungeonRun.rewards.xp
   }
-
-  getSelectedBonusForLevel(level){
-    // const selectedBonus = this.dungeonRun.results.selectedBonuses.find(bonus => bonus.level === level)
-  }
-
-  getLevelUpOptions(level){
-
-  }
-
-  setNextLevelUp(levelUp){
-
-  }
 }
 
 class Ending{

@@ -58,7 +58,7 @@ export default class AdventurerPane extends HTMLElement{
     this.statsList.setStats(adventurerInstance.stats, adventurerInstance)
   }
 
-  async addXp(toAdd){
+  async addXp(toAdd, onLevelup = null){
     await this.xpBar.setValue(this.adventurer.xp + toAdd, {
       animate: true,
       onLevelup: level => {
@@ -66,6 +66,9 @@ export default class AdventurerPane extends HTMLElement{
         delete this.adventurer.basePower
         delete this.adventurer.baseHp
         this.update()
+        if(onLevelup){
+          onLevelup(level)
+        }
       }
     })
   }

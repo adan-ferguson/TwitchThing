@@ -98,7 +98,9 @@ export default class ResultsPage extends Page{
       return
     }
     this._addResultText(`${this.adventurer.name} gained +${this.dungeonRunResults.xp} xp`)
-    await this.adventurerPane.addXp(this.dungeonRunResults.xp)
+    await this.adventurerPane.addXp(this.dungeonRunResults.xp, level => {
+      this._addResultText(`${this.adventurer.name} has reached level ${level}`)
+    })
   }
 
   // _nextLevelup = async nextLevelup => {
