@@ -1,4 +1,4 @@
-import Item from '../../../game/item.js'
+import { adventurerLoadoutItem } from '../adventurer.js'
 
 const HTML = `
 <div class="inset-title">Item</div>
@@ -15,7 +15,7 @@ export default class ItemDetails extends HTMLElement{
   _statsList
   _abilitiesList
 
-  constructor(item = null){
+  constructor(loadoutItem = null){
     super()
     this.innerHTML = HTML
     this._loadoutRow = this.querySelector('di-loadout-row')
@@ -25,15 +25,14 @@ export default class ItemDetails extends HTMLElement{
     //   statsDisplayStyle: StatsDisplayStyle.ADDITIONAL
     // })
     this._abilitiesList = this.querySelector('.item-abilities')
-    if(item){
-      this.setItem(item)
+    if(loadoutItem){
+      this.setItem(loadoutItem)
     }
   }
 
-  setItem(itemDef){
-    const item = new Item(itemDef)
-    this._loadoutRow.setItem(item, false)
-    this._statsText.innerHTML = item.HTML
+  setItem(loadoutItem){
+    this._loadoutRow.setItem(loadoutItem, false)
+    // this._statsText.innerHTML = item.HTML
     // this._statsList.setStats(item.stats)
   }
 }

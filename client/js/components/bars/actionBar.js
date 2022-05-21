@@ -1,18 +1,24 @@
 import Bar from './bar.js'
-import actionIcon from '../../../assets/icons/magicPower.svg'
+
+const ACTION_BAR_COLOR = '#FF9955'
 
 export default class ActionBar extends Bar{
   constructor(){
     super()
-    this.showValueBeforeLabel = false
-    this.setBadge(`<img src="${actionIcon}">`)
+    this.setOptions({
+      showMax: false,
+      showValue: false,
+      color: ACTION_BAR_COLOR
+    })
   }
 
   setTime(elapsed, remaining){
     const timeInSeconds = (Math.ceil(remaining / 100) / 10).toFixed(1) + 's'
     this.setValue(elapsed)
-    this.setLabel(timeInSeconds)
-    this.setOptions({ max: elapsed + remaining })
+    this.setOptions({
+      max: elapsed + remaining,
+      label: timeInSeconds
+    })
   }
 }
 

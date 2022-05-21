@@ -17,6 +17,9 @@ export default class OrbRow extends HTMLElement{
 
   setData(orbsData, showMax = false){
     this.innerHTML = ''
+    if(!orbsData){
+      return
+    }
     orbsData.list.forEach(orbDatum => {
       this.appendChild(new OrbEntry(orbDatum, showMax))
     })

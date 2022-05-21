@@ -1,5 +1,3 @@
-import Stats from '../stats/stats.js'
-import Item from '../item.js'
 import { getAdventurerStats } from '../adventurer.js'
 import { getMonsterStats } from '../monster.js'
 

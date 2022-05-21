@@ -1,4 +1,5 @@
 import AdventurerInstance from '../../../../../game/adventurerInstance.js'
+import { adventurerLoadoutContents } from '../../../adventurer.js'
 
 const HTML = `
 <div class="flex-grow">
@@ -29,9 +30,8 @@ export default class AdventurerPane extends HTMLElement{
 
   setAdventurer(adventurer){
     this.adventurer = adventurer
-    this.hpBar.setBadge(adventurer.level)
     this.querySelector('.name').textContent = adventurer.name
-    this.loadout.setFighter(adventurer)
+    this.loadout.setContents(adventurerLoadoutContents(adventurer))
   }
 
   setState(state, animate = false){

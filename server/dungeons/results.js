@@ -47,7 +47,7 @@ export async function finalize(dungeonRunDoc){
 
   async function saveAdventurer(){
     const adventurerDoc = await Adventurers.findOne(dungeonRunDoc.adventurer._id)
-    const xpAfter = adventurerDoc.xp + dungeonRunDoc.rewards.xp
+    const xpAfter = adventurerDoc.xp + (dungeonRunDoc.rewards.xp || 0)
     adventurerDoc.dungeonRunID = null
     adventurerDoc.xp = xpAfter
     adventurerDoc.level = advXpToLevel(xpAfter)

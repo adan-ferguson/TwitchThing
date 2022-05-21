@@ -62,13 +62,13 @@ export default class DungeonPage extends Page{
     this.dungeonRun = dungeonRun
 
     if(this.currentEvent.combatID && this.currentEvent.pending && !(previousPage instanceof CombatPage)){
-      return this.app.setPage(new CombatPage(this.currentEvent.combatID, {
+      return this.redirectTo(new CombatPage(this.currentEvent.combatID, {
         live: true,
         returnPage: this
       }))
     }
     if(this.dungeonRun.finished && !this._watchView){
-      return this.app.setPage(new ResultsPage(this.adventurer._id))
+      return this.redirectTo(new ResultsPage(this.adventurer._id))
     }
 
     getSocket()
@@ -101,7 +101,11 @@ export default class DungeonPage extends Page{
       }
       if(this.currentEvent.combatID){
         // If from a socket event, transition to combat
-        return this.redirectTo(new CombatPage())
+        return this.redirectTo(
+          new CombatPage(this.currentEvent.combatID, {
+            returnPage: this
+          })
+        )
       }
     }
 

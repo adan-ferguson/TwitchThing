@@ -3,13 +3,15 @@ import { fadeOut } from '../../../animationHelper.js'
 import { StatsDisplayScope } from '../../../statsDisplayInfo.js'
 import FlyingTextEffect from '../../effects/flyingTextEffect.js'
 import { toDisplayName } from '../../../../../game/utilFunctions.js'
+import { adventurerLoadoutContents } from '../../../adventurer.js'
+import { monsterLoadoutContents } from '../../../monster.js'
 
 const HTML = `
 <div class="flex-grow">
   <div class="flex-rows">
     <div class="name"></div>
     <di-hp-bar></di-hp-bar>
-    <di-action-bar></di-bar>
+    <di-action-bar></di-action-bar>
     <di-stats-list></di-stats-list>
   </div>   
 </div>
@@ -18,9 +20,10 @@ const HTML = `
 
 export default class FighterPane extends HTMLElement{
 
+  fighter
+
   constructor(){
     super()
-    debugger
     this.classList.add('content-well', 'flex-rows')
     this.innerHTML = HTML
     this.hpBar = this.querySelector('di-hp-bar')
@@ -34,11 +37,19 @@ export default class FighterPane extends HTMLElement{
     this.fighterInstance = null
   }
 
+  get isAdventurer(){
+    // Monsters have mods, not items
+    return this.fighter?.items ? true : false
+  }
+
   setFighter(fighter){
     this.fighter = fighter
     this.querySelector('.name').textContent = fighter.displayname || toDisplayName(fighter.name)
-    this.hpBar.setBadge(fighter.level || '')
-    this.loadout.setFighter(fighter)
+    if(this.isAdventurer){
+      this.loadout.setContents(adventurerLoadoutContents(this.fighter))
+    }else{
+      this.loadout.setContents(monsterLoadoutContents(this.fighter))
+    }
   }
 
   setState(state = {}, animate = false){

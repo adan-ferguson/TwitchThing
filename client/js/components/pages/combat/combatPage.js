@@ -43,7 +43,7 @@ export default class CombatPage extends Page{
 
     // If it's live but the combat's already done, just get outta here
     if(state.status === 'finished' && !this._options.live && this._options.returnPage){
-      this.app.setPage(this._options.returnPage)
+      this.redirectTo(this._options.returnPage)
       return
     }
 
@@ -133,7 +133,7 @@ export default class CombatPage extends Page{
 
     if(this._options.returnPage){
       setTimeout(() => {
-        this.app.setPage(this._options.returnPage)
+        this.redirectTo(this._options.returnPage)
       }, 2200)
     }
   }

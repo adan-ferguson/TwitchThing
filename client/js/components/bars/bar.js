@@ -52,21 +52,6 @@ export default class Bar extends HTMLElement{
     return this._val
   }
 
-  setLabel(val = this._val){
-    let html = ''
-    if(this._options.showValue){
-      html += wrap('span', val)
-      if(this._options.showMax){
-        html += wrap('span', '/')
-        html += wrap('span', this._options.max)
-      }
-    }
-    if(this._options.showLabel){
-      html += wrap('span', this._options.label)
-    }
-    this._barLabel.innerHTML = html
-  }
-
   setOptions(options){
     this._options = mergeElementOptions(this._options, options)
     this._update()
@@ -111,7 +96,7 @@ export default class Bar extends HTMLElement{
 
     if(!options.animate){
       this._val = val
-      this.setLabel(this._val)
+      this._updateLabel()
       this._barBackground.classList.add('hidden')
       this._barBackground.style.width = `${this._pct(val) * 100}%`
       this._barForeground.style.width = `${this._pct(val) * 100}%`
@@ -177,7 +162,7 @@ export default class Bar extends HTMLElement{
         tick: pct => {
           currentWidth = startWidth * (1 - pct) + targetWidth * pct
           setWidth(animatingBar, currentWidth)
-          this.setLabel(Math.round(this._pctToVal(currentWidth)))
+          this._updateLabel(Math.round(this._pctToVal(currentWidth)))
         }
       })
     })
@@ -206,7 +191,23 @@ export default class Bar extends HTMLElement{
 
   _update(){
     this._barLabel.classList.toggle('hidden', !this._options.showLabel)
-    this.setLabel()
+    this._updateLabel()
+  }
+
+  _updateLabel(valOverride){
+    const val = valOverride ?? this._val
+    let html = ''
+    if(this._options.showValue){
+      html += wrap('span', val)
+      if(this._options.showMax){
+        html += wrap('span', '/')
+        html += wrap('span', this._options.max)
+      }
+    }
+    if(this._options.showLabel){
+      html += wrap('span', this._options.label)
+    }
+    this._barLabel.innerHTML = html
   }
 }
 

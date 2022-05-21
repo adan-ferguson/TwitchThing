@@ -69,12 +69,13 @@ export default class Event extends HTMLElement{
     if(this._timeBarAnimation){
       this._timeBarAnimation.cancel()
     }
+    maxTime = maxTime - currentTime
     this._timeBar.setOptions({ max: maxTime })
-    this._timeBar.setValue(currentTime)
+    this._timeBar.setValue(0)
     this._timeBarAnimation = new CustomAnimation({
-      duration: maxTime - currentTime,
+      duration: maxTime,
       tick: pct => {
-        this._timeBar.setValue(currentTime * (1 - pct) + maxTime * pct)
+        this._timeBar.setValue(maxTime * pct)
       }
     })
   }

@@ -8,6 +8,10 @@ export default class DungeonRunResults{
     this.chests = (dungeonRun.rewards.chests || []).slice()
   }
 
+  get xp(){
+    return this.dungeonRun.rewards.xp
+  }
+
   getSelectedBonusForLevel(level){
     // const selectedBonus = this.dungeonRun.results.selectedBonuses.find(bonus => bonus.level === level)
   }

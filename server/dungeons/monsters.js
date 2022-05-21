@@ -29,7 +29,7 @@ const monstersByFloor = {
 }
 
 const CHEST_DROP_CHANCE = 0.05
-const MONSTER_CHANCE = 0.3
+const MONSTER_CHANCE = 0.35
 const MONSTER_ROOM_BUFFER = 2
 
 // Monsters of level [currentFloor - FLOOR_RANGE] to [currentFloor] will spawn (both inclusive).

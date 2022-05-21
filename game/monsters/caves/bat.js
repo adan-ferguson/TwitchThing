@@ -4,8 +4,8 @@ export default {
       name: 'Batty',
       description: 'Quick, but fragile.',
       stats: {
-        speed: 1.2,
-        hpMax: 0.6
+        speed: '+20%',
+        hpMax: '-40%'
       }
     }, {
       name: 'Fluttering',

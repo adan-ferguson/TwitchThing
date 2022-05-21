@@ -1,9 +1,6 @@
 import LoadoutRow from './loadoutRow.js'
 import OrbsData from '../../../../game/orbsData.js'
 
-import '../orbRow.js'
-import { getAdventurerOrbsData } from '../../../../game/adventurer.js'
-
 const HTML = `
 <div class="flex-rows">
   <di-orb-row></di-orb-row>
@@ -25,6 +22,8 @@ export default class Loadout extends HTMLElement{
 
   _orbRow
 
+  _contents
+
   constructor(){
     super()
     this.innerHTML = HTML
@@ -45,22 +44,13 @@ export default class Loadout extends HTMLElement{
     this.update()
   }
 
-  get type(){
-    // TODO: this sucks
-    if(this._fighter?.xp !== undefined){
-      return 'adventurer'
-    }
-    return 'unknown'
-  }
-
   get items(){
     return this._rows.map(row => row.item)
   }
 
   get orbsData(){
-    if(this.type === 'adventurer'){
-      const copyAdventurer = { ...this._fighter, items: this.items }
-      return getAdventurerOrbsData(copyAdventurer)
+    if(this._contents){
+      return this._contents.getOrbsData(this.items)
     }
     return new OrbsData()
   }
@@ -92,6 +82,24 @@ export default class Loadout extends HTMLElement{
     return this._rows.every(row => row.item)
   }
 
+  get tooltip(){
+    if(!this.loadoutItem?.makeTooltip){
+      return ''
+    }
+
+    const tooltip = document.createElement('div')
+    tooltip.appendChild(this.loadoutItem.makeTooltip())
+
+    if(this.loadoutItem.makeDetails){
+      const right = document.createElement('div')
+      right.classList.add('right-click')
+      right.innerHTML = 'right-click for more info'
+      tooltip.appendChild(right)
+    }
+
+    return tooltip
+  }
+
   setOptions(options = {}){
     for (let key in options){
       this._options[key] = options[key]
@@ -100,9 +108,9 @@ export default class Loadout extends HTMLElement{
     return this
   }
 
-  setFighter(fighter){
-    this._fighter = fighter
-    this._originalItems = [...fighter.items]
+  setContents(loadoutContents){
+    this._contents = loadoutContents
+    this._originalItems = [...loadoutContents.loadoutItems]
     for(let i = 0; i < 8; i++){
       this._rows[i].setItem(this._originalItems[i])
     }
@@ -140,7 +148,7 @@ export default class Loadout extends HTMLElement{
 
   updateOrbs(){
     const showMax = this._options.editable || this._options.orbsDisplayStyle === OrbsDisplayStyles.SHOW_MAXIMUM
-    this._orbRow.setData(this.orbsData, showMax)
+    this._orbRow.setData(this.loadoutItem?.orbsData, showMax)
   }
 }
 

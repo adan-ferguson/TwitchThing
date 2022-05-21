@@ -1,6 +1,7 @@
 import { levelToXp, xpToLevel } from '../../../game/adventurer.js'
 import { OrbsDisplayStyles } from './loadout/loadout.js'
 import AdventurerInstance from '../../../game/adventurerInstance.js'
+import { adventurerLoadoutContents } from '../adventurer.js'
 
 const HTML = `
 <div class="flex-grow">
@@ -38,7 +39,7 @@ export default class AdventurerPane extends HTMLElement{
   setAdventurer(adventurer){
     this.adventurer = adventurer
     this.xpBar.setValue(this.adventurer.xp)
-    this.loadoutEl.setFighter(this.adventurer)
+    this.loadoutEl.setContents(adventurerLoadoutContents(this.adventurer))
     this.update()
   }
 

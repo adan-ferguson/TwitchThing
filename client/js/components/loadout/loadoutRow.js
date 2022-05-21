@@ -1,5 +1,4 @@
 import tippy from 'tippy.js'
-import Item from '../../../../game/item.js'
 import SimpleModal from '../simpleModal.js'
 import ItemDetails from '../itemDetails.js'
 
@@ -17,8 +16,9 @@ export default class LoadoutRow extends HTMLElement{
   _nameEl
   _orbRow
   _newBadge
-
   _options
+
+  _loadoutItem
 
   constructor(index = -1, item = null){
     super()
@@ -41,9 +41,9 @@ export default class LoadoutRow extends HTMLElement{
     this.setItem(item)
 
     this.addEventListener('contextmenu', e => {
-      if(this.item){
+      if(this.loadoutItem?.details){
         e.preventDefault()
-        const modal = new SimpleModal(new ItemDetails(this.item))
+        const modal = new SimpleModal(this.loadoutItem.details)
         modal.show()
       }
     })
@@ -53,43 +53,32 @@ export default class LoadoutRow extends HTMLElement{
     })
   }
 
-  get itemTooltip(){
-    if(!this.item){
-      return ''
-    }
-    const tooltip = document.createElement('div')
-    tooltip.innerHTML = this.item.HTML
-
-    const right = document.createElement('div')
-    right.classList.add('right-click')
-    right.innerHTML = 'right-click for more info'
-    tooltip.appendChild(right)
-    return tooltip
+  get loadoutItem(){
+    return this._loadoutItem
   }
 
   showNewBadge(show){
     this._newBadge.classList.toggle('hidden', !show)
   }
 
-  setItem(item, enableTooltip = true){
-    if(!item){
+  setItem(loadoutItem, enableTooltip = true){
+    if(!loadoutItem){
       return this._setupBlank()
     }
-    item = new Item(item)
     this.classList.remove('blank-row')
-    this.item = item
-    this._nameEl.textContent = this.item.name
-    this._orbRow.setValue(item.orbs)
+    this._loadoutItem = loadoutItem
+    this._nameEl.textContent = loadoutItem.name
+    this._orbRow.setValue(loadoutItem.orbs)
 
     if(enableTooltip){
       this._tippy.enable()
-      this._tippy.setContent(this.itemTooltip)
+      this._tippy.setContent(loadoutItem.tooltip)
     }
   }
 
   _setupBlank(){
     this.classList.add('blank-row')
-    this.item = null
+    this._loadoutItem = null
     this._tippy.disable()
   }
 }

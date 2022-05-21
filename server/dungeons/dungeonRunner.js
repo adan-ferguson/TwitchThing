@@ -181,7 +181,7 @@ class DungeonRunInstance{
     }else if(nextEvent){
       this._addEvent(nextEvent)
     }else{
-      await this._newEvent()
+      await this._nextRoom()
     }
 
     if(!this.currentEvent.pending){
@@ -206,14 +206,16 @@ class DungeonRunInstance{
     }
   }
 
-  async _newEvent(){
+  async _nextRoom(){
+    this.doc.room = this.currentEvent?.nextRoom || this.doc.room + 1
+    this.doc.floor = this.currentEvent?.nextFloor || this.doc.floor
     this._addEvent(await generateEvent(this))
   }
 
   async _addEvent(event){
     const nextEvent = {
-      room: this.currentEvent?.nextRoom || this.doc.room + 1,
-      floor: this.currentEvent?.nextFloor || this.doc.floor,
+      room: this.doc.room,
+      floor: this.doc.floor,
       startTime: this.doc.elapsedTime,
       duration: this.adventurerInstance.standardRoomDuration,
       ...event

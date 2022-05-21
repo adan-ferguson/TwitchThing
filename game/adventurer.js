@@ -1,8 +1,8 @@
 import Stats from './stats/stats.js'
 import LevelCalculator from './levelCalculator.js'
-import Item from './item.js'
 import scaledValue from './scaledValue.js'
 import OrbsData from './orbsData.js'
+import { getItemStats } from './item.js'
 
 const LEVEL_2_XP = 100
 const XP_MULTIPLIER = 0.4
@@ -35,8 +35,7 @@ export function levelToPower(lvl){
  */
 export function getAdventurerStats(adventurer, state = null){
   const loadoutStatAffectors = adventurer.items.filter(itemDef => itemDef).map(itemDef => {
-    const item = new Item(itemDef)
-    return item.stats
+    return getItemStats(itemDef)
   })
   // TODO: extraz
   const stateAffectors = null
