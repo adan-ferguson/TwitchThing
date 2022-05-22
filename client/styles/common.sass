@@ -132,9 +132,6 @@ input
 .flex-no-grow
   flex-grow: 0 !important
 
-.glow
-  animation: glow 1s infinite alternate
-
 .tippy-box .tippy-content
   padding: 15rem 15rem 5rem
 
@@ -142,8 +139,14 @@ input
     font-size: 0.9em
     margin-top: 5rem
 
+.highlight, .glow
+  box-shadow: 0 0 10px 5px #aef4af
+
+.glow
+  animation: glow 1s infinite alternate
+
 @keyframes glow
   from
-    box-shadow: 0 0 10px -10px #aef4af
+    background-color: white
   to
-    box-shadow: 0 0 10px 10px #aef4af
+    background-color: #d8f6d8

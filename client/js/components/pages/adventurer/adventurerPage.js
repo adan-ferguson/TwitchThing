@@ -1,12 +1,11 @@
 import Page from '../page.js'
 import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
 
-import fizzetch from '../../../fizzetch.js'
 import AdventurerLoadoutEditorPage from '../adventurerLoadout/adventurerLoadoutEditorPage.js'
 
 import '../../adventurerPane.js'
-import { pageFromString } from '../../app.js'
 import LevelupPage from '../levelup/levelupPage.js'
+import DungeonPage from '../dungeon/dungeonPage.js'
 
 const HTML = `
 <div class="content-columns">
@@ -38,18 +37,14 @@ export default class AdventurerPage extends Page{
   }
 
   async load(previousPage){
+    const { adventurer } = await this.fetchData(`/game/adventurer/${this.adventurerID}`)
 
-    const { adventurer, error, targetPage } = await fizzetch(`/game/adventurer/${this.adventurerID}`)
-    if(targetPage){
-      return this.redirectTo(pageFromString({ name: targetPage.name, args: targetPage.args }))
-    }
-    if(error){
-      return error
+    if(adventurer.dungeonRunID){
+      return this.redirectTo(new DungeonPage(adventurer.dungeonRunID))
     }
 
     this.adventurer = adventurer
     this.adventurerPane.setAdventurer(adventurer)
-
     this._setupEditEquipmentButton()
     this._setupTopRightButton()
   }
@@ -73,7 +68,7 @@ export default class AdventurerPage extends Page{
   _setupTopRightButton(){
     if(this.adventurer.nextLevelUp){
       this._topRightButton.classList.add('highlight')
-      this._topRightButton.innerHTML = '<div>Choose Levelup Bonus<div/>'
+      this._topRightButton.innerHTML = '<div>Level Up!<div/>'
       this._topRightButton.addEventListener('click', () => {
         this.redirectTo(new LevelupPage(this.adventurerID))
       })

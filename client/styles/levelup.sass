@@ -1,0 +1,25 @@
+di-adventurer-levelup-selector
+  $padding: 6rem
+  display: flex
+  flex-direction: column
+  border-top: 0.2rem solid #CCCCCC
+  padding: $padding 0
+  margin: $padding 0
+
+  .options
+    display: flex
+    flex-direction: row
+    margin-left: -$padding
+
+    > .option
+      flex-basis: 33%
+      margin-left: $padding
+      border: 2rem dashed #CCCCCC
+
+      &:hover
+        background-color: initial
+        border-color: #4285F4
+
+      &.selected
+        border-style: solid
+        border-color: #92e092

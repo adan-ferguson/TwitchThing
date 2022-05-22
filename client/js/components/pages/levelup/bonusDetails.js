@@ -1,34 +1,30 @@
 import { StatsDisplayStyle } from '../../../statsDisplayInfo.js'
-import Stats, { mergeStats } from '../../../../../game/stats/stats.js'
 import StatsList from '../../stats/statsList.js'
+import { getBonusOrbsData, getBonusStats } from '../../../../../game/bonus.js'
 
 const HTML = `
-<div>
-    <span class="name"></span> has reached Level <span class="level"></span>
-</div>
+<div class="name"></div>
+<di-orb-row></di-orb-row>
 <di-stats-list></di-stats-list>
-<div class="options"></div>
 `
 
-export default class LevelupSelector extends HTMLElement{
+export default class BonusDetails extends HTMLElement{
 
-  _levelupStats = null
-  _selectedStats = null
-  _cb = () => {}
-
-  constructor(){
+  constructor(bonusDef){
     super()
     this.innerHTML = HTML
-    this.statsList = this.querySelector('di-stats-list')
-    this.statsList.setOptions({
-      statsDisplayStyle: StatsDisplayStyle.ADDITIONAL,
-      inline: true
-    })
-    this.options = this.querySelector('.options')
-  }
+    this.classList.add('clickable')
 
-  get extraStats(){
-    return mergeStats(this._levelupStats, this._selectedStats)
+    this.querySelector('.name').textContent = bonusDef.name
+
+    const orbRow = this.querySelector('di-orb-row')
+    orbRow.setData(getBonusOrbsData(bonusDef))
+
+    const statsList = this.querySelector('di-stats-list')
+    statsList.setOptions({
+      statsDisplayStyle: StatsDisplayStyle.ADDITIONAL
+    })
+    statsList.setStats(getBonusStats(bonusDef))
   }
 
   setData(adventurer, levelup){
@@ -76,4 +72,4 @@ export default class LevelupSelector extends HTMLElement{
   }
 }
 
-customElements.define('di-adventurer-levelup-selector', LevelupSelector)
+customElements.define('di-bonus-details', BonusDetails)

@@ -15,7 +15,12 @@ export async function generateLevelup(adventurerDoc){
 }
 
 export function firstLevelBonus(className){
-  return { className, type: null, level: 1 }
+  const first = {
+    warrior: Bonuses.warrior.strength,
+    mage: Bonuses.mage.placeholdering,
+    ranger: Bonuses.ranger.fleetFoot
+  }[className]
+  return { group: first.group, name: first.name, level: 1 }
 }
 
 async function generateBonusOptions(adventurerDoc, level){

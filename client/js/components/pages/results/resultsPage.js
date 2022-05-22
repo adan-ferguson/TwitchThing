@@ -103,25 +103,6 @@ export default class ResultsPage extends Page{
     })
   }
 
-  // _nextLevelup = async nextLevelup => {
-  //   const selector = new LevelupSelector()
-  //   selector.setData(
-  //     this.adventurer,
-  //     nextLevelup
-  //   )
-  //   this._addResult(selector)
-  //   const selection = await selector.awaitSelection()
-  //   this.adventurer.level = nextLevelup.level
-  //   this._updateStats()
-  //   return await fizzetch(`/game/adventurer/${this.adventurer._id}/selectbonus/${selection}`)
-  // }
-
-  // _updateStats(){
-  //   const selectors = [...this.querySelectorAll('di-adventurer-levelup-selector')]
-  //   const extraStats = selectors.map(selector => selector.extraStats)
-  //   this.adventurerPane.setExtraStats(mergeStats(...extraStats))
-  // }
-
   _showButton(){
     if(!this.doneButton.classList.contains('hidden')){
       return

@@ -68,7 +68,7 @@ export default class LoadoutRow extends HTMLElement{
     this.classList.remove('blank-row')
     this._loadoutItem = loadoutItem
     this._nameEl.textContent = loadoutItem.name
-    this._orbRow.setValue(loadoutItem.orbs)
+    this._orbRow.setData(loadoutItem.orbs)
 
     if(enableTooltip){
       this._tippy.enable()

@@ -75,6 +75,10 @@ verifiedRouter.post('/status', async(req, res, next) => {
   res.send({ status: req.adventurer.dungeonRunID ? 'dungeon' : 'idle' })
 })
 
+verifiedRouter.post('/selectbonus', async(req, res, next) => {
+
+})
+
 async function validateIdle(req, res, next){
   if(req.adventurer.dungeonRunID){
     throw {
