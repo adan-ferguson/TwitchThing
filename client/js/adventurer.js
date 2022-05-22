@@ -6,7 +6,7 @@ import ItemDetails from './components/itemDetails.js'
 export function adventurerLoadoutContents(adventurer){
   return {
     getOrbsData: loadoutItems => {
-      return getAdventurerOrbsData({ ...adventurer, items: loadoutItems.map(li => li.item) })
+      return getAdventurerOrbsData({ ...adventurer, items: loadoutItems.map(li => li?.item) })
     },
     loadoutItems: adventurer.items.map(adventurerLoadoutItem)
   }

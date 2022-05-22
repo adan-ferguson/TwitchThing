@@ -10,21 +10,21 @@ const HTML = `
 
 export default class BonusDetails extends HTMLElement{
 
-  constructor(bonusDef){
+  constructor(bonus){
     super()
     this.innerHTML = HTML
     this.classList.add('clickable')
 
-    this.querySelector('.name').textContent = bonusDef.name
+    this.querySelector('.name').textContent = bonus.name
 
     const orbRow = this.querySelector('di-orb-row')
-    orbRow.setData(getBonusOrbsData(bonusDef))
+    orbRow.setData(getBonusOrbsData(bonus))
 
     const statsList = this.querySelector('di-stats-list')
     statsList.setOptions({
       statsDisplayStyle: StatsDisplayStyle.ADDITIONAL
     })
-    statsList.setStats(getBonusStats(bonusDef))
+    statsList.setStats(getBonusStats(bonus))
   }
 
   setData(adventurer, levelup){

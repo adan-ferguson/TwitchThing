@@ -23,7 +23,7 @@ const statDefinitionsInfo = {
     icon: healthIcon,
     displayedValueFn: (value, { style, owner }) => {
       if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
-        return value * owner.baseHp
+        return Math.ceil(value * owner.baseHp)
       }
     },
     descriptionFn: (value, { style, owner }) => {
@@ -32,13 +32,13 @@ const statDefinitionsInfo = {
       }
       return 'Max Health'
     },
-    scope: StatsDisplayScope.NONE
+    scope: StatsDisplayScope.ALL
   },
   physPower: {
     icon: physPowerIcon,
     displayedValueFn: (value, { style, owner }) => {
       if(style === StatsDisplayStyle.CUMULATIVE && owner?.basePower){
-        return value * owner.basePower
+        return Math.ceil(value * owner.basePower)
       }
     },
     description: 'Phys power (basic attack damage)',
@@ -48,7 +48,7 @@ const statDefinitionsInfo = {
     icon: magicPowerIcon,
     displayedValueFn: (value, { style, owner }) => {
       if(style === StatsDisplayStyle.CUMULATIVE && owner?.basePower){
-        return value * owner.basePower
+        return Math.ceil(value * owner.basePower)
       }
     },
     description: 'Magic power',

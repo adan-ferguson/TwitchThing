@@ -109,7 +109,6 @@ export default class DungeonPage extends Page{
   }
 
   async _finish(delay){
-    debugger
     if(delay){
       await new Promise(res => setTimeout(res, 3000))
     }
@@ -117,7 +116,6 @@ export default class DungeonPage extends Page{
   }
 
   _goToCombat(){
-    debugger
     return this.redirectTo(new CombatPage(this.currentEvent.combatID, {
       live: true,
       returnPage: this

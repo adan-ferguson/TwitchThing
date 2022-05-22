@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
     <ellipse
-            fill="#B30"
+            fill="#57B"
             cx="25"
             cy="25"
             rx="23"
@@ -8,6 +8,6 @@
     />
     <path
             fill="white"
-            d="M25,11 l14,14 l-14,14 l-14,-14 Z"
+            d="M15,15 l20,0 l0,20 l-20,0 Z"
     />
 </svg>

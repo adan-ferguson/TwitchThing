@@ -82,24 +82,6 @@ export default class Loadout extends HTMLElement{
     return this._rows.every(row => row.item)
   }
 
-  get tooltip(){
-    if(!this.loadoutItem?.makeTooltip){
-      return ''
-    }
-
-    const tooltip = document.createElement('div')
-    tooltip.appendChild(this.loadoutItem.makeTooltip())
-
-    if(this.loadoutItem.makeDetails){
-      const right = document.createElement('div')
-      right.classList.add('right-click')
-      right.innerHTML = 'right-click for more info'
-      tooltip.appendChild(right)
-    }
-
-    return tooltip
-  }
-
   setOptions(options = {}){
     for (let key in options){
       this._options[key] = options[key]
@@ -147,8 +129,11 @@ export default class Loadout extends HTMLElement{
   }
 
   updateOrbs(){
+    if(!this._contents){
+      return
+    }
     const showMax = this._options.editable || this._options.orbsDisplayStyle === OrbsDisplayStyles.SHOW_MAXIMUM
-    this._orbRow.setData(this.loadoutItem?.orbsData, showMax)
+    this._orbRow.setData(this._contents.getOrbsData(this.items), showMax)
   }
 }
 

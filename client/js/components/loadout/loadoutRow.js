@@ -18,7 +18,7 @@ export default class LoadoutRow extends HTMLElement{
   _newBadge
   _options
 
-  _loadoutItem
+  loadoutItem
 
   constructor(index = -1, item = null){
     super()
@@ -53,8 +53,22 @@ export default class LoadoutRow extends HTMLElement{
     })
   }
 
-  get loadoutItem(){
-    return this._loadoutItem
+  get tooltip(){
+    if(!this.loadoutItem?.makeTooltip){
+      return ''
+    }
+
+    const tooltip = document.createElement('div')
+    tooltip.appendChild(this.loadoutItem.makeTooltip())
+
+    if(this.loadoutItem.makeDetails){
+      const right = document.createElement('div')
+      right.classList.add('right-click')
+      right.innerHTML = 'right-click for more info'
+      tooltip.appendChild(right)
+    }
+
+    return tooltip
   }
 
   showNewBadge(show){
@@ -66,7 +80,7 @@ export default class LoadoutRow extends HTMLElement{
       return this._setupBlank()
     }
     this.classList.remove('blank-row')
-    this._loadoutItem = loadoutItem
+    this.loadoutItem = loadoutItem
     this._nameEl.textContent = loadoutItem.name
     this._orbRow.setData(loadoutItem.orbs)
 
@@ -78,7 +92,7 @@ export default class LoadoutRow extends HTMLElement{
 
   _setupBlank(){
     this.classList.add('blank-row')
-    this._loadoutItem = null
+    this.loadoutItem = null
     this._tippy.disable()
   }
 }

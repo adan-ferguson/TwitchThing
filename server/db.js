@@ -21,13 +21,11 @@ const init = async () => {
 const id = id => MongoDB.ObjectID(id)
 
 const fix = (doc, defaults, projection = null) => {
-  const fixedDoc = { ...doc }
+  const fixedDoc = {}
   defaults = JSON.parse(JSON.stringify(defaults))
   for(let key in defaults){
     if(!projection || !Object.keys(projection).length || projection[key]){
-      if(!(key in fixedDoc)){
-        fixedDoc[key] = defaults[key]
-      }
+      fixedDoc[key] = doc[key] ?? defaults[key]
     }
   }
   return fixedDoc

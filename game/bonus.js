@@ -2,11 +2,12 @@ import Bonuses from './bonuses/combined.js'
 import Stats from './stats/stats.js'
 import OrbsData from './orbsData.js'
 
-export function getBonusDef(group, name){
+export function getBonusDef({ group, name }){
   return Bonuses[group][name]
 }
 
 export function getBonusOrbsData(bonusDef){
+  bonusDef = getBonusDef(bonusDef)
   const orbs = bonusDef.orbs || {}
   if(!orbs[bonusDef.group]){
     orbs[bonusDef.group] = 0
@@ -16,5 +17,6 @@ export function getBonusOrbsData(bonusDef){
 }
 
 export function getBonusStats(bonusDef){
+  bonusDef = getBonusDef(bonusDef)
   return new Stats(bonusDef.stats)
 }
