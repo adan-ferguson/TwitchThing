@@ -7,7 +7,7 @@ import { emit } from '../socketServer.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 import Users from '../collections/users.js'
 import { toDisplayName } from '../../game/utilFunctions.js'
-import { levelToHp, levelToPower } from '../../game/adventurer.js'
+import { adventurerLevelToHp, adventurerLevelToPower } from '../../game/adventurer.js'
 import log from 'fancy-log'
 
 const ADVANCEMENT_INTERVAL = 5000
@@ -79,11 +79,7 @@ export async function addRun(adventurerID, dungeonOptions){
   validateNew(adventurer, dungeonOptions)
 
   const drDoc = await DungeonRuns.save({
-    adventurer: {
-      ...adventurer,
-      baseHp: levelToHp(adventurer.level),
-      basePower: levelToPower(adventurer.level)
-    },
+    adventurer,
     dungeonOptions,
     adventurerState: AdventurerInstance.initialState(adventurer),
     floor: startingFloor

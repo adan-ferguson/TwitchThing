@@ -5,6 +5,8 @@ import healthIcon from '../assets/icons/health.svg'
 import actionIcon from '../assets/icons/action.svg'
 import physPowerIcon from '../assets/icons/physPower.svg'
 import magicPowerIcon from '../assets/icons/magicPower.svg'
+import { adventurerLevelToHp, adventurerLevelToPower } from '../../game/adventurer.js'
+import { monsterLevelToHp, monsterLevelToPower } from '../../game/monster.js'
 
 export const StatsDisplayStyle = {
   CUMULATIVE: 0, // Eg. "50%", i.e. our total of this stat is 50%
@@ -18,17 +20,29 @@ export const StatsDisplayScope = {
   ALL: 3
 }
 
+function ownerToBaseHp(owner){
+  return owner.type === 'adventurer' ?
+    adventurerLevelToHp(owner.level) :
+    monsterLevelToHp(owner.level)
+}
+
+function ownerToBasePower(owner){
+  return owner.type === 'adventurer' ?
+    adventurerLevelToPower(owner.level) :
+    monsterLevelToPower(owner.level)
+}
+
 const statDefinitionsInfo = {
   hpMax: {
     icon: healthIcon,
     displayedValueFn: (value, { style, owner }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
-        return Math.ceil(value * owner.baseHp)
+      if(style === StatsDisplayStyle.CUMULATIVE && owner){
+        return Math.ceil(value * ownerToBaseHp(owner))
       }
     },
     descriptionFn: (value, { style, owner }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
-        return `Max Health (${owner.baseHp} + ${value * 100 - 100}%)`
+      if(style === StatsDisplayStyle.CUMULATIVE && owner){
+        return `Max Health (${ownerToBaseHp(owner)} + ${value * 100 - 100}%)`
       }
       return 'Max Health'
     },
@@ -37,8 +51,8 @@ const statDefinitionsInfo = {
   physPower: {
     icon: physPowerIcon,
     displayedValueFn: (value, { style, owner }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE && owner?.basePower){
-        return Math.ceil(value * owner.basePower)
+      if(style === StatsDisplayStyle.CUMULATIVE && owner){
+        return Math.ceil(value * ownerToBasePower(owner))
       }
     },
     description: 'Phys power (basic attack damage)',
@@ -47,8 +61,8 @@ const statDefinitionsInfo = {
   magicPower: {
     icon: magicPowerIcon,
     displayedValueFn: (value, { style, owner }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE && owner?.basePower){
-        return Math.ceil(value * owner.basePower)
+      if(style === StatsDisplayStyle.CUMULATIVE && owner){
+        return Math.ceil(value * ownerToBasePower(owner))
       }
     },
     description: 'Magic power',

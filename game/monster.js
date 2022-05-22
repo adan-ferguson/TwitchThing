@@ -19,11 +19,11 @@ export function levelToXpReward(lvl){
   return Math.ceil(getScalingValue(lvl) * XP_BASE)
 }
 
-export function levelToHp(lvl){
+export function monsterLevelToHp(lvl){
   return Math.ceil(getScalingValue(lvl) * HP_BASE)
 }
 
-export function levelToPower(lvl){
+export function monsterLevelToPower(lvl){
   return Math.ceil(getScalingValue(lvl) * POWER_BASE)
 }
 

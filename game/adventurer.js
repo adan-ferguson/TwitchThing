@@ -21,11 +21,11 @@ export function levelToXp(lvl){
   return LevelCalculator.levelToXp(LEVEL_2_XP, XP_MULTIPLIER, lvl)
 }
 
-export function levelToHp(lvl){
+export function adventurerLevelToHp(lvl){
   return Math.ceil(scaledValue(HP_GROWTH_PCT, lvl - 1, HP_BASE))
 }
 
-export function levelToPower(lvl){
+export function adventurerLevelToPower(lvl){
   return Math.ceil(scaledValue(POWER_GROWTH_PCT, lvl - 1, POWER_BASE))
 }
 

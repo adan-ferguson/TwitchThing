@@ -3,6 +3,7 @@ import { firstLevelBonus } from '../adventurer/bonuses.js'
 
 const DEFAULTS = {
   _id: null,
+  type: 'adventurer',
   name: null,
   level: 1,
   xp: 0,
@@ -12,7 +13,8 @@ const DEFAULTS = {
   bonuses: [],
   accomplishments: {
     highestFloor: 1
-  }
+  },
+  nextLevelUp: null
 }
 
 const Adventurers = new Collection('adventurers', DEFAULTS)

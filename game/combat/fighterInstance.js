@@ -1,5 +1,5 @@
-import { getAdventurerStats } from '../adventurer.js'
-import { getMonsterStats } from '../monster.js'
+import { getAdventurerStats, adventurerLevelToHp, adventurerLevelToPower } from '../adventurer.js'
+import { getMonsterStats, monsterLevelToHp, monsterLevelToPower } from '../monster.js'
 
 const STATE_DEFAULTS = {
   timeSinceLastAction: 0
@@ -19,16 +19,12 @@ export default class FighterInstance{
       ...fighterStartState
     }
     if(!('hp' in this._currentState)){
-      this._currentState.hp = fighter.baseHp * this.stats.get('hpMax').value
+      this._currentState.hp = this.hpMax
     }
   }
 
-  get power(){
-    return this.baseFighter.basePower
-  }
-
   get fighterType(){
-    return this.baseFighter.adventurerID ? 'adventurer' : 'monster'
+    return this.baseFighter.type === 'adventurer' ? 'adventurer' : 'monster'
   }
 
   get stats(){
@@ -64,7 +60,10 @@ export default class FighterInstance{
   }
 
   get hpMax(){
-    return this.baseFighter.baseHp * this.stats.get('hpMax').value
+    const baseHp = this.fighterType === 'adventurer' ?
+      adventurerLevelToHp(this.baseFighter.level) :
+      monsterLevelToHp(this.baseFighter.level)
+    return baseHp * this.stats.get('hpMax').value
   }
 
   advanceTime(ms){
@@ -72,7 +71,11 @@ export default class FighterInstance{
   }
 
   performAction(enemy){
-    let baseDamage = Math.ceil(this.power * this.stats.get('physPower').value)
+    const basePower = this.fighterType === 'adventurer' ?
+      adventurerLevelToPower(this.baseFighter.level) :
+      monsterLevelToPower(this.baseFighter.level)
+
+    let baseDamage = Math.ceil(basePower * this.stats.get('physPower').value)
     const damageResult = this._dealDamage(baseDamage, enemy)
     this._currentState.timeSinceLastAction = 0
 
@@ -120,11 +123,5 @@ export default class FighterInstance{
 function checkValidity(fighter){
   if(!fighter.name){
     throw 'Fighter name is required'
-  }
-  if(!fighter.baseHp){
-    throw 'Fighter baseHp is required'
-  }
-  if(!fighter.basePower){
-    throw 'Fighter basePower is required'
   }
 }

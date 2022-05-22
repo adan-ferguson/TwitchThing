@@ -1,7 +1,7 @@
 import { generateRandomChest } from './chests.js'
 import { chooseOne } from '../../game/rando.js'
 import Monsters from '../../game/monsters/combined.js'
-import { levelToHp, levelToPower, levelToXpReward } from '../../game/monster.js'
+import { monsterLevelToHp, monsterLevelToPower, levelToXpReward } from '../../game/monster.js'
 
 const monstersByFloor = {
   // Caves
@@ -59,8 +59,6 @@ export async function generateMonster(dungeonRun){
 
   return {
     ...monsterDefinition,
-    baseHp: levelToHp(level),
-    basePower: levelToPower(level),
     rewards: generateRewards()
   }
 

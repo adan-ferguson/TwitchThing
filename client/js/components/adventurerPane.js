@@ -66,8 +66,6 @@ export default class AdventurerPane extends HTMLElement{
       animate: true,
       onLevelup: level => {
         this.adventurer.level = level
-        delete this.adventurer.basePower
-        delete this.adventurer.baseHp
         this.update()
         if(onLevelup){
           onLevelup(level)
