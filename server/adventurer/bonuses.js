@@ -30,7 +30,7 @@ export async function selectBonus(adventurerDoc, index){
   }
   adventurerDoc.bonuses.push(adventurerDoc.nextLevelUp.options[index])
   adventurerDoc.nextLevelUp = await generateLevelup(adventurerDoc)
-  await Advenaturers.save(adventurerDoc)
+  await Adventurers.save(adventurerDoc)
   return adventurerDoc.nextLevelUp
 }
 

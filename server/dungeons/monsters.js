@@ -5,7 +5,7 @@ import { monsterLevelToHp, monsterLevelToPower, levelToXpReward } from '../../ga
 
 const monstersByFloor = {
   // Caves
-  1: Monsters.caves.bat,
+  1: Monsters.caves.rat,
   2: Monsters.caves.troglodyte,
   3: Monsters.caves.bat,
   4: Monsters.caves.kobold,

@@ -74,7 +74,7 @@ async function advance(){
 export async function addRun(adventurerID, dungeonOptions){
 
   const adventurer = await Adventurers.findOne(adventurerID)
-  const startingZone = parseInt(dungeonOptions.startingZone) || 1
+  const startingZone = parseInt(dungeonOptions.startingZone) || 0
   validateNew(adventurer, dungeonOptions)
 
   const drDoc = await DungeonRuns.save({

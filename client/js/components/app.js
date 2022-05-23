@@ -5,6 +5,8 @@ import { hideAll as hideAllTippys } from 'tippy.js'
 import SimpleModal from './simpleModal.js'
 import AdventurerPage from './pages/adventurer/adventurerPage.js'
 import DungeonPage from './pages/dungeon/dungeonPage.js'
+import { getSocket } from '../socketClient.js'
+import { showPopup } from './popup.js'
 
 const HTML = `
 <di-header></di-header>
@@ -29,6 +31,7 @@ export default class App extends HTMLElement{
     this.currentPage = null
     this.header = this.querySelector('di-header')
     this.startupParams = startupParams || {}
+    getSocket().on('show popup', showPopup)
     this._setInitialPage()
   }
 
@@ -69,6 +72,8 @@ export default class App extends HTMLElement{
 
     this.currentPage = page
     page.app = this
+    page.unloaded = false
+
     try {
       await page.load(previousPage)
     }catch(ex){
@@ -86,7 +91,6 @@ export default class App extends HTMLElement{
       return
     }
 
-    page.unloaded = false
     this.querySelector(':scope > .content').appendChild(page)
     page.classList.add('fade-in')
     this.dispatchEvent(new Event('pagechange'))

@@ -1,4 +1,5 @@
 import LoadoutRow from './loadoutRow.js'
+import { adventurerLoadoutItem } from '../../adventurer.js'
 
 const HTML = `
 <div class="content-rows">
@@ -23,11 +24,11 @@ export default class Inventory extends HTMLElement{
 
   setItems(items){
     const loadoutRows = []
-    Object.values(items).forEach(item => {
-      if(item){
+    Object.values(items).forEach(itemDef => {
+      if(itemDef){
         const row = new LoadoutRow()
-        row.setItem(item)
-        row.showNewBadge(item.isNew)
+        row.setItem(adventurerLoadoutItem(itemDef))
+        row.showNewBadge(itemDef.isNew)
         loadoutRows.push(row)
       }
     })

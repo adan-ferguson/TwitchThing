@@ -12,7 +12,8 @@ const DEFAULTS = {
   dungeonRunID: null,
   bonuses: [],
   accomplishments: {
-    deepestZone: 0
+    deepestZone: 0,
+    deepestFloor: 1
   },
   nextLevelUp: null
 }

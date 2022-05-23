@@ -56,12 +56,14 @@ export async function finalize(dungeonRunDoc){
     adventurerDoc.level = advXpToLevel(xpAfter)
     adventurerDoc.accomplishments.deepestZone =
       Math.max(floorToZone(dungeonRunDoc.floor), adventurerDoc.accomplishments.deepestZone)
+    adventurerDoc.accomplishments.deepestFloor =
+      Math.max(dungeonRunDoc.floor, adventurerDoc.accomplishments.deepestFloor)
     adventurerDoc.nextLevelUp = await generateLevelup(adventurerDoc)
     await Adventurers.save(adventurerDoc)
   }
 
   async function saveUser(){
-    const userDoc = await Users.findOne(dungeonRunDoc.userID)
+    const userDoc = await Users.findOne(dungeonRunDoc.adventurer.userID)
     dungeonRunDoc.rewards.chests?.forEach(chest => {
       chest.contents.items?.forEach(item => {
         userDoc.inventory.items[item.id] = item

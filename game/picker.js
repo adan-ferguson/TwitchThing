@@ -11,25 +11,24 @@ export default class Picker{
   constructor(registry, options = {}){
     this._registry = registry
     this._options = {
-      valueFormula: objectDef => 1,
-      weightFormula: objectDef => 1,
+      valueFormula: pickable => 1,
+      weightFormula: pickable => 1,
       ...options
     }
     this._byValue = organizeByValue(registry, options.valueFormula)
   }
 
   pick(value){
-    if(!this._byValue[value]){
-      if(value < 1){
-        return this.pick(1)
-      }else{
-        return this.pick(value - 1)
-      }
+    if(value < 1){
+      return null
     }
-    return chooseOne(this._byValue[value].map(key => {
+    if(!this._byValue[value]){
+      return this.pick(value - 1)
+    }
+    return chooseOne(this._byValue[value].map(pickable => {
       return {
-        value: key,
-        weight: this._options.weightFormula(this._registry[key])
+        value: pickable,
+        weight: this._options.weightFormula(pickable)
       }
     }))
   }
@@ -37,12 +36,15 @@ export default class Picker{
 
 function organizeByValue(registry, formula){
   const byValue = {}
-  Object.keys(registry).forEach(key => {
-    const val = formula(registry[key])
-    if(!byValue[val]){
-      byValue[val] = []
+  for(let group in registry){
+    for(let name in registry[group]){
+      const pickable = registry[group][name]
+      const val = formula(pickable)
+      if(!byValue[val]){
+        byValue[val] = []
+      }
+      byValue[val].push(pickable)
     }
-    byValue[val].push(key)
-  })
+  }
   return byValue
 }

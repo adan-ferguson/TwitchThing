@@ -47,7 +47,8 @@ export default class AdventurerLoadoutEditorPage extends Page{
     return null
   }
 
-  async load(){
+  async load(_){
+    debugger
     const { adventurer, items } = await fizzetch(`/game/adventurer/${this.adventurerID}/editloadout`)
     this.adventurer = adventurer
     this.inventory.setItems(items)

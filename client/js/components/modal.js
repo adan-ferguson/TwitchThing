@@ -32,6 +32,7 @@ export default class Modal extends HTMLElement{
   }
 
   show = () => {
+    // TODO: enqueue multiple modals
     document.body.appendChild(this)
   }
 
