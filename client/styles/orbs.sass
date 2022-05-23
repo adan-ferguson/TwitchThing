@@ -3,14 +3,21 @@ di-orb-row
   display: flex
   align-items: center
   margin-bottom: 5rem
+  font-size: 1.2em
 
   di-orb-entry
     display: flex
-    align-items: end
+    font-weight: bold
+    transition: background-color 0.3s ease
+    padding: 3rem 6rem
+
+    &:hover
+      background-color: #DDD
 
     .error
       color: red
 
     img
-      height: 1.5em
-      margin-right: 3rem
+      height: 1em
+      width: 1em
+      margin-right: 0.25em

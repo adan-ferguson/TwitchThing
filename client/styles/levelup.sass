@@ -1,25 +1,31 @@
-di-adventurer-levelup-selector
-  $padding: 6rem
-  display: flex
-  flex-direction: column
-  border-top: 0.2rem solid #CCCCCC
-  padding: $padding 0
-  margin: $padding 0
+di-levelup-page
 
   .options
     display: flex
-    flex-direction: row
-    margin-left: -$padding
+    flex-direction: column
+    align-items: center
+    justify-content: space-evenly
 
-    > .option
-      flex-basis: 33%
-      margin-left: $padding
-      border: 2rem dashed #CCCCCC
+    di-bonus-details
+      min-width: 200rem
+      min-height: 100rem
+      padding: 15rem 15rem 35rem
+      border: 2rem dotted currentColor
+      cursor: pointer
+      position: relative
+
+      .header
+        display: flex
+        flex-direction: row
+        padding-bottom: 5rem
+        margin-bottom: 5rem
+        border-bottom: 1rem solid currentColor
+        font-weight: bold
 
       &:hover
-        background-color: initial
-        border-color: #4285F4
-
-      &.selected
         border-style: solid
-        border-color: #92e092
+
+      di-orb-row
+        position: absolute
+        right: 5rem
+        bottom: 5rem

@@ -47,20 +47,19 @@ export default class DungeonPickerPage extends Page{
     this.adventurer = adventurer
     this.form.addSelect({
       label: 'Select starting zone',
-      name: 'startingFloor',
-      optionsList: startingZoneOptions(adventurer.accomplishments.highestFloor)
+      name: 'startingZone',
+      optionsList: startingZoneOptions(adventurer.accomplishments.deepestZone)
     })
   }
 }
 
 customElements.define('di-dungeon-picker-page', DungeonPickerPage )
 
-function startingZoneOptions(topFloor){
-  const maxZone = Math.min(zones.length - 1, Math.floor((topFloor - 1) / 10))
+function startingZoneOptions(deepestZone){
   const options = []
-  for(let i = maxZone; i >= 0; i--){
+  for(let i = deepestZone; i >= 0; i--){
     const floor = i * 10 + 1
-    options.push({ value: floor, name: `${zones[i]} (${floor})` })
+    options.push({ value: i, name: `${zones[i]} (${floor})` })
   }
   return options
 }

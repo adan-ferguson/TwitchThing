@@ -16,6 +16,14 @@ export default class AdventurerInstance{
     }
   }
 
+  get baseHp(){
+    return adventurerLevelToHp(this.adventurer.level)
+  }
+
+  get basePower(){
+    return adventurerLevelToPower(this.adventurer.level)
+  }
+
   get name(){
     return this.adventurer.name
   }

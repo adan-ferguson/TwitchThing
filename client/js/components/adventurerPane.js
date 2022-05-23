@@ -1,7 +1,7 @@
 import { levelToXp, xpToLevel } from '../../../game/adventurer.js'
-import { OrbsDisplayStyles } from './loadout/loadout.js'
 import AdventurerInstance from '../../../game/adventurerInstance.js'
 import { adventurerLoadoutContents } from '../adventurer.js'
+import { OrbsDisplayStyle } from './orbRow.js'
 
 const HTML = `
 <div class="flex-grow">
@@ -30,7 +30,7 @@ export default class AdventurerPane extends HTMLElement{
     this.xpBar.setLevelFunctions(xpToLevel, levelToXp)
     this.loadoutEl = this.querySelector('di-loadout')
     this.loadoutEl.setOptions({
-      orbsDisplayStyle: OrbsDisplayStyles.SHOW_MAXIMUM
+      orbsDisplayStyle: OrbsDisplayStyle.SHOW_MAX
     })
     this.statsList = this.querySelector('di-stats-list')
     this.statsList.setOptions({

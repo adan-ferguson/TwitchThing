@@ -7,7 +7,6 @@ import { emit } from '../socketServer.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 import Users from '../collections/users.js'
 import { toDisplayName } from '../../game/utilFunctions.js'
-import { adventurerLevelToHp, adventurerLevelToPower } from '../../game/adventurer.js'
 import log from 'fancy-log'
 
 const ADVANCEMENT_INTERVAL = 5000
@@ -75,14 +74,14 @@ async function advance(){
 export async function addRun(adventurerID, dungeonOptions){
 
   const adventurer = await Adventurers.findOne(adventurerID)
-  const startingFloor = parseInt(dungeonOptions.startingFloor) || 1
+  const startingZone = parseInt(dungeonOptions.startingZone) || 1
   validateNew(adventurer, dungeonOptions)
 
   const drDoc = await DungeonRuns.save({
     adventurer,
     dungeonOptions,
     adventurerState: AdventurerInstance.initialState(adventurer),
-    floor: startingFloor
+    floor: startingZone * 10 + 1
   })
 
   adventurer.dungeonRunID = drDoc._id
@@ -274,11 +273,11 @@ class DungeonRunInstance{
   }
 }
 
-function validateNew(adventurer, { startingFloor }){
+function validateNew(adventurer, { startingZone }){
   if(!adventurer){
     throw 'Adventurer not found'
   }
-  if(startingFloor > adventurer.accomplishments.highestFloor || startingFloor % 10 !== 1){
+  if(startingZone > adventurer.accomplishments.deepestZone){
     throw 'Invalid starting floor'
   }
   if(adventurer.dungeonRun){

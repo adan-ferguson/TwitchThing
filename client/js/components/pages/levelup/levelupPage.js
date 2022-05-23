@@ -3,10 +3,9 @@ import AdventurerPage from '../adventurer/adventurerPage.js'
 import { fadeIn, fadeOut } from '../../../animationHelper.js'
 import { showLoader } from '../../../loader.js'
 import BonusDetails from './bonusDetails.js'
-import { getBonusDef, getBonusInfo } from '../../../../../game/bonus.js'
 
 const HTML = `
-<div class="options content-rows"></div>
+<div class="options flex-rows"></div>
 `
 
 export default class LevelupPage extends Page{
@@ -42,13 +41,13 @@ export default class LevelupPage extends Page{
     this._selected = false
 
     this._adventurer.nextLevelUp.options.forEach((bonus, index) => {
-      const levelupOption = new BonusDetails(bonus)
-      levelupOption.addEventListener('click', () => {
+      const details = new BonusDetails(bonus)
+      details.addEventListener('click', () => {
         if(!this._selected){
           this._select(index)
         }
       })
-      this._options.appendChild(levelupOption)
+      this._options.appendChild(details)
     })
 
     this._titleText = `${this._adventurer.name} - Level ${nextLevelUp.level}`

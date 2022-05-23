@@ -5,6 +5,7 @@ import db  from '../../db.js'
 import Users from '../../collections/users.js'
 import { commitAdventurerLoadout } from '../../loadouts/adventurer.js'
 import { validateParam } from '../../validations.js'
+import { selectBonus } from '../../adventurer/bonuses.js'
 
 const router = express.Router()
 const verifiedRouter = express.Router()
@@ -28,9 +29,9 @@ verifiedRouter.post('/dungeonpicker', validateIdle, async(req, res) => {
 })
 
 verifiedRouter.post('/enterdungeon', validateIdle, async(req, res) => {
-  const startingFloor = validateParam(req.body.startingFloor)
+  const startingZone = validateParam(req.body.startingZone, { type: 'integer' })
   const dungeonRun = await addRun(req.adventurer._id, {
-    startingFloor
+    startingZone
   })
   res.send({ dungeonRun })
 })
@@ -75,8 +76,12 @@ verifiedRouter.post('/status', async(req, res, next) => {
   res.send({ status: req.adventurer.dungeonRunID ? 'dungeon' : 'idle' })
 })
 
-verifiedRouter.post('/selectbonus', async(req, res, next) => {
-
+verifiedRouter.post('/selectbonus/:index', async(req, res, next) => {
+  const index = validateParam(req.params.index, {
+    type: 'integer',
+    validationFn: val => val >= 0 && val <= 2
+  })
+  res.send({ nextLevelUp: await selectBonus(req.adventurer, index) })
 })
 
 async function validateIdle(req, res, next){

@@ -5,6 +5,10 @@ const ZONES = [
 
 export default ZONES
 
-export function zoneNameFromFloor(floor){
-  return ZONES[Math.floor((floor - 1) / 10)]
+export function floorToZoneName(floor){
+  return ZONES[floorToZone(floor)]
+}
+
+export function floorToZone(floor){
+  return Math.floor((floor - 1) / 10)
 }

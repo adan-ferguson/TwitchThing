@@ -2,17 +2,7 @@ import Users from '../collections/users.js'
 import { chooseOne } from '../../game/rando.js'
 import Bonuses from '../../game/bonuses/combined.js'
 import { getAdventurerOrbsData } from '../../game/adventurer.js'
-
-export async function generateLevelup(adventurerDoc){
-  const nextLevel = adventurerDoc.bonuses.length + 1
-  if(nextLevel > adventurerDoc.level){
-    throw { message: 'Tried to generate a levelup but it was crazy.' }
-  }
-  return {
-    options: await generateBonusOptions(adventurerDoc, nextLevel),
-    level: nextLevel
-  }
-}
+import Adventurers from '../collections/adventurers.js'
 
 export function firstLevelBonus(className){
   const first = {
@@ -21,6 +11,27 @@ export function firstLevelBonus(className){
     ranger: Bonuses.ranger.fleetFoot
   }[className]
   return { group: first.group, name: first.name, level: 1 }
+}
+
+export async function generateLevelup(adventurerDoc){
+  const nextLevel = adventurerDoc.bonuses.length + 1
+  if(nextLevel > adventurerDoc.level){
+    return null
+  }
+  return {
+    options: await generateBonusOptions(adventurerDoc, nextLevel),
+    level: nextLevel
+  }
+}
+
+export async function selectBonus(adventurerDoc, index){
+  if(!adventurerDoc.nextLevelUp){
+    throw { message: 'Adventurer does not have a pending levelup, can not select bonus.' }
+  }
+  adventurerDoc.bonuses.push(adventurerDoc.nextLevelUp.options[index])
+  adventurerDoc.nextLevelUp = await generateLevelup(adventurerDoc)
+  await Advenaturers.save(adventurerDoc)
+  return adventurerDoc.nextLevelUp
 }
 
 async function generateBonusOptions(adventurerDoc, level){
@@ -35,8 +46,8 @@ async function generateBonusOptions(adventurerDoc, level){
 
   return classOptions.map(className => {
     return {
-      className,
-      type: chooseBonusType(className),
+      group: className,
+      name: chooseBonusType(className),
       level
     }
   })

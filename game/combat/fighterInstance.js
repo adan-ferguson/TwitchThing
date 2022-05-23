@@ -23,6 +23,18 @@ export default class FighterInstance{
     }
   }
 
+  get baseHp(){
+    return this.fighterType === 'adventurer' ?
+      adventurerLevelToHp(this.baseFighter.level) :
+      monsterLevelToHp(this.baseFighter.level)
+  }
+
+  get basePower(){
+    return this.fighterType === 'adventurer' ?
+      adventurerLevelToPower(this.baseFighter.level) :
+      monsterLevelToPower(this.baseFighter.level)
+  }
+
   get fighterType(){
     return this.baseFighter.type === 'adventurer' ? 'adventurer' : 'monster'
   }
@@ -60,10 +72,7 @@ export default class FighterInstance{
   }
 
   get hpMax(){
-    const baseHp = this.fighterType === 'adventurer' ?
-      adventurerLevelToHp(this.baseFighter.level) :
-      monsterLevelToHp(this.baseFighter.level)
-    return baseHp * this.stats.get('hpMax').value
+    return this.baseHp * this.stats.get('hpMax').value
   }
 
   advanceTime(ms){
@@ -71,11 +80,8 @@ export default class FighterInstance{
   }
 
   performAction(enemy){
-    const basePower = this.fighterType === 'adventurer' ?
-      adventurerLevelToPower(this.baseFighter.level) :
-      monsterLevelToPower(this.baseFighter.level)
 
-    let baseDamage = Math.ceil(basePower * this.stats.get('physPower').value)
+    let baseDamage = Math.ceil(this.basePower * this.stats.get('physPower').value)
     const damageResult = this._dealDamage(baseDamage, enemy)
     this._currentState.timeSinceLastAction = 0
 

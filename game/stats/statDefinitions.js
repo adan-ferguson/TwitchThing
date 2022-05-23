@@ -16,8 +16,7 @@ const DEFAULT_DEFINITION = {
 export const StatDefinitions = {
   hpMax: {
     ...DEFAULT_DEFINITION,
-    type: StatType.MULTIPLIER,
-    roundingDecimals: 0
+    type: StatType.MULTIPLIER
   },
   speed: {
     ...DEFAULT_DEFINITION,

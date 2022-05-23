@@ -1,5 +1,6 @@
 import LoadoutRow from './loadoutRow.js'
 import OrbsData from '../../../../game/orbsData.js'
+import { OrbsDisplayStyle } from '../orbRow.js'
 
 const HTML = `
 <div class="flex-rows">
@@ -8,15 +9,10 @@ const HTML = `
 </div>
 `
 
-export const OrbsDisplayStyles = {
-  STANDARD: 0,
-  SHOW_MAXIMUM: 1
-}
-
 export default class Loadout extends HTMLElement{
 
   _options = {
-    orbsDisplayStyle: OrbsDisplayStyles.STANDARD,
+    orbsDisplayStyle: OrbsDisplayStyle.USED_ONLY,
     editable: false
   }
 
@@ -132,8 +128,8 @@ export default class Loadout extends HTMLElement{
     if(!this._contents){
       return
     }
-    const showMax = this._options.editable || this._options.orbsDisplayStyle === OrbsDisplayStyles.SHOW_MAXIMUM
-    this._orbRow.setData(this._contents.getOrbsData(this.items), showMax)
+    const style = this._options.editable ? OrbDisplayStyle.SHOW_MAX : this._options.orbsDisplayStyle
+    this._orbRow.setData(this._contents.getOrbsData(this.items), this._options.orbsDisplayStyle)
   }
 }
 

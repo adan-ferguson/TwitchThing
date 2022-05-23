@@ -107,7 +107,7 @@ export default class FighterPane extends HTMLElement{
       }
     }
 
-    this.statsList.setStats(this.fighterInstance.stats, this.fighterInstance.baseFighter)
+    this.statsList.setStats(this.fighterInstance.stats, this.fighterInstance)
     this._updateCooldowns()
 
     if(!this.fighterInstance.hp){

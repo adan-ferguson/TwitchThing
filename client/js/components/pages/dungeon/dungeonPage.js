@@ -2,7 +2,7 @@ import Page from '../page.js'
 import { getSocket } from '../../../socketClient.js'
 import CombatPage from '../combat/combatPage.js'
 import ResultsPage from '../results/resultsPage.js'
-import { zoneNameFromFloor } from '../../../../../game/zones.js'
+import { floorToZoneName } from '../../../../../game/zones.js'
 
 const HTML = `
 <div class='content-columns'>
@@ -40,7 +40,7 @@ export default class DungeonPage extends Page{
   }
 
   get titleText(){
-    return 'Exploring' + this.dungeonRun ? '' : ' ' + zoneNameFromFloor(this.dungeonRun.floor)
+    return 'Exploring' + this.dungeonRun ? '' : ' ' + floorToZoneName(this.dungeonRun.floor)
   }
 
   get currentEvent(){
@@ -65,6 +65,7 @@ export default class DungeonPage extends Page{
       return this._goToCombat()
     }
     if(this.dungeonRun.finished && !this._watchView){
+      debugger
       return this.redirectTo(new ResultsPage(this._dungeonRunID))
     }
 
@@ -92,24 +93,22 @@ export default class DungeonPage extends Page{
 
     this.dungeonRun = dungeonRun
 
-    if(source === 'socket' && this.currentEvent.combatID){
-      return this._goToCombat()
-    }
-
     if(dungeonRun.finished && !this._watchView){
       const delayedFinish = source === 'socket' || source instanceof CombatPage
       this._finish(delayedFinish)
+    }
+
+    if(source === 'socket' && this.currentEvent.combatID && this.currentEvent.pending){
+      return this._goToCombat()
     }
 
     const animate = source === 'socket'
     this._adventurerPane.setState(dungeonRun.adventurerState, animate)
     this._eventEl.update(this.currentEvent, dungeonRun.virtualTime)
     this._stateEl.updateDungeonRun(dungeonRun, animate || source instanceof CombatPage)
-
   }
 
   async _finish(delay){
-    debugger
     if(delay){
       await new Promise(res => setTimeout(res, 3000))
     }
@@ -117,7 +116,6 @@ export default class DungeonPage extends Page{
   }
 
   _goToCombat(){
-    debugger
     return this.redirectTo(new CombatPage(this.currentEvent.combatID, {
       live: true,
       returnPage: this

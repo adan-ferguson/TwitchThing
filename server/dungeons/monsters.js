@@ -48,7 +48,7 @@ export function foundMonster(dungeonRun){
         break
       }
     }
-    return i
+    return i - 1
   }
 }
 

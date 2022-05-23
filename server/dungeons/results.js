@@ -3,6 +3,9 @@ import Users from '../collections/users.js'
 import { xpToLevel as advXpToLevel } from '../../game/adventurer.js'
 import { toArray } from '../../game/utilFunctions.js'
 import { generateLevelup } from '../adventurer/bonuses.js'
+import ZONES, { floorToZone } from '../../game/zones.js'
+import { emit } from '../socketServer.js'
+import { generateItemDef } from '../items/generator.js'
 
 const REWARDS_TYPES = {
   xp: 'int',
@@ -51,13 +54,9 @@ export async function finalize(dungeonRunDoc){
     adventurerDoc.dungeonRunID = null
     adventurerDoc.xp = xpAfter
     adventurerDoc.level = advXpToLevel(xpAfter)
-    adventurerDoc.accomplishments.highestFloor =
-      Math.max(dungeonRunDoc.floor, adventurerDoc.accomplishments.highestFloor)
-
-    if(adventurerDoc.level > adventurerDoc.bonuses.length){
-      adventurerDoc.nextLevelUp = await generateLevelup(adventurerDoc)
-    }
-
+    adventurerDoc.accomplishments.deepestZone =
+      Math.max(floorToZone(dungeonRunDoc.floor), adventurerDoc.accomplishments.deepestZone)
+    adventurerDoc.nextLevelUp = await generateLevelup(adventurerDoc)
     await Adventurers.save(adventurerDoc)
   }
 
@@ -69,15 +68,30 @@ export async function finalize(dungeonRunDoc){
       })
     })
 
-    // TODO: Emit when new things get unlocked
-    userDoc.accomplishments.highestFloor =
-      Math.max(dungeonRunDoc.floor, userDoc.accomplishments.highestFloor)
+    // TODO: have an unlocks file or something
+    const finalZone = floorToZone(dungeonRunDoc.floor)
+    if(finalZone > userDoc.accomplishments.deepestZone){
+      userDoc.accomplishments.deepestZone = finalZone
+      userDoc.inventory.adventurerSlots++
+      emit(userDoc._id, 'show popup', {
+        message: `New zone reached: ${ZONES[finalZone]}
+        
+        New adventurer slot unlocked!`
+      })
+    }
 
     if(!userDoc.features.items){
-      // TODO: emit notification + give the user an item
+      const sword = generateItemDef('warrior', 'sword')
+      userDoc.inventory.items[sword.id] = sword
       userDoc.features.items = 1
+      emit(userDoc._id, 'show popup', {
+        message: `You got crushed! What were you thinking? You didn't even have a weapon!
+        
+        I just hooked you up with a sword. Go to your adventurer's inventory to equip it.`
+      })
     }
 
     await Users.save(userDoc)
   }
 }
+
