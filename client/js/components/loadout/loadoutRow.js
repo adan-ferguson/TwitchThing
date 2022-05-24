@@ -1,6 +1,6 @@
 import tippy from 'tippy.js'
 import SimpleModal from '../simpleModal.js'
-import ItemDetails from '../itemDetails.js'
+import { OrbsDisplayStyle } from '../orbRow.js'
 
 const HTML = `
 <div>
@@ -27,6 +27,9 @@ export default class LoadoutRow extends HTMLElement{
     this._iconEl = this.querySelector('.icon')
     this._nameEl = this.querySelector('.name')
     this._orbRow = this.querySelector('di-orb-row')
+    this._orbRow.setOptions({
+      style: OrbsDisplayStyle.MAX_ONLY
+    })
     this._newBadge = this.querySelector('.new-badge')
     this._tippy = tippy(this, {
       theme: 'light',

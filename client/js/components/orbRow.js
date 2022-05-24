@@ -1,6 +1,7 @@
 import defaultOrbImg from '/client/assets/icons/orbs/default.svg'
 import classDisplayInfo from '../classDisplayInfo.js'
 import tippy from 'tippy.js'
+import { mergeElementOptions } from '../../../game/utilFunctions.js'
 
 const ORB_ENTRY_HTML = (src, text) => `
   <img src="${src}"> <span>${text}</span>
@@ -9,26 +10,38 @@ const ORB_ENTRY_HTML = (src, text) => `
 export const OrbsDisplayStyle = {
   USED_ONLY: 0,
   SHOW_MAX: 1,
-  ADDITIVE: 2
+  MAX_ADDITIVE: 2,
+  MAX_ONLY: 3
 }
 
 export default class OrbRow extends HTMLElement{
 
-  _text
+  _orbsData = null
+  _options = {
+    style: OrbsDisplayStyle.USED_ONLY
+  }
 
   constructor(){
     super()
-    // this.innerHTML = HTML
-    // this._text = this.querySelector('.orbs-text')
   }
 
-  setData(orbsData, style = OrbsDisplayStyle.USED_ONLY){
+  setOptions(options){
+    this._options = mergeElementOptions(this._options, options)
+    this._update()
+  }
+
+  setData(orbsData){
+    this._orbsData = orbsData
+    this._update()
+  }
+
+  _update(){
     this.innerHTML = ''
-    if(!orbsData){
+    if(!this._orbsData){
       return
     }
-    orbsData.list.forEach(orbDatum => {
-      this.appendChild(new OrbEntry(orbDatum, style))
+    this._orbsData.list.forEach(orbDatum => {
+      this.appendChild(new OrbEntry(orbDatum, this._options.style))
     })
   }
 }
@@ -42,8 +55,10 @@ class OrbEntry extends HTMLElement{
     if(style === OrbsDisplayStyle.SHOW_MAX){
       text = `${orbDatum.used}/${orbDatum.max}`
       this.classList.toggle('error', orbDatum.remaining < 0)
-    }else if(style === OrbsDisplayStyle.ADDITIVE){
+    }else if(style === OrbsDisplayStyle.MAX_ADDITIVE){
       text = (orbDatum.max >= 0 ? '+' : '') + orbDatum.max
+    }else if(style === OrbsDisplayStyle.MAX_ONLY){
+      text = '' + orbDatum.max
     }else{
       text = '' + orbDatum.used
     }

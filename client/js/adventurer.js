@@ -1,6 +1,6 @@
 import { getAdventurerOrbsData } from '../../game/adventurer.js'
 import { makeLoadoutItem } from './loadoutItem.js'
-import { getBaseItemType, getItemDisplayName } from '../../game/item.js'
+import { getBaseItemType, getItemDisplayName, getItemOrbsData } from '../../game/item.js'
 import ItemDetails from './components/itemDetails.js'
 
 export function adventurerLoadoutContents(adventurer){
@@ -16,10 +16,9 @@ export function adventurerLoadoutItem(itemDef){
   if(!itemDef){
     return null
   }
-  const baseType = getBaseItemType(itemDef)
   return makeLoadoutItem({
     item: itemDef,
-    orbs: baseType.orbs,
+    orbs: getItemOrbsData(itemDef),
     name: getItemDisplayName(itemDef),
     makeTooltip: () => {
       const div = document.createElement('div')

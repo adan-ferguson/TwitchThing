@@ -625,7 +625,7 @@ Game Systems/Balance:
 - Magic damage
 
 Bugs/UI Tweaks:
-- Make the glow effect much more obvious
++ Make the glow effect much more obvious
 - Get a new font
 
 - AdventurerRow
@@ -639,9 +639,11 @@ Bugs/UI Tweaks:
 
 - Make combat page redder in general
 
-- Fix fake double stairs
++ Fix fake double stairs
 
 - Dragged items have z-index on top
+
+- Loadout shouldn't show orbs if they're 0
 
 TODO Later
 -----------

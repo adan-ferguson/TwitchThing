@@ -129,7 +129,8 @@ export default class Loadout extends HTMLElement{
       return
     }
     const style = this._options.editable ? OrbsDisplayStyle.SHOW_MAX : this._options.orbsDisplayStyle
-    this._orbRow.setData(this._contents.getOrbsData(this.items), style)
+    this._orbRow.setData(this._contents.getOrbsData(this.items))
+    this._orbRow.setOptions({ style })
   }
 }
 

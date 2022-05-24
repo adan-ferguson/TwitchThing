@@ -83,7 +83,7 @@ export async function finalize(dungeonRunDoc){
     }
 
     if(!userDoc.features.items){
-      const sword = generateItemDef('warrior', 'sword')
+      const sword = generateItemDef({ group: 'warrior', name: 'sword' })
       userDoc.inventory.items[sword.id] = sword
       userDoc.features.items = 1
       emit(userDoc._id, 'show popup', {

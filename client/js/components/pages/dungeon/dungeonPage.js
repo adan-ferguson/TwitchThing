@@ -65,7 +65,6 @@ export default class DungeonPage extends Page{
       return this._goToCombat()
     }
     if(this.dungeonRun.finished && !this._watchView){
-      debugger
       return this.redirectTo(new ResultsPage(this._dungeonRunID))
     }
 

@@ -27,7 +27,10 @@ export default class BonusDetails extends HTMLElement{
     this.style.color = classInfo.color
 
     const orbRow = this.querySelector('di-orb-row')
-    orbRow.setData(getBonusOrbsData(bonus), OrbsDisplayStyle.ADDITIVE)
+    orbRow.setOptions({
+      style: OrbsDisplayStyle.MAX_ADDITIVE
+    })
+    orbRow.setData(getBonusOrbsData(bonus))
   }
 }
 
