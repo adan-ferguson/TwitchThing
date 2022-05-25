@@ -46,10 +46,6 @@ export const StatDefinitions = {
     ...DEFAULT_DEFINITION,
     type: StatType.MULTIPLIER
   },
-  stairFind: {
-    ...DEFAULT_DEFINITION,
-    type: StatType.MULTIPLIER
-  },
   relicFind: {
     ...DEFAULT_DEFINITION,
     type: StatType.MULTIPLIER

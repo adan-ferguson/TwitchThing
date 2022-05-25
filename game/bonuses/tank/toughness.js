@@ -1,6 +1,6 @@
 export default {
   stats: {
-    relicFind: '+10%'
+    hpMax: '+10%'
   },
-  orbs: 1
+  rarity: 1
 }

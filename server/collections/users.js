@@ -16,8 +16,8 @@ const DEFAULTS = {
   features: { // featureName: 0 = locked, 1 = unlocked & brand new, 2 = unlocked
     items: 0,
     advClasses: {
-      warrior: 2,
-      mage: 2,
+      fighter: 2,
+      tank: 2,
       ranger: 2
     }
   },
@@ -79,7 +79,7 @@ Users.newAdventurer = async function(userDoc, adventurername){
     throw { error: 'No slots available.', code: 403 }
   }
   // TODO: flexible starting bonuses
-  const adventurerDoc = await Adventurers.createNew(userDoc._id, adventurername, 'warrior')
+  const adventurerDoc = await Adventurers.createNew(userDoc._id, adventurername, 'fighter')
   userDoc.adventurers.push(adventurerDoc._id)
   await Users.save(userDoc)
   return adventurerDoc

@@ -20,7 +20,7 @@ export async function generateEvent(dungeonRun){
     }
   }
 
-  if(foundStairs(floor, room, adventurerInstance.stats.get('stairFind').value)){
+  if(foundStairs(floor, room){
     return {
       nextRoom: 1,
       nextFloor: floor + 1,

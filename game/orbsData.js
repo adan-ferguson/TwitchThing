@@ -40,5 +40,5 @@ function toObj(objOrArray){
       return current
     }, {})
   }
-  return objOrArray
+  return objOrArray || {}
 }

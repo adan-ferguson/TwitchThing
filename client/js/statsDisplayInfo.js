@@ -28,7 +28,7 @@ const statDefinitionsInfo = {
     },
     descriptionFn: (value, { style, owner }) => {
       if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
-        return `Max Health (${owner.baseHp} + ${value * 100 - 100}%)`
+        return `Max Health (${owner.baseHp} + ${Math.ceil(value * 100 - 100)}%)`
       }
       return 'Max Health'
     },
@@ -61,7 +61,7 @@ const statDefinitionsInfo = {
         return roundToFixed(COMBAT_BASE_TURN_TIME / (1000 * value), 2) + 's'
       }
     },
-    description: 'Combat action time (speed)',
+    description: 'Combat action time (speed)\n3 seconds is average',
     scope: StatsDisplayScope.COMBAT
   },
   physDef: {
@@ -84,11 +84,6 @@ const statDefinitionsInfo = {
     text: 'XP Gain',
     description: 'Increases XP gained by adventurer.',
     scope: StatsDisplayScope.ALL
-  },
-  stairFind: {
-    text: 'Stair Find Chance',
-    description: 'Find stairs faster. Important as floors contain more and more rooms the deeper you go.',
-    scope: StatsDisplayScope.EXPLORING
   },
   relicFind: {
     text: 'Relic Find Chance',

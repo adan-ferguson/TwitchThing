@@ -555,7 +555,7 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 + Buff items
 + Limit lvl 20 time
 + Show everyone's adventurers in admin page, can view their pane or their active dungeonrun
-- gitignore not ignoring combined files
++ gitignore not ignoring combined files
 
 *****************************************
     Milestone 6

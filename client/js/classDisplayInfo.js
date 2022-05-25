@@ -8,13 +8,13 @@ export default function(className){
   let obj = {}
 
   // Adventurer Classes
-  if(className === 'warrior'){
+  if(className === 'fighter'){
     obj = {
       description: 'Some description',
       orbIcon: warriorOrbIcon,
       color: '#BB3300'
     }
-  }else if(className === 'mage'){
+  }else if(className === 'tank'){
     obj = {
       description: 'Some description',
       orbIcon: mageOrbIcon,

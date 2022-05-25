@@ -6,8 +6,8 @@ import Adventurers from '../collections/adventurers.js'
 
 export function firstLevelBonus(className){
   const first = {
-    warrior: Bonuses.warrior.strength,
-    mage: Bonuses.mage.placeholdering,
+    fighter: Bonuses.fighter.strength,
+    tank: Bonuses.tank.placeholdering,
     ranger: Bonuses.ranger.fleetFoot
   }[className]
   return { group: first.group, name: first.name, level: 1 }
@@ -53,7 +53,7 @@ async function generateBonusOptions(adventurerDoc, level){
   })
 
   function randomClass(){
-    const exclude = orbsData.classes
+    const exclude = classOptions
     const choices = []
     Object.keys(user.features.advClasses)
       .filter(className => user.features.advClasses[className] > 0)
