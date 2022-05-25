@@ -1,5 +1,5 @@
 import { getAdventurerOrbsData } from '../../game/adventurer.js'
-import { getItemDisplayName, getItemOrbsData } from '../../game/item.js'
+import { getItemDisplayName, getItemOrbs } from '../../game/item.js'
 import ItemDetails from './components/itemDetails.js'
 
 export function adventurerLoadoutContents(adventurer){
@@ -17,7 +17,7 @@ export function adventurerLoadoutItem(itemDef){
   }
   return {
     obj: itemDef,
-    orbs: getItemOrbsData(itemDef),
+    orbs: getItemOrbs(itemDef),
     name: getItemDisplayName(itemDef),
     isNew: itemDef.isNew,
     makeTooltip: () => {

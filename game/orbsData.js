@@ -1,8 +1,8 @@
 export default class OrbsData{
 
   constructor(maxOrbs = {}, usedOrbs = {}){
-    this._maxOrbs = maxOrbs
-    this._usedOrbs = usedOrbs
+    this._maxOrbs = toObj(maxOrbs)
+    this._usedOrbs = toObj(usedOrbs)
   }
 
   get classes(){
@@ -26,4 +26,19 @@ export default class OrbsData{
     orbDatum.remaining = orbDatum.max - orbDatum.used
     return orbDatum
   }
+}
+
+function toObj(objOrArray){
+  if(Array.isArray(objOrArray)){
+    objOrArray = objOrArray.reduce((current, next) => {
+      for(let group in next){
+        if(!current[group]){
+          current[group] = 0
+        }
+        current[group] += next[group]
+      }
+      return current
+    }, {})
+  }
+  return objOrArray
 }

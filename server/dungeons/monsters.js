@@ -1,7 +1,7 @@
 import { generateRandomChest } from './chests.js'
 import { chooseOne } from '../../game/rando.js'
 import Monsters from '../../game/monsters/combined.js'
-import { monsterLevelToHp, monsterLevelToPower, levelToXpReward } from '../../game/monster.js'
+import { levelToXpReward } from '../../game/monster.js'
 
 const monstersByFloor = {
   // Caves

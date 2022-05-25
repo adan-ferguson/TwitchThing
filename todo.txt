@@ -560,11 +560,8 @@ Test some monster mods for the monster loadouts. No base stats other than hp/att
 *****************************************
     Milestone 6
     - Classes
-    - Resting
     - 3rd zone
     - Enemy items
-    - Simple active items
-    - Item ordering matters
 *****************************************
 
 New Features:
@@ -572,7 +569,6 @@ New Features:
 - Combat permalinks
 - Adventure log (viewable on results page or inside of exploring page)
 + HP + Power as all base values
-- Resting
 + Classes
 
 Component Changes:
@@ -647,6 +643,7 @@ Bugs/UI Tweaks:
 
 TODO Later
 -----------
+- Resting
 - Gussy up the tabz to make easier to use, di-tab-content
 - di-adventurer-list
 - Socket disconnect/reconnect rejoin room

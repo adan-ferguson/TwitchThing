@@ -71,6 +71,10 @@ export default class Loadout extends HTMLElement{
     return this._rows.every(row => row.loadoutItem)
   }
 
+  get objs(){
+    return this.loadoutItems.map(loadoutItem => loadoutItem?.obj)
+  }
+
   setOptions(options = {}){
     for (let key in options){
       this._options[key] = options[key]

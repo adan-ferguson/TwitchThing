@@ -15,7 +15,7 @@ export function getItemStats(itemDef){
   return getBaseItemType(itemDef).stats
 }
 
-export function getItemOrbsData(itemDef){
+export function getItemOrbs(itemDef){
   const baseType = getBaseItemType(itemDef)
-  return new OrbsData({ [baseType.group]: baseType.orbs })
+  return { [baseType.group]: baseType.orbs }
 }

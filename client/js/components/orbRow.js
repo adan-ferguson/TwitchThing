@@ -2,6 +2,7 @@ import defaultOrbImg from '/client/assets/icons/orbs/default.svg'
 import classDisplayInfo from '../classDisplayInfo.js'
 import tippy from 'tippy.js'
 import { mergeElementOptions } from '../../../game/utilFunctions.js'
+import OrbsData from '../../../game/orbsData.js'
 
 const ORB_ENTRY_HTML = (src, text) => `
   <img src="${src}"> <span>${text}</span>
@@ -31,7 +32,7 @@ export default class OrbRow extends HTMLElement{
   }
 
   setData(orbsData){
-    this._orbsData = orbsData
+    this._orbsData = orbsData instanceof OrbsData ? orbsData : new OrbsData(orbsData)
     this._update()
   }
 

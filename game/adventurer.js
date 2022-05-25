@@ -2,7 +2,7 @@ import Stats from './stats/stats.js'
 import LevelCalculator from './levelCalculator.js'
 import scaledValue from './scaledValue.js'
 import OrbsData from './orbsData.js'
-import { getItemStats } from './item.js'
+import { getItemOrbs, getItemStats } from './item.js'
 import { getBonusStats } from './bonus.js'
 
 const LEVEL_2_XP = 100
@@ -51,28 +51,14 @@ export function getAdventurerStats(adventurer, state = null){
 }
 
 export function getAdventurerOrbsData(adventurer){
-
-  const maxOrbs = {}
-  adventurer.bonuses.forEach(bonus => {
-    add(bonus.group, 1)
-    if(!bonus.orbs){
-      return
-    }
-    for(let className in bonus.orbs){
-      add(className, bonus.orbs[className])
-    }
-  })
-
-  return new OrbsData(maxOrbs)
+  return new OrbsData(
+    adventurer.bonuses.map(bonus => {
+      return { [bonus.group]: 1 }
+    }),
+    adventurer.items.filter(i => i).map(getItemOrbs)
+  )
 
   // TODO: items -> usedOrbs
   // TODO: items might affect maxOrbs as well
   // TODO: adventurer slots might affect usedOrbs
-
-  function add(name, amount){
-    if(!maxOrbs[name]){
-      maxOrbs[name] = 0
-    }
-    maxOrbs[name] += amount
-  }
 }

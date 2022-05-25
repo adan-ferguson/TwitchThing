@@ -61,7 +61,7 @@ verifiedRouter.post('/editloadout', validateIdle, async (req, res) => {
 })
 
 verifiedRouter.post('/editloadout/save', validateIdle, async (req, res) => {
-  const items = validateParam(req.items, { type: 'array' })
+  const items = validateParam(req.body.items, { type: 'array' })
   await commitAdventurerLoadout(req.adventurer, req.user, items)
   await Adventurers.save(req.adventurer)
   await Users.save(req.user)
