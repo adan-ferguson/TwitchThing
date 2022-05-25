@@ -57,7 +57,8 @@ export default class AdventurerPane extends HTMLElement{
   }
 
   updateStats(){
-    const adventurerInstance = new AdventurerInstance({ ...this.adventurer, items: this.loadoutEl.items }, this._extraStats)
+    const items = this.loadoutEl.loadoutItems.map(loadoutItem => loadoutItem?.obj)
+    const adventurerInstance = new AdventurerInstance({ ...this.adventurer, items }, this._extraStats)
     this.statsList.setStats(adventurerInstance.stats, adventurerInstance)
   }
 

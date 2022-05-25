@@ -1,10 +1,9 @@
 import { getMonsterOrbsData } from '../../game/monster.js'
-import { makeLoadoutItem } from './loadoutItem.js'
 
 export function monsterLoadoutContents(monster){
   return {
     getOrbsData: loadoutItems => {
-      return getMonsterOrbsData({ ...monster, mods: loadoutItems.map(li => li?.mod) })
+      return getMonsterOrbsData({ ...monster, mods: loadoutItems.map(li => li?.obj) })
     },
     loadoutItems: monster.mods.map(modDef => {
       if(!modDef){
@@ -13,8 +12,8 @@ export function monsterLoadoutContents(monster){
       if(modDef.baseType){
         // TODO: something
       }
-      return makeLoadoutItem({
-        mod: modDef,
+      return {
+        obj: modDef,
         orbs: null,
         name: modDef.name,
         makeTooltip: () => {
@@ -26,7 +25,7 @@ export function monsterLoadoutContents(monster){
         //   (loadoutItem) => {
         //   return new ItemDetails(loadoutItem)
         // }
-      })
+      }
     })
   }
 }

@@ -1,12 +1,11 @@
 import { getAdventurerOrbsData } from '../../game/adventurer.js'
-import { makeLoadoutItem } from './loadoutItem.js'
-import { getBaseItemType, getItemDisplayName, getItemOrbsData } from '../../game/item.js'
+import { getItemDisplayName, getItemOrbsData } from '../../game/item.js'
 import ItemDetails from './components/itemDetails.js'
 
 export function adventurerLoadoutContents(adventurer){
   return {
     getOrbsData: loadoutItems => {
-      return getAdventurerOrbsData({ ...adventurer, items: loadoutItems.map(li => li?.item) })
+      return getAdventurerOrbsData({ ...adventurer, items: loadoutItems.map(li => li?.obj) })
     },
     loadoutItems: adventurer.items.map(adventurerLoadoutItem)
   }
@@ -16,10 +15,11 @@ export function adventurerLoadoutItem(itemDef){
   if(!itemDef){
     return null
   }
-  return makeLoadoutItem({
-    item: itemDef,
+  return {
+    obj: itemDef,
     orbs: getItemOrbsData(itemDef),
     name: getItemDisplayName(itemDef),
+    isNew: itemDef.isNew,
     makeTooltip: () => {
       const div = document.createElement('div')
       div.textContent = 'a'
@@ -28,5 +28,5 @@ export function adventurerLoadoutItem(itemDef){
     makeDetails: (loadoutItem) => {
       return new ItemDetails(loadoutItem)
     }
-  })
+  }
 }

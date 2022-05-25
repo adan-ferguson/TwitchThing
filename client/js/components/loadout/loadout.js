@@ -40,33 +40,26 @@ export default class Loadout extends HTMLElement{
     this.update()
   }
 
-  get items(){
-    return this._rows.map(row => row.item)
+  get loadoutItems(){
+    return this._rows.map(row => row.loadoutItem)
   }
 
   get orbsData(){
     if(this._contents){
-      return this._contents.getOrbsData(this.items)
+      return this._contents.getOrbsData(this.loadoutItems)
     }
     return new OrbsData()
   }
 
   get hasChanges(){
     for(let i = 0; i < 8; i++){
-      const originalDef = toDef(this._originalItems[i])
-      const currentDef = toDef(this.items[i])
+      const originalDef = this._originalItems[i]
+      const currentDef = this.loadoutItems[i]
       if(originalDef !== currentDef){
         return true
       }
     }
     return false
-
-    function toDef(val){
-      if(!val){
-        return null
-      }
-      return val.itemDef || val
-    }
   }
 
   get isValid(){
@@ -75,7 +68,7 @@ export default class Loadout extends HTMLElement{
   }
 
   get isFull(){
-    return this._rows.every(row => row.item)
+    return this._rows.every(row => row.loadoutItem)
   }
 
   setOptions(options = {}){
@@ -97,7 +90,7 @@ export default class Loadout extends HTMLElement{
 
   addItem(item){
     for(let i = 0; i < 8; i++){
-      if(!this.items[i]){
+      if(!this.loadoutItems[i]){
         this._rows[i].setItem(item)
         this.update()
         return true
@@ -112,8 +105,8 @@ export default class Loadout extends HTMLElement{
   }
 
   swap(index1, index2){
-    const item1 = this._rows[index1].item
-    this._rows[index1].setItem(this._rows[index2].item)
+    const item1 = this._rows[index1].loadoutItem
+    this._rows[index1].setItem(this._rows[index2].loadoutItem)
     this._rows[index2].setItem(item1)
     this.update()
   }
@@ -129,7 +122,7 @@ export default class Loadout extends HTMLElement{
       return
     }
     const style = this._options.editable ? OrbsDisplayStyle.SHOW_MAX : this._options.orbsDisplayStyle
-    this._orbRow.setData(this._contents.getOrbsData(this.items))
+    this._orbRow.setData(this._contents.getOrbsData(this.loadoutItems))
     this._orbRow.setOptions({ style })
   }
 }

@@ -2,6 +2,7 @@ import Page from '../page.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import fizzetch from '../../../fizzetch.js'
 import setupEditable from '../../loadout/setupEditable.js'
+import { adventurerLoadoutItem } from '../../../adventurer.js'
 
 const HTML = `
 <div class="content-columns">
@@ -50,7 +51,9 @@ export default class AdventurerLoadoutEditorPage extends Page{
   async load(_){
     const { adventurer, items } = await fizzetch(`/game/adventurer/${this.adventurerID}/editloadout`)
     this.adventurer = adventurer
-    this.inventory.setItems(items)
+    this.inventory.setItems(
+      Object.values(items).map(itemDef => adventurerLoadoutItem(itemDef))
+    )
     this.adventurerPane.setAdventurer(adventurer)
 
     setupEditable(this.inventory, this.adventurerPane.loadoutEl, {
@@ -61,6 +64,9 @@ export default class AdventurerLoadoutEditorPage extends Page{
     })
 
     this.saveButton.addEventListener('click', async (e) => {
+      if(!this.adventurerPane.loadoutEl.hasChanges){
+        return this.redirectTo(new AdventurerPage(this.adventurerID))
+      }
       this._saving = true
       this._updateSaveButton()
       const items = this.adventurerPane.loadoutEl.items.map(item => item?.id)
@@ -78,7 +84,7 @@ export default class AdventurerLoadoutEditorPage extends Page{
   }
 
   _updateSaveButton(){
-    if(this.adventurerPane.loadoutEl.isValid && this.adventurerPane.loadoutEl.hasChanges || this._saving){
+    if(this.adventurerPane.loadoutEl.isValid || this._saving){
       this.saveButton.removeAttribute('disabled')
     }else{
       this.saveButton.setAttribute('disabled', 'disabled')
