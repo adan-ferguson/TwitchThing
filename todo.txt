@@ -571,6 +571,12 @@ New Features:
 + HP + Power as all base values
 + Classes
 
+- New stats
+-- Dodge chance
+-- Crit factor
+-- Relic quality
+-- Chest find
+
 Component Changes:
 
 + OrbsData w/ classes
