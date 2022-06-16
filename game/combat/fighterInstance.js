@@ -82,11 +82,13 @@ export default class FighterInstance{
   performAction(enemy){
 
     let baseDamage = Math.ceil(this.basePower * this.stats.get('physPower').value)
-    const damageResult = this._dealDamage(baseDamage, enemy)
+    const damageResult = this._dealDamage(baseDamage, enemy, {
+      basicAttack: true
+    })
     this._currentState.timeSinceLastAction = 0
 
     return {
-      actionType: 'attack',
+      actionType: 'basicAttack',
       result: damageResult
     }
   }
@@ -95,34 +97,57 @@ export default class FighterInstance{
     return []
   }
 
-  _dealDamage(amount, enemy){
-    const damageResult = enemy._takeDamage(amount)
+  _dealDamage(val, enemy, props = {}){
 
-    const lifesteal = this._lifesteal(damageResult.damage)
-    if(lifesteal){
-      damageResult.lifesteal = lifesteal
+    const damageResult = {
+      baseDamage: val,
+      basicAttack: false,
+      type: 'phys',
+      ...props
     }
+
+    this._critBonus(damageResult)
+    enemy._takeDamage(damageResult)
+    this._lifesteal(damageResult)
 
     return damageResult
   }
 
-  _lifesteal(damage){
-    const lifesteal = Math.min(
-      this.hpMax - this.hp,
-      Math.ceil(this.stats.get('lifesteal').value * damage / 100)
-    )
-    this.hp += lifesteal
-    return lifesteal
+  _critBonus(damageResult){
+    const crit = Math.random() + this.stats.get('critChance') > 1
+    if(crit){
+      damageResult.baseDamage *= this.stats.get('critDamage').value
+      damageResult.crit = true
+    }
   }
 
-  _takeDamage(dmgBeforeDefense){
-    const blocked = Math.floor(dmgBeforeDefense * this.stats.get('physDef').value)
-    const finalDamage = Math.min(this.hp, dmgBeforeDefense - blocked)
-    this.hp -= finalDamage
-    return {
-      damage: finalDamage,
-      blocked
+  _lifesteal(damageResult){
+    const lifesteal = Math.min(
+      this.hpMax - this.hp,
+      Math.ceil(this.stats.get('lifesteal').value * damageResult.finalDamage / 100)
+    )
+    if(lifesteal){
+      damageResult.lifesteal = lifesteal
+      this.hp += lifesteal
     }
+  }
+
+  _takeDamage(damageResult){
+
+    this._dodge(damageResult)
+    if(damageResult.dodged){
+      return
+    }
+
+    const blocked = Math.floor(damageResult.baseDamage * this.stats.get(damageResult.type + 'Def').value)
+    const finalDamage = Math.min(this.hp, damageResult.baseDamage - blocked)
+    this.hp -= finalDamage
+    damageResult.finalDamage = finalDamage
+    damageResult.blocked = blocked
+  }
+
+  _dodge(damageResult){
+    damageResult.dodged = Math.random() + this.stats.get('dodgeChance') > 1
   }
 }
 

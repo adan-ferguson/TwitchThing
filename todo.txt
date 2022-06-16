@@ -576,6 +576,7 @@ New Features:
 -- Crit factor
 -- Relic quality
 -- Chest find
+-- Regeneration
 
 Component Changes:
 
@@ -600,6 +601,9 @@ Component Changes:
 -- Simulate a combat
 
 Game Systems/Balance:
+- Remove "pending" events, replace with "stayInRoom" events
+-- Change combat
+
 + Remove user xp
 -- New slot when you unlock a new zone
 

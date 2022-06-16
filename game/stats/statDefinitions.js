@@ -14,19 +14,44 @@ const DEFAULT_DEFINITION = {
 }
 
 export const StatDefinitions = {
+  chestFind: {
+    ...DEFAULT_DEFINITION,
+    type: StatType.MULTIPLIER
+  },
+  combatXP: {
+    ...DEFAULT_DEFINITION,
+    type: StatType.MULTIPLIER
+  },
+  critChance: {
+    ...DEFAULT_DEFINITION,
+    type: StatType.FLAT,
+    minValue: 0
+  },
+  critDamage: {
+    ...DEFAULT_DEFINITION,
+    type: StatType.MULTIPLIER
+  },
+  dodgeChance: {
+    ...DEFAULT_DEFINITION,
+    type: StatType.PERCENTAGE
+  },
   hpMax: {
     ...DEFAULT_DEFINITION,
     type: StatType.MULTIPLIER
   },
-  speed: {
+  lifesteal: {
     ...DEFAULT_DEFINITION,
-    type: StatType.MULTIPLIER
-  },
-  physPower: {
-    ...DEFAULT_DEFINITION,
-    type: StatType.MULTIPLIER
+    minValue: 0
   },
   magicPower: {
+    ...DEFAULT_DEFINITION,
+    type: StatType.MULTIPLIER
+  },
+  magicDef: {
+    ...DEFAULT_DEFINITION,
+    type: StatType.PERCENTAGE
+  },
+  physPower: {
     ...DEFAULT_DEFINITION,
     type: StatType.MULTIPLIER
   },
@@ -34,19 +59,19 @@ export const StatDefinitions = {
     ...DEFAULT_DEFINITION,
     type: StatType.PERCENTAGE
   },
-  magicDef: {
-    ...DEFAULT_DEFINITION,
-    type: StatType.PERCENTAGE
-  },
-  lifesteal: {
-    ...DEFAULT_DEFINITION,
-    minValue: 0
-  },
-  xpGain: {
+  relicFind: {
     ...DEFAULT_DEFINITION,
     type: StatType.MULTIPLIER
   },
-  relicFind: {
+  relicKnowledge: {
+    ...DEFAULT_DEFINITION,
+    type: StatType.MULTIPLIER
+  },
+  regen: {
+    ...DEFAULT_DEFINITION,
+    type: StatType.FLAT
+  },
+  speed: {
     ...DEFAULT_DEFINITION,
     type: StatType.MULTIPLIER
   }

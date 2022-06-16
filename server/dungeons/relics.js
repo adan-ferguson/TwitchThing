@@ -1,70 +1,95 @@
 import scaledValue from '../../game/scaledValue.js'
 import { chooseOne } from '../../game/rando.js'
-import { generateRandomChest } from './chests.js'
+import RelicDefinitions from '../relics/knowledgeRelic.js'
 
 const BASE_RELIC_CHANCE = 0.2
 const RELIC_CHANCE_SCALE = 0.03
 const VALUE_MULTIPLIER = 0.25
 
+const SOLVE_CHANCES = {
+  simple: 0.40,
+  intricate: 0.15,
+  perplexing: 0.05,
+  impossible: 0.005
+}
+
+const MESSAGES = [
+  '%name% tries poking the relic but nothing happens.',
+  '%name% is still trying to decipher the meaning of the relic.',
+  '%name% tries singing to the relic.',
+  '%name% thinks they recognize some of the text on the relic.',
+  '%name% is getting nowhere and is getting frustrated.'
+]
+
 export function foundRelic(dungeonRun){
   if(!dungeonRun.user.features.items){
     return
   }
-  const relicChance = dungeonRun.adventurerInstance.stats.get('relicFind').value * BASE_RELIC_CHANCE / scaledValue(RELIC_CHANCE_SCALE, dungeonRun.floor - 1)
-  return Math.random() <= relicChance
+  const relicChance = BASE_RELIC_CHANCE / scaledValue(RELIC_CHANCE_SCALE, dungeonRun.floor - 1)
+  return Math.random() <= relicChance * dungeonRun.adventurerInstance.stats.get('relicFind').value
 }
 
 export function generateRelicEvent(dungeonRun){
-  return chooseOne([
-    { weight: 40, value: minorRelic },
-    { weight: 8, value: majorRelic },
-    { weight: 50 - 50 * dungeonRun.adventurerInstance.hpPct, value: healingRelic },
-    { weight: 4, value: chestRelic }
-  ])(dungeonRun)
-}
-
-function minorRelic(dungeonRun){
-  const xp = scaledValue(VALUE_MULTIPLIER, dungeonRun.floor, 30)
+  const relicType = chooseOne(Object.keys(RelicDefinitions).map(relicType => {
+    return { value: relicType, weight: RelicDefinitions[relicType].frequency(dungeonRun) }
+  }))
   return {
-    relic: 'Minor',
-    rewards: {
-      xp: Math.floor(xp * (0.5 + Math.random() / 2))
-    },
-    message: `${dungeonRun.adventurerInstance.name} finds an interesting tablet and learns various things.`
+    relic: generateRelic(relicType, dungeonRun),
+    stayInRoom: true,
+    attempts: 0,
+    message: `${dungeonRun.adventurerInstance.name} found a relic and is attempting to interpret it.`
   }
 }
 
-function majorRelic(dungeonRun){
-  const xp = scaledValue(VALUE_MULTIPLIER, dungeonRun.floor, 150)
-  return {
-    relic: 'Major',
-    rewards: {
-      xp: Math.floor(xp * (0.5 + Math.random() / 2))
-    },
-    message: `${dungeonRun.adventurerInstance.name} discovers an ancient relic and gains enlightenment.`
+export function continueRelicEvent(dungeonRun, previousEvent){
+
+  const relic = previousEvent.relic
+  const attemptNo = previousEvent.attempts + 1
+  const interpretationChance = SOLVE_CHANCES[relic.difficulty] * dungeonRun.adventurerInstance.stats.get('relicKnowledge').value
+  const trapChance = 0.08
+  const giveUpChance = 0.08
+  const advName = dungeonRun.adventurerInstance.name
+
+  const newEvent = {
+    relic,
+    stayInRoom: true,
+    attempts: attemptNo,
+    message: randomMessage(advName, previousEvent.message)
   }
+
+  for(let i = 0; i < attemptNo; i++){
+    if(Math.random() < interpretationChance){
+      newEvent.stayInRoom = false
+      RelicDefinitions[relic.type].resolve(newEvent, dungeonRun)
+    }else if(Math.random() < trapChance){
+      // TODO: actual traps
+      newEvent.stayInRoom = false
+      newEvent.message = `${advName} messes up and the relic explodes.`
+    }else if(Math.random() < giveUpChance){
+      newEvent.stayInRoom = false
+      newEvent.message = `${advName} can't figure it out and gives up.`
+    }
+  }
+
+  return newEvent
 }
 
-function healingRelic(dungeonRun){
-  const newState = { ...dungeonRun.adventurerInstance.adventurerState }
-  const gain = Math.floor(scaledValue(VALUE_MULTIPLIER, dungeonRun.floor, 10) * (0.5 + Math.random() / 2))
-  newState.hp = Math.min(dungeonRun.adventurerInstance.hpMax, newState.hp + gain)
-  return {
-    relic: 'Healing',
-    message: `${dungeonRun.adventurerInstance.name} finds a healing relic and regains ${gain} health.`,
-    adventurerState: newState
-  }
+function generateRelic(relicType, dungeonRun){
+  const generatedRelic = RelicDefinitions[relicType].generate(dungeonRun)
+  generatedRelic.type = relicType
+  return generatedRelic
 }
 
-function chestRelic(dungeonRun){
-  const newState = { ...dungeonRun.adventurerInstance.adventurerState }
-  const gain = Math.ceil(dungeonRun.adventurerInstance.hpMax * (0.1 + Math.random() * 0.1))
-  newState.hp = Math.min(dungeonRun.adventurerInstance.hpMax, newState.hp + gain)
-  return {
-    relic: 'Chest',
-    rewards: {
-      chests: generateRandomChest(dungeonRun)
-    },
-    message: `${dungeonRun.adventurerInstance.name} finds an abandoned relic with a treasure chest just sitting there.`,
+function randomMessage(name, previousMessage){
+  const msg = chooseOne(MESSAGES.map(msg => {
+    return { weight: 1, value: msg.replace('%name%', name) }
+  }))
+  if(msg === previousMessage){
+    return randomMessage(name, previousMessage)
   }
+  return msg
+}
+
+function relicValue(dungeonRun){
+  return scaledValue(VALUE_MULTIPLIER, dungeonRun.floor, dungeonRun.adventurerInstance.stats.get('relicQuality')).value
 }

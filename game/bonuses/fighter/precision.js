@@ -1,6 +1,6 @@
 export default {
   stats: {
-    critFactor: '+10%'
+    critChance: '+15%'
   },
   rarity: 1
 }
