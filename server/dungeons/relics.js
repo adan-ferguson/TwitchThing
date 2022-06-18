@@ -1,6 +1,14 @@
 import scaledValue from '../../game/scaledValue.js'
 import { chooseOne } from '../../game/rando.js'
-import RelicDefinitions from '../relics/knowledgeRelic.js'
+import KnowledgeRelic from '../relics/knowledgeRelic.js'
+import HealingRelic from '../relics/healingRelic.js'
+import TreasureRelic from '../relics/treasureRelic.js'
+
+const RELICS = {
+  knowledge: KnowledgeRelic,
+  healing: HealingRelic,
+  treasure: TreasureRelic
+}
 
 const BASE_RELIC_CHANCE = 0.2
 const RELIC_CHANCE_SCALE = 0.03
@@ -30,8 +38,8 @@ export function foundRelic(dungeonRun){
 }
 
 export function generateRelicEvent(dungeonRun){
-  const relicType = chooseOne(Object.keys(RelicDefinitions).map(relicType => {
-    return { value: relicType, weight: RelicDefinitions[relicType].frequency(dungeonRun) }
+  const relicType = chooseOne(Object.keys(RELICS).map(relicType => {
+    return { value: relicType, weight: RELICS[relicType].frequency(dungeonRun) }
   }))
   return {
     relic: generateRelic(relicType, dungeonRun),
@@ -41,7 +49,7 @@ export function generateRelicEvent(dungeonRun){
   }
 }
 
-export function continueRelicEvent(dungeonRun, previousEvent){
+export async function continueRelicEvent(dungeonRun, previousEvent){
 
   const relic = previousEvent.relic
   const attemptNo = previousEvent.attempts + 1
@@ -60,7 +68,7 @@ export function continueRelicEvent(dungeonRun, previousEvent){
   for(let i = 0; i < attemptNo; i++){
     if(Math.random() < interpretationChance){
       newEvent.stayInRoom = false
-      RelicDefinitions[relic.type].resolve(newEvent, dungeonRun)
+      RELICS[relic.type].resolve(newEvent, dungeonRun)
     }else if(Math.random() < trapChance){
       // TODO: actual traps
       newEvent.stayInRoom = false
@@ -75,7 +83,7 @@ export function continueRelicEvent(dungeonRun, previousEvent){
 }
 
 function generateRelic(relicType, dungeonRun){
-  const generatedRelic = RelicDefinitions[relicType].generate(dungeonRun)
+  const generatedRelic = RELICS[relicType].generate(dungeonRun)
   generatedRelic.type = relicType
   return generatedRelic
 }

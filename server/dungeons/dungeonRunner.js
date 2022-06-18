@@ -8,6 +8,7 @@ import AdventurerInstance from '../../game/adventurerInstance.js'
 import Users from '../collections/users.js'
 import { toDisplayName } from '../../game/utilFunctions.js'
 import log from 'fancy-log'
+import { continueRelicEvent } from './relics.js'
 
 const ADVANCEMENT_INTERVAL = 5000
 
@@ -210,7 +211,7 @@ class DungeonRunInstance{
   async _continueEvent(event){
     if(event.combatID){
       await this._applyCombatResult(event)
-    }else if(event.relicType){
+    }else if(event.relic){
       await continueRelicEvent(this, event)
     }
   }
