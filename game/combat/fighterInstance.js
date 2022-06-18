@@ -72,7 +72,7 @@ export default class FighterInstance{
   }
 
   get hpMax(){
-    return this.baseHp * this.stats.get('hpMax').value
+    return Math.ceil(this.baseHp * this.stats.get('hpMax').value)
   }
 
   advanceTime(ms){

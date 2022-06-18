@@ -10,16 +10,30 @@ const RELICS = {
   treasure: TreasureRelic
 }
 
-const BASE_RELIC_CHANCE = 0.2
-const RELIC_CHANCE_SCALE = 0.03
+const RELIC_CHANCE = 0.2
 const VALUE_MULTIPLIER = 0.25
 
-const SOLVE_CHANCES = {
-  simple: 0.40,
-  intricate: 0.15,
-  perplexing: 0.05,
-  impossible: 0.005
-}
+const TIERS = [
+  {
+    solveChance: 0.4
+  },
+  {
+    solveChance: 0.2,
+    findChance: 0.2
+  },
+  {
+    solveChance: 0.05,
+    findChance: 0.05
+  },
+  {
+    solveChance: 0.01,
+    findChance: 0.01
+  },
+  {
+    solveChance: 0.001,
+    findChance: 0.001
+  }
+]
 
 const MESSAGES = [
   '%name% tries poking the relic but nothing happens.',
@@ -33,16 +47,16 @@ export function foundRelic(dungeonRun){
   if(!dungeonRun.user.features.items){
     return
   }
-  const relicChance = BASE_RELIC_CHANCE / scaledValue(RELIC_CHANCE_SCALE, dungeonRun.floor - 1)
-  return Math.random() <= relicChance * dungeonRun.adventurerInstance.stats.get('relicFind').value
+  return Math.random() <= RELIC_CHANCE
 }
 
 export function generateRelicEvent(dungeonRun){
-  const relicType = chooseOne(Object.keys(RELICS).map(relicType => {
+  const type = chooseOne(Object.keys(RELICS).map(relicType => {
     return { value: relicType, weight: RELICS[relicType].frequency(dungeonRun) }
   }))
+  const tier = selectTier(dungeonRun.adventurerInstance.stats.get('rareRelicChance').value)
   return {
-    relic: generateRelic(relicType, dungeonRun),
+    relic: { type, tier },
     stayInRoom: true,
     attempts: 0,
     message: `${dungeonRun.adventurerInstance.name} found a relic and is attempting to interpret it.`
@@ -53,39 +67,42 @@ export async function continueRelicEvent(dungeonRun, previousEvent){
 
   const relic = previousEvent.relic
   const attemptNo = previousEvent.attempts + 1
-  const interpretationChance = SOLVE_CHANCES[relic.difficulty] * dungeonRun.adventurerInstance.stats.get('relicKnowledge').value
+  const solveChance = TIERS[relic.tier] * dungeonRun.adventurerInstance.stats.get('relicSolveChance').value
   const trapChance = 0.08
   const giveUpChance = 0.08
   const advName = dungeonRun.adventurerInstance.name
 
-  const newEvent = {
-    relic,
-    stayInRoom: true,
-    attempts: attemptNo,
-    message: randomMessage(advName, previousEvent.message)
-  }
+  let newEvent
 
+  // Additional attempts do additional loops
   for(let i = 0; i < attemptNo; i++){
-    if(Math.random() < interpretationChance){
+    if(Math.random() < solveChance){
+      newEvent = {
+        stayInRoom: false,
+        ...RELICS[relic.type].resolve(dungeonRun, relic.tier, relicValue(dungeonRun))
+      }
       newEvent.stayInRoom = false
-      RELICS[relic.type].resolve(newEvent, dungeonRun)
     }else if(Math.random() < trapChance){
       // TODO: actual traps
-      newEvent.stayInRoom = false
-      newEvent.message = `${advName} messes up and the relic explodes.`
+      newEvent = {
+        stayInRoom: false,
+        message: `${advName} messes up and the relic explodes.`
+      }
     }else if(Math.random() < giveUpChance){
-      newEvent.stayInRoom = false
-      newEvent.message = `${advName} can't figure it out and gives up.`
+      newEvent = {
+        stayInRoom: false,
+        message: `${advName} can't figure it out and gives up.`
+      }
     }
   }
 
-  return newEvent
-}
-
-function generateRelic(relicType, dungeonRun){
-  const generatedRelic = RELICS[relicType].generate(dungeonRun)
-  generatedRelic.type = relicType
-  return generatedRelic
+  return {
+    relic,
+    stayInRoom: true,
+    attempts: attemptNo,
+    message: randomMessage(advName, previousEvent.message),
+    ...newEvent
+  }
 }
 
 function randomMessage(name, previousMessage){
@@ -99,5 +116,14 @@ function randomMessage(name, previousMessage){
 }
 
 function relicValue(dungeonRun){
-  return scaledValue(VALUE_MULTIPLIER, dungeonRun.floor, dungeonRun.adventurerInstance.stats.get('relicQuality')).value
+  return scaledValue(VALUE_MULTIPLIER, dungeonRun.floor)
+}
+
+function selectTier(rareRelicChance){
+  for(let i = TIERS.length - 1; i > 0; i--){
+    if(Math.random() < TIERS[i].findChance * rareRelicChance){
+      return i
+    }
+  }
+  return 0
 }

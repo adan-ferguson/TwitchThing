@@ -1,5 +1,6 @@
 import Combats from '../collections/combats.js'
 import FighterInstance from '../../game/combat/fighterInstance.js'
+import { toDisplayName } from '../../game/utilFunctions.js'
 
 const START_TIME_DELAY = 1000
 const MAX_TIME = 120000
@@ -28,6 +29,25 @@ export async function generateCombat(fighter1, fighter2, fighterStartState1 = {}
     timeline: combat.timeline,
     result: combat.result
   })
+}
+
+export function finishCombatEvent(combatEvent){
+  const combat = await Combats.findOne(event.combatID)
+  const fighter = combat.fighter1.data._id.equals(this.adventurer._id) ? combat.fighter1 : combat.fighter2
+  const enemy = combat.fighter1.data._id.equals(this.adventurer._id) ? combat.fighter2 : combat.fighter1
+  if(!fighter.endState.hp){
+    event.runFinished = true
+    event.message = `${fighter.data.name} has fallen, and got kicked out of the dungeon by some mysterious entity.`
+  }else if(!enemy.endState.hp){
+    event.rewards = enemy.data.rewards
+    event.message = `${fighter.data.name} defeated the ${toDisplayName(enemy.data.name)}.`
+    event.monster.defeated = true
+  }else{
+    event.message = 'That fight was going nowhere so you both just get bored and leave.'
+  }
+  event.adventurerState = fighter.endState
+  event.pending = false
+  event.duration += 8000
 }
 
 class Combat{

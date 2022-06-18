@@ -9,6 +9,7 @@ import Users from '../collections/users.js'
 import { toDisplayName } from '../../game/utilFunctions.js'
 import log from 'fancy-log'
 import { continueRelicEvent } from './relics.js'
+import { finishCombatEvent } from '../combat/combat.js'
 
 const ADVANCEMENT_INTERVAL = 5000
 
@@ -184,7 +185,7 @@ class DungeonRunInstance{
       return this._finish()
     }
 
-    if(this.currentEvent?.pending){
+    if(this.currentEvent?.stayInRoom){
       await this._continueEvent(this.currentEvent)
     }else if(nextEvent){
       this._addEvent(nextEvent)
@@ -192,9 +193,7 @@ class DungeonRunInstance{
       await this._nextRoom()
     }
 
-    if(!this.currentEvent.pending){
-      this._resolveEvent(this.currentEvent)
-    }
+    this._resolveEvent(this.currentEvent)
 
     const truncatedDoc = {
       ...this.doc,
@@ -210,9 +209,9 @@ class DungeonRunInstance{
 
   async _continueEvent(event){
     if(event.combatID){
-      await this._applyCombatResult(event)
+      this._addEvent(finishCombatEvent(event))
     }else if(event.relic){
-      await continueRelicEvent(this, event)
+      this._addEvent(continueRelicEvent(this, event))
     }
   }
 
@@ -246,25 +245,6 @@ class DungeonRunInstance{
       this.doc.rewards = addRewards(this.doc.rewards, event.rewards)
     }
     this.doc.elapsedTime += event.duration
-  }
-
-  async _applyCombatResult(event){
-    const combat = await Combats.findOne(event.combatID)
-    const fighter = combat.fighter1.data._id.equals(this.adventurer._id) ? combat.fighter1 : combat.fighter2
-    const enemy = combat.fighter1.data._id.equals(this.adventurer._id) ? combat.fighter2 : combat.fighter1
-    if(!fighter.endState.hp){
-      event.runFinished = true
-      event.message = `${fighter.data.name} has fallen, and got kicked out of the dungeon by some mysterious entity.`
-    }else if(!enemy.endState.hp){
-      event.rewards = enemy.data.rewards
-      event.message = `${fighter.data.name} defeated the ${toDisplayName(enemy.data.name)}.`
-      event.monster.defeated = true
-    }else{
-      event.message = 'That fight was going nowhere so you both just get bored and leave.'
-    }
-    event.adventurerState = fighter.endState
-    event.pending = false
-    event.duration += 8000
   }
 
   _finish(){

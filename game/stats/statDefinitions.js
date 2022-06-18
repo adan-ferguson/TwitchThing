@@ -13,66 +13,61 @@ const DEFAULT_DEFINITION = {
   inverted: false           // If inverted, lower = better & higher = worse
 }
 
-export const StatDefinitions = {
+const defs = {
   chestFind: {
-    ...DEFAULT_DEFINITION,
     type: StatType.MULTIPLIER
   },
   combatXP: {
-    ...DEFAULT_DEFINITION,
     type: StatType.MULTIPLIER
   },
   critChance: {
-    ...DEFAULT_DEFINITION,
     type: StatType.FLAT,
     minValue: 0
   },
   critDamage: {
-    ...DEFAULT_DEFINITION,
     type: StatType.MULTIPLIER
   },
   dodgeChance: {
-    ...DEFAULT_DEFINITION,
     type: StatType.PERCENTAGE
   },
   hpMax: {
-    ...DEFAULT_DEFINITION,
     type: StatType.MULTIPLIER
   },
   lifesteal: {
-    ...DEFAULT_DEFINITION,
     minValue: 0
   },
   magicPower: {
-    ...DEFAULT_DEFINITION,
     type: StatType.MULTIPLIER
   },
   magicDef: {
-    ...DEFAULT_DEFINITION,
     type: StatType.PERCENTAGE
   },
   physPower: {
-    ...DEFAULT_DEFINITION,
     type: StatType.MULTIPLIER
   },
   physDef: {
-    ...DEFAULT_DEFINITION,
     type: StatType.PERCENTAGE
   },
-  relicFind: {
-    ...DEFAULT_DEFINITION,
+  rareRelicChance: {
     type: StatType.MULTIPLIER
   },
   relicKnowledge: {
-    ...DEFAULT_DEFINITION,
     type: StatType.MULTIPLIER
   },
   regen: {
-    ...DEFAULT_DEFINITION,
     type: StatType.FLAT
   },
   speed: {
-    ...DEFAULT_DEFINITION,
     type: StatType.MULTIPLIER
   }
 }
+
+for(let key in defs){
+  defs[key] = {
+    ...DEFAULT_DEFINITION,
+    ...defs[key],
+    name: key
+  }
+}
+
+export const StatDefinitions = defs

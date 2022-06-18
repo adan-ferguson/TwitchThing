@@ -1,9 +1,6 @@
 export default {
   frequency: dungeonRun => 50 - 50 * dungeonRun.adventurerInstance.hpPct,
-  generate: dungeonRun => {
-    return { difficulty: 'simple' }
-  },
-  resolve: (dungeonRun, event, value) => {
+  resolve: (dungeonRun, relicTier, value) => {
     const gain = Math.floor(10 * value * 10 * (0.5 + Math.random() / 2))
     const newState = { ...dungeonRun.adventurerInstance.adventurerState }
     const finalGain = Math.min(dungeonRun.adventurerInstance.hpMax - newState.hp, gain)

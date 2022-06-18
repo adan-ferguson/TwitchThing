@@ -10,7 +10,7 @@ const XP_MULTIPLIER = 0.4
 
 const HP_BASE = 100
 const HP_GROWTH_PCT = 0.1
-const POWER_BASE = 10
+const POWER_BASE = 9
 const POWER_GROWTH_PCT = 0.1
 
 export function xpToLevel(xp){
