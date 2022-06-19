@@ -86,7 +86,6 @@ export default class AdventurerPage extends Page{
   }
 
   async _quickEnterDungeon(){
-    debugger
     const { dungeonRun } = await fizzetch(`/game/adventurer/${this.adventurerID}/enterdungeon`)
     this.redirectTo(new DungeonPage(dungeonRun._id))
   }

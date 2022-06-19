@@ -33,7 +33,7 @@ export async function generateEvent(dungeonRun){
     const combat = await generateCombat(adventurerInstance.adventurer, monster, adventurerInstance.adventurerState)
     return {
       duration: combat.duration,
-      pending: true,
+      stayInRoom: true,
       message: `${dungeonRun.adventurer.name} is fighting a ${monster.name}.`,
       combatID: combat._id,
       monster

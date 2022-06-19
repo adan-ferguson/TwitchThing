@@ -207,7 +207,7 @@ class DungeonRunInstance{
 
   async _continueEvent(event){
     if(event.combatID){
-      this._addEvent(await finishCombatEvent(event))
+      this._addEvent(await finishCombatEvent(this, event))
     }else if(event.relic){
       this._addEvent(continueRelicEvent(this, event))
     }

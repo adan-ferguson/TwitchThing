@@ -2,8 +2,9 @@ import Collection from './collection.js'
 
 const DEFAULTS = {
   startTime: null,
-  endTime: null,
+  duration: null,
   timeline: null,
+  result: null,
   fighter1: null,
   fighter2: null
 }

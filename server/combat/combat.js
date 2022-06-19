@@ -31,10 +31,10 @@ export async function generateCombat(fighter1, fighter2, fighterStartState1 = {}
   })
 }
 
-export async function finishCombatEvent(combatEvent){
+export async function finishCombatEvent(dungeonRun, combatEvent){
   const combat = await Combats.findOne(combatEvent._id)
-  const fighter = combat.fighter1.data._id.equals(this.adventurer._id) ? combat.fighter1 : combat.fighter2
-  const enemy = combat.fighter1.data._id.equals(this.adventurer._id) ? combat.fighter2 : combat.fighter1
+  const fighter = combat.fighter1.data._id.equals(dungeonRun.adventurer._id) ? combat.fighter1 : combat.fighter2
+  const enemy = combat.fighter1.data._id.equals(dungeonRun.adventurer._id) ? combat.fighter2 : combat.fighter1
   const event = {
     duration: 10000,
     adventurerState: fighter.endState
@@ -45,7 +45,7 @@ export async function finishCombatEvent(combatEvent){
   }else if(!enemy.endState.hp){
     event.rewards = enemy.data.rewards
     event.message = `${fighter.data.name} defeated the ${toDisplayName(enemy.data.name)}.`
-    event.monster.defeated = true
+    event.monster = { ...combatEvent.monster, defeated: true }
   }else{
     event.message = 'That fight was going nowhere so you both just get bored and leave.'
   }

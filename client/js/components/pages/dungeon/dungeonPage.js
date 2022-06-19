@@ -61,7 +61,7 @@ export default class DungeonPage extends Page{
     const { dungeonRun } = await this.fetchData(url)
     this.dungeonRun = dungeonRun
 
-    if(this.currentEvent.combatID && this.currentEvent.pending && !(previousPage instanceof CombatPage)){
+    if(this.currentEvent.combatID && !(previousPage instanceof CombatPage)){
       return this._goToCombat()
     }
     if(this.dungeonRun.finished && !this._watchView){
@@ -97,7 +97,7 @@ export default class DungeonPage extends Page{
       this._finish(delayedFinish)
     }
 
-    if(source === 'socket' && this.currentEvent.combatID && this.currentEvent.pending){
+    if(source === 'socket' && this.currentEvent.combatID){
       return this._goToCombat()
     }
 

@@ -11,7 +11,7 @@ const DEFAULTS = {
   displayname: null,
   adventurers: [],
   accomplishments: {
-    deepestFloor: 0,
+    deepestFloor: 1,
     firstRunFinished: 0,
   },
   features: { // featureName: 0 = locked, 1 = unlocked & brand new, 2 = unlocked
