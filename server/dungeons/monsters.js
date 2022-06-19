@@ -66,7 +66,7 @@ export async function generateMonster(dungeonRun){
     const rewards = {
       xp: levelToXpReward(level) * advStats.get('combatXP').value
     }
-    if(dungeonRun.user.features.items){
+    if(dungeonRun.user.accomplishments.firstRunFinished){
       if(Math.random() < CHEST_DROP_CHANCE * advStats.get('chestFind').value){
         rewards.chests = generateRandomChest(dungeonRun)
       }

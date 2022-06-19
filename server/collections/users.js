@@ -11,10 +11,11 @@ const DEFAULTS = {
   displayname: null,
   adventurers: [],
   accomplishments: {
-    deepestZone: 0
+    deepestZone: 0,
+    firstRunFinished: 0,
   },
   features: { // featureName: 0 = locked, 1 = unlocked & brand new, 2 = unlocked
-    items: 0,
+    editLoadout: 0,
     advClasses: {
       fighter: 2,
       tank: 2,

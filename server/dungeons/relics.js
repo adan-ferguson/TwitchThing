@@ -44,7 +44,7 @@ const MESSAGES = [
 ]
 
 export function foundRelic(dungeonRun){
-  if(!dungeonRun.user.features.items){
+  if(!dungeonRun.user.accomplishments.firstRunFinished){
     return
   }
   return Math.random() <= RELIC_CHANCE

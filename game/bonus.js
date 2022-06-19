@@ -3,7 +3,10 @@ import Stats from './stats/stats.js'
 import OrbsData from './orbsData.js'
 
 export function getBonusDef({ group, name }){
-  return Bonuses[group][name]
+  return Bonuses[group][name] ?? {
+    name: 'Blank',
+    group
+  }
 }
 
 export function getBonusOrbsData(bonusDef){

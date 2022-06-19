@@ -31,10 +31,14 @@ export async function generateCombat(fighter1, fighter2, fighterStartState1 = {}
   })
 }
 
-export function finishCombatEvent(combatEvent){
-  const combat = await Combats.findOne(event.combatID)
+export async function finishCombatEvent(combatEvent){
+  const combat = await Combats.findOne(combatEvent._id)
   const fighter = combat.fighter1.data._id.equals(this.adventurer._id) ? combat.fighter1 : combat.fighter2
   const enemy = combat.fighter1.data._id.equals(this.adventurer._id) ? combat.fighter2 : combat.fighter1
+  const event = {
+    duration: 10000,
+    adventurerState: fighter.endState
+  }
   if(!fighter.endState.hp){
     event.runFinished = true
     event.message = `${fighter.data.name} has fallen, and got kicked out of the dungeon by some mysterious entity.`
@@ -45,9 +49,7 @@ export function finishCombatEvent(combatEvent){
   }else{
     event.message = 'That fight was going nowhere so you both just get bored and leave.'
   }
-  event.adventurerState = fighter.endState
-  event.pending = false
-  event.duration += 8000
+  return event
 }
 
 class Combat{

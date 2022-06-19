@@ -1,12 +1,10 @@
 import DungeonRuns from '../collections/dungeonRuns.js'
-import Combats from '../collections/combats.js'
 import Adventurers from '../collections/adventurers.js'
 import { addRewards } from './results.js'
 import { generateEvent } from './dungeonEventPlanner.js'
 import { emit } from '../socketServer.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 import Users from '../collections/users.js'
-import { toDisplayName } from '../../game/utilFunctions.js'
 import log from 'fancy-log'
 import { continueRelicEvent } from './relics.js'
 import { finishCombatEvent } from '../combat/combat.js'
@@ -209,7 +207,7 @@ class DungeonRunInstance{
 
   async _continueEvent(event){
     if(event.combatID){
-      this._addEvent(finishCombatEvent(event))
+      this._addEvent(await finishCombatEvent(event))
     }else if(event.relic){
       this._addEvent(continueRelicEvent(this, event))
     }

@@ -43,11 +43,11 @@ verifiedRouter.post('/editloadout', validateIdle, async (req, res) => {
     items: user.inventory.items
   })
 
-  // Clear the new feature + items
+  // Clear the accomplishment
   let updated = false
-  if(user.features.items === 1){
+  if(user.features.editLoadout === 1){
     updated = true
-    req.user.features.items = 2
+    req.user.features.editLoadout = 2
   }
   Object.values(req.user.inventory.items).forEach(item => {
     if(item.isNew){

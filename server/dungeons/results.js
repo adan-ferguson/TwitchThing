@@ -82,10 +82,11 @@ export async function finalize(dungeonRunDoc){
       })
     }
 
-    if(!userDoc.features.items){
+    if(!userDoc.accomplishments.firstRunFinished){
       const sword = generateItemDef({ group: 'fighter', name: 'sword' })
       userDoc.inventory.items[sword.id] = sword
-      userDoc.features.items = 1
+      userDoc.accomplishments.firstRunFinished = 1
+      userDoc.features.editLoadout = 1
       emit(userDoc._id, 'show popup', {
         message: `You got crushed! What were you thinking? You didn't even have a weapon!
         

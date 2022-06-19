@@ -5,12 +5,7 @@ import { getAdventurerOrbsData } from '../../game/adventurer.js'
 import Adventurers from '../collections/adventurers.js'
 
 export function firstLevelBonus(className){
-  const first = {
-    fighter: Bonuses.fighter.strength,
-    tank: Bonuses.tank.toughness,
-    ranger: Bonuses.ranger.evasion
-  }[className]
-  return { group: first.group, name: first.name, level: 1 }
+  return { group: className, level: 1 }
 }
 
 export async function generateLevelup(adventurerDoc){

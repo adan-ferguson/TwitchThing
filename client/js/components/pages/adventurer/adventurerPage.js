@@ -52,7 +52,7 @@ export default class AdventurerPage extends Page{
   _setupEditEquipmentButton(){
 
     const btn = this.querySelector('button.edit')
-    const featureStatus = this.user.features.items
+    const featureStatus = this.user.features.editLoadout
     if(!featureStatus){
       btn.disabled = true
       return
