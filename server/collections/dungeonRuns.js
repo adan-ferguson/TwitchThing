@@ -4,7 +4,7 @@ const DEFAULTS = {
   _id: null,
   adventurer: null,
   dungeonOptions: {
-    startingZone: 0
+    startingFloor: 1
   },
   finished: false,
   finalized: false,

@@ -54,8 +54,6 @@ export async function finalize(dungeonRunDoc){
     adventurerDoc.dungeonRunID = null
     adventurerDoc.xp = xpAfter
     adventurerDoc.level = advXpToLevel(xpAfter)
-    adventurerDoc.accomplishments.deepestZone =
-      Math.max(floorToZone(dungeonRunDoc.floor), adventurerDoc.accomplishments.deepestZone)
     adventurerDoc.accomplishments.deepestFloor =
       Math.max(dungeonRunDoc.floor, adventurerDoc.accomplishments.deepestFloor)
     adventurerDoc.nextLevelUp = await generateLevelup(adventurerDoc)
@@ -70,17 +68,7 @@ export async function finalize(dungeonRunDoc){
       })
     })
 
-    // TODO: have an unlocks file or something
-    const finalZone = floorToZone(dungeonRunDoc.floor)
-    if(finalZone > userDoc.accomplishments.deepestZone){
-      userDoc.accomplishments.deepestZone = finalZone
-      userDoc.inventory.adventurerSlots++
-      emit(userDoc._id, 'show popup', {
-        message: `New zone reached: ${ZONES[finalZone]}
-        
-        New adventurer slot unlocked!`
-      })
-    }
+    userDoc.accomplishments.deepestFloor = Math.max(userDoc.accomplishments.deepestFloor, dungeonRunDoc.floor)
 
     if(!userDoc.accomplishments.firstRunFinished){
       const sword = generateItemDef({ group: 'fighter', name: 'sword' })

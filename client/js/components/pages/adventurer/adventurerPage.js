@@ -6,6 +6,7 @@ import AdventurerLoadoutEditorPage from '../adventurerLoadout/adventurerLoadoutE
 import '../../adventurerPane.js'
 import LevelupPage from '../levelup/levelupPage.js'
 import DungeonPage from '../dungeon/dungeonPage.js'
+import fizzetch from '../../../fizzetch.js'
 
 const HTML = `
 <div class="content-columns">
@@ -75,9 +76,19 @@ export default class AdventurerPage extends Page{
     }else{
       this._topRightButton.innerHTML = '<div>Enter Dungeon<div/>'
       this._topRightButton.addEventListener('click', () => {
-        this.redirectTo(new DungeonPickerPage(this.adventurerID))
+        if(this.adventurer.accomplishments.deepestFloor > 1){
+          this.redirectTo(new DungeonPickerPage(this.adventurerID))
+        }else{
+          this._quickEnterDungeon()
+        }
       })
     }
+  }
+
+  async _quickEnterDungeon(){
+    debugger
+    const { dungeonRun } = await fizzetch(`/game/adventurer/${this.adventurerID}/enterdungeon`)
+    this.redirectTo(new DungeonPage(dungeonRun._id))
   }
 }
 

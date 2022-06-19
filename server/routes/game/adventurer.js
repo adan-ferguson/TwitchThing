@@ -29,9 +29,9 @@ verifiedRouter.post('/dungeonpicker', validateIdle, async(req, res) => {
 })
 
 verifiedRouter.post('/enterdungeon', validateIdle, async(req, res) => {
-  const startingZone = validateParam(req.body.startingZone, { type: 'integer' })
+  const startingFloor = validateParam(req.body.startingFloor, { type: 'integer', required: false }) || 1
   const dungeonRun = await addRun(req.adventurer._id, {
-    startingZone
+    startingFloor
   })
   res.send({ dungeonRun })
 })

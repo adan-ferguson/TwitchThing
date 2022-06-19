@@ -74,20 +74,20 @@ async function advance(){
 export async function addRun(adventurerID, dungeonOptions){
 
   const adventurer = await Adventurers.findOne(adventurerID)
-  const startingZone = parseInt(dungeonOptions.startingZone) || 0
-  validateNew(adventurer, dungeonOptions)
+  const startingFloor = parseInt(dungeonOptions.startingFloor) || 1
+  const userDoc = await Users.findOne(adventurer.userID)
+  validateNew(adventurer, userDoc, dungeonOptions)
 
   const drDoc = await DungeonRuns.save({
     adventurer,
     dungeonOptions,
     adventurerState: AdventurerInstance.initialState(adventurer),
-    floor: startingZone * 10 + 1
+    floor: startingFloor
   })
 
   adventurer.dungeonRunID = drDoc._id
   await Adventurers.save(adventurer)
 
-  const userDoc = await Users.findOne(adventurer.userID)
   activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, userDoc)
 
   return drDoc
@@ -254,17 +254,17 @@ class DungeonRunInstance{
   }
 }
 
-function validateNew(adventurer, { startingZone }){
-  if(!adventurer){
+function validateNew(adventurerDoc, userDoc, { startingFloor }){
+  if(!adventurerDoc){
     throw 'Adventurer not found'
   }
-  if(startingZone > adventurer.accomplishments.deepestZone){
+  if(startingFloor > userDoc.accomplishments.deepestFloor){
     throw 'Invalid starting floor'
   }
-  if(adventurer.dungeonRun){
+  if(adventurerDoc.dungeonRun){
     throw 'Adventurer already in dungeon'
   }
-  if(adventurer.nextLevelUp){
+  if(adventurerDoc.nextLevelUp){
     throw 'Adventurer can not enter dungeon, they have a pending levelup'
   }
 }

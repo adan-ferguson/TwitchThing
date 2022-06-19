@@ -37,7 +37,7 @@ export default class DungeonPickerPage extends Page{
     return () => new AdventurerPage(this.adventurerID)
   }
 
-  async load(){
+  async load(_){
 
     const { adventurer, error } = await fizzetch(`/game/adventurer/${this.adventurerID}/dungeonpicker`)
     if(error){
@@ -45,21 +45,15 @@ export default class DungeonPickerPage extends Page{
     }
 
     this.adventurer = adventurer
-    this.form.addSelect({
-      label: 'Select starting zone',
-      name: 'startingZone',
-      optionsList: startingZoneOptions(adventurer.accomplishments.deepestZone)
+    const slider = this.form.addInput({
+      label: 'Select starting floor',
+      name: 'startingFloor',
+      type: 'range',
+      min: 1,
+      max: this.user.accomplishments.deepestFloor,
+      value: adventurer.accomplishments.deepestFloor
     })
   }
 }
 
 customElements.define('di-dungeon-picker-page', DungeonPickerPage )
-
-function startingZoneOptions(deepestZone){
-  const options = []
-  for(let i = deepestZone; i >= 0; i--){
-    const floor = i * 10 + 1
-    options.push({ value: i, name: `${zones[i]} (${floor})` })
-  }
-  return options
-}
