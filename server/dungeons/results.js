@@ -68,6 +68,9 @@ export async function finalize(dungeonRunDoc){
       })
     })
 
+    if(userDoc.accomplishments.deepestFloor === 1 && dungeonRunDoc.floor > 1){
+      userDoc.features.dungeonPicker = 1
+    }
     userDoc.accomplishments.deepestFloor = Math.max(userDoc.accomplishments.deepestFloor, dungeonRunDoc.floor)
 
     if(!userDoc.accomplishments.firstRunFinished){

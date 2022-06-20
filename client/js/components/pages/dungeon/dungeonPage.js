@@ -1,5 +1,5 @@
 import Page from '../page.js'
-import { getSocket } from '../../../socketClient.js'
+import { getSocket, joinSocketRoom, leaveSocketRoom } from '../../../socketClient.js'
 import CombatPage from '../combat/combatPage.js'
 import ResultsPage from '../results/resultsPage.js'
 import { floorToZoneName } from '../../../../../game/zones.js'
@@ -68,9 +68,8 @@ export default class DungeonPage extends Page{
       return this.redirectTo(new ResultsPage(this._dungeonRunID))
     }
 
-    getSocket()
-      .emit('join dungeon run room', this.dungeonRun._id)
-      .on('dungeon run update', this._socketUpdate)
+    joinSocketRoom(this.dungeonRun._id)
+    getSocket().on('dungeon run update', this._socketUpdate)
 
     this._adventurerPane.setAdventurer(this.adventurer)
     this._eventEl.setAdventurer(this.adventurer)
@@ -78,6 +77,7 @@ export default class DungeonPage extends Page{
   }
 
   async unload(){
+    leaveSocketRoom(this.dungeonRun._id)
     getSocket().off('dungeon run update', this._socketUpdate)
   }
 

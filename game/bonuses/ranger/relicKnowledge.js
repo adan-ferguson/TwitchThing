@@ -1,6 +1,6 @@
 export default {
   stats: {
-    relicQuality: '+20%'
+    relicSolveChance: '+20%'
   },
   rarity: 1
 }

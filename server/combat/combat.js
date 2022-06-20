@@ -32,11 +32,11 @@ export async function generateCombat(fighter1, fighter2, fighterStartState1 = {}
 }
 
 export async function finishCombatEvent(dungeonRun, combatEvent){
-  const combat = await Combats.findOne(combatEvent._id)
+  const combat = await Combats.findOne(combatEvent.combatID)
   const fighter = combat.fighter1.data._id.equals(dungeonRun.adventurer._id) ? combat.fighter1 : combat.fighter2
   const enemy = combat.fighter1.data._id.equals(dungeonRun.adventurer._id) ? combat.fighter2 : combat.fighter1
   const event = {
-    duration: 10000,
+    duration: 5000,
     adventurerState: fighter.endState
   }
   if(!fighter.endState.hp){

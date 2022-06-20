@@ -209,7 +209,7 @@ class DungeonRunInstance{
     if(event.combatID){
       this._addEvent(await finishCombatEvent(this, event))
     }else if(event.relic){
-      this._addEvent(continueRelicEvent(this, event))
+      this._addEvent(await continueRelicEvent(this, event))
     }
   }
 
@@ -242,6 +242,7 @@ class DungeonRunInstance{
       }
       this.doc.rewards = addRewards(this.doc.rewards, event.rewards)
     }
+    event.duration = Math.ceil(event.duration / ADVANCEMENT_INTERVAL) * ADVANCEMENT_INTERVAL
     this.doc.elapsedTime += event.duration
   }
 

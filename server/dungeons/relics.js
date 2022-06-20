@@ -10,7 +10,7 @@ const RELICS = {
   treasure: TreasureRelic
 }
 
-const RELIC_CHANCE = 0.2
+const RELIC_CHANCE = 0.25
 const VALUE_MULTIPLIER = 0.25
 
 const TIERS = [
@@ -54,7 +54,7 @@ export function generateRelicEvent(dungeonRun){
   const type = chooseOne(Object.keys(RELICS).map(relicType => {
     return { value: relicType, weight: RELICS[relicType].frequency(dungeonRun) }
   }))
-  const tier = selectTier(dungeonRun.adventurerInstance.stats.get('rareRelicChance').value)
+  const tier = selectTier(dungeonRun.adventurerInstance.stats.get('relicRareChance').value)
   return {
     relic: { type, tier },
     stayInRoom: true,
@@ -67,7 +67,7 @@ export async function continueRelicEvent(dungeonRun, previousEvent){
 
   const relic = previousEvent.relic
   const attemptNo = previousEvent.attempts + 1
-  const solveChance = TIERS[relic.tier] * dungeonRun.adventurerInstance.stats.get('relicSolveChance').value
+  const solveChance = TIERS[relic.tier].solveChance * dungeonRun.adventurerInstance.stats.get('relicSolveChance').value
   const trapChance = 0.08
   const giveUpChance = 0.08
   const advName = dungeonRun.adventurerInstance.name

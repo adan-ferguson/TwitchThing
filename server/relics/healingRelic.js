@@ -5,7 +5,9 @@ export default {
     const newState = { ...dungeonRun.adventurerInstance.adventurerState }
     const finalGain = Math.min(dungeonRun.adventurerInstance.hpMax - newState.hp, gain)
     newState.hp += finalGain
-    event.adventurerState = newState
-    event.message = `${dungeonRun.adventurerInstance.name} finds a healing relic and regains some health.`
+    return {
+      adventurerState: newState,
+      message: `${dungeonRun.adventurerInstance.name} finds a healing relic and regains some health.`
+    }
   }
 }

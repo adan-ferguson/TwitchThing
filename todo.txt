@@ -651,6 +651,8 @@ Bugs/UI Tweaks:
 
 - Loadout shouldn't show orbs if they're 0
 
+- Final event is wack
+
 TODO Later
 -----------
 - Resting

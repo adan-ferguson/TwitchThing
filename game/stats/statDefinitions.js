@@ -48,10 +48,10 @@ const defs = {
   physDef: {
     type: StatType.PERCENTAGE
   },
-  rareRelicChance: {
+  relicRareChance: {
     type: StatType.MULTIPLIER
   },
-  relicKnowledge: {
+  relicSolveChance: {
     type: StatType.MULTIPLIER
   },
   regen: {

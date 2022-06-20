@@ -21,7 +21,6 @@ export function setup(server, sessionMiddleware){
           const id = user._id.toString()
           socket.join(id)
           socket.emit('user connect', id)
-          log('User joined room', id)
         }
       })
     }else{
@@ -29,9 +28,16 @@ export function setup(server, sessionMiddleware){
       log('Anonymous user connected')
     }
 
-    socket.on('join dungeon run room', dungeonRunID => {
-      socket.join(dungeonRunID)
-      socket.emit('room joined', dungeonRunID)
+    socket.on('joinroom', roomID => {
+      socket.join(roomID)
+      socket.emit('room joined', roomID)
+      log('User joined room', roomID)
+    })
+
+    socket.on('leaveroom', roomID => {
+      socket.join(roomID)
+      socket.emit('room left', roomID)
+      log('User left room', roomID)
     })
   })
 }

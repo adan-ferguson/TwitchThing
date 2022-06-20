@@ -85,9 +85,9 @@ const statDefinitionsInfo = {
     description: 'Increases XP gained by adventurer.',
     scope: StatsDisplayScope.ALL
   },
-  relicFind: {
-    text: 'Relic Find Chance',
-    description: 'Increased chance to find relics. Relics get more powerful but are harder to find the deeper you go.',
+  relicSolveChance: {
+    text: 'Relic Solve Chance',
+    description: 'Increased chance to solve relic puzzles. Rarer relics are harder to solve.',
     scope: StatsDisplayScope.EXPLORING
   }
 }

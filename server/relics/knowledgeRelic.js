@@ -1,25 +1,21 @@
-const TIERS = {
-  simple: {
+const TIERS = [
+  {
     multiplier: 30,
     message: advName => `${advName} learns some things from the relic.`
-  },
-  intricate: {
+  },{
     multiplier: 70,
     message: advName => `${advName} painstakingly translates the relic's rune and learns a lot.`
-  },
-  complex: {
+  },{
     multiplier: 180,
     message: advName => `${advName} painstakingly translates the relic's rune and learns a lot.`
-  },
-  perplexing: {
+  },{
     multiplier: 1000,
     message: advName => `${advName} figures out the message left from, I don't know, some ancient civilization or something.`
-  },
-  impossible: {
+  },{
     multiplier: 12000,
     message: advName => `The knowledge of the gods is imparted to ${advName} after they solve an impossible puzzle.`
   }
-}
+]
 
 export default {
   frequency: () => 50,

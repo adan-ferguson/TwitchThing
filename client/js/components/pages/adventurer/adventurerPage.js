@@ -76,7 +76,7 @@ export default class AdventurerPage extends Page{
     }else{
       this._topRightButton.innerHTML = '<div>Enter Dungeon<div/>'
       this._topRightButton.addEventListener('click', () => {
-        if(this.adventurer.accomplishments.deepestFloor > 1){
+        if(this.user.features.dungeonPicker){
           this.redirectTo(new DungeonPickerPage(this.adventurerID))
         }else{
           this._quickEnterDungeon()
