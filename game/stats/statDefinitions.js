@@ -33,6 +33,9 @@ const defs = {
   hpMax: {
     type: StatType.MULTIPLIER
   },
+  landmarkFind: {
+    type: StatType.MULTIPLIER
+  },
   lifesteal: {
     minValue: 0
   },
@@ -59,7 +62,7 @@ const defs = {
   },
   speed: {
     type: StatType.MULTIPLIER
-  }
+  },
 }
 
 for(let key in defs){

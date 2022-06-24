@@ -3,10 +3,15 @@ import DungeonPage from '../dungeon/dungeonPage.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import DIForm from '../../form.js'
 import fizzetch from '../../../fizzetch.js'
-import zones from '../../../../../game/zones.js'
 
 const HTML = `
-<div class="content-well stuff fill-contents"></div>
+<div class="content-columns">
+  <div class="content-well floor-picker fill-contents">
+    <di-slider></di-slider>
+  </div>
+  <div class="content-well">
+  </div>
+</div>
 `
 
 export default class DungeonPickerPage extends Page{
@@ -18,12 +23,13 @@ export default class DungeonPickerPage extends Page{
     this.adventurerID = adventurerID
     this.innerHTML = HTML
     this.classList.add('flex-no-grow')
-
+    this.floorSlider = this.querySelector('di-slider')
     this.form = new DIForm({
       async: true,
       action: `/game/adventurer/${this.adventurerID}/enterdungeon`,
       submitText: 'Go!',
-      success: ({ dungeonRun }) => this.redirectTo(new DungeonPage(dungeonRun._id))
+      success: ({ dungeonRun }) => this.redirectTo(new DungeonPage(dungeonRun._id)),
+      extraData: () => ({ startingFloor: this.floorSlider.value })
     })
 
     this.querySelector('.stuff').appendChild(this.form)
@@ -45,13 +51,8 @@ export default class DungeonPickerPage extends Page{
     }
 
     this.adventurer = adventurer
-    const slider = this.form.addInput({
-      label: 'Select starting floor',
-      name: 'startingFloor',
-      type: 'range',
-      min: 1,
-      max: this.user.accomplishments.deepestFloor,
-      value: adventurer.accomplishments.deepestFloor
+    this.floorSlider.setOptions({
+      max: adventurer.accomplishments.deepestFloor
     })
   }
 }

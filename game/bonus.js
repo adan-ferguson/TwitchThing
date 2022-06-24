@@ -11,11 +11,8 @@ export function getBonusDef({ group, name }){
 
 export function getBonusOrbsData(bonusDef){
   bonusDef = getBonusDef(bonusDef)
-  const orbs = bonusDef.orbs || {}
-  if(!orbs[bonusDef.group]){
-    orbs[bonusDef.group] = 0
-  }
-  orbs[bonusDef.group]++
+  const orbs = {}
+  orbs[bonusDef.group] = bonusDef.orbs || 1
   return new OrbsData(orbs)
 }
 

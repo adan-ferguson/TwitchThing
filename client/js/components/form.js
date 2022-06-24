@@ -60,32 +60,35 @@ export default class DIForm extends HTMLFormElement{
     const data = new FormData(this)
     const obj = {}
     Array.from(data.entries()).forEach(([key, val]) => obj[key] = val)
-    return { ...obj, ...this.options.extraData }
+
+    let extra = this.options.extraData
+    extra = typeof extra === 'function' ? extra() : extra
+    extra = extra ? extra : {}
+
+    return { ...obj, extra }
   }
 
-  addInput(options){
+  addInput(options, label = null){
 
-    options = {
-      label: '',
-      ...options
+    const input = document.createElement('input')
+    for (let key in options){
+      input.setAttribute(key, options[key])
     }
 
-    const label = document.createElement('label')
-    if(options.label){
+    this._addInput(input, label)
+  }
+
+  _addInput(inputEl, label = null){
+
+    const labelEl = document.createElement('label')
+    if(label){
       const span = document.createElement('span')
-      span.textContent = options.label
+      span.textContent = label
       label.appendChild(span)
     }
 
-    const input = document.createElement('input')
-    for(let key in options){
-      input.setAttribute(key, options[key])
-    }
-    label.appendChild(input)
-
+    label.appendChild(inputEl)
     this._inputs.appendChild(label)
-
-    return input
   }
 
   addSelect(options){

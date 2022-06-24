@@ -1,6 +1,6 @@
 export default {
   stats: {
-    relicFind: '+10%'
+    landmarkFind: '+10%'
   },
   orbs: 1
 }

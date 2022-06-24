@@ -1,12 +1,13 @@
-const ZONES = [
-  'Caves',
-  'Crypt'
-]
+const Zones = [{
+  name: 'Caves'
+},{
+  name: 'Crypt'
+}]
 
-export default ZONES
+export default Zones
 
 export function floorToZoneName(floor){
-  return ZONES[floorToZone(floor)]
+  return Zones[floorToZone(floor)].name
 }
 
 export function floorToZone(floor){

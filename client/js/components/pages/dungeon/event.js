@@ -45,6 +45,7 @@ export default class Event extends HTMLElement{
       this._message.textContent = dungeonEvent.message
       this._addRewards(dungeonEvent.rewards)
     })
+    // TODO: relics show something if they're attempting to interpret a relic
     this._updateTimeBar(currentTime - dungeonEvent.startTime, dungeonEvent.duration)
   }
 
