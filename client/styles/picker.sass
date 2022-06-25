@@ -1,56 +1,59 @@
 di-dungeon-picker-page
+  di-floor-slider
+    .floor-picker
+      flex: 0 0 350rem !important
+      width: 350rem
+      overflow-y: auto
 
-  .floor-picker
-    flex: 0 0 350rem !important
-    width: 350rem
-    overflow-y: auto
+      .zone
+        position: relative
 
-    .zone
-      position: relative
-
-      .slider-floors
-        width: 100%
-
-        .floor
+        .slider-floors
           width: 100%
-          color: #888
-          font-size: 1em
-          height: 20rem
-          align-items: center
-          cursor: pointer
 
-          .floor-number
-            visibility: hidden
-
-          .notch
-            stroke: currentColor
-            fill: currentColor
+          .floor
+            width: 100%
+            color: #888
+            font-size: 1em
             height: 20rem
-
-          &:hover
-            color: #12c712
-            background-color: #d7f3d7
+            align-items: center
+            cursor: pointer
 
             .floor-number
-              visibility: visible
+              visibility: hidden
 
-          &.selected
-            color: #4285F4
-            background-color: #dfeaff
+              &.always-show
+                visibility: visible
 
-            .floor-number
-              visibility: visible
+            .notch
+              stroke: currentColor
+              fill: currentColor
+              height: 20rem
 
-      .zone-name
-        position: absolute
-        top: 0
-        left: 40rem
-        right: 0
-        bottom: 0
-        font-size: 1.5em
-        display: flex
-        justify-content: center
-        align-items: center
-        flex-grow: 1
-        pointer-events: none
-        text-align: center
+            &:hover
+              color: #12c712
+              background-color: #d7f3d7
+
+              .floor-number
+                visibility: visible
+
+            &.selected
+              color: #4285F4
+              background-color: #dfeaff
+
+              .floor-number
+                visibility: visible
+
+        .zone-name
+          position: absolute
+          top: 0
+          left: 40rem
+          right: 0
+          bottom: 0
+          font-size: 1.5em
+          display: flex
+          justify-content: center
+          align-items: center
+          flex-grow: 1
+          pointer-events: none
+          text-align: center

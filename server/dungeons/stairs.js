@@ -1,6 +1,6 @@
 import scaledValue from '../../game/scaledValue.js'
 
-const SIZE_BASE = 12
+const SIZE_BASE = 10
 const SCALE_PER_FLOOR = 0.08
 const SCALE_PER_ZONE = 0.25
 
@@ -15,8 +15,13 @@ export function foundStairs(floor, room){
   if(room <= 2){
     return false
   }
-  const size = floorSize(floor, SIZE_BASE, SCALE_PER_FLOOR, SCALE_PER_ZONE, FINAL_FLOOR_BONUS)
-  const stairsChance = 1 / Math.max(1, size - room + 1)
+  let size = floorSize(floor, SIZE_BASE, SCALE_PER_FLOOR, SCALE_PER_ZONE, FINAL_FLOOR_BONUS)
+  size = size % 2 ? size : size + 1
+  const diff = room - size / 2
+  if(diff <= 0){
+    return false
+  }
+  const stairsChance = 1 / Math.max(1, size - diff + 1)
   return Math.random() < stairsChance
 }
 

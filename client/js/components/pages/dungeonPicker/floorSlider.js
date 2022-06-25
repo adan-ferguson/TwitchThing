@@ -21,7 +21,7 @@ const NOTCH_SVG = type => `
 
 const FLOOR_HTML = (floor, notchType) => `
 ${NOTCH_SVG(notchType)}
-<span class="floor-number">${floor}</span>
+<span class="floor-number${floor % 10 === 1 ? ' always-show' : ''}">${floor}</span>
 `
 
 export default class FloorSlider extends HTMLElement{

@@ -65,7 +65,7 @@ export default class DIForm extends HTMLFormElement{
     extra = typeof extra === 'function' ? extra() : extra
     extra = extra ? extra : {}
 
-    return { ...obj, extra }
+    return { ...obj, ...extra }
   }
 
   addInput(options, label = null){
