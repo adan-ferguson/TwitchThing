@@ -1,7 +1,15 @@
 const Zones = [{
-  name: 'Caves'
+  name: 'Caves',
+  color: '#fff0e9'
 },{
-  name: 'Crypt'
+  name: 'Crypt',
+  color: '#eeecec'
+},{
+  name: 'Swamp',
+  color: '#f1f5e8'
+},{
+  name: 'Something Else',
+  color: '#effaf8'
 }]
 
 export default Zones

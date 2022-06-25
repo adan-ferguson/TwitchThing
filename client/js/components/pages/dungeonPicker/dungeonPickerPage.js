@@ -6,33 +6,31 @@ import fizzetch from '../../../fizzetch.js'
 
 const HTML = `
 <div class="content-columns">
-  <div class="content-well floor-picker fill-contents">
-    <di-slider></di-slider>
-  </div>
-  <div class="content-well">
-  </div>
+    <div class="content-well floor-picker fill-contents">
+        <di-floor-slider></di-floor-slider>
+    </div>
+    <div class="content-well stuff">
+    </div>
 </div>
 `
 
 export default class DungeonPickerPage extends Page{
 
-  form
+  _formEl
 
   constructor(adventurerID){
     super()
     this.adventurerID = adventurerID
     this.innerHTML = HTML
-    this.classList.add('flex-no-grow')
-    this.floorSlider = this.querySelector('di-slider')
-    this.form = new DIForm({
+    this.floorSlider = this.querySelector('di-floor-slider')
+    this._formEl = new DIForm({
       async: true,
       action: `/game/adventurer/${this.adventurerID}/enterdungeon`,
       submitText: 'Go!',
       success: ({ dungeonRun }) => this.redirectTo(new DungeonPage(dungeonRun._id)),
       extraData: () => ({ startingFloor: this.floorSlider.value })
     })
-
-    this.querySelector('.stuff').appendChild(this.form)
+    this.querySelector('.stuff').appendChild(this._formEl)
   }
 
   get titleText(){
