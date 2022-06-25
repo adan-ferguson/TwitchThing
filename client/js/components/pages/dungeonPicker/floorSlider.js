@@ -14,8 +14,8 @@ const ZONE_HTML = name => `
 
 const NOTCH_SVG = type => `
 <svg class="notch" viewBox='0 0 20 20'>
-    <ellipse cx="10" cy="10" rx="3" ry="3" stroke-width="0"/>
-    <line stroke-width="2" x1="10" x2="10" y1="${type === 'first' ? 10: 0}" y2="${type === 'last' ? 10 : 20}"/>
+    <ellipse cx="10" cy="10" rx="2" ry="2" stroke-width="0"/>
+    <line stroke-width="1" x1="10" x2="10" y1="${type === 'first' ? 10: 0}" y2="${type === 'last' ? 10 : 20}"/>
 </svg>
 `
 
@@ -38,6 +38,27 @@ export default class FloorSlider extends HTMLElement{
     super()
     this.innerHTML = HTML
     this._entriesEl = this.querySelector('.slider-entries')
+
+    this.addEventListener('pointerdown', e => {
+      this.setPointerCapture(e.pointerId)
+      const floor = e.target.closest('.floor')
+      if(floor && !floor.classList.contains('selected')){
+        this._selectFloor(floor)
+      }
+    })
+
+    this.addEventListener('pointerup', e => {
+      this.releasePointerCapture(e.pointerId)
+    })
+
+    this.addEventListener('pointermove', e => {
+      if(this.hasPointerCapture(e.pointerId)){
+        const floor = document.elementFromPoint(e.clientX, e.clientY)?.closest('.floor')
+        if(floor && !floor.classList.contains('selected')){
+          this._selectFloor(floor)
+        }
+      }
+    })
   }
 
   get value(){
@@ -51,12 +72,12 @@ export default class FloorSlider extends HTMLElement{
 
   _update(){
     this._entriesEl.innerHTML = ''
-    const max = 40 //this._options.max
+    const max = this._options.max
     const zones = 1 + Math.floor((max - 1) / 10)
     for(let i = 0; i < zones; i++){
       this._entriesEl.appendChild(this._makeZone(i, max))
     }
-    this._selectFloor(max)
+    this._selectFloor(this._floorEls.at(-1))
   }
 
   _makeZone(zoneIndex, maxFloor){
@@ -80,17 +101,14 @@ export default class FloorSlider extends HTMLElement{
     return zoneEl
   }
 
-  _selectFloor(val){
-    if(!this._floorEls[val]){
-      return
-    }
+  _selectFloor(floorEl){
     if(this._selectedFloorEl){
       this._selectedFloorEl.classList.remove('selected')
     }
-    this._selectedFloorEl = this._floorEls[val]
-    this._selectedFloorEl.classList.add('selected')
+    this._selectedFloorEl = floorEl
+    floorEl.classList.add('selected')
     requestAnimationFrame(() => {
-      this._selectedFloorEl.scrollIntoView()
+      floorEl.scrollIntoView()
     })
   }
 }
