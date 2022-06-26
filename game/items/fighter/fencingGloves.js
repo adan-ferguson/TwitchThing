@@ -1,6 +1,6 @@
 export default {
   stats: {
-    physDef: '+5%'
+    critChance: '+20%'
   },
-  orbs: 1
+  orbs: 2
 }

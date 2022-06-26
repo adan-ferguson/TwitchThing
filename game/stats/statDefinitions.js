@@ -7,7 +7,7 @@ export const StatType = {
 const DEFAULT_DEFINITION = {
   type: StatType.FLAT,
   minValue: null,           // derived from type if null
-  maxValue: null,           // derived from type if null
+  maxValue: null,           // derived from type if nul
   defaultValue: null,       // derived from type if null
   roundingDecimals: 3,
   inverted: false           // If inverted, lower = better & higher = worse

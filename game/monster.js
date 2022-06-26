@@ -2,29 +2,30 @@ import scaledValue from './scaledValue.js'
 import Stats from './stats/stats.js'
 import OrbsData from './orbsData.js'
 
+const REWARD_MULTIPLIER = 0.2
 const POWER_MULTIPLIER = 0.25
 
 const HP_BASE = 40
 const XP_BASE = 50
 const POWER_BASE = 10
 
-export function getScalingValue(lvl){
+export function getScalingValue(lvl, multiplier){
   lvl = lvl - 1
   const zones = Math.floor(lvl / 10)
   const iterations = lvl + zones
-  return scaledValue(POWER_MULTIPLIER, iterations)
+  return scaledValue(multiplier, iterations)
 }
 
 export function levelToXpReward(lvl){
-  return Math.ceil(getScalingValue(lvl) * XP_BASE)
+  return Math.ceil(getScalingValue(lvl, REWARD_MULTIPLIER) * XP_BASE)
 }
 
 export function monsterLevelToHp(lvl){
-  return Math.ceil(getScalingValue(lvl) * HP_BASE)
+  return Math.ceil(getScalingValue(lvl, POWER_MULTIPLIER) * HP_BASE)
 }
 
 export function monsterLevelToPower(lvl){
-  return Math.ceil(getScalingValue(lvl) * POWER_BASE)
+  return Math.ceil(getScalingValue(lvl, POWER_MULTIPLIER) * POWER_BASE)
 }
 
 /**

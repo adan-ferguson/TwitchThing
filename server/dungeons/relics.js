@@ -11,7 +11,7 @@ const RELICS = {
 }
 
 const RELIC_CHANCE = 0.25
-const VALUE_MULTIPLIER = 0.25
+const VALUE_MULTIPLIER = 0.2
 
 const TIERS = [
   {
