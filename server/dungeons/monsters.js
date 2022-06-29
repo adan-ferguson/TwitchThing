@@ -25,10 +25,21 @@ const monstersByFloor = {
   17: Monsters.crypt.lich,
   18: Monsters.crypt.vampire,
   19: Monsters.crypt.abomination,
-  20: Monsters.crypt.boneDragon
+  20: Monsters.crypt.boneDragon,
+  // Swamp
+  21: Monsters.swamp.lizardPerson,
+  22: Monsters.swamp.toad,
+  23: Monsters.swamp.gator,
+  24: Monsters.swamp.naga,
+  25: Monsters.swamp.troll,
+  26: Monsters.swamp.biteyPlant,
+  27: Monsters.swamp.witch,
+  28: Monsters.swamp.basilisk,
+  29: Monsters.swamp.thing,
+  30: Monsters.swamp.hydra,
 }
 
-const CHEST_DROP_CHANCE = 0.05
+const CHEST_DROP_CHANCE = 0.1
 const MONSTER_CHANCE = 0.4
 const MONSTER_ROOM_BUFFER = 2
 

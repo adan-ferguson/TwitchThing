@@ -20,3 +20,8 @@ export function getBonusStats(bonusDef){
   bonusDef = getBonusDef(bonusDef)
   return new Stats(bonusDef.stats)
 }
+
+export function getBonusMods(bonusDef){
+  bonusDef = getBonusDef(bonusDef)
+  return bonusDef.mods || []
+}

@@ -1,5 +1,7 @@
-import { getAdventurerStats, adventurerLevelToHp, adventurerLevelToPower } from '../adventurer.js'
-import { getMonsterStats, monsterLevelToHp, monsterLevelToPower } from '../monster.js'
+import { getAdventurerStats, adventurerLevelToHp, adventurerLevelToPower, getAdventurerMods } from '../adventurer.js'
+import { getMonsterMods, getMonsterStats, monsterLevelToHp, monsterLevelToPower } from '../monster.js'
+
+import Mods from '../mods/combined.js'
 
 const STATE_DEFAULTS = {
   timeSinceLastAction: 0
@@ -47,6 +49,14 @@ export default class FighterInstance{
     }
   }
 
+  get mods(){
+    if(this.fighterType === 'adventurer'){
+      return getAdventurerMods(this.baseFighter, this.currentState)
+    }else{
+      return getMonsterMods(this.baseFighter, this.currentState)
+    }
+  }
+
   get currentState(){
     return { ...this._currentState }
   }
@@ -83,7 +93,8 @@ export default class FighterInstance{
 
     let baseDamage = Math.ceil(this.basePower * this.stats.get('physPower').value)
     const damageResult = this._dealDamage(baseDamage, enemy, {
-      basicAttack: true
+      basicAttack: true,
+      type: this.mods.contains({ name: 'magicAttack' }) ? 'magic' : 'phys'
     })
     this._currentState.timeSinceLastAction = 0
 

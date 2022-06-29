@@ -2,8 +2,9 @@ import Stats from './stats/stats.js'
 import LevelCalculator from './levelCalculator.js'
 import scaledValue from './scaledValue.js'
 import OrbsData from './orbsData.js'
-import { getItemOrbs, getItemStats } from './item.js'
-import { getBonusStats } from './bonus.js'
+import { getItemMods, getItemOrbs, getItemStats } from './item.js'
+import { getBonusMods, getBonusStats } from './bonus.js'
+import ModsCollection from './modsCollection.js'
 
 const LEVEL_2_XP = 100
 const XP_MULTIPLIER = 0.4
@@ -48,6 +49,19 @@ export function getAdventurerStats(adventurer, state = null){
     ...bonusStatAffectors,
     ...loadoutStatAffectors
   ], stateAffectors)
+}
+
+/**
+ * @param adventurer
+ * @param state
+ */
+export function getAdventurerMods(adventurer, state = null){
+
+  const bonusMods = adventurer.bonuses.map(bonus => getBonusMods(bonus))
+  const loadoutMods = adventurer.items.filter(itemDef => itemDef)
+    .map(itemDef => getItemMods(itemDef))
+  const stateMods = []
+  return new ModsCollection(...bonusMods, ...loadoutMods, ...stateMods)
 }
 
 export function getAdventurerOrbsData(adventurer){

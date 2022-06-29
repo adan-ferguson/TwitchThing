@@ -1,6 +1,5 @@
 import Items from './items/combined.js'
 import { toDisplayName } from './utilFunctions.js'
-import OrbsData from './orbsData.js'
 
 export function getBaseItemType(itemDef){
   return Items[itemDef.baseType.group][itemDef.baseType.name]
@@ -18,4 +17,8 @@ export function getItemStats(itemDef){
 export function getItemOrbs(itemDef){
   const baseType = getBaseItemType(itemDef)
   return { [baseType.group]: baseType.orbs }
+}
+
+export function getItemMods(itemDef){
+  return getBaseItemType(itemDef).mods || []
 }

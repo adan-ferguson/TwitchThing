@@ -1,6 +1,9 @@
 import scaledValue from './scaledValue.js'
 import Stats from './stats/stats.js'
 import OrbsData from './orbsData.js'
+import { getBonusMods } from './bonus.js'
+import { getItemMods } from './item.js'
+import ModsCollection from './modsCollection.js'
 
 const REWARD_MULTIPLIER = 0.2
 const POWER_MULTIPLIER = 0.25
@@ -34,12 +37,24 @@ export function monsterLevelToPower(lvl){
  * @returns {Stats}
  */
 export function getMonsterStats(monster, state = null){
-  const loadoutStatAffectors = (monster.mods || [])
+  const loadoutStatAffectors = (monster.abilities || [])
     .map(modDef => modDef?.stats)
     .filter(s => s)
   // TODO: extraz
   const stateAffectors = null
   return new Stats(loadoutStatAffectors, stateAffectors)
+}
+
+/**
+ * @param monster
+ * @param state
+ */
+export function getMonsterMods(monster, state = null){
+  const loadoutMods = (monster.abilities || [])
+    .map(modDef => modDef?.mods)
+    .filter(m => m)
+  const stateMods = []
+  return new ModsCollection(...loadoutMods, ...stateMods)
 }
 
 export function getMonsterOrbsData(monster){

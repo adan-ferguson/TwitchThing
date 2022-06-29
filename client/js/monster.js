@@ -5,7 +5,7 @@ export function monsterLoadoutContents(monster){
     getOrbsData: loadoutItems => {
       return getMonsterOrbsData({ ...monster, mods: loadoutItems.map(li => li?.obj) })
     },
-    loadoutItems: monster.mods.map(modDef => {
+    loadoutItems: monster.abilities.map(modDef => {
       if(!modDef){
         return null
       }

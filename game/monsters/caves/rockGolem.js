@@ -1,5 +1,5 @@
 export default {
-  mods: [
+  abilities: [
     {
       name: 'Big Goon',
       description: 'Big and slow and is made of rock.',

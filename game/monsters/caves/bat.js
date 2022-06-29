@@ -1,5 +1,5 @@
 export default {
-  mods: [
+  abilities: [
     {
       name: 'Fluttering',
       description: 'It\'s juking and/or jiving! It would have dodge chance if that existed.',

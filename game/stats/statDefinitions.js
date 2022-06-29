@@ -21,8 +21,8 @@ const defs = {
     type: StatType.MULTIPLIER
   },
   critChance: {
-    type: StatType.FLAT,
-    minValue: 0
+    minValue: 0,
+    maxValue: 1
   },
   critDamage: {
     type: StatType.MULTIPLIER
@@ -57,9 +57,7 @@ const defs = {
   relicSolveChance: {
     type: StatType.MULTIPLIER
   },
-  regen: {
-    type: StatType.FLAT
-  },
+  regen: {},
   speed: {
     type: StatType.MULTIPLIER
   },

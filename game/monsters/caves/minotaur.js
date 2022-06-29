@@ -1,5 +1,5 @@
 export default {
-  mods: [
+  abilities: [
     {
       name: 'Boss Monster',
       description: 'Hardest monster type in the zone, so it gets a bunch of extra stats and stuff.',

@@ -1,5 +1,6 @@
 export default {
   stats: {
+    regen: '2%'
   },
-  orbs: 3
+  orbs: 2
 }
