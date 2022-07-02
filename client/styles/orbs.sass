@@ -1,9 +1,28 @@
 di-orb-row
-  height: 20rem
   display: flex
   align-items: center
   font-size: 1.2em
-  justify-content: center
+
+  &.loadout-orb-row
+    justify-content: space-around
+    margin-bottom: 5rem
+
+    di-orb-entry
+      position: relative
+      justify-content: center
+      flex-grow: 1
+      z-index: -1
+      padding: 5rem 0
+
+      &:before
+        content: ''
+        position: absolute
+        left: 0
+        right: 0
+        top: 0
+        bottom: 0
+        opacity: 0.15
+        background-color: currentColor
 
   di-orb-entry
     display: flex

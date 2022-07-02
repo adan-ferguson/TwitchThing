@@ -22,6 +22,7 @@ const NOTCH_SVG = type => `
 const FLOOR_HTML = (floor, notchType) => `
 ${NOTCH_SVG(notchType)}
 <span class="floor-number${floor % 10 === 1 ? ' always-show' : ''}">${floor}</span>
+<span class="start-here"><-- Start Here</span>
 `
 
 export default class FloorSlider extends HTMLElement{
@@ -88,13 +89,17 @@ export default class FloorSlider extends HTMLElement{
     zoneEl.style.backgroundColor = zone.color
 
     const floors = zoneEl.querySelector('.slider-floors')
-    for(let i = zoneIndex * 10 + 1; i <= Math.min(maxFloor, 10 * (zoneIndex + 1)); i++){
+    for(let i = zoneIndex * 10 + 1; i <= 10 * (zoneIndex + 1); i++){
       const floor = document.createElement('div')
+      const selectable = i <= maxFloor
       const notchType = i === 1 ? 'first' : (i === maxFloor ? 'last' : 'middle')
+      floor.classList.toggle('not-selectable', !selectable)
       floor.classList.add('floor', 'flex-columns')
       floor.innerHTML = FLOOR_HTML(i, notchType)
       floor.floorIndex = i
-      this._floorEls[i] = floor
+      if(selectable){
+        this._floorEls[i] = floor
+      }
       floors.appendChild(floor)
     }
 

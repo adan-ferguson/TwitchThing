@@ -227,6 +227,8 @@ class DungeonRunInstance{
       duration: ADVANCEMENT_INTERVAL,
       ...event
     }
+    // Make it a multiple of the advancement interval
+    nextEvent.duration = Math.ceil(-0.01 + nextEvent.duration / ADVANCEMENT_INTERVAL) * ADVANCEMENT_INTERVAL
     this.doc.room = nextEvent.room
     this.doc.floor = nextEvent.floor
     this.doc.events.push(nextEvent)

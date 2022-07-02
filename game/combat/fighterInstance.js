@@ -1,8 +1,6 @@
 import { getAdventurerStats, adventurerLevelToHp, adventurerLevelToPower, getAdventurerMods } from '../adventurer.js'
 import { getMonsterMods, getMonsterStats, monsterLevelToHp, monsterLevelToPower } from '../monster.js'
 
-import Mods from '../mods/combined.js'
-
 const STATE_DEFAULTS = {
   timeSinceLastAction: 0
 }

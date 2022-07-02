@@ -65,6 +65,7 @@ class OrbEntry extends HTMLElement{
     }
 
     const classInfo = classDisplayInfo(orbDatum.className)
+    this.style.color = classInfo.color
     this.innerHTML = ORB_ENTRY_HTML(classInfo.orbIcon || defaultOrbImg, text)
     tippy(this, {
       theme: 'light',

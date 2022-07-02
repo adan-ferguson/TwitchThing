@@ -11,8 +11,8 @@ const HTML = `
 export default class DIForm extends HTMLFormElement{
 
   _inputs
-  _submitButton
   _errorMessage
+  submitButton
 
   constructor(options){
     super()
@@ -21,8 +21,8 @@ export default class DIForm extends HTMLFormElement{
 
     this.innerHTML = HTML
     this._inputs = this.querySelector('.inputs')
-    this._submitButton = this.querySelector('button')
-    this._submitButton.textContent = options.submitText
+    this.submitButton = this.querySelector('button')
+    this.submitButton.textContent = options.submitText
     this._errorMessage = this.querySelector('.error-message')
 
     options = {
@@ -84,11 +84,11 @@ export default class DIForm extends HTMLFormElement{
     if(label){
       const span = document.createElement('span')
       span.textContent = label
-      label.appendChild(span)
+      labelEl.appendChild(span)
     }
 
-    label.appendChild(inputEl)
-    this._inputs.appendChild(label)
+    labelEl.appendChild(inputEl)
+    this._inputs.appendChild(labelEl)
   }
 
   addSelect(options){
@@ -128,13 +128,13 @@ export default class DIForm extends HTMLFormElement{
 
   _loading(){
     this._errorMessage.classList.add('hidden')
-    this._submitButton.disabled = true
-    this._submitButton.innerHTML = '<span class="spin-effect">DI</span>'
+    this.submitButton.disabled = true
+    this.submitButton.innerHTML = '<span class="spin-effect">DI</span>'
   }
 
   _loadingFinished(){
-    this._submitButton.disabled = false
-    this._submitButton.textContent = this.options.submitText
+    this.submitButton.disabled = false
+    this.submitButton.textContent = this.options.submitText
   }
 }
 

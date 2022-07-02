@@ -74,20 +74,55 @@ const statDefinitionsInfo = {
     description: '',
     scope: StatsDisplayScope.COMBAT
   },
+  critChance: {
+    text: 'Critical Strike Chance',
+    description: 'Chance to deal bonus damage.',
+    scope: StatsDisplayScope.COMBAT
+  },
+  critDamage: {
+    text: 'Critical Strike Damage',
+    description: 'Bonus damage from critical strikes.',
+    displayedValueFn: (value, { style }) => {
+      if(style === StatsDisplayStyle.CUMULATIVE){
+        return `${Math.round(value * 100)}%`
+      }
+    },
+    scope: StatsDisplayScope.COMBAT
+  },
+  dodgeChance: {
+    text: 'Dodge Chance',
+    description: 'Chance to dodge attacks.',
+    scope: StatsDisplayScope.COMBAT
+  },
   lifesteal: {
     text: 'Lifesteal',
     valueFormat: value => `${Math.floor(value)}%`,
     description: 'Gain health when dealing physical damage.',
     scope: StatsDisplayScope.COMBAT
   },
-  xpGain: {
-    text: 'XP Gain',
-    description: 'Increases XP gained by adventurer.',
+  combatXP: {
+    text: 'Combat XP Gain',
+    description: 'Increases XP gained from combat.',
     scope: StatsDisplayScope.ALL
   },
   relicSolveChance: {
     text: 'Relic Solve Chance',
     description: 'Increased chance to solve relic puzzles. Rarer relics are harder to solve.',
+    scope: StatsDisplayScope.EXPLORING
+  },
+  relicRareChance: {
+    text: 'Increased Relic Rarity',
+    valueFormat: value => `${Math.floor(value)}%`,
+    description: 'Chance to find high quality relics.'
+  },
+  regen: {
+    text: 'Health Regeneration',
+    valueFormat: value => `${Math.floor(value)}%`,
+    description: 'Heal this much health every 5 seconds'
+  },
+  chestFind: {
+    text: 'Chest Find',
+    description: 'Increased chance to find treasure chests from combat rewards or from treasure relics.',
     scope: StatsDisplayScope.EXPLORING
   }
 }

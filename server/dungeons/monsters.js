@@ -28,11 +28,11 @@ const monstersByFloor = {
   20: Monsters.crypt.boneDragon,
   // Swamp
   21: Monsters.swamp.lizardPerson,
-  22: Monsters.swamp.toad,
   23: Monsters.swamp.gator,
+  22: Monsters.swamp.toad,
   24: Monsters.swamp.naga,
-  25: Monsters.swamp.troll,
   26: Monsters.swamp.biteyPlant,
+  25: Monsters.swamp.troll,
   27: Monsters.swamp.witch,
   28: Monsters.swamp.basilisk,
   29: Monsters.swamp.thing,

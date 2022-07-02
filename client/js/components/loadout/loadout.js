@@ -4,7 +4,7 @@ import { OrbsDisplayStyle } from '../orbRow.js'
 
 const HTML = `
 <div class="flex-rows">
-  <di-orb-row></di-orb-row>
+  <di-orb-row class="loadout-orb-row"></di-orb-row>
   <di-list></di-list>
 </div>
 `

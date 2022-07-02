@@ -1,8 +1,7 @@
 di-dungeon-picker-page
-  di-floor-slider
-    .floor-picker
+  .floor-picker
+    di-floor-slider
       flex: 0 0 350rem !important
-      width: 350rem
       overflow-y: auto
 
       .zone
@@ -18,9 +17,12 @@ di-dungeon-picker-page
             height: 20rem
             align-items: center
             cursor: pointer
+            font-weight: bold
 
-            .floor-number
+            .start-here
               visibility: hidden
+              font-weight: normal
+              padding-left: 5rem
 
               &.always-show
                 visibility: visible
@@ -34,15 +36,20 @@ di-dungeon-picker-page
               color: #12c712
               background-color: #d7f3d7
 
-              .floor-number
-                visibility: visible
-
             &.selected
               color: #4285F4
               background-color: #dfeaff
 
-              .floor-number
+              .start-here
                 visibility: visible
+
+            &.not-selectable
+              pointer-events: none
+              color: #CCCCCC
+              font-weight: normal
+
+              .notch
+                visibility: hidden
 
         .zone-name
           position: absolute

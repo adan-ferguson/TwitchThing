@@ -1,6 +1,7 @@
 import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 import { adventurerLoadoutContents } from '../../../adventurer.js'
 import { StatsDisplayScope } from '../../../statsDisplayInfo.js'
+import { OrbsDisplayStyle } from '../../orbRow.js'
 
 const HTML = `
 <div class="flex-grow">
@@ -21,6 +22,9 @@ export default class AdventurerPane extends HTMLElement{
     this.innerHTML = HTML
     this.hpBar = this.querySelector('di-hp-bar')
     this.loadout = this.querySelector('di-loadout')
+    this.loadout.setOptions({
+      orbsDisplayStyle: OrbsDisplayStyle.SHOW_MAX
+    })
     this.statsbox = this.querySelector('.stats-box')
     this.statsList = this.querySelector('di-stats-list')
     this.statsList.setOptions({
