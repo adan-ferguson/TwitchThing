@@ -42,8 +42,12 @@ export default class FighterPane extends HTMLElement{
     return this.fighter?.items ? true : false
   }
 
+  /**
+   * @param fighter {object} Value from fighter1 or fighter2 field in combat document
+   */
   setFighter(fighter){
-    this.fighter = fighter
+    this.fighter = fighter.data
+    this.fighterId = fighter.id
     this.querySelector('.name').textContent = fighter.displayname || toDisplayName(fighter.name)
     if(this.isAdventurer){
       this.loadout.setContents(adventurerLoadoutContents(this.fighter))
@@ -58,7 +62,7 @@ export default class FighterPane extends HTMLElement{
       return
     }
 
-    this.fighterInstance = new FighterInstance(this.fighter, state)
+    this.fighterInstance = new FighterInstance(this.fighter, state, this.fighterId)
     this._update(animate)
   }
 
@@ -72,9 +76,42 @@ export default class FighterPane extends HTMLElement{
     this._updateCooldowns()
   }
 
-  displayDamageTaken(damageResult){
+  displayActionPerformed(ability){
+    // if(action.actionType === 'attack'){
+    //   if(action.lifesteal){
+    //     this.displayLifeGained(result.lifesteal)
+    //   }
+    // }
+  }
 
-    let html = `<span class="damage">-${damageResult.damage}</span>`
+  displayResult(result){
+    if(result.resultType === 'dodge'){
+      this._displayDodge()
+    }else if(result.resultType === 'damage'){
+      this._displayDamageResult(result)
+    }else if(result.resultType === 'gainHealth'){
+      this._displayLifeGained(result.amount)
+    }
+  }
+
+  _displayLifeGained(amount){
+    new FlyingTextEffect(this.hpBar, amount)
+  }
+
+  _displayDodge(){
+    new FlyingTextEffect(this.hpBar, 'Dodged!')
+  }
+
+  _displayDamageResult(damageResult){
+
+    const classes = ['damage']
+    if(damageResult.crit){
+      classes.push('crit')
+    }
+    if(damageResult.damageType === 'magic'){
+      classes.push('magic')
+    }
+    let html = `<span class="${classes.join(' ')}">-${damageResult.finalDamage}${damageResult.crit ? '!!' : ''}</span>`
 
     if(damageResult.blocked){
       html += `<span class="blocked">(${damageResult.blocked} blocked)</span>`
@@ -83,10 +120,6 @@ export default class FighterPane extends HTMLElement{
     new FlyingTextEffect(this.hpBar, html, {
       html: true
     })
-  }
-
-  displayLifeGained(amount){
-    new FlyingTextEffect(this.hpBar, amount)
   }
 
   _update(animate = false){

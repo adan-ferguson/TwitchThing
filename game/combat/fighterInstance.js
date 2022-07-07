@@ -9,10 +9,11 @@ export const COMBAT_BASE_TURN_TIME = 3000
 
 export default class FighterInstance{
 
-  constructor(fighter, fighterStartState){
+  constructor(fighter, fighterStartState, fighterId){
 
     checkValidity(fighter)
 
+    this.fighterId = fighterId
     this.baseFighter = fighter
     this._currentState = {
       ...STATE_DEFAULTS,
@@ -87,47 +88,90 @@ export default class FighterInstance{
     this._currentState.timeSinceLastAction += ms
   }
 
-  performAction(enemy){
-
-    let baseDamage = Math.ceil(this.basePower * this.stats.get('physPower').value)
-    const damageResult = this._dealDamage(baseDamage, enemy, {
-      basicAttack: true,
-      type: this.mods.contains({ name: 'magicAttack' }) ? 'magic' : 'phys'
-    })
+  performAction(combat){
     this._currentState.timeSinceLastAction = 0
-
     return {
-      actionType: 'basicAttack',
-      result: damageResult
+      ability: 'basicAttack',
+      results: this._basicAttack(combat).filter(r => r)
     }
   }
 
-  tick(){
-    return []
+  performTick(combat){
+    const tickUpdates = []
+    tickUpdates.push(this._regen())
+    return tickUpdates.filter(t => t)
   }
 
-  _dealDamage(val, enemy, props = {}){
-
-    const damageResult = {
-      baseDamage: val,
-      basicAttack: false,
-      type: 'phys',
-      ...props
-    }
-
-    this._critBonus(damageResult)
-    enemy._takeDamage(damageResult)
-    this._lifesteal(damageResult)
-
-    return damageResult
+  attemptDodge(){
+    return Math.random() + this.stats.get('dodgeChance') > 1
   }
 
-  _critBonus(damageResult){
-    const crit = Math.random() + this.stats.get('critChance') > 1
-    if(crit){
-      damageResult.baseDamage *= this.stats.get('critDamage').value
-      damageResult.crit = true
+  takeDamage(damageInfo){
+    const blocked = Math.floor(damageInfo.baseDamage * this.stats.get(damageInfo.damageType + 'Def').value)
+    const finalDamage = Math.min(this.hp, damageInfo.baseDamage - blocked)
+    this.hp -= finalDamage
+    return { ...damageInfo, blocked, finalDamage }
+  }
+
+  /**
+   * TODO: gotta figure a better way to organize this
+   * @param combat
+   * @returns {[{subject: *, resultType: string}]|*[]}
+   * @private
+   */
+  _basicAttack(combat){
+
+    const enemy = combat.getEnemyOf(this)
+    const dodged = enemy.attemptDodge()
+
+    if(dodged){
+      return [{
+        subject: enemy.fighterId,
+        resultType: 'dodge'
+      }]
     }
+
+    const magicAttack = this.mods.contains({ name: 'magicAttack' })
+    const damageInfo = {
+      resultType: 'damage',
+      subject: enemy.fighterId,
+      damageType: magicAttack ? 'magic' : 'phys',
+      baseDamage: Math.ceil(this.basePower * this.stats.get(magicAttack ? 'magicPower' : 'physPower').value)
+    }
+
+    if(this._attemptCrit()){
+      damageInfo.baseDamage *= (1 + this.stats.get('critDamage'))
+      damageInfo.crit = true
+    }
+
+    const damageResult = enemy.takeDamage(damageInfo)
+    return [damageResult, this._lifesteal(damageResult)]
+  }
+
+  _regen(){
+    const regen = this.stats.get('regen').value
+    if(regen){
+      return this._gainHealth(this.hpMax * regen)
+    }
+  }
+
+  /**
+   * @param amount {number} Amount we're attempting to gain
+   * @returns {{resultType, amount}} ActionResult
+   * @private
+   */
+  _gainHealth(amount){
+    const hpBefore = this.hp
+    this.hp += amount
+    return {
+      subject: this.fighterId,
+      resultType: 'gainHealth',
+      amount: this.hp - hpBefore
+    }
+  }
+
+  _attemptCrit(){
+    return Math.random() + this.stats.get('critChance') > 1
   }
 
   _lifesteal(damageResult){
@@ -136,27 +180,8 @@ export default class FighterInstance{
       Math.ceil(this.stats.get('lifesteal').value * damageResult.finalDamage / 100)
     )
     if(lifesteal){
-      damageResult.lifesteal = lifesteal
-      this.hp += lifesteal
+      return this._gainHealth(lifesteal)
     }
-  }
-
-  _takeDamage(damageResult){
-
-    this._dodge(damageResult)
-    if(damageResult.dodged){
-      return
-    }
-
-    const blocked = Math.floor(damageResult.baseDamage * this.stats.get(damageResult.type + 'Def').value)
-    const finalDamage = Math.min(this.hp, damageResult.baseDamage - blocked)
-    this.hp -= finalDamage
-    damageResult.finalDamage = finalDamage
-    damageResult.blocked = blocked
-  }
-
-  _dodge(damageResult){
-    damageResult.dodged = Math.random() + this.stats.get('dodgeChance') > 1
   }
 }
 

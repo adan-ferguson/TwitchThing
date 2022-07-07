@@ -11,6 +11,14 @@ export function chooseOne(choices){
   return chooseMulti(choices, 1)[0]
 }
 
+export function randomOrder(...fns){
+  shuffle(fns).forEach(fn => fn())
+}
+
+export function shuffle(arr){
+  return arr.sort(() => 0.5 - Math.random())
+}
+
 /**
  * Choices formats:
  * 1. Shorthand for choosing strings

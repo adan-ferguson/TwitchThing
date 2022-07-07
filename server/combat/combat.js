@@ -1,6 +1,7 @@
 import Combats from '../collections/combats.js'
 import FighterInstance from '../../game/combat/fighterInstance.js'
 import { toDisplayName } from '../../game/utilFunctions.js'
+import { randomOrder } from '../../game/rando.js'
 
 const START_TIME_DELAY = 1000
 const MAX_TIME = 120000
@@ -9,19 +10,21 @@ const STATE_VALUES_TO_CLEAR = ['timeSinceLastAction']
 
 export async function generateCombat(fighter1, fighter2, fighterStartState1 = {}, fighterStartState2 = {}){
 
-  const fighterInstance1 = new FighterInstance(fighter1, fighterStartState1)
-  const fighterInstance2 = new FighterInstance(fighter2, fighterStartState2)
+  const fighterInstance1 = new FighterInstance(fighter1, fighterStartState1, 1)
+  const fighterInstance2 = new FighterInstance(fighter2, fighterStartState2, 2)
   const combat = new Combat(fighterInstance1, fighterInstance2)
 
   return await Combats.save({
     startTime: Date.now() + START_TIME_DELAY,
     duration: combat.duration,
     fighter1: {
+      id: 1,
       data: fighter1,
       startState: fighterStartState1,
       endState: combat.fighterEndState1
     },
     fighter2: {
+      id: 2,
       data: fighter2,
       startState: fighterStartState2,
       endState: combat.fighterEndState2
@@ -76,22 +79,25 @@ class Combat{
     return this._currentTime === MAX_TIME || !this.fighterInstance1.hp || !this.fighterInstance2.hp
   }
 
+  getEnemyOf(fighterInstance){
+    return this.fighterInstance1 === fighterInstance ? this.fighterInstance2 : this.fighterInstance1
+  }
+
   _run(){
     while(!this.finished){
       this._advanceTime()
 
-      let timelineEntry = {}
+      const tickUpdates = this._tick()
+      const actions = this._doActions()
 
-      if(this._currentTime % 1000 === 0){
-        timelineEntry = { ...timelineEntry, ...this._tick() }
-      }
-      timelineEntry = { ...timelineEntry, ...this._doActions() }
-
-      if(Object.keys(timelineEntry).length){
-        timelineEntry.time = this._currentTime
-        timelineEntry.fighterState1 = this.fighterInstance1.currentState
-        timelineEntry.fighterState2 = this.fighterInstance2.currentState
-        this.timeline.push(timelineEntry)
+      if(actions.length || tickUpdates.length){
+        this.timeline.push({
+          actions,
+          tickUpdates,
+          time: this._currentTime,
+          fighterState1: this.fighterInstance1.currentState,
+          fighterState2: this.fighterInstance2.currentState
+        })
       }
     }
   }
@@ -105,36 +111,51 @@ class Combat{
   }
 
   _tick(){
-    // TODO: ticks
-    return {}
+
+    if(this._currentTime % 1000 !== 0){
+      return []
+    }
+
+    const tickUpdates = []
+
+    const doTick = source => {
+      return { results: source.performTick(this) }
+    }
+
+    randomOrder(
+      () => doTick(this.fighterInstance1, this.fighterInstance2),
+      () => doTick(this.fighterInstance2, this.fighterInstance1)
+    )
+
+    return tickUpdates
   }
 
   _doActions(){
 
-    const actions = {}
+    const actions = []
 
-    const f1action = () => {
-      if(this.fighterInstance1.actionReady){
-        actions.fighterAction1 = this.fighterInstance1.performAction(this.fighterInstance2)
+    const doAction = actor => {
+      if(actor.actionReady){
+        debugger
+        const { ability, results } = actor.performAction(this)
+        actions.push({
+          actor: actor.fighterId,
+          ability,
+          results
+        })
       }
     }
 
-    const f2action = () => {
-      if(this.fighterInstance2.actionReady){
-        actions.fighterAction2 = this.fighterInstance2.performAction(this.fighterInstance1)
-      }
-    }
-
-    // Randomize p1 and p2 action if tied
-    const fns = [f1action]
-    if(Math.random() > 0.5){
-      fns.push(f2action)
-    }else{
-      fns.unshift(f2action)
-    }
-    fns.forEach(fn => fn())
+    randomOrder(
+      () => doAction(this.fighterInstance1, this.fighterInstance2),
+      () => doAction(this.fighterInstance2, this.fighterInstance1)
+    )
 
     return actions
+  }
+
+  _1or2(fighterInstance){
+    return this.fighterInstance1 === fighterInstance ? 1 : 2
   }
 }
 

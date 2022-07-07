@@ -118,7 +118,12 @@ const statDefinitionsInfo = {
   regen: {
     text: 'Health Regeneration',
     valueFormat: value => `${Math.floor(value)}%`,
-    description: 'Heal this much health every 5 seconds'
+    descriptionFn: (value, { style, owner }) => {
+      if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
+        return `Recover ${owner.baseHp * value} per second.`
+      }
+      return 'Recover this much health per second.'
+    },
   },
   chestFind: {
     text: 'Chest Find',

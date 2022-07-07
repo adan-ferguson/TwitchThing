@@ -50,8 +50,8 @@ export default class CombatPage extends Page{
     this.timeline = new Timeline(combat.timeline)
     this.combat = combat
 
-    this.fighterPane1.setFighter(combat.fighter1.data)
-    this.fighterPane2.setFighter(combat.fighter2.data)
+    this.fighterPane1.setFighter(combat.fighter1)
+    this.fighterPane2.setFighter(combat.fighter2)
     this.combatFeed.setCombat(this.combat)
     this.combatFeed.setTimeline(this.timeline)
 
@@ -91,12 +91,14 @@ export default class CombatPage extends Page{
   _applyEntry(timelineEntry, animate = true){
     this.timeline.time = timelineEntry.time
 
-    if(timelineEntry.fighterAction1){
-      this._performAction(timelineEntry.fighterAction1, this.fighterPane1, this.fighterPane2)
-    }
-    if(timelineEntry.fighterAction2){
-      this._performAction(timelineEntry.fighterAction2, this.fighterPane2, this.fighterPane1)
-    }
+    debugger
+    timelineEntry.actions.forEach(action => {
+      this._performAction(action)
+    })
+
+    timelineEntry.tickUpdates.forEach(tickUpdate => {
+      this._performTickUpdate(tickUpdate)
+    })
 
     this.fighterPane1.setState(timelineEntry.fighterState1, animate)
     this.fighterPane2.setState(timelineEntry.fighterState2, animate)
@@ -138,13 +140,21 @@ export default class CombatPage extends Page{
     }
   }
 
-  _performAction(action, actorPane, enemyPane){
-    if(action.actionType === 'attack'){
-      enemyPane.displayDamageTaken(action.result)
-      if(action.result.lifesteal){
-        actorPane.displayLifeGained(action.result.lifesteal)
-      }
-    }
+  _performAction(action){
+    debugger
+    this._getPaneFromFighterId(action.actor).displayActionPerformed(action.ability)
+    action.results.forEach(result => {
+      this._getPaneFromFighterId(result.subject).displayResult(result)
+    })
+  }
+
+  _getPaneFromFighterId(fighterId){
+    return this.fighterPane1.fighterId === fighterId ? this.fighterPane1 : this.fighterPane2
+  }
+
+  _performTickUpdate(tickUpdate){
+    debugger
+    this._getPaneFromFighterId(tickUpdate.source).displayResult(tickUpdate)
   }
 }
 
