@@ -20,6 +20,7 @@ export const StatsDisplayScope = {
 
 const statDefinitionsInfo = {
   hpMax: {
+    text: 'Max Health',
     icon: healthIcon,
     displayedValueFn: (value, { style, owner }) => {
       if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
@@ -35,6 +36,7 @@ const statDefinitionsInfo = {
     scope: StatsDisplayScope.ALL
   },
   physPower: {
+    text: 'Phys Power',
     icon: physPowerIcon,
     displayedValueFn: (value, { style, owner }) => {
       if(style === StatsDisplayStyle.CUMULATIVE && owner?.basePower){
@@ -45,6 +47,7 @@ const statDefinitionsInfo = {
     scope: StatsDisplayScope.ALL
   },
   magicPower: {
+    text: 'Magic Power',
     icon: magicPowerIcon,
     displayedValueFn: (value, { style, owner }) => {
       if(style === StatsDisplayStyle.CUMULATIVE && owner?.basePower){
@@ -55,13 +58,14 @@ const statDefinitionsInfo = {
     scope: StatsDisplayScope.ALL
   },
   speed: {
+    text: 'Speed',
     icon: actionIcon,
     displayedValueFn: (value, { style }) => {
       if(style === StatsDisplayStyle.CUMULATIVE){
         return roundToFixed(COMBAT_BASE_TURN_TIME / (1000 * value), 2) + 's'
       }
     },
-    description: 'Combat action time (speed)\n3 seconds is average',
+    description: 'Speed (combat turn time)',
     scope: StatsDisplayScope.COMBAT
   },
   physDef: {
@@ -100,10 +104,15 @@ const statDefinitionsInfo = {
     description: 'Gain health when dealing physical damage.',
     scope: StatsDisplayScope.COMBAT
   },
+  combatHarderChance: {
+    text: 'Stronger Monster Chance',
+    description: 'Increases chance to fight stronger monsters.',
+    scope: StatsDisplayScope.EXPLORING
+  },
   combatXP: {
     text: 'Combat XP Gain',
     description: 'Increases XP gained from combat.',
-    scope: StatsDisplayScope.ALL
+    scope: StatsDisplayScope.EXPLORING
   },
   relicSolveChance: {
     text: 'Relic Solve Chance',

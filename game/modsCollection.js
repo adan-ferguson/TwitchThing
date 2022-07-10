@@ -1,7 +1,8 @@
 export default class ModsCollection{
 
-  constructor(...mods){
-    mods = mods.filter(m => m)
+  constructor(){
+
+    const mods = [...arguments].flat(Infinity)
 
     this._mods = {}
     mods.forEach(mod => {

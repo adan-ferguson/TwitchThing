@@ -1,17 +1,20 @@
 import { generateRandomItemDef } from '../items/generator.js'
+import { fillArray } from '../../game/utilFunctions.js'
 
 export function generateRandomChest(dungeonRun, options = {}){
 
+  if(!dungeonRun.user.accomplishments.firstRunFinished){
+    return
+  }
+
   const contents = {}
-  const features = dungeonRun.user.features
   const level = options.level || dungeonRun.floor
   const tier = options.tier || 1
 
-  // TODO: something that doesn't suck here
-  const val = Math.ceil((tier > 1 ? level : Math.ceil(level * Math.random())) * 0.6)
-  if(features['items']){
-    contents.items = [generateRandomItemDef(val)]
-  }
+  contents.items = fillArray(() => {
+    const val = Math.ceil(level * Math.pow(Math.random(), 1.5))
+    return generateRandomItemDef(val)
+  }, tier)
 
   return generateChest(contents, { ...options, level })
 }

@@ -1,8 +1,6 @@
 import scaledValue from './scaledValue.js'
 import Stats from './stats/stats.js'
 import OrbsData from './orbsData.js'
-import { getBonusMods } from './bonus.js'
-import { getItemMods } from './item.js'
 import ModsCollection from './modsCollection.js'
 
 const REWARD_MULTIPLIER = 0.2

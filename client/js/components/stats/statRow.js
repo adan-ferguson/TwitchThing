@@ -1,7 +1,7 @@
 import tippy from 'tippy.js'
 
 const HTML = ({ text, displayedValue, icon }) => `
-<span>${icon ? `<img src="${icon}">` : text}</span> <span class="val">${displayedValue}</span>
+<span>${icon ? `<img src="${icon}"> ` : text}</span><span class="val">${displayedValue}</span>
 `
 
 export default class StatRow extends HTMLElement{

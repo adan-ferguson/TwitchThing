@@ -48,7 +48,7 @@ export default class FighterPane extends HTMLElement{
   setFighter(fighter){
     this.fighter = fighter.data
     this.fighterId = fighter.id
-    this.querySelector('.name').textContent = fighter.displayname || toDisplayName(fighter.name)
+    this.querySelector('.name').textContent = this.fighter.displayname || toDisplayName(this.fighter.name)
     if(this.isAdventurer){
       this.loadout.setContents(adventurerLoadoutContents(this.fighter))
     }else{

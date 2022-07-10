@@ -57,6 +57,8 @@ export default class LoadoutRow extends HTMLElement{
   }
 
   get tooltip(){
+
+    debugger
     if(!this.loadoutItem?.makeTooltip){
       return ''
     }

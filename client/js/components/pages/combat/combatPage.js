@@ -91,7 +91,6 @@ export default class CombatPage extends Page{
   _applyEntry(timelineEntry, animate = true){
     this.timeline.time = timelineEntry.time
 
-    debugger
     timelineEntry.actions.forEach(action => {
       this._performAction(action)
     })
@@ -141,7 +140,6 @@ export default class CombatPage extends Page{
   }
 
   _performAction(action){
-    debugger
     this._getPaneFromFighterId(action.actor).displayActionPerformed(action.ability)
     action.results.forEach(result => {
       this._getPaneFromFighterId(result.subject).displayResult(result)

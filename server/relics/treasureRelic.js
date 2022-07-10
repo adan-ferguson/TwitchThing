@@ -7,18 +7,18 @@ const TIERS = [{
   chestTier: 2,
   message: advName => `${advName} solves an extra tough puzzle and is rewarded with some extra valuable treasure.`
 },{
-  chestTier: 2,
+  chestTier: 3,
   message: advName => `${advName} solves an extra tough puzzle and is rewarded with some extra valuable treasure.`
 },{
-  chestTier: 2,
+  chestTier: 4,
   message: advName => `${advName} solves an extra tough puzzle and is rewarded with some extra valuable treasure.`
 },{
-  chestTier: 2,
+  chestTier: 5,
   message: advName => `${advName} solves an extra tough puzzle and is rewarded with some extra valuable treasure.`
 }]
 
 export default {
-  frequency: dungeonRun => 4 * dungeonRun.adventurerInstance.stats.get('chestFind').value,
+  frequency: dungeonRun => 5 * dungeonRun.adventurerInstance.stats.get('chestFind').value,
   resolve: (dungeonRun, relicTier, value) => {
     return {
       rewards: {

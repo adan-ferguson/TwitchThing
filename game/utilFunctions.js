@@ -55,3 +55,11 @@ export function wrap(elementName, content, html = false){
   parentEl.appendChild(el)
   return parentEl.innerHTML
 }
+
+export function fillArray(fn, length){
+  const arr = []
+  for(let i = 0; i < length; i++){
+    arr.push(fn(i))
+  }
+  return arr
+}

@@ -17,6 +17,9 @@ const defs = {
   chestFind: {
     type: StatType.MULTIPLIER
   },
+  combatHarderChance: {
+    type: StatType.MULTIPLIER
+  },
   combatXP: {
     type: StatType.MULTIPLIER
   },

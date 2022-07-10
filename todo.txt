@@ -568,15 +568,16 @@ New Features:
 - Replay combat
 - Combat permalinks
 - Adventure log (viewable on results page or inside of exploring page)
+- View old adventures/combats
 + HP + Power as all base values
 + Classes
 
-- New stats
--- Dodge chance
--- Crit factor
--- Relic quality
--- Chest find
--- Regeneration
++ New stats
+++ Dodge chance
+++ Crit factor
+++ Relic quality
+++ Chest find
+++ Regeneration
 
 Component Changes:
 
@@ -653,8 +654,16 @@ Bugs/UI Tweaks:
 
 - Final event is wack
 
+- Relics found count is wrong
+- Graphic for various events
+- Show a popup for first time you see dungeon picker
+- Show chest contents
+
 TODO Later
 -----------
+- More interesting relic UI
+- Gold
+- Use more classes for things because like
 - Resting
 - Gussy up the tabz to make easier to use, di-tab-content
 - di-adventurer-list

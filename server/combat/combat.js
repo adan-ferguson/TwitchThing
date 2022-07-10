@@ -59,12 +59,9 @@ class Combat{
   constructor(fighterInstance1, fighterInstance2){
     this.fighterInstance1 = fighterInstance1
     this.fighterInstance2 = fighterInstance2
-    this.timeline = [{
-      time: 0,
-      fighterState1: this.fighterInstance1.currentState,
-      fighterState2: this.fighterInstance2.currentState
-    }]
     this._currentTime = 0
+    this.timeline = []
+    this._addTimelineEntry()
     this._run()
     this.fighterEndState1 = cleanupState(this.fighterInstance1.currentState)
     this.fighterEndState2 = cleanupState(this.fighterInstance2.currentState)
@@ -91,12 +88,9 @@ class Combat{
       const actions = this._doActions()
 
       if(actions.length || tickUpdates.length){
-        this.timeline.push({
+        this._addTimelineEntry({
           actions,
-          tickUpdates,
-          time: this._currentTime,
-          fighterState1: this.fighterInstance1.currentState,
-          fighterState2: this.fighterInstance2.currentState
+          tickUpdates
         })
       }
     }
@@ -136,7 +130,6 @@ class Combat{
 
     const doAction = actor => {
       if(actor.actionReady){
-        debugger
         const { ability, results } = actor.performAction(this)
         actions.push({
           actor: actor.fighterId,
@@ -156,6 +149,17 @@ class Combat{
 
   _1or2(fighterInstance){
     return this.fighterInstance1 === fighterInstance ? 1 : 2
+  }
+
+  _addTimelineEntry(options = {}){
+    this.timeline.push({
+      time: this._currentTime,
+      actions: [],
+      tickUpdates: [],
+      fighterState1: this.fighterInstance1.currentState,
+      fighterState2: this.fighterInstance2.currentState,
+      ...options
+    })
   }
 }
 
