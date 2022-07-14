@@ -28,7 +28,8 @@ export default class LoadoutRow extends HTMLElement{
     this._nameEl = this.querySelector('.name')
     this._orbRow = this.querySelector('di-orb-row')
     this._orbRow.setOptions({
-      style: OrbsDisplayStyle.MAX_ONLY
+      style: OrbsDisplayStyle.MAX_ONLY,
+      showTooltips: false
     })
     this._newBadge = this.querySelector('.new-badge')
     this._tippy = tippy(this, {
@@ -58,18 +59,18 @@ export default class LoadoutRow extends HTMLElement{
 
   get tooltip(){
 
-    debugger
     if(!this.loadoutItem?.makeTooltip){
       return ''
     }
 
     const tooltip = document.createElement('div')
-    tooltip.appendChild(this.loadoutItem.makeTooltip())
+    tooltip.classList.add('loadout-row-tooltip')
+    tooltip.appendChild(this.loadoutItem.makeTooltip(true))
 
     if(this.loadoutItem.makeDetails){
       const right = document.createElement('div')
       right.classList.add('right-click')
-      right.innerHTML = 'right-click for more info'
+      right.innerHTML = 'Right-click for more info'
       tooltip.appendChild(right)
     }
 
@@ -91,7 +92,7 @@ export default class LoadoutRow extends HTMLElement{
 
     if(enableTooltip){
       this._tippy.enable()
-      this._tippy.setContent(loadoutItem.tooltip)
+      this._tippy.setContent(this.tooltip)
     }
   }
 

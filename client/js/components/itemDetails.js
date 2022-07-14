@@ -15,7 +15,7 @@ export default class ItemDetails extends HTMLElement{
   _statsList
   _abilitiesList
 
-  constructor(loadoutItem = null){
+  constructor(loadoutItem, options = {}){
     super()
     this.innerHTML = HTML
     this._loadoutRow = this.querySelector('di-loadout-row')

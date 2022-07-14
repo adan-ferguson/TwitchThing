@@ -19,7 +19,8 @@ export default class OrbRow extends HTMLElement{
 
   _orbsData = null
   _options = {
-    style: OrbsDisplayStyle.USED_ONLY
+    style: OrbsDisplayStyle.USED_ONLY,
+    showTooltips: true
   }
 
   constructor(){
@@ -37,6 +38,7 @@ export default class OrbRow extends HTMLElement{
   }
 
   _update(){
+    this.classList.toggle('no-tooltips', !this._options.showTooltips)
     this.innerHTML = ''
     if(!this._orbsData){
       return

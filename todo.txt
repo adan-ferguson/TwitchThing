@@ -661,6 +661,7 @@ Bugs/UI Tweaks:
 
 TODO Later
 -----------
+- Consolidate adventurerInstance and fighterInstance
 - More interesting relic UI
 - Gold
 - Use more classes for things because like

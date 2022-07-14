@@ -125,6 +125,7 @@ class DungeonRunInstance{
     this.user = user
     if(!this.currentEvent){
       this.advance({
+        passTimeOverride: true,
         message: `${this.adventurer.name} enters the dungeon.`
       })
     }
@@ -235,9 +236,6 @@ class DungeonRunInstance{
   }
 
   async _resolveEvent(event){
-    if(event.adventurerState){
-      this.doc.adventurerState = event.adventurerState
-    }
     if(event.rewards){
       if(event.rewards.xp){
         event.rewards.xp = Math.ceil(event.rewards.xp)
@@ -245,6 +243,8 @@ class DungeonRunInstance{
       this.doc.rewards = addRewards(this.doc.rewards, event.rewards)
     }
     event.duration = Math.ceil(event.duration / ADVANCEMENT_INTERVAL) * ADVANCEMENT_INTERVAL
+    event.adventurerState = this._passTime(event)
+    this.doc.adventurerState = event.adventurerState
     this.doc.elapsedTime += event.duration
   }
 
@@ -254,6 +254,22 @@ class DungeonRunInstance{
     delete activeRuns[this.doc._id]
     emit(this.adventurer.userID, 'dungeon run update', this.doc)
     DungeonRuns.save(this.doc)
+  }
+
+  /**
+   * Reduce cooldowns of actives, tick buffs/debuffs, perform regeneration, etc
+   * @private
+   * @param event
+   */
+  _passTime(event){
+    let state = event.adventurerState || this.doc.adventurerState
+    if (!event.passTimeOverride){ // Combats handle their own passage of time.
+      const adv = new AdventurerInstance(this.adventurer, state)
+      adv.passTime(event.duration)
+      // TODO: this might affect the event in other ways, such as ending the run if the adventurer dies
+      return adv.adventurerState
+    }
+    return state
   }
 }
 

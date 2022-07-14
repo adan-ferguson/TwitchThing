@@ -68,6 +68,10 @@ class Combat{
     this.duration = this._currentTime
   }
 
+  get time(){
+    return this._currentTime
+  }
+
   get result(){
     return {}
   }
@@ -113,7 +117,7 @@ class Combat{
     const tickUpdates = []
 
     const doTick = source => {
-      return { results: source.performTick(this) }
+      tickUpdates.push(...source.performTick(this))
     }
 
     randomOrder(

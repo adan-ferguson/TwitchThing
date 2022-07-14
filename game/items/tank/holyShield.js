@@ -1,6 +1,6 @@
 export default {
   stats: {
-    regen: '5%',
+    regen: '3%',
     physDef: '15%',
     magicDef: '35%'
   },

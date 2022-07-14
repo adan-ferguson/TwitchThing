@@ -151,8 +151,7 @@ export default class CombatPage extends Page{
   }
 
   _performTickUpdate(tickUpdate){
-    debugger
-    this._getPaneFromFighterId(tickUpdate.source).displayResult(tickUpdate)
+    this._getPaneFromFighterId(tickUpdate.subject).displayResult(tickUpdate)
   }
 }
 

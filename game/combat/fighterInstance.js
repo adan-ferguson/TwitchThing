@@ -1,5 +1,6 @@
 import { getAdventurerStats, adventurerLevelToHp, adventurerLevelToPower, getAdventurerMods } from '../adventurer.js'
 import { getMonsterMods, getMonsterStats, monsterLevelToHp, monsterLevelToPower } from '../monster.js'
+import { randomRound } from '../rando.js'
 
 const STATE_DEFAULTS = {
   timeSinceLastAction: 0
@@ -98,7 +99,9 @@ export default class FighterInstance{
 
   performTick(combat){
     const tickUpdates = []
-    tickUpdates.push(this._regen())
+    if(combat.time > 0 && combat.time % 5000 === 0){
+      tickUpdates.push(this._regen())
+    }
     return tickUpdates.filter(t => t)
   }
 
@@ -151,7 +154,7 @@ export default class FighterInstance{
   _regen(){
     const regen = this.stats.get('regen').value
     if(regen){
-      return this._gainHealth(this.hpMax * regen)
+      return this._gainHealth(randomRound(this.baseHp * regen / 100))
     }
   }
 
@@ -163,10 +166,13 @@ export default class FighterInstance{
   _gainHealth(amount){
     const hpBefore = this.hp
     this.hp += amount
-    return {
-      subject: this.fighterId,
-      resultType: 'gainHealth',
-      amount: this.hp - hpBefore
+    const finalAmount = this.hp - hpBefore
+    if(finalAmount > 0){
+      return {
+        subject: this.fighterId,
+        resultType: 'gainHealth',
+        amount: this.hp - hpBefore
+      }
     }
   }
 

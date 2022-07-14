@@ -1,5 +1,6 @@
 import { getAdventurerStats, adventurerLevelToHp, adventurerLevelToPower } from './adventurer.js'
 import { COMBAT_BASE_TURN_TIME } from './combat/fighterInstance.js'
+import { randomRound } from './rando.js'
 
 export default class AdventurerInstance{
 
@@ -46,5 +47,13 @@ export default class AdventurerInstance{
 
   get actionTime(){
     return COMBAT_BASE_TURN_TIME / this.stats.get('speed').value
+  }
+
+  passTime(time){
+    const regen = this.stats.get('regen').value
+    if(regen){
+      const amount = randomRound(this.hpMax * regen / 100)
+      this.adventurerState.hp = Math.min(this.hpMax, this.hp + amount)
+    }
   }
 }

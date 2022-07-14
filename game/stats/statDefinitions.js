@@ -60,7 +60,9 @@ const defs = {
   relicSolveChance: {
     type: StatType.MULTIPLIER
   },
-  regen: {},
+  regen: {
+    minValue: 0
+  },
   speed: {
     type: StatType.MULTIPLIER
   },

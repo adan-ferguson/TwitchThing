@@ -57,6 +57,16 @@ const statDefinitionsInfo = {
     description: 'Magic power',
     scope: StatsDisplayScope.ALL
   },
+  physDef: {
+    text: 'Phys Defense',
+    description: 'Blocks physical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
+    scope: StatsDisplayScope.COMBAT
+  },
+  magicDef: {
+    text: 'Magic Defense',
+    description: '',
+    scope: StatsDisplayScope.COMBAT
+  },
   speed: {
     text: 'Speed',
     icon: actionIcon,
@@ -66,16 +76,6 @@ const statDefinitionsInfo = {
       }
     },
     description: 'Speed (combat turn time)',
-    scope: StatsDisplayScope.COMBAT
-  },
-  physDef: {
-    text: 'Phys Defense',
-    description: 'Blocks physical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
-    scope: StatsDisplayScope.COMBAT
-  },
-  magicDef: {
-    text: 'Magic Defense',
-    description: '',
     scope: StatsDisplayScope.COMBAT
   },
   critChance: {
@@ -100,7 +100,7 @@ const statDefinitionsInfo = {
   },
   lifesteal: {
     text: 'Lifesteal',
-    valueFormat: value => `${Math.floor(value)}%`,
+    displayedValueFn: value => `${roundToFixed(value, 2)}%`,
     description: 'Gain health when dealing physical damage.',
     scope: StatsDisplayScope.COMBAT
   },
@@ -121,18 +121,19 @@ const statDefinitionsInfo = {
   },
   relicRareChance: {
     text: 'Increased Relic Rarity',
-    valueFormat: value => `${Math.floor(value)}%`,
+    displayedValueFn: value => `${Math.floor(value)}%`,
     description: 'Chance to find high quality relics.'
   },
   regen: {
     text: 'Health Regeneration',
-    valueFormat: value => `${Math.floor(value)}%`,
+    displayedValueFn: value => `${roundToFixed(value, 2)}%`,
     descriptionFn: (value, { style, owner }) => {
       if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
-        return `Recover ${owner.baseHp * value} per second.`
+        return `Recover ${roundToFixed(owner.baseHp * value / 100, 2)} health per 5 seconds, both in and out of combat.`
       }
       return 'Recover this much health per second.'
     },
+    scope: StatsDisplayScope.ALL
   },
   chestFind: {
     text: 'Chest Find',
@@ -162,7 +163,7 @@ export function getStatDisplayInfo(stat, options = {}){
     info.displayedValue = info.displayedValueFn(stat.value, options)
   }
   if(info.displayedValue === undefined){
-    info.displayedValue = toText(stat.type, stat.value, options)
+    info.displayedValue = toText(stat.type, stat.value, options.style)
   }
   if(info.descriptionFn){
     info.description = info.descriptionFn(stat.value, options)
@@ -190,6 +191,8 @@ export function scopesMatch(scope1, scope2){
 function toText(statType, value, style){
   if(statType === StatType.MULTIPLIER){
     return `${value > 1 ? '+' : ''}${Math.round((value - 1) * 100)}%`
+  }else if(statType === StatType.PERCENTAGE){
+    return `${style === StatsDisplayStyle.ADDITIONAL ? '+' : ''}${roundToFixed(value * 100, 1)}%`
   }
   return `${value > 0 && style === StatsDisplayStyle.ADDITIONAL ? '+' : ''}${value}`
 }

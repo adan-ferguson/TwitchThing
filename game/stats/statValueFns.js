@@ -70,6 +70,7 @@ function flatMods(values){
   }
 
   values.forEach(change => {
+    change = parseFloat(change)
     if(change > 0){
       mods.flatPlus.push(change)
     }else if(change < 0){

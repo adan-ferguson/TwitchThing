@@ -2,6 +2,10 @@ di-orb-row
   display: flex
   align-items: center
   font-size: 1.2em
+  z-index: 1
+
+  &.no-tooltips
+    pointer-events: none
 
   &.loadout-orb-row
     justify-content: space-around
@@ -23,6 +27,7 @@ di-orb-row
         bottom: 0
         opacity: 0.15
         background-color: currentColor
+        pointer-events: none
 
   di-orb-entry
     display: flex
@@ -33,8 +38,8 @@ di-orb-row
     &:hover
       background-color: #DDD
 
-    .error
-      color: red
+    &.error
+      color: red !important
 
     img
       height: 1em

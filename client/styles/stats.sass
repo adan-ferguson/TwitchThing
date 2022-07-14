@@ -1,11 +1,14 @@
 di-stats-list
   display: flex
-  flex-direction: row
-  flex-wrap: wrap
+  flex-direction: column
   padding: 0
 
+  &.no-icons
+    .no-icon
+      display: none !important
+
   di-stat-row
-    padding: 4rem 6rem 0
+    padding: 5rem 6rem 2rem
     transition: background-color 0.3s ease
     display: flex
     flex-direction: row
@@ -14,11 +17,15 @@ di-stats-list
     $buffColor: #6ee16e
     $debuffColor: #ff8c8c
 
-    &.no-icon
-      width: 100%
+    .left-side
+      display: flex
+      flex-direction: row
 
-    img
-      height: 1em
+      img, .no-icon
+        height: 1em
+        width: 1em
+        margin-right: 0.8em
+        display: inline-block
 
     .val
       padding-left: 5rem

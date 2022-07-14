@@ -36,6 +36,7 @@ export async function generateEvent(dungeonRun){
       stayInRoom: true,
       message: `${dungeonRun.adventurer.name} is fighting a ${monster.name}.`,
       combatID: combat._id,
+      passTimeOverride: true,
       monster
     }
   }
