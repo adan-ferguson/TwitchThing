@@ -74,9 +74,12 @@ function exporterConcater(targetFile){
       groups[group].push(name)
     })
     str += 'export default {\n'
+    let all = []
     for(let groupName in groups){
+      all.push(...groups[groupName])
       str += `  ${groupName}: { ${groups[groupName].map(name => `${name}`).join(',')} },\n`
     }
+    str += `  all: { ${all.join(',')} }\n`
     str += '}'
     return str
   }

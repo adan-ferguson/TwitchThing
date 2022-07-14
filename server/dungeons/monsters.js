@@ -1,42 +1,42 @@
 import { generateRandomChest } from './chests.js'
 import { chooseOne } from '../../game/rando.js'
-import Monsters from '../../game/monsters/combined.js'
+import { all as Monsters } from '../../game/monsters/combined.js'
 import { levelToXpReward } from '../../game/monster.js'
 
 const monstersByFloor = {
   // Caves
-  1: Monsters.caves.rat,
-  2: Monsters.caves.troglodyte,
-  3: Monsters.caves.bat,
-  4: Monsters.caves.kobold,
-  5: Monsters.caves.ooze,
-  6: Monsters.caves.spider,
-  7: Monsters.caves.scorpion,
-  8: Monsters.caves.rockGolem,
-  9: Monsters.caves.sorcerer,
-  10: Monsters.caves.minotaur,
+  1: Monsters.rat,
+  2: Monsters.troglodyte,
+  3: Monsters.bat,
+  4: Monsters.kobold,
+  5: Monsters.ooze,
+  6: Monsters.spider,
+  7: Monsters.scorpion,
+  8: Monsters.rockGolem,
+  9: Monsters.sorcerer,
+  10: Monsters.minotaur,
   // Crypt
-  11: Monsters.crypt.skeleton,
-  12: Monsters.crypt.zombie,
-  13: Monsters.crypt.wraith,
-  14: Monsters.crypt.shade,
-  15: Monsters.crypt.necromancer,
-  16: Monsters.crypt.banshee,
-  17: Monsters.crypt.lich,
-  18: Monsters.crypt.vampire,
-  19: Monsters.crypt.abomination,
-  20: Monsters.crypt.boneDragon,
+  11: Monsters.skeleton,
+  12: Monsters.zombie,
+  13: Monsters.wraith,
+  14: Monsters.shade,
+  15: Monsters.necromancer,
+  16: Monsters.banshee,
+  17: Monsters.lich,
+  18: Monsters.vampire,
+  19: Monsters.abomination,
+  20: Monsters.boneDragon,
   // Swamp
-  21: Monsters.swamp.lizardPerson,
-  23: Monsters.swamp.gator,
-  22: Monsters.swamp.toad,
-  24: Monsters.swamp.naga,
-  26: Monsters.swamp.biteyPlant,
-  25: Monsters.swamp.troll,
-  27: Monsters.swamp.witch,
-  28: Monsters.swamp.basilisk,
-  29: Monsters.swamp.thing,
-  30: Monsters.swamp.hydra,
+  21: Monsters.lizardPerson,
+  23: Monsters.gator,
+  22: Monsters.toad,
+  24: Monsters.naga,
+  26: Monsters.biteyPlant,
+  25: Monsters.troll,
+  27: Monsters.witch,
+  28: Monsters.basilisk,
+  29: Monsters.thing,
+  30: Monsters.hydra,
 }
 
 const CHEST_DROP_CHANCE = 0.1
