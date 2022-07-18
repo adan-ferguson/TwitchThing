@@ -87,6 +87,7 @@ export default class FloorSlider extends HTMLElement{
     zoneEl.classList.add('zone')
     zoneEl.innerHTML = ZONE_HTML(zone.name)
     zoneEl.style.backgroundColor = zone.color
+    zoneEl.style.backgroundImage = `url("/assets/textures/${zone.texture}")`
 
     const floors = zoneEl.querySelector('.slider-floors')
     for(let i = zoneIndex * 10 + 1; i <= 10 * (zoneIndex + 1); i++){

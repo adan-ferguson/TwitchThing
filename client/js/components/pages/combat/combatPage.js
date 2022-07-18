@@ -1,6 +1,7 @@
 import Timeline from '../../../../../game/timeline.js'
 import Page from '../page.js'
 import { mergeElementOptions } from '../../../../../game/utilFunctions.js'
+import Zones, { floorToZone } from '../../../../../game/zones.js'
 
 const HTML = `
 <div class='content-rows'>
@@ -46,6 +47,9 @@ export default class CombatPage extends Page{
       this.redirectTo(this._options.returnPage)
       return
     }
+
+    const zone = Zones[floorToZone(combat.floor ?? 1)]
+    this.app.setBackground(zone.color, zone.texture)
 
     this.timeline = new Timeline(combat.timeline)
     this.combat = combat

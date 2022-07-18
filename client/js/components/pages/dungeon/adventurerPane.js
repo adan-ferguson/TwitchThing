@@ -1,6 +1,5 @@
 import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 import { adventurerLoadoutContents } from '../../../adventurer.js'
-import { StatsDisplayScope } from '../../../statsDisplayInfo.js'
 import { OrbsDisplayStyle } from '../../orbRow.js'
 
 const HTML = `
@@ -28,8 +27,8 @@ export default class AdventurerPane extends HTMLElement{
     this.statsbox = this.querySelector('.stats-box')
     this.statsList = this.querySelector('di-stats-list')
     this.statsList.setOptions({
-      forcedStats: ['physPower'],
-      statsDisplayScope: StatsDisplayScope.EXPLORING
+      iconsOnly: true,
+      exclude: ['hpMax', 'speed']
     })
     this.displayMode = 'normal'
   }

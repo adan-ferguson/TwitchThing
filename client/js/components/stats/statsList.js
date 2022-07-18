@@ -1,14 +1,18 @@
 import StatRow from './statRow.js'
-import { getStatDisplayInfo, scopesMatch, StatsDisplayScope, StatsDisplayStyle } from '../../statsDisplayInfo.js'
+import { getStatDisplayInfo, StatsDisplayStyle } from '../../statsDisplayInfo.js'
+import Stats from '../../../../game/stats/stats.js'
 
 export default class StatsList extends HTMLElement{
 
   _options = {
     statsDisplayStyle: StatsDisplayStyle.CUMULATIVE,
-    statsDisplayScope: StatsDisplayScope.ALL,
-    forcedStats: [],
-    showTooltips: true
+    iconsOnly: false,
+    showTooltips: true,
+    exclude: []
   }
+
+  _stats = new Stats()
+  _owner = null
 
   constructor(){
     super()
@@ -20,23 +24,31 @@ export default class StatsList extends HTMLElement{
         this._options[key] = options[key]
       }
     }
+    this._update()
   }
 
   setStats(stats, owner = null){
+    this._stats = stats
+    this._owner = owner
+    this._update()
+  }
+
+  _update(){
+
+    this.classList.toggle('icons-only', this._options.iconsOnly)
 
     const unusedStats = {}
     this.querySelectorAll('di-stat-row').forEach(row => {
       unusedStats[row.getAttribute('stat-key')] = row
     })
 
-    const statsToShow = stats.getAll(this._options.forcedStats)
+    const statsToShow = this._stats.getAll()
 
-    let hasIcon = false
     for(let key in statsToShow){
-      const { rowHasIcon, visible = false } = this._updateStat(statsToShow[key], owner)
-      if(visible && rowHasIcon){
-        hasIcon = true
+      if(this._options.exclude.indexOf(key) > -1){
+        continue
       }
+      this._updateStat(statsToShow[key], this._owner)
       delete unusedStats[key]
     }
 
@@ -46,8 +58,6 @@ export default class StatsList extends HTMLElement{
         this.removeChild(row)
       }
     )
-
-    this.classList.toggle('no-icons', !hasIcon)
   }
 
   _updateStat(stat, owner = null){
@@ -55,18 +65,18 @@ export default class StatsList extends HTMLElement{
       owner,
       style: this._options.statsDisplayStyle
     })
-    if(!scopesMatch(statDisplayInfo.scope, this._options.statsDisplayScope)){
-      return {}
+    if(this._options.iconsOnly && !statDisplayInfo.icon){
+      return
     }
     const row = this.querySelector(`di-stat-row[stat-key="${stat.name}"]`)
     if(!row){
       this.appendChild(new StatRow(statDisplayInfo, {
-        showTooltips: this._options.showTooltips
+        showTooltips: this._options.showTooltips,
+        iconsOnly: this._options.iconsOnly
       }))
     }else{
       row.setStatsDisplayInfo(statDisplayInfo)
     }
-    return { visible: true, rowHasIcon: statDisplayInfo.icon ? true : false }
   }
 }
 

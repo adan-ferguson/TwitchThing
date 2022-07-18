@@ -2,6 +2,7 @@ import { foundMonster, generateMonster } from './monsters.js'
 import { generateCombat } from '../combat/combat.js'
 import { foundRelic, generateRelicEvent } from './relics.js'
 import { foundStairs } from './stairs.js'
+import FighterInstance from '../../game/combat/fighterInstance.js'
 
 /**
  * @param dungeonRun {DungeonRunInstance}
@@ -30,7 +31,12 @@ export async function generateEvent(dungeonRun){
 
   if(foundMonster(dungeonRun)){
     const monster = await generateMonster(dungeonRun)
-    const combat = await generateCombat(adventurerInstance.adventurer, monster, adventurerInstance.adventurerState)
+    // TODO: monsterInstance, adventurerInstance
+    const combat = await generateCombat(
+      new FighterInstance(adventurerInstance.adventurer, adventurerInstance.adventurerState, 1),
+      new FighterInstance(monster, {}, 2),
+      dungeonRun.floor
+    )
     return {
       duration: combat.duration,
       stayInRoom: true,

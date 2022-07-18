@@ -11,13 +11,6 @@ export const StatsDisplayStyle = {
   ADDITIONAL: 1, // Eg. "+50%", i.e. we're adding 50%
 }
 
-export const StatsDisplayScope = {
-  NONE: 0,
-  COMBAT: 1,
-  EXPLORING: 2,
-  ALL: 3
-}
-
 const statDefinitionsInfo = {
   hpMax: {
     text: 'Max Health',
@@ -33,7 +26,6 @@ const statDefinitionsInfo = {
       }
       return 'Max Health'
     },
-    scope: StatsDisplayScope.ALL
   },
   physPower: {
     text: 'Phys Power',
@@ -44,7 +36,6 @@ const statDefinitionsInfo = {
       }
     },
     description: 'Phys power (basic attack damage)',
-    scope: StatsDisplayScope.ALL
   },
   magicPower: {
     text: 'Magic Power',
@@ -55,17 +46,14 @@ const statDefinitionsInfo = {
       }
     },
     description: 'Magic power',
-    scope: StatsDisplayScope.ALL
   },
   physDef: {
     text: 'Phys Defense',
     description: 'Blocks physical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
-    scope: StatsDisplayScope.COMBAT
   },
   magicDef: {
     text: 'Magic Defense',
     description: '',
-    scope: StatsDisplayScope.COMBAT
   },
   speed: {
     text: 'Speed',
@@ -76,48 +64,41 @@ const statDefinitionsInfo = {
       }
     },
     description: 'Speed (combat turn time)',
-    scope: StatsDisplayScope.COMBAT
   },
   critChance: {
-    text: 'Critical Strike Chance',
+    text: 'Crit Chance',
     description: 'Chance to deal bonus damage.',
-    scope: StatsDisplayScope.COMBAT
+    displayedValueFn: value => `${Math.round(value * 100)}%`,
   },
   critDamage: {
-    text: 'Critical Strike Damage',
+    text: 'Crit Damage',
     description: 'Bonus damage from critical strikes.',
     displayedValueFn: (value, { style }) => {
       if(style === StatsDisplayStyle.CUMULATIVE){
-        return `${Math.round(value * 100)}%`
+        return `${Math.round(100 + value * 100)}%`
       }
     },
-    scope: StatsDisplayScope.COMBAT
   },
   dodgeChance: {
     text: 'Dodge Chance',
     description: 'Chance to dodge attacks.',
-    scope: StatsDisplayScope.COMBAT
   },
   lifesteal: {
     text: 'Lifesteal',
-    displayedValueFn: value => `${roundToFixed(value, 2)}%`,
+    displayedValueFn: value => `${Math.round(value * 100)}%`,
     description: 'Gain health when dealing physical damage.',
-    scope: StatsDisplayScope.COMBAT
   },
   combatHarderChance: {
     text: 'Stronger Monster Chance',
     description: 'Increases chance to fight stronger monsters.',
-    scope: StatsDisplayScope.EXPLORING
   },
   combatXP: {
     text: 'Combat XP Gain',
     description: 'Increases XP gained from combat.',
-    scope: StatsDisplayScope.EXPLORING
   },
   relicSolveChance: {
     text: 'Relic Solve Chance',
     description: 'Increased chance to solve relic puzzles. Rarer relics are harder to solve.',
-    scope: StatsDisplayScope.EXPLORING
   },
   relicRareChance: {
     text: 'Increased Relic Rarity',
@@ -126,24 +107,21 @@ const statDefinitionsInfo = {
   },
   regen: {
     text: 'Health Regeneration',
-    displayedValueFn: value => `${roundToFixed(value, 2)}%`,
+    displayedValueFn: value => `${roundToFixed(value * 100, 1)}%`,
     descriptionFn: (value, { style, owner }) => {
       if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
-        return `Recover ${roundToFixed(owner.baseHp * value / 100, 2)} health per 5 seconds, both in and out of combat.`
+        return `Recover ${value * owner.baseHp} health every 5 seconds, both in and out of combat (scales with level).`
       }
-      return 'Recover this much health per second.'
+      return `Recover (${value}% x Base Health) health every 5 seconds, both in and out of combat.`
     },
-    scope: StatsDisplayScope.ALL
   },
   chestFind: {
     text: 'Chest Find',
     description: 'Increased chance to find treasure chests from combat rewards or from treasure relics.',
-    scope: StatsDisplayScope.EXPLORING
   }
 }
 
 const DEFAULTS = {
-  scope: StatsDisplayScope.NONE,
   description: null,
   text: null,
   icon: null
@@ -176,16 +154,6 @@ export function getStatDisplayInfo(stat, options = {}){
     stat,
     order: Object.keys(statDefinitionsInfo).indexOf(stat.name)
   }
-}
-
-export function scopesMatch(scope1, scope2){
-  if(scope1 === StatsDisplayScope.NONE || scope2 === StatsDisplayScope.NONE){
-    return false
-  }
-  if(scope1 === StatsDisplayScope.ALL || scope2 === StatsDisplayScope.ALL){
-    return true
-  }
-  return scope1 === scope2
 }
 
 function toText(statType, value, style){

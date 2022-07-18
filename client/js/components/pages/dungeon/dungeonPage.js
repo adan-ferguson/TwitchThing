@@ -2,7 +2,7 @@ import Page from '../page.js'
 import { getSocket, joinSocketRoom, leaveSocketRoom } from '../../../socketClient.js'
 import CombatPage from '../combat/combatPage.js'
 import ResultsPage from '../results/resultsPage.js'
-import { floorToZoneName } from '../../../../../game/zones.js'
+import Zones, { floorToZone, floorToZoneName } from '../../../../../game/zones.js'
 
 const HTML = `
 <div class='content-columns'>
@@ -105,6 +105,7 @@ export default class DungeonPage extends Page{
     this._adventurerPane.setState(dungeonRun.adventurerState, animate)
     this._eventEl.update(this.currentEvent, dungeonRun.virtualTime)
     this._stateEl.updateDungeonRun(dungeonRun, animate || source instanceof CombatPage)
+    this._updateBackground()
   }
 
   async _finish(delay){
@@ -119,6 +120,11 @@ export default class DungeonPage extends Page{
       live: true,
       returnPage: this
     }))
+  }
+
+  _updateBackground(){
+    const zone = Zones[floorToZone(this.currentEvent.floor)]
+    this.app.setBackground(zone.color, zone.texture)
   }
 }
 

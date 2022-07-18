@@ -1,6 +1,5 @@
 import FighterInstance from '../../../../../game/combat/fighterInstance.js'
 import { fadeOut } from '../../../animationHelper.js'
-import { StatsDisplayScope } from '../../../statsDisplayInfo.js'
 import FlyingTextEffect from '../../effects/flyingTextEffect.js'
 import { toDisplayName } from '../../../../../game/utilFunctions.js'
 import { adventurerLoadoutContents } from '../../../adventurer.js'
@@ -31,8 +30,8 @@ export default class FighterPane extends HTMLElement{
     this.loadout = this.querySelector('di-loadout')
     this.statsList = this.querySelector('di-stats-list')
     this.statsList.setOptions({
-      statsDisplayScope: StatsDisplayScope.COMBAT,
-      forcedStats: ['physPower']
+      iconsOnly: true,
+      exclude: ['hpMax','speed']
     })
     this.fighterInstance = null
   }

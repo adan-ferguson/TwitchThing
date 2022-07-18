@@ -1,5 +1,4 @@
 import Combats from '../collections/combats.js'
-import FighterInstance from '../../game/combat/fighterInstance.js'
 import { toDisplayName } from '../../game/utilFunctions.js'
 import { randomOrder } from '../../game/rando.js'
 
@@ -8,10 +7,8 @@ const MAX_TIME = 120000
 
 const STATE_VALUES_TO_CLEAR = ['timeSinceLastAction']
 
-export async function generateCombat(fighter1, fighter2, fighterStartState1 = {}, fighterStartState2 = {}){
+export async function generateCombat(fighterInstance1, fighterInstance2, floor){
 
-  const fighterInstance1 = new FighterInstance(fighter1, fighterStartState1, 1)
-  const fighterInstance2 = new FighterInstance(fighter2, fighterStartState2, 2)
   const combat = new Combat(fighterInstance1, fighterInstance2)
 
   return await Combats.save({
@@ -19,18 +16,19 @@ export async function generateCombat(fighter1, fighter2, fighterStartState1 = {}
     duration: combat.duration,
     fighter1: {
       id: 1,
-      data: fighter1,
-      startState: fighterStartState1,
+      data: fighterInstance1.baseFighter,
+      startState: fighterInstance1.startState,
       endState: combat.fighterEndState1
     },
     fighter2: {
       id: 2,
-      data: fighter2,
-      startState: fighterStartState2,
+      data: fighterInstance2.baseFighter,
+      startState: fighterInstance2.startState,
       endState: combat.fighterEndState2
     },
     timeline: combat.timeline,
-    result: combat.result
+    result: combat.result,
+    floor: floor
   })
 }
 

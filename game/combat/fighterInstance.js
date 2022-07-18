@@ -23,6 +23,7 @@ export default class FighterInstance{
     if(!('hp' in this._currentState)){
       this._currentState.hp = this.hpMax
     }
+    this.startState = this._currentState
   }
 
   get baseHp(){
@@ -106,7 +107,7 @@ export default class FighterInstance{
   }
 
   attemptDodge(){
-    return Math.random() + this.stats.get('dodgeChance') > 1
+    return Math.random() + this.stats.get('dodgeChance').value > 1
   }
 
   takeDamage(damageInfo){
@@ -134,6 +135,9 @@ export default class FighterInstance{
       }]
     }
 
+    if(this.baseFighter.name === 'sorcerer'){
+      debugger
+    }
     const magicAttack = this.mods.contains({ name: 'magicAttack' })
     const damageInfo = {
       resultType: 'damage',
@@ -143,7 +147,7 @@ export default class FighterInstance{
     }
 
     if(this._attemptCrit()){
-      damageInfo.baseDamage *= (1 + this.stats.get('critDamage'))
+      damageInfo.baseDamage *= (1 + this.stats.get('critDamage').value)
       damageInfo.crit = true
     }
 
@@ -177,13 +181,13 @@ export default class FighterInstance{
   }
 
   _attemptCrit(){
-    return Math.random() + this.stats.get('critChance') > 1
+    return Math.random() + this.stats.get('critChance').value > 1
   }
 
   _lifesteal(damageResult){
     const lifesteal = Math.min(
       this.hpMax - this.hp,
-      Math.ceil(this.stats.get('lifesteal').value * damageResult.finalDamage / 100)
+      Math.ceil(this.stats.get('lifesteal').value * damageResult.finalDamage)
     )
     if(lifesteal){
       return this._gainHealth(lifesteal)

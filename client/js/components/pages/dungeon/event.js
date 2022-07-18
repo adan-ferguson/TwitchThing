@@ -4,8 +4,10 @@ import { fadeIn, fadeOut } from '../../../animationHelper.js'
 const innerHTML = `
 <di-bar class="time-bar"></di-bar>
 <div class="event-contents">
-  <div class="message"></div>
-  <div class="rewards"></div>
+    <div class="room-image"></div>
+    <div class="room-description"></div>
+    <div class="message"></div>
+    <div class="rewards"></div>
 </div>
 `
 

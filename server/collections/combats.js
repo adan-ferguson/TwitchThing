@@ -6,7 +6,8 @@ const DEFAULTS = {
   timeline: null,
   result: null,
   fighter1: null,
-  fighter2: null
+  fighter2: null,
+  floor: 1
 }
 
 const Combats = new Collection('combats', DEFAULTS)

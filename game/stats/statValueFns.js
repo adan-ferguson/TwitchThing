@@ -70,11 +70,15 @@ function flatMods(values){
   }
 
   values.forEach(change => {
-    change = parseFloat(change)
-    if(change > 0){
-      mods.flatPlus.push(change)
-    }else if(change < 0){
-      mods.flatMinus.push(-change)
+    let changeStr = change + ''
+    let value = parseFloat(changeStr)
+    if(changeStr.charAt(changeStr.length - 1) === '%'){
+      value /= 100
+    }
+    if(value > 0){
+      mods.flatPlus.push(value)
+    }else if(value < 0){
+      mods.flatMinus.push(-value)
     }
   })
 

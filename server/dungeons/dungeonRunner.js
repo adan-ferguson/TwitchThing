@@ -126,6 +126,7 @@ class DungeonRunInstance{
     if(!this.currentEvent){
       this.advance({
         passTimeOverride: true,
+        duration: ADVANCEMENT_INTERVAL * 2,
         message: `${this.adventurer.name} enters the dungeon.`
       })
     }

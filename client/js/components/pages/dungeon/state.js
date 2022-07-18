@@ -1,7 +1,11 @@
 import CustomAnimation from '../../../customAnimation.js'
+import { floorToZoneName } from '../../../../../game/zones.js'
 
 const innerHTML = `
 <di-timer></di-timer><br/>
+<div>
+    <span class="zone-name"></span>
+</div>
 <div>
     Floor <span class="floor"></span> - Room <span class="room"></span>
 </div>
@@ -19,9 +23,16 @@ export default class State extends HTMLElement{
   _chests
   _shareLink
 
+  _zoneNameEl
+  _floorEl
+  _roomEl
+
   constructor(){
     super()
     this.innerHTML = innerHTML
+    this._zoneNameEl = this.querySelector('.zone-name')
+    this._floorEl = this.querySelector('.floor')
+    this._roomEl = this.querySelector('.room')
     this.timer = this.querySelector('di-timer')
     this.xp = this.querySelector('.xp-reward')
     this.xpVal = null
@@ -30,8 +41,10 @@ export default class State extends HTMLElement{
   }
 
   updateDungeonRun(dungeonRun, animate){
-    this.querySelector('.floor').textContent = dungeonRun.floor
-    this.querySelector('.room').textContent = dungeonRun.room
+
+    this._zoneNameEl.textContent = floorToZoneName(dungeonRun.floor)
+    this._floorEl.textContent = dungeonRun.floor
+    this._roomEl.textContent = dungeonRun.room
 
     this._setXP(dungeonRun, animate)
     this._updateChests(dungeonRun.rewards.chests, animate)

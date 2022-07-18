@@ -1,7 +1,7 @@
 import Page from '../page.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import { fadeIn, fadeOut } from '../../../animationHelper.js'
-import { showLoader } from '../../../loader.js'
+import { hideLoader, showLoader } from '../../../loader.js'
 import BonusDetails from './bonusDetails.js'
 
 const HTML = `
@@ -40,7 +40,7 @@ export default class LevelupPage extends Page{
     this._options.innerHTML = ''
     this._selected = false
 
-    this._adventurer.nextLevelUp.options.forEach((bonus, index) => {
+    nextLevelUp.options.forEach((bonus, index) => {
       const details = new BonusDetails(bonus)
       details.addEventListener('click', () => {
         if(!this._selected){
@@ -57,12 +57,13 @@ export default class LevelupPage extends Page{
   async _select(index){
     this._selected = true
     showLoader()
-    const { nextLevelUp } = this.fetchData(`/game/adventurer/${this.adventurerID}/selectbonus/${index}`)
+    const { nextLevelUp } = await this.fetchData(`/game/adventurer/${this.adventurerID}/selectbonus/${index}`)
     if(!nextLevelUp){
       return this.redirectTo(new AdventurerPage(this.adventurerID))
     }
     await fadeOut(this._options)
     this._setupNext(nextLevelUp)
+    hideLoader()
     fadeIn(this._options)
   }
 }

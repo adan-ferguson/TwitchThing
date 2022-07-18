@@ -74,6 +74,8 @@ export default class App extends HTMLElement{
     page.app = this
     page.unloaded = false
 
+    this._resetBackground()
+
     try {
       await page.load(previousPage)
     }catch(ex){
@@ -95,7 +97,6 @@ export default class App extends HTMLElement{
     page.classList.add('fade-in')
     this.dispatchEvent(new Event('pagechange'))
     this.updateTitle()
-
     Loader.hideLoader()
   }
 
@@ -109,6 +110,11 @@ export default class App extends HTMLElement{
     this.setPage(this.currentPage.backPage())
   }
 
+  setBackground(color, texture){
+    this.style.backgroundColor = color
+    this.style.backgroundImage = `url("/assets/textures/${texture}")`
+  }
+
   async _setInitialPage(){
     const [pageStr, arg] = window.location.hash.substring(1).split('=')
     if(pageStr === 'adventurer' && arg){
@@ -120,6 +126,10 @@ export default class App extends HTMLElement{
       return this.setPage(new DungeonPage(this.startupParams.watch.id, true))
     }
     this.setPage(new MainPage())
+  }
+
+  _resetBackground(){
+    this.setBackground(null, null)
   }
 
   async _fetchUser(){

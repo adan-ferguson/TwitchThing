@@ -1,15 +1,19 @@
 const Zones = [{
   name: 'Caves',
-  color: '#fff0e9'
+  color: '#ebdad4',
+  texture: 'caves.png',
 },{
   name: 'Crypt',
-  color: '#eeecec'
+  color: '#eeecec',
+  texture: 'crypt.png',
 },{
   name: 'Swamp',
-  color: '#f1f5e8'
+  color: '#f1f5e8',
+  texture: 'swamp.png',
 },{
   name: 'Something Else',
-  color: '#effaf8'
+  color: '#effaf8',
+  texture: 'caves.png'
 }]
 
 export default Zones

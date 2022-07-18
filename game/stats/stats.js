@@ -12,7 +12,7 @@ export default class Stats{
    * @param baseStats {[object],object,Stats}
    * @param additionalStats {[object],object,Stats}
    */
-  constructor(baseStats, additionalStats = null){
+  constructor(baseStats = null, additionalStats = null){
     this.baseAffectors = toAffectorsArray(baseStats)
     this.additionalAffectors = toAffectorsArray(additionalStats)
   }

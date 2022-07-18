@@ -659,6 +659,7 @@ Bugs/UI Tweaks:
 - Show a popup for first time you see dungeon picker
 - Show chest contents
 
+
 TODO Later
 -----------
 - Consolidate adventurerInstance and fighterInstance

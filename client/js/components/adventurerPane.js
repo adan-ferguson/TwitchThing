@@ -33,9 +33,6 @@ export default class AdventurerPane extends HTMLElement{
       orbsDisplayStyle: OrbsDisplayStyle.SHOW_MAX
     })
     this.statsList = this.querySelector('di-stats-list')
-    this.statsList.setOptions({
-      forcedStats: ['hpMax', 'speed', 'physPower']
-    })
   }
 
   setAdventurer(adventurer){
