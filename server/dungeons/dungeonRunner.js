@@ -9,7 +9,7 @@ import log from 'fancy-log'
 import { continueRelicEvent } from './relics.js'
 import { finishCombatEvent } from '../combat/combat.js'
 
-const ADVANCEMENT_INTERVAL = 50000
+const ADVANCEMENT_INTERVAL = 5000
 
 let running = false
 let lastAdvancement = new Date()
