@@ -2,12 +2,14 @@ import CustomAnimation from '../../../customAnimation.js'
 import { fadeIn, fadeOut } from '../../../animationHelper.js'
 
 const innerHTML = `
+<div class="room-image">
+    <img>
+</div>
 <di-bar class="time-bar"></di-bar>
-<div class="event-contents">
-    <div class="room-image"></div>
-    <div class="room-description"></div>
-    <div class="message"></div>
-    <div class="rewards"></div>
+<div class="room-contents">
+  <div class="room-description"></div>
+  <div class="message"></div>
+  <div class="rewards"></div>
 </div>
 `
 
@@ -20,10 +22,13 @@ export default class Event extends HTMLElement{
 
   _adventurer
 
+  _imageEl
+
   constructor(){
     super()
     this.innerHTML = innerHTML
-    this._contents = this.querySelector('.event-contents')
+    this._imageEl = this.querySelector('.room-image img')
+    this._contents = this.querySelector('.room-contents')
     this._rewards = this.querySelector('.rewards')
     this._message = this.querySelector('.message')
     this._timeBar = this.querySelector('.time-bar')
@@ -40,10 +45,7 @@ export default class Event extends HTMLElement{
     fadeOut(this._contents).then(() => {
       fadeIn(this._contents)
       this._contents.classList.remove('fade-out')
-      if (!dungeonEvent){
-        this._message.textContent = `${this._adventurer.name} enters the dungeon.`
-        return
-      }
+      this._setImage(dungeonEvent)
       this._message.textContent = dungeonEvent.message
       this._addRewards(dungeonEvent.rewards)
     })
@@ -81,6 +83,11 @@ export default class Event extends HTMLElement{
         this._timeBar.setValue(maxTime * pct)
       }
     })
+  }
+
+  _setImage(dungeonEvent){
+    let roomType = dungeonEvent.roomType ?? 'wandering'
+    this._imageEl.setAttribute('src', `/assets/rooms/${roomType}.png`)
   }
 }
 

@@ -3,9 +3,11 @@ di-dungeon-event
   flex-direction: column
   opacity: 1
   transition: opacity 0.3s
+  height: 100%
 
   > *
     margin-top: 6rem
+    flex-shrink: 0
 
   .time-bar
     width: 100%
@@ -19,6 +21,19 @@ di-dungeon-event
 
   .rewards
     color: mediumseagreen
+
+  .room-image
+    height: 80%
+    display: flex
+    justify-content: center
+    align-items: center
+
+  .room-contents
+    flex-grow: 1
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
 
 di-dungeon-state
   font-family: 'Number Font', serif

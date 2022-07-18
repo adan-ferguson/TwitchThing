@@ -25,6 +25,7 @@ export async function generateEvent(dungeonRun){
     return {
       nextRoom: 1,
       nextFloor: floor + 1,
+      roomType: 'stairs',
       message: `${adventurerInstance.name} found the stairs and goes deeper.`
     }
   }

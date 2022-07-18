@@ -9,7 +9,7 @@ import log from 'fancy-log'
 import { continueRelicEvent } from './relics.js'
 import { finishCombatEvent } from '../combat/combat.js'
 
-const ADVANCEMENT_INTERVAL = 5000
+const ADVANCEMENT_INTERVAL = 50000
 
 let running = false
 let lastAdvancement = new Date()
@@ -127,7 +127,8 @@ class DungeonRunInstance{
       this.advance({
         passTimeOverride: true,
         duration: ADVANCEMENT_INTERVAL * 2,
-        message: `${this.adventurer.name} enters the dungeon.`
+        message: `${this.adventurer.name} enters the dungeon.`,
+        roomType: 'entrance'
       })
     }
     this._time = this.currentEvent.startTime

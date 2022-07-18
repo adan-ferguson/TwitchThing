@@ -57,6 +57,7 @@ export function generateRelicEvent(dungeonRun){
   const tier = selectTier(dungeonRun.adventurerInstance.stats.get('relicRareChance').value)
   return {
     relic: { type, tier },
+    roomType: 'relic',
     stayInRoom: true,
     attempts: 0,
     message: `${dungeonRun.adventurerInstance.name} found a relic and is attempting to interpret it.`

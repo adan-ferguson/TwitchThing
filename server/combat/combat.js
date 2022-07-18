@@ -41,11 +41,13 @@ export async function finishCombatEvent(dungeonRun, combatEvent){
   }
   if(!fighter.endState.hp){
     event.runFinished = true
+    event.roomType = 'dead'
     event.message = `${fighter.data.name} has fallen, and got kicked out of the dungeon by some mysterious entity.`
   }else if(!enemy.endState.hp){
     event.rewards = enemy.data.rewards
     event.message = `${fighter.data.name} defeated the ${toDisplayName(enemy.data.name)}.`
     event.monster = { ...combatEvent.monster, defeated: true }
+    event.roomType = 'victory'
   }else{
     event.message = 'That fight was going nowhere so you both just get bored and leave.'
   }
