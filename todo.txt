@@ -586,12 +586,13 @@ Component Changes:
 + More icons in general
 - Don't use hash queries for adventurer new tab
 + Go back to adventurer page not having subpages, page.load() contains source info
-- Detach user levelups from dungeon results page
++ Detach user levelups from dungeon results page
 
-- Socket reconnection should rejoin rooms, maybe even reload the current page?
++ Socket reconnection should rejoin rooms, maybe even reload the current page?
+-- Reload current page
 
 + Show name of zone while exploring
--- Show a theme for each multiple of 10 floors (background texture)
+++ Show a theme for each multiple of 10 floors (background texture)
 
 + StatDisplayInfo for additionals if they're percentages (removal of composites should help this)
 
@@ -658,7 +659,7 @@ Bugs/UI Tweaks:
 - Graphic for various events
 - Show a popup for first time you see dungeon picker
 - Show chest contents
-
+- no icon stat list tooltip
 
 TODO Later
 -----------

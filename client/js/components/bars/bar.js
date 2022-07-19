@@ -198,17 +198,21 @@ export default class Bar extends HTMLElement{
     const val = valOverride ?? this._val
     let html = ''
     if(this._options.showValue){
-      html += wrap('span', val)
+      html += spwrap(val)
       if(this._options.showMax){
-        html += wrap('span', '/')
-        html += wrap('span', this._options.max)
+        html += spwrap('/')
+        html += spwrap(this._options.max)
       }
     }
     if(this._options.showLabel){
-      html += wrap('span', this._options.label)
+      html += spwrap(this._options.label)
     }
     this._barLabel.innerHTML = html
   }
+}
+
+function spwrap(val){
+  return `<span>${val}</span>`
 }
 
 customElements.define('di-bar', Bar)

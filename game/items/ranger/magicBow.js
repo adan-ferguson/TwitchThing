@@ -5,6 +5,6 @@ export default {
   mods: [
     { name: 'magicAttack' }
   ],
-  description: 'Not really suitable for Ranger, but whatever LOL',
-  orbs: 8
+  description: 'User\'s attacks deal magic damage and use magic power.',
+  orbs: 7
 }

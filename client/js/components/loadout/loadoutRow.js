@@ -1,6 +1,7 @@
 import tippy from 'tippy.js'
 import SimpleModal from '../simpleModal.js'
 import { OrbsDisplayStyle } from '../orbRow.js'
+import { wrap } from '../../../../game/utilFunctions.js'
 
 const HTML = `
 <div>
@@ -65,13 +66,16 @@ export default class LoadoutRow extends HTMLElement{
 
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
-    tooltip.appendChild(this.loadoutItem.makeTooltip(true))
+
+    tooltip.appendChild(wrap(this.loadoutItem.makeTooltip(true), {
+      classes: 'tooltip-content',
+      allowHTML: true
+    }))
 
     if(this.loadoutItem.makeDetails){
-      const right = document.createElement('div')
-      right.classList.add('right-click')
-      right.innerHTML = 'Right-click for more info'
-      tooltip.appendChild(right)
+      tooltip.appendChild(wrap('Right-click for more info', {
+        classes: 'right-click'
+      }))
     }
 
     return tooltip

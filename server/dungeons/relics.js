@@ -101,6 +101,7 @@ export async function continueRelicEvent(dungeonRun, previousEvent){
     relic,
     stayInRoom: true,
     attempts: attemptNo,
+    roomType: 'relic',
     message: randomMessage(advName, previousEvent.message),
     ...newEvent
   }

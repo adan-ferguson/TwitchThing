@@ -4,7 +4,9 @@ import { roundToFixed } from '../../game/utilFunctions.js'
 import healthIcon from '../assets/icons/health.svg'
 import actionIcon from '../assets/icons/action.svg'
 import physPowerIcon from '../assets/icons/physPower.svg'
+import physDefIcon from '../assets/icons/physDef.svg'
 import magicPowerIcon from '../assets/icons/magicPower.svg'
+import magicDefIcon from '../assets/icons/magicDef.svg'
 
 export const StatsDisplayStyle = {
   CUMULATIVE: 0, // Eg. "50%", i.e. our total of this stat is 50%
@@ -49,10 +51,12 @@ const statDefinitionsInfo = {
   },
   physDef: {
     text: 'Phys Defense',
+    icon: physDefIcon,
     description: 'Blocks physical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
   },
   magicDef: {
     text: 'Magic Defense',
+    icon: magicDefIcon,
     description: '',
   },
   speed: {
@@ -72,12 +76,7 @@ const statDefinitionsInfo = {
   },
   critDamage: {
     text: 'Crit Damage',
-    description: 'Bonus damage from critical strikes.',
-    displayedValueFn: (value, { style }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE){
-        return `${Math.round(100 + value * 100)}%`
-      }
-    },
+    description: 'Increases damage deal by crits.'
   },
   dodgeChance: {
     text: 'Dodge Chance',

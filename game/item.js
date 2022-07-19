@@ -22,4 +22,7 @@ export default class ItemInstance{
   get mods(){
     return this.baseItem.mods || []
   }
+  get description(){
+    return this.baseItem.description || ''
+  }
 }

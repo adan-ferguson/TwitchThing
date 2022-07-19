@@ -22,7 +22,7 @@ export default class AdventurerPane extends HTMLElement{
     this.hpBar = this.querySelector('di-hp-bar')
     this.loadout = this.querySelector('di-loadout')
     this.loadout.setOptions({
-      orbsDisplayStyle: OrbsDisplayStyle.SHOW_MAX
+      orbsDisplayStyle: OrbsDisplayStyle.USED_ONLY
     })
     this.statsbox = this.querySelector('.stats-box')
     this.statsList = this.querySelector('di-stats-list')

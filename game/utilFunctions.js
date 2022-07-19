@@ -44,16 +44,27 @@ export function mergeElementOptions(currentOptions, newOptions){
   return options
 }
 
-export function wrap(elementName, content, html = false){
-  const el = document.createElement(elementName)
-  if(html){
-    el.innerHTML = content
+export function wrap(content, options = {}){
+  options = {
+    elementType: 'div',
+    allowHTML: false,
+    classes: null,
+    ...options
+  }
+  const el = document.createElement(options.elementType)
+  if(options.allowHTML){
+    if(content instanceof HTMLElement){
+      el.appendChild(content)
+    }else{
+      el.innerHTML = content
+    }
   }else{
     el.textContent = content
   }
-  const parentEl = document.createElement('div')
-  parentEl.appendChild(el)
-  return parentEl.innerHTML
+  if(options.classes){
+    el.classList.add(...toArray(options.classes))
+  }
+  return el
 }
 
 export function fillArray(fn, length){

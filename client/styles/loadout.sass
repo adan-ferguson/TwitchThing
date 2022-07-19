@@ -60,9 +60,19 @@ di-adventurer-loadout-editor-page
     justify-content: center
 
 .loadout-row-tooltip
-  di-stats-list
+
+  .tooltip-content
     margin-left: -6rem
     margin-right: -6rem
+    display: flex
+    flex-direction: column
+
+    > *
+      margin-bottom: 10rem
+
+      &:last-child
+        margin-bottom: 0
+
   .right-click
     font-size: 0.9em
     margin-top: 10rem
