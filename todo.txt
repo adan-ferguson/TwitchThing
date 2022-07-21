@@ -603,8 +603,8 @@ Component Changes:
 -- Simulate a combat
 
 Game Systems/Balance:
-- Remove "pending" events, replace with "stayInRoom" events
--- Change combat
++ Remove "pending" events, replace with "stayInRoom" events
+++ Change combat
 
 + Remove user xp
 -- New slot when you unlock a new zone
@@ -624,13 +624,11 @@ Game Systems/Balance:
 - Monster mods
 -- Make 3rd zone of monsters
 
-- Class bonuses
-
-- Class items
-
-- Active items
++ Class bonuses
++ Class items
 
 - Magic damage
+-- Test
 
 Bugs/UI Tweaks:
 + Make the glow effect much more obvious
@@ -639,6 +637,7 @@ Bugs/UI Tweaks:
 - AdventurerRow
 -- Enemy displayname
 -- Red for combat
+
 - Show time on results page
 
 - Have loadout rows contain an inner element
@@ -651,7 +650,7 @@ Bugs/UI Tweaks:
 
 - Dragged items have z-index on top
 
-- Loadout shouldn't show orbs if they're 0
++ Loadout shouldn't show orbs if they're 0
 
 - Final event is wack
 
@@ -663,6 +662,7 @@ Bugs/UI Tweaks:
 
 TODO Later
 -----------
+- Active items
 - Consolidate adventurerInstance and fighterInstance
 - More interesting relic UI
 - Gold

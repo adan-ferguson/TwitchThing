@@ -11,7 +11,29 @@ di-adventurer-page
 
 di-adventurer-pane
   .top-section
+
+    transition: background-color 0.2s
+    &:hover
+      background-color: #effaf8
+
+    cursor: pointer
+    padding: 6rem 12rem
+    margin-bottom: 6rem
+
     > *
       margin-bottom: 6rem
-    di-stats-list
-      padding: 6rem 12rem
+
+di-adventurer-info
+  .divider
+    margin: 0 16rem
+    border-right: 0.3rem solid #CCCCCC
+  .bonus-item
+    margin-bottom: 0.6em
+    align-items: center
+    justify-content: space-between
+    > *
+      margin-right: 0.20em
+      white-space: nowrap
+    img
+      height: 1em
+      margin-left: 1em

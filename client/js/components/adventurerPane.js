@@ -2,15 +2,17 @@ import { levelToXp, xpToLevel } from '../../../game/adventurer.js'
 import AdventurerInstance from '../../../game/adventurerInstance.js'
 import { adventurerLoadoutContents } from '../adventurer.js'
 import { OrbsDisplayStyle } from './orbRow.js'
+import Modal from './modal.js'
+import AdventurerInfo from './adventurerInfo.js'
 
 const HTML = `
-<div class="flex-grow">
+<!--<div class="flex-grow">-->
   <div class="flex-rows top-section">
     <div class="name"></div>
     <di-xp-bar></di-xp-bar>
     <di-stats-list></di-stats-list>
   </div>
-</div>
+<!--</div>-->
 <di-loadout></di-loadout>
 `
 
@@ -33,6 +35,12 @@ export default class AdventurerPane extends HTMLElement{
       orbsDisplayStyle: OrbsDisplayStyle.SHOW_MAX
     })
     this.statsList = this.querySelector('di-stats-list')
+
+    this.querySelector('.top-section').addEventListener('click', e => {
+      if(this.adventurer){
+        this._showAdventurerInfoModal()
+      }
+    })
   }
 
   setAdventurer(adventurer){
@@ -70,6 +78,12 @@ export default class AdventurerPane extends HTMLElement{
         }
       }
     })
+  }
+
+  _showAdventurerInfoModal(){
+    const modal = new Modal()
+    modal.innerPane.appendChild(new AdventurerInfo(this.adventurer, this.statsList.stats))
+    modal.show()
   }
 }
 

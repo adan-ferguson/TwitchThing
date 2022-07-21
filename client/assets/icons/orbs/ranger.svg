@@ -10,7 +10,7 @@
             fill="white"
             cx="25"
             cy="25"
-            rx="4"
-            ry="4"
+            rx="6"
+            ry="6"
     />
 </svg>

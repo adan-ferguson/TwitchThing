@@ -8,6 +8,7 @@ export default class StatsList extends HTMLElement{
     statsDisplayStyle: StatsDisplayStyle.CUMULATIVE,
     iconsOnly: false,
     showTooltips: true,
+    truncate: true,
     exclude: []
   }
 
@@ -18,6 +19,10 @@ export default class StatsList extends HTMLElement{
     super()
   }
 
+  get stats(){
+    return this._stats
+  }
+
   setOptions(options){
     for (let key in options){
       if(key in this._options){
@@ -25,6 +30,7 @@ export default class StatsList extends HTMLElement{
       }
     }
     this._update()
+    return this
   }
 
   setStats(stats, owner = null){
