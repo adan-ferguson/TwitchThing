@@ -19,6 +19,7 @@ export default class XpBar extends Bar{
   setLevelFunctions(xpToLevel, levelToXp){
     this._xpToLevel = xpToLevel
     this._levelToXp = levelToXp
+    return this
   }
 
   async setValue(val, options = {}){

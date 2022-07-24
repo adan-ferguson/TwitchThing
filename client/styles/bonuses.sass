@@ -1,0 +1,43 @@
+di-levelup-page
+
+  .options
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: space-evenly
+
+  di-bonus-details
+    cursor: pointer
+    width: 300rem
+    border: 2rem dotted currentColor
+
+    &:hover
+      border-style: solid
+
+
+di-bonus-details
+  position: relative
+  padding: 15rem 15rem 35rem
+  display: flex
+  flex-direction: column
+
+  .header
+    display: flex
+    flex-direction: column
+    padding-bottom: 5rem
+    margin-bottom: 5rem
+    font-weight: bold
+    border-bottom: 1rem solid currentColor
+
+    .name
+      margin-bottom: 2rem
+
+    .description
+      font-size: 0.85em
+
+
+  di-orb-row
+    position: absolute
+    right: 2rem
+    bottom: 2rem
+
