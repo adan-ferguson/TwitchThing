@@ -1,4 +1,5 @@
 import LoadoutRow from './loadoutRow.js'
+import { getAdventurerOrbsData } from '../../../../game/adventurer.js'
 
 const HTML = `
 <div class="content-rows">
@@ -21,7 +22,16 @@ export default class Inventory extends HTMLElement{
     })
   }
 
-  setItems(items){
+  get sortFn(){
+    return SORT_FUNCTIONS.date
+  }
+
+  filterFn = (el) => {
+    return isCompatible(this.adventurer, el.loadoutItem.obj)
+  }
+
+  setup(items, adventurer){
+    this.adventurer = adventurer
     const loadoutRows = []
     Object.values(items).forEach(loadoutItem => {
       if(loadoutItem){
@@ -30,6 +40,11 @@ export default class Inventory extends HTMLElement{
         row.showNewBadge(loadoutItem.isNew)
         loadoutRows.push(row)
       }
+    })
+    this.list.setOptions({
+      sortFn: this.sortFn,
+      filterFn: this.filterFn,
+      showFiltered: true
     })
     this.list.setRows(loadoutRows)
   }
@@ -46,6 +61,18 @@ export default class Inventory extends HTMLElement{
   removeItem(item){
     const row = this.list.findRow(row => row.loadoutItem === item)
     this.list.removeRow(row)
+  }
+}
+
+function isCompatible(adventurer, itemInstance){
+  return getAdventurerOrbsData(adventurer, [itemInstance]).isValid
+}
+
+const SORT_FUNCTIONS = {
+  date: null, // Default sorting is by date, so unsorted is just as good
+  class: (rowA, rowB) => {
+    const instanceA = rowA.loadoutItem.obj
+    const instanceB = rowB.loadoutItem.obj
   }
 }
 

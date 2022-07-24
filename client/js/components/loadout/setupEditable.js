@@ -42,7 +42,7 @@ export default function(inventoryEl, loadoutEl, options = {}){
 
   function click(e){
     const row = e.target.closest('di-loadout-row')
-    if(!row?.loadoutItem){
+    if(!row?.loadoutItem || row.classList.contains('filtered')){
       return
     }
     if(dragStarted){
@@ -63,7 +63,7 @@ export default function(inventoryEl, loadoutEl, options = {}){
 
   function pointerdown(e){
     const row = e.target.closest('di-loadout-row')
-    if(!row?.loadoutItem){
+    if(!row?.loadoutItem || row.classList.contains('filtered')){
       return
     }
     draggedElement = row

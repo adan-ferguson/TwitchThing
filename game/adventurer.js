@@ -64,12 +64,12 @@ export function getAdventurerMods(adventurer, state = null){
   return new ModsCollection(bonusMods, loadoutMods, stateMods)
 }
 
-export function getAdventurerOrbsData(adventurer){
+export function getAdventurerOrbsData(adventurer, items = adventurer.items){
   return new OrbsData(
     adventurer.bonuses.map(bonus => {
       return { [bonus.group]: 1 }
     }),
-    adventurer.items.filter(i => i).map(itemDef => new Item(itemDef).orbs)
+    items.filter(i => i).map(itemDef => new Item(itemDef).orbs)
   )
 
   // TODO: items -> usedOrbs

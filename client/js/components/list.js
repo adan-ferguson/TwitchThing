@@ -16,18 +16,23 @@ const HTML = `
 
 export default class List extends HTMLElement{
 
+  _rowsCache = []
+  _sortedRows = []
+
   constructor(){
     super()
     this.innerHTML = HTML
     this.rows = this.querySelector('.items')
-    this._rowsCache = []
     this._page = 1
     this._isMobile = mobileMode()
 
     this._options = {
       paginate: true,
       pageSize: 10,
-      mobilePageSize: null
+      mobilePageSize: null,
+      sortFn: null,
+      filterFn: null,
+      showFiltered: false
     }
 
     this.addEventListener('wheel', e => {
@@ -82,29 +87,37 @@ export default class List extends HTMLElement{
     for (let key in options){
       this._options[key] = options[key]
     }
-    this._update()
+    this._fullUpdate()
   }
 
   setRows(rows){
     this._rowsCache = rows.slice()
-    this._update()
+    this._fullUpdate()
   }
 
   addRow(row){
+    // TODO: binary search here
     this._rowsCache.push(row)
-    this._update()
+    this._fullUpdate()
   }
 
   removeRow(row){
-    const index = this._rowsCache.findIndex(r => r === row)
+    const index = this._sortedRows.findIndex(r => r === row)
     if(index > -1){
-      this._rowsCache.splice(index, 1)
+      this._sortedRows.splice(index, 1)
       this._update()
     }
   }
 
   findRow(fn){
     return this._rowsCache.find(fn)
+  }
+
+  _fullUpdate(){
+    const filtered = (!this._options.showFiltered && this._options.filterFn) ?
+      this._rowsCache.filter(this._options.filterFn) : [...this._rowsCache]
+    this._sortedRows = this._options.sortFn ? filtered.sort(this._options.sortFn) : filtered
+    this._update()
   }
 
   _update(){
@@ -124,10 +137,13 @@ export default class List extends HTMLElement{
 
     this.rows.innerHTML = ''
     const start = (this._page - 1) * this._pageSize
-    const toDisplay = this._rowsCache.slice(start, start + this._pageSize)
+    const toDisplay = this._sortedRows.slice(start, start + this._pageSize)
     fillWithBlanks(toDisplay, this._pageSize)
     toDisplay.forEach(el => {
       el.style.flexBasis = `${100 / this._pageSize}%`
+      if(this._options.showFiltered && !el.classList.contains('blank-row')){
+        el.classList.toggle('filtered', !this._options.filterFn(el))
+      }
     })
     this.rows.append(...toDisplay)
     hideAllTippys()
