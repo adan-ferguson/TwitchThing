@@ -1,14 +1,14 @@
 import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 import { adventurerLoadoutContents } from '../../../adventurer.js'
 import { OrbsDisplayStyle } from '../../orbRow.js'
+import Modal from '../../modal.js'
+import AdventurerInfo from '../../adventurerInfo.js'
 
 const HTML = `
-<div class="flex-grow">
-  <div class="flex-rows">
-    <div class="name"></div>
-    <di-hp-bar></di-hp-bar>
-    <di-stats-list></di-stats-list>
-  </div>
+<div class="flex-rows top-section flex-grow">
+  <div class="name"></div>
+  <di-hp-bar></di-hp-bar>
+  <di-stats-list></di-stats-list>
 </div>
 <di-loadout></di-loadout>
 `
@@ -31,6 +31,12 @@ export default class AdventurerPane extends HTMLElement{
       exclude: ['hpMax', 'speed']
     })
     this.displayMode = 'normal'
+
+    this.querySelector('.top-section').addEventListener('click', e => {
+      if(this.adventurer){
+        this._showAdventurerInfoModal()
+      }
+    })
   }
 
   setAdventurer(adventurer){
@@ -64,6 +70,13 @@ export default class AdventurerPane extends HTMLElement{
     }
 
     this.statsList.setStats(instance.stats, instance)
+  }
+
+  _showAdventurerInfoModal(){
+    const instance = new AdventurerInstance(this.adventurer, this.state)
+    const modal = new Modal()
+    modal.innerPane.appendChild(new AdventurerInfo(this.adventurer, instance.stats))
+    modal.show()
   }
 }
 

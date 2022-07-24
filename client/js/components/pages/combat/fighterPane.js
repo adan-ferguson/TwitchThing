@@ -4,16 +4,17 @@ import FlyingTextEffect from '../../effects/flyingTextEffect.js'
 import { toDisplayName } from '../../../../../game/utilFunctions.js'
 import { adventurerLoadoutContents } from '../../../adventurer.js'
 import { monsterLoadoutContents } from '../../../monster.js'
+import Modal from '../../modal.js'
+import AdventurerInfo from '../../adventurerInfo.js'
+import MonsterInfo from '../../monsterInfo.js'
 
 const HTML = `
-<div class="flex-grow">
-  <div class="flex-rows">
-    <div class="name"></div>
-    <di-hp-bar></di-hp-bar>
-    <di-action-bar></di-action-bar>
-    <di-stats-list></di-stats-list>
-  </div>   
-</div>
+<div class="flex-grow flex-rows top-section">
+  <div class="name"></div>
+  <di-hp-bar></di-hp-bar>
+  <di-action-bar></di-action-bar>
+  <di-stats-list></di-stats-list>
+</div>   
 <di-loadout></di-loadout>    
 `
 
@@ -34,6 +35,12 @@ export default class FighterPane extends HTMLElement{
       exclude: ['hpMax','speed']
     })
     this.fighterInstance = null
+
+    this.querySelector('.top-section').addEventListener('click', e => {
+      if(this.fighter){
+        this._showFighterInfoModal()
+      }
+    })
   }
 
   get isAdventurer(){
@@ -154,6 +161,16 @@ export default class FighterPane extends HTMLElement{
       this.fighterInstance.timeUntilNextAction
     )
     // TODO: update cooldowns for items and effects
+  }
+
+  _showFighterInfoModal(){
+    const modal = new Modal()
+    if(this.fighterInstance.isAdventurer){
+      modal.innerPane.appendChild(new AdventurerInfo(this.fighterInstance.fighter, this.fighterInstance.stats))
+    }else{
+      modal.innerPane.appendChild(new MonsterInfo(this.fighterInstance.fighter, this.fighterInstance.stats))
+    }
+    modal.show()
   }
 }
 

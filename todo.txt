@@ -654,7 +654,9 @@ Bugs/UI Tweaks:
 
 - Final event is wack
 
+- No back-to-back relics
 - Relics found count is wrong
+- Healing relic not healing?
 - Graphic for various events
 - Show a popup for first time you see dungeon picker
 - Show chest contents

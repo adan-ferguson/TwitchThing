@@ -1,10 +1,9 @@
-import { getAdventurerStats } from '../../../game/adventurer.js'
 import BonusDetails from './pages/levelup/bonusDetails.js'
 import classDisplayInfo from '../classDisplayInfo.js'
 import Bonus from '../../../game/bonus.js'
 import { wrap } from '../../../game/utilFunctions.js'
 import tippy from 'tippy.js'
-import { levelToXp, xpToLevel } from '../../../game/adventurer.js'
+import { getAdventurerStats, levelToXp, xpToLevel } from '../../../game/adventurer.js'
 
 const HTML = `
 <div class="flex-rows">
@@ -25,7 +24,7 @@ export default class AdventurerInfo extends HTMLElement{
 
   /**
    * @param adventurer
-   * @param stats {Stats} Provide this if they can't be derived from the adventurer itself, like
+   * @param stats Provide this if they can't be derived from the adventurer itself, like
    *  if their loadout is being edited or if they have a state.
    */
   constructor(adventurer, stats = null){
@@ -36,6 +35,7 @@ export default class AdventurerInfo extends HTMLElement{
         truncate: false
       })
       .setStats(stats || getAdventurerStats(adventurer))
+
     this._setBonuses(adventurer.bonuses)
     this.querySelector('di-xp-bar')
       .setLevelFunctions(xpToLevel, levelToXp)

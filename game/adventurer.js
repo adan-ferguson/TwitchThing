@@ -10,7 +10,7 @@ const LEVEL_2_XP = 100
 const XP_MULTIPLIER = 0.3
 
 const HP_BASE = 50
-const HP_GROWTH_PCT = 0.1
+const HP_GROWTH_PCT = 0.11
 const POWER_BASE = 10
 const POWER_GROWTH_PCT = 0.1
 

@@ -5,6 +5,7 @@ import ModsCollection from './modsCollection.js'
 
 const REWARD_MULTIPLIER = 0.2
 const POWER_MULTIPLIER = 0.25
+const HP_MULTIPLIER = 0.27
 
 const HP_BASE = 40
 const XP_BASE = 50
@@ -22,7 +23,7 @@ export function levelToXpReward(lvl){
 }
 
 export function monsterLevelToHp(lvl){
-  return Math.ceil(getScalingValue(lvl, POWER_MULTIPLIER) * HP_BASE)
+  return Math.ceil(getScalingValue(lvl, HP_MULTIPLIER) * HP_BASE)
 }
 
 export function monsterLevelToPower(lvl){

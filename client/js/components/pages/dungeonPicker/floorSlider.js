@@ -114,7 +114,7 @@ export default class FloorSlider extends HTMLElement{
     this._selectedFloorEl = floorEl
     floorEl.classList.add('selected')
     requestAnimationFrame(() => {
-      floorEl.scrollIntoView()
+      // floorEl.scrollIntoView()
     })
   }
 }
