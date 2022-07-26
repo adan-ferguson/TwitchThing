@@ -42,7 +42,7 @@ export default class List extends HTMLElement{
       if(e.deltaY < 0 && this._page > 1){
         this._page--
         this._update()
-      }else if(e.deltaY > 0 && this._page < this._maxPage){
+      }else if(e.deltaY > 0 && this._page < this.maxPage){
         this._page++
         this._update()
       }
@@ -70,13 +70,13 @@ export default class List extends HTMLElement{
     })
 
     this.querySelector('.last').addEventListener('click', () => {
-      this._page = this._maxPage
+      this._page = this.maxPage
       this._update()
     })
   }
 
-  get _maxPage(){
-    return this._options.paginate ? Math.max(1, Math.floor(1 + (this._rowsCache.length - 1) / this._pageSize)) : 1
+  get maxPage(){
+    return this._options.paginate ? Math.max(1, Math.floor(1 + (this._sortedRows.length - 1) / this._pageSize)) : 1
   }
 
   get _pageSize(){
@@ -128,12 +128,13 @@ export default class List extends HTMLElement{
       this.querySelector('.pagination-buttons').classList.add('displaynone')
     }
 
+    this._page = Math.max(1, Math.min(this.maxPage, this._page))
     this.querySelector('.first').disabled = this._page === 1 ? true : false
     this.querySelector('.prev').disabled = this._page === 1 ? true : false
-    this.querySelector('.next').disabled = this._page === this._maxPage ? true : false
-    this.querySelector('.last').disabled = this._page === this._maxPage ? true : false
+    this.querySelector('.next').disabled = this._page === this.maxPage ? true : false
+    this.querySelector('.last').disabled = this._page === this.maxPage ? true : false
     this.querySelector('.page-number').textContent = this._page + ''
-    this.querySelector('.page-count').textContent = this._maxPage + ''
+    this.querySelector('.page-count').textContent = this.maxPage + ''
 
     this.rows.innerHTML = ''
     const start = (this._page - 1) * this._pageSize

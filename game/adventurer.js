@@ -4,7 +4,7 @@ import scaledValue from './scaledValue.js'
 import OrbsData from './orbsData.js'
 import ModsCollection from './modsCollection.js'
 import Bonus from './bonus.js'
-import Item from './item.js'
+import ItemInstance from './item.js'
 
 const LEVEL_2_XP = 100
 const XP_MULTIPLIER = 0.3
@@ -41,7 +41,7 @@ export function getAdventurerStats(adventurer, state = null){
     .map(bonusDef => new Bonus(bonusDef).stats)
 
   const loadoutStatAffectors = adventurer.items.filter(itemDef => itemDef)
-    .map(itemDef => new Item(itemDef).stats)
+    .map(itemDef => new ItemInstance(itemDef).stats)
 
   // TODO: extraz
   const stateAffectors = null
@@ -59,7 +59,7 @@ export function getAdventurerMods(adventurer, state = null){
 
   const bonusMods = adventurer.bonuses.map(bonus => new Bonus(bonus).mods)
   const loadoutMods = adventurer.items.filter(itemDef => itemDef)
-    .map(itemDef => new Item(itemDef).mods)
+    .map(itemDef => new ItemInstance(itemDef).mods)
   const stateMods = []
   return new ModsCollection(bonusMods, loadoutMods, stateMods)
 }
@@ -69,7 +69,7 @@ export function getAdventurerOrbsData(adventurer, items = adventurer.items){
     adventurer.bonuses.map(bonus => {
       return { [bonus.group]: 1 }
     }),
-    items.filter(i => i).map(itemDef => new Item(itemDef).orbs)
+    items.filter(i => i).map(itemDef => new ItemInstance(itemDef).orbs)
   )
 
   // TODO: items -> usedOrbs
