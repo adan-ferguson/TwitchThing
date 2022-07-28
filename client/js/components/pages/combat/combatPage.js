@@ -139,7 +139,7 @@ export default class CombatPage extends Page{
     if(this._options.returnPage){
       setTimeout(() => {
         this.redirectTo(this._options.returnPage)
-      }, 2200)
+      }, 3000)
     }
   }
 

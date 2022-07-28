@@ -5,7 +5,10 @@ import { hideLoader, showLoader } from '../../../loader.js'
 import BonusDetails from './bonusDetails.js'
 
 const HTML = `
-<div class="options flex-rows"></div>
+<div class="content-rows">
+    <div class="text">Select a Bonus</div>
+    <div class="options flex-rows"></div>
+</div>
 `
 
 export default class LevelupPage extends Page{

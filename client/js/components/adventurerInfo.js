@@ -4,9 +4,12 @@ import Bonus from '../../../game/bonus.js'
 import { wrap } from '../../../game/utilFunctions.js'
 import tippy from 'tippy.js'
 import { getAdventurerStats, levelToXp, xpToLevel } from '../../../game/adventurer.js'
+import AdventurerInstance from '../../../game/adventurerInstance.js'
+import { StatsDisplayStyle } from '../statsDisplayInfo.js'
 
 const HTML = `
 <div class="flex-rows">
+    <div class="name"></div>
     <di-xp-bar></di-xp-bar>
     <div class="flex-columns">
         <di-stats-list></di-stats-list>
@@ -30,11 +33,12 @@ export default class AdventurerInfo extends HTMLElement{
   constructor(adventurer, stats = null){
     super()
     this.innerHTML = HTML
+    this.querySelector('.name').textContent = adventurer.name
     this.querySelector('di-stats-list')
       .setOptions({
         truncate: false
       })
-      .setStats(stats || getAdventurerStats(adventurer))
+      .setStats(stats || getAdventurerStats(adventurer), new AdventurerInstance(adventurer, stats))
 
     this._setBonuses(adventurer.bonuses)
     this.querySelector('di-xp-bar')

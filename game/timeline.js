@@ -4,8 +4,12 @@ export default class Timeline{
     this._entries = timelineEntries
   }
 
+  get entries(){
+    return this._entries
+  }
+
   get duration(){
-    return this._entries.at(-1).time
+    return this._entries.at(-1).time + (this._entries.at(-1).duration ?? 0)
   }
 
   get time(){
@@ -46,5 +50,9 @@ export default class Timeline{
       }
     }
     return entryIndex
+  }
+
+  addEntry(entry){
+    this._entries.push(entry)
   }
 }

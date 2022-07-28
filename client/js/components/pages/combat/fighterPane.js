@@ -32,7 +32,8 @@ export default class FighterPane extends HTMLElement{
     this.statsList = this.querySelector('di-stats-list')
     this.statsList.setOptions({
       iconsOnly: true,
-      exclude: ['hpMax','speed']
+      forced: ['physPower'],
+      excluded: ['hpMax','speed']
     })
     this.fighterInstance = null
 

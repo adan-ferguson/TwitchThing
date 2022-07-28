@@ -6,6 +6,7 @@ import Users from '../../collections/users.js'
 import { commitAdventurerLoadout } from '../../loadouts/adventurer.js'
 import { validateParam } from '../../validations.js'
 import { selectBonus } from '../../adventurer/bonuses.js'
+import DungeonRuns from '../../collections/dungeonRuns.js'
 
 const router = express.Router()
 const verifiedRouter = express.Router()
@@ -82,6 +83,16 @@ verifiedRouter.post('/selectbonus/:index', async(req, res, next) => {
     validationFn: val => val >= 0 && val <= 2
   })
   res.send({ nextLevelUp: await selectBonus(req.adventurer, index) })
+})
+
+verifiedRouter.post('/previousruns', async(req, res, next) => {
+  const runs = await DungeonRuns.find({
+    'adventurer._id': req.adventurer._id,
+    finalizedData: { $ne: null }
+  }, {
+    events: -1
+  })
+  res.send({ adventurer: req.adventurer, runs  })
 })
 
 async function validateIdle(req, res, next){

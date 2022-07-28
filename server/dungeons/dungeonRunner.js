@@ -131,7 +131,7 @@ class DungeonRunInstance{
         roomType: 'entrance'
       })
     }
-    this._time = this.currentEvent.startTime
+    this._time = this.currentEvent.time
   }
 
   get adventurer(){
@@ -139,7 +139,7 @@ class DungeonRunInstance{
   }
 
   get virtualTime(){
-    return this.currentEvent.startTime + (new Date() - lastAdvancement)
+    return this.currentEvent.time + (new Date() - lastAdvancement)
   }
 
   get floor(){
@@ -170,7 +170,7 @@ class DungeonRunInstance{
   }
 
   get nextEventTime(){
-    return this.currentEvent ? this.currentEvent.startTime + this.currentEvent.duration : 0
+    return this.currentEvent ? this.currentEvent.time + this.currentEvent.duration : 0
   }
 
   async advance(nextEvent){
@@ -226,7 +226,7 @@ class DungeonRunInstance{
     const nextEvent = {
       room: this.doc.room,
       floor: this.doc.floor,
-      startTime: this.doc.elapsedTime,
+      time: this.doc.elapsedTime,
       duration: ADVANCEMENT_INTERVAL,
       ...event
     }

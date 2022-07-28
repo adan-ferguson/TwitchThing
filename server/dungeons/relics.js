@@ -80,6 +80,7 @@ export async function continueRelicEvent(dungeonRun, previousEvent){
     if(Math.random() < solveChance){
       newEvent = {
         stayInRoom: false,
+        relicSolved: true,
         ...RELICS[relic.type].resolve(dungeonRun, relic.tier, relicValue(dungeonRun))
       }
       newEvent.stayInRoom = false
@@ -87,11 +88,13 @@ export async function continueRelicEvent(dungeonRun, previousEvent){
       // TODO: actual traps
       newEvent = {
         stayInRoom: false,
+        relicSolved: false,
         message: `${advName} messes up and the relic explodes.`
       }
     }else if(Math.random() < giveUpChance){
       newEvent = {
         stayInRoom: false,
+        relicSolved: false,
         message: `${advName} can't figure it out and gives up.`
       }
     }

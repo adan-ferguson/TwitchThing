@@ -7,7 +7,7 @@ const DEFAULTS = {
     startingFloor: 1
   },
   finished: false,
-  finalized: false,
+  finalizedData: null,
   floor: 1,
   room: 0,
   rewards: {},

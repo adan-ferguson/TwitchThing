@@ -3,9 +3,10 @@ import Users from '../collections/users.js'
 import { xpToLevel as advXpToLevel } from '../../game/adventurer.js'
 import { toArray } from '../../game/utilFunctions.js'
 import { generateLevelup } from '../adventurer/bonuses.js'
-import ZONES, { floorToZone } from '../../game/zones.js'
 import { emit } from '../socketServer.js'
 import { generateItemDef } from '../items/generator.js'
+import DungeonRuns from '../collections/dungeonRuns.js'
+import calculateResults from '../../game/dungeonRunResults.js'
 
 const REWARDS_TYPES = {
   xp: 'int',
@@ -37,7 +38,7 @@ export function addRewards(rewards, toAdd){
 
 export async function finalize(dungeonRunDoc){
 
-  if(dungeonRunDoc.finalized){
+  if(dungeonRunDoc.finalizedData){
     throw { error: 'Dungeon run has already been finalized' }
   }
 
@@ -47,6 +48,7 @@ export async function finalize(dungeonRunDoc){
 
   await saveAdventurer()
   await saveUser()
+  await saveDungeonRun()
 
   async function saveAdventurer(){
     const adventurerDoc = await Adventurers.findOne(dungeonRunDoc.adventurer._id)
@@ -86,6 +88,11 @@ export async function finalize(dungeonRunDoc){
     }
 
     await Users.save(userDoc)
+  }
+
+  async function saveDungeonRun(){
+    dungeonRunDoc.finalizedData = calculateResults(dungeonRunDoc)
+    await DungeonRuns.save(dungeonRunDoc)
   }
 }
 

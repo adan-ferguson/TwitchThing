@@ -9,12 +9,12 @@ export function generateRandomChest(dungeonRun, options = {}){
 
   const contents = {}
   const level = options.level || dungeonRun.floor
-  const tier = options.tier || 1
+  const tier = options.tier || 0
 
   contents.items = fillArray(() => {
     const val = Math.ceil(level * Math.pow(Math.random(), 1.5))
     return generateRandomItemDef(val)
-  }, tier)
+  }, tier + 1)
 
   return generateChest(contents, { ...options, level })
 }

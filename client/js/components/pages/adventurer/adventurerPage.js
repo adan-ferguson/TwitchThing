@@ -7,6 +7,7 @@ import '../../adventurerPane.js'
 import LevelupPage from '../levelup/levelupPage.js'
 import DungeonPage from '../dungeon/dungeonPage.js'
 import fizzetch from '../../../fizzetch.js'
+import AdventurerPreviousRunsPage from '../adventurerPreviousRuns/adventurerPreviousRunsPage.js'
 
 const HTML = `
 <div class="content-columns">
@@ -16,7 +17,7 @@ const HTML = `
   </div>
   <div class="content-rows dungeons">
       <div class="top-right content-well center-contents clickable"></div>
-      <div class="something-else content-well center-contents">Something Else Goes Here</div>
+      <div class="previous-runs content-well center-contents clickable">View Previous Runs</div>
   </div>
 </div>
 `
@@ -48,6 +49,15 @@ export default class AdventurerPage extends Page{
     this.adventurerPane.setAdventurer(adventurer)
     this._setupEditEquipmentButton()
     this._setupTopRightButton()
+
+    const prev = this.querySelector('.previous-runs')
+    if(adventurer.accomplishments.deepestFloor <= 1){
+      prev.remove()
+    }else{
+      prev.addEventListener('click', () => {
+        this.redirectTo(new AdventurerPreviousRunsPage(this.adventurerID))
+      })
+    }
   }
 
   _setupEditEquipmentButton(){

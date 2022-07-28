@@ -9,7 +9,7 @@ export default class StatsList extends HTMLElement{
     iconsOnly: false,
     showTooltips: true,
     truncate: true,
-    exclude: []
+    excluded: []
   }
 
   _stats = new Stats()
@@ -48,10 +48,10 @@ export default class StatsList extends HTMLElement{
       unusedStats[row.getAttribute('stat-key')] = row
     })
 
-    const statsToShow = this._stats.getAll()
+    const statsToShow = this._stats.getAll(this._options.forced)
 
     for(let key in statsToShow){
-      if(this._options.exclude.indexOf(key) > -1){
+      if(this._options.excluded.indexOf(key) > -1){
         continue
       }
       this._updateStat(statsToShow[key], this._owner)

@@ -1,12 +1,13 @@
 import fizzetch from '../../../fizzetch.js'
 import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
-import { mergeStats } from '../../../../../game/stats/stats.js'
 import SimpleModal from '../../simpleModal.js'
 import ChestOpenage from './chestOpenage.js'
 import { showLoader } from '../../../loader.js'
 import { toDisplayName } from '../../../../../game/utilFunctions.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import Page from '../page.js'
+import RELICS from '../../../relicDisplayInfo.js'
+import CHESTS from '../../../chestDisplayInfo.js'
 
 const WAIT_TIME = 500
 
@@ -68,7 +69,7 @@ export default class ResultsPage extends Page{
     this._addResultText(`Room: ${this.dungeonRun.room}`)
     await wait()
 
-    const monsterName = this.dungeonRunResults.lastEvent.monster?.name || 'something'
+    const monsterName = this.dungeonRunResults.killedByMonster?.name || 'Something'
     this._addResultText(`Killed By: ${toDisplayName(monsterName)}`)
     await wait()
 
@@ -78,15 +79,17 @@ export default class ResultsPage extends Page{
       await wait()
     }
 
-    const relicCount = this.dungeonRunResults.relicsFound.count
-    if(relicCount){
-      this._addResultText(`Relics Found: ${relicCount}`)
+    const relics = this.dungeonRunResults.relics
+    if(relics.length){
+      this._addResultNewline()
+      await this._addRelics(relics)
       await wait()
     }
 
-    const chestCount = this.dungeonRunResults.chestsFound.count
-    if(chestCount){
-      this._addResultText(`Chests Found: ${chestCount}`)
+    const chests = this.dungeonRunResults.chests
+    if(chests.length){
+      this._addResultNewline()
+      await this._addChests(chests)
       await wait()
     }
 
@@ -134,6 +137,20 @@ export default class ResultsPage extends Page{
   _addResultNewline(){
     const row = document.createElement('br')
     return this._addResult(row)
+  }
+
+  _addRelics(relics){
+    this._addResultText('Relics:')
+    relics.forEach(({ attempted, solved }, tier) => {
+      this._addResultText(`${RELICS[tier].displayName}: ${solved}/${attempted}`)
+    })
+  }
+
+  _addChests(chests){
+    this._addResultText('Chests:')
+    chests.forEach((count, tier) => {
+      this._addResultText(`${CHESTS[tier].displayName}: ${count}`)
+    })
   }
 }
 

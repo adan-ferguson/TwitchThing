@@ -6,7 +6,7 @@ import Modal from './modal.js'
 import AdventurerInfo from './adventurerInfo.js'
 
 const HTML = `
-<div class="flex-rows top-section">
+<div class="flex-grow flex-rows top-section">
   <div class="name"></div>
   <di-xp-bar></di-xp-bar>
   <di-stats-list></di-stats-list>

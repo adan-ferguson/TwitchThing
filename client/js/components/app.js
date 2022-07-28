@@ -112,7 +112,7 @@ export default class App extends HTMLElement{
 
   setBackground(color, texture){
     this.style.backgroundColor = color
-    this.style.backgroundImage = `url("/assets/textures/${texture}")`
+    this.style.backgroundImage = texture ? `url("/assets/textures/${texture}")` : null
   }
 
   async _setInitialPage(){

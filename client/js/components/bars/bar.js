@@ -1,6 +1,6 @@
 import CustomAnimation from '../../customAnimation.js'
 import FlyingTextEffect from '../effects/flyingTextEffect.js'
-import { mergeElementOptions, wrap } from '../../../../game/utilFunctions.js'
+import { mergeElementOptions } from '../../../../game/utilFunctions.js'
 
 const innerHTML = `
 <div class="bar-badge displaynone">

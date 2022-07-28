@@ -28,7 +28,8 @@ export default class AdventurerPane extends HTMLElement{
     this.statsList = this.querySelector('di-stats-list')
     this.statsList.setOptions({
       iconsOnly: true,
-      exclude: ['hpMax', 'speed']
+      forced: ['speed','physPower'],
+      excluded: ['hpMax']
     })
     this.displayMode = 'normal'
 
