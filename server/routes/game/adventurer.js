@@ -90,9 +90,9 @@ verifiedRouter.post('/previousruns', async(req, res, next) => {
     'adventurer._id': req.adventurer._id,
     finalizedData: { $ne: null }
   }, {
-    events: -1
+    events: 0
   })
-  res.send({ adventurer: req.adventurer, runs  })
+  res.send({ adventurer: req.adventurer, runs: runs.reverse()  })
 })
 
 async function validateIdle(req, res, next){

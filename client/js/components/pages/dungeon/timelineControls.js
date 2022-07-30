@@ -50,7 +50,17 @@ export default class TimelineControls extends HTMLElement{
 
   }
 
+  destroy(){
+    this._destroyed = true
+    if(this._eventTimeBarAnimation){
+      this._eventTimeBarAnimation.cancel()
+    }
+  }
+
   _next(){
+    if(this._destroyed){
+      return
+    }
     if(this.timeline.nextEntry){
       this.timeline.time = this.timeline.nextEntry.time
       this.dispatchEvent(new Event('nextevent'))

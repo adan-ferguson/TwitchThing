@@ -142,14 +142,14 @@ export default class ResultsPage extends Page{
   _addRelics(relics){
     this._addResultText('Relics:')
     relics.forEach(({ attempted, solved }, tier) => {
-      this._addResultText(`${RELICS[tier].displayName}: ${solved}/${attempted}`)
+      this._addResultText(`${RELICS[tier].displayName} ${solved}/${attempted}`)
     })
   }
 
   _addChests(chests){
     this._addResultText('Chests:')
     chests.forEach((count, tier) => {
-      this._addResultText(`${CHESTS[tier].displayName}: ${count}`)
+      this._addResultText(`${CHESTS[tier].displayName} ${count}`)
     })
   }
 }

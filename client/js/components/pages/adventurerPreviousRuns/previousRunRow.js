@@ -1,7 +1,25 @@
-import DungeonPage from '../dungeon/dungeonPage.js'
-
-const HTML = `
-
+const HTML = (_id, {
+  time,
+  startingFloor,
+  endingFloor,
+  xp,
+  relics,
+  chests,
+  monstersKilled
+}) => `
+<div class="flex-rows">
+    <div class="floors">Floor ${startingFloor} - ${endingFloor}</div>
+    <div class="time">${time}</div>
+    <div class="xp">+${xp} xp</div>
+</div>
+<div class="flex-rows">
+    <div class="monsters">Monsters: ${monstersKilled.length}</div>
+    <div class="chests">Chests: ${chests.join('/') || 0}</div>
+    <div class="relics">Relics: ${relics.map(r => r.solved).join('/')}</div>
+</div>
+<div class="flex-rows">
+    <a href="/watch/dungeonrun/${_id}" target="_blank">View</a>
+</div>
 `
 
 export default class PreviousRunRow extends HTMLElement{
@@ -11,11 +29,9 @@ export default class PreviousRunRow extends HTMLElement{
   constructor(run){
     super()
     this._run = run
-    this.innerHTML = HTML
-  }
 
-  get targetPage(){
-    return new DungeonPage(this._run.dungeonRunID)
+    const finalizedData = run.finalizedData
+    this.innerHTML = HTML(run._id, finalizedData)
   }
 
 }

@@ -9,13 +9,20 @@ export default function calculateResults(eventsList){
     chests: chests(eventsList)
   }
 
+  if(!eventsList.length){
+    return
+  }
+
+  results.time = eventsList.at(-1).time
+  results.startingFloor = eventsList[0].floor
+  results.endingFloor = eventsList.at(-1).floor
+
   if(eventsList.at(-1)?.runFinished){
     results.killedByMonster = eventsList.at(-2).monster
   }
 
   return results
 }
-
 
 function monstersKilled(eventsList){
   const arr = []
@@ -49,7 +56,6 @@ function chests(eventsList){
   eventsList.forEach(e => {
     const chests = toArray(e.rewards?.chests ?? [])
     chests.forEach(chest => {
-      debugger
       if(!arr[chest.tier]){
         arr[chest.tier] = 0
       }

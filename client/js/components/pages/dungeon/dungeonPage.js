@@ -108,6 +108,7 @@ export default class DungeonPage extends Page{
       leaveSocketRoom(this.dungeonRun._id)
       getSocket().off('dungeon run update', this._socketUpdate)
     }
+    this._timelineEl.destroy()
   }
 
   _socketUpdate = (dungeonRun) => {

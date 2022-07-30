@@ -17,7 +17,7 @@ export default class AdventurerPreviousRunsPage extends Page{
   }
 
   get titleText(){
-    return this.adventurer ? '' : this.adventurer.name + ' - Previous Runs'
+    return this.adventurer ? (this.adventurer.name + ' - Previous Runs') : 'Huh'
   }
 
   get backPage(){
@@ -29,13 +29,13 @@ export default class AdventurerPreviousRunsPage extends Page{
     this.adventurer = adventurer
 
     const list = this.querySelector('.previous-runs-list')
+      .setOptions({
+        pageSize: 6
+      })
+
     const rows = []
     runs.forEach(run => {
-      const row = new PreviousRunRow(run)
-      row.addEventListener('click', e => {
-        this.redirectTo(row.targetPage)
-      })
-      rows.push(row)
+      rows.push(new PreviousRunRow(run))
     })
     list.setRows(rows)
   }

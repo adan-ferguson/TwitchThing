@@ -55,12 +55,12 @@ export default {
   findOne: async (collection, queryOrID, projection = {}, defaults = {}) => {
     const doc = await connection.collection(collection).findOne(qoid(queryOrID), { projection })
     if(doc){
-      return fix(doc, defaults, projection)
+      return fix(doc, defaults)
     }
     return null
   },
   find: async (collection, queryOrID, projection = {}, defaults = {}) => {
     const docs = await connection.collection(collection).find(qoid(queryOrID), { projection }).toArray()
-    return docs.map(doc => fix(doc, defaults, projection))
+    return docs.map(doc => fix(doc, defaults))
   }
 }

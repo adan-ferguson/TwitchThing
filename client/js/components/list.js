@@ -88,6 +88,7 @@ export default class List extends HTMLElement{
       this._options[key] = options[key]
     }
     this._fullUpdate()
+    return this
   }
 
   setRows(rows){
