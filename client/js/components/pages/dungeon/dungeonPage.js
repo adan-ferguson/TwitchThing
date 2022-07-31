@@ -88,7 +88,7 @@ export default class DungeonPage extends Page{
       this._timelineEl.jumpTo(dungeonRun.virtualTime, false)
     }
 
-    if(this.currentEvent.combatID){
+    if(this.currentEvent.combatID && (!this.isReplay || this._timelineEl.viewCombat)){
       return this._goToCombat()
     }
 
@@ -131,7 +131,7 @@ export default class DungeonPage extends Page{
     }
 
     // TODO: ??
-    if(this.currentEvent.combatID){
+    if(this.currentEvent.combatID && (!this.isReplay || this._timelineEl.viewCombat)){
       return this._goToCombat()
     }
 

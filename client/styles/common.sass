@@ -49,8 +49,18 @@ button
   align-items: center
   justify-content: center
 
+  transition: background-color 0.2s ease, color 0.2s ease
+
+  &.toggle-off
+    border-color: #AAA
+    border-style: dotted
+
+  &.toggle-on
+    border-color: black
+
   &:hover:not(:disabled)
-    background-color: #EEE
+    background-color: #CCC
+    color: black
 
   &:disabled
     border-color: currentColor
