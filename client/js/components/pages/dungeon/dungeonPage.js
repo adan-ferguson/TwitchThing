@@ -11,10 +11,10 @@ const HTML = `
     <div class="content-well">
         <di-dungeon-event></di-dungeon-event>
     </div>
-    <div class="state content-well" style="flex-basis:125rem;flex-grow:0">
+    <div class="state flex-no-grow content-well">
         <di-dungeon-state></di-dungeon-state>
     </div>
-    <div class="content-well">
+    <div class="flex-no-grow content-well">
         <di-timeline-controls></di-timeline-controls>
     </div>
   </div>
@@ -50,7 +50,7 @@ export default class DungeonPage extends Page{
   }
 
   get watching(){
-    return this.dungeonRun?.adventurer.userID !== this.app.user?._id
+    return this.dungeonRun?.finalizedData || this._watchView
   }
 
   get titleText(){
@@ -81,8 +81,11 @@ export default class DungeonPage extends Page{
     this._timelineEl.setup(dungeonRun)
 
     if(previousPage instanceof CombatPage){
-      debugger
-      this._timelineEl.jumpToAfterCombat(previousPage.combat._id)
+      this._timelineEl.jumpToAfterCombat(previousPage.combatID, false)
+    }else if(this.isReplay){
+      this._timelineEl.jumpTo(0, false)
+    }else{
+      this._timelineEl.jumpTo(dungeonRun.virtualTime, false)
     }
 
     if(this.currentEvent.combatID){
@@ -122,7 +125,7 @@ export default class DungeonPage extends Page{
 
   _update(sourcePage = 'self'){
 
-    if(this.dungeonRun.finished){
+    if(this.dungeonRun.finished && !this.isReplay && !this.watching){
       const delayedFinish = sourcePage === 'socket' || sourcePage instanceof CombatPage
       this._finish(delayedFinish)
     }

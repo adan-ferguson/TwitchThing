@@ -16,6 +16,7 @@ export default class Event extends HTMLElement{
 
   _rewards
   _message
+  _hasUpdated
 
   _adventurer
 
@@ -34,15 +35,17 @@ export default class Event extends HTMLElement{
     this._adventurer = adventurer
   }
 
-  update(dungeonEvent, currentTime){
-    fadeOut(this._contents).then(() => {
+  async update(dungeonEvent, currentTime){
+
+    if(this._hasUpdated){
+      await fadeOut(this._contents)
       fadeIn(this._contents)
-      this._contents.classList.remove('fade-out')
-      this._setImage(dungeonEvent)
-      this._message.textContent = dungeonEvent.message
-      this._addRewards(dungeonEvent.rewards)
-    })
-    // TODO: relics show something if they're attempting to interpret a relic
+    }
+
+    this._hasUpdated = true
+    this._setImage(dungeonEvent)
+    this._message.textContent = dungeonEvent.message
+    this._addRewards(dungeonEvent.rewards)
   }
 
   _addRewards(rewards){

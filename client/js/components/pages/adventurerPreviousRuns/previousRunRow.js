@@ -18,7 +18,7 @@ const HTML = (_id, {
     <div class="relics">Relics: ${relics.map(r => r.solved).join('/')}</div>
 </div>
 <div class="flex-rows">
-    <a href="/watch/dungeonrun/${_id}" target="_blank">View</a>
+    <a href="/watch/dungeonrun/${_id}" target="_blank">View <i class="fa-solid fa-up-right-from-square"></i></a>
 </div>
 `
 

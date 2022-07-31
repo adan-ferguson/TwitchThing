@@ -55,6 +55,7 @@ export default class Bar extends HTMLElement{
   setOptions(options){
     this._options = mergeElementOptions(this._options, options)
     this._update()
+    return this
   }
 
   setBadge(html){

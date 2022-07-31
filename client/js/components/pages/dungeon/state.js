@@ -17,7 +17,6 @@ const innerHTML = `
       Chests: <span class="chests">0</span>
   </div>
 </div>
-<a target="_blank" class="share-link">Permalink</a>
 `
 
 export default class State extends HTMLElement{

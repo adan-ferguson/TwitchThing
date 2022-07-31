@@ -26,9 +26,7 @@ router.post('/dungeonrun/:dungeonRunID', async (req, res) => {
   if(!dungeonRun){
     return res.status(400).send({ error: 'Dungeon Run not found' })
   }
-  const adventurer = await Adventurers.findOne(dungeonRun.adventurerID)
   res.send({
-    adventurer,
     dungeonRun
   })
 })

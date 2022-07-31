@@ -2,6 +2,7 @@ export default class Timeline{
 
   constructor(timelineEntries){
     this._entries = timelineEntries
+    this._time = 0
   }
 
   get entries(){

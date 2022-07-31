@@ -45,10 +45,6 @@ export default class App extends HTMLElement{
 
   async setPage(page){
 
-    if(this.currentPage && this.startupParams.watch){
-      throw 'Can not change pages in watch mode'
-    }
-
     if(!page){
       throw 'Attempted to set null page'
     }

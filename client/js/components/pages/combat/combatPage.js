@@ -31,7 +31,7 @@ export default class CombatPage extends Page{
     this.fighterPane2 = this.querySelector('.fighter2')
     this.combatFeed = this.querySelector('di-combat-feed')
 
-    this._combatID = combatID
+    this.combatID = combatID
     this._options = mergeElementOptions(this._options, options)
   }
 
@@ -40,7 +40,7 @@ export default class CombatPage extends Page{
   }
 
   async load(previousPage){
-    const { combat, state } = await this.fetchData(`/watch/combat/${this._combatID}`)
+    const { combat, state } = await this.fetchData(`/watch/combat/${this.combatID}`)
 
     // If it's live but the combat's already done, just get outta here
     if(state.status === 'finished' && !this._options.live && this._options.returnPage){
