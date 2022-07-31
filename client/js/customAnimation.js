@@ -60,6 +60,15 @@ export default class CustomAnimation{
       }
 
       await frame()
+
+      if(this.cancelled){
+        return
+      }
+
+      if(this._finishForced){
+        return this.options.finish()
+      }
+
       now = new Date()
       const pct = Math.min(1, (now - starttime) / this.options.duration)
       this.options.tick(EASING_FNS[this.options.easing](pct))

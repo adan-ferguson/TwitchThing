@@ -7,15 +7,16 @@ const HTML = `
 <div class="flex-rows">
   <di-timer></di-timer>
   <div class="flex-columns buttons">
+    <button class="log" title="View event log"><i class="fa-solid fa-list"></i></button>
     <div class="flex-columns">
-      <button class="log" title="View event log"><i class="fa-solid fa-list"></i></button>
+      <button class="restart" title="Restart"><i class="fa-solid fa-backward-fast"></i></button>
       <button class="back" title="Back"><i class="fa-solid fa-backward-step"></i></button>
       <button class="pause" title="Pause"><i class="fa-solid fa-pause"></i></button>
       <button class="play" title="Play"><i class="fa-solid fa-play"></i></button>
-      <button class="forward" title="Forward"><i class="fa-solid fa-forward-step"></i></button>   
+      <button class="forward" title="Forward"><i class="fa-solid fa-forward-step"></i></button>  
+      <button class="finish" title="Skip to Results"><i class="fa-solid fa-forward-fast"></i></button> 
     </div>
-    <button class="view-combat toggle-on" title="View combat?"><i class="fa-solid fa-gun"></i></button>
-    <button class="share" title="Copy shareable link to clipboard"><i class="fa-solid fa-copy"></i></button>
+    <button class="view-combat toggle-on" title="View combat on/off"><i class="fa-solid fa-gun"></i></button>
   </div>
 </div>
 `
@@ -45,11 +46,22 @@ export default class TimelineControls extends HTMLElement{
       this.pause()
     })
 
+    this.querySelector('button.restart').addEventListener('click', () => {
+      this.jumpTo(0, {
+        animate: false
+      })
+    })
     this.querySelector('button.back').addEventListener('click', () => {
-      this.jumpToIndex(this.timeline.currentEntryIndex - 1)
+      this.jumpToIndex(this.timeline.currentEntryIndex - 1, {
+        animate: false,
+        noCombat: true
+      })
     })
     this.querySelector('button.forward').addEventListener('click', () => {
       this.jumpToIndex(this.timeline.currentEntryIndex + 1)
+    })
+    this.querySelector('button.finish').addEventListener('click', () => {
+      this.jumpTo(this.timeline.duration)
     })
 
     this._viewCombatBtn = this.querySelector('button.view-combat')
@@ -58,12 +70,16 @@ export default class TimelineControls extends HTMLElement{
         this._updateViewCombat()
       })
 
-    this._ticker = new Ticker(() => this._tick())
+    this._ticker = new Ticker(running => this._tick(running))
     this._updateViewCombat()
   }
 
   get elapsedEvents(){
     return this.timeline.entries.slice(0, this.timeline.currentEntryIndex + 1)
+  }
+
+  get finished(){
+    return this.timeline.time === this.timeline.duration
   }
 
   setup(dungeonRun){
@@ -79,28 +95,35 @@ export default class TimelineControls extends HTMLElement{
     this._update()
   }
 
-  jumpTo(time, triggerEvent = true){
+  jumpTo(time, options = {}){
+    options = {
+      triggerEvent: true,
+      ...options
+    }
     this.timeline.time = time
-    if(triggerEvent){
-      this.dispatchEvent(new Event('nextevent'))
+    if(options.triggerEvent){
+      this._triggerEvent(options)
     }
     this._update()
   }
 
-  jumpToAfterCombat(combatID){
+  jumpToAfterCombat(combatID, options = {}){
     let i
     const entry = this.timeline.entries.find((event, _i) => {
       i = _i
       return event.combatID === combatID
     })
     if(entry){
-      this.jumpToIndex(i + 1)
+      this.jumpToIndex(i + 1, options)
     }
   }
 
-  jumpToIndex(index){
-    index = Math.max(0, Math.min(this.timeline.entries.length - 1, index))
-    this.jumpTo(this.timeline.entries[index].time)
+  jumpToIndex(index, options = {}){
+    if(index >= this.timeline.entries.length){
+      this.jumpTo(this.timeline.duration, options)
+    }else{
+      this.jumpTo(this.timeline.entries[index].time, options)
+    }
   }
 
   destroy(){
@@ -131,17 +154,23 @@ export default class TimelineControls extends HTMLElement{
     }
   }
 
-  _tick(){
+  _tick(running = true){
     this.timeline.time = this.timeline.currentEntry.time + this._ticker.currentTime
     this._eventTimeBarEl.setOptions({
       max: this._ticker.endTime,
       label: dateformat(this.timeline.time, 'M:ss')
     })
     this._eventTimeBarEl.setValue(this._ticker.currentTime)
-    if(this._ticker.finished){
-      this.dispatchEvent(new CustomEvent('nextevent'))
+    if(running && this._ticker.finished){
+      this._triggerEvent()
       this._update()
     }
+  }
+
+  _triggerEvent(options = {}){
+    this.dispatchEvent(new CustomEvent('event_changed', {
+      detail: options
+    }))
   }
 
   _update(){

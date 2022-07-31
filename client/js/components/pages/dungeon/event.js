@@ -1,12 +1,11 @@
-import CustomAnimation from '../../../customAnimation.js'
 import { fadeIn, fadeOut } from '../../../animationHelper.js'
+import { wrap } from '../../../../../game/utilFunctions.js'
 
 const innerHTML = `
 <div class="room-image">
     <img>
 </div>
 <div class="room-contents">
-  <div class="room-description"></div>
   <div class="message"></div>
   <div class="rewards"></div>
 </div>
@@ -35,7 +34,7 @@ export default class Event extends HTMLElement{
     this._adventurer = adventurer
   }
 
-  async update(dungeonEvent, currentTime){
+  async update(dungeonEvent){
 
     if(this._hasUpdated){
       await fadeOut(this._contents)
@@ -46,6 +45,16 @@ export default class Event extends HTMLElement{
     this._setImage(dungeonEvent)
     this._message.textContent = dungeonEvent.message
     this._addRewards(dungeonEvent.rewards)
+
+    if(dungeonEvent.combatID){
+      const btn = wrap('Watch', {
+        elementType: 'button'
+      })
+      btn.addEventListener('click', () => {
+        this.dispatchEvent(new CustomEvent('view_combat'))
+      })
+      this._rewards.appendChild(btn)
+    }
   }
 
   _addRewards(rewards){
@@ -67,6 +76,7 @@ export default class Event extends HTMLElement{
 
   _setImage(dungeonEvent){
     let roomType = dungeonEvent.roomType ?? 'wandering'
+    roomType = dungeonEvent.combatID ? 'fighting' : roomType
     this._imageEl.setAttribute('src', `/assets/rooms/${roomType}.png`)
   }
 }

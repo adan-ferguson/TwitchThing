@@ -7,9 +7,7 @@ const innerHTML = `
   <div>
       <span class="zone-name"></span>
   </div>
-  <div>
-      Floor <span class="floor"></span> - Room <span class="room"></span>
-  </div>
+  <div class="floor-and-room"></div>
   <div>
       XP: <span class="xp-reward">0</span>
   </div>
@@ -32,8 +30,7 @@ export default class State extends HTMLElement{
     super()
     this.innerHTML = innerHTML
     this._zoneNameEl = this.querySelector('.zone-name')
-    this._floorEl = this.querySelector('.floor')
-    this._roomEl = this.querySelector('.room')
+    this._floorAndRoomEl = this.querySelector('.floor-and-room')
     this.xp = this.querySelector('.xp-reward')
     this.xpVal = null
     this._chests = this.querySelector('.chests')
@@ -46,8 +43,8 @@ export default class State extends HTMLElement{
     const results = new DungeonRunResults(eventsList)
 
     this._zoneNameEl.textContent = floorToZoneName(currentEvent.floor)
-    this._floorEl.textContent = currentEvent.floor
-    this._roomEl.textContent = currentEvent.room
+
+    this._floorAndRoomEl.textContent = `Floor ${currentEvent.floor} - ${currentEvent.room ? 'Room ' + currentEvent.room : 'Entrance'}`
 
     this._setXP(results.xp, animate)
     this._updateChests(results.chests, animate)
@@ -65,7 +62,9 @@ export default class State extends HTMLElement{
 
     this._xpAnimation?.cancel()
 
-    const prevVal = xp - parseInt(this.xp.textContent)
+    const prevVal = parseInt(this.xp.textContent)
+
+    // TODO: make a text animation helper
     this._xpAnimation = new CustomAnimation({
       duration: 1500,
       easing: 'easeOut',
@@ -82,12 +81,13 @@ export default class State extends HTMLElement{
   }
 
   /**
-   * @param chestsFound {ChestsFound}
+   * @param chests
    * @param animate
    * @private
    */
-  _updateChests(chestsFound, animate){
-    // this._chests.textContent = (chests?.length || 0) + ''
+  _updateChests(chests, animate){
+    // TODO: animate
+    this._chests.textContent = (chests?.length || 0) + ''
   }
 }
 

@@ -40,9 +40,12 @@ export default class DungeonPage extends Page{
     this.innerHTML = HTML
     this._adventurerPane = this.querySelector('di-dungeon-adventurer-pane')
     this._eventEl = this.querySelector('di-dungeon-event')
+    this._eventEl.addEventListener('view_combat', () => {
+      this._goToCombat()
+    })
     this._stateEl = this.querySelector('di-dungeon-state')
     this._timelineEl = this.querySelector('di-timeline-controls')
-    this._timelineEl.addEventListener('nextevent', () => this._update())
+    this._timelineEl.addEventListener('event_changed', e => this._update(e.detail))
   }
 
   get timeline(){
@@ -81,15 +84,17 @@ export default class DungeonPage extends Page{
     this._timelineEl.setup(dungeonRun)
 
     if(previousPage instanceof CombatPage){
-      this._timelineEl.jumpToAfterCombat(previousPage.combatID, false)
+      this._timelineEl.jumpToAfterCombat(previousPage.combatID, {
+        triggerEvent: false
+      })
     }else if(this.isReplay){
-      this._timelineEl.jumpTo(0, false)
+      this._timelineEl.jumpTo(0, {
+        triggerEvent: false
+      })
     }else{
-      this._timelineEl.jumpTo(dungeonRun.virtualTime, false)
-    }
-
-    if(this.currentEvent.combatID && (!this.isReplay || this._timelineEl.viewCombat)){
-      return this._goToCombat()
+      this._timelineEl.jumpTo(dungeonRun.virtualTime, {
+        triggerEvent: false
+      })
     }
 
     if(this.dungeonRun.finished && !this.watching){
@@ -98,7 +103,7 @@ export default class DungeonPage extends Page{
 
     this._adventurerPane.setAdventurer(this.adventurer)
     this._eventEl.setAdventurer(this.adventurer)
-    this._update(previousPage)
+    this._update({ sourcePage: previousPage, animate: false })
 
     if(!this.isReplay){
       joinSocketRoom(this.dungeonRun._id)
@@ -123,38 +128,44 @@ export default class DungeonPage extends Page{
     this._update()
   }
 
-  _update(sourcePage = 'self'){
+  _update(options = {}){
 
-    if(this.dungeonRun.finished && !this.isReplay && !this.watching){
-      const delayedFinish = sourcePage === 'socket' || sourcePage instanceof CombatPage
-      this._finish(delayedFinish)
+    options = {
+      animate: true,
+      viewCombat: this._timelineEl.viewCombat,
+      sourcePage: 'self',
+      ...options
     }
 
-    // TODO: ??
-    if(this.currentEvent.combatID && (!this.isReplay || this._timelineEl.viewCombat)){
+    if(this.currentEvent.combatID && (!this.isReplay || options.viewCombat)){
       return this._goToCombat()
     }
 
-    const animate = sourcePage === 'self'
+    if(this.isReplay && this._timelineEl.finished){
+      this._finish()
+    }
+
+    if(this.currentEvent.finished && this._timelineEl.finished){
+      this._finish()
+    }
+
+    const animate = options.animate
     this._adventurerPane.setState(this.currentEvent.adventurerState, animate)
-    this._stateEl.update(this._timelineEl.elapsedEvents, animate || sourcePage instanceof CombatPage)
+    this._stateEl.update(this._timelineEl.elapsedEvents, animate || options.sourcePage instanceof CombatPage)
     this._eventEl.update(this.currentEvent)
     this._updateBackground()
   }
 
-  async _finish(delay){
-    if(this.watching){
-      return
-    }
-    if(delay){
-      await new Promise(res => setTimeout(res, 3000))
-    }
+  async _finish(){
     this.redirectTo(new ResultsPage(this.dungeonRun._id))
   }
 
   _goToCombat(){
+    if(!this.currentEvent?.combatID){
+      return
+    }
     return this.redirectTo(new CombatPage(this.currentEvent.combatID, {
-      live: true,
+      live: this.isReplay,
       returnPage: this
     }))
   }

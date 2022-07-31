@@ -19,6 +19,8 @@ export default class Ticker{
     this.currentTime = Math.min(endTime, currentTime)
     if(!this._ticking && this.running){
       this._tick()
+    }else{
+      this._onTick(false)
     }
   }
 
