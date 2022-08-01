@@ -73,3 +73,24 @@ di-timeline-controls
     button
       margin-left: -1px
       width: 50rem
+
+di-event-log
+  display: flex
+  flex-direction: column
+  justify-content: stretch
+  overflow: auto
+
+  di-event-log-row
+    display: flex
+    flex-direction: row
+    padding: 4rem
+
+    &.current
+      background-color: #d1ffd1
+
+    &:hover
+      background-color: #dfeaff
+
+    .time
+      width: 60rem
+      font-weight: bold

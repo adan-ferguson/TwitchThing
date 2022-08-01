@@ -32,12 +32,12 @@ export default class Modal extends HTMLElement{
   }
 
   show = () => {
-    // TODO: enqueue multiple modals
     document.body.appendChild(this)
   }
 
   hide = () => {
     document.body.removeChild(this)
+    this.dispatchEvent(new CustomEvent('hide'))
   }
 }
 customElements.define('di-modal', Modal)

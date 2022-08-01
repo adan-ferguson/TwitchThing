@@ -1,6 +1,8 @@
 import Timeline from '../../../../../game/timeline.js'
 import Ticker from '../../../ticker.js'
 import dateformat from 'dateformat'
+import Modal from '../../modal.js'
+import EventLog from './eventLog.js'
 
 const HTML = `
 <di-bar class="event-time-bar"></di-bar>
@@ -69,6 +71,10 @@ export default class TimelineControls extends HTMLElement{
       .addEventListener('click', ()=> {
         this._updateViewCombat()
       })
+
+    this.querySelector('button.log').addEventListener('click', () => {
+      this._showEventLogModal()
+    })
 
     this._ticker = new Ticker(running => this._tick(running))
     this._updateViewCombat()
@@ -198,6 +204,27 @@ export default class TimelineControls extends HTMLElement{
       this._viewCombatBtn.classList.add('toggle-off')
       this.viewCombat = false
     }
+  }
+
+  _showEventLogModal(){
+    const wasRunning = this._ticker.running
+    const modal = new Modal()
+    const log = new EventLog(this.timeline)
+    log.addEventListener('event_selected', e => {
+      this.jumpToIndex(e.detail.eventIndex, {
+        animate: false
+      })
+      modal.hide()
+    })
+
+    modal.innerPane.appendChild(log)
+    modal.show()
+    modal.addEventListener('hide', () => {
+      if(wasRunning){
+        this._ticker.start()
+      }
+    })
+    this._ticker.stop()
   }
 }
 
