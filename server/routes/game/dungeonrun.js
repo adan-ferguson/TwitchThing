@@ -18,12 +18,6 @@ router.use('/:dungeonRunID', async (req, res, next) => {
 
 router.use('/:dungeonRunID', verifiedRouter)
 
-verifiedRouter.post('', async(req, res) => {
-  res.send({
-    dungeonRun: req.dungeonRun
-  })
-})
-
 verifiedRouter.post('/results', async (req, res) => {
   if(!req.dungeonRun.finished){
     throw { code: 400, message: 'Can not show results, dungeon run is not finished yet.' }

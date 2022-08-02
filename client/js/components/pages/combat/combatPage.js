@@ -2,6 +2,7 @@ import Timeline from '../../../../../game/timeline.js'
 import Page from '../page.js'
 import { mergeOptionsObjects, toArray } from '../../../../../game/utilFunctions.js'
 import Zones, { floorToZone } from '../../../../../game/zones.js'
+import tippy from 'tippy.js'
 
 const HTML = `
 <div class='content-rows'>
@@ -40,6 +41,18 @@ export default class CombatPage extends Page{
     this._timeControlsEl = this.querySelector('di-combat-time-controls')
     this._timeControlsEl.addEventListener('tick', e => this._tick())
     this._timeControlsEl.addEventListener('jumped', e => this._jump())
+
+    this.querySelector('.permalink').addEventListener('click', e => {
+      const txt = `${window.location.origin}/watch/combat/${this.combatID}`
+      navigator?.clipboard?.writeText(txt)
+      tippy(e.currentTarget, {
+        showOnCreate: true,
+        content: 'Link copied to clipboard',
+        onHidden(instance){
+          instance.destroy()
+        }
+      })
+    })
 
     this.combatID = combatID
     this._options = mergeOptionsObjects(this._options, options)
@@ -113,7 +126,6 @@ export default class CombatPage extends Page{
 
   _jump(){
     this._timeline.time = this._timeControlsEl.time
-    const entry = this._timeline.currentEntry
     this._updatePanes(false)
     if(this._timeline.finished){
       this._finish()
@@ -148,7 +160,7 @@ export default class CombatPage extends Page{
     if(this._options.returnPage){
       setTimeout(() => {
         this.redirectTo(this._options.returnPage)
-      }, 3000)
+      }, this._options.isReplay ? 1000 : 3000)
     }
   }
 

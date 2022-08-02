@@ -75,12 +75,7 @@ export default class DungeonPage extends Page{
 
   async load(previousPage){
 
-    const url =
-      this._watchView ?
-        `/watch/dungeonrun/${this._dungeonRunID}` :
-        `/game/dungeonrun/${this._dungeonRunID}`
-
-    const { dungeonRun } = await this.fetchData(url)
+    const { dungeonRun } = await this.fetchData(`/watch/dungeonrun/${this._dungeonRunID}`)
     this.dungeonRun = dungeonRun
 
     if(this.dungeonRun.finished && !this.watching){

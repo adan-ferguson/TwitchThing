@@ -19,7 +19,7 @@ const HTML = `
       <button class="play" title="Play"><i class="fa-solid fa-play"></i></button>
       <button class="finish" title="Finish"><i class="fa-solid fa-forward-fast"></i></button> 
     </div>
-    <button class="permalink" title="Share"><i class="fa-solid fa-share-from-square"></i></button>
+    <button class="permalink" title="Share"><i class="fa-solid fa-clipboard"></i></button>
   </div>
 </div>
 `
@@ -59,8 +59,6 @@ export default class TimeControls extends HTMLElement{
       this._update()
       this.dispatchEvent(new CustomEvent('tick'))
     })
-
-    // TODO: permalink
   }
 
   get speed(){
