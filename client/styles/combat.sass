@@ -13,8 +13,30 @@ di-combat-page
   .feed
     flex: 0 0 50rem !important
 
-di-combat-fighter-pane
-  > div > .flex-rows
-    margin-top: -6rem
-    > *
-      margin-top: 6rem
+  di-combat-fighter-pane
+    > div > .flex-rows
+      margin-top: -6rem
+      > *
+        margin-top: 6rem
+
+  di-combat-time-controls
+
+    .speed
+      width: 55rem
+      text-align: center
+
+    .event-time-bar
+      height: 1.1em
+      margin-bottom: 0.4em
+      .bar-border
+        border: none
+      .bar-label
+        padding-top: 4px
+
+  .buttons
+    justify-content: space-between
+    margin-left: 1px
+
+    button
+      margin-left: -1px
+      width: 50rem

@@ -54,16 +54,15 @@ export default class TimelineControls extends HTMLElement{
       })
     })
     this.querySelector('button.back').addEventListener('click', () => {
-      this.jumpToIndex(this.timeline.currentEntryIndex - 1, {
-        animate: false,
-        noCombat: true
+      this.jumpToIndex(this._timeline.currentEntryIndex - 1, {
+        animate: false
       })
     })
     this.querySelector('button.forward').addEventListener('click', () => {
-      this.jumpToIndex(this.timeline.currentEntryIndex + 1)
+      this.jumpToIndex(this._timeline.currentEntryIndex + 1)
     })
     this.querySelector('button.finish').addEventListener('click', () => {
-      this.jumpTo(this.timeline.duration)
+      this.jumpTo(this._timeline.duration)
     })
 
     this._viewCombatBtn = this.querySelector('button.view-combat')
@@ -76,46 +75,47 @@ export default class TimelineControls extends HTMLElement{
       this._showEventLogModal()
     })
 
-    this._ticker = new Ticker(running => this._tick(running))
+    this._ticker = new Ticker()
+      .on('tick', () => {
+        this._tick()
+      })
+      .on('ended', () => {
+        this._nextEvent()
+      })
+
     this._updateViewCombat()
   }
 
   get elapsedEvents(){
-    return this.timeline.entries.slice(0, this.timeline.currentEntryIndex + 1)
+    return this._timeline.entries.slice(0, this._timeline.currentEntryIndex + 1)
   }
 
   get finished(){
-    return this.timeline.time === this.timeline.duration
+    return this._timeline.time === this._timeline.duration
   }
 
-  setup(dungeonRun){
-    this.timeline = new Timeline(dungeonRun.events)
+  setup(timeline){
+    this._timeline = timeline
     setTimeout(() => {
-      this._update()
+      this._updateEvent()
       this.play()
     }, 0)
   }
 
   addEvent(event){
-    this.timeline.addEntry(event)
-    this._update()
+    this._timeline.addEntry(event)
+    this._updateEvent()
   }
 
   jumpTo(time, options = {}){
-    options = {
-      triggerEvent: true,
-      ...options
-    }
-    this.timeline.time = time
-    if(options.triggerEvent){
-      this._triggerEvent(options)
-    }
-    this._update()
+    this._timeline.time = time
+    this._triggerEvent(options)
+    this._updateEvent()
   }
 
   jumpToAfterCombat(combatID, options = {}){
     let i
-    const entry = this.timeline.entries.find((event, _i) => {
+    const entry = this._timeline.entries.find((event, _i) => {
       i = _i
       return event.combatID === combatID
     })
@@ -125,10 +125,11 @@ export default class TimelineControls extends HTMLElement{
   }
 
   jumpToIndex(index, options = {}){
-    if(index >= this.timeline.entries.length){
-      this.jumpTo(this.timeline.duration, options)
+    index = Math.max(0, index)
+    if(index >= this._timeline.entries.length){
+      this.jumpTo(this._timeline.duration, options)
     }else{
-      this.jumpTo(this.timeline.entries[index].time, options)
+      this.jumpTo(this._timeline.entries[index].time, options)
     }
   }
 
@@ -153,24 +154,25 @@ export default class TimelineControls extends HTMLElement{
     if(this._destroyed){
       return
     }
-    if(this.timeline.nextEntry){
-      this.jumpTo(this.timeline.nextEntry.time)
+    if(this._timeline.nextEntry){
+      this.jumpTo(this._timeline.nextEntry.time)
     }else{
       this.pause()
     }
   }
 
-  _tick(running = true){
-    this.timeline.time = this.timeline.currentEntry.time + this._ticker.currentTime
+  _tick(){
+    this._timeline.time = this._timeline.currentEntry.time + this._ticker.currentTime
+    this._eventTimeBarEl.setValue(this._ticker.currentTime)
     this._eventTimeBarEl.setOptions({
       max: this._ticker.endTime,
-      label: dateformat(this.timeline.time, 'M:ss')
+      label: dateformat(this._timeline.time, 'M:ss')
     })
-    this._eventTimeBarEl.setValue(this._ticker.currentTime)
-    if(running && this._ticker.finished){
-      this._triggerEvent()
-      this._update()
-    }
+  }
+
+  _nextEvent(){
+    this._triggerEvent()
+    this._updateEvent()
   }
 
   _triggerEvent(options = {}){
@@ -179,8 +181,10 @@ export default class TimelineControls extends HTMLElement{
     }))
   }
 
-  _update(){
-    this._ticker.setTimes(this.timeline.timeSinceLastEntry, this.timeline.currentEntry.duration)
+  _updateEvent(){
+    this._ticker.endTime = this._timeline.currentEntry.duration
+    this._ticker.currentTime = this._timeline.timeSinceLastEntry
+    this._tick()
   }
 
   _updateViewCombat(val = 'toggle'){
@@ -209,7 +213,7 @@ export default class TimelineControls extends HTMLElement{
   _showEventLogModal(){
     const wasRunning = this._ticker.running
     const modal = new Modal()
-    const log = new EventLog(this.timeline)
+    const log = new EventLog(this._timeline)
     log.addEventListener('event_selected', e => {
       this.jumpToIndex(e.detail.eventIndex, {
         animate: false
@@ -228,4 +232,4 @@ export default class TimelineControls extends HTMLElement{
   }
 }
 
-customElements.define('di-timeline-controls', TimelineControls)
+customElements.define('di-dungeon-timeline-controls', TimelineControls)

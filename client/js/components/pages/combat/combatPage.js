@@ -1,6 +1,6 @@
 import Timeline from '../../../../../game/timeline.js'
 import Page from '../page.js'
-import { mergeElementOptions } from '../../../../../game/utilFunctions.js'
+import { mergeOptionsObjects, toArray } from '../../../../../game/utilFunctions.js'
 import Zones, { floorToZone } from '../../../../../game/zones.js'
 
 const HTML = `
@@ -10,8 +10,13 @@ const HTML = `
     <div class="mid-thing">VS</div>
     <di-combat-fighter-pane class="fighter2"></di-combat-fighter-pane>
   </div>
-  <div class="content-well feed">
-    <di-combat-feed></di-combat-feed>
+  <div class="content-columns content-no-grow">
+    <div class="content-well">
+      <di-combat-feed></di-combat-feed>
+    </div>
+    <div class="content-well">
+      <di-combat-time-controls></di-combat-time-controls>
+    </div>
   </div>
 </div>
 `
@@ -20,9 +25,11 @@ export default class CombatPage extends Page{
 
   _cancelled = false
   _options = {
-    live: true,
+    isReplay: false,
     returnPage: null
   }
+
+  _timeControlsEl
 
   constructor(combatID, options = {}){
     super()
@@ -30,9 +37,12 @@ export default class CombatPage extends Page{
     this.fighterPane1 = this.querySelector('.fighter1')
     this.fighterPane2 = this.querySelector('.fighter2')
     this.combatFeed = this.querySelector('di-combat-feed')
+    this._timeControlsEl = this.querySelector('di-combat-time-controls')
+    this._timeControlsEl.addEventListener('tick', e => this._tick())
+    this._timeControlsEl.addEventListener('jumped', e => this._jump())
 
     this.combatID = combatID
-    this._options = mergeElementOptions(this._options, options)
+    this._options = mergeOptionsObjects(this._options, options)
   }
 
   get titleText(){
@@ -43,7 +53,7 @@ export default class CombatPage extends Page{
     const { combat, state } = await this.fetchData(`/watch/combat/${this.combatID}`)
 
     // If it's live but the combat's already done, just get outta here
-    if(state.status === 'finished' && !this._options.live && this._options.returnPage){
+    if(state.status === 'finished' && !this._options.isReplay && this._options.returnPage){
       this.redirectTo(this._options.returnPage)
       return
     }
@@ -51,79 +61,78 @@ export default class CombatPage extends Page{
     const zone = Zones[floorToZone(combat.floor ?? 1)]
     this.app.setBackground(zone.color, zone.texture)
 
-    this.timeline = new Timeline(combat.timeline)
     this.combat = combat
-
     this.fighterPane1.setFighter(combat.fighter1)
     this.fighterPane2.setFighter(combat.fighter2)
-    this.combatFeed.setCombat(this.combat)
-    this.combatFeed.setTimeline(this.timeline)
+    this._setupTimeline(combat, state)
 
     // TODO: This only makes sense in monster combat
     this.combatFeed.setText(`A ${combat.fighter2.data.name} draws near.`)
-
-    this.timeline.time = state.currentTime - this.combat.startTime
-
-    const currentEntry = this.timeline.currentEntry
-    this._applyEntry(currentEntry, false)
-
-    const waitUntilStartTime = Math.max(1000, this.combat.startTime - state.currentTime)
-    setTimeout(() => {
-      this._tick()
-    }, waitUntilStartTime)
   }
 
   async unload(){
     this._cancelled = true
   }
 
-  _tick(){
-    const before = Date.now()
+  _setupTimeline(combat, state){
+    this._timeline = new Timeline(combat.timeline)
+    if(!this._options.isReplay){
+      this._timeline.time = state.currentTime - this.combat.startTime
+    }
+    this._timeControlsEl.setup(this._timeline.time, this._timeline.duration)
+    this._applyEntries(this._timeline.currentEntry, false)
     setTimeout(() => {
-      if(this._cancelled){
-        return
-      }
-      this._advanceTime(Date.now() - before)
-      if(this.timeline.finished){
-        this._finish()
-      }else{
-        this._tick()
-      }
-    })
+      this._timeControlsEl.play()
+    }, 500)
   }
 
-  _applyEntry(timelineEntry, animate = true){
-    this.timeline.time = timelineEntry.time
+  _applyEntries(entries, animate = true){
 
-    timelineEntry.actions.forEach(action => {
-      this._performAction(action)
+    entries = toArray(entries)
+
+    entries.forEach(entry => {
+      entry.actions.forEach(action => {
+        this._performAction(action)
+      })
+      entry.tickUpdates.forEach(tickUpdate => {
+        this._performTickUpdate(tickUpdate)
+      })
     })
 
-    timelineEntry.tickUpdates.forEach(tickUpdate => {
-      this._performTickUpdate(tickUpdate)
-    })
-
-    this.fighterPane1.setState(timelineEntry.fighterState1, animate)
-    this.fighterPane2.setState(timelineEntry.fighterState2, animate)
-    this.fighterPane1.advanceTime(this.timeline.timeSinceLastEntry)
-    this.fighterPane2.advanceTime(this.timeline.timeSinceLastEntry)
-    this.combatFeed.setTime(this.timeline.time)
+    this._updatePanes(animate)
   }
 
-  _advanceTime(ms){
-    if(ms <= 0){
-      return
+  _updatePanes(animate){
+    const currentEntry = this._timeline.currentEntry
+    this._timeline.time = currentEntry.time
+    this.fighterPane1.setState(currentEntry.fighterState1, animate)
+    this.fighterPane2.setState(currentEntry.fighterState2, animate)
+    this.fighterPane1.advanceTime(this._timeline.timeSinceLastEntry)
+    this.fighterPane2.advanceTime(this._timeline.timeSinceLastEntry)
+  }
+
+  _jump(){
+    this._timeline.time = this._timeControlsEl.time
+    const entry = this._timeline.currentEntry
+    this._updatePanes(false)
+    if(this._timeline.finished){
+      this._finish()
     }
-    const prevEntry = this.timeline.currentEntry
-    this.timeline.time += ms
-    if(prevEntry !== this.timeline.currentEntry){
-      this._applyEntry(this.timeline.currentEntry)
+  }
+
+  _tick(){
+    const prevEntry = this._timeline.currentEntryIndex
+    const diff = this._timeControlsEl.time - this._timeline.time
+    this._timeline.time += diff
+    if(prevEntry !== this._timeline.currentEntryIndex){
+      this._applyEntries(this._timeline.entries.slice(prevEntry + 1, this._timeline.currentEntryIndex + 1))
     }else{
-      this.fighterPane1.advanceTime(ms)
-      this.fighterPane2.advanceTime(ms)
+      this.fighterPane1.advanceTime(diff)
+      this.fighterPane2.advanceTime(diff)
     }
-    this.combatFeed.setTime(this.timeline.time)
-    // TODO: clock?
+    if(this._timeline.finished){
+      this._finish()
+    }
   }
 
   _finish(){

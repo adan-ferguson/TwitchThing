@@ -1,6 +1,6 @@
 import CustomAnimation from '../../customAnimation.js'
 import FlyingTextEffect from '../effects/flyingTextEffect.js'
-import { mergeElementOptions } from '../../../../game/utilFunctions.js'
+import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
 
 const innerHTML = `
 <div class="bar-badge displaynone">
@@ -53,7 +53,7 @@ export default class Bar extends HTMLElement{
   }
 
   setOptions(options){
-    this._options = mergeElementOptions(this._options, options)
+    this._options = mergeOptionsObjects(this._options, options)
     this._update()
     return this
   }

@@ -1,4 +1,4 @@
-import { mergeElementOptions } from '../../../../../game/utilFunctions.js'
+import { mergeOptionsObjects } from '../../../../../game/utilFunctions.js'
 import ZONES from '../../../../../game/zones.js'
 
 const HTML = `
@@ -67,7 +67,7 @@ export default class FloorSlider extends HTMLElement{
   }
 
   setOptions(options){
-    this._options = mergeElementOptions(this._options, options)
+    this._options = mergeOptionsObjects(this._options, options)
     this._update()
   }
 

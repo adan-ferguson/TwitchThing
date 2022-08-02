@@ -1,7 +1,7 @@
 import defaultOrbImg from '/client/assets/icons/orbs/default.svg'
 import classDisplayInfo from '../classDisplayInfo.js'
 import tippy from 'tippy.js'
-import { mergeElementOptions } from '../../../game/utilFunctions.js'
+import { mergeOptionsObjects } from '../../../game/utilFunctions.js'
 import OrbsData from '../../../game/orbsData.js'
 
 const ORB_ENTRY_HTML = (src, text) => `
@@ -28,7 +28,7 @@ export default class OrbRow extends HTMLElement{
   }
 
   setOptions(options){
-    this._options = mergeElementOptions(this._options, options)
+    this._options = mergeOptionsObjects(this._options, options)
     this._update()
   }
 

@@ -1,6 +1,6 @@
 import LoadoutRow from './loadoutRow.js'
 import { getAdventurerOrbsData } from '../../../../game/adventurer.js'
-import { mergeElementOptions } from '../../../../game/utilFunctions.js'
+import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
 
 const HTML = `
 <div class="content-rows">
@@ -76,7 +76,7 @@ export default class Inventory extends HTMLElement{
 
     const stored = localStorage.getItem(STORAGE_NAME)
     if(stored){
-      this._filterSortOptions = mergeElementOptions(this._filterSortOptions, JSON.parse(stored))
+      this._filterSortOptions = mergeOptionsObjects(this._filterSortOptions, JSON.parse(stored))
     }
 
     const filteringOptions = this.querySelector('.filtering-options')

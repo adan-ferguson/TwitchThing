@@ -34,7 +34,7 @@ export function isObject(val){
   return ( (typeof val === 'function') || (typeof val === 'object') )
 }
 
-export function mergeElementOptions(currentOptions, newOptions){
+export function mergeOptionsObjects(currentOptions, newOptions){
   const options = { ...currentOptions }
   for(let key in newOptions){
     if(key in options){

@@ -3,6 +3,7 @@ import { getSocket, joinSocketRoom, leaveSocketRoom } from '../../../socketClien
 import CombatPage from '../combat/combatPage.js'
 import ResultsPage from '../results/resultsPage.js'
 import Zones, { floorToZone, floorToZoneName } from '../../../../../game/zones.js'
+import Timeline from '../../../../../game/timeline.js'
 
 const HTML = `
 <div class='content-columns'>
@@ -15,7 +16,7 @@ const HTML = `
         <di-dungeon-state></di-dungeon-state>
     </div>
     <div class="flex-no-grow content-well">
-        <di-timeline-controls></di-timeline-controls>
+        <di-dungeon-timeline-controls></di-dungeon-timeline-controls>
     </div>
   </div>
 </div>
@@ -31,6 +32,9 @@ export default class DungeonPage extends Page{
   _stateEl
   _timelineEl
 
+  _timeline
+  _ticker
+
   dungeonRun
 
   constructor(dungeonRunID, watchView = false){
@@ -44,12 +48,9 @@ export default class DungeonPage extends Page{
       this._goToCombat()
     })
     this._stateEl = this.querySelector('di-dungeon-state')
-    this._timelineEl = this.querySelector('di-timeline-controls')
+    this._timelineEl = this.querySelector('di-dungeon-timeline-controls')
+    this._timelineEl.addEventListener('tick', () => {})
     this._timelineEl.addEventListener('event_changed', e => this._update(e.detail))
-  }
-
-  get timeline(){
-    return this._timelineEl.timeline
   }
 
   get watching(){
@@ -61,7 +62,7 @@ export default class DungeonPage extends Page{
   }
 
   get currentEvent(){
-    return this.timeline.currentEntry
+    return this._timeline.currentEntry
   }
 
   get adventurer(){
@@ -81,34 +82,23 @@ export default class DungeonPage extends Page{
 
     const { dungeonRun } = await this.fetchData(url)
     this.dungeonRun = dungeonRun
-    this._timelineEl.setup(dungeonRun)
-
-    if(previousPage instanceof CombatPage){
-      this._timelineEl.jumpToAfterCombat(previousPage.combatID, {
-        triggerEvent: false
-      })
-    }else if(this.isReplay){
-      this._timelineEl.jumpTo(0, {
-        triggerEvent: false
-      })
-    }else{
-      this._timelineEl.jumpTo(dungeonRun.virtualTime, {
-        triggerEvent: false
-      })
-    }
 
     if(this.dungeonRun.finished && !this.watching){
       return this.redirectTo(new ResultsPage(this._dungeonRunID))
     }
 
-    this._adventurerPane.setAdventurer(this.adventurer)
-    this._eventEl.setAdventurer(this.adventurer)
-    this._update({ sourcePage: previousPage, animate: false })
-
-    if(!this.isReplay){
+    if(this.isReplay){
+      // Remove the entrance event
+      this.dungeonRun.events = this.dungeonRun.events.slice(1)
+    }else{
       joinSocketRoom(this.dungeonRun._id)
       getSocket().on('dungeon run update', this._socketUpdate)
     }
+
+    this._setupTimeline(dungeonRun, previousPage)
+    this._adventurerPane.setAdventurer(this.adventurer)
+    this._eventEl.setAdventurer(this.adventurer)
+    this._update({ sourcePage: previousPage, animate: false })
   }
 
   async unload(){
@@ -152,7 +142,7 @@ export default class DungeonPage extends Page{
     const animate = options.animate
     this._adventurerPane.setState(this.currentEvent.adventurerState, animate)
     this._stateEl.update(this._timelineEl.elapsedEvents, animate || options.sourcePage instanceof CombatPage)
-    this._eventEl.update(this.currentEvent)
+    this._eventEl.update(this.currentEvent, animate)
     this._updateBackground()
   }
 
@@ -165,7 +155,7 @@ export default class DungeonPage extends Page{
       return
     }
     return this.redirectTo(new CombatPage(this.currentEvent.combatID, {
-      live: this.isReplay,
+      isReplay: this.isReplay,
       returnPage: this
     }))
   }
@@ -175,6 +165,16 @@ export default class DungeonPage extends Page{
     this.app.setBackground(zone.color, zone.texture)
   }
 
+  _setupTimeline(dungeonRun, previousPage){
+    this._timeline = new Timeline(dungeonRun.events)
+    if(previousPage instanceof CombatPage){
+      const combatIndex = this._timeline.entries.findIndex(entry => entry.combatID === previousPage.combatID)
+      this._timeline.time = this._timeline.entries[combatIndex + 1].time
+    }else if(!this.isReplay){
+      this._timeline.time = dungeonRun.virtualTime
+    }
+    this._timelineEl.setup(this._timeline)
+  }
 }
 
 customElements.define('di-dungeon-page', DungeonPage )

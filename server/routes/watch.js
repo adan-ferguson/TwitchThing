@@ -38,7 +38,7 @@ router.post('/combat/:combatID', async(req, res) => {
       return res.status(404).send('Combat not found.')
     }
     const currentTime = Date.now()
-    const state = combat.startTime + combat.duration < currentTime ? { status: 'finished' } : { status: 'live', currentTime }
+    const state = combat.startTime + combat.duration < currentTime ? { status: 'finished', currentTime: combat.endTime } : { status: 'live', currentTime }
     res.send({ combat, state })
   }catch(ex){
     return res.status(ex.code || 401).send(ex.error || ex)

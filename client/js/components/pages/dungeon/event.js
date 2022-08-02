@@ -34,9 +34,9 @@ export default class Event extends HTMLElement{
     this._adventurer = adventurer
   }
 
-  async update(dungeonEvent){
+  async update(dungeonEvent, animate = true){
 
-    if(this._hasUpdated){
+    if(this._hasUpdated && animate){
       await fadeOut(this._contents)
       fadeIn(this._contents)
     }
