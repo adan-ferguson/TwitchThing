@@ -1,26 +1,32 @@
-import dateformat from 'dateformat'
 import RELICS from '../../../relicDisplayInfo.js'
 import { toDisplayName } from '../../../../../game/utilFunctions.js'
+import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 
-const ROW_HTML = (floor, room, description, time) => `
-<span class="time">${floor}-${room}</span>
+const ROW_HTML = (floor, room, description) => `
+<span class="floor">${floor}-${room}</span>
+<di-bar class="hp-pct"></di-bar>
 <span class="desc">${description}</span>
 `
 
 export default class EventLog extends HTMLElement{
-  constructor(timeline){
+  constructor(timeline, adventurer, options = {}){
     super()
-    let currentRow
-    timeline.entries.forEach((event, i) => {
+
+    this._timeline = timeline
+
+    options = {
+      rowsClickable: true,
+      ...options
+    }
+
+    const addEvent = (event, i) => {
       if(shouldSkip(event, timeline.entries[i - 1])){
         return
       }
-      const row = new EventLogRow(event)
-      if(event === timeline.currentEntry){
-        currentRow = row
-      }
+      const row = new EventLogRow(event, adventurer)
+      row.classList.toggle('clickable', options.rowsClickable)
       row.addEventListener('click', () => {
-        if(currentRow === row){
+        if(row.classList.contains('current') || !options.rowsClickable){
           return
         }
         this.dispatchEvent(new CustomEvent('event_selected', {
@@ -30,22 +36,65 @@ export default class EventLog extends HTMLElement{
         }))
       })
       this.appendChild(row)
+      return row
+    }
+
+    timeline.on('entry_added', event => {
+      const row = addEvent(event, timeline.entries.length - 1)
+      if(row){
+        this._setCurrent(row)
+      }
     })
 
-    if(currentRow){
-      currentRow.classList.add('current')
-      currentRow.scrollIntoView()
+    timeline.entries.forEach((event, i) => {
+      addEvent(event, i)
+    })
+  }
+
+  updateCurrent(scrollIntoView = false){
+    const rows = this.querySelectorAll('di-event-log-row')
+    let i
+    for(i = 0; i < rows.length; i++){
+      if (rows[i].event.time >= this._timeline.time){
+        break
+      }
+    }
+    const row = rows[i - 1]
+    this._setCurrent(row)
+    if(scrollIntoView){
+      row.scrollIntoView()
+    }
+  }
+
+  _setCurrent(row){
+    this.querySelector('.current')?.classList.remove('current')
+    const atBottom = this.scrollHeight <= this.scrollTop + this.offsetHeight + 50
+    row.classList.add('current')
+    if(atBottom){
+      row.scrollIntoView()
     }
   }
 }
 
 class EventLogRow extends HTMLElement{
-  constructor(event){
+  constructor(event, adventurer){
     super()
-    this.classList.add('clickable')
-
+    this.event = event
     const desc = DESCRIPTION_FNS[event.roomType ?? 'unknown'](event)
-    this.innerHTML = ROW_HTML(event.floor, event.room, desc, dateformat(event.time, 'M:ss'))
+    this.innerHTML = ROW_HTML(
+      event.floor,
+      event.room,
+      desc
+    )
+
+    const adv = new AdventurerInstance(adventurer, event.adventurerState)
+    const hpBar = this.querySelector('di-bar')
+    hpBar.setOptions({
+      max: 1,
+      showLabel: false,
+      showValue: false
+    })
+    hpBar.setValue(adv.hpPct)
   }
 }
 

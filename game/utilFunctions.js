@@ -74,3 +74,13 @@ export function fillArray(fn, length){
   }
   return arr
 }
+
+export function wait(ms){
+  return new Promise(res => {
+    setTimeout(res, ms)
+  })
+}
+
+export function isString(val){
+  return typeof val === 'string' || val instanceof String
+}

@@ -162,7 +162,7 @@ export default class CombatPage extends Page{
     if(this._options.returnPage){
       setTimeout(() => {
         this.redirectTo(this._options.returnPage)
-      }, this._options.isReplay ? 1000 : 3000)
+      }, this._options.isReplay ? 1000 : 4000)
     }
   }
 

@@ -1,3 +1,5 @@
+import { isString } from './utilFunctions.js'
+
 export default class ModsCollection{
 
   constructor(){
@@ -6,6 +8,10 @@ export default class ModsCollection{
 
     this._mods = {}
     mods.forEach(mod => {
+      if(isString(mod)){
+        mod = { name: mod }
+      }
+      mod.group = mod.group ?? 'generic'
       if(!this._mods[mod.group]){
         this._mods[mod.group] = []
       }

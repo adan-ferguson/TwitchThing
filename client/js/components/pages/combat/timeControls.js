@@ -5,7 +5,7 @@ const HTML = `
 <di-bar class="event-time-bar"></di-bar>
 <div class="flex-rows">
   <di-timer></di-timer>
-  <div class="flex-columns buttons">
+  <div class="flex-columns buttons replay-yes">
     <select class="speed">
       <option value="25">25%</option>
       <option value="50">50%</option>
@@ -32,6 +32,9 @@ export default class TimeControls extends HTMLElement{
   _speedEl
 
   _ticker
+  _options = {
+    isReplay: false
+  }
 
   constructor(){
     super()
@@ -70,14 +73,15 @@ export default class TimeControls extends HTMLElement{
   }
 
   setup(startTime, endTime, options = {}){
-    options = {
+
+    this._options = {
       isReplay: false,
       ...options
     }
 
-    if(!options.isReplay){
-      this.querySelector('.buttons').classList.add('displaynone')
-    }
+    this.querySelectorAll(`.replay-${options.isReplay ? 'no' : 'yes'}`).forEach(el => {
+      el.classList.add('displaynone')
+    })
 
     this._ticker.endTime = endTime
     this._ticker.startTime = startTime
@@ -112,7 +116,9 @@ export default class TimeControls extends HTMLElement{
       max: this._ticker.endTime,
       label: dateformat(this._ticker.currentTime, 'M:ss.L')
     })
-    this._eventTimeBarEl.setValue(this._ticker.currentTime)
+    if(this._options.isReplay){
+      this._eventTimeBarEl.setValue(this._ticker.currentTime)
+    }
   }
 
   _setupPlayPause(){

@@ -75,18 +75,36 @@ di-dungeon-timeline-controls
       width: 50rem
 
 di-event-log
+  overflow-y: auto
+  max-height: 90vh
   display: flex
   flex-direction: column
   justify-content: stretch
-  overflow: auto
 
   di-event-log-row
     display: flex
     flex-direction: row
     padding: 4rem
+    align-items: center
+    border-bottom: 0.5rem solid #DDDDDD
+    margin-right: 5rem
+
+    .floor
+      width: 40rem
+
+    .hp-pct
+      width: 40rem
+      height: 10rem
+      margin-right: 15rem
+
+      .bar-border
+        border-color: #c6f58d
+
+      .bar-foreground
+        background-color: #c6f58d !important
 
     &.current
-      background-color: #d1ffd1
+      background-color: #f7ffd3
 
     &:hover
       background-color: #dfeaff

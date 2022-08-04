@@ -1,6 +1,9 @@
-export default class Timeline{
+import { EventEmitter } from 'events'
+
+export default class Timeline extends EventEmitter{
 
   constructor(timelineEntries){
+    super()
     this._entries = timelineEntries
     this._time = 0
   }
@@ -55,5 +58,6 @@ export default class Timeline{
 
   addEntry(entry){
     this._entries.push(entry)
+    this.emit('entry_added', entry)
   }
 }

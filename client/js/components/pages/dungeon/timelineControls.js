@@ -1,9 +1,7 @@
-import Timeline from '../../../../../game/timeline.js'
 import Ticker from '../../../ticker.js'
 import dateformat from 'dateformat'
 import Modal from '../../modal.js'
 import EventLog from './eventLog.js'
-import { mergeOptionsObjects } from '../../../../../game/utilFunctions.js'
 
 const HTML = `
 <di-bar class="event-time-bar"></di-bar>
@@ -11,7 +9,7 @@ const HTML = `
   <di-timer></di-timer>
   <div class="flex-columns buttons">
     <button class="log" title="View event log"><i class="fa-solid fa-list"></i></button>
-    <div class="flex-columns">
+    <div class="flex-columns replay-yes">
       <button class="restart" title="Restart"><i class="fa-solid fa-backward-fast"></i></button>
       <button class="back" title="Back"><i class="fa-solid fa-backward-step"></i></button>
       <button class="pause" title="Pause"><i class="fa-solid fa-pause"></i></button>
@@ -19,15 +17,20 @@ const HTML = `
       <button class="forward" title="Forward"><i class="fa-solid fa-forward-step"></i></button>  
       <button class="finish" title="Skip to Results"><i class="fa-solid fa-forward-fast"></i></button> 
     </div>
-    <button class="view-combat toggle-on" title="View combat on/off"><i class="fa-solid fa-gun"></i></button>
+    <button class="view-combat toggle-on replay-yes" title="View combat on/off"><i class="fa-solid fa-gun"></i></button>
+    <button class="permalink replay-no" title="Share"><i class="fa-solid fa-clipboard"></i></button>
   </div>
 </div>
 `
 
 export default class TimelineControls extends HTMLElement{
 
+  _options = {
+    isReplay: false
+  }
   _eventTimeBarEl
   _viewCombatBtn
+  _eventLog
 
   _playEl
   _pauseEl
@@ -95,18 +98,18 @@ export default class TimelineControls extends HTMLElement{
     return this._timeline.time === this._timeline.duration
   }
 
-  setup(timeline, options = {}){
+  setup(timeline, adventurer, options = {}){
 
-    options = {
+    this._options = {
       isReplay: false,
       ...options
     }
+    this.querySelectorAll(`.replay-${options.isReplay ? 'no' : 'yes'}`).forEach(el => {
+      el.classList.add('displaynone')
+    })
 
     this._timeline = timeline
-
-    if(!options.isReplay){
-      this.querySelector('.buttons').classList.add('displaynone')
-    }
+    this._setupEventLog(adventurer)
 
     setTimeout(() => {
       this._updateEvent()
@@ -160,6 +163,17 @@ export default class TimelineControls extends HTMLElement{
     this._pauseEl.classList.add('displaynone')
     this._playEl.classList.remove('displaynone')
     this._ticker.stop()
+  }
+
+  _setupEventLog(adventurer){
+    this._eventLog = new EventLog(this._timeline, adventurer, {
+      rowsClickable: this._options.isReplay
+    })
+    this._eventLog.addEventListener('event_selected', e => {
+      this.jumpToIndex(e.detail.eventIndex, {
+        animate: false
+      })
+    })
   }
 
   _next(){
@@ -225,22 +239,24 @@ export default class TimelineControls extends HTMLElement{
   _showEventLogModal(){
     const wasRunning = this._ticker.running
     const modal = new Modal()
-    const log = new EventLog(this._timeline)
-    log.addEventListener('event_selected', e => {
-      this.jumpToIndex(e.detail.eventIndex, {
-        animate: false
-      })
-      modal.hide()
-    })
-
-    modal.innerPane.appendChild(log)
+    modal.innerPane.appendChild(this._eventLog)
     modal.show()
     modal.addEventListener('hide', () => {
       if(wasRunning){
         this._ticker.start()
       }
     })
-    this._ticker.stop()
+
+    const listener = () => {
+      modal.hide()
+      this._eventLog.removeEventListener(listener)
+    }
+    this._eventLog.addEventListener('event_selected', listener)
+    this._eventLog.updateCurrent(true)
+
+    if(this._options.isReplay){
+      this._ticker.stop()
+    }
   }
 }
 

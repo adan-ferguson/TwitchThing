@@ -50,7 +50,9 @@ export default class DungeonPage extends Page{
     this._stateEl = this.querySelector('di-dungeon-state')
     this._timelineEl = this.querySelector('di-dungeon-timeline-controls')
     this._timelineEl.addEventListener('tick', () => {})
-    this._timelineEl.addEventListener('event_changed', e => this._update(e.detail))
+    this._timelineEl.addEventListener('event_changed', e => {
+      this._update(e.detail)
+    })
   }
 
   get watching(){
@@ -110,7 +112,7 @@ export default class DungeonPage extends Page{
     }
     this.dungeonRun = dungeonRun
     this._timelineEl.addEvent(dungeonRun.currentEvent)
-    this._update()
+    this._timelineEl.jumpTo(dungeonRun.currentEvent.time)
   }
 
   _update(options = {}){
@@ -168,7 +170,7 @@ export default class DungeonPage extends Page{
     }else if(!this.isReplay){
       this._timeline.time = dungeonRun.virtualTime
     }
-    this._timelineEl.setup(this._timeline, {
+    this._timelineEl.setup(this._timeline, this.adventurer, {
       isReplay: this.isReplay
     })
   }

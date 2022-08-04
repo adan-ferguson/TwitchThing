@@ -8,8 +8,10 @@ import Users from '../collections/users.js'
 import log from 'fancy-log'
 import { continueRelicEvent } from './relics.js'
 import { finishCombatEvent } from '../combat/combat.js'
+import { waitFor } from '@babel/core/lib/gensync-utils/async.js'
+import { wait } from '../../game/utilFunctions.js'
 
-const ADVANCEMENT_INTERVAL = 30000
+const ADVANCEMENT_INTERVAL = 5000
 
 let running = false
 let lastAdvancement = new Date()
@@ -88,6 +90,7 @@ export async function addRun(adventurerID, dungeonOptions){
   adventurer.dungeonRunID = drDoc._id
   await Adventurers.save(adventurer)
 
+  await wait(ADVANCEMENT_INTERVAL - (new Date() - lastAdvancement))
   activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, userDoc)
 
   return drDoc
@@ -126,7 +129,7 @@ class DungeonRunInstance{
     if(!this.currentEvent){
       this.advance({
         passTimeOverride: true,
-        duration: ADVANCEMENT_INTERVAL * 2,
+        duration: ADVANCEMENT_INTERVAL,
         message: `${this.adventurer.name} enters the dungeon.`,
         roomType: 'entrance'
       })
@@ -139,7 +142,7 @@ class DungeonRunInstance{
   }
 
   get virtualTime(){
-    return this.currentEvent.time + (new Date() - lastAdvancement)
+    return this._time + (new Date() - lastAdvancement)
   }
 
   get floor(){

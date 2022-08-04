@@ -15,7 +15,7 @@ export default async function(url, data = null){
 
     resp = await fetch(url, obj)
     text = await resp.text()
-    return JSON.parse(text)
+    return text ? JSON.parse(text) : {}
   }catch(ex){
     if(!resp || resp.status >= 400){
       if(text){

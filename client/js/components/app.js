@@ -51,6 +51,7 @@ export default class App extends HTMLElement{
 
     Loader.showLoader()
     hideAllTippys()
+    closeAllModals()
 
     // Update the user whenever we change pages
     this._fetchUser()
@@ -172,4 +173,10 @@ export function pageFromString(name, args){
     return new page(...args)
   }
   return null
+}
+
+function closeAllModals(){
+  document.querySelectorAll('di-modal').forEach(modal => {
+    modal.hide()
+  })
 }
