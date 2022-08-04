@@ -168,7 +168,9 @@ export default class DungeonPage extends Page{
     }else if(!this.isReplay){
       this._timeline.time = dungeonRun.virtualTime
     }
-    this._timelineEl.setup(this._timeline)
+    this._timelineEl.setup(this._timeline, {
+      isReplay: this.isReplay
+    })
   }
 }
 

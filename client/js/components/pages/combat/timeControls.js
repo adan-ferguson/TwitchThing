@@ -69,7 +69,16 @@ export default class TimeControls extends HTMLElement{
     return this._ticker.currentTime
   }
 
-  setup(startTime, endTime){
+  setup(startTime, endTime, options = {}){
+    options = {
+      isReplay: false,
+      ...options
+    }
+
+    if(!options.isReplay){
+      this.querySelector('.buttons').classList.add('displaynone')
+    }
+
     this._ticker.endTime = endTime
     this._ticker.startTime = startTime
     this._update()

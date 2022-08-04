@@ -92,7 +92,9 @@ export default class CombatPage extends Page{
     if(!this._options.isReplay){
       this._timeline.time = state.currentTime - this.combat.startTime
     }
-    this._timeControlsEl.setup(this._timeline.time, this._timeline.duration)
+    this._timeControlsEl.setup(this._timeline.time, this._timeline.duration, {
+      isReplay: this._options.isReplay
+    })
     this._applyEntries(this._timeline.currentEntry, false)
     setTimeout(() => {
       this._timeControlsEl.play()

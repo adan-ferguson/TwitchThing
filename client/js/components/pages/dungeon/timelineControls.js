@@ -3,6 +3,7 @@ import Ticker from '../../../ticker.js'
 import dateformat from 'dateformat'
 import Modal from '../../modal.js'
 import EventLog from './eventLog.js'
+import { mergeOptionsObjects } from '../../../../../game/utilFunctions.js'
 
 const HTML = `
 <di-bar class="event-time-bar"></di-bar>
@@ -94,8 +95,19 @@ export default class TimelineControls extends HTMLElement{
     return this._timeline.time === this._timeline.duration
   }
 
-  setup(timeline){
+  setup(timeline, options = {}){
+
+    options = {
+      isReplay: false,
+      ...options
+    }
+
     this._timeline = timeline
+
+    if(!options.isReplay){
+      this.querySelector('.buttons').classList.add('displaynone')
+    }
+
     setTimeout(() => {
       this._updateEvent()
       this.play()
