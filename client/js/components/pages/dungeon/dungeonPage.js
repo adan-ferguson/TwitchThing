@@ -5,6 +5,7 @@ import ResultsPage from '../results/resultsPage.js'
 import Zones, { floorToZone, floorToZoneName } from '../../../../../game/zones.js'
 import Timeline from '../../../../../game/timeline.js'
 import tippy from 'tippy.js'
+import { mergeOptionsObjects } from '../../../../../game/utilFunctions.js'
 
 const HTML = `
 <div class='content-columns'>
@@ -26,7 +27,6 @@ const HTML = `
 export default class DungeonPage extends Page{
 
   _dungeonRunID
-  _watchView
 
   _adventurerPane
   _eventEl
@@ -36,12 +36,16 @@ export default class DungeonPage extends Page{
   _timeline
   _ticker
 
+  _options = {
+    watchView: false
+  }
+
   dungeonRun
 
-  constructor(dungeonRunID, watchView = false){
+  constructor(dungeonRunID, options = {}){
     super()
+    this._options = mergeOptionsObjects(this._options, options)
     this._dungeonRunID = dungeonRunID
-    this._watchView = watchView
     this.innerHTML = HTML
     this._adventurerPane = this.querySelector('di-dungeon-adventurer-pane')
     this._eventEl = this.querySelector('di-dungeon-event')
@@ -58,6 +62,7 @@ export default class DungeonPage extends Page{
     this.querySelector('.permalink').addEventListener('click', e => {
       const txt = `${window.location.origin}/watch/dungeonrun/${this.combatID}`
       navigator?.clipboard?.writeText(txt)
+      console.log('Copied', txt, navigator?.clipboard ? true : false)
       tippy(e.currentTarget, {
         showOnCreate: true,
         content: 'Link copied to clipboard',
@@ -69,7 +74,7 @@ export default class DungeonPage extends Page{
   }
 
   get watching(){
-    return this.dungeonRun?.finalizedData || this._watchView
+    return this.dungeonRun?.finalizedData || this._options.watchView
   }
 
   get titleText(){
@@ -97,10 +102,7 @@ export default class DungeonPage extends Page{
       return this.redirectTo(new ResultsPage(this._dungeonRunID))
     }
 
-    if(this.isReplay){
-      // Remove the entrance event
-      this.dungeonRun.events = this.dungeonRun.events.slice(1)
-    }else{
+    if(!this.isReplay){
       joinSocketRoom(this.dungeonRun._id)
       getSocket().on('dungeon run update', this._socketUpdate)
     }

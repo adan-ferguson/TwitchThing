@@ -7,6 +7,7 @@ import AdventurerPage from './pages/adventurer/adventurerPage.js'
 import DungeonPage from './pages/dungeon/dungeonPage.js'
 import { getSocket } from '../socketClient.js'
 import { showPopup } from './popup.js'
+import CombatPage from './pages/combat/combatPage.js'
 
 const HTML = `
 <di-header></di-header>
@@ -43,7 +44,7 @@ export default class App extends HTMLElement{
     this._pageTitle.textContent = this.currentPage.titleText
   }
 
-  async setPage(page){
+  async setPage(page, redirectToIndexOnError = false){
 
     if(!page){
       throw 'Attempted to set null page'
@@ -76,6 +77,10 @@ export default class App extends HTMLElement{
     try {
       await page.load(previousPage)
     }catch(ex){
+      if(redirectToIndexOnError){
+        debugger
+        return window.location = '/'
+      }
       const { error, targetPage } = ex
       console.error(ex)
       if(targetPage){
@@ -120,7 +125,14 @@ export default class App extends HTMLElement{
       }
     }
     if(this.startupParams.watch?.page === 'dungeonrun'){
-      return this.setPage(new DungeonPage(this.startupParams.watch.id, true))
+      return this.setPage(new DungeonPage(this.startupParams.watch.id, {
+        watchView: true
+      }), true)
+    }else if(this.startupParams.watch?.page === 'combat'){
+      return this.setPage(new CombatPage(this.startupParams.watch.id, {
+        watchView: true,
+        isReplay: true
+      }), true)
     }
     this.setPage(new MainPage())
   }

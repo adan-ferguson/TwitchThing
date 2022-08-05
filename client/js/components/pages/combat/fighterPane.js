@@ -7,6 +7,7 @@ import { monsterLoadoutContents } from '../../../monster.js'
 import Modal from '../../modal.js'
 import AdventurerInfo from '../../adventurerInfo.js'
 import MonsterInfo from '../../monsterInfo.js'
+import CustomAnimation from '../../../customAnimation.js'
 
 const HTML = `
 <div class="flex-grow flex-rows top-section">
@@ -64,21 +65,11 @@ export default class FighterPane extends HTMLElement{
   }
 
   setState(state = {}, animate = false){
-
-    if(this._finished){
-      return
-    }
-
     this.fighterInstance = new FighterInstance(this.fighter, state, this.fighterId)
     this._update(animate)
   }
 
   advanceTime(ms){
-
-    if(this._finished){
-      return
-    }
-
     this.fighterInstance.advanceTime(ms)
     this._updateCooldowns()
   }
@@ -132,7 +123,13 @@ export default class FighterPane extends HTMLElement{
   _update(animate = false){
 
     if(this._finished){
-      return
+      if(this.fighterInstance.hp){
+        this._fadeAnim.cancel()
+        this._finished = false
+        this.style.opacity = '1'
+      }else{
+        return
+      }
     }
 
     this.hpBar.setOptions({ max: this.fighterInstance.hpMax })
@@ -151,7 +148,12 @@ export default class FighterPane extends HTMLElement{
     this._updateCooldowns()
 
     if(!this.fighterInstance.hp){
-      fadeOut(this, 2000)
+      this._fadeAnim = new CustomAnimation({
+        duration: 1200,
+        tick: pct => {
+          this.style.opacity = (1 - pct).toString()
+        }
+      })
       this._finished = true
     }
   }

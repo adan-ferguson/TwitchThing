@@ -30,7 +30,7 @@ export default class AdventurerPreviousRunsPage extends Page{
 
     const list = this.querySelector('.previous-runs-list')
       .setOptions({
-        pageSize: 6
+        pageSize: 8
       })
 
     const rows = []

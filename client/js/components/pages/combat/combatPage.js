@@ -27,13 +27,15 @@ export default class CombatPage extends Page{
   _cancelled = false
   _options = {
     isReplay: false,
-    returnPage: null
+    returnPage: null,
+    watchView: false
   }
 
   _timeControlsEl
 
   constructor(combatID, options = {}){
     super()
+    this._options = mergeOptionsObjects(this._options, options)
     this.innerHTML = HTML
     this.fighterPane1 = this.querySelector('.fighter1')
     this.fighterPane2 = this.querySelector('.fighter2')
@@ -45,6 +47,7 @@ export default class CombatPage extends Page{
     this.querySelector('.permalink').addEventListener('click', e => {
       const txt = `${window.location.origin}/watch/combat/${this.combatID}`
       navigator?.clipboard?.writeText(txt)
+      console.log('Copied', txt, navigator?.clipboard ? true : false)
       tippy(e.currentTarget, {
         showOnCreate: true,
         content: 'Link copied to clipboard',
@@ -55,7 +58,6 @@ export default class CombatPage extends Page{
     })
 
     this.combatID = combatID
-    this._options = mergeOptionsObjects(this._options, options)
   }
 
   get titleText(){
@@ -64,6 +66,10 @@ export default class CombatPage extends Page{
 
   async load(previousPage){
     const { combat, state } = await this.fetchData(`/watch/combat/${this.combatID}`)
+
+    if(state.status !== 'finished' && this._options.watchView){
+      throw 'Not possible to watch live combats.'
+    }
 
     // If it's live but the combat's already done, just get outta here
     if(state.status === 'finished' && !this._options.isReplay && this._options.returnPage){
