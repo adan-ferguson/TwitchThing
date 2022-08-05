@@ -4,6 +4,7 @@ import CombatPage from '../combat/combatPage.js'
 import ResultsPage from '../results/resultsPage.js'
 import Zones, { floorToZone, floorToZoneName } from '../../../../../game/zones.js'
 import Timeline from '../../../../../game/timeline.js'
+import tippy from 'tippy.js'
 
 const HTML = `
 <div class='content-columns'>
@@ -52,6 +53,18 @@ export default class DungeonPage extends Page{
     this._timelineEl.addEventListener('tick', () => {})
     this._timelineEl.addEventListener('event_changed', e => {
       this._update(e.detail)
+    })
+
+    this.querySelector('.permalink').addEventListener('click', e => {
+      const txt = `${window.location.origin}/watch/dungeonrun/${this.combatID}`
+      navigator?.clipboard?.writeText(txt)
+      tippy(e.currentTarget, {
+        showOnCreate: true,
+        content: 'Link copied to clipboard',
+        onHidden(instance){
+          instance.destroy()
+        }
+      })
     })
   }
 

@@ -92,7 +92,8 @@ class EventLogRow extends HTMLElement{
     hpBar.setOptions({
       max: 1,
       showLabel: false,
-      showValue: false
+      showValue: false,
+      rounding: false
     })
     hpBar.setValue(adv.hpPct)
   }

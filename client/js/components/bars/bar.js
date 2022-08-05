@@ -25,7 +25,8 @@ export default class Bar extends HTMLElement{
     increaserColor: null,
     decreaserColor: null,
     min: 0,
-    max: 100
+    max: 100,
+    rounding: true
   }
 
   _barLabel
@@ -89,7 +90,8 @@ export default class Bar extends HTMLElement{
       options.flyingText = false
     }
 
-    val = Math.min(this._options.max, Math.max(this._options.min, Math.round(val)))
+    val = this._options.rounding ? Math.round(val) : val
+    val = Math.min(this._options.max, Math.max(this._options.min, val))
 
     if(options.flyingText){
       this._flyingText(val - this._val)
@@ -163,7 +165,7 @@ export default class Bar extends HTMLElement{
         tick: pct => {
           currentWidth = startWidth * (1 - pct) + targetWidth * pct
           setWidth(animatingBar, currentWidth)
-          this._updateLabel(Math.round(this._pctToVal(currentWidth)))
+          this._updateLabel(this._pctToVal(currentWidth))
         }
       })
     })
@@ -176,7 +178,8 @@ export default class Bar extends HTMLElement{
 
   _pctToVal(pct){
     pct = Math.min(1, Math.max(0, pct))
-    return this._options.min * (1 - pct) + this._options.max * pct
+    const val = this._options.min * (1 - pct) + this._options.max * pct
+    return this._options.rounding ? Math.round(val) : val
   }
 
   _valToColor(val){
