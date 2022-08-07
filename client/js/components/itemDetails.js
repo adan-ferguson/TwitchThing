@@ -1,11 +1,11 @@
 import { adventurerLoadoutItem } from '../adventurer.js'
 
 const HTML = `
-<div class="inset-title">Item</div>
-<di-loadout-row></di-loadout-row>
-<div class="stats-text"></div>
-<!--<di-stats-list></di-stats-list>-->
-<!--<div class='item-abilities'>&#45;&#45; TODO: add other abilities here &#45;&#45;</div>-->
+<div>
+    <span class="icon"></span> <span class="name"></span>
+</div>
+<di-orb-row></di-orb-row>
+<div class="new-badge hidden">New!</div>
 `
 
 export default class ItemDetails extends HTMLElement{
@@ -19,12 +19,6 @@ export default class ItemDetails extends HTMLElement{
     super()
     this.innerHTML = HTML
     this._loadoutRow = this.querySelector('di-loadout-row')
-    this._statsText = this.querySelector('.stats-text')
-    // this._statsList = this.querySelector('di-stats-list')
-    // this._statsList.setOptions({
-    //   statsDisplayStyle: StatsDisplayStyle.ADDITIONAL
-    // })
-    this._abilitiesList = this.querySelector('.item-abilities')
     if(loadoutItem){
       this.setItem(loadoutItem)
     }
@@ -32,8 +26,6 @@ export default class ItemDetails extends HTMLElement{
 
   setItem(loadoutItem){
     this._loadoutRow.setItem(loadoutItem, false)
-    // this._statsText.innerHTML = item.HTML
-    // this._statsList.setStats(item.stats)
   }
 }
 

@@ -36,15 +36,10 @@ export default class DungeonPage extends Page{
   _timeline
   _ticker
 
-  _options = {
-    watchView: false
-  }
-
   dungeonRun
 
-  constructor(dungeonRunID, options = {}){
+  constructor(dungeonRunID){
     super()
-    this._options = mergeOptionsObjects(this._options, options)
     this._dungeonRunID = dungeonRunID
     this.innerHTML = HTML
     this._adventurerPane = this.querySelector('di-dungeon-adventurer-pane')
@@ -74,7 +69,7 @@ export default class DungeonPage extends Page{
   }
 
   get watching(){
-    return this.dungeonRun?.finalizedData || this._options.watchView
+    return this.dungeonRun?.finalizedData || this.app.watchView
   }
 
   get titleText(){

@@ -5,9 +5,63 @@ di-results-page
     padding-bottom: 1em
     flex-grow: 0 !important
 
-  .results-list
+  di-tab
     line-height: 1.6em
     overflow-y: auto
+    overflow-x: hidden
+    display: flex
+    flex-direction: column
+    align-items: start
 
-  .levelup, .done
+  .open-all
+    font-size: 0.8em
+    border: 0.2rem dashed #CCC
+
+  .buttons-row
     flex-grow: 0 !important
+    display: flex
+    flex-direction: row
+    justify-content: space-between
+    align-items: center
+    margin-top: -10rem
+
+    .replay, .view-replay
+      flex-grow: 0
+      margin-left: 10rem
+      border: 0.2rem dashed #CCC
+      padding: 10rem
+
+      i
+        margin-left: 10rem
+
+    .done
+      flex-grow: 1
+
+  .chests
+    display: flex
+    flex-direction: column
+    align-items: start
+    margin-bottom: 15rem
+
+    di-chest-openage
+      position: relative
+      border: 1.5rem dashed currentColor
+      box-sizing: border-box
+      padding: 0 10rem
+      margin-bottom: 5rem
+      transition: background-color 0.2s ease
+      overflow: visible
+
+      .contents
+        .unopened
+          height: 28rem
+          flex-direction: row
+          justify-content: space-between
+          align-items: center
+          display: flex
+          .open-me
+            padding: 0 6rem
+
+      &.clickable:hover
+        border-style: solid
+        background-color: #F8F8F8

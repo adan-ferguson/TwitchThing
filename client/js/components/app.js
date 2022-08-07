@@ -40,6 +40,10 @@ export default class App extends HTMLElement{
     return this.currentPage?.backPage ? true : false
   }
 
+  get watchView(){
+    return document.location.pathname.search(/^\/watch/) > -1 ? true : false
+  }
+
   updateTitle(){
     this._pageTitle.textContent = this.currentPage.titleText
   }
@@ -125,12 +129,9 @@ export default class App extends HTMLElement{
       }
     }
     if(this.startupParams.watch?.page === 'dungeonrun'){
-      return this.setPage(new DungeonPage(this.startupParams.watch.id, {
-        watchView: true
-      }), true)
+      return this.setPage(new DungeonPage(this.startupParams.watch.id), true)
     }else if(this.startupParams.watch?.page === 'combat'){
       return this.setPage(new CombatPage(this.startupParams.watch.id, {
-        watchView: true,
         isReplay: true
       }), true)
     }

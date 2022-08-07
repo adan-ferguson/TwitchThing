@@ -45,25 +45,43 @@ export function mergeOptionsObjects(currentOptions, newOptions){
 }
 
 export function wrap(content, options = {}){
+  if(options.allowHTML){
+    return makeEl({
+      content: content,
+      ...options
+    })
+  }
+  return makeEl({
+    text: content,
+    ...options
+  })
+}
+
+export function makeEl(options = {}){
+
   options = {
     elementType: 'div',
-    allowHTML: false,
-    classes: null,
+    text: null,
+    content: null,
+    class: null,
     ...options
   }
+
   const el = document.createElement(options.elementType)
-  if(options.allowHTML){
-    if(content instanceof HTMLElement){
-      el.appendChild(content)
-    }else{
-      el.innerHTML = content
+  if (options.content){
+    if (options.content instanceof HTMLElement){
+      el.appendChild(options.content)
+    } else {
+      el.innerHTML = options.content
     }
-  }else{
-    el.textContent = content
+  } else if (options.text){
+    el.text = options.text
   }
-  if(options.classes){
-    el.classList.add(...toArray(options.classes))
+
+  if (options.class){
+    el.classList.add(...toArray(options.class))
   }
+
   return el
 }
 
@@ -75,7 +93,7 @@ export function fillArray(fn, length){
   return arr
 }
 
-export function wait(ms){
+export function wait(ms = 0){
   return new Promise(res => {
     setTimeout(res, ms)
   })

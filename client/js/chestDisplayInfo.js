@@ -1,18 +1,23 @@
 const CHESTS = [
   {
-    displayName: 'Common'
+    displayName: 'Common',
+    color: '#000'
   },
   {
-    displayName: 'Rare'
+    displayName: 'Rare',
+    color: '#59c916'
   },
   {
-    displayName: 'Really Rare'
+    displayName: 'Really Rare',
+    color: '#6898bd'
   },
   {
-    displayName: 'Something Else'
+    displayName: 'Outrageous',
+    color: '#7d56ce'
   },
   {
-    displayName: 'Yolo'
+    displayName: 'Yolo',
+    color: '#ff8100'
   }
 ]
 

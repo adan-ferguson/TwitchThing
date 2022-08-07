@@ -65,15 +65,18 @@ export default class AdventurerPane extends HTMLElement{
     this.statsList.setStats(adventurerInstance.stats, adventurerInstance)
   }
 
-  async addXp(toAdd, onLevelup = null){
-    await this.xpBar.setValue(this.adventurer.xp + toAdd, {
+  async addXp(toAdd, options = { }){
+    options = {
+      onLevelup: null,
       animate: true,
+      ...options
+    }
+    await this.xpBar.setValue(this.adventurer.xp + toAdd, {
+      animate: options.animate,
       onLevelup: level => {
         this.adventurer.level = level
         this.update()
-        if(onLevelup){
-          onLevelup(level)
-        }
+        options.onLevelup?.(level)
       }
     })
   }

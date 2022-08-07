@@ -27,8 +27,7 @@ export default class CombatPage extends Page{
   _cancelled = false
   _options = {
     isReplay: false,
-    returnPage: null,
-    watchView: false
+    returnPage: null
   }
 
   _timeControlsEl
@@ -67,7 +66,7 @@ export default class CombatPage extends Page{
   async load(previousPage){
     const { combat, state } = await this.fetchData(`/watch/combat/${this.combatID}`)
 
-    if(state.status !== 'finished' && this._options.watchView){
+    if(state.status !== 'finished' && this.app.watchView){
       throw 'Not possible to watch live combats.'
     }
 

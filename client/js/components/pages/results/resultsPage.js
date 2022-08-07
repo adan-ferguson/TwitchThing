@@ -1,22 +1,31 @@
 import fizzetch from '../../../fizzetch.js'
 import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
-import SimpleModal from '../../simpleModal.js'
 import ChestOpenage from './chestOpenage.js'
 import { showLoader } from '../../../loader.js'
-import { toDisplayName } from '../../../../../game/utilFunctions.js'
+import { toDisplayName, wrap } from '../../../../../game/utilFunctions.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import Page from '../page.js'
 import RELICS from '../../../relicDisplayInfo.js'
-import CHESTS from '../../../chestDisplayInfo.js'
+import DungeonPage from '../dungeon/dungeonPage.js'
 
 const WAIT_TIME = 500
 
 const HTML = `
 <div class='content-columns'>
   <di-adventurer-pane></di-adventurer-pane>
-  <div class='content-rows results' style='flex-grow:1.5'>
-    <div class='results-list'></div>
-    <button class="done hidden">Okay</button>
+  <div class='content-rows results' style='flex-grow:1.66'>
+    <div class="content-well">
+      <di-tabz>
+        <di-tab data-tab-name="Results"></di-tab>
+        <di-tab data-tab-name="Monsters"></di-tab>
+        <di-tab data-tab-name="Relics"></di-tab>
+      </di-tabz>
+    </div>
+    <div class="buttons-row">
+      <button class="done hidden">Okay</button>
+      <button class="clickable replay">Replay <i class="fa-solid fa-rotate"></i></button>
+      <a target="_blank" class="clickable view-replay">View Replay <i class="fa-solid fa-up-right-from-square"></i></a>
+    </div>
   </div>
 </div>
 `
@@ -24,14 +33,16 @@ const HTML = `
 export default class ResultsPage extends Page{
 
   _dungeonRunID
+  _skipAnimations = false
 
   constructor(dungeonRunID){
     super()
     this.innerHTML = HTML
     this.adventurerPane = this.querySelector('di-adventurer-pane')
-    this.results = this.querySelector('.results-list')
-    this.doneButton = this.querySelector('.done')
     this._dungeonRunID = dungeonRunID
+    this.addEventListener('click', () => {
+      this._skipAnimations = true
+    })
   }
 
   get titleText(){
@@ -46,72 +57,85 @@ export default class ResultsPage extends Page{
 
     const { dungeonRun } = await this.fetchData(`/game/dungeonrun/${this._dungeonRunID}/results`)
 
+    this._setupReplayButton()
     this.dungeonRun = dungeonRun
     this.adventurerPane.setAdventurer(dungeonRun.adventurer)
     this.dungeonRunResults = new DungeonRunResults(dungeonRun)
 
-    const fns = [
-      this._showDungeonResult,
-      this._adventurerXp
-    ]
+    this._addMonsters(this.dungeonRunResults.monstersKilled)
+    this._addRelics(this.dungeonRunResults.relics)
 
     waitUntilDocumentVisible().then(async () => {
-      for(let fn of fns){
-        await fn()
-      }
-      this._showButton()
+      await this._showDungeonResult()
+      this._showButtons()
     })
   }
 
   _showDungeonResult = async () => {
-    this._addResultText(`Floor: ${this.dungeonRun.floor}`)
-    await wait()
-    this._addResultText(`Room: ${this.dungeonRun.room}`)
-    await wait()
+
+    const resultsTab = this.querySelector('di-tab[data-tab-name="Results"]')
+
+    this._addText(resultsTab, `Floor: ${this.dungeonRun.floor}`)
+    await this._wait()
+    this._addText(resultsTab, `Room: ${this.dungeonRun.room}`)
+    await this._wait()
 
     const monsterName = this.dungeonRunResults.killedByMonster?.name || 'Something'
-    this._addResultText(`Killed By: ${toDisplayName(monsterName)}`)
-    await wait()
+    this._addText(resultsTab, `Killed By: ${toDisplayName(monsterName)}`)
+    await this._wait()
 
-    const monsterCount = this.dungeonRunResults.monstersKilled.count
-    if(monsterCount){
-      this._addResultText(`Monsters Killed: ${monsterCount}`)
-      await wait()
-    }
+    this._addNewline(resultsTab)
+    await this._adventurerXp(resultsTab)
 
-    const relics = this.dungeonRunResults.relics
-    if(relics.length){
-      this._addResultNewline()
-      await this._addRelics(relics)
-      await wait()
-    }
-
-    const chests = this.dungeonRunResults.chests
-    if(chests.length){
-      this._addResultNewline()
-      await this._addChests(chests)
-      await wait()
-    }
-
-    this._addResultNewline()
+    this._addNewline(resultsTab)
+    await this._addChests(resultsTab, this.dungeonRunResults.chests)
   }
 
-  _adventurerXp = async () => {
+  _adventurerXp = async (el) => {
     if(!this.dungeonRunResults.xp){
       return
     }
-    this._addResultText(`${this.adventurer.name} gained +${this.dungeonRunResults.xp} xp`)
-    await this.adventurerPane.addXp(this.dungeonRunResults.xp, level => {
-      this._addResultText(`${this.adventurer.name} has reached level ${level}`)
+    this._addText(el, `${this.adventurer.name} gained +${this.dungeonRunResults.xp} xp`)
+
+    await this.adventurerPane.addXp(this.dungeonRunResults.xp, {
+      onLevelup: level => {
+        this._addText(el, `${this.adventurer.name} has reached level ${level}`)
+      },
+      animate: !this._skipAnimations
     })
   }
 
-  _showButton(){
-    if(!this.doneButton.classList.contains('hidden')){
+  async _addChests(el, chests){
+
+    if(!chests.length){
       return
     }
-    this.doneButton.classList.remove('hidden')
-    this.doneButton.addEventListener('click', () => this._finish())
+    this._addText(el, 'Chests:')
+
+    const chestDiv = document.createElement('div')
+    chestDiv.classList.add('chests')
+    el.appendChild(chestDiv)
+
+    for(let i = 0; i < chests.length; i++){
+      this._addRow(chestDiv, new ChestOpenage(chests[i]))
+      await this._wait(WAIT_TIME / 3)
+    }
+
+    const btn = wrap('Open All', {
+      class: 'open-all',
+      elementType: 'button'
+    })
+    btn.addEventListener('click', () => {
+      this.querySelectorAll('di-chest-openage').forEach(el => el.open())
+    })
+    this._addRow(el, btn)
+  }
+
+  _showButtons(){
+    if(!this.app.watchView){
+      this.querySelector('.done').classList.remove('hidden')
+      this.querySelector('.done').addEventListener('click', () => this._finish())
+    }
   }
 
   async _finish(){
@@ -122,35 +146,69 @@ export default class ResultsPage extends Page{
     }
   }
 
-  _addResult(row){
-    this.results.appendChild(row)
-    this.results.scrollTop = this.results.scrollHeight
+  _addRow(target, row){
+    target.appendChild(row)
+    target.scrollTop = target.scrollHeight
     return row
   }
 
-  _addResultText(text){
+  _addText(target, text){
     const row = document.createElement('div')
     row.textContent = text
-    return this._addResult(row)
+    return this._addRow(target, row)
   }
 
-  _addResultNewline(){
+  _addNewline(target){
     const row = document.createElement('br')
-    return this._addResult(row)
+    return this._addRow(target, row)
+  }
+
+  _addMonsters(monsters){
+    if(!monsters.length){
+      return this.querySelectorAll('[data-tab-name="Monsters"]')
+        .forEach(el => el.classList.add('displaynone'))
+    }
+    const target = this.querySelector('di-tab[data-tab-name="Monsters"]')
+    for(let i = 0; i < monsters.length; i++){
+      const { name, amount } = monsters[i]
+      this._addText(target, `${toDisplayName(name)} ${amount}`)
+    }
   }
 
   _addRelics(relics){
-    this._addResultText('Relics:')
-    relics.forEach(({ attempted, solved }, tier) => {
-      this._addResultText(`${RELICS[tier].displayName} ${solved}/${attempted}`)
-    })
+    if(!relics.length){
+      return this.querySelectorAll('[data-tab-name="Relics"]')
+        .forEach(el => el.classList.add('displaynone'))
+    }
+    const target = this.querySelector('di-tab[data-tab-name="Relics"]')
+    for(let i = 0; i < relics.length; i++){
+      if(!relics[i]){
+        continue
+      }
+      const { attempted, solved } = relics[i]
+      this._addText(target, `${RELICS[i].displayName} ${solved}/${attempted}`)
+    }
   }
 
-  _addChests(chests){
-    this._addResultText('Chests:')
-    chests.forEach((count, tier) => {
-      this._addResultText(`${CHESTS[tier].displayName} ${count}`)
-    })
+  async _wait(time){
+    if(this._skipAnimations){
+      return
+    }
+    return await wait(time)
+  }
+
+  _setupReplayButton(runID = this._dungeonRunID){
+    const btn = this.querySelector('.replay')
+    const link = this.querySelector('.view-replay')
+    if(this.app.watchView){
+      link.remove()
+      btn.addEventListener('click', () => {
+        this.redirectTo(new DungeonPage(runID))
+      })
+    }else{
+      btn.remove()
+      link.setAttribute('href', `/watch/dungeonrun/${runID}`)
+    }
   }
 }
 
@@ -174,36 +232,6 @@ function waitUntilDocumentVisible(){
       }
     })
   })
-}
-
-async function showPopups(dungeonRunResults){
-
-  if(!dungeonRunResults.chests.length){
-    return
-  }
-
-  const modal = new SimpleModal()
-  modal.setOptions({ closeOnUnderlayClick: false })
-
-  for(let i = 0; i < dungeonRunResults.chests.length; i++){
-    await showPopup(dungeonRunResults.chests[i], i === dungeonRunResults.chests.length - 1)
-  }
-
-  modal.hide(true)
-
-  function showPopup(chest, lastOne){
-    return new Promise(res => {
-      modal.setContent(new ChestOpenage(chest), true)
-      modal.setButtons({
-        text: lastOne ? 'Finish' : 'Next',
-        fn: () => {
-          res()
-          return false
-        }
-      })
-      modal.show()
-    })
-  }
 }
 
 customElements.define('di-results-page', ResultsPage)

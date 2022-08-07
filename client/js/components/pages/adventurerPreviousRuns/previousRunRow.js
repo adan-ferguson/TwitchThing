@@ -42,11 +42,13 @@ customElements.define('di-previous-run-row', PreviousRunRow)
 
 function relicStr(relics){
   const r = []
-  relics.forEach((rel, i) => {
+  for(let i = 0; i < relics.length; i++){
+    const rel = relics[i]
     if(!rel?.solved){
-      return
+      r[i] = 0
+    }else{
+      r[i] = rel.solved
     }
-    r[i] = rel.solved
-  })
-  return r.map(r => r ?? 0).join('/')
+  }
+  return r.join('/')
 }

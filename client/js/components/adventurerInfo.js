@@ -53,7 +53,7 @@ export default class AdventurerInfo extends HTMLElement{
       const info = classDisplayInfo(bonus.group)
       const item = wrap(BONUS_HTML(bonusDef.level, info.orbIcon, bonus.displayName), {
         allowHTML: true,
-        classes: ['bonus-item', 'flex-columns']
+        class: ['bonus-item', 'flex-columns']
       })
       item.style.color = info.color
       tippy(item, {

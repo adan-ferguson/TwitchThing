@@ -30,6 +30,10 @@ export default class XpBar extends Bar{
 
     if(!options.animate){
       const level = this._xpToLevel(val)
+      const currentLevel = this._xpToLevel(this._val)
+      for(let i = currentLevel + 1; i <= level; i++){
+        await options.onLevelup?.(i)
+      }
       this._setLevel(level)
       super.setBadge(level)
       super.setValue(val)

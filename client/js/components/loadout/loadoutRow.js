@@ -4,11 +4,7 @@ import { OrbsDisplayStyle } from '../orbRow.js'
 import { wrap } from '../../../../game/utilFunctions.js'
 
 const HTML = `
-<div>
-    <span class="icon"></span> <span class="name"></span>
-</div>
-<di-orb-row></di-orb-row>
-<div class="new-badge hidden">New!</div>
+<di-item-details></di-item-details>
 `
 
 export default class LoadoutRow extends HTMLElement{
@@ -68,13 +64,13 @@ export default class LoadoutRow extends HTMLElement{
     tooltip.classList.add('loadout-row-tooltip')
 
     tooltip.appendChild(wrap(this.loadoutItem.makeTooltip(true), {
-      classes: 'tooltip-content',
+      class: 'tooltip-content',
       allowHTML: true
     }))
 
     if(this.loadoutItem.makeDetails){
       tooltip.appendChild(wrap('Right-click for more info', {
-        classes: 'right-click'
+        class: 'right-click'
       }))
     }
 

@@ -1,40 +1,64 @@
+import CHESTS from '../../../chestDisplayInfo.js'
+import { fillArray, makeEl, wait } from '../../../../../game/utilFunctions.js'
 import ItemDetails from '../../itemDetails.js'
 
-const HTML = `
-<h3>Opening Chests</h3>
-<div class="chest-description">
-    Lv. <span class="level"></span> <span class="name"></span>
-</div>
-<div class="contents">
-</div>
+const UNOPENED_HTML = `
+<span class="unopened">
+  <span class="stars"></span>
+  <span class="open-me">
+    Open Me
+  </span>
+  <span class="stars"></span>
+</span>
+`
+
+const OPENED_HTML = `
+<div class='description'></div>
+<div class="contents"
 `
 
 export default class ChestOpenage extends HTMLElement{
 
-  _description
-  _level
-  _name
-  _contents
-
-  constructor(chest = null){
+  constructor(chest, opened = false){
     super()
-    this.innerHTML = HTML
-    this._description = this.querySelector('.chest-description')
-    this._level = this.querySelector('.level')
-    this._name = this.querySelector('.name')
-    this._contents = this.querySelector('.contents')
-    if(chest){
-      this.setChest(chest)
+    const chestDisplayInfo = CHESTS[chest.tier]
+    this.style.color = chestDisplayInfo.color
+
+    if(!opened){
+      this.innerHTML = UNOPENED_HTML
+      const starsHTML = fillArray(() => '<i class="fa-solid fa-star"></i>', chest.tier).join('')
+      this.querySelectorAll('.stars').forEach(el => {
+        el.innerHTML = starsHTML
+      })
+      this.classList.add('clickable')
+      this.addEventListener('click', () => this.open(chest))
+    }else{
+      this.open(chest, false)
     }
   }
 
-  setChest(chest){
-    this.setAttribute('tier', chest.tier)
-    this._level.textContent = chest.level
-    this._name.textContent = chest.name
+  async _open(chest, animate = false){
+    if(this._opened){
+      return
+    }
+    this._opened = true
+    this.classList.remove('clickable')
+
+    this.innerHTML = OPENED_HTML
+
+    if(animate){
+      this.appendChild(makeEl({
+        class: 'fading-overlay'
+      }))
+    }
+
+    const displayInfo = CHESTS[chest.tier]
+    this.querySelector('.description').textConten =
+      `Lvl. ${chest.level} ${displayInfo.displayName} Chest`
+
+    const contents = this.querySelector('.contents')
     chest.contents.items?.forEach(item => {
-      // TODO: more than just items
-      this._contents.appendChild(new ItemDetails(item))
+      contents.appendChild(new ItemDetails(item))
     })
   }
 }

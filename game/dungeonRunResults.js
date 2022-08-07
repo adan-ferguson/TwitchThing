@@ -25,13 +25,13 @@ export default function calculateResults(eventsList){
 }
 
 function monstersKilled(eventsList){
-  const arr = []
+  const obj = {}
   eventsList.forEach(event => {
     if(event.monster?.defeated){
-      arr.push(event.monster)
+      obj[event.monster.name] = (obj[event.monster.name] ?? 0) + 1
     }
   })
-  return arr
+  return Object.keys(obj).map(name => { return { name, amount: obj[name] }} )
 }
 
 function relics(eventsList){
@@ -56,10 +56,7 @@ function chests(eventsList){
   eventsList.forEach(e => {
     const chests = toArray(e.rewards?.chests ?? [])
     chests.forEach(chest => {
-      if(!arr[chest.tier]){
-        arr[chest.tier] = 0
-      }
-      arr[chest.tier]++
+      arr.push(chest)
     })
   })
   return arr
