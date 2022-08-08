@@ -16,11 +16,11 @@ const HTML = (_id, {
 </div>
 <div class="flex-rows">
     <div class="monsters">Monsters: ${monstersKilled.length}</div>
-    <div class="chests">Chests: ${chests.map(c => c ?? 0).join('/') || 0}</div>
+    <div class="chests">Chests: ${chestStr(chests)}</div>
     <div class="relics">Relics: ${relicStr(relics)}</div>
 </div>
 <div class="flex-rows">
-    <a href="/watch/dungeonrun/${_id}" target="_blank">View <i class="fa-solid fa-up-right-from-square"></i></a>
+    <a href="/watch/dungeonrun/${_id}" target="_blank">Replay <i class="fa-solid fa-up-right-from-square"></i></a>
 </div>
 `
 
@@ -50,5 +50,9 @@ function relicStr(relics){
       r[i] = rel.solved
     }
   }
-  return r.join('/')
+  return r.join('/') || 0
+}
+
+function chestStr(chests){
+  return chests.map(c => c ?? 0).join('/') || 0
 }
