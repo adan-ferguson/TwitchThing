@@ -18,7 +18,6 @@ const HTML = `
         </span>
     </div>
 </div>
-<a class="new-tab" target="_blank" title="Open in new tab">[->]</a>
 `
 
 export default class AdventurerRow extends HTMLElement{
@@ -38,7 +37,6 @@ export default class AdventurerRow extends HTMLElement{
 
     if(!adventurer){
       this.querySelector('.inner').textContent = 'Create a new Adventurer'
-      this.querySelector('.new-tab').classList.add('hidden')
       return
     }
 
@@ -54,8 +52,6 @@ export default class AdventurerRow extends HTMLElement{
     this._room = this.querySelector('.room')
     this._timer = this.querySelector('di-timer')
     this._event = this.querySelector('.event')
-
-    this._setupNewTabLink()
 
     if(adventurer.dungeonRun){
       this.setDungeonRun(adventurer.dungeonRun)
@@ -106,18 +102,6 @@ export default class AdventurerRow extends HTMLElement{
         return `VS. ${currentEvent.monster.name}`
       }
       return 'Exploring'
-    }
-  }
-
-  _setupNewTabLink(){
-    const newTab = this.querySelector('.new-tab')
-    if(this._options.newTab){
-      newTab.setAttribute('href', this._options.newTab)
-      newTab.addEventListener('click', e => {
-        e.stopPropagation()
-      })
-    }else{
-      newTab.classList.add('hidden')
     }
   }
 }

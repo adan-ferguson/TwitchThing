@@ -143,7 +143,7 @@ export default class App extends HTMLElement{
 
   async _fetchUser(){
     this.user = await fizzetch('/user')
-    this.header.updateUserBar()
+    this.header.update()
   }
 
   _confirmLeavePage(message){

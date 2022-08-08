@@ -30,6 +30,7 @@ export default class OrbRow extends HTMLElement{
   setOptions(options){
     this._options = mergeOptionsObjects(this._options, options)
     this._update()
+    return this
   }
 
   setData(orbsData){

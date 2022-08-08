@@ -3,6 +3,7 @@ export default {
     physDef: '+10%',
     speed: '+20%'
   },
-  description: 'Like, you know, a sabre which is lightweight',
+  displayName: 'Light Saber',
+  description: 'Like, you know, a saber which is lightweight',
   orbs: 3
 }

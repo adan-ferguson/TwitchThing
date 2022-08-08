@@ -1,18 +1,41 @@
 di-item-details
-  padding: 10rem
+  padding: 15rem
   border: 0.5rem solid black
   display: flex
   flex-direction: column
   min-width: 220rem
   position: relative
+  $insetPadding: 6rem
+
+  di-stats-list
+    margin-top: 5rem
 
   .inset-title
-    $padding: 6rem
     position: absolute
-    top: -$padding
-    left: $padding
+    top: -$insetPadding
+    left: $insetPadding
     background-color: white
-    padding: 0 $padding
+    padding: 0 $insetPadding
 
-  .stats-text
-    padding-top: 15rem
+  .top-part
+    display: flex
+    flex-direction: column
+
+    .description
+      color: #777
+      font-size: 0.94em
+
+    > *
+      margin-bottom: 5rem
+
+  di-stats-list
+    padding-top: 7rem
+    border-top: 0.3rem solid #CCC
+
+  di-orb-row
+    position: absolute
+    top: -$insetPadding - 3
+    right: $insetPadding
+    background-color: white
+    padding: 0
+    font-size: 0.9em

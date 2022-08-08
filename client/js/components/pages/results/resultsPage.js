@@ -2,7 +2,7 @@ import fizzetch from '../../../fizzetch.js'
 import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
 import ChestOpenage from './chestOpenage.js'
 import { showLoader } from '../../../loader.js'
-import { makeEl, toDisplayName, wrap } from '../../../../../game/utilFunctions.js'
+import { makeEl, toDisplayName } from '../../../../../game/utilFunctions.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import Page from '../page.js'
 import RELICS from '../../../relicDisplayInfo.js'
@@ -57,6 +57,10 @@ export default class ResultsPage extends Page{
 
     const { dungeonRun } = await this.fetchData(`/game/dungeonrun/${this._dungeonRunID}/results`)
 
+    if(this.app.watchView){
+      this._skipAnimations = true
+    }
+
     this._setupReplayButton()
     this.dungeonRun = dungeonRun
     this.adventurerPane.setAdventurer(dungeonRun.adventurer)
@@ -96,12 +100,12 @@ export default class ResultsPage extends Page{
       return
     }
     this._addText(el, `${this.adventurer.name} gained +${this.dungeonRunResults.xp} xp`)
-
     await this.adventurerPane.addXp(this.dungeonRunResults.xp, {
       onLevelup: level => {
         this._addText(el, `${this.adventurer.name} has reached level ${level}`)
       },
-      animate: !this._skipAnimations
+      animate: !this._skipAnimations,
+      triggerEventsEvenIfNoAnimate: true
     })
   }
 
@@ -109,6 +113,12 @@ export default class ResultsPage extends Page{
 
     if(!chests.length){
       return
+    }
+
+    const checkOpenAllButton = () => {
+      if(!this.querySelector('di-chest-openage:not(.opened)')){
+        openAllBtn.remove()
+      }
     }
 
     const titleEl = makeEl({
@@ -121,7 +131,7 @@ export default class ResultsPage extends Page{
     el.appendChild(chestDiv)
 
     for(let i = 0; i < chests.length; i++){
-      const openage = new ChestOpenage(chests[i])
+      const openage = new ChestOpenage(chests[i], this.app.watchView)
       openage.addEventListener('opened', () => {
         checkOpenAllButton()
       })
@@ -133,12 +143,7 @@ export default class ResultsPage extends Page{
     openAllBtn.addEventListener('click', () => {
       this.querySelectorAll('di-chest-openage').forEach(el => el.open())
     })
-
-    const checkOpenAllButton = () => {
-      if(!this.querySelector('di-chest-openage:not(.opened)')){
-        openAllBtn.remove()
-      }
-    }
+    checkOpenAllButton()
   }
 
   _showButtons(){

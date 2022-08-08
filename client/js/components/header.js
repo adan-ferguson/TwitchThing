@@ -13,15 +13,13 @@ export default class Header extends HTMLElement{
 
   _userInfo
 
-  _anonymousMode = false
-
   constructor(){
     super()
     this.innerHTML = HTML
 
     this.backButton = this.querySelector('.back-button')
     this.backButton.addEventListener('click', () => {
-      if(this._anonymousMode){
+      if(this.app.watchView){
         window.location = '/'
       }else{
         this.app.back()
@@ -51,20 +49,15 @@ export default class Header extends HTMLElement{
     return this.app?.user
   }
 
-  updateUserBar(){
+  update(){
     if(this.user.anonymous){
-      return this._setAnonymousMode()
+      this._userInfo.classList.add('hidden')
+    }else{
+      this.querySelector('.displayname').textContent = this.user.displayname
     }
-    this.querySelector('.displayname').textContent = this.user.displayname
-  }
-
-  _setAnonymousMode(){
-    if(this._anonymousMode){
-      return
+    if(this.app.watchView){
+      this.backButton.textContent = 'Secret Project DI'
     }
-    this._anonymousMode = true
-    this._userInfo.classList.add('hidden')
-    this.backButton.textContent = 'DI'
   }
 }
 
