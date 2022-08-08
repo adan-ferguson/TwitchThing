@@ -2,7 +2,7 @@ import fizzetch from '../../../fizzetch.js'
 import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
 import ChestOpenage from './chestOpenage.js'
 import { showLoader } from '../../../loader.js'
-import { toDisplayName, wrap } from '../../../../../game/utilFunctions.js'
+import { makeEl, toDisplayName, wrap } from '../../../../../game/utilFunctions.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import Page from '../page.js'
 import RELICS from '../../../relicDisplayInfo.js'
@@ -110,25 +110,35 @@ export default class ResultsPage extends Page{
     if(!chests.length){
       return
     }
-    this._addText(el, 'Chests:')
+
+    const titleEl = makeEl({
+      content: '<span>Chests: </span><button class="open-all">Open All</button>'
+    })
+    this._addRow(el, titleEl)
 
     const chestDiv = document.createElement('div')
     chestDiv.classList.add('chests')
     el.appendChild(chestDiv)
 
     for(let i = 0; i < chests.length; i++){
-      this._addRow(chestDiv, new ChestOpenage(chests[i]))
+      const openage = new ChestOpenage(chests[i])
+      openage.addEventListener('opened', () => {
+        checkOpenAllButton()
+      })
+      this._addRow(chestDiv, openage)
       await this._wait(WAIT_TIME / 3)
     }
 
-    const btn = wrap('Open All', {
-      class: 'open-all',
-      elementType: 'button'
-    })
-    btn.addEventListener('click', () => {
+    const openAllBtn = titleEl.querySelector('button')
+    openAllBtn.addEventListener('click', () => {
       this.querySelectorAll('di-chest-openage').forEach(el => el.open())
     })
-    this._addRow(el, btn)
+
+    const checkOpenAllButton = () => {
+      if(!this.querySelector('di-chest-openage:not(.opened)')){
+        openAllBtn.remove()
+      }
+    }
   }
 
   _showButtons(){

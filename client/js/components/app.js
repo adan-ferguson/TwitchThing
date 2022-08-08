@@ -82,7 +82,6 @@ export default class App extends HTMLElement{
       await page.load(previousPage)
     }catch(ex){
       if(redirectToIndexOnError){
-        debugger
         return window.location = '/'
       }
       const { error, targetPage } = ex

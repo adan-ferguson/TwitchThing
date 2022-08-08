@@ -1,6 +1,7 @@
 import CHESTS from '../../../chestDisplayInfo.js'
 import { fillArray, makeEl, wait } from '../../../../../game/utilFunctions.js'
-import ItemDetails from '../../itemDetails.js'
+import LoadoutRow from '../../loadout/loadoutRow.js'
+import { adventurerLoadoutItem } from '../../../adventurer.js'
 
 const UNOPENED_HTML = `
 <span class="unopened">
@@ -13,14 +14,15 @@ const UNOPENED_HTML = `
 `
 
 const OPENED_HTML = `
-<div class='description'></div>
-<div class="contents"
+<div class='inset-title'></div>
+<div class="contents"></div>
 `
 
 export default class ChestOpenage extends HTMLElement{
 
   constructor(chest, opened = false){
     super()
+    this._chest = chest
     const chestDisplayInfo = CHESTS[chest.tier]
     this.style.color = chestDisplayInfo.color
 
@@ -31,34 +33,40 @@ export default class ChestOpenage extends HTMLElement{
         el.innerHTML = starsHTML
       })
       this.classList.add('clickable')
-      this.addEventListener('click', () => this.open(chest))
+      this.addEventListener('click', () => this.open())
     }else{
-      this.open(chest, false)
+      this.open(false)
     }
   }
 
-  async _open(chest, animate = false){
-    if(this._opened){
+  async open(animate = true){
+
+    if(this.classList.contains('opened')){
       return
     }
-    this._opened = true
-    this.classList.remove('clickable')
 
+    this.classList.remove('clickable')
     this.innerHTML = OPENED_HTML
 
     if(animate){
       this.appendChild(makeEl({
         class: 'fading-overlay'
       }))
+      await wait()
     }
 
-    const displayInfo = CHESTS[chest.tier]
-    this.querySelector('.description').textConten =
-      `Lvl. ${chest.level} ${displayInfo.displayName} Chest`
+    this.classList.add('opened')
+    this.dispatchEvent(new CustomEvent('opened'))
+
+    const displayInfo = CHESTS[this._chest.tier]
+    this.querySelector('.inset-title').textContent =
+      `Lvl. ${this._chest.level} ${displayInfo.displayName} Chest`
 
     const contents = this.querySelector('.contents')
-    chest.contents.items?.forEach(item => {
-      contents.appendChild(new ItemDetails(item))
+    this._chest.contents.items?.forEach(item => {
+      const row = new LoadoutRow()
+      row.setItem(adventurerLoadoutItem(item))
+      contents.appendChild(row)
     })
   }
 }

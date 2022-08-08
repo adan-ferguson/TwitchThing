@@ -1,34 +1,24 @@
 import tippy from 'tippy.js'
 import SimpleModal from '../simpleModal.js'
-import { OrbsDisplayStyle } from '../orbRow.js'
 import { wrap } from '../../../../game/utilFunctions.js'
 
 const HTML = `
-<di-item-details></di-item-details>
+<di-item-row></di-item-row>
+<div class="new-badge hidden">New!</div>
 `
 
 export default class LoadoutRow extends HTMLElement{
 
-  _iconEl
-  _nameEl
-  _orbRow
   _newBadge
   _options
 
   loadoutItem
 
-  constructor(index = -1, item = null){
+  constructor(index = -1){
     super()
     this.innerHTML = HTML
-
-    this._iconEl = this.querySelector('.icon')
-    this._nameEl = this.querySelector('.name')
-    this._orbRow = this.querySelector('di-orb-row')
-    this._orbRow.setOptions({
-      style: OrbsDisplayStyle.MAX_ONLY,
-      showTooltips: false
-    })
     this._newBadge = this.querySelector('.new-badge')
+    this._itemRowEl = this.querySelector('di-item-row')
     this._tippy = tippy(this, {
       theme: 'light',
       allowHTML: true
@@ -37,14 +27,12 @@ export default class LoadoutRow extends HTMLElement{
       showNewBadge: false
     }
     this._tippy.disable()
-
     this.index = index
-    this.setItem(item)
-
+    this.setItem(null)
     this.addEventListener('contextmenu', e => {
-      if(this.loadoutItem?.details){
+      if(this.loadoutItem?.makeDetails){
         e.preventDefault()
-        const modal = new SimpleModal(this.loadoutItem.details)
+        const modal = new SimpleModal(this.loadoutItem.makeDetails())
         modal.show()
       }
     })
@@ -81,19 +69,15 @@ export default class LoadoutRow extends HTMLElement{
     this._newBadge.classList.toggle('hidden', !show)
   }
 
-  setItem(loadoutItem, enableTooltip = true){
+  setItem(loadoutItem){
     if(!loadoutItem){
       return this._setupBlank()
     }
     this.classList.remove('blank-row')
     this.loadoutItem = loadoutItem
-    this._nameEl.textContent = loadoutItem.name
-    this._orbRow.setData(loadoutItem.orbs)
-
-    if(enableTooltip){
-      this._tippy.enable()
-      this._tippy.setContent(this.tooltip)
-    }
+    this._itemRowEl.setItem(loadoutItem.obj)
+    this._tippy.enable()
+    this._tippy.setContent(this.tooltip)
   }
 
   _setupBlank(){

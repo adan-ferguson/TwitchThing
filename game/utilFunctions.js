@@ -75,7 +75,7 @@ export function makeEl(options = {}){
       el.innerHTML = options.content
     }
   } else if (options.text){
-    el.text = options.text
+    el.textContent = options.text
   }
 
   if (options.class){

@@ -14,8 +14,11 @@ di-results-page
     align-items: start
 
   .open-all
+    display: inline-block
     font-size: 0.8em
-    border: 0.2rem dashed #CCC
+    border: none
+    text-decoration: underline
+    padding: 2rem
 
   .buttons-row
     flex-grow: 0 !important
@@ -48,11 +51,53 @@ di-results-page
       border: 1.5rem dashed currentColor
       box-sizing: border-box
       padding: 0 10rem
-      margin-bottom: 5rem
+      margin-top: 10rem
       transition: background-color 0.2s ease
       overflow: visible
 
+      $insetPadding: 6rem
+
+      .fading-overlay
+        position: absolute
+        top: -5rem
+        left: -5rem
+        right: -5rem
+        bottom: -5rem
+        background-color: currentColor
+        opacity: 1
+        transition: opacity 1s linear
+        z-index: 2
+        pointer-events: none
+
+      &.opened
+        min-width: 200rem
+        min-height: 50rem
+        border-style: solid
+
+        .fading-overlay
+          opacity: 0
+
+        .inset-title
+          opacity: 1
+          top: -$insetPadding
+
+      .inset-title
+        position: absolute
+        top: 0
+        left: $insetPadding
+        background-color: white
+        padding: 0 $insetPadding
+        white-space: nowrap
+        opacity: 0
+        transition: opacity 1s linear, top 1s linear
+
       .contents
+        display: flex
+        padding: 15rem 0 5rem
+
+        di-loadout-row
+          width: 200rem
+
         .unopened
           height: 28rem
           flex-direction: row
