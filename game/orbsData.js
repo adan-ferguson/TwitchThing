@@ -6,7 +6,10 @@ export default class OrbsData{
   }
 
   get classes(){
-    return Object.keys(this._maxOrbs)
+    const classes = {}
+    Object.keys(this._maxOrbs).forEach(cls => classes[cls] = 1)
+    Object.keys(this._usedOrbs).forEach(cls => classes[cls] = 1)
+    return Object.keys(classes)
   }
 
   get isValid(){

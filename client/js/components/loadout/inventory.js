@@ -22,7 +22,7 @@ export default class Inventory extends HTMLElement{
 
   _filterSortOptions = {
     sortBy: 'class',
-    hideOther: true
+    hideOther: false
   }
 
   constructor(){

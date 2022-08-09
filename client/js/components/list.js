@@ -103,6 +103,10 @@ export default class List extends HTMLElement{
   }
 
   removeRow(row){
+    const cacheIndex = this._rowsCache.findIndex(r => r === row)
+    if(cacheIndex > -1){
+      this._rowsCache.splice(cacheIndex, 1)
+    }
     const index = this._sortedRows.findIndex(r => r === row)
     if(index > -1){
       this._sortedRows.splice(index, 1)
