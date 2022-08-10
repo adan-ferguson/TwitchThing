@@ -5,6 +5,10 @@ export default class OrbsData{
     this._usedOrbs = toObj(usedOrbs)
   }
 
+  get maxOrbs(){
+    return this._maxOrbs
+  }
+
   get classes(){
     const classes = {}
     Object.keys(this._maxOrbs).forEach(cls => classes[cls] = 1)

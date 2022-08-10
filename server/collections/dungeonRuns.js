@@ -3,9 +3,7 @@ import Collection from './collection.js'
 const DEFAULTS = {
   _id: null,
   adventurer: null,
-  dungeonOptions: {
-    startingFloor: 1
-  },
+  dungeonOptions: {},
   finished: false,
   finalizedData: null,
   floor: 1,

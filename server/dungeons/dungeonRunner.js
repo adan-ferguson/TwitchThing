@@ -75,6 +75,12 @@ async function advance(){
  */
 export async function addRun(adventurerID, dungeonOptions){
 
+  dungeonOptions = {
+    startingFloor: 1,
+    pace: 'Brisk',
+    ...dungeonOptions
+  }
+
   const adventurer = await Adventurers.findOne(adventurerID)
   const startingFloor = parseInt(dungeonOptions.startingFloor) || 1
   const userDoc = await Users.findOne(adventurer.userID)
@@ -174,6 +180,10 @@ class DungeonRunInstance{
 
   get nextEventTime(){
     return this.currentEvent ? this.currentEvent.time + this.currentEvent.duration : 0
+  }
+
+  get pace(){
+    return this.doc.dungeonOptions.pace ?? 'Brisk'
   }
 
   async advance(nextEvent){

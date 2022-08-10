@@ -1,7 +1,7 @@
 import fizzetch from '../fizzetch.js'
 
-const HTML = `
-<div class="inputs"></div>
+const HTML = (html) => `
+<div class="inputs">${html}</div>
 <div class="bottom">
   <button type="submit"></button>
   <div class="error-message hidden"></div>
@@ -17,14 +17,6 @@ export default class DIForm extends HTMLFormElement{
   constructor(options){
     super()
 
-    this.classList.add('di-form')
-
-    this.innerHTML = HTML
-    this._inputs = this.querySelector('.inputs')
-    this.submitButton = this.querySelector('button')
-    this.submitButton.textContent = options.submitText
-    this._errorMessage = this.querySelector('.error-message')
-
     options = {
       async: false,
       action: '',
@@ -32,9 +24,18 @@ export default class DIForm extends HTMLFormElement{
       success: () => {},
       customFetch: false,
       extraData: {},
+      html: '',
       ...options
     }
     this.options = options
+
+    this.classList.add('di-form')
+    this.innerHTML = HTML(options.html)
+    this._inputs = this.querySelector('.inputs')
+    this.submitButton = this.querySelector('button')
+    this.submitButton.textContent = options.submitText
+    this._errorMessage = this.querySelector('.error-message')
+
 
     if(options.action){
       this.setAttribute('action', options.action)

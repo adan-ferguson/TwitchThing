@@ -102,6 +102,7 @@ export default class DungeonPage extends Page{
       getSocket().on('dungeon run update', this._socketUpdate)
     }
 
+    this._stateEl.setup(dungeonRun)
     this._setupTimeline(dungeonRun, previousPage)
     this._adventurerPane.setAdventurer(this.adventurer)
     this._eventEl.setAdventurer(this.adventurer)

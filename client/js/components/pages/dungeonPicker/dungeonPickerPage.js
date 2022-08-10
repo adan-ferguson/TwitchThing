@@ -4,13 +4,29 @@ import AdventurerPage from '../adventurer/adventurerPage.js'
 import DIForm from '../../form.js'
 import fizzetch from '../../../fizzetch.js'
 
+const FORM_HTML = `
+<div class="input-group">
+  <div class="input-title">Pace</div>
+  <label>
+    <input type="radio" name="pace" value="Brisk" checked="checked">
+    <span>Brisk</span>
+    <div class="subtitle">Go deeper as soon as the stairs are found</div>
+  </label>
+  <label>
+    <input type="radio" name="pace" value="Leisurely">
+    <span>Leisurely</span>
+    <div class="subtitle">Explore the entire floor before taking the stairs</div>
+  </label>
+</div>
+`
+
 const HTML = `
 <div class="content-columns">
-    <div class="content-well floor-picker fill-contents">
-        <di-floor-slider></di-floor-slider>
-    </div>
-    <div class="content-well stuff">
-    </div>
+  <div class="content-well floor-picker fill-contents">
+    <di-floor-slider></di-floor-slider>
+  </div>
+  <div class="content-well stuff">
+  </div>
 </div>
 `
 
@@ -27,6 +43,7 @@ export default class DungeonPickerPage extends Page{
       async: true,
       action: `/game/adventurer/${this.adventurerID}/enterdungeon`,
       submitText: 'Go!',
+      html: FORM_HTML,
       success: ({ dungeonRun }) => this.redirectTo(new DungeonPage(dungeonRun._id)),
       extraData: () => ({ startingFloor: this.floorSlider.value })
     })

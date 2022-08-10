@@ -65,14 +65,9 @@ export function getAdventurerMods(adventurer, state = null){
 }
 
 export function getAdventurerOrbsData(adventurer, items = adventurer.items){
-  return new OrbsData(
-    adventurer.bonuses.map(bonus => {
-      return { [bonus.group]: 1 }
-    }),
-    items.filter(i => i).map(itemDef => new ItemInstance(itemDef).orbs)
-  )
-
-  // TODO: items -> usedOrbs
-  // TODO: items might affect maxOrbs as well
-  // TODO: adventurer slots might affect usedOrbs
+  const used = adventurer.bonuses.map(bonusDef => {
+    return new Bonus(bonusDef).orbsData.maxOrbs
+  })
+  const max = items.filter(i => i).map(itemDef => new ItemInstance(itemDef).orbs)
+  return new OrbsData(used, max)
 }

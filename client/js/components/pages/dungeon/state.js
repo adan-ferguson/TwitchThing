@@ -5,6 +5,9 @@ import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
 const innerHTML = `
 <div>
   <div>
+    <span class="pace"></span> Pace
+  </div>
+  <div>
       <span class="zone-name"></span>
   </div>
   <div class="floor-and-room"></div>
@@ -35,6 +38,10 @@ export default class State extends HTMLElement{
     this.xpVal = null
     this._chests = this.querySelector('.chests')
     // this._shareLink = this.querySelector('.share-link')
+  }
+
+  setup(dungeonRun){
+    this.querySelector('.pace').textContent = dungeonRun.dungeonOptions.pace ?? 'Brisk'
   }
 
   update(eventsList, animate){

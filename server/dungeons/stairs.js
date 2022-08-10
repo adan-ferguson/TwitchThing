@@ -7,7 +7,7 @@ const SCALE_PER_ZONE = 0.25
 // Final floor gets this bonus size
 const FINAL_FLOOR_BONUS = 3.0
 
-export function foundStairs(floor, room){
+export function foundStairs(floor, room, pace = 'Brisk'){
   if(floor === 30){
     // TODO: remove this restriction
     return false
@@ -16,12 +16,15 @@ export function foundStairs(floor, room){
     return false
   }
   let size = floorSize(floor, SIZE_BASE, SCALE_PER_FLOOR, SCALE_PER_ZONE, FINAL_FLOOR_BONUS)
-  size = size % 2 ? size + 1 : size
-  const diff = room - size / 2
+  if(pace === 'Leisurely'){
+    return room >= size
+  }
+  const evenSize = size % 2 ? size + 1 : size
+  const diff = room - evenSize / 2
   if(diff <= 0){
     return false
   }
-  const stairsChance = 1 / Math.max(1, size / 2 - diff + 1)
+  const stairsChance = 1 / Math.max(1, evenSize / 2 - diff + 1)
   return Math.random() < stairsChance
 }
 

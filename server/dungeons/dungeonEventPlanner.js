@@ -21,7 +21,7 @@ export async function generateEvent(dungeonRun){
     }
   }
 
-  if(dungeonRun.user.accomplishments.firstRunFinished && foundStairs(floor, room)){
+  if(dungeonRun.user.accomplishments.firstRunFinished && foundStairs(floor, room, dungeonRun.pace)){
     return {
       nextRoom: 1,
       nextFloor: floor + 1,
