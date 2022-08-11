@@ -36,7 +36,6 @@ export default class DIForm extends HTMLFormElement{
     this.submitButton.textContent = options.submitText
     this._errorMessage = this.querySelector('.error-message')
 
-
     if(options.action){
       this.setAttribute('action', options.action)
     }
@@ -102,6 +101,7 @@ export default class DIForm extends HTMLFormElement{
     }
 
     const label = document.createElement('label')
+    label.classList.add('flex-between')
     if(options.label){
       const span = document.createElement('span')
       span.textContent = options.label

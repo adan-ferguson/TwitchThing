@@ -7,6 +7,7 @@ import { emit } from '../socketServer.js'
 import { generateItemDef } from '../items/generator.js'
 import DungeonRuns from '../collections/dungeonRuns.js'
 import calculateResults from '../../game/dungeonRunResults.js'
+import { floorToZone } from '../../game/zones.js'
 
 const REWARDS_TYPES = {
   xp: 'int',
@@ -73,7 +74,13 @@ export async function finalize(dungeonRunDoc){
     if(!userDoc.features.dungeonPicker && dungeonRunDoc.floor > 1){
       userDoc.features.dungeonPicker = 1
     }
-    userDoc.accomplishments.deepestFloor = Math.max(userDoc.accomplishments.deepestFloor, dungeonRunDoc.floor)
+
+    if(userDoc.inventory.adventurerSlots < floorToZone(dungeonRunDoc.floor) + 1){
+      userDoc.inventory.adventurerSlots = floorToZone(dungeonRunDoc.floor) + 1
+      emit(userDoc._id, 'show popup', {
+        message: 'New adventurer slot unlocked! You can make a new adventurer from the main page.'
+      })
+    }
 
     if(!userDoc.accomplishments.firstRunFinished){
       const sword = generateItemDef({ group: 'fighter', name: 'sword' })
@@ -86,6 +93,8 @@ export async function finalize(dungeonRunDoc){
         I just hooked you up with a sword. Go to your adventurer's inventory to equip it.`
       })
     }
+
+    userDoc.accomplishments.deepestFloor = Math.max(userDoc.accomplishments.deepestFloor, dungeonRunDoc.floor)
 
     await Users.save(userDoc)
   }

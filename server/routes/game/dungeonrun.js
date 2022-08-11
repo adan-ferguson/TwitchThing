@@ -22,14 +22,12 @@ verifiedRouter.post('/results', async (req, res) => {
   if(!req.dungeonRun.finished){
     throw { code: 400, message: 'Can not show results, dungeon run is not finished yet.' }
   }
+  if(!req.dungeonRun.finalizedData){
+    await finalize(req.dungeonRun)
+  }
   res.send({
     dungeonRun: req.dungeonRun
   })
-})
-
-verifiedRouter.post('/finalize', async (req, res) => {
-  await finalize(req.dungeonRun)
-  res.status(200).send({ result: 'okay' })
 })
 
 export default router

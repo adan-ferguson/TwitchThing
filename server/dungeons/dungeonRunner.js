@@ -292,7 +292,7 @@ function validateNew(adventurerDoc, userDoc, { startingFloor }){
   if(!adventurerDoc){
     throw 'Adventurer not found'
   }
-  if(startingFloor > userDoc.accomplishments.deepestFloor){
+  if(startingFloor > adventurerDoc.accomplishments.deepestFloor){
     throw 'Invalid starting floor'
   }
   if(adventurerDoc.dungeonRun){

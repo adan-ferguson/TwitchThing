@@ -1,6 +1,6 @@
 import scaledValue from '../../game/scaledValue.js'
 
-const SIZE_BASE = 10
+const SIZE_BASE = 8
 const SCALE_PER_FLOOR = 0.08
 const SCALE_PER_ZONE = 0.25
 

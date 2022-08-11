@@ -66,7 +66,7 @@ export default class MainPage extends Page{
       rows.push(row)
     })
 
-    for(let i = adventurers.length; i < slots; i++){
+    for(let i = adventurers.length; i < slots + 5; i++){
       const newAdventurerRow = new AdventurerRow()
       rows.push(newAdventurerRow)
       newAdventurerRow.addEventListener('click', e => {
@@ -94,7 +94,23 @@ export default class MainPage extends Page{
       maxLength: 15,
       placeholder: 'Choose a name'
     })
-    // TODO: choose adventurer card
+
+    if(this.user.accomplishments.firstRunFinished){
+      form.addSelect({
+        label: 'Starting Class',
+        name: 'class',
+        optionsList: [{
+          value: 'fighter',
+          name: 'Fighter'
+        },{
+          value: 'tank',
+          name: 'Tank'
+        },{
+          value: 'ranger',
+          name: 'Ranger'
+        }]
+      })
+    }
 
     new FormModal(form).show()
   }

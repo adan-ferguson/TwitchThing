@@ -30,12 +30,12 @@ router.post('/main', async(req, res) => {
 })
 
 router.post('/newadventurer', async(req, res) => {
-  try {
-    const adventurer = await Users.newAdventurer(req.user, validateParam(req.body.name))
-    res.send({ adventurerID: adventurer._id })
-  }catch(error){
-    return res.status(error.code || 500).send({ error: error.message || error })
-  }
+  const startingClass = validateParam(req.body.class, {
+    required: false
+  }) ?? 'fighter'
+  const name = validateParam(req.body.name)
+  const adventurer = await Users.newAdventurer(req.user, name, startingClass)
+  res.send({ adventurerID: adventurer._id })
 })
 
 router.get('/', async(req, res) => {

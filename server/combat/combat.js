@@ -1,12 +1,33 @@
 import Combats from '../collections/combats.js'
 import { toDisplayName } from '../../game/utilFunctions.js'
 import { randomOrder } from '../../game/rando.js'
+import { generateMonster } from '../dungeons/monsters.js'
+import FighterInstance from '../../game/combat/fighterInstance.js'
 
 const START_TIME_DELAY = 1000
 const MAX_TIME = 120000
 
 const STATE_VALUES_TO_CLEAR = ['timeSinceLastAction']
 
+export async function generateCombatEvent(dungeonRun){
+  const adventurerInstance = dungeonRun.adventurerInstance
+  const monster = await generateMonster(dungeonRun)
+  // TODO: monsterInstance, adventurerInstance as combat params
+  const combat = await generateCombat(
+    new FighterInstance(adventurerInstance.adventurer, adventurerInstance.adventurerState, 1),
+    new FighterInstance(monster, {}, 2),
+    dungeonRun.floor
+  )
+  return {
+    duration: combat.duration,
+    stayInRoom: true,
+    message: `${dungeonRun.adventurer.name} is fighting a ${monster.name}.`,
+    combatID: combat._id,
+    passTimeOverride: true,
+    roomType: 'combat',
+    monster
+  }
+}
 export async function generateCombat(fighterInstance1, fighterInstance2, floor){
 
   const combat = new Combat(fighterInstance1, fighterInstance2)

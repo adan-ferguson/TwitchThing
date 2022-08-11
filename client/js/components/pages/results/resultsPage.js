@@ -1,7 +1,5 @@
-import fizzetch from '../../../fizzetch.js'
 import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
 import ChestOpenage from './chestOpenage.js'
-import { showLoader } from '../../../loader.js'
 import { makeEl, toDisplayName } from '../../../../../game/utilFunctions.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import Page from '../page.js'
@@ -24,7 +22,6 @@ const HTML = `
     <div class="buttons-row">
       <button class="done hidden">Okay</button>
       <button class="clickable replay">Replay <i class="fa-solid fa-rotate"></i></button>
-      <a target="_blank" class="clickable view-replay">View Replay <i class="fa-solid fa-up-right-from-square"></i></a>
     </div>
   </div>
 </div>
@@ -56,10 +53,6 @@ export default class ResultsPage extends Page{
   async load(source){
 
     const { dungeonRun } = await this.fetchData(`/game/dungeonrun/${this._dungeonRunID}/results`)
-
-    if(this.app.watchView){
-      this._skipAnimations = true
-    }
 
     this._setupReplayButton()
     this.dungeonRun = dungeonRun
@@ -154,11 +147,7 @@ export default class ResultsPage extends Page{
   }
 
   async _finish(){
-    showLoader()
-    const results = await fizzetch(`/game/dungeonrun/${this._dungeonRunID}/finalize`)
-    if(!results.error){
-      this.redirectTo(new AdventurerPage(this.adventurer._id))
-    }
+    this.redirectTo(new AdventurerPage(this.adventurer._id))
   }
 
   _addRow(target, row){
@@ -214,16 +203,9 @@ export default class ResultsPage extends Page{
 
   _setupReplayButton(runID = this._dungeonRunID){
     const btn = this.querySelector('.replay')
-    const link = this.querySelector('.view-replay')
-    if(this.app.watchView){
-      link.remove()
-      btn.addEventListener('click', () => {
-        this.redirectTo(new DungeonPage(runID))
-      })
-    }else{
-      btn.remove()
-      link.setAttribute('href', `/watch/dungeonrun/${runID}`)
-    }
+    btn.addEventListener('click', () => {
+      this.redirectTo(new DungeonPage(runID))
+    })
   }
 }
 

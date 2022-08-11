@@ -1,4 +1,4 @@
-import warriorOrbIcon from '/client/assets/icons/orbs/warrior.svg'
+import fighterOrbIcon from '/client/assets/icons/orbs/fighter.svg'
 import mageOrbIcon from '/client/assets/icons/orbs/mage.svg'
 import rangerOrbIcon from '/client/assets/icons/orbs/ranger.svg'
 import { toDisplayName } from '../../game/utilFunctions.js'
@@ -11,7 +11,7 @@ export default function(className){
   if(className === 'fighter'){
     obj = {
       description: 'Some description',
-      orbIcon: warriorOrbIcon,
+      orbIcon: fighterOrbIcon,
       color: '#BB3300'
     }
   }else if(className === 'tank'){

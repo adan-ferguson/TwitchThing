@@ -68,7 +68,7 @@ verifiedRouter.post('/editloadout/save', validateIdle, async (req, res) => {
   await commitAdventurerLoadout(req.adventurer, req.user, items)
   await Adventurers.save(req.adventurer)
   await Users.save(req.user)
-  res.status(200).end()
+  res.status(200).send({ success: 1 })
 })
 
 verifiedRouter.post('', async(req, res, next) => {

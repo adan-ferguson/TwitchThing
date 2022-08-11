@@ -20,6 +20,9 @@ export default class EventLog extends HTMLElement{
     }
 
     const addEvent = (event, i) => {
+      if(!event){
+        debugger
+      }
       if(shouldSkip(event, timeline.entries[i - 1])){
         return
       }
@@ -80,7 +83,7 @@ class EventLogRow extends HTMLElement{
   constructor(event, adventurer){
     super()
     this.event = event
-    const desc = DESCRIPTION_FNS[event.roomType ?? 'unknown'](event)
+    const desc = (DESCRIPTION_FNS[event.roomType] ?? DESCRIPTION_FNS.unknown)(event)
     this.innerHTML = ROW_HTML(
       event.floor,
       event.room,

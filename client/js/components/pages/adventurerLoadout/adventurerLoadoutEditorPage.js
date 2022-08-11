@@ -71,11 +71,11 @@ export default class AdventurerLoadoutEditorPage extends Page{
       this._saving = true
       this._updateSaveButton()
       const items = this.adventurerPane.loadoutEl.objs.map(item => item?.id)
-      const { error } = await fizzetch(`/game/adventurer/${this.adventurerID}/editloadout/save`, {
+      const { error, success } = await fizzetch(`/game/adventurer/${this.adventurerID}/editloadout/save`, {
         items
       })
-      if(error){
-        this._showError(error)
+      if(!success){
+        console.error(error || 'Saving failed for some reason')
         this._saving = false
         this._updateSaveButton()
       }else{

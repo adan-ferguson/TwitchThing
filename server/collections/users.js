@@ -75,13 +75,13 @@ Users.setDisplayname = async function(userDoc, displayname){
   await Users.save(userDoc)
 }
 
-Users.newAdventurer = async function(userDoc, adventurername){
+Users.newAdventurer = async function(userDoc, adventurername, startingClass){
   const availableSlots = userDoc.inventory.adventurerSlots - userDoc.adventurers.length
   if(availableSlots <= 0){
     throw { error: 'No slots available.', code: 403 }
   }
   // TODO: flexible starting bonuses
-  const adventurerDoc = await Adventurers.createNew(userDoc._id, adventurername, 'fighter')
+  const adventurerDoc = await Adventurers.createNew(userDoc._id, adventurername, startingClass)
   userDoc.adventurers.push(adventurerDoc._id)
   await Users.save(userDoc)
   return adventurerDoc

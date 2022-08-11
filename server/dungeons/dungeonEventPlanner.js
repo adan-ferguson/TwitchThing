@@ -1,8 +1,7 @@
-import { foundMonster, generateMonster } from './monsters.js'
-import { generateCombat } from '../combat/combat.js'
+import { foundMonster } from './monsters.js'
 import { foundRelic, generateRelicEvent } from './relics.js'
 import { foundStairs } from './stairs.js'
-import FighterInstance from '../../game/combat/fighterInstance.js'
+import { generateCombatEvent } from '../combat/combat.js'
 
 /**
  * @param dungeonRun {DungeonRunInstance}
@@ -22,34 +21,25 @@ export async function generateEvent(dungeonRun){
   }
 
   if(dungeonRun.user.accomplishments.firstRunFinished && foundStairs(floor, room, dungeonRun.pace)){
+    const message = dungeonRun.pace === 'Brisk' ?
+      `${adventurerInstance.name} found the stairs and goes deeper.` :
+      `${adventurerInstance.name} feels like they've finished exploring this floor.`
     return {
       nextRoom: 1,
       nextFloor: floor + 1,
       roomType: 'stairs',
-      message: `${adventurerInstance.name} found the stairs and goes deeper.`
+      message: message
     }
   }
 
-  if(foundMonster(dungeonRun)){
-    const monster = await generateMonster(dungeonRun)
-    // TODO: monsterInstance, adventurerInstance
-    const combat = await generateCombat(
-      new FighterInstance(adventurerInstance.adventurer, adventurerInstance.adventurerState, 1),
-      new FighterInstance(monster, {}, 2),
-      dungeonRun.floor
-    )
-    return {
-      duration: combat.duration,
-      stayInRoom: true,
-      message: `${dungeonRun.adventurer.name} is fighting a ${monster.name}.`,
-      combatID: combat._id,
-      passTimeOverride: true,
-      roomType: 'combat',
-      monster
-    }
+  const previousEvent = dungeonRun.events.at(-1)
+  const encounterPossible = previousEvent?.monster || previousEvent?.relic ? false : true
+
+  if(encounterPossible && foundMonster(dungeonRun)){
+    return await generateCombatEvent(dungeonRun)
   }
 
-  if(foundRelic(dungeonRun)){
+  if(encounterPossible && foundRelic(dungeonRun)){
     return generateRelicEvent(dungeonRun)
   }
 
