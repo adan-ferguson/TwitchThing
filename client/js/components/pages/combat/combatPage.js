@@ -101,9 +101,7 @@ export default class CombatPage extends Page{
       isReplay: this._options.isReplay
     })
     this._applyEntries(this._timeline.currentEntry, false)
-    setTimeout(() => {
-      this._timeControlsEl.play()
-    }, 500)
+    this._timeControlsEl.play()
   }
 
   _applyEntries(entries, animate = true){
