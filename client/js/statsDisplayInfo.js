@@ -89,7 +89,7 @@ const statDefinitionsInfo = {
   },
   combatHarderChance: {
     text: 'Stronger Monster Chance',
-    description: 'Increases chance to fight stronger monsters.',
+    description: 'Increases chance to fight stronger (higher level) monsters.',
   },
   combatXP: {
     text: 'Combat XP Gain',
@@ -100,8 +100,7 @@ const statDefinitionsInfo = {
     description: 'Increased chance to solve relic puzzles. Rarer relics are harder to solve.',
   },
   relicRareChance: {
-    text: 'Increased Relic Rarity',
-    displayedValueFn: value => `${Math.floor(value)}%`,
+    text: 'Rare Relic Chance',
     description: 'Chance to find high quality relics.'
   },
   regen: {

@@ -79,7 +79,7 @@ export default class Ticker extends EventEmitter{
       this.emit('tick', this.currentTime - timeBefore)
       if(this.currentTime === this.endTime){
         this._ticking = false
-        this.emit('ended')
+        this.emit('ended', timeBefore + diff - this.currentTime)
       }else{
         this._tick()
       }

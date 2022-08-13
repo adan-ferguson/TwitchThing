@@ -5,12 +5,12 @@ import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
 const innerHTML = `
 <div>
   <div>
-    <span class="pace"></span> Pace
-  </div>
-  <div>
       <span class="zone-name"></span>
   </div>
   <div class="floor-and-room"></div>
+  <div>
+    <span class="pace"></span> Pace
+  </div>
   <div>
       XP: <span class="xp-reward">0</span>
   </div>

@@ -83,8 +83,8 @@ export default class TimelineControls extends HTMLElement{
       .on('tick', () => {
         this._tick()
       })
-      .on('ended', () => {
-        this._nextEvent()
+      .on('ended', overflow => {
+        this._nextEvent(overflow)
       })
 
     this._updateViewCombat()
@@ -123,6 +123,7 @@ export default class TimelineControls extends HTMLElement{
   }
 
   jumpTo(time, options = {}){
+    console.log('jump to', time)
     this._timeline.time = time
     this._triggerEvent(options)
     this._updateEvent()
@@ -196,9 +197,11 @@ export default class TimelineControls extends HTMLElement{
     })
   }
 
-  _nextEvent(){
+  _nextEvent(extraTime = 0){
     this._triggerEvent()
-    this._updateEvent()
+    if(!this._timeline.finished){
+      this._updateEvent(extraTime)
+    }
   }
 
   _triggerEvent(options = {}){
@@ -207,9 +210,9 @@ export default class TimelineControls extends HTMLElement{
     }))
   }
 
-  _updateEvent(){
+  _updateEvent(extraTime = 0){
     this._ticker.endTime = this._timeline.currentEntry.duration
-    this._ticker.currentTime = this._timeline.timeSinceLastEntry
+    this._ticker.currentTime = this._timeline.timeSinceLastEntry + extraTime
     this._tick()
   }
 

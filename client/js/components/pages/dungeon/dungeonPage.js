@@ -123,7 +123,6 @@ export default class DungeonPage extends Page{
     }
     this.dungeonRun = dungeonRun
     this._timelineEl.addEvent(dungeonRun.currentEvent)
-    this._timelineEl.jumpTo(dungeonRun.currentEvent.time)
   }
 
   _update(options = {}){
@@ -143,7 +142,7 @@ export default class DungeonPage extends Page{
       this._finish()
     }
 
-    if(this.currentEvent.finished && this._timelineEl.finished){
+    if(this.currentEvent.runFinished && this._timelineEl.finished){
       this._finish()
     }
 
@@ -177,7 +176,11 @@ export default class DungeonPage extends Page{
     this._timeline = new Timeline(dungeonRun.events)
     if(previousPage instanceof CombatPage){
       const combatIndex = this._timeline.entries.findIndex(entry => entry.combatID === previousPage.combatID)
-      this._timeline.time = this._timeline.entries[combatIndex + 1].time
+      const combatEntry = this._timeline.entries[combatIndex]
+      if(!combatEntry){
+        debugger
+      }
+      this._timeline.time = combatEntry.time + combatEntry.duration
     }else if(!this.isReplay){
       this._timeline.time = dungeonRun.virtualTime
     }

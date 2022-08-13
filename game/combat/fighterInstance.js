@@ -158,7 +158,7 @@ export default class FighterInstance{
   _regen(){
     const regen = this.stats.get('regen').value
     if(regen){
-      return this._gainHealth(randomRound(this.baseHp * regen / 100))
+      return this._gainHealth(randomRound(this.baseHp * regen))
     }
   }
 

@@ -8,8 +8,7 @@ import Users from '../collections/users.js'
 import log from 'fancy-log'
 import { continueRelicEvent } from './relics.js'
 import { finishCombatEvent } from '../combat/combat.js'
-import { waitFor } from '@babel/core/lib/gensync-utils/async.js'
-import { wait } from '../../game/utilFunctions.js'
+import { EventEmitter } from 'events'
 
 const ADVANCEMENT_INTERVAL = 5000
 
@@ -62,7 +61,18 @@ async function advance(){
   }
   lastAdvancement = new Date()
   for(const id in activeRuns){
-    await activeRuns[id].advance()
+    const run = activeRuns[id]
+    if(!run.started){
+      await run.advance({
+        passTimeOverride: true,
+        duration: ADVANCEMENT_INTERVAL,
+        message: `${run.adventurer.name} enters the dungeon.`,
+        roomType: 'entrance'
+      })
+      run.emit('started')
+    }else{
+      await run.advance()
+    }
   }
   setTimeout(advance, ADVANCEMENT_INTERVAL)
 }
@@ -96,9 +106,12 @@ export async function addRun(adventurerID, dungeonOptions){
   adventurer.dungeonRunID = drDoc._id
   await Adventurers.save(adventurer)
 
-  await wait(ADVANCEMENT_INTERVAL - (new Date() - lastAdvancement))
-  activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, userDoc)
+  const instance = new DungeonRunInstance(drDoc, userDoc)
+  activeRuns[drDoc._id] = instance
 
+  await new Promise(res => {
+    instance.once('started', res)
+  })
   return drDoc
 }
 
@@ -124,23 +137,16 @@ export async function getRunData(dungeonRunID){
   return getActiveRunData(dungeonRunID) || await DungeonRuns.findOne(dungeonRunID)
 }
 
-class DungeonRunInstance{
+class DungeonRunInstance extends EventEmitter{
 
   constructor(doc, user){
+    super()
     this.doc = doc
     if(!this.adventurer.userID.equals(user._id)){
       throw 'User mismatch in dungeonRun instance'
     }
     this.user = user
-    if(!this.currentEvent){
-      this.advance({
-        passTimeOverride: true,
-        duration: ADVANCEMENT_INTERVAL,
-        message: `${this.adventurer.name} enters the dungeon.`,
-        roomType: 'entrance'
-      })
-    }
-    this._time = this.currentEvent.time
+    this._time = this.currentEvent?.time ?? 0
   }
 
   get adventurer(){
@@ -172,6 +178,10 @@ class DungeonRunInstance{
 
   get currentEvent(){
     return this.events.at(-1)
+  }
+
+  get started(){
+    return this.currentEvent ? true : false
   }
 
   get adventurerInstance(){
@@ -267,7 +277,6 @@ class DungeonRunInstance{
     console.log('run finished', this.adventurer.name)
     this.doc.finished = true
     delete activeRuns[this.doc._id]
-    emit(this.adventurer.userID, 'dungeon run update', this.doc)
     DungeonRuns.save(this.doc)
   }
 

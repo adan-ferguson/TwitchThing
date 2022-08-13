@@ -66,7 +66,7 @@ export default class MainPage extends Page{
       rows.push(row)
     })
 
-    for(let i = adventurers.length; i < slots + 5; i++){
+    for(let i = adventurers.length; i < slots; i++){
       const newAdventurerRow = new AdventurerRow()
       rows.push(newAdventurerRow)
       newAdventurerRow.addEventListener('click', e => {

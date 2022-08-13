@@ -1,4 +1,5 @@
 import fizzetch from '../fizzetch.js'
+import { hideLoader, showLoader } from '../loader.js'
 
 const HTML = (html) => `
 <div class="inputs">${html}</div>
@@ -23,6 +24,7 @@ export default class DIForm extends HTMLFormElement{
       submitText: 'Submit',
       success: () => {},
       customFetch: false,
+      fullscreenLoading: false,
       extraData: {},
       html: '',
       ...options
@@ -128,12 +130,18 @@ export default class DIForm extends HTMLFormElement{
   }
 
   _loading(){
+    if(this.options.fullscreenLoading){
+      return showLoader()
+    }
     this._errorMessage.classList.add('hidden')
     this.submitButton.disabled = true
     this.submitButton.innerHTML = '<span class="spin-effect">DI</span>'
   }
 
   _loadingFinished(){
+    if(this.options.fullscreenLoading){
+      return hideLoader()
+    }
     this.submitButton.disabled = false
     this.submitButton.textContent = this.options.submitText
   }

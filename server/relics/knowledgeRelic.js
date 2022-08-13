@@ -1,15 +1,15 @@
 const TIERS = [
   {
-    multiplier: 30,
+    multiplier: 50,
     message: advName => `${advName} learns some things from the relic.`
   },{
-    multiplier: 70,
+    multiplier: 120,
     message: advName => `${advName} painstakingly translates the relic's rune and learns a lot.`
   },{
-    multiplier: 180,
+    multiplier: 240,
     message: advName => `${advName} painstakingly translates the relic's rune and learns a lot.`
   },{
-    multiplier: 1000,
+    multiplier: 1200,
     message: advName => `${advName} figures out the message left from, I don't know, some ancient civilization or something.`
   },{
     multiplier: 12000,

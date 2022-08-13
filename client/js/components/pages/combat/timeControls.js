@@ -84,7 +84,7 @@ export default class TimeControls extends HTMLElement{
     })
 
     this._ticker.endTime = endTime
-    this._ticker.startTime = startTime
+    this._ticker.currentTime = startTime
     this._update()
   }
 
