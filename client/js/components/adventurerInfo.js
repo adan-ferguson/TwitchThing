@@ -19,8 +19,10 @@ const HTML = `
 </div>
 `
 
-const BONUS_HTML = (lvl, icon, name) => `
-<span>${lvl}. ${name}</span><img src="${icon}">
+const BONUS_HTML = (count, icon, name) => `
+<img class="flex-no-grow" src="${icon}">
+<span class="name">${name}</span>
+<span class="flex-no-grow">${count > 1 ? 'x' + count : ''}</span>
 `
 
 export default class AdventurerInfo extends HTMLElement{
@@ -36,7 +38,9 @@ export default class AdventurerInfo extends HTMLElement{
     this.querySelector('.name').textContent = adventurer.name
     this.querySelector('di-stats-list')
       .setOptions({
-        truncate: false
+        truncate: false,
+        statsDisplayStyle: StatsDisplayStyle.CUMULATIVE,
+        forced: ['physPower']
       })
       .setStats(stats || getAdventurerStats(adventurer), new AdventurerInstance(adventurer, stats))
 
@@ -48,20 +52,34 @@ export default class AdventurerInfo extends HTMLElement{
 
   _setBonuses(bonuses){
     const bonusesList = this.querySelector('.bonuses-list')
-    bonuses.forEach(bonusDef => {
-      const bonus = new Bonus(bonusDef)
-      const info = classDisplayInfo(bonus.group)
-      const item = wrap(BONUS_HTML(bonusDef.level, info.orbIcon, bonus.displayName), {
-        allowHTML: true,
-        class: ['bonus-item', 'flex-columns']
+
+    const conglomerated = {}
+    bonuses.forEach(({ group, name }) => {
+      if (!conglomerated[group]){
+        conglomerated[group] = {}
+      }
+      if (!conglomerated[group][name]){
+        conglomerated[group][name] = 0
+      }
+      conglomerated[group][name]++
+    })
+
+    Object.keys(conglomerated).forEach(group => {
+      Object.keys(conglomerated[group]).forEach(name => {
+        const bonus = new Bonus({ group, name })
+        const info = classDisplayInfo(bonus.group)
+        const item = wrap(BONUS_HTML(conglomerated[group][name], info.orbIcon, bonus.displayName), {
+          allowHTML: true,
+          class: ['bonus-item', 'flex-columns']
+        })
+        item.style.color = info.color
+        tippy(item, {
+          theme: 'light',
+          allowHTML: true,
+          content: new BonusDetails({ group, name })
+        })
+        bonusesList.appendChild(item)
       })
-      item.style.color = info.color
-      tippy(item, {
-        theme: 'light',
-        allowHTML: true,
-        content: new BonusDetails(bonusDef)
-      })
-      bonusesList.appendChild(item)
     })
   }
 }

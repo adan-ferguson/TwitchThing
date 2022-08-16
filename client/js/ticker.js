@@ -30,7 +30,7 @@ export default class Ticker extends EventEmitter{
       return
     }
     this._currentTime = val
-    if(this.running && !this._ticking){
+    if(this.running){
       this._tick()
     }
   }
@@ -44,7 +44,7 @@ export default class Ticker extends EventEmitter{
       return
     }
     this._endTime = val
-    if(this.running && !this._ticking){
+    if(this.running){
       this._tick()
     }
   }
@@ -54,7 +54,7 @@ export default class Ticker extends EventEmitter{
   }
 
   start(){
-    if(this.reachedEnd){
+    if(this.reachedEnd || this.running){
       return
     }
     this.running = true
@@ -66,23 +66,34 @@ export default class Ticker extends EventEmitter{
   }
 
   _tick(){
-    const before = Date.now()
-    this._ticking = true
-    setTimeout(() => {
+
+    const doTick = () => {
       if(!this.running){
         this._ticking = false
         return
       }
-      const timeBefore = this.currentTime
-      const diff = (Date.now() - before) * this._options.speed
-      this.currentTime = Math.max(0, Math.min(this.endTime, this.currentTime + diff))
-      this.emit('tick', this.currentTime - timeBefore)
+      const elapsedTime = (new Date() - this._startingTimestamp) * this._options.speed
+      this._currentTime = this._startingTime + Math.max(0, Math.min(this.endTime, elapsedTime))
+      this.emit('tick')
       if(this.currentTime === this.endTime){
         this._ticking = false
-        this.emit('ended', timeBefore + diff - this.currentTime)
+        this.emit('ended', elapsedTime - this.currentTime)
       }else{
-        this._tick()
+        setTimeout(() => {
+          doTick()
+        })
       }
+    }
+
+    this._startingTimestamp = Date.now()
+    this._startingTime = this.currentTime
+
+    if(this._ticking){
+      return
+    }
+    this._ticking = true
+    setTimeout(() => {
+      doTick()
     })
   }
 }

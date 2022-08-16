@@ -27,6 +27,10 @@ export default class MainPage extends Page{
     super()
     this.innerHTML = HTML
     this._error = this.querySelector('.error-message')
+    this.querySelector('.adventurer-list')
+      .setOptions({
+        pageSize: 8
+      })
     if(error){
       this._showError(error)
     }
@@ -132,7 +136,7 @@ export default class MainPage extends Page{
   }
 
   _dungeonRunUpdate = dungeonRun => {
-    const row = this.querySelector(`di-adventurer-row[adventurer-id="${dungeonRun.adventurerID}"]`)
+    const row = this.querySelector(`di-adventurer-row[adventurer-id="${dungeonRun.adventurer._id}"]`)
     if(row){
       row.setDungeonRun(dungeonRun)
     }

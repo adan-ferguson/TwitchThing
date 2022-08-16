@@ -54,5 +54,13 @@ function relicStr(relics){
 }
 
 function chestStr(chests){
-  return chests.map(c => c ?? 0).join('/') || 0
+  const c = []
+  for(let i = 0; i < chests.length; i++){
+    const tier = chests[i].tier
+    if(!c[tier]){
+      c[tier] = 0
+    }
+    c[tier]++
+  }
+  return c.map(c => c ?? 0).join('/') || 0
 }

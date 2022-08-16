@@ -5,7 +5,7 @@ const HTML = `
 <div class="inset-title"></div>
 <div class="top-part">
   <div class="type-line"></div>
-  <div class="description"></div>
+  <div class="description subtitle"></div>
 </div>
 <di-stats-list></di-stats-list>
 <di-orb-row></di-orb-row>

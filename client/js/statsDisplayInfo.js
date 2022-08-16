@@ -57,7 +57,7 @@ const statDefinitionsInfo = {
   magicDef: {
     text: 'Magic Defense',
     icon: magicDefIcon,
-    description: '',
+    description: 'Blocks magical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
   },
   speed: {
     text: 'Speed',
@@ -76,7 +76,13 @@ const statDefinitionsInfo = {
   },
   critDamage: {
     text: 'Crit Damage',
-    description: 'Increases damage deal by crits.'
+    description: 'Increases damage deal by crits.',
+    displayedValueFn: (value, { style }) => {
+      if(style === StatsDisplayStyle.CUMULATIVE){
+        return roundToFixed(1 + value, 2) + 'x'
+      }
+      return value
+    }
   },
   dodgeChance: {
     text: 'Dodge Chance',
@@ -110,7 +116,7 @@ const statDefinitionsInfo = {
       if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
         return `Recover ${value * owner.baseHp} health every 5 seconds, both in and out of combat (scales with level).`
       }
-      return `Recover (${value}% x Base Health) health every 5 seconds, both in and out of combat.`
+      return `Recover (${roundToFixed(value * 100, 1)}% x Base Health) health every 5 seconds, both in and out of combat.`
     },
   },
   chestFind: {

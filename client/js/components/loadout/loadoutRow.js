@@ -57,7 +57,7 @@ export default class LoadoutRow extends HTMLElement{
     }))
 
     if(this.loadoutItem.makeDetails){
-      tooltip.appendChild(wrap('Right-click for more info', {
+      tooltip.appendChild(wrap('Right-click for more info (not)', {
         class: 'right-click'
       }))
     }

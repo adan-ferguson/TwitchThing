@@ -38,6 +38,10 @@ export default class FighterInstance{
       monsterLevelToPower(this.baseFighter.level)
   }
 
+  get isAdventurer(){
+    return this.fighterType === 'adventurer'
+  }
+
   get fighterType(){
     return this.baseFighter.type === 'adventurer' ? 'adventurer' : 'monster'
   }
@@ -135,9 +139,6 @@ export default class FighterInstance{
       }]
     }
 
-    if(this.baseFighter.name === 'sorcerer'){
-      debugger
-    }
     const magicAttack = this.mods.contains({ name: 'magicAttack' })
     const damageInfo = {
       resultType: 'damage',

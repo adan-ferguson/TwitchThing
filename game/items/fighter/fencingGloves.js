@@ -1,6 +1,8 @@
 export default {
   stats: {
-    critChance: '+20%'
+    critChance: '+5%',
+    physPower: '+5%',
+    speed: '+5%'
   },
   orbs: 2
 }

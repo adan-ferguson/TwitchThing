@@ -1,6 +1,10 @@
 import { getMonsterStats } from '../../../game/monster.js'
+import { StatsDisplayStyle } from '../statsDisplayInfo.js'
+import { toDisplayName } from '../../../game/utilFunctions.js'
+import FighterInstance from '../../../game/combat/fighterInstance.js'
 
 const HTML = `
+<div class="name"></div>
 <di-stats-list></di-stats-list>
 `
 
@@ -14,11 +18,14 @@ export default class MonsterInfo extends HTMLElement{
   constructor(monster, stats = null){
     super()
     this.innerHTML = HTML
+    this.querySelector('.name').textContent = toDisplayName(monster.name)
     this.querySelector('di-stats-list')
       .setOptions({
-        truncate: false
+        truncate: false,
+        statsDisplayStyle: StatsDisplayStyle.CUMULATIVE,
+        forced: ['physPower']
       })
-      .setStats(stats || getMonsterStats(monster))
+      .setStats(stats || getMonsterStats(monster), new FighterInstance(monster, stats))
   }
 }
 

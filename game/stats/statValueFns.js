@@ -44,7 +44,7 @@ function multiplierValue(values, defaultValue){
   let value = defaultValue
 
   value = mods.plus.reduce((val, mod) => {
-    return val * mod
+    return val + mod
   }, value)
 
   value = mods.minus.reduce((val, mod) => {
@@ -128,7 +128,7 @@ function compositeMods(values){
 }
 
 /**
- * plus examples: 1.1, '10%', '+10%'
+ * plus examples: '10%', '+10%'
  * minus examples: 0.9, '-10%'
  * @param values [number|string]
  * @returns {{minus: *[], plus: *[]}}
@@ -147,15 +147,14 @@ function percentageMods(values){
       if(changeStr.charAt(0) === '+'){
         changeStr = changeStr.slice(1)
       }
-      change = (1 + parseFloat(changeStr) / 100)
+      change = parseFloat(changeStr) / 100
     }else{
-      change = Math.max(0, change)
+      change = change - 1
     }
-
-    if(change >= 1){
+    if(change > 0){
       mods.plus.push(change)
-    }else{
-      mods.minus.push(change)
+    }else if(change < 0){
+      mods.minus.push(1 + change)
     }
   })
 

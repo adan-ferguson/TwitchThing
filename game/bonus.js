@@ -7,7 +7,7 @@ export default class Bonus{
 
   constructor({ group, name }){
     this.bonusDef = Bonuses[group][name] ?? {
-      name: 'Blank',
+      name: '1st Level',
       group
     }
   }

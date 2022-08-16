@@ -5,7 +5,6 @@ import ResultsPage from '../results/resultsPage.js'
 import Zones, { floorToZone, floorToZoneName } from '../../../../../game/zones.js'
 import Timeline from '../../../../../game/timeline.js'
 import tippy from 'tippy.js'
-import { mergeOptionsObjects } from '../../../../../game/utilFunctions.js'
 
 const HTML = `
 <div class='content-columns'>
@@ -52,6 +51,11 @@ export default class DungeonPage extends Page{
     this._timelineEl.addEventListener('tick', () => {})
     this._timelineEl.addEventListener('event_changed', e => {
       this._update(e.detail)
+    })
+    this._timelineEl.addEventListener('finished', () => {
+      if(this.isReplay || this.currentEvent.runFinished){
+        this._finish()
+      }
     })
 
     this.querySelector('.permalink').addEventListener('click', e => {
@@ -118,11 +122,16 @@ export default class DungeonPage extends Page{
   }
 
   _socketUpdate = (dungeonRun) => {
+    // Set the virtual time here
     if(this.dungeonRun._id !== dungeonRun._id){
       return
     }
     this.dungeonRun = dungeonRun
     this._timelineEl.addEvent(dungeonRun.currentEvent)
+    this._timelineEl.play()
+    if(dungeonRun.virtualTime){
+      this._timelineEl.jumpTo(dungeonRun.virtualTime)
+    }
   }
 
   _update(options = {}){
@@ -135,15 +144,9 @@ export default class DungeonPage extends Page{
     }
 
     if(this.currentEvent.combatID && (!this.isReplay || options.viewCombat)){
-      return this._goToCombat()
-    }
-
-    if(this.isReplay && this._timelineEl.finished){
-      this._finish()
-    }
-
-    if(this.currentEvent.runFinished && this._timelineEl.finished){
-      this._finish()
+      if(!(options.sourcePage instanceof CombatPage)){
+        return this._goToCombat()
+      }
     }
 
     const animate = options.animate

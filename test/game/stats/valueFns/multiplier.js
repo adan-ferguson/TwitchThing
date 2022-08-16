@@ -13,7 +13,7 @@ describe('multiplier valueFn', () => {
 
   it('Should support decimal format for increases', () => {
     const val = multiplierValue([1.1, 1.2], 1)
-    expect(val).to.be.closeTo(1.32, 0.001,'Decimal format works for increases')
+    expect(val).to.be.closeTo(1.3, 0.001,'Decimal format works for increases')
   })
 
   it('Should support decimal format for decreases', () => {
@@ -21,18 +21,18 @@ describe('multiplier valueFn', () => {
     expect(val).to.be.closeTo(0.72, 0.001, 'Decimal format works for decreases')
   })
 
-  it('Should support pct format for increases', () => {
+  it('Should support pct format for flat increases', () => {
     const val = multiplierValue(['10%', '+20%'], 1)
-    expect(val).to.be.closeTo(1.32, 0.001,'Decimal format works for increases')
+    expect(val).to.be.closeTo(1.3, 0.001,'Decimal format works for increases')
   })
 
-  it('Should support pct format for decreases', () => {
+  it('Should support pct format for multiplicative decreases', () => {
     const val = multiplierValue(['-10%', '-20%'], 1)
     expect(val).to.be.closeTo(0.72, 0.001, 'Decimal format works for decreases')
   })
 
   it('Should support everything mixed', () => {
-    const val = multiplierValue([1.2, '-20%', '50%', 0.5], 1)
-    expect(val).to.be.closeTo(0.72, 0.001, 'Mixed')
+    const val = multiplierValue([1.2, '80%', '-50%', 0.6], 1)
+    expect(val).to.be.closeTo(0.6, 0.001, 'Mixed')
   })
 })

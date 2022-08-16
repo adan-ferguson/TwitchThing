@@ -225,6 +225,8 @@ class DungeonRunInstance extends EventEmitter{
       virtualTime: this.virtualTime
     }
 
+    console.log(this.virtualTime)
+
     delete truncatedDoc.events
     emit(this.adventurer.userID, 'user dungeon run update', truncatedDoc)
     emit(this.doc._id, 'dungeon run update', truncatedDoc)

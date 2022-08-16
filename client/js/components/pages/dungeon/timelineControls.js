@@ -118,12 +118,14 @@ export default class TimelineControls extends HTMLElement{
   }
 
   addEvent(event){
+    const update = this._timeline.finished
     this._timeline.addEntry(event)
-    this._updateEvent()
+    if(update){
+      this._updateEvent()
+    }
   }
 
   jumpTo(time, options = {}){
-    console.log('jump to', time)
     this._timeline.time = time
     this._triggerEvent(options)
     this._updateEvent()
@@ -198,9 +200,11 @@ export default class TimelineControls extends HTMLElement{
   }
 
   _nextEvent(extraTime = 0){
-    this._triggerEvent()
     if(!this._timeline.finished){
+      this._triggerEvent()
       this._updateEvent(extraTime)
+    }else{
+      this.dispatchEvent(new CustomEvent('finished'))
     }
   }
 
@@ -211,8 +215,8 @@ export default class TimelineControls extends HTMLElement{
   }
 
   _updateEvent(extraTime = 0){
-    this._ticker.endTime = this._timeline.currentEntry.duration
     this._ticker.currentTime = this._timeline.timeSinceLastEntry + extraTime
+    this._ticker.endTime = this._timeline.currentEntry.duration
     this._tick()
   }
 
@@ -252,7 +256,7 @@ export default class TimelineControls extends HTMLElement{
 
     const listener = () => {
       modal.hide()
-      this._eventLog.removeEventListener(listener)
+      this._eventLog.removeEventListener('click', listener)
     }
     this._eventLog.addEventListener('event_selected', listener)
     this._eventLog.updateCurrent(true)

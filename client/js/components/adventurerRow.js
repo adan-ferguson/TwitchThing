@@ -2,22 +2,26 @@ import './timer.js'
 import AdventurerPage from './pages/adventurer/adventurerPage.js'
 import DungeonPage from './pages/dungeon/dungeonPage.js'
 import ResultsPage from './pages/results/resultsPage.js'
+import { OrbsDisplayStyle } from './orbRow.js'
+import { getAdventurerOrbsData } from '../../../game/adventurer.js'
+import dateFormat from 'dateformat'
+import { toDisplayName } from '../../../game/utilFunctions.js'
 
 const HTML = `
 <div class="inner">
-    <span>
-        Lvl.<span class="level"></span>
-    </span>
+  <span style="text-align:center">
     <span class="name"></span>
-    <div class="flex-rows displaynone dungeon-status">
-        <span class="event"></span>
-        <di-timer class="displaynone"></di-timer>
-        <span class="depth"> 
-            Floor: <span class="floor"></span>
-            Room: <span class="room"></span>
-        </span>
-    </div>
+    <di-orb-row></di-orb-row>
+  </span>
+  <span style="text-align:center">
+  <div class="status"></div>
+    <div class="description"></div>
+  </span>
 </div>
+`
+
+const DUNGEON_HTML = ({ time, floor, room }) => `
+Floor ${floor} - Room ${room} - ${time}
 `
 
 export default class AdventurerRow extends HTMLElement{
@@ -44,23 +48,14 @@ export default class AdventurerRow extends HTMLElement{
     this.adventurer = adventurer
 
     this.querySelector('.name').textContent = this.adventurer.name
-    this.querySelector('.level').textContent = this.adventurer.level
-
-    this._dungeonStatus = this.querySelector('.dungeon-status')
-    this._depth = this.querySelector('.depth')
-    this._floor = this.querySelector('.floor')
-    this._room = this.querySelector('.room')
-    this._timer = this.querySelector('di-timer')
-    this._event = this.querySelector('.event')
-
-    if(adventurer.dungeonRun){
-      this.setDungeonRun(adventurer.dungeonRun)
-    }else if(adventurer.dungeonRunID){
-      this.setDungeonRun({
-        _id: adventurer.dungeonRunID,
-        finished: true
+    this.querySelector('di-orb-row')
+      .setOptions({
+        style: OrbsDisplayStyle.MAX_ONLY,
+        showTooltips: false
       })
-    }
+      .setData(getAdventurerOrbsData(adventurer))
+
+    this.setDungeonRun(adventurer.dungeonRun)
   }
 
   get targetPage(){
@@ -75,31 +70,34 @@ export default class AdventurerRow extends HTMLElement{
 
   setDungeonRun(dungeonRun){
 
-    this.dungeonRun = dungeonRun
-    this._dungeonStatus.classList.toggle('displaynone', dungeonRun ? false : true)
-
+    const statusEl = this.querySelector('.status')
+    const descriptionEl = this.querySelector('.description')
     if(!dungeonRun){
+      statusEl.innerHTML = ''
+      descriptionEl.style.color = '#888'
+      descriptionEl.textContent = 'Idle'
+      return
+    }else if(dungeonRun.finished){
+      statusEl.innerHTML = ''
+      descriptionEl.style.color = '#4d8fc4'
+      descriptionEl.textContent = 'Finished'
       return
     }
 
-    this._event.textContent = eventText()
-    this._timer.classList.toggle('displaynone', dungeonRun.finished)
-    this._depth.classList.toggle('displaynone', dungeonRun.finished)
-
-    if(!dungeonRun.finished){
-      this._room.textContent = dungeonRun.room
-      this._floor.textContent = dungeonRun.floor
-      this._timer.time = dungeonRun.virtualTime
-      this._timer.start()
-    }
+    statusEl.innerHTML = DUNGEON_HTML({
+      floor: dungeonRun.floor,
+      time: dateFormat(dungeonRun.virtualTime, 'M:ss'),
+      room: dungeonRun.room
+    })
+    descriptionEl.style.color = '#000'
+    descriptionEl.textContent = eventText()
 
     function eventText(){
-      if(dungeonRun.finished){
-        return 'Finished'
-      }
       const currentEvent = dungeonRun.currentEvent || dungeonRun.events.at(-1)
       if(currentEvent?.monster){
-        return `VS. ${currentEvent.monster.name}`
+        return `Battling a ${toDisplayName(currentEvent.monster.name)}`
+      }else if(currentEvent?.relic){
+        return 'Investigating a Relic'
       }
       return 'Exploring'
     }

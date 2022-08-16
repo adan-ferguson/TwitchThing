@@ -13,7 +13,7 @@ const TIERS = [{
 }]
 
 export default {
-  frequency: dungeonRun => 5 * dungeonRun.adventurerInstance.stats.get('chestFind').value,
+  frequency: dungeonRun => 4 * dungeonRun.adventurerInstance.stats.get('chestFind').value,
   resolve: (dungeonRun, relicTier, value) => {
     return {
       rewards: {

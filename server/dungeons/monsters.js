@@ -39,7 +39,7 @@ const monstersByFloor = {
   30: Monsters.hydra,
 }
 
-const CHEST_DROP_CHANCE = 0.1
+const CHEST_DROP_CHANCE = 0.08
 const MONSTER_CHANCE = 0.4
 const MONSTER_ROOM_BUFFER = 2
 

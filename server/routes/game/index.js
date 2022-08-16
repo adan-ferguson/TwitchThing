@@ -5,7 +5,7 @@ import adventurerRouter from './adventurer.js'
 import dungeonRunRouter from './dungeonrun.js'
 
 import Adventurers from '../../collections/adventurers.js'
-import { getActiveRunData } from '../../dungeons/dungeonRunner.js'
+import { getActiveRunData, getRunData } from '../../dungeons/dungeonRunner.js'
 import { validateParam } from '../../validations.js'
 
 const router = express.Router()
@@ -25,7 +25,11 @@ router.use('/dungeonrun', dungeonRunRouter)
 
 router.post('/main', async(req, res) => {
   const adventurers = await Adventurers.findByIDs(req.user.adventurers)
-  adventurers.forEach(adv => adv.dungeonRun = getActiveRunData(adv.dungeonRunID))
+  for(let adv of adventurers){
+    if(adv.dungeonRunID){
+      adv.dungeonRun = await getRunData(adv.dungeonRunID)
+    }
+  }
   res.send({  adventurers, slots: req.user.inventory.adventurerSlots })
 })
 

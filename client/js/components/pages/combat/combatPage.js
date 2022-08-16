@@ -1,6 +1,6 @@
 import Timeline from '../../../../../game/timeline.js'
 import Page from '../page.js'
-import { mergeOptionsObjects, toArray } from '../../../../../game/utilFunctions.js'
+import { mergeOptionsObjects, toArray, toDisplayName } from '../../../../../game/utilFunctions.js'
 import Zones, { floorToZone } from '../../../../../game/zones.js'
 import tippy from 'tippy.js'
 
@@ -85,7 +85,7 @@ export default class CombatPage extends Page{
     this._setupTimeline(combat, state)
 
     // TODO: This only makes sense in monster combat
-    this.combatFeed.setText(`A ${combat.fighter2.data.name} draws near.`)
+    this.combatFeed.setText(`A ${toDisplayName(combat.fighter2.data.name)} draws near.`)
   }
 
   async unload(){

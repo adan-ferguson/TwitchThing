@@ -9,6 +9,7 @@ export default class StatsList extends HTMLElement{
     iconsOnly: false,
     showTooltips: true,
     truncate: true,
+    forced: [],
     excluded: []
   }
 
@@ -64,6 +65,8 @@ export default class StatsList extends HTMLElement{
         this.removeChild(row)
       }
     )
+
+    this.classList.toggle('no-icons', this.querySelector('img') ? false : true)
   }
 
   _updateStat(stat, owner = null){

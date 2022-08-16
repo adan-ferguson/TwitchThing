@@ -58,7 +58,8 @@ export async function finishCombatEvent(dungeonRun, combatEvent){
   const fighter = combat.fighter1.data._id.equals(dungeonRun.adventurer._id) ? combat.fighter1 : combat.fighter2
   const enemy = combat.fighter1.data._id.equals(dungeonRun.adventurer._id) ? combat.fighter2 : combat.fighter1
   const event = {
-    adventurerState: fighter.endState
+    adventurerState: fighter.endState,
+    passTimeOverride: true
   }
   if(!fighter.endState.hp){
     event.runFinished = true

@@ -4,8 +4,8 @@ import OrbsData from './orbsData.js'
 import ModsCollection from './modsCollection.js'
 
 const REWARD_MULTIPLIER = 0.2
-const POWER_MULTIPLIER = 0.23
-const HP_MULTIPLIER = 0.26
+const POWER_MULTIPLIER = 0.21
+const HP_MULTIPLIER = 0.23
 
 const HP_BASE = 40
 const XP_BASE = 50

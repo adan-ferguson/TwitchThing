@@ -39,7 +39,9 @@ export function adventurerLoadoutItem(itemDef){
       }
 
       if(itemInstance.description){
-        tt.appendChild(wrap(itemInstance.description, 'div'))
+        tt.appendChild(wrap(itemInstance.description, {
+          class: 'subtitle'
+        }))
       }
 
       return tt
