@@ -1,6 +1,7 @@
 export default {
   stats: {
-    hpMax: '+15%'
+    hpMax: '+30%'
   },
-  orbs: 2
+  orbs: 2,
+  description: 'Over-statted because please try tank.'
 }

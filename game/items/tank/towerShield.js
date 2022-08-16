@@ -1,7 +1,7 @@
 export default {
   stats: {
-    physDef: '20%',
-    hpMax: '15%'
+    physDef: '+50%',
   },
-  orbs: 4
+  orbs: 6,
+  description: 'There no "shield block" mechanic so shields are the same as armor I guess.'
 }

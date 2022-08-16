@@ -1,6 +1,6 @@
 export default {
   stats: {
-    physPower: '+20%',
+    regen: '2.5%'
   },
-  orbs: 3
+  orbs: 4
 }

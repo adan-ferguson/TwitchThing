@@ -1,7 +1,8 @@
 export default {
   stats: {
-    dodgeChance: '+50%'
+    dodgeChance: '+50%',
+    speed: '+100%'
   },
-  description: 'How is this an item?',
-  orbs: 5
+  description: 'Wow what a great Ranger-themed item',
+  orbs: 9
 }

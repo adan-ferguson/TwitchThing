@@ -1,7 +1,6 @@
 export default {
   stats: {
-    speed: '+30%',
-    dodgeChance: '+20%'
+    physPower: '+50%',
   },
   orbs: 5
 }

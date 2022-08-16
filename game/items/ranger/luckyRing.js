@@ -1,7 +1,7 @@
 export default {
   stats: {
-    relicRareChance: '+20%',
-    chestFind: '+20%'
+    relicRareChance: '+100%',
+    chestFind: '+50%'
   },
-  orbs: 3
+  orbs: 7
 }
