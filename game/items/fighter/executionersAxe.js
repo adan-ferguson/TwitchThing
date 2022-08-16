@@ -1,7 +1,8 @@
 export default {
   stats: {
-    critDamage: '+100%',
+    physPower: '+50%',
+    critDamage: '+50%',
     critChance: '+10%'
   },
-  orbs: 5
+  orbs: 7
 }
