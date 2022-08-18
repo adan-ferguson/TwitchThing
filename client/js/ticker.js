@@ -51,6 +51,7 @@ export default class Ticker extends EventEmitter{
 
   setOptions(options = {}){
     this._options = mergeOptionsObjects(this._options, options)
+    this._tick()
   }
 
   start(){
@@ -73,7 +74,7 @@ export default class Ticker extends EventEmitter{
         return
       }
       const elapsedTime = (new Date() - this._startingTimestamp) * this._options.speed
-      this._currentTime = this._startingTime + Math.max(0, Math.min(this.endTime, elapsedTime))
+      this._currentTime = Math.max(0, Math.min(this.endTime, this._startingTime + elapsedTime))
       this.emit('tick')
       if(this.currentTime === this.endTime){
         this._ticking = false

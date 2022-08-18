@@ -199,10 +199,10 @@ export default class TimelineControls extends HTMLElement{
     })
   }
 
-  _nextEvent(extraTime = 0){
+  _nextEvent(){
     if(!this._timeline.finished){
       this._triggerEvent()
-      this._updateEvent(extraTime)
+      this._updateEvent()
     }else{
       this.dispatchEvent(new CustomEvent('finished'))
     }
@@ -214,8 +214,9 @@ export default class TimelineControls extends HTMLElement{
     }))
   }
 
-  _updateEvent(extraTime = 0){
-    this._ticker.currentTime = this._timeline.timeSinceLastEntry + extraTime
+  _updateEvent(){
+    this._prevEvent = this._timeline.currentEntry
+    this._ticker.currentTime = this._timeline.timeSinceLastEntry
     this._ticker.endTime = this._timeline.currentEntry.duration
     this._tick()
   }
