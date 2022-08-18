@@ -25,12 +25,13 @@ export default class Picker{
     if(!this._byValue[value]){
       return this.pick(value - 1)
     }
-    return chooseOne(this._byValue[value].map(pickable => {
+    const choices = this._byValue[value].map(pickable => {
       return {
         value: pickable,
         weight: this._options.weightFormula(pickable)
       }
-    }))
+    })
+    return chooseOne(choices)
   }
 }
 

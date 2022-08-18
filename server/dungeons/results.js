@@ -94,6 +94,16 @@ export async function finalize(dungeonRunDoc){
       })
     }
 
+    const cfBefore = userDoc.accomplishments.chestsFound ?? 0
+    userDoc.accomplishments.chestsFound = cfBefore + (dungeonRunDoc.rewards.chests?.length ?? 0)
+    if(cfBefore < 10 && userDoc.accomplishments.chestsFound >= 10){
+      emit(userDoc._id, 'show popup', {
+        message: `Monsters have been complaining that SOMEONE has been stealing their treasure chests!
+        
+        They're going to start hiding them a bit better.`
+      })
+    }
+
     userDoc.accomplishments.deepestFloor = Math.max(userDoc.accomplishments.deepestFloor, dungeonRunDoc.floor)
 
     await Users.save(userDoc)

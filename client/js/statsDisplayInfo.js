@@ -111,10 +111,15 @@ const statDefinitionsInfo = {
   },
   regen: {
     text: 'Health Regeneration',
-    displayedValueFn: value => `${roundToFixed(value * 100, 1)}%`,
+    displayedValueFn: (value, { style, owner }) => {
+      if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
+        return `${roundToFixed(value * owner.baseHp, 1)}`
+      }
+      return `${roundToFixed(value * 100, 1)}%`
+    },
     descriptionFn: (value, { style, owner }) => {
       if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
-        return `Recover ${value * owner.baseHp} health every 5 seconds, both in and out of combat (scales with level).`
+        return `Recover ${roundToFixed(value * owner.baseHp, 1)} health every 5 seconds, both in and out of combat (scales with level).`
       }
       return `Recover (${roundToFixed(value * 100, 1)}% x Base Health) health every 5 seconds, both in and out of combat.`
     },

@@ -40,7 +40,7 @@ export default class AdventurerInfo extends HTMLElement{
       .setOptions({
         truncate: false,
         statsDisplayStyle: StatsDisplayStyle.CUMULATIVE,
-        forced: ['physPower']
+        forced: ['physPower','speed','hpMax']
       })
       .setStats(stats || getAdventurerStats(adventurer), new AdventurerInstance(adventurer, stats))
 

@@ -5,7 +5,7 @@ import Stats from './stats/stats.js'
 export default class ItemInstance{
   constructor(itemDef){
     this.itemDef = itemDef.itemDef ?? itemDef
-    this.baseItem = Items[this.itemDef.baseType.group][this.itemDef.baseType.name]
+    this.baseItem = Items[this.itemDef.baseType.group][this.itemDef.baseType.name] ?? {}
   }
   get id(){
     return this.itemDef.id

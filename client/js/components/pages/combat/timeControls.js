@@ -56,16 +56,14 @@ export default class TimeControls extends HTMLElement{
       this.jumpTo(this._ticker.endTime)
     })
 
-    this._ticker = new Ticker({
-      speed: this.speed
-    }).on('tick', () => {
+    this._ticker = new Ticker().on('tick', () => {
       this._update()
       this.dispatchEvent(new CustomEvent('tick'))
     })
   }
 
   get speed(){
-    return this._speedEl.value / 100
+    return this._options.isReplay ? this._speedEl.value / 100 : 1
   }
 
   get time(){
@@ -83,6 +81,9 @@ export default class TimeControls extends HTMLElement{
       el.classList.add('displaynone')
     })
 
+    this._ticker.setOptions({
+      speed: this.speed
+    })
     this._ticker.endTime = endTime
     this._ticker.currentTime = startTime
     this._update()

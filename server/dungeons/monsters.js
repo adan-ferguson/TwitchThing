@@ -39,7 +39,10 @@ const monstersByFloor = {
   30: Monsters.hydra,
 }
 
-const CHEST_DROP_CHANCE = 0.08
+const BONUS_CHESTS_UNTIL = 10
+const BONUS_CHEST_CHANCE = 0.35
+
+const CHEST_DROP_CHANCE = 0.07
 const MONSTER_CHANCE = 0.4
 const MONSTER_ROOM_BUFFER = 2
 
@@ -77,11 +80,13 @@ export async function generateMonster(dungeonRun){
     const advStats = dungeonRun.adventurerInstance.stats
     const monsterStats = getMonsterStats(monsterDefinition)
     const rewards = {
-      xp: levelToXpReward(level) * advStats.get('combatXP').value * monsterStats.get('rewards')
+      xp: levelToXpReward(level) * advStats.get('combatXP').value * monsterStats.get('rewards').value
     }
     if(dungeonRun.user.accomplishments.firstRunFinished){
       // TODO: chest rarity
-      if(Math.random() < CHEST_DROP_CHANCE * advStats.get('chestFind').value){
+      const userChests = dungeonRun.user.accomplishments.chestsFound ?? 0
+      const dropChance = userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE : CHEST_DROP_CHANCE
+      if(Math.random() < dropChance * advStats.get('chestFind').value){
         rewards.chests = generateRandomChest(dungeonRun)
       }
     }
@@ -111,7 +116,7 @@ export function generateFloorChoices(floor, range = 1, skew = 0){
   const choices = []
   for(let i = 0; i < range; i++){
     const val = Math.max(minVal, floor - range + i + 1)
-    const weight = skew < 0 ? Math.pow(1 - skew, i ) : (1 + skew * i)
+    const weight = skew < 0 ? Math.pow(1 + skew, i ) : (1 + skew * i)
     choices.push({ weight: 100 * weight, value: val })
   }
   return choices

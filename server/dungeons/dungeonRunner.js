@@ -62,16 +62,21 @@ async function advance(){
   lastAdvancement = new Date()
   for(const id in activeRuns){
     const run = activeRuns[id]
-    if(!run.started){
-      await run.advance({
-        passTimeOverride: true,
-        duration: ADVANCEMENT_INTERVAL,
-        message: `${run.adventurer.name} enters the dungeon.`,
-        roomType: 'entrance'
-      })
-      run.emit('started')
-    }else{
-      await run.advance()
+    try {
+      if(!run.started){
+        await run.advance({
+          passTimeOverride: true,
+          duration: ADVANCEMENT_INTERVAL,
+          message: `${run.adventurer.name} enters the dungeon.`,
+          roomType: 'entrance'
+        })
+        run.emit('started')
+      }else{
+        await run.advance()
+      }
+    }catch(ex){
+      console.log('Run suspended due to error', run.doc, ex)
+      delete activeRuns[id]
     }
   }
   setTimeout(advance, ADVANCEMENT_INTERVAL)

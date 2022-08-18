@@ -7,7 +7,7 @@ import Bonus from './bonus.js'
 import ItemInstance from './item.js'
 
 const LEVEL_2_XP = 100
-const XP_MULTIPLIER = 0.33
+const XP_MULTIPLIER = 0.35
 
 const HP_BASE = 50
 const HP_GROWTH_PCT = 0.12

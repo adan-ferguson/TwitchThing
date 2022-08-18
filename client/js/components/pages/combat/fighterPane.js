@@ -1,5 +1,4 @@
 import FighterInstance from '../../../../../game/combat/fighterInstance.js'
-import { fadeOut } from '../../../animationHelper.js'
 import FlyingTextEffect from '../../effects/flyingTextEffect.js'
 import { toDisplayName } from '../../../../../game/utilFunctions.js'
 import { adventurerLoadoutContents } from '../../../adventurer.js'
@@ -8,6 +7,7 @@ import Modal from '../../modal.js'
 import AdventurerInfo from '../../adventurerInfo.js'
 import MonsterInfo from '../../monsterInfo.js'
 import CustomAnimation from '../../../customAnimation.js'
+import { all as Mods } from '../../../../../game/mods/combined.js'
 
 const HTML = `
 <div class="flex-grow flex-rows top-section">
@@ -33,7 +33,6 @@ export default class FighterPane extends HTMLElement{
     this.statsList = this.querySelector('di-stats-list')
     this.statsList.setOptions({
       iconsOnly: true,
-      forced: ['physPower'],
       excluded: ['hpMax','speed']
     })
     this.fighterInstance = null
@@ -144,7 +143,14 @@ export default class FighterPane extends HTMLElement{
       }
     }
 
+    const isMagic = this.fighterInstance.mods.contains(Mods.magicAttack) ?  true : false
+    if(!isMagic){
+      this.statsList.setOptions({
+        forced: ['physPower']
+      })
+    }
     this.statsList.setStats(this.fighterInstance.stats, this.fighterInstance)
+
     this._updateCooldowns()
 
     if(!this.fighterInstance.hp){

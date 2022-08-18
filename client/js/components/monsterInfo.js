@@ -4,7 +4,10 @@ import { toDisplayName } from '../../../game/utilFunctions.js'
 import FighterInstance from '../../../game/combat/fighterInstance.js'
 
 const HTML = `
-<div class="name"></div>
+<div class="top">
+  <div class="name"></div>
+  <div class="subtitle description"></div>
+</div>
 <di-stats-list></di-stats-list>
 `
 
@@ -19,11 +22,14 @@ export default class MonsterInfo extends HTMLElement{
     super()
     this.innerHTML = HTML
     this.querySelector('.name').textContent = toDisplayName(monster.name)
+    if(monster.description){
+      this.querySelector('.description').textContent = monster.description
+    }
     this.querySelector('di-stats-list')
       .setOptions({
         truncate: false,
         statsDisplayStyle: StatsDisplayStyle.CUMULATIVE,
-        forced: ['physPower']
+        forced: ['physPower','speed','hpMax']
       })
       .setStats(stats || getMonsterStats(monster), new FighterInstance(monster, stats))
   }

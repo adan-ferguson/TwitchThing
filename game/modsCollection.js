@@ -25,6 +25,7 @@ export default class ModsCollection{
    * @returns {boolean}
    */
   contains({ group = 'generic', name }){
+    debugger
     const groupArr = this._mods[group]
     if(groupArr?.find(mod => mod.name === name)){
       return true

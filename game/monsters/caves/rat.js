@@ -1,11 +1,6 @@
 export default {
-  abilities: [
-    {
-      name: 'Generic Enemy',
-      stats: {
-        speed: '5%'
-      },
-      description: 'This doesn\'t even do anything why are you reading this?'
-    }
-  ]
+  baseStats: {
+    speed: '+5%'
+  },
+  description: 'A large rat, not just a regular one, I mean come on.'
 }

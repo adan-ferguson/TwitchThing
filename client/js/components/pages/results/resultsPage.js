@@ -11,7 +11,7 @@ const WAIT_TIME = 500
 const HTML = `
 <div class='content-columns'>
   <di-adventurer-pane></di-adventurer-pane>
-  <div class='content-rows results' style='flex-grow:1.66'>
+  <div class='content-rows results' style='flex-grow:1.5'>
     <div class="content-well scrollable">
       <di-tabz>
         <di-tab data-tab-name="Results"></di-tab>

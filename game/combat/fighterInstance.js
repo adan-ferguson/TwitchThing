@@ -2,6 +2,7 @@ import { getAdventurerStats, adventurerLevelToHp, adventurerLevelToPower, getAdv
 import { getMonsterMods, getMonsterStats, monsterLevelToHp, monsterLevelToPower } from '../monster.js'
 import { randomRound } from '../rando.js'
 import { toDisplayName } from '../utilFunctions.js'
+import { all as Mods } from '../mods/combined.js'
 
 const STATE_DEFAULTS = {
   timeSinceLastAction: 0
@@ -113,7 +114,7 @@ export default class FighterInstance{
 
   performTick(combat){
     const tickUpdates = []
-    if(combat.time > 0 && combat.time % 5000 === 0){
+    if(combat.time % 5000 === 0){
       tickUpdates.push(this._regen())
     }
     return tickUpdates.filter(t => t)
@@ -148,7 +149,7 @@ export default class FighterInstance{
       }]
     }
 
-    const magicAttack = this.mods.contains({ name: 'magicAttack' })
+    const magicAttack = this.mods.contains(Mods.magicAttack)
     const damageInfo = {
       resultType: 'damage',
       subject: enemy.fighterId,

@@ -4,8 +4,8 @@ import OrbsData from './orbsData.js'
 import ModsCollection from './modsCollection.js'
 
 const REWARD_MULTIPLIER = 0.2
-const POWER_MULTIPLIER = 0.21
-const HP_MULTIPLIER = 0.23
+const POWER_MULTIPLIER = 0.19
+const HP_MULTIPLIER = 0.21
 
 const HP_BASE = 40
 const XP_BASE = 50
@@ -39,6 +39,7 @@ export function getMonsterStats(monster, state = null){
   const loadoutStatAffectors = (monster.abilities || [])
     .map(modDef => modDef?.stats)
     .filter(s => s)
+  loadoutStatAffectors.push(monster.baseStats ?? {})
   // TODO: extraz
   const stateAffectors = null
   return new Stats(loadoutStatAffectors, stateAffectors)
