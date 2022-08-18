@@ -1,6 +1,3 @@
 export default {
-  abilities: [{
-    name: 'Get it?',
-    description: 'Like a swamp thing?'
-  }]
+  description: 'Remember, it\'s gigantic like everything else.'
 }

@@ -1,12 +1,13 @@
 export default {
   baseStats: {
-    speed: '-20%'
+    speed: '-25%'
   },
   abilities: [
     {
       name: 'Deadly Weapon',
       stats: {
-        critChance: '35%'
+        critChance: '30%',
+        critDamage: '+50%'
       }
     }
   ]

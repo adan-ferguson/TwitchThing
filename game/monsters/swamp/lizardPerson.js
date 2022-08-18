@@ -1,6 +1,8 @@
 export default {
-  abilities: [{
-    name: 'Get it?',
-    description: 'Like a swamp thing?'
-  }]
+  description: 'Like a big kobold.',
+  baseStats: {
+    physDef: '+20%',
+    magicDef: '+20%',
+    physPower: '-20%'
+  }
 }

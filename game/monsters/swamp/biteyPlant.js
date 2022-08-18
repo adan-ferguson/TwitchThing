@@ -1,3 +1,3 @@
 export default {
-  abilities: []
+  description: 'It bites alright.'
 }

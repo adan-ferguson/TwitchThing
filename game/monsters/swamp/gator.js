@@ -1,6 +1,7 @@
 export default {
-  abilities: [{
-    name: 'Get it?',
-    description: 'Like a swamp thing?'
-  }]
+  physPower: {
+    physDef: '30%',
+    physPower: '+30%',
+    speed: '-30%'
+  }
 }

@@ -1,6 +1,15 @@
 export default {
-  abilities: [{
-    name: 'Get it?',
-    description: 'Like a swamp thing?'
-  }]
+  baseStats: {
+    hpMax: '-50%',
+    physDef: '50%'
+  },
+  description: 'Vulnerable to magic in a roundabout way because it only has phys defense.',
+  abilities: [
+    {
+      name: 'Regeneration',
+      stats: {
+        regen: '10%'
+      }
+    }
+  ]
 }

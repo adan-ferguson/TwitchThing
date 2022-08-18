@@ -131,6 +131,8 @@ function getBasicMonsterDefinition(floor){
     throw `Could not find monster for floor ${floor}`
   }
   return {
+    baseStats: {},
+    abilities: [],
     ...monstersByFloor[floor]
   }
 }

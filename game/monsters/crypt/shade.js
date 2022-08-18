@@ -9,8 +9,7 @@ export default {
     {
       name: 'Ethereal',
       stats: {
-        physDef: '+25%',
-        dodgeChance: '+25%'
+        dodgeChance: '+30%'
       }
     }
   ]
