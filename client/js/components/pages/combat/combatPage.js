@@ -85,7 +85,7 @@ export default class CombatPage extends Page{
     this._setupTimeline(combat, state)
 
     // TODO: This only makes sense in monster combat
-    this.combatFeed.setText(`A ${toDisplayName(combat.fighter2.data.name)} draws near.`)
+    this.combatFeed.setText(`A ${toDisplayName(combat.fighter2.displayName)} draws near.`)
   }
 
   async unload(){
@@ -155,9 +155,9 @@ export default class CombatPage extends Page{
   _finish(){
 
     if(this.combat.fighter1.endState.hp){
-      this.combatFeed.setText(`The ${this.combat.fighter2.data.name} has been defeated.`)
+      this.combatFeed.setText(`The ${this.combat.fighter2.displayName} has been defeated.`)
     }else if(this.combat.fighter2.endState.hp){
-      this.combatFeed.setText(`${this.combat.fighter1.data.name} has been defeated.`)
+      this.combatFeed.setText(`${this.combat.fighter1.displayName} has been defeated.`)
     }else{
       this.combatFeed.setText('Time is up, combat is not going anywhere.')
     }

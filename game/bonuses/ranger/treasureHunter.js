@@ -1,6 +1,7 @@
 export default {
   stats: {
-    chestFind: '+20%'
+    chestFind: '+10%',
+    relicRareChance: '+10%'
   },
   rarity: 2
 }

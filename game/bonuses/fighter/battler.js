@@ -1,6 +1,6 @@
 export default {
   stats: {
-    combatXP: '+10%'
+    combatXP: '+20%'
   },
   rarity: 2
 }

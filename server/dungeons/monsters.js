@@ -1,7 +1,7 @@
 import { generateRandomChest } from './chests.js'
 import { chooseOne } from '../../game/rando.js'
 import { all as Monsters } from '../../game/monsters/combined.js'
-import { levelToXpReward } from '../../game/monster.js'
+import { getMonsterStats, levelToXpReward } from '../../game/monster.js'
 
 const monstersByFloor = {
   // Caves
@@ -18,12 +18,12 @@ const monstersByFloor = {
   // Crypt
   11: Monsters.skeleton,
   12: Monsters.zombie,
-  13: Monsters.wraith,
   14: Monsters.shade,
-  15: Monsters.necromancer,
   16: Monsters.banshee,
-  17: Monsters.lich,
+  15: Monsters.necromancer,
   18: Monsters.vampire,
+  13: Monsters.deathKnight,
+  17: Monsters.lich,
   19: Monsters.abomination,
   20: Monsters.boneDragon,
   // Swamp
@@ -47,7 +47,7 @@ const MONSTER_ROOM_BUFFER = 2
 const FLOOR_RANGE = 4
 
 // How much to skew RNG towards higher levels.
-const FLOOR_SKEW = 0.1
+const FLOOR_SKEW = -0.2
 
 export function foundMonster(dungeonRun){
   return roomsSinceMonster() > MONSTER_ROOM_BUFFER && Math.random() < MONSTER_CHANCE
@@ -69,15 +69,18 @@ export async function generateMonster(dungeonRun){
 
   return {
     ...monsterDefinition,
+    level,
     rewards: generateRewards()
   }
 
   function generateRewards(){
     const advStats = dungeonRun.adventurerInstance.stats
+    const monsterStats = getMonsterStats(monsterDefinition)
     const rewards = {
-      xp: levelToXpReward(level) * advStats.get('combatXP').value
+      xp: levelToXpReward(level) * advStats.get('combatXP').value * monsterStats.get('rewards')
     }
     if(dungeonRun.user.accomplishments.firstRunFinished){
+      // TODO: chest rarity
       if(Math.random() < CHEST_DROP_CHANCE * advStats.get('chestFind').value){
         rewards.chests = generateRandomChest(dungeonRun)
       }
@@ -93,7 +96,7 @@ export async function generateMonster(dungeonRun){
  * @param harderMonsterChance
  */
 function floorToLevel(floor, harderMonsterChance = 1){
-  return chooseOne(generateFloorChoices(floor, FLOOR_RANGE, FLOOR_SKEW * harderMonsterChance))
+  return chooseOne(generateFloorChoices(floor, FLOOR_RANGE, FLOOR_SKEW + harderMonsterChance - 1))
 }
 
 /**
@@ -108,7 +111,8 @@ export function generateFloorChoices(floor, range = 1, skew = 0){
   const choices = []
   for(let i = 0; i < range; i++){
     const val = Math.max(minVal, floor - range + i + 1)
-    choices.push({ weight: 100 * (1 + skew * i), value: val })
+    const weight = skew < 0 ? Math.pow(1 - skew, i ) : (1 + skew * i)
+    choices.push({ weight: 100 * weight, value: val })
   }
   return choices
 }
@@ -127,7 +131,6 @@ function getBasicMonsterDefinition(floor){
     throw `Could not find monster for floor ${floor}`
   }
   return {
-    level: floor,
     ...monstersByFloor[floor]
   }
 }

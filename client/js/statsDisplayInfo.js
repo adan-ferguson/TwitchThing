@@ -122,6 +122,10 @@ const statDefinitionsInfo = {
   chestFind: {
     text: 'Chest Find',
     description: 'Increased chance to find treasure chests from combat rewards or from treasure relics.',
+  },
+  rewards: {
+    text: 'Rewards',
+    description: 'More xp for killing, better chests.'
   }
 }
 

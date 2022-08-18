@@ -2,7 +2,7 @@ export default {
   stats: {
     hpMax: '+10%',
     physPower: '+10%',
-    speed: '-10%'
+    speed: '-5%'
   },
-  rarity: 1
+  rarity: 2
 }

@@ -1,3 +1,10 @@
 export default {
-  abilities: []
+  abilities: [
+    {
+      name: 'Lifesteal',
+      stats: {
+        lifesteal: '30%'
+      }
+    }
+  ]
 }

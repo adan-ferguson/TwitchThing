@@ -1,7 +1,7 @@
 export default {
-  stats: {
-    magicPower: '+30%',
-    hpMax: '-20%'
+  baseStats: {
+    magicPower: '+50%',
+    hpMax: '-40%'
   },
   abilities: [
     {

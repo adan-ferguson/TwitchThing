@@ -1,6 +1,7 @@
 import { getAdventurerStats, adventurerLevelToHp, adventurerLevelToPower, getAdventurerMods } from '../adventurer.js'
 import { getMonsterMods, getMonsterStats, monsterLevelToHp, monsterLevelToPower } from '../monster.js'
 import { randomRound } from '../rando.js'
+import { toDisplayName } from '../utilFunctions.js'
 
 const STATE_DEFAULTS = {
   timeSinceLastAction: 0
@@ -26,14 +27,22 @@ export default class FighterInstance{
     this.startState = this._currentState
   }
 
+  get displayName(){
+    if(this.isAdventurer){
+      return this.baseFighter.name
+    }else{
+      return toDisplayName(this.baseFighter.name)
+    }
+  }
+
   get baseHp(){
-    return this.fighterType === 'adventurer' ?
+    return this.isAdventurer ?
       adventurerLevelToHp(this.baseFighter.level) :
       monsterLevelToHp(this.baseFighter.level)
   }
 
   get basePower(){
-    return this.fighterType === 'adventurer' ?
+    return this.isAdventurer ?
       adventurerLevelToPower(this.baseFighter.level) :
       monsterLevelToPower(this.baseFighter.level)
   }
@@ -47,7 +56,7 @@ export default class FighterInstance{
   }
 
   get stats(){
-    if(this.fighterType === 'adventurer'){
+    if(this.isAdventurer){
       return getAdventurerStats(this.baseFighter, this.currentState)
     }else{
       return getMonsterStats(this.baseFighter, this.currentState)
@@ -55,7 +64,7 @@ export default class FighterInstance{
   }
 
   get mods(){
-    if(this.fighterType === 'adventurer'){
+    if(this.isAdventurer){
       return getAdventurerMods(this.baseFighter, this.currentState)
     }else{
       return getMonsterMods(this.baseFighter, this.currentState)

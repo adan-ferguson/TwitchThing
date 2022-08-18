@@ -1,3 +1,7 @@
 export default {
-  abilities: []
+  baseStats: {
+    hpMax: '+60%',
+    speed: '-30%'
+  },
+  description: 'Tough and slow'
 }
