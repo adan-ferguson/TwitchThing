@@ -1,6 +1,6 @@
 export default {
   stats: {
-    physDef: '+20%',
+    physDef: '+15%',
     magicDef: '+80%',
     hpMax: '+100%'
   },

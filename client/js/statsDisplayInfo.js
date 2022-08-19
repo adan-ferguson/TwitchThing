@@ -81,7 +81,7 @@ const statDefinitionsInfo = {
       if(style === StatsDisplayStyle.CUMULATIVE){
         return roundToFixed(1 + value, 2) + 'x'
       }
-      return value
+      return `+${Math.round(value * 100)}%`
     }
   },
   dodgeChance: {

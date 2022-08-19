@@ -1,7 +1,7 @@
 export default {
   stats: {
-    physDef: '+60%',
-    hpMax: '+60%',
+    physDef: '+50%',
+    hpMax: '+50%',
     speed: '-20%'
   },
   orbs: 8,

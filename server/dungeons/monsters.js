@@ -1,7 +1,7 @@
 import { generateRandomChest } from './chests.js'
 import { chooseOne } from '../../game/rando.js'
 import { all as Monsters } from '../../game/monsters/combined.js'
-import { getMonsterStats, levelToXpReward } from '../../game/monster.js'
+import { getMonsterMods, getMonsterStats, levelToXpReward } from '../../game/monster.js'
 
 const monstersByFloor = {
   // Caves
@@ -42,7 +42,7 @@ const monstersByFloor = {
 const BONUS_CHESTS_UNTIL = 10
 const BONUS_CHEST_CHANCE = 0.35
 
-const CHEST_DROP_CHANCE = 0.07
+const CHEST_DROP_CHANCE = 0.08
 const MONSTER_CHANCE = 0.4
 const MONSTER_ROOM_BUFFER = 2
 
@@ -79,15 +79,18 @@ export async function generateMonster(dungeonRun){
   function generateRewards(){
     const advStats = dungeonRun.adventurerInstance.stats
     const monsterStats = getMonsterStats(monsterDefinition)
+    const rewardBonus = monsterStats.get('rewards').value
     const rewards = {
-      xp: levelToXpReward(level) * advStats.get('combatXP').value * monsterStats.get('rewards').value
+      xp: levelToXpReward(level) * advStats.get('combatXP').value * rewardBonus
     }
     if(dungeonRun.user.accomplishments.firstRunFinished){
       // TODO: chest rarity
       const userChests = dungeonRun.user.accomplishments.chestsFound ?? 0
       const dropChance = userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE : CHEST_DROP_CHANCE
       if(Math.random() < dropChance * advStats.get('chestFind').value){
-        rewards.chests = generateRandomChest(dungeonRun)
+        rewards.chests = generateRandomChest(dungeonRun, {
+          tier: rewardBonus > 1 ? 1 : 0
+        })
       }
     }
     return rewards

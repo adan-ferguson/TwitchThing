@@ -25,9 +25,9 @@ export default class ItemRow extends HTMLElement{
     })
   }
 
-  setItem(itemInstance){
-    this._nameEl.textContent = itemInstance.displayName
-    this._orbRow.setData(itemInstance.orbs)
+  setItem(loadoutItem){
+    this._nameEl.textContent = loadoutItem.name
+    this._orbRow.setData(loadoutItem.orbs)
   }
 }
 

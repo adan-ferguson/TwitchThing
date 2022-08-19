@@ -9,6 +9,7 @@ export default class StatsList extends HTMLElement{
     iconsOnly: false,
     showTooltips: true,
     truncate: true,
+    maxItems: 999,
     forced: [],
     excluded: []
   }
@@ -67,6 +68,12 @@ export default class StatsList extends HTMLElement{
     )
 
     this.classList.toggle('no-icons', this.querySelector('img') ? false : true)
+
+    const rows = this.querySelectorAll('di-stat-row')
+    rows.forEach((el, i) => {
+      el.classList.toggle('max-items-hidden', i >= this._options.maxItems)
+    })
+    this.classList.toggle('show-ellipsis', rows.length > this._options.maxItems)
   }
 
   _updateStat(stat, owner = null){

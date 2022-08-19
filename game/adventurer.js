@@ -7,12 +7,12 @@ import Bonus from './bonus.js'
 import ItemInstance from './item.js'
 
 const LEVEL_2_XP = 100
-const XP_MULTIPLIER = 0.35
+const XP_MULTIPLIER = 0.4
 
 const HP_BASE = 50
-const HP_GROWTH_PCT = 0.12
+const HP_GROWTH_PCT = 0.15
 const POWER_BASE = 10
-const POWER_GROWTH_PCT = 0.1
+const POWER_GROWTH_PCT = 0.11
 
 export function xpToLevel(xp){
   return LevelCalculator.xpToLevel(LEVEL_2_XP, XP_MULTIPLIER, xp)

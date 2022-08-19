@@ -1,19 +1,19 @@
 const TIERS = [
   {
-    multiplier: 100,
-    message: advName => `${advName} learns some things from the relic.`
+    multiplier: 60,
+    message: advName => `${advName} solves the relic puzzle and learns a bit.`
   },{
-    multiplier: 200,
-    message: advName => `${advName} painstakingly translates the relic's rune and learns a lot.`
+    multiplier: 150,
+    message: advName => `${advName} solves the relic puzzle and learns a lot!`
   },{
-    multiplier: 500,
-    message: advName => `${advName} painstakingly translates the relic's rune and learns a lot.`
+    multiplier: 450,
+    message: advName => `${advName} gets a new high score and gains a ton of xp!`
   },{
-    multiplier: 2500,
-    message: advName => `${advName} figures out the message left from, I don't know, some ancient civilization or something.`
+    multiplier: 1800,
+    message: advName => `${advName} learns ancient secrets from, I don't know, some ancient civilization or something.`
   },{
-    multiplier: 25000,
-    message: advName => `The knowledge of the gods is imparted to ${advName} after they solve an impossible puzzle.`
+    multiplier: 10000,
+    message: advName => `WOW! ${advName} solved the impossible relic! They gain probably way too much xp and breaks the game!`
   }
 ]
 

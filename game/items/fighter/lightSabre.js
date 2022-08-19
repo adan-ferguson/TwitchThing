@@ -1,6 +1,6 @@
 export default {
   stats: {
-    physDef: '+20%',
+    physPower: '+20%',
     speed: '+20%'
   },
   displayName: 'Light Saber',

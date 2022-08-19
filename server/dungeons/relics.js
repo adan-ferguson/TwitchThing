@@ -10,37 +10,39 @@ const RELICS = {
   treasure: TreasureRelic
 }
 
-const RELIC_CHANCE = 0.25
+const RELIC_CHANCE = 0.20
 const VALUE_MULTIPLIER = 0.2
+const TRAP_CHANCE = 0.15
+const GIVE_UP_CHANCE = 0.15
 
 const TIERS = [
   {
     solveChance: 0.4
   },
   {
-    solveChance: 0.2,
+    solveChance: 0.24,
     findChance: 0.2
   },
   {
-    solveChance: 0.05,
+    solveChance: 0.08,
     findChance: 0.05
   },
   {
-    solveChance: 0.01,
+    solveChance: 0.016,
     findChance: 0.01
   },
   {
-    solveChance: 0.001,
+    solveChance: 0.002,
     findChance: 0.001
   }
 ]
 
 const MESSAGES = [
-  '%name% tries poking the relic but nothing happens.',
-  '%name% is still trying to decipher the meaning of the relic.',
-  '%name% tries singing to the relic.',
-  '%name% thinks they recognize some of the text on the relic.',
-  '%name% is getting nowhere and is getting frustrated.'
+  '%name% tries poking one of the engravings.',
+  '%name% kicks the relic.',
+  '%name% yells really loud, but nothing happens.',
+  '%name% thinks they recognize some of the symbols.',
+  '%name% is getting upset with the lack of progress.'
 ]
 
 export function foundRelic(dungeonRun){
@@ -69,8 +71,6 @@ export async function continueRelicEvent(dungeonRun, previousEvent){
   const relic = previousEvent.relic
   const attemptNo = previousEvent.attempts + 1
   const solveChance = TIERS[relic.tier].solveChance * dungeonRun.adventurerInstance.stats.get('relicSolveChance').value
-  const trapChance = 0.08
-  const giveUpChance = 0.08
   const advName = dungeonRun.adventurerInstance.name
 
   let newEvent
@@ -84,14 +84,14 @@ export async function continueRelicEvent(dungeonRun, previousEvent){
         ...RELICS[relic.type].resolve(dungeonRun, relic.tier, relicValue(dungeonRun))
       }
       newEvent.stayInRoom = false
-    }else if(Math.random() < trapChance){
+    }else if(Math.random() < TRAP_CHANCE){
       // TODO: actual traps
       newEvent = {
         stayInRoom: false,
         relicSolved: false,
         message: `${advName} messes up and the relic explodes.`
       }
-    }else if(Math.random() < giveUpChance){
+    }else if(Math.random() < GIVE_UP_CHANCE){
       newEvent = {
         stayInRoom: false,
         relicSolved: false,

@@ -75,7 +75,7 @@ export default class LoadoutRow extends HTMLElement{
     }
     this.classList.remove('blank-row')
     this.loadoutItem = loadoutItem
-    this._itemRowEl.setItem(loadoutItem.obj)
+    this._itemRowEl.setItem(loadoutItem)
     this._tippy.enable()
     this._tippy.setContent(this.tooltip)
   }

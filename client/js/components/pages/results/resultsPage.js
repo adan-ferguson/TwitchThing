@@ -15,7 +15,7 @@ const HTML = `
     <div class="content-well scrollable">
       <di-tabz>
         <di-tab data-tab-name="Results"></di-tab>
-        <di-tab data-tab-name="Monsters"></di-tab>
+        <di-tab data-tab-name="Monsters Killed"></di-tab>
         <di-tab data-tab-name="Relics"></di-tab>
       </di-tabz>
     </div>
@@ -169,10 +169,10 @@ export default class ResultsPage extends Page{
 
   _addMonsters(monsters){
     if(!monsters.length){
-      return this.querySelectorAll('[data-tab-name="Monsters"]')
+      return this.querySelectorAll('[data-tab-name="Monsters Killed"]')
         .forEach(el => el.classList.add('displaynone'))
     }
-    const target = this.querySelector('di-tab[data-tab-name="Monsters"]')
+    const target = this.querySelector('di-tab[data-tab-name="Monsters Killed"]')
     for(let i = 0; i < monsters.length; i++){
       const { name, amount } = monsters[i]
       this._addText(target, `${toDisplayName(name)} ${amount}`)

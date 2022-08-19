@@ -1,6 +1,6 @@
 export default {
   stats: {
-    regen: '1%'
+    regen: '0.7%'
   },
   rarity: 1
 }

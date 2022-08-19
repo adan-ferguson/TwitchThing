@@ -11,6 +11,10 @@ SocketClient.getSocket().on('user connect', id => {
 }).on('anonymous connect', () => {
   console.log('socket connected')
   startApp()
+}).on('connect', () => {
+  if(app){
+    app.reloadPage()
+  }
 })
 
 function startApp(){

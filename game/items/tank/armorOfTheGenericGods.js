@@ -1,8 +1,8 @@
 export default {
   stats: {
-    physDef: '+50%',
+    physDef: '+40%',
     magicDef: '+95%',
-    regen: '5%'
+    regen: '4%'
   },
   orbs: 10,
   description: 'This item helps me test overly long item names.'

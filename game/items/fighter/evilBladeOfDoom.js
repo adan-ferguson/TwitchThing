@@ -1,4 +1,5 @@
 export default {
+  displayName: 'Evil Blade of Doom',
   stats: {
     critDamage: '+200%',
     combatHarderChance: '+200%',

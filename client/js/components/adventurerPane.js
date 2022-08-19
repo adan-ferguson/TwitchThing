@@ -33,6 +33,9 @@ export default class AdventurerPane extends HTMLElement{
       orbsDisplayStyle: OrbsDisplayStyle.SHOW_MAX
     })
     this.statsList = this.querySelector('di-stats-list')
+      .setOptions({
+        maxItems: 10
+      })
 
     this.querySelector('.top-section').addEventListener('click', e => {
       if(this.adventurer){

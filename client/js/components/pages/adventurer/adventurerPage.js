@@ -8,6 +8,8 @@ import LevelupPage from '../levelup/levelupPage.js'
 import DungeonPage from '../dungeon/dungeonPage.js'
 import fizzetch from '../../../fizzetch.js'
 import AdventurerPreviousRunsPage from '../adventurerPreviousRuns/adventurerPreviousRunsPage.js'
+import tippyCallout from '../../effects/tippyCallout.js'
+import { showLoader } from '../../../loader.js'
 
 const HTML = `
 <div class="content-columns">
@@ -69,6 +71,7 @@ export default class AdventurerPage extends Page{
       return
     }else if(featureStatus === 1){
       btn.classList.add('glow')
+      tippyCallout(btn, 'Click here to edit your items')
     }
 
     btn.addEventListener('click', () => {
@@ -96,6 +99,7 @@ export default class AdventurerPage extends Page{
   }
 
   async _quickEnterDungeon(){
+    showLoader()
     const { dungeonRun } = await fizzetch(`/game/adventurer/${this.adventurerID}/enterdungeon`)
     this.redirectTo(new DungeonPage(dungeonRun._id))
   }

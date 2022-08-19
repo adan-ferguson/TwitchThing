@@ -22,8 +22,7 @@ export function generateRandomChest(dungeonRun, options = {}){
   }
 
   chest.contents.items = fillArray(() => {
-    const val = Math.ceil(chest.level * Math.pow(Math.random(), 1.8))
-    return generateRandomItemDef(val)
+    return generateRandomItemDef(chest.level)
   }, chest.tier + 1)
 
   return chest

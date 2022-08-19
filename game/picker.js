@@ -6,46 +6,28 @@ import { chooseOne } from './rando.js'
 export default class Picker{
 
   _options = {}
-  _byValue = {}
 
   constructor(registry, options = {}){
     this._registry = registry
     this._options = {
       valueFormula: pickable => 1,
-      weightFormula: pickable => 1,
+      lowerDeviation: 1,
+      higherDeviation: 1,
       ...options
     }
-    this._byValue = organizeByValue(registry, options.valueFormula)
   }
 
-  pick(value){
-    if(value < 1){
-      return null
-    }
-    if(!this._byValue[value]){
-      return this.pick(value - 1)
-    }
-    const choices = this._byValue[value].map(pickable => {
+  pick(average){
+    const choices = this._registry.map(pickable => {
+      const diff = this._options.valueFormula(pickable) - average
+      const weight = diff > 0 ?
+        Math.pow(this._options.higherDeviation, diff) :
+        Math.pow(this._options.lowerDeviation, -diff)
       return {
         value: pickable,
-        weight: this._options.weightFormula(pickable)
+        weight
       }
     })
     return chooseOne(choices)
   }
-}
-
-function organizeByValue(registry, formula){
-  const byValue = {}
-  for(let group in registry){
-    for(let name in registry[group]){
-      const pickable = registry[group][name]
-      const val = formula(pickable)
-      if(!byValue[val]){
-        byValue[val] = []
-      }
-      byValue[val].push(pickable)
-    }
-  }
-  return byValue
 }

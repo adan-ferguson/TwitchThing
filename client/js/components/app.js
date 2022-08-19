@@ -8,6 +8,7 @@ import DungeonPage from './pages/dungeon/dungeonPage.js'
 import { getSocket } from '../socketClient.js'
 import { showPopup } from './popup.js'
 import CombatPage from './pages/combat/combatPage.js'
+import ErrorPage from './pages/errorPage.js'
 
 const HTML = `
 <di-header></di-header>
@@ -46,6 +47,10 @@ export default class App extends HTMLElement{
 
   updateTitle(){
     this._pageTitle.textContent = this.currentPage.titleText
+  }
+
+  async reloadPage(){
+    this.setPage(this.currentPage)
   }
 
   async setPage(page, redirectToIndexOnError = false){
@@ -89,7 +94,7 @@ export default class App extends HTMLElement{
       if(targetPage){
         this.setPage(pageFromString(targetPage.name, targetPage.args))
       }else{
-        this.setPage(new MainPage({ error }))
+        this.setPage(new ErrorPage(error))
       }
     }
 

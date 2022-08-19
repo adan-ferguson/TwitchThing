@@ -1,7 +1,7 @@
 const CHESTS = [
   {
     displayName: 'Common',
-    color: '#000'
+    color: '#888'
   },
   {
     displayName: 'Rare',
