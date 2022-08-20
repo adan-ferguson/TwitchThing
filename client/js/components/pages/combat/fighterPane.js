@@ -12,8 +12,8 @@ import { OrbsDisplayStyle } from '../../orbRow.js'
 import { getAdventurerOrbsData } from '../../../../../game/adventurer.js'
 
 const HTML = `
+<div class="name"></div>
 <div class="flex-grow flex-rows top-section">
-  <div class="name"></div>
   <di-hp-bar></di-hp-bar>
   <di-action-bar></di-action-bar>
   <di-stats-list></di-stats-list>

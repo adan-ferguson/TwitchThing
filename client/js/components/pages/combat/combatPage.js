@@ -8,7 +8,7 @@ const HTML = `
 <div class='content-rows'>
   <div class='content-columns'>
     <di-combat-fighter-pane class="fighter1"></di-combat-fighter-pane>
-    <div class="mid-thing">VS</div>
+    <div class="mid-thing"><span>VS</span></div>
     <di-combat-fighter-pane class="fighter2"></di-combat-fighter-pane>
   </div>
   <div class="content-columns content-no-grow">

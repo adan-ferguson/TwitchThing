@@ -77,7 +77,7 @@ export default class DungeonPage extends Page{
   }
 
   get titleText(){
-    return 'Exploring' + this.dungeonRun ? '' : ' ' + floorToZoneName(this.dungeonRun.floor)
+    return 'Exploring' + (this.dungeonRun ? ' ' + floorToZoneName(this.dungeonRun.floor) : '')
   }
 
   get currentEvent(){

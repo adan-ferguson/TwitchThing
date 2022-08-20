@@ -7,6 +7,7 @@ const HTML = `
 <div class="user-info clickable">
     <span class="displayname"></span> <i class="fa-solid fa-caret-down"></i>
 </div>
+<div class="title-text"></div>
 `
 
 export default class Header extends HTMLElement{
@@ -39,6 +40,10 @@ export default class Header extends HTMLElement{
     })
 
     this.app.addEventListener('pagechange', () => this.backButton.classList.toggle('hidden', !this.app.showBackButton))
+  }
+
+  set titleText(val){
+    this.querySelector('.title-text').textContent = val
   }
 
   get app(){

@@ -46,7 +46,7 @@ export default class App extends HTMLElement{
   }
 
   updateTitle(){
-    this._pageTitle.textContent = this.currentPage.titleText
+    this.header.titleText = this.currentPage.titleText
   }
 
   async reloadPage(){
