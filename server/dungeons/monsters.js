@@ -1,7 +1,7 @@
 import { generateRandomChest } from './chests.js'
 import { chooseOne } from '../../game/rando.js'
 import { all as Monsters } from '../../game/monsters/combined.js'
-import { getMonsterMods, getMonsterStats, levelToXpReward } from '../../game/monster.js'
+import { getMonsterStats, levelToXpReward } from '../../game/monster.js'
 
 const monstersByFloor = {
   // Caves
@@ -40,7 +40,7 @@ const monstersByFloor = {
 }
 
 const BONUS_CHESTS_UNTIL = 10
-const BONUS_CHEST_CHANCE = 0.35
+const BONUS_CHEST_CHANCE = 0.45
 
 const CHEST_DROP_CHANCE = 0.08
 const MONSTER_CHANCE = 0.4

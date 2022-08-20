@@ -3,17 +3,21 @@ import { adventurerLoadoutContents } from '../../../adventurer.js'
 import { OrbsDisplayStyle } from '../../orbRow.js'
 import Modal from '../../modal.js'
 import AdventurerInfo from '../../adventurerInfo.js'
+import { getAdventurerOrbsData } from '../../../../../game/adventurer.js'
 
 const HTML = `
 <div class="flex-rows top-section flex-grow">
   <div class="name"></div>
   <di-hp-bar></di-hp-bar>
   <di-stats-list></di-stats-list>
+  <di-orb-row class="adventurer-orbs"></di-orb-row>
 </div>
 <di-loadout></di-loadout>
 `
 
 export default class AdventurerPane extends HTMLElement{
+
+  _orbRow
 
   constructor(){
     super()
@@ -21,8 +25,8 @@ export default class AdventurerPane extends HTMLElement{
     this.innerHTML = HTML
     this.hpBar = this.querySelector('di-hp-bar')
     this.loadout = this.querySelector('di-loadout')
-    this.loadout.setOptions({
-      orbsDisplayStyle: OrbsDisplayStyle.USED_ONLY
+    this._orbRow = this.querySelector('.adventurer-orbs').setOptions({
+      style: OrbsDisplayStyle.MAX_ONLY
     })
     this.statsbox = this.querySelector('.stats-box')
     this.statsList = this.querySelector('di-stats-list')
@@ -44,6 +48,7 @@ export default class AdventurerPane extends HTMLElement{
     this.adventurer = adventurer
     this.querySelector('.name').textContent = adventurer.name
     this.loadout.setContents(adventurerLoadoutContents(adventurer))
+    this._orbRow.setData(getAdventurerOrbsData(adventurer))
   }
 
   setState(state, animate = false){

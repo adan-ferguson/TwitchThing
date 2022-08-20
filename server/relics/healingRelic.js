@@ -7,7 +7,7 @@ export default {
     newState.hp += finalGain
     return {
       adventurerState: newState,
-      message: `${dungeonRun.adventurerInstance.name} finds a healing relic and regains ${finalGain} health.`
+      message: `The healing relic bathes ${dungeonRun.adventurerInstance.name} in a healing light, regaining ${finalGain} health.`
     }
   }
 }

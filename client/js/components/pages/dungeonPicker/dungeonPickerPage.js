@@ -68,7 +68,8 @@ export default class DungeonPickerPage extends Page{
 
     this.adventurer = adventurer
     this.floorSlider.setOptions({
-      max: adventurer.accomplishments.deepestFloor
+      max: adventurer.accomplishments.deepestFloor,
+      showTutorialTooltip: this.user.features.dungeonPicker === 1
     })
   }
 }

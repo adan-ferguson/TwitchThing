@@ -8,8 +8,8 @@ describe('Picker object', () => {
     ], {
       valueFormula: i => i,
       higherDeviation: 0.5,
-      lowerDeviation: 0.7
+      lowerDeviation: 0.85
     })
-    const x = p.pick(1)
+    const x = p.pick(9)
   })
 })

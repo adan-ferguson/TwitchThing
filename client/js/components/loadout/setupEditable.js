@@ -152,7 +152,6 @@ export default function(inventoryEl, loadoutEl, options = {}){
   }
 
   function changed(){
-    loadoutEl.updateOrbs()
     options.onChange()
   }
 }

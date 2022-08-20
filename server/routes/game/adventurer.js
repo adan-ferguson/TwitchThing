@@ -37,6 +37,10 @@ verifiedRouter.post('/enterdungeon', validateIdle, async(req, res) => {
     pace
   })
   res.send({ dungeonRun })
+  if(req.user.features.dungeonPicker === 1){
+    req.user.features.dungeonPicker = 2
+    Users.save(req.user)
+  }
 })
 
 verifiedRouter.post('/editloadout', validateIdle, async (req, res) => {

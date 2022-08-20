@@ -8,6 +8,8 @@ import AdventurerInfo from '../../adventurerInfo.js'
 import MonsterInfo from '../../monsterInfo.js'
 import CustomAnimation from '../../../customAnimation.js'
 import { all as Mods } from '../../../../../game/mods/combined.js'
+import { OrbsDisplayStyle } from '../../orbRow.js'
+import { getAdventurerOrbsData } from '../../../../../game/adventurer.js'
 
 const HTML = `
 <div class="flex-grow flex-rows top-section">
@@ -15,6 +17,7 @@ const HTML = `
   <di-hp-bar></di-hp-bar>
   <di-action-bar></di-action-bar>
   <di-stats-list></di-stats-list>
+  <di-orb-row class="adventurer-orbs"></di-orb-row>
 </div>   
 <di-loadout></di-loadout>    
 `
@@ -22,11 +25,15 @@ const HTML = `
 export default class FighterPane extends HTMLElement{
 
   fighter
+  _orbRow
 
   constructor(){
     super()
     this.classList.add('content-well', 'flex-rows')
     this.innerHTML = HTML
+    this._orbRow = this.querySelector('.adventurer-orbs').setOptions({
+      style: OrbsDisplayStyle.MAX_ONLY
+    })
     this.hpBar = this.querySelector('di-hp-bar')
     this.actionBar = this.querySelector('di-action-bar')
     this.loadout = this.querySelector('di-loadout')
@@ -58,6 +65,7 @@ export default class FighterPane extends HTMLElement{
     this.querySelector('.name').textContent = this.fighter.displayname || toDisplayName(this.fighter.name)
     if(this.isAdventurer){
       this.loadout.setContents(adventurerLoadoutContents(this.fighter))
+      this._orbRow.setData(getAdventurerOrbsData(this.fighter))
     }else{
       this.loadout.setContents(monsterLoadoutContents(this.fighter))
     }

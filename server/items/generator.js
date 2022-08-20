@@ -2,10 +2,10 @@ import BaseItems from '../../game/items/combined.js'
 import { v4 } from 'uuid'
 import Picker from '../../game/picker.js'
 
-const itemPicker = new Picker(BaseItems.all, {
+const itemPicker = new Picker(BaseItems, {
   valueFormula: baseItemDef => baseItemDef.orbs,
-  lowerDeviation: 0.7,
-  higherDeviation: 0.55
+  lowerDeviation: 0.9,
+  higherDeviation: 0.5
 })
 
 export function generateItemDef({ group, name }){

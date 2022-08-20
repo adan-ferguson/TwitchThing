@@ -10,6 +10,7 @@ const HTML = `
   <div class="name"></div>
   <di-xp-bar></di-xp-bar>
   <di-stats-list></di-stats-list>
+  <di-orb-row class="adventurer-orbs"></di-orb-row>
 </div>
 <di-loadout></di-loadout>
 `
@@ -18,6 +19,7 @@ export default class AdventurerPane extends HTMLElement{
 
   _hpBar
   _actionBar
+  orbRow
 
   _extraStats
 
@@ -28,10 +30,12 @@ export default class AdventurerPane extends HTMLElement{
     this._name = this.querySelector('div.name')
     this.xpBar = this.querySelector('di-xp-bar')
     this.xpBar.setLevelFunctions(xpToLevel, levelToXp)
+    this.orbRow = this.querySelector('di-orb-row')
+      .setOptions({
+        style: OrbsDisplayStyle.SHOW_MAX
+      })
+
     this.loadoutEl = this.querySelector('di-loadout')
-    this.loadoutEl.setOptions({
-      orbsDisplayStyle: OrbsDisplayStyle.SHOW_MAX
-    })
     this.statsList = this.querySelector('di-stats-list')
       .setOptions({
         maxItems: 10
@@ -59,7 +63,12 @@ export default class AdventurerPane extends HTMLElement{
 
   update(){
     this.updateStats()
+    this.updateOrbs()
     this.loadoutEl.update()
+  }
+
+  updateOrbs(){
+    this.orbRow.setData(this.loadoutEl.orbsData)
   }
 
   updateStats(){

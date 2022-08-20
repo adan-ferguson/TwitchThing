@@ -3,6 +3,7 @@ import AdventurerPage from '../adventurer/adventurerPage.js'
 import fizzetch from '../../../fizzetch.js'
 import setupEditable from '../../loadout/setupEditable.js'
 import { adventurerLoadoutItem } from '../../../adventurer.js'
+import { OrbsDisplayStyle } from '../../orbRow.js'
 
 const HTML = `
 <div class="content-columns">
@@ -60,6 +61,7 @@ export default class AdventurerLoadoutEditorPage extends Page{
     setupEditable(this.inventory, this.adventurerPane.loadoutEl, {
       onChange: () => {
         this.adventurerPane.updateStats()
+        this.adventurerPane.updateOrbs()
         this._updateSaveButton()
       }
     })
@@ -85,7 +87,7 @@ export default class AdventurerLoadoutEditorPage extends Page{
   }
 
   _updateSaveButton(){
-    if(this.adventurerPane.loadoutEl.isValid || this._saving){
+    if(this.adventurerPane.loadoutEl.orbsData.isValid || this._saving){
       this.saveButton.removeAttribute('disabled')
     }else{
       this.saveButton.setAttribute('disabled', 'disabled')

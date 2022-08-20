@@ -1,5 +1,6 @@
 import { mergeOptionsObjects } from '../../../../../game/utilFunctions.js'
 import ZONES from '../../../../../game/zones.js'
+import tippyCallout from '../../effects/tippyCallout.js'
 
 const HTML = `
 <div class='flex-rows slider-entries'></div>
@@ -28,7 +29,8 @@ ${NOTCH_SVG(notchType)}
 export default class FloorSlider extends HTMLElement{
 
   _options = {
-    max: 1
+    max: 1,
+    showTutorialTooltip: false
   }
 
   _entriesEl
@@ -79,6 +81,10 @@ export default class FloorSlider extends HTMLElement{
       this._entriesEl.appendChild(this._makeZone(i, max))
     }
     this._selectFloor(this._floorEls.at(-1))
+    if(this._options.showTutorialTooltip){
+      tippyCallout(this._entriesEl, 'You can choose your starting floor here')
+      this._options.showTutorialTooltip = false
+    }
   }
 
   _makeZone(zoneIndex, maxFloor){

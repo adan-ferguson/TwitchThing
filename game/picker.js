@@ -17,8 +17,21 @@ export default class Picker{
     }
   }
 
+  get list(){
+    if(Array.isArray(this._registry)){
+      return this._registry
+    }
+    const arr = []
+    Object.values(this._registry).forEach(
+      /** @param group {object} */
+      (group) => {
+        arr.push(...Object.values(group))
+      })
+    return arr
+  }
+
   pick(average){
-    const choices = this._registry.map(pickable => {
+    const choices = this.list.map(pickable => {
       const diff = this._options.valueFormula(pickable) - average
       const weight = diff > 0 ?
         Math.pow(this._options.higherDeviation, diff) :
