@@ -16,14 +16,14 @@ export default class StatRow extends HTMLElement{
   }
 
   _tippy
-  _statsDisplayInfo
+  statsDisplayInfo
 
   constructor(statsDisplayInfo, options = {}){
     super()
     this._tippy = tippy(this, {
       theme: 'light'
     })
-    this._statsDisplayInfo = statsDisplayInfo
+    this.statsDisplayInfo = statsDisplayInfo
     this.setOptions(options)
   }
 
@@ -37,7 +37,7 @@ export default class StatRow extends HTMLElement{
   }
 
   setStatsDisplayInfo(statsDisplayInfo){
-    this._statsDisplayInfo = statsDisplayInfo
+    this.statsDisplayInfo = statsDisplayInfo
     this._update()
   }
 
@@ -45,15 +45,15 @@ export default class StatRow extends HTMLElement{
 
     if(this._options.showTooltips){
       this._tippy.enable()
-      this._tippy.setContent(this._statsDisplayInfo.description)
+      this._tippy.setContent(this.statsDisplayInfo.description)
     }else{
       this._tippy.disable()
     }
 
-    this.innerHTML = (this._options.iconsOnly ? ICONS_ONLY_HTML : HTML)(this._statsDisplayInfo)
-    this.setAttribute('stat-key', this._statsDisplayInfo.stat.name)
-    this.setAttribute('diff', this._statsDisplayInfo.stat.diff)
-    this.style.order = this._statsDisplayInfo.order
+    this.innerHTML = (this._options.iconsOnly ? ICONS_ONLY_HTML : HTML)(this.statsDisplayInfo)
+    this.setAttribute('stat-key', this.statsDisplayInfo.stat.name)
+    this.setAttribute('diff', this.statsDisplayInfo.stat.diff)
+    this.style.order = this.statsDisplayInfo.order
   }
 }
 

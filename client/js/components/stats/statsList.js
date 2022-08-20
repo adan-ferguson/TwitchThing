@@ -1,6 +1,12 @@
 import StatRow from './statRow.js'
 import { getStatDisplayInfo, StatsDisplayStyle } from '../../statsDisplayInfo.js'
 import Stats from '../../../../game/stats/stats.js'
+import { wait } from '../../../../game/utilFunctions.js'
+import { flash } from '../../animationHelper.js'
+
+const STAT_INCREASE_COLOR = '#c0ffc0'
+const STAT_DECREASE_COLOR = '#fabcbc'
+const STAT_EFFECT_TIME = 500
 
 export default class StatsList extends HTMLElement{
 
@@ -35,13 +41,14 @@ export default class StatsList extends HTMLElement{
     return this
   }
 
-  setStats(stats, owner = null){
+  setStats(stats, owner = null, showStatChangeEffect = false){
+    // TODO: options
     this._stats = stats
     this._owner = owner
-    this._update()
+    this._update(showStatChangeEffect)
   }
 
-  _update(){
+  async _update(showStatChangeEffect = false){
 
     this.classList.toggle('icons-only', this._options.iconsOnly)
 
@@ -56,16 +63,11 @@ export default class StatsList extends HTMLElement{
       if(this._options.excluded.indexOf(key) > -1){
         continue
       }
-      this._updateStat(statsToShow[key], this._owner)
+      this._updateStat(statsToShow[key], this._owner, showStatChangeEffect)
       delete unusedStats[key]
     }
 
-    Object.values(unusedStats).forEach(
-      /** @param row {Node} */
-      (row) => {
-        this.removeChild(row)
-      }
-    )
+    await this._removeUnused(Object.values(unusedStats), showStatChangeEffect)
 
     this.classList.toggle('no-icons', this.querySelector('img') ? false : true)
 
@@ -76,7 +78,7 @@ export default class StatsList extends HTMLElement{
     this.classList.toggle('show-ellipsis', rows.length > this._options.maxItems)
   }
 
-  _updateStat(stat, owner = null){
+  _updateStat(stat, owner = null, showStatChangeEffect = false){
     const statDisplayInfo = getStatDisplayInfo(stat, {
       owner,
       style: this._options.statsDisplayStyle
@@ -91,8 +93,28 @@ export default class StatsList extends HTMLElement{
         iconsOnly: this._options.iconsOnly
       }))
     }else{
+      const diff = statDisplayInfo.stat.value - row.statsDisplayInfo.stat.value
+      if(!diff){
+        return
+      }
+      if(showStatChangeEffect){
+        const flip = statDisplayInfo.stat.inverted ? -1 : 1
+        const color = flip * diff > 0 ? STAT_INCREASE_COLOR : STAT_DECREASE_COLOR
+        flash(row, color, STAT_EFFECT_TIME)
+      }
       row.setStatsDisplayInfo(statDisplayInfo)
     }
+  }
+
+  async _removeUnused(rows, showStatChangeEffect = false){
+    if(!rows.length){
+      return
+    }
+    if(showStatChangeEffect){
+      rows.forEach(r => flash(r, STAT_DECREASE_COLOR, STAT_EFFECT_TIME))
+      await wait(STAT_EFFECT_TIME)
+    }
+    rows.forEach(r => r.remove())
   }
 }
 

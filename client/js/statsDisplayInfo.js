@@ -19,12 +19,12 @@ const statDefinitionsInfo = {
     icon: healthIcon,
     displayedValueFn: (value, { style, owner }) => {
       if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
-        return Math.ceil(value * owner.baseHp)
+        return Math.round(value * owner.baseHp)
       }
     },
     descriptionFn: (value, { style, owner }) => {
       if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
-        return `Max Health (${owner.baseHp} + ${Math.ceil(value * 100 - 100)}%)`
+        return `Max Health (${owner.baseHp} + ${Math.round(value * 100 - 100)}%)`
       }
       return 'Max Health'
     },
@@ -112,16 +112,16 @@ const statDefinitionsInfo = {
   regen: {
     text: 'Health Regeneration',
     displayedValueFn: (value, { style, owner }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
-        return `${roundToFixed(value * owner.baseHp, 1)}`
+      if(style === StatsDisplayStyle.CUMULATIVE && owner?.hpMax){
+        return `${roundToFixed(value * owner.hpMax, 1)}`
       }
       return `${roundToFixed(value * 100, 1)}%`
     },
     descriptionFn: (value, { style, owner }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
-        return `Recover ${roundToFixed(value * owner.baseHp, 1)} health every 5 seconds, both in and out of combat (scales with level).`
+      if(style === StatsDisplayStyle.CUMULATIVE && owner?.hpMax){
+        return `Recover ${roundToFixed(value * owner.hpMax, 1)} health every 5 seconds, both in and out of combat (scales with level).`
       }
-      return `Recover (${roundToFixed(value * 100, 1)}% x Base Health) health every 5 seconds, both in and out of combat.`
+      return `Recover (${roundToFixed(value * 100, 1)}% x max health) health every 5 seconds, both in and out of combat.`
     },
   },
   chestFind: {

@@ -79,6 +79,22 @@ verifiedRouter.post('', async(req, res, next) => {
   res.send({ adventurer: req.adventurer })
 })
 
+verifiedRouter.post('/dismiss', async(req, res, next) => {
+  const index = req.user.adventurers.findIndex(advID => advID.equals(req.adventurer._id))
+  if(index === -1){
+    throw 'Adventurer can not be dismissed, not in user\'s adventurer list'
+  }
+  req.user.adventurers.splice(index, 1)
+  req.adventurer.items.forEach(i => {
+    if(!i){
+      return
+    }
+    req.user.inventory.items[i.id] = i
+  })
+  await Users.save(req.user)
+  res.status(200).send({ success: 1 })
+})
+
 verifiedRouter.post('/status', async(req, res, next) => {
   res.send({ status: req.adventurer.dungeonRunID ? 'dungeon' : 'idle' })
 })

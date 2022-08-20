@@ -38,7 +38,8 @@ export default class AdventurerPane extends HTMLElement{
     this.loadoutEl = this.querySelector('di-loadout')
     this.statsList = this.querySelector('di-stats-list')
       .setOptions({
-        maxItems: 10
+        maxItems: 10,
+        forced: ['hpMax', 'speed', 'physPower']
       })
 
     this.querySelector('.top-section').addEventListener('click', e => {
@@ -61,8 +62,8 @@ export default class AdventurerPane extends HTMLElement{
     this.update()
   }
 
-  update(){
-    this.updateStats()
+  update(showStatChangeEffect = false){
+    this.updateStats(showStatChangeEffect)
     this.updateOrbs()
     this.loadoutEl.update()
   }
@@ -71,10 +72,10 @@ export default class AdventurerPane extends HTMLElement{
     this.orbRow.setData(this.loadoutEl.orbsData)
   }
 
-  updateStats(){
+  updateStats(showStatChangeEffect){
     const items = this.loadoutEl.loadoutItems.map(loadoutItem => loadoutItem?.obj)
     const adventurerInstance = new AdventurerInstance({ ...this.adventurer, items }, this._extraStats)
-    this.statsList.setStats(adventurerInstance.stats, adventurerInstance)
+    this.statsList.setStats(adventurerInstance.stats, adventurerInstance, showStatChangeEffect)
   }
 
   async addXp(toAdd, options = { }){
@@ -82,7 +83,7 @@ export default class AdventurerPane extends HTMLElement{
       ...options,
       onLevelup: level => {
         this.adventurer.level = level
-        this.update()
+        this.update(true)
         options.onLevelup?.(level)
       }
     })

@@ -9,6 +9,7 @@ import { getSocket } from '../socketClient.js'
 import { showPopup } from './popup.js'
 import CombatPage from './pages/combat/combatPage.js'
 import ErrorPage from './pages/errorPage.js'
+import { fadeIn, fadeOut } from '../animationHelper.js'
 
 const HTML = `
 <di-header></di-header>
@@ -72,8 +73,8 @@ export default class App extends HTMLElement{
       if(preventUnload){
         return
       }
+      await fadeOut(previousPage, 100)
       previousPage.unloaded = true
-      previousPage.classList.add('fade-out')
       previousPage.remove()
     }
 
@@ -104,7 +105,7 @@ export default class App extends HTMLElement{
     }
 
     this.querySelector(':scope > .content').appendChild(page)
-    page.classList.add('fade-in')
+    fadeIn(page)
     this.dispatchEvent(new Event('pagechange'))
     this.updateTitle()
     Loader.hideLoader()

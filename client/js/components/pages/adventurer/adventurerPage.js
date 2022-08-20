@@ -10,6 +10,8 @@ import fizzetch from '../../../fizzetch.js'
 import AdventurerPreviousRunsPage from '../adventurerPreviousRuns/adventurerPreviousRunsPage.js'
 import tippyCallout from '../../effects/tippyCallout.js'
 import { showLoader } from '../../../loader.js'
+import SimpleModal from '../../simpleModal.js'
+import MainPage from '../main/mainPage.js'
 
 const HTML = `
 <div class="content-columns">
@@ -20,6 +22,7 @@ const HTML = `
   <div class="content-rows dungeons">
       <div class="top-right content-well center-contents clickable"></div>
       <div class="previous-runs content-well center-contents clickable">View Previous Runs</div>
+      <button class="clickable dismiss content-no-grow">Dismiss Adventurer</button>
   </div>
 </div>
 `
@@ -27,6 +30,7 @@ const HTML = `
 export default class AdventurerPage extends Page{
 
   _topRightButton
+  _prevRuns
 
   constructor(adventurerID){
     super()
@@ -34,10 +38,29 @@ export default class AdventurerPage extends Page{
     this.adventurerID = adventurerID
     this.adventurerPane = this.querySelector('di-adventurer-pane')
     this._topRightButton = this.querySelector('.top-right')
+    this._prevRuns = this.querySelector('.previous-runs')
+    this._prevRuns.addEventListener('click', () => {
+      this.redirectTo(new AdventurerPreviousRunsPage(this.adventurerID))
+    })
+    this.querySelector('.dismiss').addEventListener('click', () => {
+      new SimpleModal(`Are you sure you want to dismiss ${this.adventurer.name}? Just to clarify I mean DELETE!\n\nEquipped items will be returned to your inventory.`, [{
+        text: 'DELETE',
+        style: 'scary',
+        fn: () => {
+          showLoader()
+          fizzetch(`/game/adventurer/${this.adventurerID}/dismiss`)
+            .then(() => {
+              this.redirectTo(new MainPage())
+            })
+        }
+      },{
+        text: 'Do not delete'
+      }]).show()
+    })
   }
 
   get titleText(){
-    return this.adventurer.name
+    return this.adventurer?.name
   }
 
   async load(previousPage){
@@ -52,14 +75,7 @@ export default class AdventurerPage extends Page{
     this._setupEditEquipmentButton()
     this._setupTopRightButton()
 
-    const prev = this.querySelector('.previous-runs')
-    if(adventurer.accomplishments.deepestFloor <= 1){
-      prev.remove()
-    }else{
-      prev.addEventListener('click', () => {
-        this.redirectTo(new AdventurerPreviousRunsPage(this.adventurerID))
-      })
-    }
+    this._prevRuns.classList.toggle('displaynone', adventurer.accomplishments.deepestFloor <= 1)
   }
 
   _setupEditEquipmentButton(){

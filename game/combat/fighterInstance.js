@@ -97,7 +97,7 @@ export default class FighterInstance{
   }
 
   get hpMax(){
-    return Math.ceil(this.baseHp * this.stats.get('hpMax').value)
+    return Math.round(this.baseHp * this.stats.get('hpMax').value)
   }
 
   advanceTime(ms){
@@ -169,7 +169,7 @@ export default class FighterInstance{
   _regen(){
     const regen = this.stats.get('regen').value
     if(regen){
-      return this._gainHealth(randomRound(this.baseHp * regen))
+      return this._gainHealth(randomRound(this.hpMax * regen))
     }
   }
 

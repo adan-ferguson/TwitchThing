@@ -43,7 +43,7 @@ const BONUS_CHESTS_UNTIL = 10
 const BONUS_CHEST_CHANCE = 0.45
 
 const CHEST_DROP_CHANCE = 0.08
-const MONSTER_CHANCE = 0.4
+const MONSTER_CHANCE = 0.45
 const MONSTER_ROOM_BUFFER = 2
 
 // Monsters of level [currentFloor - FLOOR_RANGE] to [currentFloor] will spawn (both inclusive).

@@ -83,6 +83,7 @@ export default class LoadoutRow extends HTMLElement{
   _setupBlank(){
     this.classList.add('blank-row')
     this.loadoutItem = null
+    this._itemRowEl.setItem(null)
     this._tippy.disable()
   }
 }

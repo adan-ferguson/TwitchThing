@@ -53,7 +53,7 @@ export default class AdventurerInstance{
     const turns = time / 5000
     const regen = this.stats.get('regen').value
     if(regen){
-      const amount = randomRound(turns * this.baseHp * regen)
+      const amount = randomRound(turns * this.hpMax * regen)
       this.adventurerState.hp = Math.min(this.hpMax, this.hp + amount)
     }
   }

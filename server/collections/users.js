@@ -82,6 +82,7 @@ Users.newAdventurer = async function(userDoc, adventurername, startingClass){
     throw { message: 'No slots available.', code: 403 }
   }
   // TODO: flexible starting bonuses
+  // TODO: prevent duplicates?
   const adventurerDoc = await Adventurers.createNew(userDoc._id, adventurername, startingClass)
   userDoc.adventurers.push(adventurerDoc._id)
   await Users.save(userDoc)

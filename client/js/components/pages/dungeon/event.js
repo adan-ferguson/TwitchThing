@@ -39,11 +39,14 @@ export default class Event extends HTMLElement{
 
   async update(dungeonEvent, animate = true){
 
+    const roomStr = `${dungeonEvent.floor},${dungeonEvent.room}`
     if(this._hasUpdated && animate){
-      await fadeOut(this._contents)
-      fadeIn(this._contents)
+      const toFade = roomStr === this._prevRoom ? this._contents : this
+      await fadeOut(toFade)
+      fadeIn(toFade)
     }
 
+    this._prevRoom = roomStr
     this._hasUpdated = true
     this._setImage(dungeonEvent)
     this._description.textContent = getDescription(dungeonEvent)

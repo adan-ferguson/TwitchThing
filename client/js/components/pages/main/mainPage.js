@@ -6,6 +6,7 @@ import DIForm from '../../form.js'
 import FormModal from '../../formModal.js'
 import { getSocket } from '../../../socketClient.js'
 import '../../list.js'
+import { wrap } from '../../../../../game/utilFunctions.js'
 
 const HTML = `
 <div class="content-rows">
@@ -29,7 +30,7 @@ export default class MainPage extends Page{
     this._error = this.querySelector('.error-message')
     this.querySelector('.adventurer-list')
       .setOptions({
-        pageSize: 8
+        pageSize: 6
       })
     if(error){
       this._showError(error)
@@ -70,12 +71,18 @@ export default class MainPage extends Page{
       rows.push(row)
     })
 
-    for(let i = adventurers.length; i < slots; i++){
-      const newAdventurerRow = new AdventurerRow()
-      rows.push(newAdventurerRow)
-      newAdventurerRow.addEventListener('click', e => {
-        this._showNewAdventurerModal()
-      })
+    for(let i = adventurers.length; i < 3; i++){
+      if(slots > i){
+        const newAdventurerRow = new AdventurerRow()
+        rows.push(newAdventurerRow)
+        newAdventurerRow.addEventListener('click', e => {
+          this._showNewAdventurerModal()
+        })
+      }else{
+        rows.push(wrap(`Reach floor ${1 + i * 10} to unlock.`, {
+          class: 'blank-row'
+        }))
+      }
     }
 
     adventurerList.setRows(rows)
