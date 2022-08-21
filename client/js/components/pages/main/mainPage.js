@@ -15,7 +15,12 @@ const HTML = `
     <div class="content-well fill-contents">
       <di-list class="adventurer-list"></di-list>
     </div>
-    <div class="other-stuff content-well">Other stuff goes over here</div>
+    <div class="content-rows">
+      <div class="content-well">
+        <di-live-dungeon-map></di-live-dungeon-map>
+      </div>
+      <button class="flex-no-grow">Discord</button>
+    </div>
   </div>
 </div>
 `
@@ -54,10 +59,12 @@ export default class MainPage extends Page{
     }
     history.replaceState(null, null, ' ')
     getSocket().on('user dungeon run update', this._dungeonRunUpdate)
+    this.querySelector('di-live-dungeon-map').load()
   }
 
   async unload(){
     getSocket().off('user dungeon run update', this._dungeonRunUpdate)
+    this.querySelector('di-live-dungeon-map').unload()
   }
 
   _populateAdventurers(adventurers, slots){
@@ -65,6 +72,7 @@ export default class MainPage extends Page{
     const rows = []
     adventurers.forEach(adventurer => {
       const row = new AdventurerRow(adventurer)
+      row.classList.add('clickable')
       row.addEventListener('click', e => {
         this.redirectTo(row.targetPage)
       })

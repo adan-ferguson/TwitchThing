@@ -20,9 +20,11 @@ const HTML = `
     <button class="edit content-no-grow">Edit Equipment</button>
   </div>
   <div class="content-rows dungeons">
-      <div class="top-right content-well center-contents clickable"></div>
-      <div class="previous-runs content-well center-contents clickable">View Previous Runs</div>
-      <button class="clickable dismiss content-no-grow">Dismiss Adventurer</button>
+    <div class="top-right content-well center-contents clickable"></div>
+    <div class="previous-runs content-well center-contents clickable">View Previous Runs</div>
+    <div class="content-no-grow scary-buttons">
+      <button class="clickable dismiss">Dismiss Adventurer</button>
+    </div>
   </div>
 </div>
 `

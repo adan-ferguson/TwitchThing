@@ -73,7 +73,7 @@ export default class App extends HTMLElement{
       if(preventUnload){
         return
       }
-      await fadeOut(previousPage, 100)
+      // await fadeOut(previousPage, 100)
       previousPage.unloaded = true
       previousPage.remove()
     }
@@ -118,7 +118,7 @@ export default class App extends HTMLElement{
         return
       }
     }
-    this.setPage(this.currentPage.backPage())
+    this.setPage(this.currentPage.backPage() || new MainPage())
   }
 
   setBackground(color, texture){

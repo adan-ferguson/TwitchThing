@@ -1,5 +1,5 @@
 import express from 'express'
-import { getRunData } from '../dungeons/dungeonRunner.js'
+import { getAllActiveRuns, getRunData } from '../dungeons/dungeonRunner.js'
 import db from '../db.js'
 import Combats from '../collections/combats.js'
 
@@ -45,6 +45,13 @@ router.post('/combat/:combatID', async(req, res) => {
   const currentTime = Date.now()
   const state = combat.startTime + combat.duration < currentTime ? { status: 'finished', currentTime: combat.endTime } : { status: 'live', currentTime }
   res.send({ combat, state })
+})
+
+router.post('/livedungeonmap', async(req, res) => {
+  const activeRuns = getAllActiveRuns(true)
+  res.send({
+    activeRuns
+  })
 })
 
 export default router

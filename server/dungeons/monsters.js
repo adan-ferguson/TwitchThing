@@ -18,12 +18,12 @@ const monstersByFloor = {
   // Crypt
   11: Monsters.skeleton,
   12: Monsters.zombie,
-  14: Monsters.shade,
-  16: Monsters.banshee,
+  13: Monsters.shade,
+  14: Monsters.banshee,
   15: Monsters.necromancer,
-  18: Monsters.vampire,
-  13: Monsters.deathKnight,
-  17: Monsters.lich,
+  16: Monsters.vampire,
+  17: Monsters.deathKnight,
+  18: Monsters.lich,
   19: Monsters.abomination,
   20: Monsters.boneDragon,
   // Swamp

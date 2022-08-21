@@ -93,12 +93,9 @@ export default class StatsList extends HTMLElement{
         iconsOnly: this._options.iconsOnly
       }))
     }else{
-      const diff = statDisplayInfo.stat.value - row.statsDisplayInfo.stat.value
-      if(!diff){
-        return
-      }
-      if(showStatChangeEffect){
-        const flip = statDisplayInfo.stat.inverted ? -1 : 1
+      const diff = parseFloat(statDisplayInfo.displayedValue) - parseFloat(row.statsDisplayInfo.displayedValue)
+      if(showStatChangeEffect && diff){
+        const flip = (statDisplayInfo.displayInverted || statDisplayInfo.stat.inverted) ? -1 : 1
         const color = flip * diff > 0 ? STAT_INCREASE_COLOR : STAT_DECREASE_COLOR
         flash(row, color, STAT_EFFECT_TIME)
       }

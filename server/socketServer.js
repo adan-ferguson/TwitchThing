@@ -42,6 +42,10 @@ export function setup(server, sessionMiddleware){
   })
 }
 
+export function broadcast(eventName, data = {}){
+  io.emit(eventName, data)
+}
+
 export function emit(roomname, eventName, data = {}){
   io.to(roomname.toString()).emit(eventName, data)
 }

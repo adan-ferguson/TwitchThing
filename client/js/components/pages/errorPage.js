@@ -5,7 +5,7 @@ const HTML = errorMessage => `
 <div>
   <p>An error occurred, oh no.</p>
   <p>Details:</p>
-  <textarea readonly="readonly">${errorMessage}</textarea>
+  <textarea readonly="readonly">${JSON.stringify(errorMessage)}</textarea>
 </div>
 `
 

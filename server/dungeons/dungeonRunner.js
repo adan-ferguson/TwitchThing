@@ -2,7 +2,7 @@ import DungeonRuns from '../collections/dungeonRuns.js'
 import Adventurers from '../collections/adventurers.js'
 import { addRewards } from './results.js'
 import { generateEvent } from './dungeonEventPlanner.js'
-import { emit } from '../socketServer.js'
+import { broadcast, emit } from '../socketServer.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 import Users from '../collections/users.js'
 import log from 'fancy-log'
@@ -55,10 +55,6 @@ export async function start(){
 }
 
 async function advance(){
-  const numRuns = Object.keys(activeRuns).length
-  if(numRuns){
-    console.log('advancing, number of runs:', numRuns)
-  }
   lastAdvancement = new Date()
   for(const id in activeRuns){
     const run = activeRuns[id]
@@ -126,6 +122,10 @@ export async function getRunDataMulti(dungeonRunIDs){
     runs.push(await getRunData(dungeonRunIDs[i]))
   }
   return runs
+}
+
+export function getAllActiveRuns(truncated = false){
+  return Object.values(activeRuns).map(activeRun => truncated ? activeRun.truncatedDoc : activeRun)
 }
 
 export function getActiveRunData(dungeonRunID){
@@ -201,6 +201,16 @@ class DungeonRunInstance extends EventEmitter{
     return this.doc.dungeonOptions.pace ?? 'Brisk'
   }
 
+  get truncatedDoc(){
+    const truncatedDoc = {
+      ...this.doc,
+      currentEvent: this.currentEvent,
+      virtualTime: this.virtualTime
+    }
+    delete truncatedDoc.events
+    return truncatedDoc
+  }
+
   async advance(nextEvent){
 
     if(this._time + ADVANCEMENT_INTERVAL < this.nextEventTime){
@@ -223,16 +233,7 @@ class DungeonRunInstance extends EventEmitter{
     }
 
     this._resolveEvent(this.currentEvent)
-
-    const truncatedDoc = {
-      ...this.doc,
-      currentEvent: this.currentEvent,
-      virtualTime: this.virtualTime
-    }
-
-    delete truncatedDoc.events
-    emit(this.adventurer.userID, 'user dungeon run update', truncatedDoc)
-    emit(this.doc._id, 'dungeon run update', truncatedDoc)
+    this._emitSocketEvents()
     DungeonRuns.save(this.doc)
   }
 
@@ -299,6 +300,13 @@ class DungeonRunInstance extends EventEmitter{
       return adv.adventurerState
     }
     return state
+  }
+
+  _emitSocketEvents(){
+    const truncatedDoc = this.truncatedDoc
+    emit(this.adventurer.userID, 'user dungeon run update', truncatedDoc)
+    emit(this.doc._id, 'dungeon run update', truncatedDoc)
+    broadcast('live dungeon map update', truncatedDoc)
   }
 }
 

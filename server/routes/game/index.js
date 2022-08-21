@@ -5,7 +5,7 @@ import adventurerRouter from './adventurer.js'
 import dungeonRunRouter from './dungeonrun.js'
 
 import Adventurers from '../../collections/adventurers.js'
-import { getActiveRunData, getRunData } from '../../dungeons/dungeonRunner.js'
+import { getRunData } from '../../dungeons/dungeonRunner.js'
 import { validateParam } from '../../validations.js'
 
 const router = express.Router()

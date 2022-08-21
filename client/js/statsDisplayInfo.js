@@ -61,6 +61,7 @@ const statDefinitionsInfo = {
   },
   speed: {
     text: 'Speed',
+    displayInverted: true,
     icon: actionIcon,
     displayedValueFn: (value, { style }) => {
       if(style === StatsDisplayStyle.CUMULATIVE){
@@ -81,7 +82,7 @@ const statDefinitionsInfo = {
       if(style === StatsDisplayStyle.CUMULATIVE){
         return roundToFixed(1 + value, 2) + 'x'
       }
-      return `+${Math.round(value * 100)}%`
+      return `+${Math.round((value - 1) * 100)}%`
     }
   },
   dodgeChance: {

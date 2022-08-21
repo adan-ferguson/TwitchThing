@@ -59,7 +59,7 @@ export default class DungeonPage extends Page{
     })
 
     this.querySelector('.permalink').addEventListener('click', e => {
-      const txt = `${window.location.origin}/watch/dungeonrun/${this.combatID}`
+      const txt = `${window.location.origin}/watch/dungeonrun/${this._dungeonRunID}`
       navigator?.clipboard?.writeText(txt)
       console.log('Copied', txt, navigator?.clipboard ? true : false)
       tippy(e.currentTarget, {
@@ -70,6 +70,14 @@ export default class DungeonPage extends Page{
         }
       })
     })
+  }
+
+  get backPage(){
+    return () => {
+      if(this.isReplay){
+        return new ResultsPage(this._dungeonRunID)
+      }
+    }
   }
 
   get watching(){
@@ -177,15 +185,15 @@ export default class DungeonPage extends Page{
 
   _setupTimeline(dungeonRun, previousPage){
     this._timeline = new Timeline(dungeonRun.events)
-    if(previousPage instanceof CombatPage){
+    if(!this.isReplay){
+      this._timeline.time = dungeonRun.virtualTime
+    }else if(previousPage instanceof CombatPage){
       const combatIndex = this._timeline.entries.findIndex(entry => entry.combatID === previousPage.combatID)
       const combatEntry = this._timeline.entries[combatIndex]
       if(!combatEntry){
         debugger
       }
       this._timeline.time = combatEntry.time + combatEntry.duration
-    }else if(!this.isReplay){
-      this._timeline.time = dungeonRun.virtualTime
     }
     this._timelineEl.setup(this._timeline, this.adventurer, {
       isReplay: this.isReplay

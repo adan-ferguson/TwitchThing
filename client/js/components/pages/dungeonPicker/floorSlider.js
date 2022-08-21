@@ -9,7 +9,7 @@ const HTML = `
 const ZONE_HTML = name => `
 <div class='flex-columns'>
     <div class='flex-rows slider-floors'></div>
-    <div class='zone-name'>${name}</div>  
+    <div class='zone-name absolute-center-both'>${name}</div>  
 </div>
 `
 

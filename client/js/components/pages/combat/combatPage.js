@@ -3,6 +3,7 @@ import Page from '../page.js'
 import { mergeOptionsObjects, toArray, toDisplayName } from '../../../../../game/utilFunctions.js'
 import Zones, { floorToZone } from '../../../../../game/zones.js'
 import tippy from 'tippy.js'
+import MainPage from '../main/mainPage.js'
 
 const HTML = `
 <div class='content-rows'>
@@ -44,7 +45,7 @@ export default class CombatPage extends Page{
     this._timeControlsEl.addEventListener('jumped', e => this._jump())
 
     this.querySelector('.permalink').addEventListener('click', e => {
-      const txt = `${window.location.origin}/watch/combat/${this.combatID}`
+      const txt = `${window.location.origin}/watch/combat/${combatID}`
       navigator?.clipboard?.writeText(txt)
       console.log('Copied', txt, navigator?.clipboard ? true : false)
       tippy(e.currentTarget, {
@@ -59,16 +60,20 @@ export default class CombatPage extends Page{
     this.combatID = combatID
   }
 
+  get backPage(){
+    return () => {
+      if(this._options.isReplay){
+        return this._options.returnPage
+      }
+    }
+  }
+
   get titleText(){
     return 'Fight!'
   }
 
   async load(previousPage){
     const { combat, state } = await this.fetchData(`/watch/combat/${this.combatID}`)
-
-    if(state.status !== 'finished' && this.app.watchView){
-      throw 'Not possible to watch live combats.'
-    }
 
     // If it's live but the combat's already done, just get outta here
     if(state.status === 'finished' && !this._options.isReplay && this._options.returnPage){
@@ -163,9 +168,10 @@ export default class CombatPage extends Page{
     }
 
     if(this._options.returnPage){
+      const afterBuffer = Math.max(1000, 5000 - (this.combat.duration % 5000))
       setTimeout(() => {
         this.redirectTo(this._options.returnPage)
-      }, this._options.isReplay ? 1000 : 4000)
+      }, this._options.isReplay ? 1000 : afterBuffer)
     }
   }
 

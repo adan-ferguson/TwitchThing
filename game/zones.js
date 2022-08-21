@@ -8,7 +8,7 @@ const Zones = [{
   texture: 'crypt.png',
 },{
   name: 'Swamp',
-  color: '#f1f5e8',
+  color: '#f5ffdf',
   texture: 'swamp.png',
 },{
   name: 'Something Else',
