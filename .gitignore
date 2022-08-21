@@ -6,6 +6,8 @@ config.js
 
 client_dist
 
+logs
+
 ngrok.*
 
 game/**/combined.js

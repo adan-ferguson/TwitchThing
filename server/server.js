@@ -2,8 +2,6 @@ import express from 'express'
 import session from 'express-session'
 import passport from 'passport'
 
-import log from 'fancy-log'
-
 import gameRouter from './routes/game/index.js'
 import userRouter from './routes/user.js'
 import adminRouter from './routes/admin.js'
@@ -61,12 +59,12 @@ async function init(){
 
   try {
     const server = app.listen(config.port, () => {
-      log('Server running', config.port)
+      console.log('Server running', config.port)
     })
     setupSocketServer(server, sessionMiddlware)
   }catch(ex){
-    log(ex)
-    log('Server failed to load.')
+    console.log(ex)
+    console.log('Server failed to load.')
   }
 }
 

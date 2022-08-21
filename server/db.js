@@ -1,6 +1,5 @@
 import MongoDB from 'mongodb'
 import config from './config.js'
-import log from 'fancy-log'
 
 let connection
 let client
@@ -12,9 +11,9 @@ const init = async () => {
       useUnifiedTopology: true
     })
     connection = client.db(config.db.name)
-    log('Connected to DB')
+    console.log('Connected to DB')
   }catch(e){
-    log('Failed to connect to DB, did you run "npm run startdb"?')
+    console.log('Failed to connect to DB, did you run "npm run startdb"?')
   }
 }
 

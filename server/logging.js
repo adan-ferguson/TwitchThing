@@ -1,22 +1,25 @@
 import fs from 'fs'
 import { Console } from 'console'
+import log from 'fancy-log'
 
 export function initLogging(){
 
+  const RESTART_MARKER = '------------------------------------------------'
   const logger = new Console({
-    stderr: fs.createWriteStream('output.log'),
-    stdout: fs.createWriteStream('error.log')
+    stderr: fs.createWriteStream('logs/error.log', { flags: 'a' }),
+    stdout: fs.createWriteStream('logs/output.log', { flags: 'a' })
   })
 
-  const clog = global.console.log
+  logger.log(RESTART_MARKER)
+  logger.error(RESTART_MARKER)
+
   global.console.log = function(){
-    clog(...arguments)
+    log(...arguments)
     logger.log(...arguments)
   }
 
-  const cerror = global.console.error
   global.console.error = function(){
-    cerror(...arguments)
+    log.error(...arguments)
     logger.error(...arguments)
   }
 

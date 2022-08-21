@@ -1,5 +1,4 @@
 import { Server as SocketServer } from 'socket.io'
-import log from 'fancy-log'
 import Users from './collections/users.js'
 
 let io
@@ -25,19 +24,19 @@ export function setup(server, sessionMiddleware){
       })
     }else{
       socket.emit('anonymous connect')
-      log('Anonymous user connected')
+      console.log('Anonymous user connected')
     }
 
     socket.on('joinroom', roomID => {
       socket.join(roomID)
       socket.emit('room joined', roomID)
-      log('User joined room', roomID)
+      console.log('User joined room', roomID)
     })
 
     socket.on('leaveroom', roomID => {
       socket.join(roomID)
       socket.emit('room left', roomID)
-      log('User left room', roomID)
+      console.log('User left room', roomID)
     })
   })
 }

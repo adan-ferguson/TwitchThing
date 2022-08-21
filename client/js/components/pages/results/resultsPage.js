@@ -52,6 +52,8 @@ export default class ResultsPage extends Page{
 
   async load(source){
 
+    this.querySelectorAll('di-tab').forEach(t => t.innerHTML = '')
+
     const { dungeonRun } = await this.fetchData(`/game/dungeonrun/${this._dungeonRunID}/results`)
 
     this._setupReplayButton()

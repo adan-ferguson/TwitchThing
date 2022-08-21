@@ -5,7 +5,6 @@ import { generateEvent } from './dungeonEventPlanner.js'
 import { broadcast, emit } from '../socketServer.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 import Users from '../collections/users.js'
-import log from 'fancy-log'
 import { continueRelicEvent } from './relics.js'
 import { finishCombatEvent } from '../combat/combat.js'
 import { EventEmitter } from 'events'
@@ -45,7 +44,7 @@ export async function start(){
     if(!user){
       dr.finished = true
       DungeonRuns.save(dr)
-      log('Dungeon run in limbo, no user')
+      console.log('Dungeon run in limbo, no user')
       return
     }
     activeRuns[dr._id] = new DungeonRunInstance(dr, user)
