@@ -8,6 +8,8 @@ di-dungeon-picker-page
 
         .slider-floors
           width: 100%
+          border: 0.2rem solid rgba(0,0,0,0.5)
+          margin-bottom: -1rem
 
           .floor
             width: 100%
@@ -17,6 +19,9 @@ di-dungeon-picker-page
             align-items: center
             cursor: pointer
             font-weight: bold
+
+            &:nth-child(even)
+              background-color: rgba(0,0,0,0.05)
 
             .start-here
               visibility: hidden
@@ -52,7 +57,7 @@ di-dungeon-picker-page
 
         .zone-name
           font-size: 2.5em
-          color: white
+          color: #777
           -webkit-text-stroke: 0.1rem black
           font-weight: bold
           pointer-events: none

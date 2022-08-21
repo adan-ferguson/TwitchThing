@@ -1,12 +1,7 @@
 import scaledValue from '../../game/scaledValue.js'
 
-const SIZE_BASE = 12
-const SCALE_PER_FLOOR = 0.07
-const SCALE_PER_ZONE = 0.25
 const MIN_FLOOR_TRAVERSAL_PCT = 0.30
 
-// Final floor gets this bonus size
-const FINAL_FLOOR_BONUS = 4.0
 
 export function foundStairs(floor, room, pace = 'Brisk'){
   if(floor === 30){
@@ -16,7 +11,8 @@ export function foundStairs(floor, room, pace = 'Brisk'){
   if(room <= 2){
     return false
   }
-  let size = floorSize(floor, SIZE_BASE, SCALE_PER_FLOOR, SCALE_PER_ZONE, FINAL_FLOOR_BONUS)
+
+  const size = floorSize(floor)
   if(pace === 'Leisurely'){
     return room >= size
   }

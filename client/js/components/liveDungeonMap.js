@@ -1,6 +1,6 @@
 import fizzetch from '../fizzetch.js'
 import { getSocket } from '../socketClient.js'
-import Zones from '../../../game/zones.js'
+import Zones, { floorSize } from '../../../game/zones.js'
 import { makeEl, wait, wrap } from '../../../game/utilFunctions.js'
 import tippy from 'tippy.js'
 import AdventurerStatus from './adventurerStatus.js'
@@ -64,17 +64,23 @@ export default class LiveDungeonMap extends HTMLElement{
     }
     const el = this._dungeonRunEls[dungeonRun._id]
     el._tippyContent.setDungeonRun(dungeonRun)
-    el.classList.toggle('in-combat', dungeonRun.combatID ? true : false)
+    el.classList.toggle('in-combat', dungeonRun.currentEvent.combatID ? true : false)
     if(el.floor !== dungeonRun.floor){
       el.floor = dungeonRun.floor
       this._floorEls[dungeonRun.floor - 1].appendChild(el)
       this._showZones(Math.floor((el.floor - 1) / 10))
     }
+    const pct = 95 * dungeonRun.room / floorSize(dungeonRun.floor)
+    el.style.left = `${pct}%`
   }
 
   _makeDungeonRunEl({ _id, adventurer }){
-    const el = makeEl({ class: 'dungeon-run-dot' })
+    const el = makeEl({ class: ['dungeon-run-dot', 'clickable'] })
     const status = new AdventurerStatus(adventurer)
+    status.appendChild(wrap('Click to watch', {
+      class: 'subtitle',
+      elementType: 'span'
+    }))
     el._tippyContent = status
     tippy(el, {
       theme: 'light',

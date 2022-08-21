@@ -4,17 +4,56 @@ di-live-dungeon-map
     text-align: center
     font-size: 1.2em
     margin-bottom: 5rem
+
   .zone
     position: relative
     display: flex
     flex-direction: column
     overflow-y: auto
+    border: 0.2rem solid rgba(0,0,0,0.5)
+    margin-bottom: -1rem
 
     .floor
       height: 20rem
+      overflow: hidden
+      position: relative
+
+      &:nth-child(even)
+        background-color: rgba(0,0,0,0.05)
 
     .zone-name
       font-size: 2.5em
-      color: white
+      color: #777
       -webkit-text-stroke: 0.1rem black
       font-weight: bold
+
+  .dungeon-run-dot
+
+    @keyframes greenvibrate
+      from
+        background-color: #d7ffc0
+      to
+        background-color: #6cfc34
+
+    @keyframes redvibrate
+      from
+        background-color: #ffc6c6
+      to
+        background-color: #ec0000
+
+    border-radius: 50%
+    width: 10rem
+    height: 10rem
+    display: inline-block
+    margin-left: 3rem
+    border: 0.25rem solid #999
+    position: absolute
+    top: 50%
+    transform: translateY(-50%)
+    animation-duration: 1.5s
+    animation-name: greenvibrate
+    animation-iteration-count: infinite
+    animation-direction: alternate
+
+    &.in-combat
+      animation-name: redvibrate
