@@ -131,7 +131,7 @@ export default class DIForm extends HTMLFormElement{
 
   _loading(){
     if(this.options.fullscreenLoading){
-      return showLoader()
+      return showLoader(this.options.fullscreenLoading.message ?? '')
     }
     this._errorMessage.classList.add('hidden')
     this.submitButton.disabled = true

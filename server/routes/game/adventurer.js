@@ -76,7 +76,7 @@ verifiedRouter.post('/editloadout/save', validateIdle, async (req, res) => {
 })
 
 verifiedRouter.post('', async(req, res, next) => {
-  res.send({ adventurer: req.adventurer })
+  res.send({ adventurer: req.adventurer, user: req.user })
 })
 
 verifiedRouter.post('/dismiss', async(req, res, next) => {

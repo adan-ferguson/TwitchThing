@@ -5,7 +5,7 @@ import { toDisplayName } from '../../../game/utilFunctions.js'
 
 const HTML = `
 <span style="text-align:center">
-  <span class="name"></span>
+  <span><span class="name"></span> <span class="subtitle level"></span></span>
   <di-orb-row></di-orb-row>
 </span>
 <span style="text-align:center">
@@ -31,6 +31,7 @@ export default class AdventurerStatus extends HTMLElement{
   setAdventurer(adventurer){
 
     this.querySelector('.name').textContent = adventurer.name
+    this.querySelector('.level').textContent = adventurer.level
     this.querySelector('di-orb-row')
       .setOptions({
         style: OrbsDisplayStyle.MAX_ONLY,
@@ -51,7 +52,7 @@ export default class AdventurerStatus extends HTMLElement{
       descriptionEl.style.color = '#888'
       descriptionEl.textContent = 'Idle'
       return
-    }else if(dungeonRun.finished){
+    }else if(dungeonRun.finished || dungeonRun.currentEvent?.runFinished){
       statusEl.innerHTML = ''
       descriptionEl.style.color = '#4d8fc4'
       descriptionEl.textContent = 'Finished'

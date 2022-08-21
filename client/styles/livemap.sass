@@ -2,16 +2,25 @@ di-live-dungeon-map
 
   .heading
     text-align: center
-    font-size: 1.2em
+    font-size: 1.1em
     margin-bottom: 5rem
+
+  .runs
+    overflow-y: auto
+    position: absolute
+    $padding: 10rem
+    top: $padding + 15rem
+    left: $padding
+    right: $padding
+    bottom: $padding
 
   .zone
     position: relative
     display: flex
     flex-direction: column
-    overflow-y: auto
-    border: 0.2rem solid rgba(0,0,0,0.5)
-    margin-bottom: -1rem
+    //overflow-y: auto
+    //border: 0.2rem solid rgba(0,0,0,0.5)
+    //margin-bottom: -1rem
 
     .floor
       height: 20rem

@@ -1,8 +1,12 @@
 import { Magic } from 'magic-sdk'
 import { OAuthExtension } from '@magic-ext/oauth'
 import DIForm from '../components/form.js'
+import LiveDungeonMap from '../components/liveDungeonMap.js'
+import { connect } from '../socketClient.js'
 
 (async () => {
+
+  connect()
 
   const magic = new Magic(window.MAGIC_PUBLISHABLE_KEY, {
     extensions: [new OAuthExtension()]
@@ -32,6 +36,10 @@ import DIForm from '../components/form.js'
         }
       })
     })
+
+  const map = new LiveDungeonMap()
+  document.querySelector('.dungeon-map').appendChild(map)
+  map.load()
 
   async function sendLink(){
     const email = diform.data().email

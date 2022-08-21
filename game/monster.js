@@ -3,7 +3,7 @@ import Stats from './stats/stats.js'
 import OrbsData from './orbsData.js'
 import ModsCollection from './modsCollection.js'
 
-const REWARD_MULTIPLIER = 0.2
+const REWARD_MULTIPLIER = 0.17
 const POWER_MULTIPLIER = 0.19
 const HP_MULTIPLIER = 0.21
 

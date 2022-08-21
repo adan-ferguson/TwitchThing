@@ -1,9 +1,8 @@
 export default {
   name: 'Executioner\'s Axe',
   stats: {
-    physPower: '+50%',
-    critDamage: '+50%',
-    critChance: '+10%'
+    critDamage: '+100%',
+    critChance: '+40%'
   },
   orbs: 7
 }

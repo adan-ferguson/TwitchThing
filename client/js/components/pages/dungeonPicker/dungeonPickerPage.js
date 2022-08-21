@@ -41,7 +41,7 @@ export default class DungeonPickerPage extends Page{
     this.floorSlider = this.querySelector('di-floor-slider')
     this._formEl = new DIForm({
       async: true,
-      fullscreenLoading: true,
+      fullscreenLoading: { message: 'Entering Dungeon...' },
       action: `/game/adventurer/${this.adventurerID}/enterdungeon`,
       submitText: 'Go!',
       html: FORM_HTML,

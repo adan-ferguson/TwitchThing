@@ -18,7 +18,7 @@ export default class AdventurerRow extends HTMLElement{
     super()
 
     if(!adventurer){
-      this.textContent = 'Create a new Adventurer'
+      this.innerHTML = '<span class="center-contents">Create a new Adventurer</span>'
       return
     }
 

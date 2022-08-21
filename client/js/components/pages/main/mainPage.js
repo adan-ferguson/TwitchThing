@@ -83,6 +83,7 @@ export default class MainPage extends Page{
       if(slots > i){
         const newAdventurerRow = new AdventurerRow()
         rows.push(newAdventurerRow)
+        newAdventurerRow.classList.add('clickable')
         newAdventurerRow.addEventListener('click', e => {
           this._showNewAdventurerModal()
         })

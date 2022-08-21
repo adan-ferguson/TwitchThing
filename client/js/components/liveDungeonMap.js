@@ -1,12 +1,12 @@
 import fizzetch from '../fizzetch.js'
 import { getSocket } from '../socketClient.js'
 import Zones, { floorSize } from '../../../game/zones.js'
-import { makeEl, wait, wrap } from '../../../game/utilFunctions.js'
+import { makeEl, wrap } from '../../../game/utilFunctions.js'
 import tippy from 'tippy.js'
 import AdventurerStatus from './adventurerStatus.js'
 
 const HTML = `
-<div class="flex-no-grow heading">Live Dungeon Runs</div>
+<div class="heading">Current Active Runs</div>
 <div class="runs">
   <di-loader class="show"></di-loader>
 </div>
@@ -28,7 +28,6 @@ export default class LiveDungeonMap extends HTMLElement{
 
   async load(){
     const { activeRuns } = await fizzetch('/watch/livedungeonmap')
-    await wait(200)
     const runsEl = this.querySelector('.runs')
     runsEl.innerHTML = ''
 
@@ -58,7 +57,9 @@ export default class LiveDungeonMap extends HTMLElement{
   }
 
   _updateRun = dungeonRun => {
-    console.log('updating an el')
+    if(dungeonRun.currentEvent.runFinished){
+      return this._runFinished(dungeonRun._id)
+    }
     if(!this._dungeonRunEls[dungeonRun._id]){
       this._makeDungeonRunEl(dungeonRun)
     }
@@ -70,8 +71,17 @@ export default class LiveDungeonMap extends HTMLElement{
       this._floorEls[dungeonRun.floor - 1].appendChild(el)
       this._showZones(Math.floor((el.floor - 1) / 10))
     }
-    const pct = 95 * dungeonRun.room / floorSize(dungeonRun.floor)
+    const pct = 95 * Math.min(1, dungeonRun.room / floorSize(dungeonRun.floor))
     el.style.left = `${pct}%`
+  }
+
+  _runFinished(id){
+    const el = this._dungeonRunEls[id]
+    if(!el){
+      return
+    }
+    el.remove()
+    delete this._dungeonRunEls[id]
   }
 
   _makeDungeonRunEl({ _id, adventurer }){

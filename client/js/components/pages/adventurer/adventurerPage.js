@@ -22,7 +22,7 @@ const HTML = `
   <div class="content-rows dungeons">
     <div class="top-right content-well center-contents clickable"></div>
     <div class="previous-runs content-well center-contents clickable">View Previous Runs</div>
-    <div class="content-no-grow scary-buttons">
+    <div class="content-no-grow scary-buttons displaynone">
       <button class="clickable dismiss">Dismiss Adventurer</button>
     </div>
   </div>
@@ -66,7 +66,7 @@ export default class AdventurerPage extends Page{
   }
 
   async load(previousPage){
-    const { adventurer } = await this.fetchData(`/game/adventurer/${this.adventurerID}`)
+    const { adventurer, user } = await this.fetchData(`/game/adventurer/${this.adventurerID}`)
 
     if(adventurer.dungeonRunID){
       return this.redirectTo(new DungeonPage(adventurer.dungeonRunID))
@@ -74,21 +74,24 @@ export default class AdventurerPage extends Page{
 
     this.adventurer = adventurer
     this.adventurerPane.setAdventurer(adventurer)
-    this._setupEditEquipmentButton()
-    this._setupTopRightButton()
+    this._setupEditEquipmentButton(user)
+    this._setupTopRightButton(user)
 
-    this._prevRuns.classList.toggle('displaynone', adventurer.accomplishments.deepestFloor <= 1)
+    const showButtons = user.accomplishments.deepestFloor <= 1
+    this._prevRuns.classList.toggle('displaynone', showButtons)
+    this.querySelector('.scary-buttons').classList.toggle('displaynone', showButtons)
   }
 
-  _setupEditEquipmentButton(){
+  _setupEditEquipmentButton(user){
 
     const btn = this.querySelector('button.edit')
-    const featureStatus = this.user.features.editLoadout
+    const featureStatus = user.features.editLoadout
     if(!featureStatus){
-      btn.disabled = true
+      btn.classList.add('displaynone')
       return
     }else if(featureStatus === 1){
       btn.classList.add('glow')
+      btn.classList.remove('displaynone')
       tippyCallout(btn, 'Click here to edit your items')
     }
 
@@ -97,7 +100,7 @@ export default class AdventurerPage extends Page{
     })
   }
 
-  _setupTopRightButton(){
+  _setupTopRightButton(user){
     if(this.adventurer.nextLevelUp){
       this._topRightButton.classList.add('highlight')
       this._topRightButton.innerHTML = '<div>Level Up!<div/>'
@@ -107,7 +110,7 @@ export default class AdventurerPage extends Page{
     }else{
       this._topRightButton.innerHTML = '<div>Enter Dungeon<div/>'
       this._topRightButton.addEventListener('click', () => {
-        if(this.user.features.dungeonPicker){
+        if(user.features.dungeonPicker){
           this.redirectTo(new DungeonPickerPage(this.adventurerID))
         }else{
           this._quickEnterDungeon()
@@ -117,7 +120,7 @@ export default class AdventurerPage extends Page{
   }
 
   async _quickEnterDungeon(){
-    showLoader()
+    showLoader('Entering Dungeon...')
     const { dungeonRun } = await fizzetch(`/game/adventurer/${this.adventurerID}/enterdungeon`)
     this.redirectTo(new DungeonPage(dungeonRun._id))
   }

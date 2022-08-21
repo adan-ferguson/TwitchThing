@@ -11,7 +11,7 @@ const RELICS = {
 }
 
 const RELIC_CHANCE = 0.20
-const VALUE_MULTIPLIER = 0.2
+const VALUE_MULTIPLIER = 0.17
 const TRAP_CHANCE = 0.15
 const GIVE_UP_CHANCE = 0.15
 

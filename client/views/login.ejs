@@ -7,19 +7,22 @@
     <script src="https://kit.fontawesome.com/d486ec65d1.js" crossorigin="anonymous"></script>
 </head>
 <body>
-    <div class='login-form screen-center'>
-        <div class='email-login-form'></div>
-        <div class="oauth-providers">
-            Or login with:
-            <div class="providers-list">
-                <button provider="google">
-                    <img alt="Login with Google" src="../assets/google.png"/> <span>Google</span>
-                </button>
-                <button provider="twitch">
-                    <i class="fa-brands fa-twitch"></i> Twitch
-                </button>
+    <div class="screen-center login-page flex-columns">
+        <div class='login-form center-contents'>
+            <div class='email-login-form'></div>
+            <div class="oauth-providers">
+                Or login with:
+                <div class="providers-list">
+                    <button provider="google">
+                        <img alt="Login with Google" src="../assets/google.png"/> <span>Google</span>
+                    </button>
+                    <button provider="twitch">
+                        <i class="fa-brands fa-twitch"></i> Twitch
+                    </button>
+                </div>
             </div>
         </div>
+        <div class="dungeon-map"></div>
     </div>
     <script>
         window.MAGIC_PUBLISHABLE_KEY = "<%= locals.magicPublishableKey %>"

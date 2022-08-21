@@ -26,6 +26,7 @@
     "babel-eslint": "^10.1.0",
     "babel-loader": "^8.2.2",
     "connect-mongo": "^4.6.0",
+    "console": "^0.7.2",
     "css-loader": "^5.2.6",
     "dateformat": "^5.0.2",
     "debounce": "^1.2.1",
