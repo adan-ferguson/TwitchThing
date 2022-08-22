@@ -1,68 +1,63 @@
-export default class DungeonRunResults{
-  constructor(dungeonRun){
-    this.dungeonRun = dungeonRun
-    this.lastEvent = new Ending(dungeonRun.events.at(-1))
-    this.monstersKilled = new MonstersKilled(dungeonRun.events)
-    this.relicsFound = new RelicsFound(dungeonRun.events)
-    this.chestsFound = new ChestsFound(dungeonRun.results.rewards.chests)
-    this.chests = (dungeonRun.results.rewards.chests || []).slice()
-    dungeonRun.results.userLevelups.forEach(levelup => {
-      if(levelup.chest){
-        this.chests.push(levelup.chest)
-      }
-    })
+import { toArray } from './utilFunctions.js'
+
+export default function calculateResults(eventsList){
+  eventsList = eventsList.events ?? eventsList
+  const results = {
+    xp: eventsList.reduce((prev, e) => prev + (e.rewards?.xp ?? 0), 0),
+    monstersKilled: monstersKilled(eventsList),
+    relics: relics(eventsList),
+    chests: chests(eventsList)
   }
 
-  getUserLevelup(level){
-    return this.dungeonRun.results.userLevelups.find(levelup => levelup.level === level)
+  if(!eventsList.length){
+    return
   }
+
+  results.time = eventsList.at(-1).time
+  results.startingFloor = eventsList[0].floor
+  results.endingFloor = eventsList.at(-1).floor
+
+  if(eventsList.at(-1)?.runFinished){
+    results.killedByMonster = eventsList.at(-2).monster
+  }
+
+  return results
 }
 
-class Ending{
-  constructor(lastEvent){
-    this.monster = lastEvent.monster
-  }
-}
-
-class MonstersKilled{
-  constructor(events){
-    this.monsters = []
-    events.forEach(event => {
-      if(event.monster?.defeated){
-        this.monsters.push(event.monster)
-      }
-    })
-  }
-
-  get count(){
-    return this.monsters.length
-  }
-}
-
-class RelicsFound{
-  constructor(events){
-    this.relics = []
-    events.forEach(event => {
-      if(event.relic){
-        this.relics.push(event.monster)
-      }
-    })
-  }
-
-  get count(){
-    return this.relics.length
-  }
-}
-
-class ChestsFound{
-  constructor(chests){
-    if(!chests){
-      chests = []
+function monstersKilled(eventsList){
+  const obj = {}
+  eventsList.forEach(event => {
+    if(event.monster?.defeated){
+      obj[event.monster.name] = (obj[event.monster.name] ?? 0) + 1
     }
-    this.chests = chests
-  }
+  })
+  return Object.keys(obj).map(name => { return { name, amount: obj[name] }} )
+}
 
-  get count(){
-    return this.chests.length
-  }
+function relics(eventsList){
+  const arr = []
+  eventsList.forEach(e => {
+    if('relicSolved' in e){
+      const tier = e.relic.tier
+      if(!arr[tier]){
+        arr[tier] = { attempted: 0, solved: 0 }
+      }
+      arr[tier].attempted++
+      if(e.relicSolved){
+        arr[tier].solved++
+      }
+    }
+  })
+  return arr
+}
+
+function chests(eventsList){
+  const arr = []
+  eventsList.forEach(e => {
+    const chests = toArray(e.rewards?.chests ?? [])
+    chests.forEach(chest => {
+      arr.push(chest)
+    })
+  })
+  return arr
 }

@@ -16,18 +16,23 @@ const HTML = `
 
 export default class List extends HTMLElement{
 
+  _rowsCache = []
+  _sortedRows = []
+
   constructor(){
     super()
     this.innerHTML = HTML
     this.rows = this.querySelector('.items')
-    this._rowsCache = []
     this._page = 1
     this._isMobile = mobileMode()
 
     this._options = {
       paginate: true,
       pageSize: 10,
-      mobilePageSize: null
+      mobilePageSize: null,
+      sortFn: null,
+      filterFn: null,
+      showFiltered: false
     }
 
     this.addEventListener('wheel', e => {
@@ -37,7 +42,7 @@ export default class List extends HTMLElement{
       if(e.deltaY < 0 && this._page > 1){
         this._page--
         this._update()
-      }else if(e.deltaY > 0 && this._page < this._maxPage){
+      }else if(e.deltaY > 0 && this._page < this.maxPage){
         this._page++
         this._update()
       }
@@ -65,13 +70,13 @@ export default class List extends HTMLElement{
     })
 
     this.querySelector('.last').addEventListener('click', () => {
-      this._page = this._maxPage
+      this._page = this.maxPage
       this._update()
     })
   }
 
-  get _maxPage(){
-    return this._options.paginate ? Math.floor(1 + (this._rowsCache.length - 1) / this._pageSize) : 1
+  get maxPage(){
+    return this._options.paginate ? Math.max(1, Math.floor(1 + (this._sortedRows.length - 1) / this._pageSize)) : 1
   }
 
   get _pageSize(){
@@ -82,29 +87,42 @@ export default class List extends HTMLElement{
     for (let key in options){
       this._options[key] = options[key]
     }
-    this._update()
+    this._fullUpdate()
+    return this
   }
 
   setRows(rows){
     this._rowsCache = rows.slice()
-    this._update()
+    this._fullUpdate()
   }
 
   addRow(row){
+    // TODO: binary search here
     this._rowsCache.push(row)
-    this._update()
+    this._fullUpdate()
   }
 
   removeRow(row){
-    const index = this._rowsCache.findIndex(r => r === row)
+    const cacheIndex = this._rowsCache.findIndex(r => r === row)
+    if(cacheIndex > -1){
+      this._rowsCache.splice(cacheIndex, 1)
+    }
+    const index = this._sortedRows.findIndex(r => r === row)
     if(index > -1){
-      this._rowsCache.splice(index, 1)
+      this._sortedRows.splice(index, 1)
       this._update()
     }
   }
 
   findRow(fn){
     return this._rowsCache.find(fn)
+  }
+
+  _fullUpdate(){
+    const filtered = (!this._options.showFiltered && this._options.filterFn) ?
+      this._rowsCache.filter(this._options.filterFn) : [...this._rowsCache]
+    this._sortedRows = this._options.sortFn ? filtered.sort(this._options.sortFn) : filtered
+    this._update()
   }
 
   _update(){
@@ -115,19 +133,23 @@ export default class List extends HTMLElement{
       this.querySelector('.pagination-buttons').classList.add('displaynone')
     }
 
+    this._page = Math.max(1, Math.min(this.maxPage, this._page))
     this.querySelector('.first').disabled = this._page === 1 ? true : false
     this.querySelector('.prev').disabled = this._page === 1 ? true : false
-    this.querySelector('.next').disabled = this._page === this._maxPage ? true : false
-    this.querySelector('.last').disabled = this._page === this._maxPage ? true : false
+    this.querySelector('.next').disabled = this._page === this.maxPage ? true : false
+    this.querySelector('.last').disabled = this._page === this.maxPage ? true : false
     this.querySelector('.page-number').textContent = this._page + ''
-    this.querySelector('.page-count').textContent = this._maxPage + ''
+    this.querySelector('.page-count').textContent = this.maxPage + ''
 
     this.rows.innerHTML = ''
     const start = (this._page - 1) * this._pageSize
-    const toDisplay = this._rowsCache.slice(start, start + this._pageSize)
+    const toDisplay = this._sortedRows.slice(start, start + this._pageSize)
     fillWithBlanks(toDisplay, this._pageSize)
     toDisplay.forEach(el => {
       el.style.flexBasis = `${100 / this._pageSize}%`
+      if(this._options.showFiltered && !el.classList.contains('blank-row')){
+        el.classList.toggle('filtered', !this._options.filterFn(el))
+      }
     })
     this.rows.append(...toDisplay)
     hideAllTippys()

@@ -1,4 +1,6 @@
 import AdventurerRow from '../../adventurerRow.js'
+import fizzetch from '../../../fizzetch.js'
+import { hideLoader, showLoader } from '../../../loader.js'
 
 const HTML = `
 <div class="content-well fill-contents">
@@ -14,10 +16,16 @@ export default class AdminAdventurerTab extends HTMLElement{
     this.classList.add('content-columns')
     this.innerHTML = HTML
     this._list = this.querySelector('di-list')
+      .setOptions({
+        pageSize: 6
+      })
     this._adventurerPane = this.querySelector('di-adventurer-pane')
   }
 
-  setAdventurers(adventurers){
+  async show(){
+    showLoader('Loading adventurers...')
+    const { adventurers } = await fizzetch('/admin/adventurers')
+    hideLoader()
     const rows = []
     adventurers.forEach(adventurer => {
       const row = new AdventurerRow(adventurer, {

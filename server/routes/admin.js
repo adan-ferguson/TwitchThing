@@ -3,7 +3,9 @@ import Users from '../collections/users.js'
 import Adventurers from '../collections/adventurers.js'
 import DungeonRuns from '../collections/dungeonRuns.js'
 import Combats from '../collections/combats.js'
-import { cancelAllRuns, getActiveRunData, getRunDataMulti } from '../dungeons/dungeonRunner.js'
+import { cancelAllRuns, getActiveRunData } from '../dungeons/dungeonRunner.js'
+import { validateParam } from '../validations.js'
+import { getErrorLogTail, getOutputLogTail } from '../logging.js'
 
 const router = express.Router()
 
@@ -20,14 +22,24 @@ router.use(async (req, res, next) => {
 })
 
 router.post('/', async(req, res) => {
+  res.status(200).send({})
+})
+
+router.post('/adventurers', async(req, res) => {
   const adventurers = await Adventurers.find({})
   adventurers.forEach(adv => adv.dungeonRun = getActiveRunData(adv.dungeonRunID))
   res.status(200).send({ adventurers })
 })
 
+
+router.post('/logs', async(req, res) => {
+  const outputlog = await getOutputLogTail()
+  const errorlog = await getErrorLogTail()
+  res.status(200).send({ outputlog, errorlog })
+})
+
 router.post('/runcommand', async(req, res) => {
-  req.validateParam('command')
-  const cmd = req.body.command
+  const cmd = validateParam(req.body.command)
   let result = 'Command not found'
   if(cmd === 'reset all'){
     cancelAllRuns()

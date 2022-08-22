@@ -5,22 +5,14 @@ import { hideAll as hideAllTippys } from 'tippy.js'
 import SimpleModal from './simpleModal.js'
 import AdventurerPage from './pages/adventurer/adventurerPage.js'
 import DungeonPage from './pages/dungeon/dungeonPage.js'
-
-import './header.js'
-import './pages/dungeon/combat/fighterPane.js'
-import './pages/dungeon/combat/feed.js'
-import './pages/dungeon/exploring/adventurerPane.js'
-import './pages/dungeon/exploring/event.js'
-import './pages/dungeon/exploring/state.js'
-import './loadout/inventory.js'
-import './stats/statsList.js'
-import './xpBar.js'
-import './hpBar.js'
-import './loadout/loadout.js'
+import { getSocket } from '../socketClient.js'
+import { showPopup } from './popup.js'
+import CombatPage from './pages/combat/combatPage.js'
+import ErrorPage from './pages/errorPage.js'
+import { fadeIn, fadeOut } from '../animationHelper.js'
 
 const HTML = `
 <di-header></di-header>
-<div class="page-title"></div>
 <div class="content"></div>
 `
 
@@ -32,15 +24,14 @@ const PAGES = {
 export default class App extends HTMLElement{
 
   currentPage
-  _pageTitle
 
   constructor(startupParams = {}){
     super()
     this.innerHTML = HTML
-    this._pageTitle = this.querySelector('.page-title')
     this.currentPage = null
     this.header = this.querySelector('di-header')
     this.startupParams = startupParams || {}
+    getSocket().on('show popup', showPopup)
     this._setInitialPage()
   }
 
@@ -48,15 +39,19 @@ export default class App extends HTMLElement{
     return this.currentPage?.backPage ? true : false
   }
 
-  updateTitle(){
-    this._pageTitle.textContent = this.currentPage.titleText
+  get watchView(){
+    return document.location.pathname.search(/^\/watch/) > -1 ? true : false
   }
 
-  async setPage(page){
+  updateTitle(){
+    this.header.titleText = this.currentPage.titleText
+  }
 
-    if(this.currentPage && this.startupParams.watch){
-      throw 'Can not change pages in watch mode'
-    }
+  async reloadPage(){
+    this.setPage(this.currentPage)
+  }
+
+  async setPage(page, redirectToIndexOnError = false){
 
     if(!page){
       throw 'Attempted to set null page'
@@ -64,39 +59,52 @@ export default class App extends HTMLElement{
 
     Loader.showLoader()
     hideAllTippys()
+    closeAllModals()
 
     // Update the user whenever we change pages
     this._fetchUser()
 
-    if(this.currentPage){
-      const preventUnload = await this.currentPage.unload()
+    const previousPage = this.currentPage
+    if(previousPage){
+      const preventUnload = await previousPage.unload()
       if(preventUnload){
         return
       }
-      this.currentPage.unloaded = true
-      this.currentPage.classList.add('fade-out')
-      this.currentPage.remove()
+      // await fadeOut(previousPage, 100)
+      previousPage.unloaded = true
+      previousPage.remove()
     }
 
     this.currentPage = page
     page.app = this
-    const error = await page.load()
+    page.unloaded = false
+
+    this._resetBackground()
+
+    try {
+      await page.load(previousPage)
+    }catch(ex){
+      if(redirectToIndexOnError){
+        return window.location = '/'
+      }
+      const { error, targetPage } = ex
+      console.error(ex)
+      if(targetPage){
+        this.setPage(pageFromString(targetPage.name, targetPage.args))
+      }else{
+        this.setPage(new ErrorPage(error))
+      }
+    }
 
     if(this.currentPage !== page){
       // The page.load() caused a redirect, so this setPage is no longer relevant.
       return
     }
 
-    if(error){
-      return this.setPage(new MainPage({ error }))
-    }
-
-    page.unloaded = false
     this.querySelector(':scope > .content').appendChild(page)
-    page.classList.add('fade-in')
+    fadeIn(page)
     this.dispatchEvent(new Event('pagechange'))
     this.updateTitle()
-
     Loader.hideLoader()
   }
 
@@ -107,7 +115,12 @@ export default class App extends HTMLElement{
         return
       }
     }
-    this.setPage(this.currentPage.backPage())
+    this.setPage(this.currentPage.backPage() || new MainPage())
+  }
+
+  setBackground(color, texture){
+    this.style.backgroundColor = color
+    this.style.backgroundImage = texture ? `url("/assets/textures/${texture}")` : null
   }
 
   async _setInitialPage(){
@@ -118,14 +131,22 @@ export default class App extends HTMLElement{
       }
     }
     if(this.startupParams.watch?.page === 'dungeonrun'){
-      return this.setPage(new DungeonPage(this.startupParams.watch.id, true))
+      return this.setPage(new DungeonPage(this.startupParams.watch.id), true)
+    }else if(this.startupParams.watch?.page === 'combat'){
+      return this.setPage(new CombatPage(this.startupParams.watch.id, {
+        isReplay: true
+      }), true)
     }
     this.setPage(new MainPage())
   }
 
+  _resetBackground(){
+    this.setBackground(null, null)
+  }
+
   async _fetchUser(){
     this.user = await fizzetch('/user')
-    this.header.updateUserBar()
+    this.header.update()
   }
 
   _confirmLeavePage(message){
@@ -167,4 +188,10 @@ export function pageFromString(name, args){
     return new page(...args)
   }
   return null
+}
+
+function closeAllModals(){
+  document.querySelectorAll('di-modal').forEach(modal => {
+    modal.hide()
+  })
 }

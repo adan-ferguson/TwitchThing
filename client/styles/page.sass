@@ -1,4 +1,5 @@
 $margin: 25rem
+$smallMargin: 5rem
 
 di-app .page
   display: flex
@@ -34,10 +35,14 @@ di-app .page
       flex-basis: 0
 
   .content-well
-    //display: flex
-    //flex-direction: column
+    background-color: white
+    position: relative
+    z-index: 0
     border: 1rem solid #BBB
     padding: 6rem
+
+    &.scrollable
+      overflow-y: auto
 
     &.grow
       flex-grow: 1 !important
@@ -49,3 +54,20 @@ di-app .page
   .content-no-grow
     flex-grow: 0
     flex-basis: initial
+
+@media (max-aspect-ratio: 1/1)
+
+  di-app .page
+    margin: $smallMargin
+
+    .content-columns
+      margin-right: -$smallMargin
+
+      > *
+        margin-right: $smallMargin
+
+    .content-rows
+      margin-bottom: -$smallMargin
+
+      > *
+        margin-bottom: $smallMargin

@@ -1,45 +1,28 @@
 import Items from './items/combined.js'
-import Stats from './stats/stats.js'
 import { toDisplayName } from './utilFunctions.js'
+import Stats from './stats/stats.js'
 
-export default class Item{
+export default class ItemInstance{
   constructor(itemDef){
-    if(itemDef instanceof Item){
-      itemDef = itemDef.itemDef
-    }
-    if(!itemDef.baseType){
-      throw `Invalid itemDef, invalid baseType ${itemDef.baseType}.`
-    }
-    this.itemDef = itemDef
+    this.itemDef = itemDef.itemDef ?? itemDef
+    this.baseItem = Items[this.itemDef.baseType.group][this.itemDef.baseType.name] ?? {}
   }
-
-  get HTML(){
-    const stats = this.baseType.stats
-    let html = '<div>'
-    for(let key in stats){
-      html += `<div>${key}: ${stats[key]}</div>`
-    }
-    html += '</div>'
-    return html
-  }
-
-  get baseType(){
-    return Items[this.itemDef.baseType]
-  }
-
   get id(){
     return this.itemDef.id
   }
-
-  get name(){
-    return this.itemDef.displayName || this.baseType.displayName || toDisplayName(this.baseType.name)
+  get displayName(){
+    return this.itemDef.displayName || this.baseItem.displayName || toDisplayName(this.baseItem.name)
   }
-
-  get orbs(){
-    return this.baseType.orbs
-  }
-
   get stats(){
-    return new Stats(this.baseType.stats)
+    return new Stats(this.baseItem.stats)
+  }
+  get orbs(){
+    return { [this.baseItem.group]: this.baseItem.orbs }
+  }
+  get mods(){
+    return this.baseItem.mods || []
+  }
+  get description(){
+    return this.baseItem.description || ''
   }
 }

@@ -17,10 +17,16 @@
     text-align: center
 
   label
-    display: flex
-    flex-direction: column
-    align-items: stretch
+    display: block
     margin-bottom: 10rem
+
+    &.flex-between
+      display: flex
+      justify-content: space-between
+      align-items: baseline
+
+    select
+      padding: 4rem
 
     span
       margin-bottom: 5rem
@@ -34,3 +40,13 @@ di-modal form
   border: none
   padding: 0
   min-width: 200rem
+
+.input-group
+  border-bottom: 0.5rem solid #CCC
+  margin-bottom: 12rem
+  padding-bottom: 8rem
+
+input[type="radio"], input[type="checkbox"]
+  margin-top: -2.5rem
+  margin-right: 5rem
+  vertical-align: middle

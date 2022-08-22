@@ -11,10 +11,12 @@ di-inventory
 
 .editable
   di-loadout-row
-    &:not(.blank-row)
+    &:not(.blank-row, .filtered)
       cursor: pointer
       &:hover
         background-color: #e9ffdf
+    &.filtered
+      opacity: 0.4
 
   .hoverable, &.hoverable
     background-color: #f8f8ff
@@ -27,12 +29,11 @@ di-inventory
 
 di-loadout-row
   border: 0.5rem solid #CCC
-  display: flex
-  flex-direction: row
-  justify-content: space-between
-  align-items: center
-  padding: 0 5rem
   position: relative
+  margin-bottom: 5rem
+
+  di-item-row
+    height: 100%
 
   .new-badge
     position: absolute
@@ -40,17 +41,40 @@ di-loadout-row
     left: -12rem
     width: 20rem
     height: 12rem
-    border-radius: 50%
+    border-radius: 4rem
     font-size: 10rem
     color: white
     background-color: red
     font-family: Arial, serif
 
 di-adventurer-loadout-editor-page
+  .content-columns > *
+    margin-right: 10rem !important
   .edit-hinter
-    width: 140rem
     display: flex
     flex-direction: column
-    flex: 0 0 73rem !important
+    flex: 0 0 70rem !important
     text-align: center
     justify-content: center
+
+.loadout-row-tooltip
+
+  .tooltip-content
+    display: flex
+    flex-direction: column
+
+    di-stats-list
+      margin-left: -6rem
+      margin-right: -6rem
+      margin-bottom: 4rem
+
+    > *
+      margin-bottom: 10rem
+
+      &:last-child
+        margin-bottom: 0
+
+  .right-click
+    font-size: 0.9em
+    margin-top: 10rem
+    font-style: italic

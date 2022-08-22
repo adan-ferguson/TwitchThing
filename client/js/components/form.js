@@ -1,7 +1,8 @@
 import fizzetch from '../fizzetch.js'
+import { hideLoader, showLoader } from '../loader.js'
 
-const HTML = `
-<div class="inputs"></div>
+const HTML = (html) => `
+<div class="inputs">${html}</div>
 <div class="bottom">
   <button type="submit"></button>
   <div class="error-message hidden"></div>
@@ -11,19 +12,11 @@ const HTML = `
 export default class DIForm extends HTMLFormElement{
 
   _inputs
-  _submitButton
   _errorMessage
+  submitButton
 
   constructor(options){
     super()
-
-    this.classList.add('di-form')
-
-    this.innerHTML = HTML
-    this._inputs = this.querySelector('.inputs')
-    this._submitButton = this.querySelector('button')
-    this._submitButton.textContent = options.submitText
-    this._errorMessage = this.querySelector('.error-message')
 
     options = {
       async: false,
@@ -31,10 +24,19 @@ export default class DIForm extends HTMLFormElement{
       submitText: 'Submit',
       success: () => {},
       customFetch: false,
+      fullscreenLoading: false,
       extraData: {},
+      html: '',
       ...options
     }
     this.options = options
+
+    this.classList.add('di-form')
+    this.innerHTML = HTML(options.html)
+    this._inputs = this.querySelector('.inputs')
+    this.submitButton = this.querySelector('button')
+    this.submitButton.textContent = options.submitText
+    this._errorMessage = this.querySelector('.error-message')
 
     if(options.action){
       this.setAttribute('action', options.action)
@@ -60,32 +62,35 @@ export default class DIForm extends HTMLFormElement{
     const data = new FormData(this)
     const obj = {}
     Array.from(data.entries()).forEach(([key, val]) => obj[key] = val)
-    return { ...obj, ...this.options.extraData }
+
+    let extra = this.options.extraData
+    extra = typeof extra === 'function' ? extra() : extra
+    extra = extra ? extra : {}
+
+    return { ...obj, ...extra }
   }
 
-  addInput(options){
-
-    options = {
-      label: '',
-      ...options
-    }
-
-    const label = document.createElement('label')
-    if(options.label){
-      const span = document.createElement('span')
-      span.textContent = options.label
-      label.appendChild(span)
-    }
+  addInput(options, label = null){
 
     const input = document.createElement('input')
-    for(let key in options){
+    for (let key in options){
       input.setAttribute(key, options[key])
     }
-    label.appendChild(input)
 
-    this._inputs.appendChild(label)
+    this._addInput(input, label)
+  }
 
-    return input
+  _addInput(inputEl, label = null){
+
+    const labelEl = document.createElement('label')
+    if(label){
+      const span = document.createElement('span')
+      span.textContent = label
+      labelEl.appendChild(span)
+    }
+
+    labelEl.appendChild(inputEl)
+    this._inputs.appendChild(labelEl)
   }
 
   addSelect(options){
@@ -98,6 +103,7 @@ export default class DIForm extends HTMLFormElement{
     }
 
     const label = document.createElement('label')
+    label.classList.add('flex-between')
     if(options.label){
       const span = document.createElement('span')
       span.textContent = options.label
@@ -124,14 +130,20 @@ export default class DIForm extends HTMLFormElement{
   }
 
   _loading(){
+    if(this.options.fullscreenLoading){
+      return showLoader(this.options.fullscreenLoading.message ?? '')
+    }
     this._errorMessage.classList.add('hidden')
-    this._submitButton.disabled = true
-    this._submitButton.innerHTML = '<span class="spin-effect">DI</span>'
+    this.submitButton.disabled = true
+    this.submitButton.innerHTML = '<span class="spin-effect">DI</span>'
   }
 
   _loadingFinished(){
-    this._submitButton.disabled = false
-    this._submitButton.textContent = this.options.submitText
+    if(this.options.fullscreenLoading){
+      return hideLoader()
+    }
+    this.submitButton.disabled = false
+    this.submitButton.textContent = this.options.submitText
   }
 }
 

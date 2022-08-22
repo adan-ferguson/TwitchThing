@@ -1,11 +1,19 @@
-export default class Timeline{
+import { EventEmitter } from 'events'
+
+export default class Timeline extends EventEmitter{
 
   constructor(timelineEntries){
+    super()
     this._entries = timelineEntries
+    this._time = 0
+  }
+
+  get entries(){
+    return this._entries
   }
 
   get duration(){
-    return this._entries.at(-1).time
+    return this._entries.at(-1).time + (this._entries.at(-1).duration ?? 0)
   }
 
   get time(){
@@ -46,5 +54,10 @@ export default class Timeline{
       }
     }
     return entryIndex
+  }
+
+  addEntry(entry){
+    this._entries.push(entry)
+    this.emit('entry_added', entry)
   }
 }

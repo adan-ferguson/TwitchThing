@@ -11,6 +11,10 @@ html
   font-size: 0.12vh
   user-select: none
 
+@media (max-aspect-ratio: 1/1)
+  html
+    font-size: 0.12vw
+
 html, body
   position: relative
   width: 100%
@@ -34,11 +38,17 @@ body
   font-family: 'Main Font', Arial, serif
   font-size: 12rem
 
+.subtitle
+  font-size: 0.93em
+  color: #777
+  line-height: 1.2em
+
 input
   font-family: 'Main Font', Arial, serif
   font-size: 12rem
 
-button
+button, .buttonish
+  text-decoration: none
   font-family: 'Main Font', Arial, serif
   font-size: 12rem
   border: 1rem solid black
@@ -49,8 +59,26 @@ button
   align-items: center
   justify-content: center
 
-  &:hover
-    background-color: #EEE
+  transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease
+
+  &.toggle-off
+    border-color: #AAA
+    border-style: dashed
+    color: #888
+
+  &.toggle-on
+    background-color: #dfeaff
+    color: black
+    border-color: black
+    border-style: solid
+
+  &:hover:not(:disabled)
+    background-color: #CCC
+    //color: black
+
+  &:disabled
+    border-color: currentColor
+    cursor: default
 
 input
   padding: 9rem 18rem
@@ -107,6 +135,17 @@ input
   > *
     flex-grow: 1
 
+.center-contents
+  display: flex
+  align-items: center
+  justify-content: center
+
+.absolute-center-both
+  position: absolute
+  top: 50%
+  left: 50%
+  transform: translate(-50%, -50%)
+
 .flex-columns
   display: flex
   flex-direction: row
@@ -120,21 +159,28 @@ input
 .flex-grow
   flex-grow: 1 !important
 
+.flex-shrink
+  flex-shrink: 1 !important
+
 .flex-no-grow
   flex-grow: 0 !important
+
+.tippy-box .tippy-content
+  padding: 8rem 12rem
+
+.highlight, .glow
+  box-shadow: 0 0 10px 5px #aef4af
 
 .glow
   animation: glow 1s infinite alternate
 
-.tippy-box .tippy-content
-  padding: 15rem 15rem 5rem
-
-  .right-click
-    font-size: 0.9em
-    margin-top: 5rem
-
 @keyframes glow
   from
-    box-shadow: 0 0 10px -10px #aef4af
+    background-color: white
   to
-    box-shadow: 0 0 10px 10px #aef4af
+    background-color: #d8f6d8
+
+.autocrawl
+  font-size: 5em
+  font-family: serif
+  color: #e0ebff

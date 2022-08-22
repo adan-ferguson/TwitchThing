@@ -3,9 +3,6 @@ import fizzetch from '../../../fizzetch.js'
 const HTML = `
 <div>
     <input class="command-input" placeholder="enter command name" autocomplete="organization">
-    <select>
-        <option>-- Or select command --</option>
-    </select>
 </div>
 <textarea readonly class="command-output"></textarea>
 `

@@ -1,41 +1,45 @@
 import { isObject } from '../game/utilFunctions.js'
 
-export default function validations(req, res, next){
-
-  req.validateParam = (name, options = {} ) => {
-    const error = validateObjectValue(req.body, name, options)
-    if(error){
-      throw { code: 403, error }
-    }
-    return req.body[name]
-  }
-
-  next()
-}
-
-export function validateObjectValue(obj, name, options){
+export function validateParam(val, options){
 
   options = isObject(options) ? options : {}
   options = {
     required: true,
     type: null,
+    validationFn: null,
     ...options
   }
-  const val = obj[name]
   if(val === undefined){
     if(options.required){
-      return `Required parameter ${name} is missing.`
+      throw { code: 400, message:  'Required parameter is missing.' }
     }
   }else{
-    return validateType()
+    validateType()
   }
+
+  if(options.validationFn && !options.validationFn(val)){
+    throw { code: 400, message:  'Validation function failed.' }
+  }
+
+  return val
 
   function validateType(){
     const type = options.type
+
+    let err = false
     if(type === 'array' && !Array.isArray(val)){
-      return `Parameter ${name} is invalid type, expected ${type}.`
+      err = true
+    }else if(type === 'integer'){
+      val = parseInt(val)
+      if(!Number.isInteger(val)){
+        err = true
+      }
     }else if(isObject(type)){
-      return Object.keys(type).find(key => validateObjectValue(val, key, type[key]))
+      Object.keys(type).find(key => validateParam(val[key], type[key]))
+    }
+
+    if(err){
+      throw { code: 400, message: `Parameter ${val} is invalid type, expected ${type}.` }
     }
   }
 }

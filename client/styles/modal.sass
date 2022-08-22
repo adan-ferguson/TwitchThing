@@ -13,7 +13,7 @@ $padding: 20rem
     left: 0
     right: 0
     bottom: 0
-    background-color: #00000066
+    background-color: rgba(0,0,0,0.15)
 
   .inner-pane
     position: absolute
@@ -24,12 +24,15 @@ $padding: 20rem
     border: 1rem solid #666
     padding: $padding
     font-size: 12rem
+    max-height: 90%
+    overflow: hidden
 
   .content
-    padding-bottom: $padding
+    white-space: pre-line
 
   .buttons
     border-top: 1rem solid #555
+    margin-top: $padding
     padding-top: $padding
     display: flex
     justify-content: end
@@ -39,6 +42,6 @@ $padding: 20rem
       margin-left: 2rem
 
       &.style-scary
-        background-color: #ee9b9b
+        background-color: red
         color: white
 

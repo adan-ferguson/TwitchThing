@@ -1,5 +1,6 @@
 import App from '../components/app.js'
 import * as SocketClient from '../socketClient.js'
+import '../componentImporter.js'
 
 let app
 
@@ -10,6 +11,10 @@ SocketClient.getSocket().on('user connect', id => {
 }).on('anonymous connect', () => {
   console.log('socket connected')
   startApp()
+}).on('connect', () => {
+  if(app){
+    app.reloadPage()
+  }
 })
 
 function startApp(){

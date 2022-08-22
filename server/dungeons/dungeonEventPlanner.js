@@ -1,7 +1,7 @@
-import { foundMonster, generateMonster } from '../monsters/generator.js'
-import { generateCombat } from '../combat/combat.js'
+import { foundMonster } from './monsters.js'
 import { foundRelic, generateRelicEvent } from './relics.js'
 import { foundStairs } from './stairs.js'
+import { generateCombatEvent } from '../combat/combat.js'
 
 /**
  * @param dungeonRun {DungeonRunInstance}
@@ -13,34 +13,33 @@ export async function generateEvent(dungeonRun){
   const room = dungeonRun.room
   const adventurerInstance = dungeonRun.adventurerInstance
 
-  if(floor === 20 && room >= 100){
+  if(floor === 30 && room >= 200){
     return {
       message: `${adventurerInstance.name} gets bored and leaves.`,
       runFinished: true
     }
   }
 
-  if(foundStairs(floor, room, adventurerInstance.stats.get('stairFind').value)){
+  if(dungeonRun.user.accomplishments.firstRunFinished && foundStairs(floor, room, dungeonRun.pace)){
+    const message = dungeonRun.pace === 'Brisk' ?
+      `${adventurerInstance.name} found the stairs and goes deeper.` :
+      `${adventurerInstance.name} feels like they've finished exploring this floor.`
     return {
       nextRoom: 1,
       nextFloor: floor + 1,
-      message: `${adventurerInstance.name} found the stairs and goes deeper.`
+      roomType: 'stairs',
+      message: message
     }
   }
 
-  if(foundMonster(dungeonRun)){
-    const monster = await generateMonster(dungeonRun)
-    const combat = await generateCombat(adventurerInstance.adventurer, monster, adventurerInstance.adventurerState)
-    return {
-      duration: combat.duration,
-      pending: true,
-      message: `${dungeonRun.adventurer.name} is fighting a ${monster.name}.`,
-      combatID: combat._id,
-      monster
-    }
+  const previousEvent = dungeonRun.events.at(-1)
+  const encounterPossible = previousEvent?.monster || previousEvent?.relic ? false : true
+
+  if(encounterPossible && foundMonster(dungeonRun)){
+    return await generateCombatEvent(dungeonRun)
   }
 
-  if(foundRelic(dungeonRun)){
+  if(encounterPossible && foundRelic(dungeonRun)){
     return generateRelicEvent(dungeonRun)
   }
 

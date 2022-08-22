@@ -1,34 +1,51 @@
-import Item from './item.js'
-
 export default class OrbsData{
 
-  static fromFighter(adventurer, items = adventurer.items){
-    if(!adventurer){
-      return new OrbsData()
-    }
-    return new OrbsData(adventurer.level, items)
+  constructor(maxOrbs = {}, usedOrbs = {}){
+    this._maxOrbs = toObj(maxOrbs)
+    this._usedOrbs = toObj(usedOrbs)
   }
 
-  constructor(maxOrbs = 0, items = []){
-    this.maxOrbs = maxOrbs
-    this.items = items.map(itemDef => itemDef ? new Item(itemDef) : null)
+  get maxOrbs(){
+    return this._maxOrbs
   }
 
-  get used(){
-    return this.items.reduce((val, item) => {
-      return val + (item?.orbs || 0)
-    }, 0)
-  }
-
-  get remaining(){
-    return this.max - this.used
-  }
-
-  get max(){
-    return this.maxOrbs
+  get classes(){
+    const classes = {}
+    Object.keys(this._maxOrbs).forEach(cls => classes[cls] = 1)
+    Object.keys(this._usedOrbs).forEach(cls => classes[cls] = 1)
+    return Object.keys(classes)
   }
 
   get isValid(){
-    return this.remaining >= 0
+    return this.list.find(data => data.remaining < 0) ? false : true
   }
+
+  get list(){
+    return this.classes.map(className => this.get(className))
+  }
+
+  get(className){
+    const orbDatum = {
+      className,
+      used: this._usedOrbs[className] || 0,
+      max: this._maxOrbs[className] || 0
+    }
+    orbDatum.remaining = orbDatum.max - orbDatum.used
+    return orbDatum
+  }
+}
+
+function toObj(objOrArray){
+  if(Array.isArray(objOrArray)){
+    objOrArray = objOrArray.reduce((current, next) => {
+      for(let group in next){
+        if(!current[group]){
+          current[group] = 0
+        }
+        current[group] += next[group]
+      }
+      return current
+    }, {})
+  }
+  return objOrArray || {}
 }

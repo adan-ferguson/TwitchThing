@@ -1,5 +1,5 @@
 import Modal from './modal.js'
-import { toArray } from '../../../game/utilFunctions.js'
+import { convertNewlinesToBreaks, toArray } from '../../../game/utilFunctions.js'
 import { fadeIn, fadeOut } from '../animationHelper.js'
 
 const SIMPLE_MODAL_HTML = `

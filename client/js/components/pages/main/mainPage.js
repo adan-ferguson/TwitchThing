@@ -6,6 +6,7 @@ import DIForm from '../../form.js'
 import FormModal from '../../formModal.js'
 import { getSocket } from '../../../socketClient.js'
 import '../../list.js'
+import { wrap } from '../../../../../game/utilFunctions.js'
 
 const HTML = `
 <div class="content-rows">
@@ -14,7 +15,14 @@ const HTML = `
     <div class="content-well fill-contents">
       <di-list class="adventurer-list"></di-list>
     </div>
-    <div class="other-stuff content-well">Other stuff goes over here</div>
+    <div class="content-rows">
+      <div class="content-well">
+        <di-live-dungeon-map></di-live-dungeon-map>
+      </div>
+      <a href="https://discord.gg/Y3UDA9SX" target="_blank" class="flex-no-grow discord buttonish">
+        <i class="fab fa-discord"></i> Join the Discord server for updates and news
+      </a>
+    </div>
   </div>
 </div>
 `
@@ -27,13 +35,13 @@ export default class MainPage extends Page{
     super()
     this.innerHTML = HTML
     this._error = this.querySelector('.error-message')
+    this.querySelector('.adventurer-list')
+      .setOptions({
+        pageSize: 6
+      })
     if(error){
       this._showError(error)
     }
-  }
-
-  get titleText(){
-    return 'Home Page'
   }
 
   get backPage(){
@@ -49,10 +57,12 @@ export default class MainPage extends Page{
     }
     history.replaceState(null, null, ' ')
     getSocket().on('user dungeon run update', this._dungeonRunUpdate)
+    this.querySelector('di-live-dungeon-map').load()
   }
 
   async unload(){
     getSocket().off('user dungeon run update', this._dungeonRunUpdate)
+    this.querySelector('di-live-dungeon-map').unload()
   }
 
   _populateAdventurers(adventurers, slots){
@@ -60,18 +70,26 @@ export default class MainPage extends Page{
     const rows = []
     adventurers.forEach(adventurer => {
       const row = new AdventurerRow(adventurer)
+      row.classList.add('clickable')
       row.addEventListener('click', e => {
         this.redirectTo(row.targetPage)
       })
       rows.push(row)
     })
 
-    for(let i = adventurers.length; i < slots; i++){
-      const newAdventurerRow = new AdventurerRow()
-      rows.push(newAdventurerRow)
-      newAdventurerRow.addEventListener('click', e => {
-        this._showNewAdventurerModal()
-      })
+    for(let i = adventurers.length; i < 3; i++){
+      if(slots > i){
+        const newAdventurerRow = new AdventurerRow()
+        rows.push(newAdventurerRow)
+        newAdventurerRow.classList.add('clickable')
+        newAdventurerRow.addEventListener('click', e => {
+          this._showNewAdventurerModal()
+        })
+      }else{
+        rows.push(wrap(`Reach floor ${1 + i * 10} to unlock.`, {
+          class: 'blank-row'
+        }))
+      }
     }
 
     adventurerList.setRows(rows)
@@ -94,25 +112,45 @@ export default class MainPage extends Page{
       maxLength: 15,
       placeholder: 'Choose a name'
     })
-    // TODO: choose adventurer card
+
+    if(this.user.accomplishments.firstRunFinished){
+      form.addSelect({
+        label: 'Starting Class',
+        name: 'class',
+        optionsList: [{
+          value: 'fighter',
+          name: 'Fighter'
+        },{
+          value: 'tank',
+          name: 'Tank'
+        },{
+          value: 'ranger',
+          name: 'Ranger'
+        }]
+      })
+    }
 
     new FormModal(form).show()
   }
 
   /**
-   * @param message {string}
+   * @param error {string|object}
    * @param critical {boolean} If true, then the main page itself failed to load.
    * @private
    */
-  _showError(message, critical = false){
+  _showError(error, critical = false){
+    if(!error){
+      return
+    }
+    const message = typeof(error) === 'string' ? error : error.message
     if(message){
       this._error.classList.remove('displaynone')
-      this._error.textContent = message
+      this._error.textContent = message || 'An error occurred'
     }
   }
 
   _dungeonRunUpdate = dungeonRun => {
-    const row = this.querySelector(`di-adventurer-row[adventurer-id="${dungeonRun.adventurerID}"]`)
+    const row = this.querySelector(`di-adventurer-row[adventurer-id="${dungeonRun.adventurer._id}"]`)
     if(row){
       row.setDungeonRun(dungeonRun)
     }

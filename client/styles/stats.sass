@@ -1,25 +1,50 @@
 di-stats-list
   display: flex
   flex-direction: column
-  padding: 6rem 0
+  padding: 0
+  position: relative
 
-  &.inline
+  &.show-ellipsis:after
+    content: '........'
+    bottom: -23rem
+    left: 22rem
+    position: absolute
+
+  &.icons-only
     flex-direction: row
-    padding: 0
+    di-stat-row
+      img
+        margin-right: 0 !important
+
+  &.no-icons .no-icon
+    display: none !important
 
   di-stat-row
-    padding: 4rem
+    padding: 5rem 6rem 2rem
     transition: background-color 0.3s ease
     display: flex
     flex-direction: row
     justify-content: space-between
     text-align: left
-    align-items: center
+    height: fit-content
     $buffColor: #6ee16e
     $debuffColor: #ff8c8c
 
+    &.max-items-hidden
+      display: none !important
+
+    .left-side
+      display: flex
+      flex-direction: row
+
+      img, .no-icon
+        height: 1em
+        width: 1em
+        margin-right: 0.5em
+        display: inline-block
+
     .val
-      padding-left: 10rem
+      padding-left: 5rem
 
     &:hover
       background-color: #d3d0d9

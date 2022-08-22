@@ -2,6 +2,8 @@ import Page from '../page.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import fizzetch from '../../../fizzetch.js'
 import setupEditable from '../../loadout/setupEditable.js'
+import { adventurerLoadoutItem } from '../../../adventurer.js'
+import { OrbsDisplayStyle } from '../../orbRow.js'
 
 const HTML = `
 <div class="content-columns">
@@ -47,28 +49,35 @@ export default class AdventurerLoadoutEditorPage extends Page{
     return null
   }
 
-  async load(){
+  async load(_){
     const { adventurer, items } = await fizzetch(`/game/adventurer/${this.adventurerID}/editloadout`)
     this.adventurer = adventurer
-    this.inventory.setItems(items)
+    this.inventory.setup(
+      Object.values(items).map(itemDef => adventurerLoadoutItem(itemDef)),
+      adventurer
+    )
     this.adventurerPane.setAdventurer(adventurer)
 
     setupEditable(this.inventory, this.adventurerPane.loadoutEl, {
       onChange: () => {
-        this.adventurerPane.updateStats()
+        this.adventurerPane.updateStats(true)
+        this.adventurerPane.updateOrbs()
         this._updateSaveButton()
       }
     })
 
     this.saveButton.addEventListener('click', async (e) => {
+      if(!this.adventurerPane.loadoutEl.hasChanges){
+        return this.redirectTo(new AdventurerPage(this.adventurerID))
+      }
       this._saving = true
       this._updateSaveButton()
-      const items = this.adventurerPane.loadoutEl.items.map(item => item?.id)
-      const { error } = await fizzetch(`/game/adventurer/${this.adventurerID}/editloadout/save`, {
+      const items = this.adventurerPane.loadoutEl.objs.map(item => item?.id)
+      const { error, success } = await fizzetch(`/game/adventurer/${this.adventurerID}/editloadout/save`, {
         items
       })
-      if(error){
-        this._showError(error)
+      if(!success){
+        console.error(error || 'Saving failed for some reason')
         this._saving = false
         this._updateSaveButton()
       }else{
@@ -78,7 +87,7 @@ export default class AdventurerLoadoutEditorPage extends Page{
   }
 
   _updateSaveButton(){
-    if(this.adventurerPane.loadoutEl.isValid && this.adventurerPane.loadoutEl.hasChanges || this._saving){
+    if(this.adventurerPane.loadoutEl.orbsData.isValid || this._saving){
       this.saveButton.removeAttribute('disabled')
     }else{
       this.saveButton.setAttribute('disabled', 'disabled')

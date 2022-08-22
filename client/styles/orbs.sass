@@ -1,14 +1,29 @@
 di-orb-row
-  height: 20rem
   display: flex
   align-items: center
+  font-size: 1.2em
+  z-index: 1
 
-  .error
-    color: red
+  &.no-tooltips
+    pointer-events: none
 
-  span
-    height: 50%
+  di-orb-entry
+    display: flex
+    font-weight: bold
+    transition: background-color 0.3s ease
+    padding: 3rem 6rem
+    align-items: center
 
-  img
-    height: 50%
-    margin-right: 3rem
+    img
+      margin-bottom: 1.5rem
+
+    &:hover
+      background-color: #DDD
+
+    &.error
+      color: red !important
+
+    img
+      height: 1em
+      width: 1em
+      margin-right: 0.25em

@@ -1,14 +1,18 @@
 import DungeonRuns from '../collections/dungeonRuns.js'
-import Combats from '../collections/combats.js'
 import Adventurers from '../collections/adventurers.js'
-import { addRewards, calculateResults } from './results.js'
+import { addRewards } from './results.js'
 import { generateEvent } from './dungeonEventPlanner.js'
-import { emit } from '../socketServer.js'
+import { broadcast, emit } from '../socketServer.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 import Users from '../collections/users.js'
-import { toDisplayName } from '../../game/utilFunctions.js'
+import { continueRelicEvent } from './relics.js'
+import { finishCombatEvent } from '../combat/combat.js'
+import { EventEmitter } from 'events'
+
+const ADVANCEMENT_INTERVAL = 5000
 
 let running = false
+let lastAdvancement = new Date()
 let activeRuns = {}
 
 export function cancelAllRuns(){
@@ -25,11 +29,11 @@ export async function start(){
   const dungeonRuns = await DungeonRuns.find({
     finished: false
   })
-  const adventurers = await Adventurers.findByIDs(dungeonRuns.map(dr => dr.adventurerID))
+  const adventurers = await Adventurers.findByIDs(dungeonRuns.map(dr => dr.adventurer._id))
   const users = await Users.findByIDs(adventurers.map(adv => adv.userID))
 
   dungeonRuns.forEach(dr => {
-    const adventurer = adventurers.find(adv => adv._id.equals(dr.adventurerID))
+    const adventurer = adventurers.find(adv => adv._id.equals(dr.adventurer._id))
     if(!adventurer || !adventurer.dungeonRunID?.equals(dr._id)){
       dr.finished = true
       DungeonRuns.save(dr)
@@ -43,24 +47,34 @@ export async function start(){
       console.log('Dungeon run in limbo, no user')
       return
     }
-    activeRuns[dr._id] = new DungeonRunInstance(dr, adventurer, user)
+    activeRuns[dr._id] = new DungeonRunInstance(dr, user)
   })
 
-  advanceTime(0)
+  advance()
+}
 
-  async function advanceTime(ms){
-    for(const id in activeRuns){
-      const activeRun = activeRuns[id]
-      activeRun.timeSinceLastEvent += ms
-      if(activeRun.currentEvent.duration <= activeRun.timeSinceLastEvent){
-        await activeRun.advance()
+async function advance(){
+  lastAdvancement = new Date()
+  for(const id in activeRuns){
+    const run = activeRuns[id]
+    try {
+      if(!run.started){
+        await run.advance({
+          passTimeOverride: true,
+          duration: ADVANCEMENT_INTERVAL,
+          message: `${run.adventurer.name} enters the dungeon.`,
+          roomType: 'entrance'
+        })
+        run.emit('started')
+      }else{
+        await run.advance()
       }
+    }catch(ex){
+      console.log('Run suspended due to error', run.doc, ex)
+      delete activeRuns[id]
     }
-    const before = Date.now()
-    setTimeout(() => {
-      advanceTime(Date.now() - before)
-    })
   }
+  setTimeout(advance, ADVANCEMENT_INTERVAL)
 }
 
 /**
@@ -71,28 +85,34 @@ export async function start(){
  */
 export async function addRun(adventurerID, dungeonOptions){
 
-  const adventurerDoc = await Adventurers.findOne(adventurerID)
+  dungeonOptions = {
+    startingFloor: 1,
+    pace: 'Brisk',
+    ...dungeonOptions
+  }
 
+  const adventurer = await Adventurers.findOne(adventurerID)
   const startingFloor = parseInt(dungeonOptions.startingFloor) || 1
-  if(startingFloor > adventurerDoc.accomplishments.highestFloor || startingFloor % 10 !== 1){
-    throw 'Invalid starting floor'
-  }
+  const userDoc = await Users.findOne(adventurer.userID)
+  validateNew(adventurer, userDoc, dungeonOptions)
 
-  if(!adventurerID){
-    throw 'No adventurer ID'
-  }
-
-  const userDoc = await Users.findOne(adventurerDoc.userID)
-  const adventurerInstance = new AdventurerInstance(adventurerDoc)
   const drDoc = await DungeonRuns.save({
-    adventurerID,
+    adventurer,
     dungeonOptions,
-    adventurerState: adventurerInstance.adventurerState,
+    adventurerState: AdventurerInstance.initialState(adventurer),
     floor: startingFloor
   })
-  adventurerDoc.dungeonRunID = drDoc._id
-  await Adventurers.save(adventurerDoc)
-  activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, adventurerDoc, userDoc)
+
+  adventurer.dungeonRunID = drDoc._id
+  await Adventurers.save(adventurer)
+
+  const instance = new DungeonRunInstance(drDoc, userDoc)
+  activeRuns[drDoc._id] = instance
+
+  await new Promise(res => {
+    instance.once('started', res)
+  })
+  return drDoc
 }
 
 export async function getRunDataMulti(dungeonRunIDs){
@@ -101,6 +121,10 @@ export async function getRunDataMulti(dungeonRunIDs){
     runs.push(await getRunData(dungeonRunIDs[i]))
   }
   return runs
+}
+
+export function getAllActiveRuns(truncated = false){
+  return Object.values(activeRuns).map(activeRun => truncated ? activeRun.truncatedDoc : activeRun)
 }
 
 export function getActiveRunData(dungeonRunID){
@@ -117,28 +141,24 @@ export async function getRunData(dungeonRunID){
   return getActiveRunData(dungeonRunID) || await DungeonRuns.findOne(dungeonRunID)
 }
 
-class DungeonRunInstance{
+class DungeonRunInstance extends EventEmitter{
 
-  constructor(doc, adventurer, user){
+  constructor(doc, user){
+    super()
     this.doc = doc
-    this.adventurer = adventurer
-    if(!this.doc.adventurerID.equals(adventurer._id)){
-      throw 'Adventurer mismatch in dungeonRun instance'
-    }
-    if(!adventurer.userID.equals(user._id)){
+    if(!this.adventurer.userID.equals(user._id)){
       throw 'User mismatch in dungeonRun instance'
     }
     this.user = user
-    this.timeSinceLastEvent = 0
-    if(!this.currentEvent){
-      this.advance({
-        message: `${this.adventurer.name} enters the dungeon.`
-      })
-    }
+    this._time = this.currentEvent?.time ?? 0
+  }
+
+  get adventurer(){
+    return this.doc.adventurer
   }
 
   get virtualTime(){
-    return this.currentEvent.startTime + this.timeSinceLastEvent
+    return this._time + (new Date() - lastAdvancement)
   }
 
   get floor(){
@@ -164,103 +184,142 @@ class DungeonRunInstance{
     return this.events.at(-1)
   }
 
+  get started(){
+    return this.currentEvent ? true : false
+  }
+
   get adventurerInstance(){
     return new AdventurerInstance(this.adventurer, this.doc.adventurerState)
   }
 
-  async advance(nextEvent){
-    process.stdout.write(this.doc.floor + '')
+  get nextEventTime(){
+    return this.currentEvent ? this.currentEvent.time + this.currentEvent.duration : 0
+  }
 
-    if(this.currentEvent?.runFinished){
-      return this._finish()
-    }
+  get pace(){
+    return this.doc.dungeonOptions.pace ?? 'Brisk'
+  }
 
-    if(this.currentEvent?.pending){
-      await this._continueEvent(this.currentEvent)
-    }else if(nextEvent){
-      this._addEvent(nextEvent)
-    }else{
-      await this._newEvent()
-    }
-
-    if(!this.currentEvent.pending){
-      this._resolveEvent(this.currentEvent)
-    }
-
+  get truncatedDoc(){
     const truncatedDoc = {
       ...this.doc,
       currentEvent: this.currentEvent,
       virtualTime: this.virtualTime
     }
-
     delete truncatedDoc.events
-    emit(this.adventurer.userID, 'user dungeon run update', truncatedDoc)
-    emit(this.doc._id, 'dungeon run update', truncatedDoc)
+    return truncatedDoc
+  }
+
+  async advance(nextEvent){
+
+    if(this._time + ADVANCEMENT_INTERVAL < this.nextEventTime){
+      this._time += ADVANCEMENT_INTERVAL
+      return
+    }else{
+      this._time = this.nextEventTime
+    }
+
+    if(this.currentEvent?.runFinished){
+      return this._finish()
+    }
+
+    if(this.currentEvent?.stayInRoom){
+      await this._continueEvent(this.currentEvent)
+    }else if(nextEvent){
+      this._addEvent(nextEvent)
+    }else{
+      await this._nextRoom()
+    }
+
+    this._resolveEvent(this.currentEvent)
+    this._emitSocketEvents()
     DungeonRuns.save(this.doc)
   }
 
   async _continueEvent(event){
     if(event.combatID){
-      await this._applyCombatResult(event)
+      this._addEvent(await finishCombatEvent(this, event))
+    }else if(event.relic){
+      this._addEvent(await continueRelicEvent(this, event))
     }
   }
 
-  async _newEvent(){
+  async _nextRoom(){
+    this.doc.room = this.currentEvent?.nextRoom || this.doc.room + 1
+    this.doc.floor = this.currentEvent?.nextFloor || this.doc.floor
     this._addEvent(await generateEvent(this))
   }
 
   async _addEvent(event){
     const nextEvent = {
-      room: this.currentEvent?.nextRoom || this.doc.room + 1,
-      floor: this.currentEvent?.nextFloor || this.doc.floor,
-      startTime: this.doc.elapsedTime,
-      duration: this.adventurerInstance.standardRoomDuration,
+      room: this.doc.room,
+      floor: this.doc.floor,
+      time: this.doc.elapsedTime,
+      duration: ADVANCEMENT_INTERVAL,
       ...event
     }
+    // Make it a multiple of the advancement interval
+    nextEvent.duration = Math.ceil(-0.01 + nextEvent.duration / ADVANCEMENT_INTERVAL) * ADVANCEMENT_INTERVAL
     this.doc.room = nextEvent.room
     this.doc.floor = nextEvent.floor
     this.doc.events.push(nextEvent)
-    this.timeSinceLastEvent = 0
   }
 
   async _resolveEvent(event){
-    if(event.adventurerState){
-      this.doc.adventurerState = event.adventurerState
-    }
     if(event.rewards){
       if(event.rewards.xp){
         event.rewards.xp = Math.ceil(event.rewards.xp)
       }
       this.doc.rewards = addRewards(this.doc.rewards, event.rewards)
     }
+    event.duration = Math.ceil(event.duration / ADVANCEMENT_INTERVAL) * ADVANCEMENT_INTERVAL
+    event.adventurerState = this._passTime(event)
+    this.doc.adventurerState = event.adventurerState
     this.doc.elapsedTime += event.duration
-  }
-
-  async _applyCombatResult(event){
-    const combat = await Combats.findOne(event.combatID)
-    const fighter = combat.fighter1.data._id.equals(this.doc.adventurerID) ? combat.fighter1 : combat.fighter2
-    const enemy = combat.fighter1.data._id.equals(this.doc.adventurerID) ? combat.fighter2 : combat.fighter1
-    if(!fighter.endState.hp){
-      event.runFinished = true
-      event.message = `${fighter.data.name} has fallen, and got kicked out of the dungeon by some mysterious entity.`
-    }else if(!enemy.endState.hp){
-      event.rewards = enemy.data.rewards
-      event.message = `${fighter.data.name} defeated the ${toDisplayName(enemy.data.name)}.`
-      event.monster.defeated = true
-    }else{
-      event.message = 'That fight was going nowhere so you both just get bored and leave.'
-    }
-    event.adventurerState = fighter.endState
-    event.pending = false
-    event.duration += 8000
   }
 
   _finish(){
     console.log('run finished', this.adventurer.name)
     this.doc.finished = true
-    this.doc.results = calculateResults(this)
     delete activeRuns[this.doc._id]
-    emit(this.adventurer.userID, 'dungeon run update', this.doc)
     DungeonRuns.save(this.doc)
+  }
+
+  /**
+   * Reduce cooldowns of actives, tick buffs/debuffs, perform regeneration, etc
+   * @private
+   * @param event
+   */
+  _passTime(event){
+    let state = event.adventurerState || this.doc.adventurerState
+    if (!event.passTimeOverride){ // Combats handle their own passage of time.
+      const adv = new AdventurerInstance(this.adventurer, state)
+      adv.passTime(event.duration)
+      // TODO: this might affect the event in other ways, such as ending the run if the adventurer dies
+      return adv.adventurerState
+    }
+    return state
+  }
+
+  _emitSocketEvents(){
+    const truncatedDoc = this.truncatedDoc
+    emit(this.adventurer.userID, 'user dungeon run update', truncatedDoc)
+    emit(this.doc._id, 'dungeon run update', truncatedDoc)
+    broadcast('live dungeon map update', truncatedDoc)
+  }
+}
+
+function validateNew(adventurerDoc, userDoc, { startingFloor }){
+  if(!adventurerDoc){
+    throw 'Adventurer not found'
+  }
+  if(startingFloor > adventurerDoc.accomplishments.deepestFloor){
+    throw 'Invalid starting floor'
+  }
+  if(adventurerDoc.dungeonRun){
+    throw 'Adventurer already in dungeon'
+  }
+  if(adventurerDoc.nextLevelUp){
+    throw 'Adventurer can not enter dungeon, they have a pending levelup'
   }
 }

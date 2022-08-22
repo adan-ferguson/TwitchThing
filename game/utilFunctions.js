@@ -33,3 +33,72 @@ export function isObject(val){
   if (val === null){ return false}
   return ( (typeof val === 'function') || (typeof val === 'object') )
 }
+
+export function mergeOptionsObjects(currentOptions, newOptions){
+  const options = { ...currentOptions }
+  for(let key in newOptions){
+    if(key in options){
+      options[key] = newOptions[key]
+    }
+  }
+  return options
+}
+
+export function wrap(content, options = {}){
+  if(options.allowHTML){
+    return makeEl({
+      content: content,
+      ...options
+    })
+  }
+  return makeEl({
+    text: content,
+    ...options
+  })
+}
+
+export function makeEl(options = {}){
+
+  options = {
+    elementType: 'div',
+    text: null,
+    content: null,
+    class: null,
+    ...options
+  }
+
+  const el = document.createElement(options.elementType)
+  if (options.content){
+    if (options.content instanceof HTMLElement){
+      el.appendChild(options.content)
+    } else {
+      el.innerHTML = options.content
+    }
+  } else if (options.text){
+    el.textContent = options.text
+  }
+
+  if (options.class){
+    el.classList.add(...toArray(options.class))
+  }
+
+  return el
+}
+
+export function fillArray(fn, length){
+  const arr = []
+  for(let i = 0; i < length; i++){
+    arr.push(fn(i))
+  }
+  return arr
+}
+
+export function wait(ms = 0){
+  return new Promise(res => {
+    setTimeout(res, ms)
+  })
+}
+
+export function isString(val){
+  return typeof val === 'string' || val instanceof String
+}

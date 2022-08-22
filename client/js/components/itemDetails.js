@@ -1,9 +1,14 @@
-import Item from '../../../game/item.js'
+import { OrbsDisplayStyle } from './orbRow.js'
+import { StatsDisplayStyle } from '../statsDisplayInfo.js'
 
 const HTML = `
-<div class="inset-title">Item</div>
-<di-loadout-row></di-loadout-row>
-<div class="stats-text"></div>
+<div class="inset-title"></div>
+<div class="top-part">
+  <div class="type-line"></div>
+  <div class="description subtitle"></div>
+</div>
+<di-stats-list></di-stats-list>
+<di-orb-row></di-orb-row>
 <!--<di-stats-list></di-stats-list>-->
 <!--<div class='item-abilities'>&#45;&#45; TODO: add other abilities here &#45;&#45;</div>-->
 `
@@ -15,26 +20,22 @@ export default class ItemDetails extends HTMLElement{
   _statsList
   _abilitiesList
 
-  constructor(item = null){
+  constructor(itemInstance, options = {}){
     super()
     this.innerHTML = HTML
-    this._loadoutRow = this.querySelector('di-loadout-row')
-    this._statsText = this.querySelector('.stats-text')
-    // this._statsList = this.querySelector('di-stats-list')
-    // this._statsList.setOptions({
-    //   statsDisplayStyle: StatsDisplayStyle.ADDITIONAL
-    // })
-    this._abilitiesList = this.querySelector('.item-abilities')
-    if(item){
-      this.setItem(item)
-    }
-  }
-
-  setItem(itemDef){
-    const item = new Item(itemDef)
-    this._loadoutRow.setItem(item, false)
-    this._statsText.innerHTML = item.HTML
-    // this._statsList.setStats(item.stats)
+    this.querySelector('.inset-title').textContent = itemInstance.displayName
+    this.querySelector('.type-line').textContent = 'Standard Item'
+    this.querySelector('di-orb-row')
+      .setOptions({
+        style: OrbsDisplayStyle.MAX_ONLY
+      })
+      .setData(itemInstance.orbs)
+    this.querySelector('di-stats-list')
+      .setOptions({
+        statsDisplayStyle: StatsDisplayStyle.ADDITIONAL
+      })
+      .setStats(itemInstance.stats)
+    this.querySelector('.description').textContent = itemInstance.description
   }
 }
 

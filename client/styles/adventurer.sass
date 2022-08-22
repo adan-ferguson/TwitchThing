@@ -8,3 +8,58 @@ di-adventurer-page
 
   .something
     flex: 0 0 160rem
+
+  .scary-buttons
+
+    .dismiss
+      border-color: red !important
+      color: red
+      float: right
+      font-size: 0.9em
+      padding: 6rem
+
+      &:hover
+        color: white !important
+        background-color: red !important
+
+di-adventurer-pane, di-dungeon-adventurer-pane, di-combat-fighter-pane
+
+  .adventurer-orbs
+    height: 25rem
+    justify-content: space-around
+    margin: 6rem -6rem
+
+    di-orb-entry
+      position: relative
+      justify-content: center
+      flex-grow: 1
+      z-index: -1
+      padding: 5rem 0
+
+      &:before
+        content: ''
+        position: absolute
+        left: 0
+        right: 0
+        top: 0
+        bottom: 0
+        opacity: 0.15
+        background-color: currentColor
+        pointer-events: none
+
+  .top-section
+
+    di-stats-list
+      flex-grow: 1 !important
+
+    transition: background-color 0.2s
+
+    &:hover
+      background-color: #effaf8
+
+    cursor: pointer
+    padding: 6rem 12rem 0
+    margin-bottom: 6rem
+
+    > *
+      margin-bottom: 6rem

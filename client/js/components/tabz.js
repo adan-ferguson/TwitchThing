@@ -32,7 +32,11 @@ export default class Tabz extends HTMLElement{
       tab.classList.toggle('active', tab.getAttribute('data-tab-name') === name)
     })
     this.querySelectorAll('.tabz-content > *').forEach(tabContent => {
-      tabContent.classList.toggle('active', tabContent.getAttribute('data-tab-name') === name)
+      const match = tabContent.getAttribute('data-tab-name') === name
+      if(match){
+        tabContent.show?.()
+      }
+      tabContent.classList.toggle('active', match)
     })
   }
 }

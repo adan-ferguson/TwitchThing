@@ -14,6 +14,9 @@ export default class Collection{
   }
 
   async findOne(queryOrID, projection = {}){
+    if(!queryOrID){
+      throw 'Tried to findOne with null value, probably a bug'
+    }
     return await db.findOne(this.collectionName, queryOrID, projection, this.defaults)
   }
 

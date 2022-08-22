@@ -1,33 +1,24 @@
 import tippy from 'tippy.js'
-import Item from '../../../../game/item.js'
 import SimpleModal from '../simpleModal.js'
-import ItemDetails from '../itemDetails.js'
+import { wrap } from '../../../../game/utilFunctions.js'
 
 const HTML = `
-<div>
-    <span class="icon"></span> <span class="name"></span>
-</div>
-<di-orb-row></di-orb-row>
+<di-item-row></di-item-row>
 <div class="new-badge hidden">New!</div>
 `
 
 export default class LoadoutRow extends HTMLElement{
 
-  _iconEl
-  _nameEl
-  _orbRow
   _newBadge
-
   _options
 
-  constructor(index = -1, item = null){
+  loadoutItem
+
+  constructor(index = -1){
     super()
     this.innerHTML = HTML
-
-    this._iconEl = this.querySelector('.icon')
-    this._nameEl = this.querySelector('.name')
-    this._orbRow = this.querySelector('di-orb-row')
     this._newBadge = this.querySelector('.new-badge')
+    this._itemRowEl = this.querySelector('di-item-row')
     this._tippy = tippy(this, {
       theme: 'light',
       allowHTML: true
@@ -36,14 +27,12 @@ export default class LoadoutRow extends HTMLElement{
       showNewBadge: false
     }
     this._tippy.disable()
-
     this.index = index
-    this.setItem(item)
-
+    this.setItem(null)
     this.addEventListener('contextmenu', e => {
-      if(this.item){
+      if(this.loadoutItem?.makeDetails){
         e.preventDefault()
-        const modal = new SimpleModal(new ItemDetails(this.item))
+        const modal = new SimpleModal(this.loadoutItem.makeDetails())
         modal.show()
       }
     })
@@ -53,17 +42,26 @@ export default class LoadoutRow extends HTMLElement{
     })
   }
 
-  get itemTooltip(){
-    if(!this.item){
+  get tooltip(){
+
+    if(!this.loadoutItem?.makeTooltip){
       return ''
     }
-    const tooltip = document.createElement('div')
-    tooltip.innerHTML = this.item.HTML
 
-    const right = document.createElement('div')
-    right.classList.add('right-click')
-    right.innerHTML = 'right-click for more info'
-    tooltip.appendChild(right)
+    const tooltip = document.createElement('div')
+    tooltip.classList.add('loadout-row-tooltip')
+
+    tooltip.appendChild(wrap(this.loadoutItem.makeTooltip(true), {
+      class: 'tooltip-content',
+      allowHTML: true
+    }))
+
+    if(this.loadoutItem.makeDetails){
+      tooltip.appendChild(wrap('Right-click for more info (not)', {
+        class: 'right-click'
+      }))
+    }
+
     return tooltip
   }
 
@@ -71,25 +69,21 @@ export default class LoadoutRow extends HTMLElement{
     this._newBadge.classList.toggle('hidden', !show)
   }
 
-  setItem(item, enableTooltip = true){
-    if(!item){
+  setItem(loadoutItem){
+    if(!loadoutItem){
       return this._setupBlank()
     }
-    item = new Item(item)
     this.classList.remove('blank-row')
-    this.item = item
-    this._nameEl.textContent = this.item.name
-    this._orbRow.setValue(item.orbs)
-
-    if(enableTooltip){
-      this._tippy.enable()
-      this._tippy.setContent(this.itemTooltip)
-    }
+    this.loadoutItem = loadoutItem
+    this._itemRowEl.setItem(loadoutItem)
+    this._tippy.enable()
+    this._tippy.setContent(this.tooltip)
   }
 
   _setupBlank(){
     this.classList.add('blank-row')
-    this.item = null
+    this.loadoutItem = null
+    this._itemRowEl.setItem(null)
     this._tippy.disable()
   }
 }

@@ -1,4 +1,7 @@
 import Combats from '../collections/combats.js'
+import { toDisplayName } from '../../game/utilFunctions.js'
+import { randomOrder } from '../../game/rando.js'
+import { generateMonster } from '../dungeons/monsters.js'
 import FighterInstance from '../../game/combat/fighterInstance.js'
 
 const START_TIME_DELAY = 1000
@@ -6,28 +9,71 @@ const MAX_TIME = 120000
 
 const STATE_VALUES_TO_CLEAR = ['timeSinceLastAction']
 
-export async function generateCombat(fighter1, fighter2, fighterStartState1 = {}, fighterStartState2 = {}){
+export async function generateCombatEvent(dungeonRun){
+  const adventurerInstance = dungeonRun.adventurerInstance
+  const monster = await generateMonster(dungeonRun)
+  // TODO: monsterInstance, adventurerInstance as combat params
+  const combat = await generateCombat(
+    new FighterInstance(adventurerInstance.adventurer, adventurerInstance.adventurerState, 1),
+    new FighterInstance(monster, {}, 2),
+    dungeonRun.floor
+  )
+  return {
+    duration: combat.duration,
+    stayInRoom: true,
+    message: `${dungeonRun.adventurer.name} is fighting a ${toDisplayName(monster.name)}.`,
+    combatID: combat._id,
+    passTimeOverride: true,
+    roomType: 'combat',
+    monster
+  }
+}
+export async function generateCombat(fighterInstance1, fighterInstance2, floor){
 
-  const fighterInstance1 = new FighterInstance(fighter1, fighterStartState1)
-  const fighterInstance2 = new FighterInstance(fighter2, fighterStartState2)
   const combat = new Combat(fighterInstance1, fighterInstance2)
 
   return await Combats.save({
     startTime: Date.now() + START_TIME_DELAY,
     duration: combat.duration,
     fighter1: {
-      data: fighter1,
-      startState: fighterStartState1,
+      id: 1,
+      data: fighterInstance1.baseFighter,
+      startState: fighterInstance1.startState,
       endState: combat.fighterEndState1
     },
     fighter2: {
-      data: fighter2,
-      startState: fighterStartState2,
+      id: 2,
+      data: fighterInstance2.baseFighter,
+      startState: fighterInstance2.startState,
       endState: combat.fighterEndState2
     },
     timeline: combat.timeline,
-    result: combat.result
+    result: combat.result,
+    floor: floor
   })
+}
+
+export async function finishCombatEvent(dungeonRun, combatEvent){
+  const combat = await Combats.findOne(combatEvent.combatID)
+  const fighter = combat.fighter1.data._id.equals(dungeonRun.adventurer._id) ? combat.fighter1 : combat.fighter2
+  const enemy = combat.fighter1.data._id.equals(dungeonRun.adventurer._id) ? combat.fighter2 : combat.fighter1
+  const event = {
+    adventurerState: fighter.endState,
+    passTimeOverride: true
+  }
+  if(!fighter.endState.hp){
+    event.runFinished = true
+    event.roomType = 'dead'
+    event.message = `${fighter.data.name} has fallen, and got kicked out of the dungeon by some mysterious entity.`
+  }else if(!enemy.endState.hp){
+    event.rewards = enemy.data.rewards
+    event.message = `${fighter.data.name} defeated the ${toDisplayName(enemy.data.name)}.`
+    event.monster = { ...combatEvent.monster, defeated: true }
+    event.roomType = 'victory'
+  }else{
+    event.message = 'That fight was going nowhere so you both just get bored and leave.'
+  }
+  return event
 }
 
 class Combat{
@@ -35,16 +81,17 @@ class Combat{
   constructor(fighterInstance1, fighterInstance2){
     this.fighterInstance1 = fighterInstance1
     this.fighterInstance2 = fighterInstance2
-    this.timeline = [{
-      time: 0,
-      fighterState1: this.fighterInstance1.currentState,
-      fighterState2: this.fighterInstance2.currentState
-    }]
     this._currentTime = 0
+    this.timeline = []
+    this._addTimelineEntry()
     this._run()
     this.fighterEndState1 = cleanupState(this.fighterInstance1.currentState)
     this.fighterEndState2 = cleanupState(this.fighterInstance2.currentState)
     this.duration = this._currentTime
+  }
+
+  get time(){
+    return this._currentTime
   }
 
   get result(){
@@ -55,22 +102,22 @@ class Combat{
     return this._currentTime === MAX_TIME || !this.fighterInstance1.hp || !this.fighterInstance2.hp
   }
 
+  getEnemyOf(fighterInstance){
+    return this.fighterInstance1 === fighterInstance ? this.fighterInstance2 : this.fighterInstance1
+  }
+
   _run(){
     while(!this.finished){
       this._advanceTime()
 
-      let timelineEntry = {}
+      const tickUpdates = this._tick()
+      const actions = this._doActions()
 
-      if(this._currentTime % 1000 === 0){
-        timelineEntry = { ...timelineEntry, ...this._tick() }
-      }
-      timelineEntry = { ...timelineEntry, ...this._doActions() }
-
-      if(Object.keys(timelineEntry).length){
-        timelineEntry.time = this._currentTime
-        timelineEntry.fighterState1 = this.fighterInstance1.currentState
-        timelineEntry.fighterState2 = this.fighterInstance2.currentState
-        this.timeline.push(timelineEntry)
+      if(actions.length || tickUpdates.length){
+        this._addTimelineEntry({
+          actions,
+          tickUpdates
+        })
       }
     }
   }
@@ -84,36 +131,61 @@ class Combat{
   }
 
   _tick(){
-    // TODO: ticks
-    return {}
+
+    if(this._currentTime % 1000 !== 0){
+      return []
+    }
+
+    const tickUpdates = []
+
+    const doTick = source => {
+      tickUpdates.push(...source.performTick(this))
+    }
+
+    randomOrder(
+      () => doTick(this.fighterInstance1, this.fighterInstance2),
+      () => doTick(this.fighterInstance2, this.fighterInstance1)
+    )
+
+    return tickUpdates
   }
 
   _doActions(){
 
-    const actions = {}
+    const actions = []
 
-    const f1action = () => {
-      if(this.fighterInstance1.actionReady){
-        actions.fighterAction1 = this.fighterInstance1.performAction(this.fighterInstance2)
+    const doAction = actor => {
+      if(actor.actionReady){
+        const { ability, results } = actor.performAction(this)
+        actions.push({
+          actor: actor.fighterId,
+          ability,
+          results
+        })
       }
     }
 
-    const f2action = () => {
-      if(this.fighterInstance2.actionReady){
-        actions.fighterAction2 = this.fighterInstance2.performAction(this.fighterInstance1)
-      }
-    }
-
-    // Randomize p1 and p2 action if tied
-    const fns = [f1action]
-    if(Math.random() > 0.5){
-      fns.push(f2action)
-    }else{
-      fns.unshift(f2action)
-    }
-    fns.forEach(fn => fn())
+    randomOrder(
+      () => doAction(this.fighterInstance1, this.fighterInstance2),
+      () => doAction(this.fighterInstance2, this.fighterInstance1)
+    )
 
     return actions
+  }
+
+  _1or2(fighterInstance){
+    return this.fighterInstance1 === fighterInstance ? 1 : 2
+  }
+
+  _addTimelineEntry(options = {}){
+    this.timeline.push({
+      time: this._currentTime,
+      actions: [],
+      tickUpdates: [],
+      fighterState1: this.fighterInstance1.currentState,
+      fighterState2: this.fighterInstance2.currentState,
+      ...options
+    })
   }
 }
 

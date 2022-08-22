@@ -1,4 +1,4 @@
-export function fadeOut(el, speed = 200){
+export function fadeOut(el, speed = 250){
   return new Promise(res => {
     if(document.hidden){
       el.style.opacity = 0
@@ -25,10 +25,24 @@ export function fadeIn(el){
     el.animate([
       { opacity: 1 }
     ], {
-      duration: 200,
+      duration: 250,
       easing: 'ease-out'
     }).onfinish = () => {
       el.style.opacity = 1
+      res()
+    }
+  })
+}
+
+export function flash(el, color, duration = 250){
+  const originalBackgroundColor = el.style.backgroundColor || 'transparent'
+  return new Promise(res => {
+    el.animate([
+      { backgroundColor: color },
+      { backgroundColor: originalBackgroundColor }
+    ], {
+      duration
+    }).onfinish = () => {
       res()
     }
   })

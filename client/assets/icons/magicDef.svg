@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-10 -10 70 70">
+    <path
+        fill="#48F"
+        d="
+        M-5,-10
+        l60,0
+        l0,48
+        l-30,22
+        l-30,-22
+        Z"
+    />
+    <path
+            fill="#FFF"
+            d="
+            M20,0
+            L44,0
+            L28,22
+            L44,22
+            L15,47
+            L22,27
+            L6,27
+            Z"
+    />
+</svg>

@@ -42,7 +42,7 @@ export default function(inventoryEl, loadoutEl, options = {}){
 
   function click(e){
     const row = e.target.closest('di-loadout-row')
-    if(!row?.item){
+    if(!row?.loadoutItem || row.classList.contains('filtered')){
       return
     }
     if(dragStarted){
@@ -50,12 +50,12 @@ export default function(inventoryEl, loadoutEl, options = {}){
     }
     if(inventoryEl.contains(row)){
       if(!loadoutEl.isFull){
-        inventoryEl.removeItem(row.item)
-        loadoutEl.addItem(row.item)
+        inventoryEl.removeItem(row.loadoutItem)
+        loadoutEl.addItem(row.loadoutItem)
         changed()
       }
     }else{
-      inventoryEl.addItem(row.item)
+      inventoryEl.addItem(row.loadoutItem)
       loadoutEl.setItem(row.index, null)
       changed()
     }
@@ -63,7 +63,7 @@ export default function(inventoryEl, loadoutEl, options = {}){
 
   function pointerdown(e){
     const row = e.target.closest('di-loadout-row')
-    if(!row?.item){
+    if(!row?.loadoutItem || row.classList.contains('filtered')){
       return
     }
     draggedElement = row
@@ -102,6 +102,7 @@ export default function(inventoryEl, loadoutEl, options = {}){
         hovered?.classList.add('hovered')
         hoveredElement = hovered
       }
+      draggedElement.style.zIndex = 1000
       draggedElement.style.transform = `translate(${currentPoint.x - initialPoint.x}px, ${currentPoint.y - initialPoint.y}px)`
     }
   }
@@ -113,18 +114,18 @@ export default function(inventoryEl, loadoutEl, options = {}){
     }
     if(hoveredElement){
       if(hoveredElement === inventoryEl){
-        inventoryEl.addItem(draggedElement.item)
+        inventoryEl.addItem(draggedElement.loadoutItem)
         loadoutEl.setItem(draggedElement.index, null)
         changed()
       }else if(loadoutEl.contains(draggedElement)){
         loadoutEl.swap(draggedElement.index, hoveredElement.index)
         changed()
       }else{
-        inventoryEl.removeItem(draggedElement.item)
-        if(hoveredElement.item){
-          inventoryEl.addItem(hoveredElement.item)
+        inventoryEl.removeItem(draggedElement.loadoutItem)
+        if(hoveredElement.loadoutItem){
+          inventoryEl.addItem(hoveredElement.loadoutItem)
         }
-        loadoutEl.setItem(hoveredElement.index, draggedElement.item)
+        loadoutEl.setItem(hoveredElement.index, draggedElement.loadoutItem)
         changed()
       }
     }
@@ -151,7 +152,6 @@ export default function(inventoryEl, loadoutEl, options = {}){
   }
 
   function changed(){
-    loadoutEl.updateOrbs()
     options.onChange()
   }
 }
@@ -176,6 +176,7 @@ function reset(){
   }
   if(draggedElement){
     draggedElement.style.transform = 'initial'
+    draggedElement.style.zIndex = 'initial'
     draggedElement = null
   }
   hoveredElement = null

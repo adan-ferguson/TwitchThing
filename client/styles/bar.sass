@@ -1,16 +1,19 @@
-di-bar, di-xp-bar, di-hp-bar
-  display: flex
+.di-bar
   height: 2.5em
+  display: flex
   flex-direction: row
   align-items: stretch
+  background-color: white
 
   .bar-badge
-    text-align: center
     background-color: white
-    border: 0.2rem solid #BBB
-    border-right: none
     display: flex
     align-items: center
+    justify-content: center
+    margin-right: 10rem
+
+    img
+      height: 80%
 
     span
       padding: 0 0.8em
@@ -38,6 +41,18 @@ di-bar, di-xp-bar, di-hp-bar
       transform: translate(-50%, -50%)
       white-space: nowrap
 
+      > *
+        padding-right: 3rem
+
       color: currentColor
       //text-shadow: -$t -$t 0 #000, $t -$t 0 #000,-$t $t 0 #000, $t $t 0 #000
 
+di-action-bar.di-bar
+  height: 1.25em
+
+di-xp-bar
+  .bar-badge
+    padding: 0 1em
+    margin-right: 0 !important
+    border: 0.5rem solid #BBB
+    border-right: none

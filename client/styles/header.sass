@@ -3,6 +3,8 @@ di-header
   width: 100%
   flex-basis: 40rem
   flex-shrink: 0
+  background-color: white
+  position: relative
 
   display: flex
   flex-direction: row
@@ -12,14 +14,19 @@ di-header
   box-shadow: 0 -5rem 10rem black
   box-sizing: border-box
 
-  di-xp-bar
+  .title-text
+    font-size: 2em
+    -webkit-text-stroke: 0.1rem white
+
+  .user-info
     position: relative
+    border: 1px solid #CCC
     font-size: 12rem
-    width: 240rem
+    padding: 8rem 12rem
 
   .back-button.hidden
     visibility: hidden
 
 @media (max-aspect-ratio: 1/1)
   di-header
-    flex-basis: 65rem
+    flex-basis: 75rem

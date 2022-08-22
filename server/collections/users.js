@@ -1,6 +1,5 @@
 import Adventurers from './adventurers.js'
 import Collection from './collection.js'
-import { levelToAdventurerSlots } from '../../game/user.js'
 
 const DEFAULTS = {
   _id: null,
@@ -10,15 +9,23 @@ const DEFAULTS = {
     type: 'none'
   },
   displayname: null,
-  xp: 0,
-  level: 0,
   adventurers: [],
+  accomplishments: {
+    deepestFloor: 1,
+    firstRunFinished: 0,
+    chestsFound: 0
+  },
   features: { // featureName: 0 = locked, 1 = unlocked & brand new, 2 = unlocked
-    items: 0,
-    chests: 0,
-    relics: 0
+    editLoadout: 0,
+    dungeonPicker: 0,
+    advClasses: {
+      fighter: 2,
+      tank: 2,
+      ranger: 2
+    }
   },
   inventory: {
+    adventurerSlots: 1,
     items: {}
   }
 }
@@ -69,12 +76,14 @@ Users.setDisplayname = async function(userDoc, displayname){
   await Users.save(userDoc)
 }
 
-Users.newAdventurer = async function(userDoc, adventurername){
-  const availableSlots = levelToAdventurerSlots(userDoc.level)  - userDoc.adventurers.length
+Users.newAdventurer = async function(userDoc, adventurername, startingClass){
+  const availableSlots = userDoc.inventory.adventurerSlots - userDoc.adventurers.length
   if(availableSlots <= 0){
-    throw { error: 'No slots available.', code: 403 }
+    throw { message: 'No slots available.', code: 403 }
   }
-  const adventurerDoc = await Adventurers.createNew(userDoc._id, adventurername)
+  // TODO: flexible starting bonuses
+  // TODO: prevent duplicates?
+  const adventurerDoc = await Adventurers.createNew(userDoc._id, adventurername, startingClass)
   userDoc.adventurers.push(adventurerDoc._id)
   await Users.save(userDoc)
   return adventurerDoc

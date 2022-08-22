@@ -3,22 +3,24 @@ import { v4 } from 'uuid'
 import Picker from '../../game/picker.js'
 
 const itemPicker = new Picker(BaseItems, {
-  valueFormula: baseItemDef => baseItemDef.orbs
+  valueFormula: baseItemDef => baseItemDef.orbs,
+  lowerDeviation: 0.9,
+  higherDeviation: 0.5
 })
 
-export function generateItemDef(baseTypeName){
-  if(!BaseItems[baseTypeName]){
-    throw 'Invalid item base type: ' + baseTypeName
+export function generateItemDef({ group, name }){
+  if(!BaseItems[group][name]){
+    throw `Invalid base item type: ${group} / ${name}`
   }
   return {
     id: v4(),
     created: new Date(),
     isNew: true,
-    baseType: baseTypeName
+    baseType: { group, name }
   }
 }
 
-export function generateRandomItemDef(val){
-  const baseType = itemPicker.pick(val)
+export function generateRandomItemDef(chestLevel){
+  const baseType = itemPicker.pick(chestLevel / 3)
   return generateItemDef(baseType)
 }

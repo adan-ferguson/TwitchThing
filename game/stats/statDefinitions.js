@@ -1,92 +1,82 @@
 export const StatType = {
-  COMPOSITE: 0, // Can add both flat and percentage
+  FLAT: 0,
   MULTIPLIER: 1, // 0 to infinity, default is 1
   PERCENTAGE: 2, // 0 to 1, default is 0
-  ADDITIVE_MULTIPLIER: 3 // 20% + 20% = 1.4, but 20% - 50% = 0.6
-}
-
-/**
- * Where the stat shows up during levelup bonus
- */
-export const StatBonusCategory = {
-  NONE: 0, // Can't be offered in levelups
-  OFFENSIVE: 1,
-  DEFENSIVE: 2,
-  ADVENTURING: 3
 }
 
 const DEFAULT_DEFINITION = {
-  category: StatBonusCategory.NONE,
-  type: StatType.COMPOSITE,
-  weight: 1,
-  scaling: null,
-  minValue: null,           // derived from type if not defined
-  maxValue: null,           // derived from type if not defined
-  defaultValue: null,       // derived from type if not defined
+  type: StatType.FLAT,
+  minValue: null,           // derived from type if null
+  maxValue: null,           // derived from type if nul
+  defaultValue: null,       // derived from type if null
   roundingDecimals: 3,
-  rarity: null              // Can't be randomly generated if null
+  inverted: false           // If inverted, lower = better & higher = worse
 }
 
-export const StatDefinitions = {
-  attack: {
-    ...DEFAULT_DEFINITION,
-    weight: 20,
-    category: StatBonusCategory.OFFENSIVE,
-    roundingDecimals: 0,
-    scaling: true,
-    rarity: 1
+const defs = {
+  chestFind: {
+    type: StatType.MULTIPLIER
+  },
+  combatHarderChance: {
+    type: StatType.MULTIPLIER
+  },
+  combatXP: {
+    type: StatType.MULTIPLIER
+  },
+  critChance: {
+    minValue: 0,
+    maxValue: 1
+  },
+  critDamage: {
+    type: StatType.MULTIPLIER
+  },
+  dodgeChance: {
+    type: StatType.PERCENTAGE
   },
   hpMax: {
-    ...DEFAULT_DEFINITION,
-    weight: 1,
-    category: StatBonusCategory.DEFENSIVE,
-    scaling: true,
-    roundingDecimals: 0,
-    rarity: 1
+    type: StatType.MULTIPLIER
   },
-  speed: {
-    ...DEFAULT_DEFINITION,
-    weight: 200,
-    category: StatBonusCategory.OFFENSIVE,
-    type: StatType.MULTIPLIER,
-    rarity: 2
-  },
-  physDef: {
-    ...DEFAULT_DEFINITION,
-    weight: 200,
-    type: StatType.PERCENTAGE,
-    category: StatBonusCategory.DEFENSIVE,
-    rarity: 2
+  landmarkFind: {
+    type: StatType.MULTIPLIER
   },
   lifesteal: {
-    ...DEFAULT_DEFINITION,
-    weight: 4,
-    category: StatBonusCategory.NONE,
-    rarity: 3,
     minValue: 0
   },
-  xpGain: {
-    ...DEFAULT_DEFINITION,
-    weight: 200,
-    type: StatType.MULTIPLIER,
-    category: StatBonusCategory.ADVENTURING,
-    rarity: 3
+  magicPower: {
+    type: StatType.MULTIPLIER
   },
-  stairFind: {
-    ...DEFAULT_DEFINITION,
-    weight: 200,
-    type: StatType.MULTIPLIER,
-    category: StatBonusCategory.ADVENTURING,
-    rarity: 2
+  magicDef: {
+    type: StatType.PERCENTAGE
   },
-  relicFind: {
-    ...DEFAULT_DEFINITION,
-    weight: 200,
-    type: StatType.MULTIPLIER,
-    category: StatBonusCategory.ADVENTURING,
-    rarity: 3
+  physPower: {
+    type: StatType.MULTIPLIER
   },
-  power: {
-    ...DEFAULT_DEFINITION
+  physDef: {
+    type: StatType.PERCENTAGE
+  },
+  relicRareChance: {
+    type: StatType.MULTIPLIER
+  },
+  relicSolveChance: {
+    type: StatType.MULTIPLIER
+  },
+  rewards: {
+    type: StatType.MULTIPLIER
+  },
+  regen: {
+    minValue: 0
+  },
+  speed: {
+    type: StatType.MULTIPLIER
+  },
+}
+
+for(let key in defs){
+  defs[key] = {
+    ...DEFAULT_DEFINITION,
+    ...defs[key],
+    name: key
   }
 }
+
+export const StatDefinitions = defs

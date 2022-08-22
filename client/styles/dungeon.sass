@@ -3,9 +3,12 @@ di-dungeon-event
   flex-direction: column
   opacity: 1
   transition: opacity 0.3s
+  height: 100%
+  text-align: center
 
   > *
     margin-top: 6rem
+    flex-shrink: 0
 
   .time-bar
     width: 100%
@@ -18,7 +21,27 @@ di-dungeon-event
     opacity: 0
 
   .rewards
+    padding-top: 8rem
     color: mediumseagreen
+
+  .room-image
+    height: 75%
+    display: flex
+    justify-content: center
+    align-items: center
+    margin-top: 0
+
+    img
+      width: 100%
+      max-height: 100%
+
+  .room-contents
+    flex-grow: 1
+    display: flex
+    flex-direction: column
+    align-items: center
+    justify-content: center
+    text-align: center
 
 di-dungeon-state
   font-family: 'Number Font', serif
@@ -26,7 +49,7 @@ di-dungeon-state
 di-dungeon-page
   position: relative
 
-  .subpage
+  .page
     display: flex
     > *
       flex: 1 1
@@ -35,3 +58,60 @@ di-dungeon-page
     position: absolute
     right: 5rem
     bottom: 5rem
+
+di-dungeon-timeline-controls
+
+  .event-time-bar
+    height: 1.1em
+    .bar-border
+      border: none
+    .bar-label
+      padding-top: 4px
+
+  .buttons
+    justify-content: space-between
+    margin-left: 1px
+    margin-top: 0.4em
+
+    button
+      margin-left: -1px
+      width: 50rem
+
+di-event-log
+  overflow-y: auto
+  max-height: 90vh
+  display: flex
+  flex-direction: column
+  justify-content: stretch
+
+  di-event-log-row
+    display: flex
+    flex-direction: row
+    padding: 4rem
+    align-items: center
+    border-bottom: 0.5rem solid #DDDDDD
+    margin-right: 5rem
+
+    .floor
+      width: 40rem
+
+    .hp-pct
+      width: 40rem
+      height: 10rem
+      margin-right: 15rem
+
+      .bar-border
+        border-color: #c6f58d
+
+      .bar-foreground
+        background-color: #c6f58d !important
+
+    &.current
+      background-color: #f7ffd3
+
+    &:hover
+      background-color: #dfeaff
+
+    .time
+      width: 60rem
+      font-weight: bold
