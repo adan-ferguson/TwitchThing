@@ -116,7 +116,7 @@ function makeComponentImporter(targetPath){
   }
 }
 
-export const watch =  () => {
+export const watch = () => {
   gulp.watch('./client/js/components/**/*.js', { ignoreInitial: false }, importComponents)
   gulp.watch('./client/styles/**/*.sass', { ignoreInitial: false }, buildStyles)
   gulp.watch('./client/assets/**/*', { ignoreInitial: false }, copyAssets)
