@@ -13,7 +13,6 @@ import { fadeIn, fadeOut } from '../animationHelper.js'
 
 const HTML = `
 <di-header></di-header>
-<div class="page-title"></div>
 <div class="content"></div>
 `
 
@@ -25,12 +24,10 @@ const PAGES = {
 export default class App extends HTMLElement{
 
   currentPage
-  _pageTitle
 
   constructor(startupParams = {}){
     super()
     this.innerHTML = HTML
-    this._pageTitle = this.querySelector('.page-title')
     this.currentPage = null
     this.header = this.querySelector('di-header')
     this.startupParams = startupParams || {}

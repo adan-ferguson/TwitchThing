@@ -7,7 +7,8 @@ const HTML = `
 <div class="user-info clickable">
     <span class="displayname"></span> <i class="fa-solid fa-caret-down"></i>
 </div>
-<div class="title-text"></div>
+<div class="autocrawl absolute-center-both">AUTOCRAWL</div>
+<div class="title-text absolute-center-both"></div>
 `
 
 export default class Header extends HTMLElement{
@@ -61,7 +62,7 @@ export default class Header extends HTMLElement{
       this.querySelector('.displayname').textContent = this.user.displayname
     }
     if(this.app.watchView){
-      this.backButton.textContent = 'Secret Project DI'
+      this.backButton.textContent = 'AutoCrawl'
     }
   }
 }

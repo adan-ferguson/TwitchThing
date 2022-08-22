@@ -4,6 +4,7 @@ di-header
   flex-basis: 40rem
   flex-shrink: 0
   background-color: white
+  position: relative
 
   display: flex
   flex-direction: row
@@ -14,9 +15,8 @@ di-header
   box-sizing: border-box
 
   .title-text
-    position: absolute
-    left: 50%
-    transform: translateX(-50%)
+    font-size: 2em
+    -webkit-text-stroke: 0.1rem white
 
   .user-info
     position: relative
@@ -29,4 +29,4 @@ di-header
 
 @media (max-aspect-ratio: 1/1)
   di-header
-    flex-basis: 65rem
+    flex-basis: 75rem

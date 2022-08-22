@@ -24,19 +24,16 @@ export function setup(server, sessionMiddleware){
       })
     }else{
       socket.emit('anonymous connect')
-      console.log('Anonymous user connected')
     }
 
     socket.on('joinroom', roomID => {
       socket.join(roomID)
       socket.emit('room joined', roomID)
-      console.log('User joined room', roomID)
     })
 
     socket.on('leaveroom', roomID => {
       socket.join(roomID)
       socket.emit('room left', roomID)
-      console.log('User left room', roomID)
     })
   })
 }

@@ -19,7 +19,9 @@ const HTML = `
       <div class="content-well">
         <di-live-dungeon-map></di-live-dungeon-map>
       </div>
-      <button class="flex-no-grow">Discord</button>
+      <a href="https://discord.gg/Y3UDA9SX" target="_blank" class="flex-no-grow discord buttonish">
+        <i class="fab fa-discord"></i> Join the Discord server for updates and news
+      </a>
     </div>
   </div>
 </div>
@@ -40,10 +42,6 @@ export default class MainPage extends Page{
     if(error){
       this._showError(error)
     }
-  }
-
-  get titleText(){
-    return 'Home Page'
   }
 
   get backPage(){

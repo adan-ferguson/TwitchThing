@@ -9,7 +9,8 @@ const HTML = `
 <div class="fill-contents">
     <di-tabz>
         <di-admin-command-tab data-tab-name="Command"></di-admin-command-tab>
-        <di-admin-adventurer-tab data-tab-name="Adventurer"></di-admin-adventurer-tab>
+        <di-admin-adventurer-tab data-tab-name="Adventurers"></di-admin-adventurer-tab>
+        <di-admin-logs-tab data-tab-name="View Logs"></di-admin-logs-tab>
     </di-tabz>
 </div>
 `
@@ -19,22 +20,17 @@ export default class AdminPage extends Page{
   constructor(adventurerID){
     super()
     this.innerHTML = HTML
-    this._commandTab = this.querySelector('di-admin-command-tab')
-    this._adventurerTab = this.querySelector('di-admin-adventurer-tab')
   }
 
   get titleText(){
     return 'Admin Control Panel'
   }
 
-  async load(){
-
-    const { adventurers, error } = await fizzetch('/admin')
+  async load(_){
+    const { error } = await fizzetch('/admin')
     if(error){
       return error
     }
-
-    this._adventurerTab.setAdventurers(adventurers)
   }
 }
 

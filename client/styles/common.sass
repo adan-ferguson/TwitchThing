@@ -11,6 +11,10 @@ html
   font-size: 0.12vh
   user-select: none
 
+@media (max-aspect-ratio: 1/1)
+  html
+    font-size: 0.12vw
+
 html, body
   position: relative
   width: 100%
@@ -43,7 +47,8 @@ input
   font-family: 'Main Font', Arial, serif
   font-size: 12rem
 
-button
+button, .buttonish
+  text-decoration: none
   font-family: 'Main Font', Arial, serif
   font-size: 12rem
   border: 1rem solid black
@@ -174,3 +179,8 @@ input
     background-color: white
   to
     background-color: #d8f6d8
+
+.autocrawl
+  font-size: 5em
+  font-family: serif
+  color: #e0ebff

@@ -6,7 +6,6 @@ import tippy from 'tippy.js'
 import AdventurerStatus from './adventurerStatus.js'
 
 const HTML = `
-<div class="heading">Current Active Runs</div>
 <div class="runs">
   <di-loader class="show"></di-loader>
 </div>

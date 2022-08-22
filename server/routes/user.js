@@ -68,6 +68,7 @@ router.get('/newuser', async (req, res) => {
   if(req.query && req.query.displayname){
     err = await Users.setDisplayname(req.user, req.query.displayname)
     if(!err){
+      console.log('New User', req.query.displayname)
       return res.redirect('/game')
     }
   }
