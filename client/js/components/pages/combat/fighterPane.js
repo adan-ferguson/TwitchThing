@@ -55,17 +55,16 @@ export default class FighterPane extends HTMLElement{
     return this.fighter?.items ? true : false
   }
 
-  get fighterInstance(){
-    return new FighterInstance(this.fighter, this.state, this.fighterId)
-  }
-
   /**
    * @param fighter {object} Value from fighter1 or fighter2 field in combat document
    */
   setFighter(fighter){
     this.fighter = fighter.data
     this.fighterId = fighter.id
-    this.querySelector('.name').textContent = this.fighterInstance.displayName
+
+    const fighterInstance = new FighterInstance(this.fighter)
+    this.querySelector('.name').textContent = fighterInstance.displayName
+
     if(this.isAdventurer){
       this.loadout.setContents(adventurerLoadoutContents(this.fighter))
       this._orbRow.setData(getAdventurerOrbsData(this.fighter))
@@ -75,7 +74,7 @@ export default class FighterPane extends HTMLElement{
   }
 
   setState(state = {}, animate = false){
-    this.state = state
+    this.fighterInstance = new FighterInstance(this.fighter, state, this.fighterId)
     this._update(animate)
   }
 
