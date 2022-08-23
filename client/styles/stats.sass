@@ -5,10 +5,12 @@ di-stats-list
   position: relative
 
   &.show-ellipsis:after
-    content: '........'
-    bottom: -23rem
-    left: 22rem
-    position: absolute
+    content: '... (click for more)'
+    padding-left: 22rem
+    padding-top: 10rem
+    font-size: 0.9em
+    font-style: italic
+    order: 9999
 
   &.icons-only
     flex-direction: row

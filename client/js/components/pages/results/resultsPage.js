@@ -54,7 +54,11 @@ export default class ResultsPage extends Page{
 
     this.querySelectorAll('di-tab').forEach(t => t.innerHTML = '')
 
-    const { dungeonRun } = await this.fetchData(`/game/dungeonrun/${this._dungeonRunID}/results`)
+    const { dungeonRun } = await this.fetchData(
+      this.app.watchView ?
+        `/watch/dungeonRun/${this._dungeonRunID}` :
+        `/game/dungeonrun/${this._dungeonRunID}/results`
+    )
 
     this._setupReplayButton()
     this.dungeonRun = dungeonRun

@@ -42,7 +42,6 @@ export default class FighterPane extends HTMLElement{
       iconsOnly: true,
       excluded: ['hpMax','speed']
     })
-    this.fighterInstance = null
 
     this.querySelector('.top-section').addEventListener('click', e => {
       if(this.fighter){
@@ -56,13 +55,17 @@ export default class FighterPane extends HTMLElement{
     return this.fighter?.items ? true : false
   }
 
+  get fighterInstance(){
+    return new FighterInstance(this.fighter, this.state, this.fighterId)
+  }
+
   /**
    * @param fighter {object} Value from fighter1 or fighter2 field in combat document
    */
   setFighter(fighter){
     this.fighter = fighter.data
     this.fighterId = fighter.id
-    this.querySelector('.name').textContent = this.fighter.displayname || toDisplayName(this.fighter.name)
+    this.querySelector('.name').textContent = this.fighterInstance.displayName
     if(this.isAdventurer){
       this.loadout.setContents(adventurerLoadoutContents(this.fighter))
       this._orbRow.setData(getAdventurerOrbsData(this.fighter))
@@ -72,7 +75,7 @@ export default class FighterPane extends HTMLElement{
   }
 
   setState(state = {}, animate = false){
-    this.fighterInstance = new FighterInstance(this.fighter, state, this.fighterId)
+    this.state = state
     this._update(animate)
   }
 
