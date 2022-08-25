@@ -96,6 +96,7 @@ export default class CombatPage extends Page{
   }
 
   async unload(){
+    this._timeControlsEl.pause()
     this._cancelled = true
   }
 
@@ -112,6 +113,9 @@ export default class CombatPage extends Page{
   }
 
   _applyEntries(entries, animate = true){
+    if(this._cancelled){
+      return
+    }
 
     entries = toArray(entries)
 
@@ -128,6 +132,9 @@ export default class CombatPage extends Page{
   }
 
   _updatePanes(animate){
+    if(this._cancelled){
+      return
+    }
     const currentEntry = this._timeline.currentEntry
     this._timeline.time = currentEntry.time
     this.fighterPane1.setState(currentEntry.fighterState1, animate)
@@ -145,6 +152,9 @@ export default class CombatPage extends Page{
   }
 
   _tick(){
+    if(this._cancelled){
+      return
+    }
     const prevEntry = this._timeline.currentEntryIndex
     const diff = this._timeControlsEl.time - this._timeline.time
     this._timeline.time += diff
