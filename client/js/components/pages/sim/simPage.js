@@ -1,7 +1,7 @@
 import AdventurerRow from '../../adventurerRow.js'
 import fizzetch from '../../../fizzetch.js'
 import CombatPage from '../combat/combatPage.js'
-import { showLoader } from '../../../loader.js'
+import { hideLoader, showLoader } from '../../../loader.js'
 import Page from '../page.js'
 
 const HTML = `
@@ -88,9 +88,15 @@ export default class SimPage extends Page{
       fighter1: this._adventurers[0]._id,
       fighter2: this._adventurers[1]._id
     })
-    this.redirectTo(new CombatPage(combatID, {
-      isReplay: true
-    }))
+    hideLoader()
+    this._clear()
+    window.open('/watch/combat/' + combatID)
+  }
+
+  _clear(){
+    this._adventurers = []
+    this.querySelectorAll('.fighter di-adventurer-row').forEach(el => el.remove())
+    this._updateButton()
   }
 }
 customElements.define('di-sim-page', SimPage)
