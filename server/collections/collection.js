@@ -8,6 +8,10 @@ export default class Collection{
     this.validateSave = () => {}
   }
 
+  get collection(){
+    return db.conn().collection(this.collectionName)
+  }
+
   async save(doc){
     this.validateSave(doc)
     return await db.save(db.fix(doc, this.defaults), this.collectionName)
@@ -31,7 +35,7 @@ export default class Collection{
   }
 
   async update(_id, $set){
-    await db.conn().collection(this.collectionName).updateOne({ _id }, { $set })
+    await this.collection.updateOne({ _id }, { $set })
   }
 
   async removeAll(){

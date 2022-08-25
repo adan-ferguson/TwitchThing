@@ -1,6 +1,7 @@
 import * as Dropdown  from './dropdown.js'
 import SimpleModal from './simpleModal.js'
 import AdminPage from './pages/admin/adminPage.js'
+import SimPage from './pages/sim/simPage.js'
 
 const HTML = `
 <button class="back-button hidden"><- Back</button>
@@ -32,7 +33,8 @@ export default class Header extends HTMLElement{
 
     Dropdown.create(this._userInfo, () => {
       const options = {
-        Logout: () => confirmLogout()
+        Logout: () => confirmLogout(),
+        'Sim Combat': () => this.app.setPage(new SimPage())
       }
       if(this.user.isAdmin){
         options.Admin =  () => this.app.setPage(new AdminPage())

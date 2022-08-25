@@ -7,6 +7,8 @@ import dungeonRunRouter from './dungeonrun.js'
 import Adventurers from '../../collections/adventurers.js'
 import { getRunData } from '../../dungeons/dungeonRunner.js'
 import { validateParam } from '../../validations.js'
+import FighterInstance from '../../../game/combat/fighterInstance.js'
+import { generateCombat } from '../../combat/combat.js'
 
 const router = express.Router()
 
@@ -44,6 +46,28 @@ router.post('/newadventurer', async(req, res) => {
 
 router.get('/', async(req, res) => {
   res.render('game')
+})
+
+router.get('/sim', (req, res) => {
+  res.render('game', {
+    startupParams: {
+      page: 'sim'
+    }
+  })
+})
+
+router.post('/sim', async (req, res) => {
+  const adventurers = await Adventurers.sortByLevel()
+  res.status(200).send({ adventurers })
+})
+
+router.post('/sim/run', async (req, res) => {
+  const adv1 = validateParam(req.body.fighter1)
+  const adv2 = validateParam(req.body.fighter2)
+  const fighter1 = new FighterInstance(await Adventurers.findOne(adv1), {}, 1)
+  const fighter2 = new FighterInstance(await Adventurers.findOne(adv2), {}, 2)
+  const combat = await generateCombat(fighter1, fighter2)
+  res.status(200).send({ combatID: combat._id })
 })
 
 export default router

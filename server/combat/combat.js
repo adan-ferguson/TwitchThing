@@ -28,7 +28,7 @@ export async function generateCombatEvent(dungeonRun){
     monster
   }
 }
-export async function generateCombat(fighterInstance1, fighterInstance2, floor){
+export async function generateCombat(fighterInstance1, fighterInstance2, floor = -1){
 
   const combat = new Combat(fighterInstance1, fighterInstance2)
 

@@ -10,6 +10,7 @@ import { showPopup } from './popup.js'
 import CombatPage from './pages/combat/combatPage.js'
 import ErrorPage from './pages/errorPage.js'
 import { fadeIn, fadeOut } from '../animationHelper.js'
+import SimPage from './pages/sim/simPage.js'
 
 const HTML = `
 <di-header></di-header>
@@ -130,12 +131,14 @@ export default class App extends HTMLElement{
         return
       }
     }
-    if(this.startupParams.watch?.page === 'dungeonrun'){
-      return this.setPage(new DungeonPage(this.startupParams.watch.id), true)
-    }else if(this.startupParams.watch?.page === 'combat'){
-      return this.setPage(new CombatPage(this.startupParams.watch.id, {
+    if(this.startupParams?.page === 'dungeonrun'){
+      return this.setPage(new DungeonPage(this.startupParams.id), true)
+    }else if(this.startupParams?.page === 'combat'){
+      return this.setPage(new CombatPage(this.startupParams.id, {
         isReplay: true
       }), true)
+    }else if(this.startupParams?.page === 'sim'){
+      return this.setPage(new SimPage())
     }
     this.setPage(new MainPage())
   }

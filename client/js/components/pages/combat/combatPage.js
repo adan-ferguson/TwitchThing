@@ -82,7 +82,9 @@ export default class CombatPage extends Page{
     }
 
     const zone = Zones[floorToZone(combat.floor ?? 1)]
-    this.app.setBackground(zone.color, zone.texture)
+    if(zone){
+      this.app.setBackground(zone.color, zone.texture)
+    }
 
     this.combat = combat
     this.fighterPane1.setFighter(combat.fighter1)
@@ -168,9 +170,12 @@ export default class CombatPage extends Page{
     }
 
     if(this._options.returnPage){
-      const afterBuffer = Math.max(1000, 5000 - (this.combat.duration % 5000))
+      const afterBuffer = Math.max(1000, 5300 - (this.combat.duration % 5000))
       setTimeout(() => {
-        this.redirectTo(this._options.returnPage)
+        if(this._timeline.finished){
+          // Don't redirect if the user rewound
+          this.redirectTo(this._options.returnPage)
+        }
       }, this._options.isReplay ? 1000 : afterBuffer)
     }
   }

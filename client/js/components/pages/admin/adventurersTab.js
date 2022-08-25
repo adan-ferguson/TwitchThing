@@ -28,9 +28,7 @@ export default class AdminAdventurerTab extends HTMLElement{
     hideLoader()
     const rows = []
     adventurers.forEach(adventurer => {
-      const row = new AdventurerRow(adventurer, {
-        newTab: adventurer.dungeonRunID ? '/watch/dungeonrun/' + adventurer.dungeonRunID : null
-      })
+      const row = new AdventurerRow(adventurer)
       row.addEventListener('click', e => {
         this._adventurerPane.setAdventurer(adventurer)
       })

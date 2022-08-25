@@ -23,4 +23,8 @@ Adventurers.createNew = async function(userID, name, startingClass){
   return await Adventurers.save({ name, userID, bonuses: [firstLevelBonus(startingClass)] })
 }
 
+Adventurers.sortByLevel = async function(){
+  return Adventurers.collection.find({}).sort({ level: -1 }).toArray()
+}
+
 export default Adventurers

@@ -8,10 +8,8 @@ const router = express.Router()
 router.get('/dungeonrun/:dungeonRunID', async (req, res) => {
   res.render('game', {
     startupParams: {
-      watch: {
-        page: 'dungeonrun',
-        id: req.params.dungeonRunID
-      }
+      page: 'dungeonrun',
+      id: req.params.dungeonRunID
     }
   })
 })
@@ -19,10 +17,8 @@ router.get('/dungeonrun/:dungeonRunID', async (req, res) => {
 router.get('/combat/:combatID', async(req, res, body) => {
   res.render('game', {
     startupParams: {
-      watch: {
-        page: 'combat',
-        id: req.params.combatID
-      }
+      page: 'combat',
+      id: req.params.combatID
     }
   })
 })
