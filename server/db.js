@@ -1,8 +1,11 @@
 import MongoDB from 'mongodb'
 import config from './config.js'
+import { EventEmitter } from 'events'
 
 let connection
 let client
+
+const events = new EventEmitter()
 
 const init = async () => {
   try {
@@ -11,6 +14,7 @@ const init = async () => {
       useUnifiedTopology: true
     })
     connection = client.db(config.db.name)
+    events.emit('connected')
     console.log('Connected to DB')
   }catch(e){
     console.log('Failed to connect to DB, did you run "npm run startdb"?')
@@ -41,6 +45,15 @@ export default {
   init,
   client: () => client,
   conn: () => connection,
+  waitForConnection: () => {
+    return new Promise((res) => {
+      if(connection){
+        res()
+      }else{
+        events.once('connected', res)
+      }
+    })
+  },
   id,
   save: async (doc, collectionName) => {
     if(doc._id){

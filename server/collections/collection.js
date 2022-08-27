@@ -2,10 +2,15 @@ import db from '../db.js'
 
 export default class Collection{
 
-  constructor(collectionName, defaults = {}){
+  constructor(collectionName, defaults = {}, indexes = []){
     this.collectionName = collectionName
     this.defaults = defaults
     this.validateSave = () => {}
+    if(indexes.length){
+      db.waitForConnection().then(() => {
+        this.collection.createIndexes(indexes)
+      })
+    }
   }
 
   get collection(){
