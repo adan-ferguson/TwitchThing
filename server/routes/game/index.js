@@ -57,15 +57,15 @@ router.get('/sim', (req, res) => {
 })
 
 router.post('/sim', async (req, res) => {
-  const adventurers = await Adventurers.sortByLevel()
+  const adventurers = await Adventurers.collection.find({ sort: { level: -1 } })
   res.status(200).send({ adventurers })
 })
 
 router.post('/sim/run', async (req, res) => {
   const adv1 = validateParam(req.body.fighter1)
   const adv2 = validateParam(req.body.fighter2)
-  const fighter1 = new FighterInstance(await Adventurers.findOne(adv1), {}, 1)
-  const fighter2 = new FighterInstance(await Adventurers.findOne(adv2), {}, 2)
+  const fighter1 = new FighterInstance(await Adventurers.findByID(adv1), {}, 1)
+  const fighter2 = new FighterInstance(await Adventurers.findByID(adv2), {}, 2)
   const combat = await generateCombat(fighter1, fighter2)
   res.status(200).send({ combatID: combat._id })
 })

@@ -34,7 +34,7 @@ router.post('/dungeonrun/:dungeonRunID', async (req, res) => {
 })
 
 router.post('/combat/:combatID', async(req, res) => {
-  const combat = await Combats.findOne(db.id(req.params.combatID))
+  const combat = await Combats.findByID(req.params.combatID)
   if(!combat){
     return res.status(404).send('Combat not found.')
   }

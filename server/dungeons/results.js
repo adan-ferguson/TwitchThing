@@ -52,7 +52,7 @@ export async function finalize(dungeonRunDoc){
   await saveDungeonRun()
 
   async function saveAdventurer(){
-    const adventurerDoc = await Adventurers.findOne(dungeonRunDoc.adventurer._id)
+    const adventurerDoc = await Adventurers.findByID(dungeonRunDoc.adventurer._id)
     const xpAfter = adventurerDoc.xp + (dungeonRunDoc.rewards.xp || 0)
     adventurerDoc.dungeonRunID = null
     adventurerDoc.xp = xpAfter
@@ -64,7 +64,7 @@ export async function finalize(dungeonRunDoc){
   }
 
   async function saveUser(){
-    const userDoc = await Users.findOne(dungeonRunDoc.adventurer.userID)
+    const userDoc = await Users.findByID(dungeonRunDoc.adventurer.userID)
     dungeonRunDoc.rewards.chests?.forEach(chest => {
       chest.contents.items?.forEach(item => {
         userDoc.inventory.items[item.id] = item

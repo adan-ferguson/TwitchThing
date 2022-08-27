@@ -39,9 +39,12 @@ Users.validateSave = function(userDoc){
 }
 
 Users.loadFromMagicID = async function(magicID){
-  return await Users.findOne({
-    magicID
+  const results = await Users.find({
+    query: {
+      magicID
+    }
   })
+  return results[0]
 }
 
 Users.create = async function(magicID, iat, email, provider){
@@ -68,7 +71,7 @@ Users.setDisplayname = async function(userDoc, displayname){
   if(displayname.length > 15){
     return 'Display name must be between 2 and 15 letters.'
   }
-  const user = await Users.findOne({ displayname })
+  const user = await Users.findByID(displayname)
   if(user){
     return `Display name '${displayname}' is taken.`
   }
@@ -117,7 +120,7 @@ Users.isAdmin = function(userDoc){
 }
 
 Users.resetAll = async function(){
-  const users = await Users.find({})
+  const users = await Users.find()
   await Promise.all(users.map(async userDoc => {
     await Users.save({
       _id: userDoc._id,

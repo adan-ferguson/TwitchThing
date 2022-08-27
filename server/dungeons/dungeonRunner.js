@@ -27,7 +27,9 @@ export async function start(){
 
   running = true
   const dungeonRuns = await DungeonRuns.find({
-    finished: false
+    query: {
+      finished: false
+    }
   })
   const adventurers = await Adventurers.findByIDs(dungeonRuns.map(dr => dr.adventurer._id))
   const users = await Users.findByIDs(adventurers.map(adv => adv.userID))
@@ -91,9 +93,9 @@ export async function addRun(adventurerID, dungeonOptions){
     ...dungeonOptions
   }
 
-  const adventurer = await Adventurers.findOne(adventurerID)
+  const adventurer = await Adventurers.findByID(adventurerID)
   const startingFloor = parseInt(dungeonOptions.startingFloor) || 1
-  const userDoc = await Users.findOne(adventurer.userID)
+  const userDoc = await Users.findByID(adventurer.userID)
   validateNew(adventurer, userDoc, dungeonOptions)
 
   const drDoc = await DungeonRuns.save({
@@ -138,7 +140,7 @@ export function getActiveRunData(dungeonRunID){
 }
 
 export async function getRunData(dungeonRunID){
-  return getActiveRunData(dungeonRunID) || await DungeonRuns.findOne(dungeonRunID)
+  return getActiveRunData(dungeonRunID) || await DungeonRuns.findByID(dungeonRunID)
 }
 
 class DungeonRunInstance extends EventEmitter{

@@ -54,7 +54,7 @@ export async function generateCombat(fighterInstance1, fighterInstance2, floor =
 }
 
 export async function finishCombatEvent(dungeonRun, combatEvent){
-  const combat = await Combats.findOne(combatEvent.combatID)
+  const combat = await Combats.findByID(combatEvent.combatID)
   const fighter = combat.fighter1.data._id.equals(dungeonRun.adventurer._id) ? combat.fighter1 : combat.fighter2
   const enemy = combat.fighter1.data._id.equals(dungeonRun.adventurer._id) ? combat.fighter2 : combat.fighter1
   const event = {

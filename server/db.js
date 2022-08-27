@@ -64,15 +64,15 @@ export default {
     return doc
   },
   fix,
-  findOne: async (collection, queryOrID, projection = {}, defaults = {}) => {
-    const doc = await connection.collection(collection).findOne(qoid(queryOrID), { projection })
+  findOne: async (collection, { id = null, query = {}, projection = {}, defaults = {} }) => {
+    const doc = await connection.collection(collection).findOne(qoid(id ?? query), { projection })
     if(doc){
       return fix(doc, defaults)
     }
     return null
   },
-  find: async (collection, queryOrID, projection = {}, defaults = {}) => {
-    const docs = await connection.collection(collection).find(qoid(queryOrID), { projection }).toArray()
+  find: async (collection, { id = null, query = {}, projection = {}, defaults = {}, sort = {} }) => {
+    const docs = await connection.collection(collection).find(qoid(id ?? query), { projection }).sort(sort).toArray()
     return docs.map(doc => fix(doc, defaults))
   }
 }

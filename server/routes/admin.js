@@ -26,7 +26,7 @@ router.post('/', async(req, res) => {
 })
 
 router.post('/adventurers', async(req, res) => {
-  const adventurers = await Adventurers.find({})
+  const adventurers = await Adventurers.find()
   adventurers.forEach(adv => adv.dungeonRun = getActiveRunData(adv.dungeonRunID))
   res.status(200).send({ adventurers })
 })

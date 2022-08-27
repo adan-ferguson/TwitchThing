@@ -37,7 +37,7 @@ export async function selectBonus(adventurerDoc, index){
 
 async function generateBonusOptions(adventurerDoc, level){
 
-  const user = await Users.findOne(adventurerDoc.userID)
+  const user = await Users.findByID(adventurerDoc.userID)
   const orbsData = getAdventurerOrbsData(adventurerDoc)
   const classOptions = orbsData.classes.slice(0,3)
 

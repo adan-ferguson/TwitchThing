@@ -16,7 +16,7 @@ router.use('/:adventurerID', async (req, res, next) => {
   if(!req.user.adventurers.find(adv => adv.equals(adventurerID))){
     throw { code: 400, message: 'Invalid adventurer ID' }
   }
-  req.adventurer = await Adventurers.findOne(adventurerID)
+  req.adventurer = await Adventurers.findByID(adventurerID)
   if(!req.adventurer){
     throw { code: 400, message: 'Invalid adventurer ID' }
   }
@@ -109,10 +109,13 @@ verifiedRouter.post('/selectbonus/:index', async(req, res, next) => {
 
 verifiedRouter.post('/previousruns', async(req, res, next) => {
   const runs = await DungeonRuns.find({
-    'adventurer._id': req.adventurer._id,
-    finalizedData: { $ne: null }
-  }, {
-    events: 0
+    query: {
+      'adventurer._id': req.adventurer._id,
+      finalizedData: { $ne: null }
+    },
+    projection: {
+      events: 0
+    }
   })
   res.send({ adventurer: req.adventurer, runs: runs.reverse()  })
 })
