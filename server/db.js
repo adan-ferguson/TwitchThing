@@ -56,12 +56,22 @@ export default {
   },
   id,
   save: async (doc, collectionName) => {
-    if(doc._id){
-      await connection.collection(collectionName).replaceOne({ _id: doc._id }, doc)
-    }else{
-      await connection.collection(collectionName).insertOne(doc)
-    }
+    await connection.collection(collectionName).replaceOne({ _id: doc._id }, doc, { upsert: true })
     return doc
+  },
+  saveMany: async(docs, collectionName) => {
+    const operations = docs.map(doc => {
+      return {
+        replaceOne: {
+          filter: {
+            _id: doc._id
+          },
+          document: doc,
+          upsert: true
+        }
+      }
+    })
+    const result = await connection.collection(collectionName).bulkWrite(operations)
   },
   fix,
   findOne: async (collection, { id = null, query = {}, projection = {}, defaults = {} }) => {

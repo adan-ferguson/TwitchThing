@@ -1,19 +1,15 @@
 import DungeonRuns from '../collections/dungeonRuns.js'
 import Adventurers from '../collections/adventurers.js'
-import { addRewards } from './results.js'
-import { generateEvent } from './dungeonEventPlanner.js'
-import { broadcast, emit } from '../socketServer.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 import Users from '../collections/users.js'
-import { continueRelicEvent } from './relics.js'
-import { finishCombatEvent } from '../combat/combat.js'
-import { EventEmitter } from 'events'
-
-const ADVANCEMENT_INTERVAL = 5000
+import DungeonRunInstance from './dungeonRunInstance.js'
+import { emit } from '../socketServer.js'
 
 let running = false
 let lastAdvancement = new Date()
 let activeRuns = {}
+
+export const ADVANCEMENT_INTERVAL = 5000
 
 export function cancelAllRuns(){
   activeRuns = {}
@@ -56,28 +52,21 @@ export async function start(){
 }
 
 async function advance(){
-  lastAdvancement = new Date()
-  for(const id in activeRuns){
-    const run = activeRuns[id]
-    try {
-      if(!run.started){
-        await run.advance({
-          passTimeOverride: true,
-          duration: ADVANCEMENT_INTERVAL,
-          message: `${run.adventurer.name} enters the dungeon.`,
-          roomType: 'entrance'
-        })
-        run.emit('started')
-      }else{
-        await run.advance()
-      }
-    }catch(ex){
-      console.log('Run suspended due to error', run.doc, ex)
-      delete activeRuns[id]
-    }
+  const before = new Date()
+  await advanceRuns()
+  emitSocketEvents()
+  await saveAllRuns()
+  clearFinishedRuns()
+
+  let waitFor = ADVANCEMENT_INTERVAL - (new Date() - before)
+  if(waitFor < 0){
+    waitFor = ADVANCEMENT_INTERVAL
+    console.log('Dungeon Run advancement took longer than 5 seconds, probably something is wrong.')
   }
-  setTimeout(advance, ADVANCEMENT_INTERVAL)
+
+  setTimeout(advance, waitFor)
 }
+
 
 /**
  * Start a dungeons run. It's assumed that all of the error-checking has been done beforehand
@@ -126,7 +115,7 @@ export async function getRunDataMulti(dungeonRunIDs){
 }
 
 export function getAllActiveRuns(truncated = false){
-  return Object.values(activeRuns).map(activeRun => truncated ? activeRun.truncatedDoc : activeRun)
+  return Object.values(activeRuns).map(activeRun => truncated ? truncatedRun(activeRun) : activeRun)
 }
 
 export function getActiveRunData(dungeonRunID){
@@ -135,180 +124,12 @@ export function getActiveRunData(dungeonRunID){
     return null
   }
   const runDoc = { ...run.doc }
-  runDoc.virtualTime = run.virtualTime
+  runDoc.virtualTime = virtualTime(run)
   return runDoc
 }
 
 export async function getRunData(dungeonRunID){
   return getActiveRunData(dungeonRunID) || await DungeonRuns.findByID(dungeonRunID)
-}
-
-class DungeonRunInstance extends EventEmitter{
-
-  constructor(doc, user){
-    super()
-    this.doc = doc
-    if(!this.adventurer.userID.equals(user._id)){
-      throw 'User mismatch in dungeonRun instance'
-    }
-    this.user = user
-    this._time = this.currentEvent?.time ?? 0
-  }
-
-  get adventurer(){
-    return this.doc.adventurer
-  }
-
-  get virtualTime(){
-    return this._time + (new Date() - lastAdvancement)
-  }
-
-  get floor(){
-    return this.doc.floor
-  }
-
-  get room(){
-    return this.doc.room
-  }
-
-  /**
-   * @returns {array}
-   */
-  get events(){
-    return this.doc.events
-  }
-
-  get rewards(){
-    return this.doc.rewards
-  }
-
-  get currentEvent(){
-    return this.events.at(-1)
-  }
-
-  get started(){
-    return this.currentEvent ? true : false
-  }
-
-  get adventurerInstance(){
-    return new AdventurerInstance(this.adventurer, this.doc.adventurerState)
-  }
-
-  get nextEventTime(){
-    return this.currentEvent ? this.currentEvent.time + this.currentEvent.duration : 0
-  }
-
-  get pace(){
-    return this.doc.dungeonOptions.pace ?? 'Brisk'
-  }
-
-  get truncatedDoc(){
-    const truncatedDoc = {
-      ...this.doc,
-      currentEvent: this.currentEvent,
-      virtualTime: this.virtualTime
-    }
-    delete truncatedDoc.events
-    return truncatedDoc
-  }
-
-  async advance(nextEvent){
-
-    if(this._time + ADVANCEMENT_INTERVAL < this.nextEventTime){
-      this._time += ADVANCEMENT_INTERVAL
-      return
-    }else{
-      this._time = this.nextEventTime
-    }
-
-    if(this.currentEvent?.runFinished){
-      return this._finish()
-    }
-
-    if(this.currentEvent?.stayInRoom){
-      await this._continueEvent(this.currentEvent)
-    }else if(nextEvent){
-      this._addEvent(nextEvent)
-    }else{
-      await this._nextRoom()
-    }
-
-    this._resolveEvent(this.currentEvent)
-    this._emitSocketEvents()
-    DungeonRuns.save(this.doc)
-  }
-
-  async _continueEvent(event){
-    if(event.combatID){
-      this._addEvent(await finishCombatEvent(this, event))
-    }else if(event.relic){
-      this._addEvent(await continueRelicEvent(this, event))
-    }
-  }
-
-  async _nextRoom(){
-    this.doc.room = this.currentEvent?.nextRoom || this.doc.room + 1
-    this.doc.floor = this.currentEvent?.nextFloor || this.doc.floor
-    this._addEvent(await generateEvent(this))
-  }
-
-  async _addEvent(event){
-    const nextEvent = {
-      room: this.doc.room,
-      floor: this.doc.floor,
-      time: this.doc.elapsedTime,
-      duration: ADVANCEMENT_INTERVAL,
-      ...event
-    }
-    // Make it a multiple of the advancement interval
-    nextEvent.duration = Math.ceil(-0.01 + nextEvent.duration / ADVANCEMENT_INTERVAL) * ADVANCEMENT_INTERVAL
-    this.doc.room = nextEvent.room
-    this.doc.floor = nextEvent.floor
-    this.doc.events.push(nextEvent)
-  }
-
-  async _resolveEvent(event){
-    if(event.rewards){
-      if(event.rewards.xp){
-        event.rewards.xp = Math.ceil(event.rewards.xp)
-      }
-      this.doc.rewards = addRewards(this.doc.rewards, event.rewards)
-    }
-    event.duration = Math.ceil(event.duration / ADVANCEMENT_INTERVAL) * ADVANCEMENT_INTERVAL
-    event.adventurerState = this._passTime(event)
-    this.doc.adventurerState = event.adventurerState
-    this.doc.elapsedTime += event.duration
-  }
-
-  _finish(){
-    console.log('run finished', this.adventurer.name)
-    this.doc.finished = true
-    delete activeRuns[this.doc._id]
-    DungeonRuns.save(this.doc)
-  }
-
-  /**
-   * Reduce cooldowns of actives, tick buffs/debuffs, perform regeneration, etc
-   * @private
-   * @param event
-   */
-  _passTime(event){
-    let state = event.adventurerState || this.doc.adventurerState
-    if (!event.passTimeOverride){ // Combats handle their own passage of time.
-      const adv = new AdventurerInstance(this.adventurer, state)
-      adv.passTime(event.duration)
-      // TODO: this might affect the event in other ways, such as ending the run if the adventurer dies
-      return adv.adventurerState
-    }
-    return state
-  }
-
-  _emitSocketEvents(){
-    const truncatedDoc = this.truncatedDoc
-    emit(this.adventurer.userID, 'user dungeon run update', truncatedDoc)
-    emit(this.doc._id, 'dungeon run update', truncatedDoc)
-    broadcast('live dungeon map update', truncatedDoc)
-  }
 }
 
 function validateNew(adventurerDoc, userDoc, { startingFloor }){
@@ -324,4 +145,79 @@ function validateNew(adventurerDoc, userDoc, { startingFloor }){
   if(adventurerDoc.nextLevelUp){
     throw 'Adventurer can not enter dungeon, they have a pending levelup'
   }
+}
+
+
+async function advanceRuns(){
+  lastAdvancement = new Date()
+  for(const id in activeRuns){
+    const run = activeRuns[id]
+    try {
+      if(!run.started){
+        await run.advance({
+          passTimeOverride: true,
+          duration: ADVANCEMENT_INTERVAL,
+          message: `${run.adventurer.name} enters the dungeon.`,
+          roomType: 'entrance'
+        })
+        run.emit('started')
+      }else{
+        await run.advance()
+      }
+    }catch(ex){
+      console.log('Run suspended due to error', run.doc, ex)
+      delete activeRuns[id]
+    }
+  }
+}
+
+function emitSocketEvents(){
+  const perUser = {}
+  const liveMap = []
+
+  activeRuns.forEach(dri => {
+    const truncated = truncatedRun(dri)
+    emit(truncated._id, 'dungeon run update', truncated)
+    if(!perUser[truncated.adventurer.userID]){
+      perUser[truncated.adventurer.userID] = []
+    }
+    perUser[truncated.adventurer.userID].push(truncated)
+    liveMap.push(truncated)
+  })
+
+  Object.keys(perUser).forEach(userID => {
+    emit(userID, 'user dungeon run update', perUser[userID])
+  })
+
+  emit('live dungeon map', 'live dungeon map update', liveMap)
+}
+
+async function saveAllRuns(){
+  const docs = activeRuns.map(r => r.doc)
+  await DungeonRuns.saveMany(docs)
+}
+
+function clearFinishedRuns(){
+  activeRuns.filter(r => r.finished)
+    .forEach(r => {
+      delete activeRuns[r._id]
+    })
+}
+
+/**
+ * @param dri {DungeonRunInstance}
+ * @returns {object}
+ */
+function truncatedRun(dri){
+  const truncatedDoc = {
+    ...dri.doc,
+    currentEvent: dri.currentEvent,
+    virtualTime: virtualTime(dri)
+  }
+  delete truncatedDoc.events
+  return truncatedDoc
+}
+
+function virtualTime(dri){
+  return dri.time + (new Date() - lastAdvancement)
 }
