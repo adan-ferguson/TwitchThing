@@ -56,12 +56,12 @@ export default class MainPage extends Page{
       this._populateAdventurers(adventurers, slots)
     }
     history.replaceState(null, null, ' ')
-    getSocket().on('user dungeon run update', this._dungeonRunUpdate)
+    getSocket().on('user dungeon run update', this._dungeonRunUpdates)
     this.querySelector('di-live-dungeon-map').load()
   }
 
   async unload(){
-    getSocket().off('user dungeon run update', this._dungeonRunUpdate)
+    getSocket().off('user dungeon run update', this._dungeonRunUpdates)
     this.querySelector('di-live-dungeon-map').unload()
   }
 
@@ -149,11 +149,13 @@ export default class MainPage extends Page{
     }
   }
 
-  _dungeonRunUpdate = dungeonRun => {
-    const row = this.querySelector(`di-adventurer-row[adventurer-id="${dungeonRun.adventurer._id}"]`)
-    if(row){
-      row.setDungeonRun(dungeonRun)
-    }
+  _dungeonRunUpdates = dungeonRuns => {
+    dungeonRuns.forEach(dungeonRun => {
+      const row = this.querySelector(`di-adventurer-row[adventurer-id="${dungeonRun.adventurer._id}"]`)
+      if(row){
+        row.setDungeonRun(dungeonRun)
+      }
+    })
   }
 }
 

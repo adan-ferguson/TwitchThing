@@ -53,17 +53,18 @@ export async function start(){
 
 async function advance(){
   const before = new Date()
-  await advanceRuns()
-  emitSocketEvents()
-  await saveAllRuns()
-  clearFinishedRuns()
+  if(Object.keys(activeRuns).length){
+    await advanceRuns()
+    emitSocketEvents()
+    await saveAllRuns()
+    clearFinishedRuns()
+  }
 
   let waitFor = ADVANCEMENT_INTERVAL - (new Date() - before)
   if(waitFor < 0){
     waitFor = ADVANCEMENT_INTERVAL
     console.log('Dungeon Run advancement took longer than 5 seconds, probably something is wrong.')
   }
-
   setTimeout(advance, waitFor)
 }
 
@@ -160,7 +161,6 @@ async function advanceRuns(){
           message: `${run.adventurer.name} enters the dungeon.`,
           roomType: 'entrance'
         })
-        run.emit('started')
       }else{
         await run.advance()
       }
@@ -175,7 +175,7 @@ function emitSocketEvents(){
   const perUser = {}
   const liveMap = []
 
-  activeRuns.forEach(dri => {
+  Object.values(activeRuns).forEach(dri => {
     const truncated = truncatedRun(dri)
     emit(truncated._id, 'dungeon run update', truncated)
     if(!perUser[truncated.adventurer.userID]){
@@ -193,12 +193,12 @@ function emitSocketEvents(){
 }
 
 async function saveAllRuns(){
-  const docs = activeRuns.map(r => r.doc)
+  const docs = Object.values(activeRuns).map(r => r.doc)
   await DungeonRuns.saveMany(docs)
 }
 
 function clearFinishedRuns(){
-  activeRuns.filter(r => r.finished)
+  Object.values(activeRuns).filter(r => r.finished)
     .forEach(r => {
       delete activeRuns[r._id]
     })

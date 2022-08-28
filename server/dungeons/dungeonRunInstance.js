@@ -87,6 +87,10 @@ export default class DungeonRunInstance extends EventEmitter{
     }
 
     this._resolveEvent(this.currentEvent)
+
+    if(this.events.length === 1){
+      this.emit('started')
+    }
   }
 
   async _continueEvent(event){

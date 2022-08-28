@@ -33,11 +33,11 @@ export default class Header extends HTMLElement{
 
     Dropdown.create(this._userInfo, () => {
       const options = {
-        Logout: () => confirmLogout(),
-        'Sim Combat': () => this.app.setPage(new SimPage())
+        Logout: () => confirmLogout()
       }
       if(this.user.isAdmin){
         options.Admin =  () => this.app.setPage(new AdminPage())
+        options['Sim Combat'] = () => this.app.setPage(new SimPage())
       }
       return options
     })
