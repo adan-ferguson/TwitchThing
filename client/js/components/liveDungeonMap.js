@@ -1,14 +1,10 @@
-import fizzetch from '../fizzetch.js'
-import { getSocket } from '../socketClient.js'
 import Zones, { floorSize } from '../../../game/zones.js'
 import { makeEl, wrap } from '../../../game/utilFunctions.js'
 import tippy from 'tippy.js'
 import AdventurerStatus from './adventurerStatus.js'
 
 const HTML = `
-<div class="runs">
-  <di-loader class="show"></di-loader>
-</div>
+<div class="runs"></div>
 `
 
 const ZONE_HTML = ({ name }) => `
@@ -23,13 +19,7 @@ export default class LiveDungeonMap extends HTMLElement{
   constructor(){
     super()
     this.innerHTML = HTML
-  }
-
-  async load(){
-    const { activeRuns } = await fizzetch('/watch/livedungeonmap')
     const runsEl = this.querySelector('.runs')
-    runsEl.innerHTML = ''
-
     Zones.forEach((zone, zoneIndex) => {
       const zoneEl = wrap(ZONE_HTML(zone), {
         class: 'zone',
@@ -46,16 +36,9 @@ export default class LiveDungeonMap extends HTMLElement{
       runsEl.appendChild(zoneEl)
     })
     this._showZones(0)
-
-    activeRuns.forEach(this._updateRun)
-    getSocket().on('live dungeon map update', this._updateRun)
   }
 
-  unload(){
-    getSocket().off('live dungeon map update', this._updateRun)
-  }
-
-  _updateRun = dungeonRun => {
+  updateRun(dungeonRun){
     if(dungeonRun.currentEvent.runFinished){
       return this._runFinished(dungeonRun._id)
     }
@@ -97,7 +80,7 @@ export default class LiveDungeonMap extends HTMLElement{
       content: status
     })
     el.addEventListener('click', () => {
-      window.open(`/watch/dungeonrun/${_id}`, '_blank')
+      window.open(`/dungeonrun/${_id}`, '_blank')
     })
     this._dungeonRunEls[_id] = el
   }

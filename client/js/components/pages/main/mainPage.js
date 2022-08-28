@@ -4,9 +4,10 @@ import AdventurerRow from '../../adventurerRow.js'
 import fizzetch from '../../../fizzetch.js'
 import DIForm from '../../form.js'
 import FormModal from '../../formModal.js'
-import { getSocket } from '../../../socketClient.js'
+import { getSocket, joinSocketRoom, leaveSocketRoom } from '../../../socketClient.js'
 import '../../list.js'
 import { wrap } from '../../../../../game/utilFunctions.js'
+import LiveDungeonMapPage from '../liveDungeonMap/liveDungeonMapPage.js'
 
 const HTML = `
 <div class="content-rows">
@@ -16,8 +17,8 @@ const HTML = `
       <di-list class="adventurer-list"></di-list>
     </div>
     <div class="content-rows">
-      <div class="content-well">
-        <di-live-dungeon-map></di-live-dungeon-map>
+      <div class="content-well live-dungeon-map clickable">
+        View Live Dungeon Map
       </div>
       <a href="https://discord.gg/Y3UDA9SX" target="_blank" class="flex-no-grow discord buttonish">
         <i class="fab fa-discord"></i> Join the Discord server for updates and news
@@ -35,6 +36,9 @@ export default class MainPage extends Page{
     super()
     this.innerHTML = HTML
     this._error = this.querySelector('.error-message')
+    this.querySelector('.live-dungeon-map').addEventListener('click', () => {
+      this.redirectTo(new LiveDungeonMapPage())
+    })
     this.querySelector('.adventurer-list')
       .setOptions({
         pageSize: 6
@@ -48,7 +52,7 @@ export default class MainPage extends Page{
     return null
   }
 
-  async load(){
+  async load(_){
     const { error, adventurers, slots } = await fizzetch('/game/main')
     if(error){
       this._showError(error, true)
@@ -56,13 +60,13 @@ export default class MainPage extends Page{
       this._populateAdventurers(adventurers, slots)
     }
     history.replaceState(null, null, ' ')
+    joinSocketRoom('user all adventurers ' + this.app.user._id)
     getSocket().on('user dungeon run update', this._dungeonRunUpdates)
-    this.querySelector('di-live-dungeon-map').load()
   }
 
   async unload(){
+    leaveSocketRoom('user all adventurers ' + this.app.user._id)
     getSocket().off('user dungeon run update', this._dungeonRunUpdates)
-    this.querySelector('di-live-dungeon-map').unload()
   }
 
   _populateAdventurers(adventurers, slots){

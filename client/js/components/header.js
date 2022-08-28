@@ -22,7 +22,7 @@ export default class Header extends HTMLElement{
 
     this.backButton = this.querySelector('.back-button')
     this.backButton.addEventListener('click', () => {
-      if(this.app.watchView){
+      if(this.app.publicView){
         window.location = '/'
       }else{
         this.app.back()
@@ -63,7 +63,7 @@ export default class Header extends HTMLElement{
     }else{
       this.querySelector('.displayname').textContent = this.user.displayname
     }
-    if(this.app.watchView){
+    if(this.app.publicView){
       this.backButton.textContent = 'AutoCrawl'
     }
   }

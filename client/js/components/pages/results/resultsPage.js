@@ -55,8 +55,8 @@ export default class ResultsPage extends Page{
     this.querySelectorAll('di-tab').forEach(t => t.innerHTML = '')
 
     const { dungeonRun } = await this.fetchData(
-      this.app.watchView ?
-        `/watch/dungeonRun/${this._dungeonRunID}` :
+      this.app.publicView ?
+        `/dungeonRun/${this._dungeonRunID}` :
         `/game/dungeonrun/${this._dungeonRunID}/results`
     )
 
@@ -130,7 +130,7 @@ export default class ResultsPage extends Page{
     el.appendChild(chestDiv)
 
     for(let i = 0; i < chests.length; i++){
-      const openage = new ChestOpenage(chests[i], this.app.watchView)
+      const openage = new ChestOpenage(chests[i], this.app.publicView)
       openage.addEventListener('opened', () => {
         checkOpenAllButton()
       })
@@ -146,7 +146,7 @@ export default class ResultsPage extends Page{
   }
 
   _showButtons(){
-    if(!this.app.watchView){
+    if(!this.app.publicView){
       this.querySelector('.done').classList.remove('hidden')
       this.querySelector('.done').addEventListener('click', () => this._finish())
     }

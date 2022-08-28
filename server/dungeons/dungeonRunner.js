@@ -186,7 +186,7 @@ function emitSocketEvents(){
   })
 
   Object.keys(perUser).forEach(userID => {
-    emit(userID, 'user dungeon run update', perUser[userID])
+    emit('user all adventurers ' + userID, 'user dungeon run update', perUser[userID])
   })
 
   emit('live dungeon map', 'live dungeon map update', liveMap)

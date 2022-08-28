@@ -40,8 +40,8 @@ export default class App extends HTMLElement{
     return this.currentPage?.backPage ? true : false
   }
 
-  get watchView(){
-    return document.location.pathname.search(/^\/watch/) > -1 ? true : false
+  get publicView(){
+    return document.location.pathname.search(/^\/game/) > -1 ? false : true
   }
 
   updateTitle(){

@@ -90,7 +90,7 @@ export default class SimPage extends Page{
     })
     hideLoader()
     this._clear()
-    window.open('/watch/combat/' + combatID)
+    window.open('/combat/' + combatID)
   }
 
   _clear(){

@@ -32,7 +32,7 @@ export function setup(server, sessionMiddleware){
     })
 
     socket.on('leaveroom', roomID => {
-      socket.join(roomID)
+      socket.leave(roomID)
       socket.emit('room left', roomID)
     })
   })

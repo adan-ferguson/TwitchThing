@@ -20,7 +20,7 @@ const HTML = (_id, {
     <div class="relics">Relics: ${relicStr(relics)}</div>
 </div>
 <div class="flex-rows">
-    <a href="/watch/dungeonrun/${_id}" target="_blank">Replay <i class="fa-solid fa-up-right-from-square"></i></a>
+    <a href="/dungeonrun/${_id}" target="_blank">Replay <i class="fa-solid fa-up-right-from-square"></i></a>
 </div>
 `
 

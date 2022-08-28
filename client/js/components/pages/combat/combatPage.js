@@ -45,7 +45,7 @@ export default class CombatPage extends Page{
     this._timeControlsEl.addEventListener('jumped', e => this._jump())
 
     this.querySelector('.permalink').addEventListener('click', e => {
-      const txt = `${window.location.origin}/watch/combat/${combatID}`
+      const txt = `${window.location.origin}/combat/${combatID}`
       navigator?.clipboard?.writeText(txt)
       console.log('Copied', txt, navigator?.clipboard ? true : false)
       tippy(e.currentTarget, {
@@ -73,7 +73,7 @@ export default class CombatPage extends Page{
   }
 
   async load(previousPage){
-    const { combat, state } = await this.fetchData(`/watch/combat/${this.combatID}`)
+    const { combat, state } = await this.fetchData(`/combat/${this.combatID}`)
 
     // If it's live but the combat's already done, just get outta here
     if(state.status === 'finished' && !this._options.isReplay && this._options.returnPage){

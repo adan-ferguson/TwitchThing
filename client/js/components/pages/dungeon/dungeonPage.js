@@ -59,7 +59,7 @@ export default class DungeonPage extends Page{
     })
 
     this.querySelector('.permalink').addEventListener('click', e => {
-      const txt = `${window.location.origin}/watch/dungeonrun/${this._dungeonRunID}`
+      const txt = `${window.location.origin}/dungeonrun/${this._dungeonRunID}`
       navigator?.clipboard?.writeText(txt)
       console.log('Copied', txt, navigator?.clipboard ? true : false)
       tippy(e.currentTarget, {
@@ -81,7 +81,7 @@ export default class DungeonPage extends Page{
   }
 
   get watching(){
-    return this.dungeonRun?.finalizedData || this.app.watchView
+    return this.dungeonRun?.finalizedData || this.app.publicView
   }
 
   get titleText(){
@@ -102,7 +102,7 @@ export default class DungeonPage extends Page{
 
   async load(previousPage){
 
-    const { dungeonRun } = await this.fetchData(`/watch/dungeonrun/${this._dungeonRunID}`)
+    const { dungeonRun } = await this.fetchData(`/dungeonrun/${this._dungeonRunID}`)
     this.dungeonRun = dungeonRun
 
     if(this.dungeonRun.finished && !this.watching){
