@@ -1,4 +1,5 @@
 import { isObject } from '../game/utilFunctions.js'
+import Users from './collections/users.js'
 
 export function validateParam(val, options){
 
@@ -41,5 +42,14 @@ export function validateParam(val, options){
     if(err){
       throw { code: 400, message: `Parameter ${val} is invalid type, expected ${type}.` }
     }
+  }
+}
+
+export function requireRegisteredUser(req){
+  if(!req.user){
+    throw { code: 401, message: 'Not logged in', redirect: '/' }
+  }
+  if(!Users.isSetupComplete(req.user)){
+    throw { code: 401, message: 'User setup not complete', redirect: '/user/newuser' }
   }
 }

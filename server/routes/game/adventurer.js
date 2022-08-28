@@ -11,6 +11,15 @@ import DungeonRuns from '../../collections/dungeonRuns.js'
 const router = express.Router()
 const verifiedRouter = express.Router()
 
+router.post('/new', async(req, res) => {
+  const startingClass = validateParam(req.body.class, {
+    required: false
+  }) ?? 'fighter'
+  const name = validateParam(req.body.name)
+  const adventurer = await Users.newAdventurer(req.user, name, startingClass)
+  res.send({ adventurerID: adventurer._id })
+})
+
 router.use('/:adventurerID', async (req, res, next) => {
   const adventurerID = db.id(req.params.adventurerID)
   if(!req.user.adventurers.find(adv => adv.equals(adventurerID))){

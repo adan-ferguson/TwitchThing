@@ -6,6 +6,8 @@ import Combats from '../collections/combats.js'
 import { cancelAllRuns, getActiveRunData } from '../dungeons/dungeonRunner.js'
 import { validateParam } from '../validations.js'
 import { getErrorLogTail, getOutputLogTail } from '../logging.js'
+import FighterInstance from '../../game/combat/fighterInstance.js'
+import { generateCombat } from '../combat/combat.js'
 
 const router = express.Router()
 
@@ -52,6 +54,20 @@ router.post('/runcommand', async(req, res) => {
     result = 'Everything has been successfully reset.'
   }
   res.status(200).send({ result })
+})
+
+router.post('/sim', async (req, res) => {
+  const adventurers = await Adventurers.collection.find({ sort: { level: -1 } })
+  res.status(200).send({ adventurers })
+})
+
+router.post('/sim/run', async (req, res) => {
+  const adv1 = validateParam(req.body.fighter1)
+  const adv2 = validateParam(req.body.fighter2)
+  const fighter1 = new FighterInstance(await Adventurers.findByID(adv1), {}, 1)
+  const fighter2 = new FighterInstance(await Adventurers.findByID(adv2), {}, 2)
+  const combat = await generateCombat(fighter1, fighter2)
+  res.status(200).send({ combatID: combat._id })
 })
 
 export default router
