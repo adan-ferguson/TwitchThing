@@ -48,16 +48,24 @@ export default class MainPage extends Page{
     }
   }
 
+  static get pathDef(){
+    return []
+  }
+
+  get path(){
+    return ''
+  }
+
   get backPage(){
     return null
   }
 
   async load(_){
-    const { error, adventurers, slots } = await fizzetch('/game/main')
+    const { error, adventurers } = await this.fetchData()
     if(error){
       this._showError(error, true)
     }else{
-      this._populateAdventurers(adventurers, slots)
+      this._populateAdventurers(adventurers, this.user.inventory.adventurerSlots)
     }
     history.replaceState(null, null, ' ')
     joinSocketRoom('user all adventurers ' + this.app.user._id)

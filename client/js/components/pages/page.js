@@ -11,6 +11,14 @@ export default class Page extends HTMLElement{
     this.classList.add('page')
   }
 
+  static get pathDef(){
+    return null
+  }
+
+  get path(){
+    return null
+  }
+
   /**
    * @return string
    */
@@ -33,8 +41,11 @@ export default class Page extends HTMLElement{
     this.app.setPage(page)
   }
 
-  async fetchData(url, args = {}){
-    const results = await fizzetch(url, args)
+  async fetchData(args = {}){
+    if(this.path === null){
+      throw 'Could not fetch data with null path.'
+    }
+    const results = await fizzetch('/game' + this.path, args)
     if(results.error){
       throw results
     }

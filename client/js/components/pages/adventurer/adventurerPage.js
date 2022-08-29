@@ -65,8 +65,16 @@ export default class AdventurerPage extends Page{
     return this.adventurer?.name
   }
 
+  static get pathDef(){
+    return ['adventurer', 'ARG']
+  }
+
+  get path(){
+    return `/adventurer/${this.adventurerID}`
+  }
+
   async load(previousPage){
-    const { adventurer, user } = await this.fetchData(`/game/adventurer/${this.adventurerID}`)
+    const { adventurer, user } = await this.fetchData()
 
     if(adventurer.dungeonRunID){
       return this.redirectTo(new DungeonPage(adventurer.dungeonRunID))

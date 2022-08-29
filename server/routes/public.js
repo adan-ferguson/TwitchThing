@@ -30,24 +30,6 @@ router.get('/', (req, res) => {
   }
 })
 
-router.get('/dungeonrun/:dungeonRunID', async (req, res) => {
-  res.render('game', {
-    startupParams: {
-      page: 'dungeonrun',
-      id: req.params.dungeonRunID
-    }
-  })
-})
-
-router.get('/combat/:combatID', async(req, res, body) => {
-  res.render('game', {
-    startupParams: {
-      page: 'combat',
-      id: req.params.combatID
-    }
-  })
-})
-
 /**************************************/
 
 router.post('/dungeonrun/:dungeonRunID', async (req, res) => {

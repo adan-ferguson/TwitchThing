@@ -7,20 +7,15 @@ import AdventurerPage from './pages/adventurer/adventurerPage.js'
 import DungeonPage from './pages/dungeon/dungeonPage.js'
 import { getSocket } from '../socketClient.js'
 import { showPopup } from './popup.js'
-import CombatPage from './pages/combat/combatPage.js'
 import ErrorPage from './pages/errorPage.js'
-import { fadeIn, fadeOut } from '../animationHelper.js'
-import SimPage from './pages/sim/simPage.js'
+import { fadeIn } from '../animationHelper.js'
+import getStartPage from './pathRouter.js'
+import { addPageToHistory } from '../history.js'
 
 const HTML = `
 <di-header></di-header>
 <div class="content"></div>
 `
-
-const PAGES = {
-  adventurer: AdventurerPage,
-  dungeon: DungeonPage
-}
 
 export default class App extends HTMLElement{
 
@@ -33,7 +28,7 @@ export default class App extends HTMLElement{
     this.header = this.querySelector('di-header')
     this.startupParams = startupParams || {}
     getSocket().on('show popup', showPopup)
-    this._setInitialPage()
+    this.setPage(getStartPage())
   }
 
   get showBackButton(){
@@ -52,7 +47,7 @@ export default class App extends HTMLElement{
     this.setPage(this.currentPage)
   }
 
-  async setPage(page, redirectToIndexOnError = false){
+  async setPage(page){
 
     if(!page){
       throw 'Attempted to set null page'
@@ -85,16 +80,8 @@ export default class App extends HTMLElement{
     try {
       await page.load(previousPage)
     }catch(ex){
-      if(redirectToIndexOnError){
-        return window.location = '/'
-      }
-      const { error, targetPage } = ex
       console.error(ex)
-      if(targetPage){
-        this.setPage(pageFromString(targetPage.name, targetPage.args))
-      }else{
-        this.setPage(new ErrorPage(error))
-      }
+      this.setPage(new ErrorPage(ex))
     }
 
     if(this.currentPage !== page){
@@ -102,6 +89,7 @@ export default class App extends HTMLElement{
       return
     }
 
+    addPageToHistory(page)
     this.querySelector(':scope > .content').appendChild(page)
     fadeIn(page)
     this.dispatchEvent(new Event('pagechange'))
@@ -122,25 +110,6 @@ export default class App extends HTMLElement{
   setBackground(color, texture){
     this.style.backgroundColor = color
     this.style.backgroundImage = texture ? `url("/assets/textures/${texture}")` : null
-  }
-
-  async _setInitialPage(){
-    const [pageStr, arg] = window.location.hash.substring(1).split('=')
-    if(pageStr === 'adventurer' && arg){
-      if(await this._setAdventurerPage(arg)){
-        return
-      }
-    }
-    if(this.startupParams?.page === 'dungeonrun'){
-      return this.setPage(new DungeonPage(this.startupParams.id), true)
-    }else if(this.startupParams?.page === 'combat'){
-      return this.setPage(new CombatPage(this.startupParams.id, {
-        isReplay: true
-      }), true)
-    }else if(this.startupParams?.page === 'sim'){
-      return this.setPage(new SimPage())
-    }
-    this.setPage(new MainPage())
   }
 
   _resetBackground(){
@@ -184,14 +153,6 @@ export default class App extends HTMLElement{
 }
 
 customElements.define('di-app', App)
-
-export function pageFromString(name, args){
-  const page = PAGES[name?.toLowerCase()]
-  if(page){
-    return new page(...args)
-  }
-  return null
-}
 
 function closeAllModals(){
   document.querySelectorAll('di-modal').forEach(modal => {

@@ -16,8 +16,16 @@ export default class LiveDungeonMapPage extends Page{
     this._liveDungeonMapEl = this.querySelector('di-live-dungeon-map')
   }
 
+  static get pathDef(){
+    return ['livedungeonmap']
+  }
+
+  get path(){
+    return '/livedungeonmap'
+  }
+
   async load(_){
-    const { activeRuns } = await this.fetchData('/livedungeonmap')
+    const { activeRuns } = await this.fetchData()
     joinSocketRoom('live dungeon map')
     getSocket().on('live dungeon map update', this._updateRuns)
     this._updateRuns(activeRuns)

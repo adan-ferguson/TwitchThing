@@ -12,7 +12,7 @@ const router = express.Router()
 router.use('/adventurer', adventurerRouter)
 router.use('/dungeonrun', dungeonRunRouter)
 
-router.post('/main', async(req, res) => {
+router.post('/', async(req, res) => {
   requireRegisteredUser(req)
   const adventurers = await Adventurers.findByIDs(req.user.adventurers)
   for(let adv of adventurers){
@@ -23,13 +23,7 @@ router.post('/main', async(req, res) => {
   res.send({ adventurers })
 })
 
-router.route(new RegExp('/.*'))
-  .get(async(req, res) => {
-  // TODO: startup params
-    res.render('game')
-  })
-
-router.get('/', async(req, res) => {
+router.get(new RegExp('.*'), async(req, res) => {
   res.render('game')
 })
 
