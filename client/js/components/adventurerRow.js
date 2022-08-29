@@ -1,7 +1,4 @@
 import './timer.js'
-import AdventurerPage from './pages/adventurer/adventurerPage.js'
-import DungeonPage from './pages/dungeon/dungeonPage.js'
-import ResultsPage from './pages/results/resultsPage.js'
 
 const HTML = `
 <di-adventurer-status></di-adventurer-status>
@@ -31,11 +28,11 @@ export default class AdventurerRow extends HTMLElement{
 
   get targetPage(){
     if(!this.dungeonRun){
-      return new AdventurerPage(this.adventurer._id)
+      return '/adventurer/' + this.adventurer._id
     }else if(this.dungeonRun.finished){
-      return new ResultsPage(this.dungeonRun._id)
+      return '/dungeon/' + this.dungeonRun._id + '/results'
     }else{
-      return new DungeonPage(this.dungeonRun._id)
+      return '/dungeon/' + this.dungeonRun._id
     }
   }
 

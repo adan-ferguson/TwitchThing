@@ -64,7 +64,7 @@ export default class AdventurerLoadoutEditorPage extends Page{
 
     this.saveButton.addEventListener('click', async (e) => {
       if(!this.adventurerPane.loadoutEl.hasChanges){
-        return this.redirectTo(new AdventurerPage(this.adventurerID))
+        return this.redirectTo(`/adventurer/${this.adventurerID}`)
       }
       this._saving = true
       this._updateSaveButton()
@@ -77,7 +77,7 @@ export default class AdventurerLoadoutEditorPage extends Page{
         this._saving = false
         this._updateSaveButton()
       }else{
-        this.redirectTo(new AdventurerPage(this.adventurerID))
+        this.redirectTo(`/adventurer/${this.adventurerID}`)
       }
     })
   }

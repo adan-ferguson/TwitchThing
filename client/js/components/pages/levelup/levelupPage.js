@@ -29,7 +29,7 @@ export default class LevelupPage extends Page{
   async load(previousPage){
     const { adventurer } = await this.fetchData(`/game/adventurer/${this.adventurerID}`)
     if(!adventurer.nextLevelUp){
-      return this.redirectTo(new AdventurerPage(this.adventurerID))
+      return this.redirectTo(`/adventurer/${this.adventurerID}`)
     }
     this._adventurer = adventurer
     this._setupNext(adventurer.nextLevelUp)
@@ -58,7 +58,7 @@ export default class LevelupPage extends Page{
     showLoader()
     const { nextLevelUp } = await this.fetchData(`/game/adventurer/${this.adventurerID}/selectbonus/${index}`)
     if(!nextLevelUp){
-      return this.redirectTo(new AdventurerPage(this.adventurerID))
+      return this.redirectTo(`/adventurer/${this.adventurerID}`)
     }
     await fadeOut(this._options)
     this._setupNext(nextLevelUp)

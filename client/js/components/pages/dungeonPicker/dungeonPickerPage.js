@@ -45,7 +45,7 @@ export default class DungeonPickerPage extends Page{
       action: `/game/adventurer/${this.adventurerID}/enterdungeon`,
       submitText: 'Go!',
       html: FORM_HTML,
-      success: ({ dungeonRun }) => this.redirectTo(new DungeonPage(dungeonRun._id)),
+      success: ({ dungeonRun }) => this.redirectTo(`/dungeon/${dungeonRun._id}`),
       extraData: () => ({ startingFloor: this.floorSlider.value })
     })
     this.querySelector('.stuff').appendChild(this._formEl)

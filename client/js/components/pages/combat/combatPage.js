@@ -69,7 +69,8 @@ export default class CombatPage extends Page{
 
     // If it's live but the combat's already done, just get outta here
     if(state.status === 'finished' && !this._options.isReplay && this._options.returnPage){
-      this.redirectTo(this._options.returnPage)
+      // TODO: This should no longer leave the page, combat page is a standalone watch page
+      // this.redirectTo(this._options.returnPage)
       return
     }
 
@@ -176,7 +177,8 @@ export default class CombatPage extends Page{
       setTimeout(() => {
         if(this._timeline.finished){
           // Don't redirect if the user rewound
-          this.redirectTo(this._options.returnPage)
+          // TODO: This should no longer leave the page, combat page is a standalone watch page
+          // this.redirectTo(this._options.returnPage)
         }
       }, this._options.isReplay ? 1000 : afterBuffer)
     }

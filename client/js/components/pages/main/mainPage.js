@@ -113,7 +113,7 @@ export default class MainPage extends Page{
       async: true,
       action: '/game/adventurer/new',
       submitText: 'Create',
-      success: result => this.redirectTo(new AdventurerPage(result.adventurerID))
+      success: result => this.redirectTo(`/adventurer/${result.adventurerID}`)
     })
 
     form.addInput({

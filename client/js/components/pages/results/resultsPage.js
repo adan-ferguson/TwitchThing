@@ -153,7 +153,7 @@ export default class ResultsPage extends Page{
   }
 
   async _finish(){
-    this.redirectTo(new AdventurerPage(this.adventurer._id))
+    this.redirectTo(`/adventurer/${this.adventurer._id}`)
   }
 
   _addRow(target, row){
@@ -210,7 +210,7 @@ export default class ResultsPage extends Page{
   _setupReplayButton(runID = this._dungeonRunID){
     const btn = this.querySelector('.replay')
     btn.addEventListener('click', () => {
-      this.redirectTo(new DungeonPage(runID))
+      this.redirectTo(`/dungeon/${runID}`)
     })
   }
 }

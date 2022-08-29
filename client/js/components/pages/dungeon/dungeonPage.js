@@ -98,7 +98,7 @@ export default class DungeonPage extends Page{
     this.dungeonRun = dungeonRun
 
     if(this.dungeonRun.finished && !this.watching){
-      return this.redirectTo(new ResultsPage(this._dungeonRunID))
+      return this.redirectTo(`/dungeon/${this._dungeonRunID}/results`)
     }
 
     if(!this.isReplay){
@@ -157,17 +157,18 @@ export default class DungeonPage extends Page{
   }
 
   async _finish(){
-    this.redirectTo(new ResultsPage(this.dungeonRun._id))
+    this.redirectTo(`/dungeon/${this.dungeonRun._id}/results`)
   }
 
   _goToCombat(){
     if(!this.currentEvent?.combatID){
       return
     }
-    return this.redirectTo(new CombatPage(this.currentEvent.combatID, {
-      isReplay: this.isReplay,
-      returnPage: this
-    }))
+    // TODO: no more redirecting to combat page
+    // return this.redirectTo(new CombatPage(this.currentEvent.combatID, {
+    //   isReplay: this.isReplay,
+    //   returnPage: this
+    // }))
   }
 
   _updateBackground(){
