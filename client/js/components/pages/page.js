@@ -34,11 +34,11 @@ export default class Page extends HTMLElement{
     return false
   }
 
-  redirectTo(page){
+  redirectTo(path){
     if(this.unloaded){
       return
     }
-    this.app.setPage(page)
+    this.app.setPage(path)
   }
 
   async fetchData(args = {}){
@@ -52,12 +52,8 @@ export default class Page extends HTMLElement{
     return results
   }
 
-  /**
-   * Page to go to if back button gets clicked. If null/false, back button will not be visible.
-   * @returns {null|function(): Page}
-   */
-  get backPage(){
-    return () => new MainPage()
+  get showBackButton(){
+    return true
   }
 
   /**

@@ -60,14 +60,6 @@ export default class CombatPage extends Page{
     this.combatID = combatID
   }
 
-  get backPage(){
-    return () => {
-      if(this._options.isReplay){
-        return this._options.returnPage
-      }
-    }
-  }
-
   get titleText(){
     return 'Fight!'
   }

@@ -26,10 +26,6 @@ export default class LevelupPage extends Page{
     return this._titleText
   }
 
-  get backPage(){
-    return () => new AdventurerPage(this.adventurerID)
-  }
-
   async load(previousPage){
     const { adventurer } = await this.fetchData(`/game/adventurer/${this.adventurerID}`)
     if(!adventurer.nextLevelUp){

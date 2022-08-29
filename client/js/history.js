@@ -1,10 +1,12 @@
-export function addPageToHistory(page){
+export function addPageToHistory(page, replace){
   if(page.path === null){
     return
   }
   const targetPath = '/game' + page.path
-  if(window.location.pathname === targetPath){
-    return
+  if(replace || targetPath === window.location.pathname){
+    console.log('replace')
+    window.history.replaceState({ targetPath }, '', targetPath)
+  }else{
+    window.history.pushState({ targetPath }, '', targetPath)
   }
-  window.history.pushState({}, '', targetPath)
 }

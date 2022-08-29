@@ -1,18 +1,29 @@
 import AdventurerPage from './pages/adventurer/adventurerPage.js'
 import MainPage from './pages/main/mainPage.js'
-import Page from './pages/page.js'
+import LiveDungeonMapPage from './pages/liveDungeonMap/liveDungeonMapPage.js'
+import ErrorPage from './pages/errorPage.js'
 
 const pages = [
-  AdventurerPage
+  AdventurerPage,
+  LiveDungeonMapPage,
+  ErrorPage
 ]
 
-export default function getStartPage(){
-  const segments = arrayTrim(window.location.pathname.split('/'))
-  const page = pages.find(PageSubclass => {
+export default function pathToPage(location, queryStringArgs = {}){
+
+  console.log('nav to', location, queryStringArgs)
+
+  let segments = arrayTrim(location.split('/'))
+  if(segments[0] === 'game'){
+    segments = segments.slice(1)
+  }
+
+  let page
+  pages.find(PageSubclass => {
     const args = findMatch(PageSubclass.pathDef, segments)
     if(args){
-      debugger
-      return new PageSubclass(...args)
+      page = new PageSubclass(...args, queryStringArgs)
+      return true
     }
   })
   return page ?? new MainPage()

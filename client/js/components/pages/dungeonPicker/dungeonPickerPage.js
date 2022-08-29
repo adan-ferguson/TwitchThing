@@ -55,10 +55,6 @@ export default class DungeonPickerPage extends Page{
     return this.adventurer.name + ' - Entering Dungeon'
   }
 
-  get backPage(){
-    return () => new AdventurerPage(this.adventurerID)
-  }
-
   async load(_){
 
     const { adventurer, error } = await fizzetch(`/game/adventurer/${this.adventurerID}/dungeonpicker`)

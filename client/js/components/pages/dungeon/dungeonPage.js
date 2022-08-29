@@ -72,14 +72,6 @@ export default class DungeonPage extends Page{
     })
   }
 
-  get backPage(){
-    return () => {
-      if(this.isReplay){
-        return new ResultsPage(this._dungeonRunID)
-      }
-    }
-  }
-
   get watching(){
     return this.dungeonRun?.finalizedData || this.app.publicView
   }

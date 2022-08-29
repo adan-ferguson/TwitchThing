@@ -20,10 +20,6 @@ export default class AdventurerPreviousRunsPage extends Page{
     return this.adventurer ? (this.adventurer.name + ' - Previous Runs') : 'Huh'
   }
 
-  get backPage(){
-    return () => new AdventurerPage(this.adventurerID)
-  }
-
   async load(_){
     const { adventurer, runs } = await this.fetchData(`/game/adventurer/${this.adventurerID}/previousruns`)
     this.adventurer = adventurer

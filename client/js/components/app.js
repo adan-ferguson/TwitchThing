@@ -3,13 +3,10 @@ import MainPage from './pages/main/mainPage.js'
 import fizzetch from '../fizzetch.js'
 import { hideAll as hideAllTippys } from 'tippy.js'
 import SimpleModal from './simpleModal.js'
-import AdventurerPage from './pages/adventurer/adventurerPage.js'
-import DungeonPage from './pages/dungeon/dungeonPage.js'
 import { getSocket } from '../socketClient.js'
 import { showPopup } from './popup.js'
-import ErrorPage from './pages/errorPage.js'
 import { fadeIn } from '../animationHelper.js'
-import getStartPage from './pathRouter.js'
+import pathToPage from './pathRouter.js'
 import { addPageToHistory } from '../history.js'
 
 const HTML = `
@@ -27,12 +24,18 @@ export default class App extends HTMLElement{
     this.currentPage = null
     this.header = this.querySelector('di-header')
     this.startupParams = startupParams || {}
-    getSocket().on('show popup', showPopup)
-    this.setPage(getStartPage())
+
+    this._fetchUser().then(() => {
+      getSocket().on('show popup', showPopup)
+      this.setPage(window.location.pathname, window.location.search, true)
+      window.addEventListener('popstate', e => {
+        this.setPage(window.location.pathname, window.location.search, true)
+      })
+    })
   }
 
   get showBackButton(){
-    return this.currentPage?.backPage ? true : false
+    return this.currentPage?.showBackButton ? true : false
   }
 
   get publicView(){
@@ -47,11 +50,13 @@ export default class App extends HTMLElement{
     this.setPage(this.currentPage)
   }
 
-  async setPage(page){
+  async setPage(path, queryArgs = {}, replaceHistoryState = false){
 
-    if(!page){
-      throw 'Attempted to set null page'
+    if(typeof(queryArgs) === 'string'){
+      queryArgs = Object.fromEntries(new URLSearchParams(queryArgs))
     }
+
+    const page = pathToPage(path, queryArgs)
 
     Loader.showLoader()
     hideAllTippys()
@@ -81,7 +86,8 @@ export default class App extends HTMLElement{
       await page.load(previousPage)
     }catch(ex){
       console.error(ex)
-      this.setPage(new ErrorPage(ex))
+      this.setPage('error', { error: ex.error ?? ex })
+      return
     }
 
     if(this.currentPage !== page){
@@ -89,7 +95,8 @@ export default class App extends HTMLElement{
       return
     }
 
-    addPageToHistory(page)
+    document.title = 'AutoCrawl - ' + page.constructor.name
+    addPageToHistory(page, replaceHistoryState)
     this.querySelector(':scope > .content').appendChild(page)
     fadeIn(page)
     this.dispatchEvent(new Event('pagechange'))
@@ -136,19 +143,6 @@ export default class App extends HTMLElement{
         }
       }]).show()
     })
-  }
-
-  async _setAdventurerPage(adventurerID){
-    const { error, status } = await fizzetch(`/game/adventurer/${adventurerID}/status`)
-    if(error){
-      return false
-    }
-    if(status === 'idle'){
-      this.setPage(new AdventurerPage(adventurerID))
-    }else{
-      this.setPage(new DungeonPage(adventurerID))
-    }
-    return true
   }
 }
 

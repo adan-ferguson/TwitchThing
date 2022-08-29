@@ -37,7 +37,7 @@ export default class MainPage extends Page{
     this.innerHTML = HTML
     this._error = this.querySelector('.error-message')
     this.querySelector('.live-dungeon-map').addEventListener('click', () => {
-      this.redirectTo(new LiveDungeonMapPage())
+      this.redirectTo('livedungeonmap')
     })
     this.querySelector('.adventurer-list')
       .setOptions({
@@ -56,8 +56,8 @@ export default class MainPage extends Page{
     return ''
   }
 
-  get backPage(){
-    return null
+  get showBackButton(){
+    return false
   }
 
   async load(_){
@@ -111,7 +111,7 @@ export default class MainPage extends Page{
 
     const form = new DIForm({
       async: true,
-      action: '/game/newadventurer',
+      action: '/game/adventurer/new',
       submitText: 'Create',
       success: result => this.redirectTo(new AdventurerPage(result.adventurerID))
     })

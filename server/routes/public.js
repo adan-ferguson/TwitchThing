@@ -52,11 +52,4 @@ router.post('/combat/:combatID', async(req, res) => {
   res.send({ combat, state })
 })
 
-router.post('/livedungeonmap', async(req, res) => {
-  const activeRuns = getAllActiveRuns(true)
-  res.send({
-    activeRuns
-  })
-})
-
 export default router

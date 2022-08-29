@@ -8,7 +8,7 @@ const HTML = `
 <div class="user-info clickable">
     <span class="displayname"></span> <i class="fa-solid fa-caret-down"></i>
 </div>
-<div class="autocrawl absolute-center-both">AUTOCRAWL</div>
+<div class="autocrawl absolute-center-both clickable">AUTOCRAWL</div>
 <div class="title-text absolute-center-both"></div>
 `
 
@@ -22,11 +22,11 @@ export default class Header extends HTMLElement{
 
     this.backButton = this.querySelector('.back-button')
     this.backButton.addEventListener('click', () => {
-      if(this.app.publicView){
-        window.location = '/'
-      }else{
-        this.app.back()
-      }
+      window.history.back()
+    })
+
+    this.querySelector('.autocrawl').addEventListener('click', () => {
+      this.app.setPage('')
     })
 
     this._userInfo = this.querySelector('.user-info')

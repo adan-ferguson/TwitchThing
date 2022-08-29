@@ -4,7 +4,7 @@ import adventurerRouter from './adventurer.js'
 import dungeonRunRouter from './dungeonrun.js'
 
 import Adventurers from '../../collections/adventurers.js'
-import { getRunData } from '../../dungeons/dungeonRunner.js'
+import { getAllActiveRuns, getRunData } from '../../dungeons/dungeonRunner.js'
 import { requireRegisteredUser } from '../../validations.js'
 
 const router = express.Router()
@@ -21,6 +21,13 @@ router.post('/', async(req, res) => {
     }
   }
   res.send({ adventurers })
+})
+
+router.post('/livedungeonmap', async(req, res) => {
+  const activeRuns = getAllActiveRuns(true)
+  res.send({
+    activeRuns
+  })
 })
 
 router.get(new RegExp('.*'), async(req, res) => {

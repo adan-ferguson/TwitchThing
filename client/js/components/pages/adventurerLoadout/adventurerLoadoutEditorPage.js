@@ -38,10 +38,6 @@ export default class AdventurerLoadoutEditorPage extends Page{
     return this.adventurer.name + ' - Edit Equipment'
   }
 
-  get backPage(){
-    return () => new AdventurerPage(this.adventurerID)
-  }
-
   get confirmLeavePageMessage(){
     if(this.adventurerPane.loadoutEl.hasChanges){
       return 'Your adventurer has unsaved changes.'
