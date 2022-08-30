@@ -63,23 +63,25 @@ export default class App extends HTMLElement{
 
     const previousPage = this.currentPage
     if(previousPage){
-      const preventUnload = await previousPage.unload()
-      if(preventUnload){
-        return
+      if(previousPage.loaded){
+        const preventUnload = await previousPage.unload()
+        if(preventUnload){
+          return
+        }
       }
-      // await fadeOut(previousPage, 100)
-      previousPage.unloaded = true
+      previousPage.loadstate = 'unloaded'
       previousPage.remove()
     }
 
     this.currentPage = page
     page.app = this
-    page.unloaded = false
 
     this._resetBackground()
 
     try {
-      await page.load(previousPage)
+      page.loadstate = 'loading'
+      await page.load()
+      page.loadstate = 'loaded'
     }catch(ex){
       console.error(ex)
       this.setPage('error', { error: ex.error ?? ex })

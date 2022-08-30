@@ -47,7 +47,7 @@ export default class Page extends HTMLElement{
   }
 
   redirectTo(path){
-    if(this.unloaded){
+    if(this.loadstate === 'unloaded'){
       return
     }
     this.app.setPage(path)
@@ -67,10 +67,9 @@ export default class Page extends HTMLElement{
   /**
    * Load page content here. Return false to prevent the page from loading (for example,
    * if an error occurred).
-   * @param previousPage {Page|undefined}
    * @returns {Promise<string|void>}
    */
-  async load(previousPage){
+  async load(){
 
   }
 

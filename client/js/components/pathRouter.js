@@ -3,6 +3,7 @@ import MainPage from './pages/main/mainPage.js'
 import LiveDungeonMapPage from './pages/liveDungeonMap/liveDungeonMapPage.js'
 import ErrorPage from './pages/errorPage.js'
 import DungeonPage from './pages/dungeon/dungeonPage.js'
+import { isObject } from '../../../game/utilFunctions.js'
 
 const pages = [
   AdventurerPage,
@@ -43,6 +44,11 @@ export function generatePath(pathDef, pathArgs){
       str += '/' + def
     }
   })
+
+  const last = pathArgs[pathArgs.length - 1]
+  if(isObject(last)){
+    str += '?' + new URLSearchParams(last).toString()
+  }
   return str
 }
 

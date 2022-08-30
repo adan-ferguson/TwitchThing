@@ -29,10 +29,10 @@ export default class AdventurerRow extends HTMLElement{
   }
 
   get targetPage(){
-    if(!this.dungeonRun){
+    if(!this.adventurer.dungeonRun){
       return AdventurerPage.path(this.adventurer._id)
     }else{
-      return DungeonPage.path(this.dungeonRun._id)
+      return DungeonPage.path(this.adventurer.dungeonRun._id)
     }
   }
 

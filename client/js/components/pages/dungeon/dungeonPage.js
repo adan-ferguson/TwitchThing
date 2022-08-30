@@ -73,7 +73,7 @@ export default class DungeonPage extends Page{
   }
 
   static get pathDef(){
-    return ['dungeon', 0]
+    return ['dungeonrun', 0]
   }
 
   get pathArgs(){
@@ -100,9 +100,9 @@ export default class DungeonPage extends Page{
     return this.dungeonRun.finalizedData ? true : false
   }
 
-  async load(previousPage){
+  async load(){
 
-    const { dungeonRun } = await this.fetchData(`/dungeonrun/${this._dungeonRunID}`)
+    const { dungeonRun } = await this.fetchData()
     this.dungeonRun = dungeonRun
 
     if(this.dungeonRun.finished && !this.watching){

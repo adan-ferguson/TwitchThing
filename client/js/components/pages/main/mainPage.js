@@ -40,7 +40,7 @@ export default class MainPage extends Page{
       })
   }
 
-  async load(_){
+  async load(){
     const { adventurers } = await this.fetchData()
     this._populateAdventurers(adventurers, this.user.inventory.adventurerSlots)
     history.replaceState(null, null, ' ')
