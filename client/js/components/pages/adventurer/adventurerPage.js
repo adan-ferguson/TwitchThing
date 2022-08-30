@@ -66,11 +66,11 @@ export default class AdventurerPage extends Page{
   }
 
   static get pathDef(){
-    return ['adventurer', 'ARG']
+    return ['adventurer', 0]
   }
 
-  get path(){
-    return `/adventurer/${this.adventurerID}`
+  get pathArgs(){
+    return [this.adventurerID]
   }
 
   async load(previousPage){

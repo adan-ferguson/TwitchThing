@@ -1,13 +1,12 @@
 import * as Loader from '../loader.js'
-import MainPage from './pages/main/mainPage.js'
 import fizzetch from '../fizzetch.js'
 import { hideAll as hideAllTippys } from 'tippy.js'
 import SimpleModal from './simpleModal.js'
 import { getSocket } from '../socketClient.js'
 import { showPopup } from './popup.js'
 import { fadeIn } from '../animationHelper.js'
-import pathToPage from './pathRouter.js'
 import { addPageToHistory } from '../history.js'
+import { pathToPage } from './pathRouter.js'
 
 const HTML = `
 <di-header></di-header>
@@ -34,10 +33,6 @@ export default class App extends HTMLElement{
     })
   }
 
-  get showBackButton(){
-    return this.currentPage?.showBackButton ? true : false
-  }
-
   get publicView(){
     return document.location.pathname.search(/^\/game/) > -1 ? false : true
   }
@@ -47,7 +42,8 @@ export default class App extends HTMLElement{
   }
 
   async reloadPage(){
-    this.setPage(this.currentPage)
+    debugger
+    this.setPage(this.currentPage.path, {}, true)
   }
 
   async setPage(path, queryArgs = {}, replaceHistoryState = false){
@@ -102,16 +98,6 @@ export default class App extends HTMLElement{
     this.dispatchEvent(new Event('pagechange'))
     this.updateTitle()
     Loader.hideLoader()
-  }
-
-  async back(){
-    if(this.currentPage.confirmLeavePageMessage){
-      const confirmed = await this._confirmLeavePage(this.currentPage.confirmLeavePageMessage)
-      if(!confirmed){
-        return
-      }
-    }
-    this.setPage(this.currentPage.backPage() || new MainPage())
   }
 
   setBackground(color, texture){

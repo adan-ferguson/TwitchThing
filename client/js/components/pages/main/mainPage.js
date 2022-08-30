@@ -1,17 +1,13 @@
 import Page from '../page.js'
-import AdventurerPage from '../adventurer/adventurerPage.js'
 import AdventurerRow from '../../adventurerRow.js'
-import fizzetch from '../../../fizzetch.js'
 import DIForm from '../../form.js'
 import FormModal from '../../formModal.js'
 import { getSocket, joinSocketRoom, leaveSocketRoom } from '../../../socketClient.js'
 import '../../list.js'
 import { wrap } from '../../../../../game/utilFunctions.js'
-import LiveDungeonMapPage from '../liveDungeonMap/liveDungeonMapPage.js'
 
 const HTML = `
 <div class="content-rows">
-  <div class="displaynone error-message"></div>
   <div class="content-columns">
     <div class="content-well fill-contents">
       <di-list class="adventurer-list"></di-list>
@@ -30,12 +26,9 @@ const HTML = `
 
 export default class MainPage extends Page{
 
-  _error
-
-  constructor({ error } = {}){
+  constructor(){
     super()
     this.innerHTML = HTML
-    this._error = this.querySelector('.error-message')
     this.querySelector('.live-dungeon-map').addEventListener('click', () => {
       this.redirectTo('livedungeonmap')
     })
@@ -43,30 +36,11 @@ export default class MainPage extends Page{
       .setOptions({
         pageSize: 6
       })
-    if(error){
-      this._showError(error)
-    }
-  }
-
-  static get pathDef(){
-    return []
-  }
-
-  get path(){
-    return ''
-  }
-
-  get showBackButton(){
-    return false
   }
 
   async load(_){
-    const { error, adventurers } = await this.fetchData()
-    if(error){
-      this._showError(error, true)
-    }else{
-      this._populateAdventurers(adventurers, this.user.inventory.adventurerSlots)
-    }
+    const { adventurers } = await this.fetchData()
+    this._populateAdventurers(adventurers, this.user.inventory.adventurerSlots)
     history.replaceState(null, null, ' ')
     joinSocketRoom('user all adventurers ' + this.app.user._id)
     getSocket().on('user dungeon run update', this._dungeonRunUpdates)
@@ -143,22 +117,6 @@ export default class MainPage extends Page{
     }
 
     new FormModal(form).show()
-  }
-
-  /**
-   * @param error {string|object}
-   * @param critical {boolean} If true, then the main page itself failed to load.
-   * @private
-   */
-  _showError(error, critical = false){
-    if(!error){
-      return
-    }
-    const message = typeof(error) === 'string' ? error : error.message
-    if(message){
-      this._error.classList.remove('displaynone')
-      this._error.textContent = message || 'An error occurred'
-    }
   }
 
   _dungeonRunUpdates = dungeonRuns => {

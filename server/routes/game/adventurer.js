@@ -4,7 +4,7 @@ import { addRun } from '../../dungeons/dungeonRunner.js'
 import db  from '../../db.js'
 import Users from '../../collections/users.js'
 import { commitAdventurerLoadout } from '../../loadouts/adventurer.js'
-import { validateParam } from '../../validations.js'
+import { requireRegisteredUser, validateParam } from '../../validations.js'
 import { selectBonus } from '../../adventurer/bonuses.js'
 import DungeonRuns from '../../collections/dungeonRuns.js'
 
@@ -22,9 +22,6 @@ router.post('/new', async(req, res) => {
 
 router.use('/:adventurerID', async (req, res, next) => {
   const adventurerID = db.id(req.params.adventurerID)
-  if(!req.user.adventurers.find(adv => adv.equals(adventurerID))){
-    throw { code: 400, message: 'Invalid adventurer ID' }
-  }
   req.adventurer = await Adventurers.findByID(adventurerID)
   if(!req.adventurer){
     throw { code: 400, message: 'Invalid adventurer ID' }
@@ -39,6 +36,7 @@ verifiedRouter.post('/dungeonpicker', validateIdle, async(req, res) => {
 })
 
 verifiedRouter.post('/enterdungeon', validateIdle, async(req, res) => {
+  requireOwnsAdventurer(req)
   const startingFloor = validateParam(req.body.startingFloor, { type: 'integer', required: false }) || 1
   const pace = validateParam(req.body.pace, { type: 'string', required: false })
   const dungeonRun = await addRun(req.adventurer._id, {
@@ -137,6 +135,13 @@ async function validateIdle(req, res, next){
     }
   }
   next()
+}
+
+export function requireOwnsAdventurer(req){
+  requireRegisteredUser(req)
+  if(!req.user.adventurers.find(adv => adv.equals(req.adventurer._id))){
+    throw { code: 400, message: 'Invalid adventurer ID' }
+  }
 }
 
 export default router

@@ -1,5 +1,4 @@
 import Page from '../page.js'
-import AdventurerPage from '../adventurer/adventurerPage.js'
 import { fadeIn, fadeOut } from '../../../animationHelper.js'
 import { hideLoader, showLoader } from '../../../loader.js'
 import BonusDetails from './bonusDetails.js'

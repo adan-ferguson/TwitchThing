@@ -72,6 +72,14 @@ export default class DungeonPage extends Page{
     })
   }
 
+  static get pathDef(){
+    return ['dungeonrun', 0]
+  }
+
+  get pathArgs(){
+    return [this._dungeonRunID]
+  }
+
   get watching(){
     return this.dungeonRun?.finalizedData || this.app.publicView
   }

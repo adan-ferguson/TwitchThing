@@ -1,14 +1,11 @@
 import * as Dropdown  from './dropdown.js'
 import SimpleModal from './simpleModal.js'
-import AdminPage from './pages/admin/adminPage.js'
-import SimPage from './pages/sim/simPage.js'
 
 const HTML = `
-<button class="back-button hidden"><- Back</button>
+<div class="autocrawl clickable">AUTOCRAWL</div>
 <div class="user-info clickable">
     <span class="displayname"></span> <i class="fa-solid fa-caret-down"></i>
 </div>
-<div class="autocrawl absolute-center-both clickable">AUTOCRAWL</div>
 <div class="title-text absolute-center-both"></div>
 `
 
@@ -19,11 +16,6 @@ export default class Header extends HTMLElement{
   constructor(){
     super()
     this.innerHTML = HTML
-
-    this.backButton = this.querySelector('.back-button')
-    this.backButton.addEventListener('click', () => {
-      window.history.back()
-    })
 
     this.querySelector('.autocrawl').addEventListener('click', () => {
       this.app.setPage('')
@@ -36,13 +28,11 @@ export default class Header extends HTMLElement{
         Logout: () => confirmLogout()
       }
       if(this.user.isAdmin){
-        options.Admin =  () => this.app.setPage(new AdminPage())
-        options['Sim Combat'] = () => this.app.setPage(new SimPage())
+        options.Admin =  () => this.app.setPage('/admin')
+        options['Sim Combat'] = () => this.app.setPage('/admin/sim')
       }
       return options
     })
-
-    this.app.addEventListener('pagechange', () => this.backButton.classList.toggle('hidden', !this.app.showBackButton))
   }
 
   set titleText(val){
@@ -62,9 +52,6 @@ export default class Header extends HTMLElement{
       this._userInfo.classList.add('hidden')
     }else{
       this.querySelector('.displayname').textContent = this.user.displayname
-    }
-    if(this.app.publicView){
-      this.backButton.textContent = 'AutoCrawl'
     }
   }
 }

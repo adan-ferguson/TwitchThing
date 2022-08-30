@@ -1,5 +1,5 @@
-import MainPage from './main/mainPage.js'
 import fizzetch from '../../fizzetch.js'
+import { generatePath } from '../pathRouter.js'
 
 export default class Page extends HTMLElement{
 
@@ -11,12 +11,20 @@ export default class Page extends HTMLElement{
     this.classList.add('page')
   }
 
-  static get pathDef(){
-    return null
+  static path(args){
+    return generatePath(this.pathDef, args)
   }
 
   get path(){
-    return null
+    return this.constructor.path(this.pathArgs)
+  }
+
+  static get pathDef(){
+    return []
+  }
+
+  get pathArgs(){
+    return []
   }
 
   /**
@@ -50,10 +58,6 @@ export default class Page extends HTMLElement{
       throw results
     }
     return results
-  }
-
-  get showBackButton(){
-    return true
   }
 
   /**

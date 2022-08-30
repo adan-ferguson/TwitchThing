@@ -19,8 +19,8 @@ export default class ErrorPage extends Page{
     return ['error']
   }
 
-  get path(){
-    return '/error/' + this._error
+  get pathArgs(){
+    return [this._error]
   }
 }
 customElements.define('di-error-page', ErrorPage)

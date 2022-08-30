@@ -9,7 +9,7 @@ const pages = [
   ErrorPage
 ]
 
-export default function pathToPage(location, queryStringArgs = {}){
+export function pathToPage(location, queryStringArgs = {}){
 
   console.log('nav to', location, queryStringArgs)
 
@@ -29,11 +29,26 @@ export default function pathToPage(location, queryStringArgs = {}){
   return page ?? new MainPage()
 }
 
+/**
+ * @returns {string}
+ */
+export function generatePath(pathDef, pathArgs){
+  let str = ''
+  pathDef.forEach(def => {
+    if(Number.isInteger(def) && pathArgs[def]){
+      str += '/' + pathArgs[def]
+    }else{
+      str += '/' + def
+    }
+  })
+  return str
+}
+
 function findMatch(params, segments){
   const args = []
   for(let i = 0; i < params.length; i++){
-    if(params[i] === 'ARG'){
-      args.push(segments[i])
+    if(Number.isInteger(params[i])){
+      args[params[i]] = segments[i]
     }else if(segments[i] !== params[i]){
       return false
     }
