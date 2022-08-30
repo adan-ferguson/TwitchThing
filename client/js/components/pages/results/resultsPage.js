@@ -3,6 +3,8 @@ import ChestOpenage from './chestOpenage.js'
 import { makeEl, toDisplayName } from '../../../../../game/utilFunctions.js'
 import Page from '../page.js'
 import RELICS from '../../../relicDisplayInfo.js'
+import DungeonPage from '../dungeon/dungeonPage.js'
+import AdventurerPage from '../adventurer/adventurerPage.js'
 
 const WAIT_TIME = 500
 
@@ -151,7 +153,7 @@ export default class ResultsPage extends Page{
   }
 
   async _finish(){
-    this.redirectTo(`/adventurer/${this.adventurer._id}`)
+    this.redirectTo(AdventurerPage.path(this.adventurer._id))
   }
 
   _addRow(target, row){
@@ -208,7 +210,7 @@ export default class ResultsPage extends Page{
   _setupReplayButton(runID = this._dungeonRunID){
     const btn = this.querySelector('.replay')
     btn.addEventListener('click', () => {
-      this.redirectTo(`/dungeon/${runID}`)
+      this.redirectTo(DungeonPage.path(runID))
     })
   }
 }

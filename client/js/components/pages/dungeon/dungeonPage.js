@@ -73,7 +73,7 @@ export default class DungeonPage extends Page{
   }
 
   static get pathDef(){
-    return ['dungeonrun', 0]
+    return ['dungeon', 0]
   }
 
   get pathArgs(){
@@ -106,7 +106,7 @@ export default class DungeonPage extends Page{
     this.dungeonRun = dungeonRun
 
     if(this.dungeonRun.finished && !this.watching){
-      return this.redirectTo(`/dungeon/${this._dungeonRunID}/results`)
+      return this.redirectTo(DungeonPage.path(this._dungeonRunID))
     }
 
     if(!this.isReplay){
@@ -165,7 +165,8 @@ export default class DungeonPage extends Page{
   }
 
   async _finish(){
-    this.redirectTo(`/dungeon/${this.dungeonRun._id}/results`)
+    // TODO: no more redirecting
+    // this.redirectTo(`/dungeon/${this.dungeonRun._id}/results`)
   }
 
   _goToCombat(){

@@ -5,6 +5,8 @@ import FormModal from '../../formModal.js'
 import { getSocket, joinSocketRoom, leaveSocketRoom } from '../../../socketClient.js'
 import '../../list.js'
 import { wrap } from '../../../../../game/utilFunctions.js'
+import LiveDungeonMapPage from '../liveDungeonMap/liveDungeonMapPage.js'
+import AdventurerPage from '../adventurer/adventurerPage.js'
 
 const HTML = `
 <div class="content-rows">
@@ -30,7 +32,7 @@ export default class MainPage extends Page{
     super()
     this.innerHTML = HTML
     this.querySelector('.live-dungeon-map').addEventListener('click', () => {
-      this.redirectTo('livedungeonmap')
+      this.redirectTo(LiveDungeonMapPage.path())
     })
     this.querySelector('.adventurer-list')
       .setOptions({
@@ -87,7 +89,7 @@ export default class MainPage extends Page{
       async: true,
       action: '/game/adventurer/new',
       submitText: 'Create',
-      success: result => this.redirectTo(`/adventurer/${result.adventurerID}`)
+      success: result => this.redirectTo(AdventurerPage.path(result.adventurerID))
     })
 
     form.addInput({

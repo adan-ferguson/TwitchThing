@@ -11,12 +11,12 @@ export default class Page extends HTMLElement{
     this.classList.add('page')
   }
 
-  static path(args){
-    return generatePath(this.pathDef, args)
+  static path(){
+    return generatePath(this.pathDef, arguments)
   }
 
   get path(){
-    return this.constructor.path(this.pathArgs)
+    return this.constructor.path(...this.pathArgs)
   }
 
   static get pathDef(){
@@ -40,6 +40,10 @@ export default class Page extends HTMLElement{
 
   showBackConfirm(){
     return false
+  }
+
+  redirectToMain(){
+    this.redirectTo('')
   }
 
   redirectTo(path){

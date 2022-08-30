@@ -2,11 +2,13 @@ import AdventurerPage from './pages/adventurer/adventurerPage.js'
 import MainPage from './pages/main/mainPage.js'
 import LiveDungeonMapPage from './pages/liveDungeonMap/liveDungeonMapPage.js'
 import ErrorPage from './pages/errorPage.js'
+import DungeonPage from './pages/dungeon/dungeonPage.js'
 
 const pages = [
   AdventurerPage,
   LiveDungeonMapPage,
-  ErrorPage
+  ErrorPage,
+  DungeonPage
 ]
 
 export function pathToPage(location, queryStringArgs = {}){
