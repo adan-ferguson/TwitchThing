@@ -39,8 +39,8 @@ export default class CombatPage extends Page{
     this.innerHTML = HTML
     this.fighterPane1 = this.querySelector('.fighter1')
     this.fighterPane2 = this.querySelector('.fighter2')
-    this.combatFeed = this.querySelector('di-combat-feed')
-    this._timeControlsEl = this.querySelector('di-combat-time-controls')
+    this.combatFeed = this.querySelector('di-actionsAndTicks-feed')
+    this._timeControlsEl = this.querySelector('di-actionsAndTicks-time-controls')
     this._timeControlsEl.addEventListener('tick', e => this._tick())
     this._timeControlsEl.addEventListener('jumped', e => this._jump())
 
@@ -67,9 +67,9 @@ export default class CombatPage extends Page{
   async load(previousPage){
     const { combat, state } = await this.fetchData(`/combat/${this.combatID}`)
 
-    // If it's live but the combat's already done, just get outta here
+    // If it's live but the actionsAndTicks's already done, just get outta here
     if(state.status === 'finished' && !this._options.isReplay && this._options.returnPage){
-      // TODO: This should no longer leave the page, combat page is a standalone watch page
+      // TODO: This should no longer leave the page, actionsAndTicks page is a standalone watch page
       // this.redirectTo(this._options.returnPage)
       return
     }
@@ -84,7 +84,7 @@ export default class CombatPage extends Page{
     this.fighterPane2.setFighter(combat.fighter2)
     this._setupTimeline(combat, state)
 
-    // TODO: This only makes sense in monster combat
+    // TODO: This only makes sense in monster actionsAndTicks
     this.combatFeed.setText(`A ${toDisplayName(combat.fighter2.data.name)} draws near.`)
   }
 
@@ -169,7 +169,7 @@ export default class CombatPage extends Page{
     }else if(this.combat.fighter1.endState.hp <= 0){
       this.combatFeed.setText(`${toDisplayName(this.combat.fighter1.data.name)} has been defeated.`)
     }else{
-      this.combatFeed.setText('Time is up, combat is not going anywhere.')
+      this.combatFeed.setText('Time is up, actionsAndTicks is not going anywhere.')
     }
 
     if(this._options.returnPage){
@@ -177,7 +177,7 @@ export default class CombatPage extends Page{
       setTimeout(() => {
         if(this._timeline.finished){
           // Don't redirect if the user rewound
-          // TODO: This should no longer leave the page, combat page is a standalone watch page
+          // TODO: This should no longer leave the page, actionsAndTicks page is a standalone watch page
           // this.redirectTo(this._options.returnPage)
         }
       }, this._options.isReplay ? 1000 : afterBuffer)

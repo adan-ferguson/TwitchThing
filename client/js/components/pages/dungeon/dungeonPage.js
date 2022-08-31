@@ -174,7 +174,7 @@ export default class DungeonPage extends Page{
     if(!this.currentEvent?.combatID){
       return
     }
-    // TODO: no more redirecting to combat page
+    // TODO: no more redirecting to actionsAndTicks page
     // return this.redirectTo(new CombatPage(this.currentEvent.combatID, {
     //   isReplay: this.isReplay,
     //   returnPage: this

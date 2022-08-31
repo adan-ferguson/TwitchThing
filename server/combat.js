@@ -1,8 +1,10 @@
-import Combats from '../collections/combats.js'
-import { toDisplayName } from '../../game/utilFunctions.js'
-import { randomOrder } from '../../game/rando.js'
-import { generateMonster } from '../dungeons/monsters.js'
-import FighterInstance from '../../game/fighterInstance.js'
+import Combats from './collections/combats.js'
+import { toDisplayName } from '../game/utilFunctions.js'
+import { randomOrder } from '../game/rando.js'
+import { generateMonster } from './dungeons/monsters.js'
+import MonsterInstance from '../game/monsterInstance.js'
+import { performCombatAction } from './actionsAndTicks/performAction.js'
+import { performCombatTick } from './actionsAndTicks/performCombatTick.js'
 
 const START_TIME_DELAY = 1000
 const MAX_TIME = 120000
@@ -10,25 +12,26 @@ const MAX_TIME = 120000
 const STATE_VALUES_TO_CLEAR = ['timeSinceLastAction']
 
 export async function generateCombatEvent(dungeonRun){
+
   const adventurerInstance = dungeonRun.adventurerInstance
-  const monster = await generateMonster(dungeonRun)
-  // TODO: monsterInstance, adventurerInstance as combat params
-  const combat = await generateCombat(
-    new FighterInstance(adventurerInstance.adventurer, adventurerInstance.adventurerState, 1),
-    new FighterInstance(monster, {}, 2),
-    dungeonRun.floor
-  )
+  const monsterDef = await generateMonster(dungeonRun)
+  const monsterInstance = new MonsterInstance(monsterDef)
+
+  const combat = await generateCombat(adventurerInstance, monsterInstance, {
+    floor: dungeonRun.floor
+  })
+
   return {
     duration: combat.duration,
     stayInRoom: true,
-    message: `${dungeonRun.adventurer.name} is fighting a ${toDisplayName(monster.name)}.`,
+    message: `${adventurerInstance.displayName} is fighting a ${monsterInstance.displayName}.`,
     combatID: combat._id,
     passTimeOverride: true,
     roomType: 'combat',
-    monster
+    monster: monsterDef
   }
 }
-export async function generateCombat(fighterInstance1, fighterInstance2, floor = -1){
+export async function generateCombat(fighterInstance1, fighterInstance2, params = {}){
 
   const combat = new Combat(fighterInstance1, fighterInstance2)
 
@@ -37,19 +40,19 @@ export async function generateCombat(fighterInstance1, fighterInstance2, floor =
     duration: combat.duration,
     fighter1: {
       id: 1,
-      data: fighterInstance1.baseFighter,
+      data: fighterInstance1.baseFighterDef,
       startState: fighterInstance1.startState,
       endState: combat.fighterEndState1
     },
     fighter2: {
       id: 2,
-      data: fighterInstance2.baseFighter,
+      data: fighterInstance2.baseFighterDef,
       startState: fighterInstance2.startState,
       endState: combat.fighterEndState2
     },
     timeline: combat.timeline,
     result: combat.result,
-    floor: floor
+    params
   })
 }
 
@@ -80,7 +83,9 @@ class Combat{
 
   constructor(fighterInstance1, fighterInstance2){
     this.fighterInstance1 = fighterInstance1
+    fighterInstance1.fighterId = 1
     this.fighterInstance2 = fighterInstance2
+    fighterInstance1.fighterId = 2
     this._currentTime = 0
     this.timeline = []
     this._addTimelineEntry()
@@ -139,7 +144,7 @@ class Combat{
     const tickUpdates = []
 
     const doTick = source => {
-      tickUpdates.push(...source.performTick(this))
+      tickUpdates.push(...performCombatTick(this, source))
     }
 
     randomOrder(
@@ -156,7 +161,7 @@ class Combat{
 
     const doAction = actor => {
       if(actor.actionReady){
-        const { ability, results } = actor.performAction(this)
+        const { ability, results } = performCombatAction(this, actor)
         actions.push({
           actor: actor.fighterId,
           ability,
@@ -171,10 +176,6 @@ class Combat{
     )
 
     return actions
-  }
-
-  _1or2(fighterInstance){
-    return this.fighterInstance1 === fighterInstance ? 1 : 2
   }
 
   _addTimelineEntry(options = {}){

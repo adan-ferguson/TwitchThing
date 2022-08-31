@@ -1,7 +1,7 @@
 import { foundMonster } from './monsters.js'
 import { foundRelic, generateRelicEvent } from './relics.js'
 import { foundStairs } from './stairs.js'
-import { generateCombatEvent } from '../combat/combat.js'
+import { generateCombatEvent } from '../combat.js'
 
 /**
  * @param dungeonRun {DungeonRunInstance}

@@ -7,7 +7,7 @@ import { cancelAllRuns, getActiveRunData } from '../dungeons/dungeonRunner.js'
 import { validateParam } from '../validations.js'
 import { getErrorLogTail, getOutputLogTail } from '../logging.js'
 import FighterInstance from '../../game/fighterInstance.js'
-import { generateCombat } from '../combat/combat.js'
+import { generateCombat } from '../combat.js'
 
 const router = express.Router()
 

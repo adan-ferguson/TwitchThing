@@ -47,7 +47,7 @@ export default class LiveDungeonMap extends HTMLElement{
     }
     const el = this._dungeonRunEls[dungeonRun._id]
     el._tippyContent.setDungeonRun(dungeonRun)
-    el.classList.toggle('in-combat', dungeonRun.currentEvent.combatID ? true : false)
+    el.classList.toggle('in-actionsAndTicks', dungeonRun.currentEvent.combatID ? true : false)
     if(el.floor !== dungeonRun.floor){
       el.floor = dungeonRun.floor
       this._floorEls[dungeonRun.floor - 1].appendChild(el)

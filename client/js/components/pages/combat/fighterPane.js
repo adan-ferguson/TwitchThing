@@ -56,7 +56,7 @@ export default class FighterPane extends HTMLElement{
   }
 
   /**
-   * @param fighter {object} Value from fighter1 or fighter2 field in combat document
+   * @param fighter {object} Value from fighter1 or fighter2 field in actionsAndTicks document
    */
   setFighter(fighter){
     this.fighter = fighter.data

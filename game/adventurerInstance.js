@@ -1,13 +1,12 @@
 import { getAdventurerStats, adventurerLevelToHp, adventurerLevelToPower, getAdventurerMods } from './adventurer.js'
-import FighterInstance, { COMBAT_BASE_TURN_TIME } from './fighterInstance.js'
-import { randomRound } from './rando.js'
+import FighterInstance from './fighterInstance.js'
 
 export default class AdventurerInstance extends FighterInstance{
 
   adventurer
 
   constructor(adventurer, initialState = {}){
-    super(initialState)
+    super(adventurer, initialState)
     this.adventurer = adventurer
   }
 

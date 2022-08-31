@@ -69,7 +69,7 @@ export default class TimelineControls extends HTMLElement{
       this.jumpTo(this._timeline.duration)
     })
 
-    this._viewCombatBtn = this.querySelector('button.view-combat')
+    this._viewCombatBtn = this.querySelector('button.view-actionsAndTicks')
     this._viewCombatBtn
       .addEventListener('click', ()=> {
         this._updateViewCombat()
