@@ -1,6 +1,5 @@
-import { randomRound } from './rando.js'
-import { all as Mods } from './mods/combined.js'
 import Stats from './stats/stats.js'
+import { mergeOptionsObjects } from './utilFunctions.js'
 
 const STATE_DEFAULTS = {
   timeSinceLastAction: 0
@@ -85,11 +84,11 @@ export default class FighterInstance{
   }
 
   get hp(){
-    return this._currentState.hp ?? this.hpMax
+    return Math.floor(this._currentState.hp ?? this.hpMax)
   }
 
   set hp(val){
-    this._currentState.hp = Math.min(this.hpMax, Math.max(0, val))
+    this._currentState.hp = Math.max(0, Math.min(this.hpMax, val))
   }
 
   get hpMax(){
@@ -102,5 +101,21 @@ export default class FighterInstance{
 
   advanceTime(ms){
     this._currentState.timeSinceLastAction += ms
+    // TODO advance buff/debuff times
+    // TODO advance active timers
+  }
+
+  updateState(newVal = {}){
+    this._currentState = mergeOptionsObjects(this._currentState, newVal)
+  }
+
+  /**
+   * Use this for things like regen/dots so that 0.3 per second doesn't result in nothing happening.
+   * @param amount
+   */
+  changeHpWithDecimals(amount){
+    amount = amount + (this._currentState.hpRemainder ?? 0)
+    this.hp += Math.floor(amount)
+    this._currentState.hpRemainder = this.hp < this.hpMax ? (amount % 1) : 0
   }
 }

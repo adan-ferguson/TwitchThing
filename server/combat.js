@@ -5,6 +5,7 @@ import { generateMonster } from './dungeons/monsters.js'
 import MonsterInstance from '../game/monsterInstance.js'
 import { performCombatAction } from './actionsAndTicks/performAction.js'
 import { performCombatTick } from './actionsAndTicks/performCombatTick.js'
+import AdventurerInstance from '../game/adventurerInstance.js'
 
 const START_TIME_DELAY = 1000
 const MAX_TIME = 120000
@@ -31,6 +32,19 @@ export async function generateCombatEvent(dungeonRun){
     monster: monsterDef
   }
 }
+
+export async function generateSimulatedCombat(fighterDef1, fighterDef2){
+  const i1 = toInstance(fighterDef1)
+  const i2 = toInstance(fighterDef2)
+  return await generateCombat(i1, i2, {
+    sim: true
+  })
+
+  function toInstance(def){
+    return def.baseType ? new MonsterInstance(def) : new AdventurerInstance(def)
+  }
+}
+
 export async function generateCombat(fighterInstance1, fighterInstance2, params = {}){
 
   const combat = new Combat(fighterInstance1, fighterInstance2)
@@ -85,7 +99,7 @@ class Combat{
     this.fighterInstance1 = fighterInstance1
     fighterInstance1.fighterId = 1
     this.fighterInstance2 = fighterInstance2
-    fighterInstance1.fighterId = 2
+    fighterInstance2.fighterId = 2
     this._currentTime = 0
     this.timeline = []
     this._addTimelineEntry()
@@ -104,7 +118,7 @@ class Combat{
   }
 
   get finished(){
-    return this._currentTime === MAX_TIME || !this.fighterInstance1.hp || !this.fighterInstance2.hp
+    return this._currentTime === MAX_TIME || this.fighterInstance1.hp === 0 || this.fighterInstance2.hp === 0
   }
 
   getEnemyOf(fighterInstance){

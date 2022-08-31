@@ -4,12 +4,14 @@ import LiveDungeonMapPage from './pages/liveDungeonMap/liveDungeonMapPage.js'
 import ErrorPage from './pages/errorPage.js'
 import DungeonPage from './pages/dungeon/dungeonPage.js'
 import { isObject } from '../../../game/utilFunctions.js'
+import SimPage from './pages/sim/simPage.js'
 
 const pages = [
   AdventurerPage,
   LiveDungeonMapPage,
   ErrorPage,
-  DungeonPage
+  DungeonPage,
+  SimPage
 ]
 
 export function pathToPage(location, queryStringArgs = {}){

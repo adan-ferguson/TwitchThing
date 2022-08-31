@@ -1,5 +1,6 @@
 import { getAdventurerStats, adventurerLevelToHp, adventurerLevelToPower, getAdventurerMods } from './adventurer.js'
 import FighterInstance from './fighterInstance.js'
+import { performVenturingTick, performVenturingTicks } from '../server/actionsAndTicks/performVenturingTicks.js'
 
 export default class AdventurerInstance extends FighterInstance{
 
@@ -30,12 +31,11 @@ export default class AdventurerInstance extends FighterInstance{
     return getAdventurerMods(this.adventurer, this._currentState)
   }
 
-  // passTime(time){
-  //   const turns = time / 5000
-  //   const regen = this.stats.get('regen').value
-  //   if(regen){
-  //     const amount = randomRound(turns * this.hpMax * regen)
-  //     this.adventurerState.hp = Math.min(this.hpMax, this.hp + amount)
-  //   }
-  // }
+  /**
+   * Pass time (out of combat)
+   * @param time
+   */
+  passTime(time){
+    return performVenturingTicks(Math.floor(time / 1000))
+  }
 }

@@ -120,9 +120,9 @@ const statDefinitionsInfo = {
     },
     descriptionFn: (value, { style, owner }) => {
       if(style === StatsDisplayStyle.CUMULATIVE && owner?.hpMax){
-        return `Recover ${roundToFixed(value * owner.hpMax, 1)} health every 5 seconds, both in and out of combat (scales with level).`
+        return `Recover ${roundToFixed(value * owner.hpMax, 1)} health every second, both in and out of combat (scales with level).`
       }
-      return `Recover (${roundToFixed(value * 100, 1)}% x max health) health every 5 seconds, both in and out of combat.`
+      return `Recover (${roundToFixed(value * 100, 1)}% x max health) health every second, both in and out of combat.`
     },
   },
   chestFind: {

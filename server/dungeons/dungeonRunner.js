@@ -91,7 +91,6 @@ export async function addRun(adventurerID, dungeonOptions){
   const drDoc = await DungeonRuns.save({
     adventurer,
     dungeonOptions,
-    adventurerState: AdventurerInstance.initialState(adventurer),
     floor: startingFloor
   })
 

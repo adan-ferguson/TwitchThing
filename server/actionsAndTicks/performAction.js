@@ -2,10 +2,12 @@ import { all as Mods } from '../../game/mods/combined.js'
 import { gainHealth } from './common.js'
 
 export function performCombatAction(combat, actor){
-  actor.timeSinceLastAction = 0
+  actor.updateState({
+    timeSinceLastAction: 0
+  })
   return {
     ability: 'basicAttack',
-    results: basicAttack(combat).filter(r => r)
+    results: basicAttack(combat, actor).filter(r => r)
   }
 }
 

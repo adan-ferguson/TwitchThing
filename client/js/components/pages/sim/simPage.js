@@ -3,11 +3,16 @@ import fizzetch from '../../../fizzetch.js'
 import CombatPage from '../combat/combatPage.js'
 import { hideLoader, showLoader } from '../../../loader.js'
 import Page from '../page.js'
+import MonsterInstance from '../../../../../game/monsterInstance.js'
+import { makeEl } from '../../../../../game/utilFunctions.js'
 
 const HTML = `
 <div class="content-columns">
   <div class="content-well fill-contents">
-    <di-list></di-list>
+    <di-tabz>
+      <di-list data-tab-name="Adventurers"></di-list>
+      <di-list data-tab-name="Monsters"></di-list>
+    </di-tabz>
   </div>
   <div class="flex-rows right-side">
     <div class="fighter fighter-0"></div>
@@ -20,16 +25,20 @@ const HTML = `
 
 export default class SimPage extends Page{
 
-  _adventurers = []
+  _fighters = []
   _goButton
-  _listEl
+  _adventurersListEl
 
   constructor(){
     super()
     this.innerHTML = HTML
-    this._listEl = this.querySelector('di-list')
+    this._adventurersListEl = this.querySelector('di-list[data-tab-name="Adventurers"]')
       .setOptions({
         pageSize: 6
+      })
+    this._monstersListEl = this.querySelector('di-list[data-tab-name="Monsters"]')
+      .setOptions({
+        pageSize: 10
       })
     this._goButton = this.querySelector('.go')
     this._goButton.addEventListener('click', () => {
@@ -37,12 +46,17 @@ export default class SimPage extends Page{
     })
   }
 
-  get ready(){
-    return (this._adventurers[0] && this._adventurers[1]) ? true : false
+  static get pathDef(){
+    return ['admin', 'sim']
   }
 
-  async load(_){
-    const { adventurers } = await this.fetchData('/game/sim')
+  get ready(){
+    return (this._fighters[0] && this._fighters[1]) ? true : false
+  }
+
+  async load(){
+    const { adventurers, monsters } = await this.fetchData()
+
     const rows = []
     adventurers.forEach(adventurer => {
       const row = new AdventurerRow(adventurer)
@@ -51,24 +65,45 @@ export default class SimPage extends Page{
       })
       rows.push(row)
     })
-    this._listEl.setRows(rows)
+    this._adventurersListEl.setRows(rows)
+
+    const mrows = []
+    monsters.forEach(monsterDef => {
+      const monsterInstance = new MonsterInstance(monsterDef)
+      const row = makeMonsterRow(monsterInstance)
+      row.addEventListener('click', e => {
+        this._chooseMonster(monsterInstance)
+      })
+      mrows.push(row)
+    })
+    this._monstersListEl.setRows(mrows)
   }
 
   _chooseAdventurer(adventurer){
-    const index = this._adventurers[0] ? (this._adventurers[1] ? -1 : 1) : 0
+    const row = new AdventurerRow(adventurer)
+    row.classList.add('buttonish')
+    this._chooseFighter(row, adventurer)
+  }
+
+  _chooseMonster(monsterInstance){
+    const row = makeMonsterRow(monsterInstance)
+    this._chooseFighter(row, monsterInstance.baseFighterDef)
+  }
+
+  _chooseFighter(row, fighterDef){
+
+    const index = this._fighters[0] ? (this._fighters[1] ? -1 : 1) : 0
     if(index === -1){
       return
     }
 
-    const row = new AdventurerRow(adventurer)
-    row.classList.add('buttonish')
     const el = this.querySelector('.fighter-' + index)
-    this._adventurers[index] = adventurer
+    this._fighters[index] = fighterDef
 
     el.appendChild(row)
     row.addEventListener('click', () => {
       row.remove()
-      this._adventurers[index] = null
+      this._fighters[index] = null
       this._updateButton()
     })
 
@@ -84,19 +119,28 @@ export default class SimPage extends Page{
       return
     }
     showLoader('Generating Combat')
-    const { combatID } = await fizzetch('/game/sim/run', {
-      fighter1: this._adventurers[0]._id,
-      fighter2: this._adventurers[1]._id
+    const { combatID } = await fizzetch('/game/admin/sim/run', {
+      fighter1: this._fighters[0],
+      fighter2: this._fighters[1]
     })
     hideLoader()
     this._clear()
-    window.open('/combat/' + combatID)
+    if(combatID){
+      window.open('/combat/' + combatID)
+    }
   }
 
   _clear(){
-    this._adventurers = []
-    this.querySelectorAll('.fighter di-adventurer-row').forEach(el => el.remove())
+    this._fighters = []
+    this.querySelectorAll('.fighter > *').forEach(el => el.remove())
     this._updateButton()
   }
 }
 customElements.define('di-sim-page', SimPage)
+
+function makeMonsterRow(monsterInstance){
+  return makeEl({
+    class: ['monster-row', 'buttonish'],
+    text: `Lvl. ${monsterInstance.level} ${monsterInstance.displayName}`
+  })
+}

@@ -1,7 +1,7 @@
 import FighterInstance  from './fighterInstance.js'
 import { getMonsterMods, getMonsterStats, monsterLevelToHp, monsterLevelToPower } from './monster.js'
 import { toDisplayName } from './utilFunctions.js'
-import * as Monsters from './mods/combined.js'
+import * as Monsters from './monsters/combined.js'
 
 export default class MonsterInstance extends FighterInstance{
 
@@ -20,12 +20,16 @@ export default class MonsterInstance extends FighterInstance{
     }
   }
 
+  get level(){
+    return this.monster.level ?? 1
+  }
+
   get baseHp(){
-    return monsterLevelToHp(this.monster.level)
+    return monsterLevelToHp(this.level)
   }
 
   get basePower(){
-    return monsterLevelToPower(this.monster.level)
+    return monsterLevelToPower(this.level)
   }
 
   get displayName(){

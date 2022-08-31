@@ -98,16 +98,6 @@ export async function generateMonster(dungeonRun){
 }
 
 /**
- * Given a floor, return a random level equal to this floor or less, but it has to be
- * the same zone (aka the tens digit must remain the same).
- * @param floor
- * @param harderMonsterChance
- */
-function floorToLevel(floor, harderMonsterChance = 1){
-  return chooseOne(generateFloorChoices(floor, FLOOR_RANGE, FLOOR_SKEW + harderMonsterChance - 1))
-}
-
-/**
  * Generate choices based on
  * @param floor
  * @param range
@@ -125,6 +115,23 @@ export function generateFloorChoices(floor, range = 1, skew = 0){
   return choices
 }
 
+/**
+ * @return {[object]}
+ */
+export function getAllMonsters(){
+  return Object.keys(monstersByFloor).map(floor => getBasicMonsterDefinition(floor))
+}
+
+/**
+ * Given a floor, return a random level equal to this floor or less, but it has to be
+ * the same zone (aka the tens digit must remain the same).
+ * @param floor
+ * @param harderMonsterChance
+ */
+function floorToLevel(floor, harderMonsterChance = 1){
+  return chooseOne(generateFloorChoices(floor, FLOOR_RANGE, FLOOR_SKEW + harderMonsterChance - 1))
+}
+
 function getMonsterDefinition(floor, rarity = 1){
   floor = Math.max(1, floor)
   if(rarity === 1){
@@ -139,6 +146,7 @@ function getBasicMonsterDefinition(floor){
     throw `Could not find monster for floor ${floor}`
   }
   return {
-    baseType: monstersByFloor[floor].name
+    baseType: monstersByFloor[floor].name,
+    level: floor
   }
 }

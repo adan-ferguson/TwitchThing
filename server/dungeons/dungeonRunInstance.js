@@ -130,8 +130,9 @@ export default class DungeonRunInstance extends EventEmitter{
       this.doc.rewards = addRewards(this.doc.rewards, event.rewards)
     }
     event.duration = Math.ceil(event.duration / ADVANCEMENT_INTERVAL) * ADVANCEMENT_INTERVAL
-    event.adventurerState = this._passTime(event)
-    this.doc.adventurerState = event.adventurerState
+    event.adventurerState = this.adventurerInstance.currentState
+    event.tickUpdates = this._passTime(event)
+    this.doc.adventurerState = this.adventurerInstance.currentState
     this.doc.elapsedTime += event.duration
   }
 
@@ -149,10 +150,8 @@ export default class DungeonRunInstance extends EventEmitter{
     let state = event.adventurerState || this.doc.adventurerState
     if (!event.passTimeOverride){ // Combats handle their own passage of time.
       const adv = new AdventurerInstance(this.adventurer, state)
-      adv.passTime(event.duration)
-      // TODO: this might affect the event in other ways, such as ending the run if the adventurer dies
-      return adv.adventurerState
+      return adv.passTime(event.duration)
     }
-    return state
+    return []
   }
 }

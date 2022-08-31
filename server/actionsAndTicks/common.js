@@ -1,8 +1,9 @@
-import { randomRound } from '../../game/rando.js'
-
 export function gainHealth(actor, amount){
+  if(amount <= 0){
+    return
+  }
   const hpBefore = actor.hp
-  actor.hp += amount
+  actor.changeHpWithDecimals(amount)
   const finalAmount = actor.hp - hpBefore
   if(finalAmount > 0){
     return {
@@ -14,5 +15,5 @@ export function gainHealth(actor, amount){
 }
 
 export function regen(fighterInstance){
-  return gainHealth(randomRound(fighterInstance.hpMax * regen))
+  return gainHealth(fighterInstance, fighterInstance.baseHp * fighterInstance.stats.get('regen').value)
 }

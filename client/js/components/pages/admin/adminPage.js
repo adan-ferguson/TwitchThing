@@ -26,7 +26,7 @@ export default class AdminPage extends Page{
     return 'Admin Control Panel'
   }
 
-  async load(_){
+  async load(){
     const { error } = await fizzetch('/admin')
     if(error){
       return error
