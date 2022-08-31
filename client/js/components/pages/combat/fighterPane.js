@@ -1,10 +1,10 @@
-import FighterInstance from '../../../../../game/combat/fighterInstance.js'
+import FighterInstance from '../../../../../game/fighterInstance.js'
 import FlyingTextEffect from '../../effects/flyingTextEffect.js'
 import { toDisplayName } from '../../../../../game/utilFunctions.js'
 import { adventurerLoadoutContents } from '../../../adventurer.js'
 import { monsterLoadoutContents } from '../../../monster.js'
 import Modal from '../../modal.js'
-import AdventurerInfo from '../../adventurerInfo.js'
+import AdventurerInfo from '../../adventurer/adventurerInfo.js'
 import MonsterInfo from '../../monsterInfo.js'
 import CustomAnimation from '../../../customAnimation.js'
 import { all as Mods } from '../../../../../game/mods/combined.js'
@@ -176,7 +176,7 @@ export default class FighterPane extends HTMLElement{
 
   _updateCooldowns(){
     this.actionBar.setTime(
-      this.fighterInstance.currentState.timeSinceLastAction,
+      this.fighterInstance._currentState.timeSinceLastAction,
       this.fighterInstance.timeUntilNextAction
     )
     // TODO: update cooldowns for items and effects

@@ -1,5 +1,5 @@
 import Page from '../page.js'
-import '../../adventurerPane.js'
+import '../../adventurer/adventurerPane.js'
 import fizzetch from '../../../fizzetch.js'
 import tippyCallout from '../../effects/tippyCallout.js'
 import { showLoader } from '../../../loader.js'

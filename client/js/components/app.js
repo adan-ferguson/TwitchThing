@@ -42,7 +42,6 @@ export default class App extends HTMLElement{
   }
 
   async reloadPage(){
-    debugger
     this.setPage(this.currentPage.path, {}, true)
   }
 

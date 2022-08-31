@@ -2,7 +2,7 @@ import Combats from '../collections/combats.js'
 import { toDisplayName } from '../../game/utilFunctions.js'
 import { randomOrder } from '../../game/rando.js'
 import { generateMonster } from '../dungeons/monsters.js'
-import FighterInstance from '../../game/combat/fighterInstance.js'
+import FighterInstance from '../../game/fighterInstance.js'
 
 const START_TIME_DELAY = 1000
 const MAX_TIME = 120000

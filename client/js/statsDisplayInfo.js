@@ -1,5 +1,5 @@
 import { StatType } from '../../game/stats/statDefinitions.js'
-import { COMBAT_BASE_TURN_TIME } from '../../game/combat/fighterInstance.js'
+import { COMBAT_BASE_TURN_TIME } from '../../game/fighterInstance.js'
 import { roundToFixed } from '../../game/utilFunctions.js'
 import healthIcon from '../assets/icons/health.svg'
 import actionIcon from '../assets/icons/action.svg'

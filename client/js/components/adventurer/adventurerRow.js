@@ -1,6 +1,6 @@
-import './timer.js'
-import AdventurerPage from './pages/adventurer/adventurerPage.js'
-import DungeonPage from './pages/dungeon/dungeonPage.js'
+import '../timer.js'
+import AdventurerPage from '../pages/adventurer/adventurerPage.js'
+import DungeonPage from '../pages/dungeon/dungeonPage.js'
 
 const HTML = `
 <di-adventurer-status></di-adventurer-status>

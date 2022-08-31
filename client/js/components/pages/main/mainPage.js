@@ -1,5 +1,5 @@
 import Page from '../page.js'
-import AdventurerRow from '../../adventurerRow.js'
+import AdventurerRow from '../../adventurer/adventurerRow.js'
 import DIForm from '../../form.js'
 import FormModal from '../../formModal.js'
 import { getSocket, joinSocketRoom, leaveSocketRoom } from '../../../socketClient.js'

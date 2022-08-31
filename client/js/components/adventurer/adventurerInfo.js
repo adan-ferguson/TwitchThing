@@ -1,11 +1,11 @@
-import BonusDetails from './pages/levelup/bonusDetails.js'
-import classDisplayInfo from '../classDisplayInfo.js'
-import Bonus from '../../../game/bonus.js'
-import { wrap } from '../../../game/utilFunctions.js'
+import BonusDetails from '../pages/levelup/bonusDetails.js'
+import classDisplayInfo from '../../classDisplayInfo.js'
+import Bonus from '../../../../game/bonus.js'
+import { wrap } from '../../../../game/utilFunctions.js'
 import tippy from 'tippy.js'
-import { getAdventurerStats, levelToXp, xpToLevel } from '../../../game/adventurer.js'
-import AdventurerInstance from '../../../game/adventurerInstance.js'
-import { StatsDisplayStyle } from '../statsDisplayInfo.js'
+import { getAdventurerStats, levelToXp, xpToLevel } from '../../../../game/adventurer.js'
+import AdventurerInstance from '../../../../game/adventurerInstance.js'
+import { StatsDisplayStyle } from '../../statsDisplayInfo.js'
 
 const HTML = `
 <div class="flex-rows">

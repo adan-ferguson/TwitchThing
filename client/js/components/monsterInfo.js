@@ -1,7 +1,7 @@
 import { getMonsterStats } from '../../../game/monster.js'
 import { StatsDisplayStyle } from '../statsDisplayInfo.js'
 import { toDisplayName } from '../../../game/utilFunctions.js'
-import FighterInstance from '../../../game/combat/fighterInstance.js'
+import FighterInstance from '../../../game/fighterInstance.js'
 
 const HTML = `
 <div class="top">

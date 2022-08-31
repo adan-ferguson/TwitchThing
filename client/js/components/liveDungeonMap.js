@@ -1,7 +1,7 @@
 import Zones, { floorSize } from '../../../game/zones.js'
 import { makeEl, wrap } from '../../../game/utilFunctions.js'
 import tippy from 'tippy.js'
-import AdventurerStatus from './adventurerStatus.js'
+import AdventurerStatus from './adventurer/adventurerStatus.js'
 
 const HTML = `
 <div class="runs"></div>

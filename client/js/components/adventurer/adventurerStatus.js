@@ -1,7 +1,7 @@
-import { OrbsDisplayStyle } from './orbRow.js'
-import { getAdventurerOrbsData } from '../../../game/adventurer.js'
+import { OrbsDisplayStyle } from '../orbRow.js'
+import { getAdventurerOrbsData } from '../../../../game/adventurer.js'
 import dateFormat from 'dateformat'
-import { toDisplayName } from '../../../game/utilFunctions.js'
+import { toDisplayName } from '../../../../game/utilFunctions.js'
 
 const HTML = `
 <span style="text-align:center">

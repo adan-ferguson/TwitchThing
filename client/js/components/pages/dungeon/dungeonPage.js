@@ -1,23 +1,24 @@
 import Page from '../page.js'
 import { getSocket, joinSocketRoom, leaveSocketRoom } from '../../../socketClient.js'
 import CombatPage from '../combat/combatPage.js'
-import ResultsPage from '../results/resultsPage.js'
 import Zones, { floorToZone, floorToZoneName } from '../../../../../game/zones.js'
 import Timeline from '../../../../../game/timeline.js'
 import tippy from 'tippy.js'
 
 const HTML = `
 <div class='content-columns'>
-  <di-dungeon-adventurer-pane></di-dungeon-adventurer-pane>
+  <div class='content-rows'>
+    <di-fighter-instance-pane></di-fighter-instance-pane>
+    <div class="flex-no-grow content-well">
+      <di-dungeon-timeline-controls></di-dungeon-timeline-controls>
+    </div>
+  </div>
   <div class="content-rows">
     <div class="content-well">
-        <di-dungeon-event></di-dungeon-event>
+      <di-dungeon-event></di-dungeon-event>
     </div>
     <div class="state flex-no-grow content-well">
-        <di-dungeon-state></di-dungeon-state>
-    </div>
-    <div class="flex-no-grow content-well">
-        <di-dungeon-timeline-controls></di-dungeon-timeline-controls>
+      <di-dungeon-state></di-dungeon-state>
     </div>
   </div>
 </div>

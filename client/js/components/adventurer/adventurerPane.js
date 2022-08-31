@@ -1,8 +1,8 @@
-import { levelToXp, xpToLevel } from '../../../game/adventurer.js'
-import AdventurerInstance from '../../../game/adventurerInstance.js'
-import { adventurerLoadoutContents } from '../adventurer.js'
-import { OrbsDisplayStyle } from './orbRow.js'
-import Modal from './modal.js'
+import { levelToXp, xpToLevel } from '../../../../game/adventurer.js'
+import AdventurerInstance from '../../../../game/adventurerInstance.js'
+import { adventurerLoadoutContents } from '../../adventurer.js'
+import { OrbsDisplayStyle } from '../orbRow.js'
+import Modal from '../modal.js'
 import AdventurerInfo from './adventurerInfo.js'
 
 const HTML = `
