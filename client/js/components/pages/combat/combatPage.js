@@ -180,7 +180,7 @@ export default class CombatPage extends Page{
   }
 
   _getPaneFromFighterId(fighterId){
-    return this._fighterPane1.fighterId === fighterId ? this._fighterPane1 : this._fighterPane2
+    return fighterId === 1 ? this._fighterPane1 : this._fighterPane2
   }
 
   _performTickUpdate(tickUpdate){
