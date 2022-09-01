@@ -68,7 +68,7 @@ const statDefinitionsInfo = {
         return roundToFixed(COMBAT_BASE_TURN_TIME / (1000 * value), 2) + 's'
       }
     },
-    description: 'Speed (actionsAndTicks turn time)',
+    description: 'Speed (combat turn time)',
   },
   critChance: {
     text: 'Crit Chance',
@@ -100,7 +100,7 @@ const statDefinitionsInfo = {
   },
   combatXP: {
     text: 'Combat XP Gain',
-    description: 'Increases XP gained from actionsAndTicks.',
+    description: 'Increases XP gained from combat.',
   },
   relicSolveChance: {
     text: 'Relic Solve Chance',
@@ -127,7 +127,7 @@ const statDefinitionsInfo = {
   },
   chestFind: {
     text: 'Chest Find',
-    description: 'Increased chance to find treasure chests from actionsAndTicks rewards or from treasure relics.',
+    description: 'Increased chance to find treasure chests from combat rewards or from treasure relics.',
   },
   rewards: {
     text: 'Rewards',

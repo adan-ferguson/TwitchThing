@@ -3,8 +3,11 @@ import { adventurerLoadoutContents } from '../../adventurer.js'
 import { OrbsDisplayStyle } from '../orbRow.js'
 import Modal from '../modal.js'
 import AdventurerInfo from '../adventurer/adventurerInfo.js'
-import { getAdventurerOrbsData } from '../../../../game/adventurer.js'
 import MonsterInfo from '../monsterInfo.js'
+import { monsterLoadoutContents } from '../../monster.js'
+import FlyingTextEffect from '../effects/flyingTextEffect.js'
+import { all as Mods } from '../../../../game/mods/combined.js'
+import CustomAnimation from '../../customAnimation.js'
 
 const HTML = `
 <div class="name"></div>
@@ -37,7 +40,7 @@ export default class FighterInstancePane extends HTMLElement{
     this._hpBarEl = this.querySelector('di-hp-bar')
     this._actionBarEl = this.querySelector('di-action-bar')
     this._loadoutEl = this.querySelector('di-loadout')
-    this._orbRowEl = this.querySelector('.adventurer-orbs').setOptions({
+    this._orbRowEl = this.querySelector('.fighter-orbs').setOptions({
       style: OrbsDisplayStyle.MAX_ONLY
     })
     this.statsList = this.querySelector('di-stats-list').setOptions({
@@ -53,46 +56,134 @@ export default class FighterInstancePane extends HTMLElement{
   setFighter(fighterInstance){
     this.fighterInstance = fighterInstance
     this.querySelector('.name').textContent = fighterInstance.displayName
-    this.loadout.setContents(adventurerLoadoutContents(adventurer))
-    this._orbRow.setData(getAdventurerOrbsData(adventurer))
+
+    if(fighterInstance instanceof AdventurerInstance){
+      this._loadoutEl.setContents(adventurerLoadoutContents(fighterInstance.adventurer))
+    }else{
+      this._loadoutEl.setContents(monsterLoadoutContents(fighterInstance.monster))
+    }
+
+    this._orbRowEl.setData(fighterInstance.orbs)
   }
 
   setState(state, animate = false){
-    this.state = { ...state }
+    this.fighterInstance.currentState = state
     this._update(animate)
   }
 
-  _update(animateChanges){
+  advanceTime(ms){
+    this.fighterInstance.advanceTime(ms)
+    this._updateCooldowns()
+  }
 
-    const instance = new AdventurerInstance(this.adventurer, this.state)
+  displayActionPerformed(ability){
+    // if(action.actionType === 'attack'){
+    //   if(action.lifesteal){
+    //     this.displayLifeGained(result.lifesteal)
+    //   }
+    // }
+  }
 
-    this.hpBar.setOptions({
-      max: instance.hpMax
+  displayResult(result){
+    if(result.resultType === 'dodge'){
+      this._displayDodge()
+    }else if(result.resultType === 'damage'){
+      this._displayDamageResult(result)
+    }else if(result.resultType === 'gainHealth'){
+      this._displayLifeGained(result.amount)
+    }
+  }
+
+  _displayLifeGained(amount){
+    new FlyingTextEffect(this._hpBarEl, amount)
+  }
+
+  _displayDodge(){
+    new FlyingTextEffect(this._hpBarEl, 'Dodged!')
+  }
+
+  _displayDamageResult(damageResult){
+
+    const classes = ['damage']
+    if(damageResult.crit){
+      classes.push('crit')
+    }
+    if(damageResult.damageType === 'magic'){
+      classes.push('magic')
+    }
+    let html = `<span class="${classes.join(' ')}">-${damageResult.finalDamage}${damageResult.crit ? '!!' : ''}</span>`
+
+    if(damageResult.blocked){
+      html += `<span class="blocked">(${damageResult.blocked} blocked)</span>`
+    }
+
+    new FlyingTextEffect(this._hpBarEl, html, {
+      html: true
     })
+  }
 
-    if(this.state.hp !== this.hpBar.value){
-      if(animateChanges){
-        this.hpBar.setValue(this.state.hp, {
-          animate: true,
-          flyingText: true
-        })
+  _update(animate = false){
+
+    if(this._finished){
+      if(this.fighterInstance.hp){
+        this._fadeAnim.cancel()
+        this._finished = false
+        this.style.opacity = '1'
       }else{
-        this.hpBar.setValue(this.state.hp)
+        return
       }
     }
 
-    this.statsList.setStats(instance.stats, instance)
+    this._hpBarEl.setOptions({ max: this.fighterInstance.hpMax })
+
+    if(this.fighterInstance.hp !== this._hpBarEl.value){
+      if(animate){
+        this._hpBarEl.setValue(this.fighterInstance.hp, {
+          animate: true
+        })
+      }else{
+        this._hpBarEl.setValue(this.fighterInstance.hp)
+      }
+    }
+
+    const isMagic = this.fighterInstance.mods.contains(Mods.magicAttack) ?  true : false
+    if(!isMagic){
+      this.statsList.setOptions({
+        forced: ['physPower']
+      })
+    }
+    this.statsList.setStats(this.fighterInstance.stats, this.fighterInstance)
+
+    this._updateCooldowns()
+
+    if(!this.fighterInstance.hp){
+      this._fadeAnim = new CustomAnimation({
+        duration: 1200,
+        tick: pct => {
+          this.style.opacity = (1 - pct).toString()
+        }
+      })
+      this._finished = true
+    }
+  }
+
+  _updateCooldowns(){
+    this._actionBarEl.setTime(
+      this.fighterInstance._currentState.timeSinceLastAction,
+      this.fighterInstance.timeUntilNextAction
+    )
+    // TODO: update cooldowns for items and effects
   }
 
   _showFighterInfoModal(){
     const modal = new Modal()
-    if(this.fighterInstance.isAdventurer){
-      modal.innerPane.appendChild(new AdventurerInfo(this.fighterInstance.baseFighter, this.fighterInstance.stats))
+    if(this.fighterInstance instanceof AdventurerInstance){
+      modal.innerPane.appendChild(new AdventurerInfo(this.fighterInstance))
     }else{
-      modal.innerPane.appendChild(new MonsterInfo(this.fighterInstance.baseFighter, this.fighterInstance.stats))
+      modal.innerPane.appendChild(new MonsterInfo(this.fighterInstance))
     }
     modal.show()
   }
 }
 
-customElements.define('di-dungeon-adventurer-pane', FighterInstancePane )
+customElements.define('di-fighter-instance-pane', FighterInstancePane )

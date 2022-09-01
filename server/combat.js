@@ -5,7 +5,7 @@ import { generateMonster } from './dungeons/monsters.js'
 import MonsterInstance from '../game/monsterInstance.js'
 import { performCombatAction } from './actionsAndTicks/performAction.js'
 import { performCombatTick } from './actionsAndTicks/performCombatTick.js'
-import AdventurerInstance from '../game/adventurerInstance.js'
+import { toFighterInstance } from '../game/toFighterInstance.js'
 
 const START_TIME_DELAY = 1000
 const MAX_TIME = 120000
@@ -34,15 +34,11 @@ export async function generateCombatEvent(dungeonRun){
 }
 
 export async function generateSimulatedCombat(fighterDef1, fighterDef2){
-  const i1 = toInstance(fighterDef1)
-  const i2 = toInstance(fighterDef2)
+  const i1 = toFighterInstance(fighterDef1)
+  const i2 = toFighterInstance(fighterDef2)
   return await generateCombat(i1, i2, {
     sim: true
   })
-
-  function toInstance(def){
-    return def.baseType ? new MonsterInstance(def) : new AdventurerInstance(def)
-  }
 }
 
 export async function generateCombat(fighterInstance1, fighterInstance2, params = {}){

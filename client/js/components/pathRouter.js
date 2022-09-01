@@ -5,13 +5,15 @@ import ErrorPage from './pages/errorPage.js'
 import DungeonPage from './pages/dungeon/dungeonPage.js'
 import { isObject } from '../../../game/utilFunctions.js'
 import SimPage from './pages/sim/simPage.js'
+import CombatPage from './pages/combat/combatPage.js'
 
 const pages = [
   AdventurerPage,
   LiveDungeonMapPage,
   ErrorPage,
   DungeonPage,
-  SimPage
+  SimPage,
+  CombatPage
 ]
 
 export function pathToPage(location, queryStringArgs = {}){

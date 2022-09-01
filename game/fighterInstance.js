@@ -1,5 +1,4 @@
 import Stats from './stats/stats.js'
-import { mergeOptionsObjects } from './utilFunctions.js'
 
 const STATE_DEFAULTS = {
   timeSinceLastAction: 0
@@ -18,11 +17,8 @@ export default class FighterInstance{
 
   constructor(baseFighterDef, initialState = {}){
     this._baseFighterDef = baseFighterDef
-    this._currentState = {
-      ...STATE_DEFAULTS,
-      ...initialState
-    }
-    this.startState = this._currentState
+    this.currentState = initialState
+    this.startState = { ...this._currentState }
   }
 
   /**
@@ -67,8 +63,19 @@ export default class FighterInstance{
     throw 'Not implemented'
   }
 
+  get orbs(){
+    return null
+  }
+
   get currentState(){
     return { ...this._currentState }
+  }
+
+  set currentState(val){
+    this._currentState = {
+      ...STATE_DEFAULTS,
+      ...val
+    }
   }
 
   get actionTime(){
@@ -89,6 +96,9 @@ export default class FighterInstance{
 
   set hp(val){
     this._currentState.hp = Math.max(0, Math.min(this.hpMax, val))
+    if(this.hp === this.hpMax){
+      this._currentState.hpRemainder = 0
+    }
   }
 
   get hpMax(){
@@ -105,8 +115,8 @@ export default class FighterInstance{
     // TODO advance active timers
   }
 
-  updateState(newVal = {}){
-    this._currentState = mergeOptionsObjects(this._currentState, newVal)
+  resetTimeSinceLastAction(){
+    this._currentState.timeSinceLastAction = 0
   }
 
   /**
@@ -115,7 +125,7 @@ export default class FighterInstance{
    */
   changeHpWithDecimals(amount){
     amount = amount + (this._currentState.hpRemainder ?? 0)
+    this._currentState.hpRemainder = amount % 1
     this.hp += Math.floor(amount)
-    this._currentState.hpRemainder = this.hp < this.hpMax ? (amount % 1) : 0
   }
 }

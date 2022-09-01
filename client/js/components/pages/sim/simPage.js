@@ -1,10 +1,10 @@
 import AdventurerRow from '../../adventurer/adventurerRow.js'
 import fizzetch from '../../../fizzetch.js'
-import CombatPage from '../combat/combatPage.js'
 import { hideLoader, showLoader } from '../../../loader.js'
 import Page from '../page.js'
 import MonsterInstance from '../../../../../game/monsterInstance.js'
 import { makeEl } from '../../../../../game/utilFunctions.js'
+import CombatPage from '../combat/combatPage.js'
 
 const HTML = `
 <div class="content-columns">
@@ -124,16 +124,9 @@ export default class SimPage extends Page{
       fighter2: this._fighters[1]
     })
     hideLoader()
-    this._clear()
     if(combatID){
-      window.open('/combat/' + combatID)
+      this.redirectTo(CombatPage.path(combatID))
     }
-  }
-
-  _clear(){
-    this._fighters = []
-    this.querySelectorAll('.fighter > *').forEach(el => el.remove())
-    this._updateButton()
   }
 }
 customElements.define('di-sim-page', SimPage)

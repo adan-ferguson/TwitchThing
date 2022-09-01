@@ -28,26 +28,24 @@ const BONUS_HTML = (count, icon, name) => `
 export default class AdventurerInfo extends HTMLElement{
 
   /**
-   * @param adventurer
-   * @param stats Provide this if they can't be derived from the adventurer itself, like
-   *  if their loadout is being edited or if they have a state.
+   * @param adventurerInstance
    */
-  constructor(adventurer, stats = null){
+  constructor(adventurerInstance){
     super()
     this.innerHTML = HTML
-    this.querySelector('.name').textContent = adventurer.name
+    this.querySelector('.name').textContent = adventurerInstance.displayName
     this.querySelector('di-stats-list')
       .setOptions({
         truncate: false,
         statsDisplayStyle: StatsDisplayStyle.CUMULATIVE,
         forced: ['physPower','speed','hpMax']
       })
-      .setStats(stats || getAdventurerStats(adventurer), new AdventurerInstance(adventurer, stats))
+      .setStats(adventurerInstance.stats, adventurerInstance)
 
-    this._setBonuses(adventurer.bonuses)
+    this._setBonuses(adventurerInstance.baseFighterDef.bonuses)
     this.querySelector('di-xp-bar')
       .setLevelFunctions(xpToLevel, levelToXp)
-      .setValue(adventurer.xp)
+      .setValue(adventurerInstance.baseFighterDef.xp)
   }
 
   _setBonuses(bonuses){

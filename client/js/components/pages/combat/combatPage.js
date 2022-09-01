@@ -1,16 +1,15 @@
 import Timeline from '../../../../../game/timeline.js'
 import Page from '../page.js'
-import { mergeOptionsObjects, toArray, toDisplayName } from '../../../../../game/utilFunctions.js'
+import { toArray } from '../../../../../game/utilFunctions.js'
 import Zones, { floorToZone } from '../../../../../game/zones.js'
-import tippy from 'tippy.js'
-import MainPage from '../main/mainPage.js'
+import { toFighterInstance } from '../../../../../game/toFighterInstance.js'
 
 const HTML = `
 <div class='content-rows'>
   <div class='content-columns'>
-    <di-combat-fighter-pane class="fighter1"></di-combat-fighter-pane>
+    <di-fighter-instance-pane class="fighter1"></di-fighter-instance-pane>
     <div class="mid-thing"><span>VS</span></div>
-    <di-combat-fighter-pane class="fighter2"></di-combat-fighter-pane>
+    <di-fighter-instance-pane class="fighter2"></di-fighter-instance-pane>
   </div>
   <div class="content-columns content-no-grow">
     <div class="content-well">
@@ -25,54 +24,55 @@ const HTML = `
 
 export default class CombatPage extends Page{
 
-  _cancelled = false
-  _options = {
-    isReplay: false,
-    returnPage: null
-  }
-
+  _combatFeedEl
   _timeControlsEl
+  _fighterPane1
+  _fighterPane2
 
-  constructor(combatID, options = {}){
+  _combatID
+  _cancelled = false
+
+  constructor(combatID){
     super()
-    this._options = mergeOptionsObjects(this._options, options)
     this.innerHTML = HTML
-    this.fighterPane1 = this.querySelector('.fighter1')
-    this.fighterPane2 = this.querySelector('.fighter2')
-    this.combatFeed = this.querySelector('di-actionsAndTicks-feed')
-    this._timeControlsEl = this.querySelector('di-actionsAndTicks-time-controls')
+    this._fighterPane1 = this.querySelector('.fighter1')
+    this._fighterPane2 = this.querySelector('.fighter2')
+    this._combatFeedEl = this.querySelector('di-combat-feed')
+    this._timeControlsEl = this.querySelector('di-combat-time-controls')
     this._timeControlsEl.addEventListener('tick', e => this._tick())
     this._timeControlsEl.addEventListener('jumped', e => this._jump())
 
-    this.querySelector('.permalink').addEventListener('click', e => {
-      const txt = `${window.location.origin}/combat/${combatID}`
-      navigator?.clipboard?.writeText(txt)
-      console.log('Copied', txt, navigator?.clipboard ? true : false)
-      tippy(e.currentTarget, {
-        showOnCreate: true,
-        content: 'Link copied to clipboard',
-        onHidden(instance){
-          instance.destroy()
-        }
-      })
-    })
+    // this.querySelector('.permalink').addEventListener('click', e => {
+    //   const txt = `${window.location.origin}/combat/${combatID}`
+    //   navigator?.clipboard?.writeText(txt)
+    //   console.log('Copied', txt, navigator?.clipboard ? true : false)
+    //   tippy(e.currentTarget, {
+    //     showOnCreate: true,
+    //     content: 'Link copied to clipboard',
+    //     onHidden(instance){
+    //       instance.destroy()
+    //     }
+    //   })
+    // })
 
-    this.combatID = combatID
+    this._combatID = combatID
+  }
+
+  static get pathDef(){
+    return ['combat', 0]
+  }
+
+  get pathArgs(){
+    return [this._combatID]
   }
 
   get titleText(){
     return 'Fight!'
   }
 
-  async load(previousPage){
-    const { combat, state } = await this.fetchData(`/combat/${this.combatID}`)
+  async load(){
 
-    // If it's live but the actionsAndTicks's already done, just get outta here
-    if(state.status === 'finished' && !this._options.isReplay && this._options.returnPage){
-      // TODO: This should no longer leave the page, actionsAndTicks page is a standalone watch page
-      // this.redirectTo(this._options.returnPage)
-      return
-    }
+    const { combat } = await this.fetchData()
 
     const zone = Zones[floorToZone(combat.floor ?? 1)]
     if(zone){
@@ -80,12 +80,15 @@ export default class CombatPage extends Page{
     }
 
     this.combat = combat
-    this.fighterPane1.setFighter(combat.fighter1)
-    this.fighterPane2.setFighter(combat.fighter2)
-    this._setupTimeline(combat, state)
 
-    // TODO: This only makes sense in monster actionsAndTicks
-    this.combatFeed.setText(`A ${toDisplayName(combat.fighter2.data.name)} draws near.`)
+    const fighterInstance1 = toFighterInstance(combat.fighter1.data, combat.fighter1.startState)
+    const fighterInstance2 = toFighterInstance(combat.fighter2.data, combat.fighter2.startState)
+    this._fighterPane1.setFighter(fighterInstance1)
+    this._fighterPane2.setFighter(fighterInstance2)
+    this._setupTimeline(combat)
+
+    // TODO: This only makes sense in monster combat
+    // this.combatFeed.setText(`A ${toDisplayName(combat.fighter2.data.name)} draws near.`)
   }
 
   async unload(){
@@ -93,14 +96,9 @@ export default class CombatPage extends Page{
     this._cancelled = true
   }
 
-  _setupTimeline(combat, state){
+  _setupTimeline(combat){
     this._timeline = new Timeline(combat.timeline)
-    if(!this._options.isReplay){
-      this._timeline.time = state.currentTime - this.combat.startTime
-    }
-    this._timeControlsEl.setup(this._timeline.time, this._timeline.duration, {
-      isReplay: this._options.isReplay
-    })
+    this._timeControlsEl.setup(this._timeline.time, this._timeline.duration)
     this._applyEntries(this._timeline.currentEntry, false)
     this._timeControlsEl.play()
   }
@@ -130,10 +128,10 @@ export default class CombatPage extends Page{
     }
     const currentEntry = this._timeline.currentEntry
     this._timeline.time = currentEntry.time
-    this.fighterPane1.setState(currentEntry.fighterState1, animate)
-    this.fighterPane2.setState(currentEntry.fighterState2, animate)
-    this.fighterPane1.advanceTime(this._timeline.timeSinceLastEntry)
-    this.fighterPane2.advanceTime(this._timeline.timeSinceLastEntry)
+    this._fighterPane1.setState(currentEntry.fighterState1, animate)
+    this._fighterPane2.setState(currentEntry.fighterState2, animate)
+    this._fighterPane1.advanceTime(this._timeline.timeSinceLastEntry)
+    this._fighterPane2.advanceTime(this._timeline.timeSinceLastEntry)
   }
 
   _jump(){
@@ -154,8 +152,8 @@ export default class CombatPage extends Page{
     if(prevEntry !== this._timeline.currentEntryIndex){
       this._applyEntries(this._timeline.entries.slice(prevEntry + 1, this._timeline.currentEntryIndex + 1))
     }else{
-      this.fighterPane1.advanceTime(diff)
-      this.fighterPane2.advanceTime(diff)
+      this._fighterPane1.advanceTime(diff)
+      this._fighterPane2.advanceTime(diff)
     }
     if(this._timeline.finished){
       this._finish()
@@ -163,24 +161,14 @@ export default class CombatPage extends Page{
   }
 
   _finish(){
-
-    if(this.combat.fighter2.endState.hp <= 0){
-      this.combatFeed.setText(`The ${toDisplayName(this.combat.fighter2.data.name)} has been defeated.`)
-    }else if(this.combat.fighter1.endState.hp <= 0){
-      this.combatFeed.setText(`${toDisplayName(this.combat.fighter1.data.name)} has been defeated.`)
+    const fighter1 = this._fighterPane1.fighterInstance
+    const fighter2 = this._fighterPane2.fighterInstance
+    if(fighter2.hp <= 0){
+      this._combatFeedEl.setText(`${fighter2.displayName} has been defeated.`)
+    }else if(fighter1.hp <= 0){
+      this._combatFeedEl.setText(`${fighter1.displayName} has been defeated.`)
     }else{
-      this.combatFeed.setText('Time is up, actionsAndTicks is not going anywhere.')
-    }
-
-    if(this._options.returnPage){
-      const afterBuffer = Math.max(1000, 5300 - (this.combat.duration % 5000))
-      setTimeout(() => {
-        if(this._timeline.finished){
-          // Don't redirect if the user rewound
-          // TODO: This should no longer leave the page, actionsAndTicks page is a standalone watch page
-          // this.redirectTo(this._options.returnPage)
-        }
-      }, this._options.isReplay ? 1000 : afterBuffer)
+      this._combatFeedEl.setText('Time is up, combat is not going anywhere.')
     }
   }
 
@@ -192,7 +180,7 @@ export default class CombatPage extends Page{
   }
 
   _getPaneFromFighterId(fighterId){
-    return this.fighterPane1.fighterId === fighterId ? this.fighterPane1 : this.fighterPane2
+    return this._fighterPane1.fighterId === fighterId ? this._fighterPane1 : this._fighterPane2
   }
 
   _performTickUpdate(tickUpdate){

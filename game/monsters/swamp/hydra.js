@@ -17,7 +17,7 @@ export default {
       name: 'Head Regrowth',
       description: 'Just kidding, it\'s regeneration again!',
       stats: {
-        regen: '5%'
+        regen: '1%'
       }
     }]
 }

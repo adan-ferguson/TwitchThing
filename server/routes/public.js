@@ -42,14 +42,4 @@ router.post('/dungeonrun/:dungeonRunID', async (req, res) => {
   })
 })
 
-router.post('/combat/:combatID', async(req, res) => {
-  const combat = await Combats.findByID(req.params.combatID)
-  if(!combat){
-    return res.status(404).send('Combat not found.')
-  }
-  const currentTime = Date.now()
-  const state = combat.startTime + combat.duration < currentTime ? { status: 'finished', currentTime: combat.endTime } : { status: 'live', currentTime }
-  res.send({ combat, state })
-})
-
 export default router

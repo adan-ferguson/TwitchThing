@@ -32,9 +32,6 @@ export default class TimeControls extends HTMLElement{
   _speedEl
 
   _ticker
-  _options = {
-    isReplay: false
-  }
 
   constructor(){
     super()
@@ -63,21 +60,16 @@ export default class TimeControls extends HTMLElement{
   }
 
   get speed(){
-    return this._options.isReplay ? this._speedEl.value / 100 : 1
+    return this._speedEl.value / 100
   }
 
   get time(){
     return this._ticker.currentTime
   }
 
-  setup(startTime, endTime, options = {}){
+  setup(startTime, endTime){
 
-    this._options = {
-      isReplay: false,
-      ...options
-    }
-
-    this.querySelectorAll(`.replay-${options.isReplay ? 'no' : 'yes'}`).forEach(el => {
+    this.querySelectorAll('.replay-no').forEach(el => {
       el.classList.add('displaynone')
     })
 
@@ -117,9 +109,7 @@ export default class TimeControls extends HTMLElement{
       max: this._ticker.endTime,
       label: dateformat(this._ticker.currentTime, 'M:ss.L')
     })
-    if(this._options.isReplay){
-      this._eventTimeBarEl.setValue(this._ticker.currentTime)
-    }
+    this._eventTimeBarEl.setValue(this._ticker.currentTime)
   }
 
   _setupPlayPause(){

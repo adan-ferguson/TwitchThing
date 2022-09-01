@@ -1,6 +1,12 @@
-import { getAdventurerStats, adventurerLevelToHp, adventurerLevelToPower, getAdventurerMods } from './adventurer.js'
+import {
+  getAdventurerStats,
+  adventurerLevelToHp,
+  adventurerLevelToPower,
+  getAdventurerMods,
+  getAdventurerOrbsData
+} from './adventurer.js'
 import FighterInstance from './fighterInstance.js'
-import { performVenturingTick, performVenturingTicks } from '../server/actionsAndTicks/performVenturingTicks.js'
+import { performVenturingTicks } from '../server/actionsAndTicks/performVenturingTicks.js'
 
 export default class AdventurerInstance extends FighterInstance{
 
@@ -29,6 +35,10 @@ export default class AdventurerInstance extends FighterInstance{
 
   get mods(){
     return getAdventurerMods(this.adventurer, this._currentState)
+  }
+
+  get orbs(){
+    return getAdventurerOrbsData(this.adventurer)
   }
 
   /**
