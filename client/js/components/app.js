@@ -93,7 +93,11 @@ export default class App extends HTMLElement{
     }
 
     document.title = 'AutoCrawl - ' + page.constructor.name
-    addPageToHistory(page, replaceHistoryState)
+
+    if(page.useHistory){
+      addPageToHistory(page, replaceHistoryState)
+    }
+    
     this.querySelector(':scope > .content').appendChild(page)
     fadeIn(page)
     this.dispatchEvent(new Event('pagechange'))

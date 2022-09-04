@@ -31,33 +31,31 @@ export function monsterLevelToPower(lvl){
 }
 
 /**
- * @param monster
- * @param state
+ * @param monsterInstance
  * @returns {Stats}
  */
-export function getMonsterStats(monster, state = null){
-  const loadoutStatAffectors = (monster.abilities || [])
+export function getMonsterStats(monsterInstance){
+  const loadoutStatAffectors = (monsterInstance.abilities || [])
     .map(modDef => modDef?.stats)
     .filter(s => s)
-  loadoutStatAffectors.push(monster.baseStats ?? {})
+  loadoutStatAffectors.push(monsterInstance.baseStats ?? {})
   // TODO: extraz
   const stateAffectors = null
   return new Stats(loadoutStatAffectors, stateAffectors)
 }
 
 /**
- * @param monster
- * @param state
+ * @param monsterInstance
  */
-export function getMonsterMods(monster, state = null){
-  const loadoutMods = (monster.abilities || [])
+export function getMonsterMods(monsterInstance){
+  const loadoutMods = (monsterInstance.abilities || [])
     .map(modDef => modDef?.mods)
     .filter(m => m)
   const stateMods = []
   return new ModsCollection(...loadoutMods, ...stateMods)
 }
 
-export function getMonsterOrbsData(monster){
+export function getMonsterOrbsData(monsterInstance){
   // TODO: all this
   return new OrbsData()
   // const maxOrbs = {}

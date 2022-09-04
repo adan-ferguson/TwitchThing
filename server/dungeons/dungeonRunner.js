@@ -1,6 +1,5 @@
 import DungeonRuns from '../collections/dungeonRuns.js'
 import Adventurers from '../collections/adventurers.js'
-import AdventurerInstance from '../../game/adventurerInstance.js'
 import Users from '../collections/users.js'
 import DungeonRunInstance from './dungeonRunInstance.js'
 import { emit } from '../socketServer.js'
@@ -9,7 +8,7 @@ let running = false
 let lastAdvancement = new Date()
 let activeRuns = {}
 
-export const ADVANCEMENT_INTERVAL = 30000
+export const ADVANCEMENT_INTERVAL = 5000
 
 export function cancelAllRuns(){
   activeRuns = {}
@@ -197,9 +196,9 @@ async function saveAllRuns(){
 }
 
 function clearFinishedRuns(){
-  Object.values(activeRuns).filter(r => r.finished)
+  Object.values(activeRuns).filter(r => r.doc.finished)
     .forEach(r => {
-      delete activeRuns[r._id]
+      delete activeRuns[r.doc._id.toString()]
     })
 }
 

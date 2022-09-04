@@ -8,6 +8,7 @@ import { monsterLoadoutContents } from '../../monster.js'
 import FlyingTextEffect from '../effects/flyingTextEffect.js'
 import { all as Mods } from '../../../../game/mods/combined.js'
 import CustomAnimation from '../../customAnimation.js'
+import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
 
 const HTML = `
 <div class="name"></div>
@@ -30,12 +31,12 @@ export default class FighterInstancePane extends HTMLElement{
   _loadoutEl
 
   _options = {
-    inCombat: false
+    fadeOutOnDefeat: true
   }
 
   constructor(){
     super()
-    this.classList.add('content-well', 'flex-rows')
+    this.classList.add('flex-rows')
     this.innerHTML = HTML
     this._hpBarEl = this.querySelector('di-hp-bar')
     this._actionBarEl = this.querySelector('di-action-bar')
@@ -53,6 +54,11 @@ export default class FighterInstancePane extends HTMLElement{
     })
   }
 
+  setOptions(options){
+    this._options = mergeOptionsObjects(this._options, options)
+    return this
+  }
+
   setFighter(fighterInstance){
     this.fighterInstance = fighterInstance
     this.querySelector('.name').textContent = fighterInstance.displayName
@@ -64,6 +70,7 @@ export default class FighterInstancePane extends HTMLElement{
     }
 
     this._orbRowEl.setData(fighterInstance.orbs)
+    this._update(false)
   }
 
   setState(state, animate = false){
@@ -156,7 +163,7 @@ export default class FighterInstancePane extends HTMLElement{
 
     this._updateCooldowns()
 
-    if(!this.fighterInstance.hp){
+    if(!this.fighterInstance.hp && this._options.fadeOutOnDefeat){
       this._fadeAnim = new CustomAnimation({
         duration: 1200,
         tick: pct => {

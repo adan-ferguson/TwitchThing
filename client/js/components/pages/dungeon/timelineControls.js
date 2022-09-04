@@ -9,6 +9,13 @@ const HTML = `
   <di-timer></di-timer>
   <div class="flex-columns buttons">
     <button class="log" title="View event log"><i class="fa-solid fa-list"></i></button>
+    <select class="speed">
+      <option value="25">25%</option>
+      <option value="50">50%</option>
+      <option value="100">100%</option>
+      <option value="200">200%</option>
+      <option value="400">400%</option>
+    </select>
     <div class="flex-columns replay-yes">
       <button class="restart" title="Restart"><i class="fa-solid fa-backward-fast"></i></button>
       <button class="back" title="Back"><i class="fa-solid fa-backward-step"></i></button>
@@ -17,8 +24,6 @@ const HTML = `
       <button class="forward" title="Forward"><i class="fa-solid fa-forward-step"></i></button>  
       <button class="finish" title="Skip to Results"><i class="fa-solid fa-forward-fast"></i></button> 
     </div>
-    <button class="view-combat toggle-on replay-yes" title="View combat on/off"><i class="fa-solid fa-gun"></i></button>
-    <button class="permalink replay-no" title="Share"><i class="fa-solid fa-clipboard"></i></button>
   </div>
 </div>
 `
@@ -29,12 +34,10 @@ export default class TimelineControls extends HTMLElement{
     isReplay: false
   }
   _eventTimeBarEl
-  _viewCombatBtn
   _eventLog
 
   _playEl
   _pauseEl
-  viewCombat
 
   constructor(){
     super()
@@ -63,22 +66,21 @@ export default class TimelineControls extends HTMLElement{
       })
     })
     this.querySelector('button.forward').addEventListener('click', () => {
-      this.jumpToIndex(this._timeline.currentEntryIndex + 1)
+      this.jumpToIndex(this._timeline.currentEntryIndex + 1, {
+        animate: false
+      })
     })
     this.querySelector('button.finish').addEventListener('click', () => {
-      this.jumpTo(this._timeline.duration)
-    })
-
-    this._viewCombatBtn = this.querySelector('button.view-combat')
-    this._viewCombatBtn
-      .addEventListener('click', ()=> {
-        this._updateViewCombat()
+      this.jumpTo(this._timeline.duration, {
+        animate: false
       })
+    })
 
     this.querySelector('button.log').addEventListener('click', () => {
       this._showEventLogModal()
     })
 
+    this._setupSpeed()
     this._ticker = new Ticker()
       .on('tick', () => {
         this._tick()
@@ -87,7 +89,14 @@ export default class TimelineControls extends HTMLElement{
         this._nextEvent(overflow)
       })
 
-    this._updateViewCombat()
+    this.pause()
+  }
+
+  get speed(){
+    if(this._options.isReplay){
+      return 1
+    }
+    return this._speedEl.value / 100
   }
 
   get elapsedEvents(){
@@ -96,6 +105,10 @@ export default class TimelineControls extends HTMLElement{
 
   get finished(){
     return this._timeline.time === this._timeline.duration
+  }
+
+  get ticker(){
+    return this._ticker
   }
 
   setup(timeline, adventurer, options = {}){
@@ -110,6 +123,9 @@ export default class TimelineControls extends HTMLElement{
 
     this._timeline = timeline
     this._setupEventLog(adventurer)
+    this._ticker.setOptions({
+      speed: this.speed
+    })
 
     setTimeout(() => {
       this._updateEvent()
@@ -131,17 +147,6 @@ export default class TimelineControls extends HTMLElement{
     this._updateEvent()
   }
 
-  jumpToAfterCombat(combatID, options = {}){
-    let i
-    const entry = this._timeline.entries.find((event, _i) => {
-      i = _i
-      return event.combatID === combatID
-    })
-    if(entry){
-      this.jumpToIndex(i + 1, options)
-    }
-  }
-
   jumpToIndex(index, options = {}){
     index = Math.max(0, index)
     if(index >= this._timeline.entries.length){
@@ -157,6 +162,9 @@ export default class TimelineControls extends HTMLElement{
   }
 
   play(){
+    if(this._ticker.reachedEnd){
+      return
+    }
     this._pauseEl.classList.remove('displaynone')
     this._playEl.classList.add('displaynone')
     this._ticker.start()
@@ -221,29 +229,6 @@ export default class TimelineControls extends HTMLElement{
     this._tick()
   }
 
-  _updateViewCombat(val = 'toggle'){
-
-    const STORAGE_KEY = 'ViewCombatWhileWatchingDungeonRunReplay'
-
-    if(this.viewCombat === undefined){
-      val = localStorage.getItem(STORAGE_KEY) === 'true'
-    }else if(val === 'toggle'){
-      val = !this.viewCombat
-    }
-
-    localStorage.setItem(STORAGE_KEY, val)
-
-    if(val){
-      this._viewCombatBtn.classList.remove('toggle-off')
-      this._viewCombatBtn.classList.add('toggle-on')
-      this.viewCombat = true
-    }else{
-      this._viewCombatBtn.classList.remove('toggle-on')
-      this._viewCombatBtn.classList.add('toggle-off')
-      this.viewCombat = false
-    }
-  }
-
   _showEventLogModal(){
     const wasRunning = this._ticker.running
     const modal = new Modal()
@@ -265,6 +250,18 @@ export default class TimelineControls extends HTMLElement{
     if(this._options.isReplay){
       this._ticker.stop()
     }
+  }
+
+  _setupSpeed(){
+    const STORAGE_NAME = 'CombatReplaySpeed'
+    this._speedEl = this.querySelector('select.speed')
+    this._speedEl.addEventListener('change', () => {
+      localStorage.setItem(STORAGE_NAME, this._speedEl.value)
+      this._ticker.setOptions({
+        speed: this.speed
+      })
+    })
+    this._speedEl.value = localStorage.getItem(STORAGE_NAME) ?? '100'
   }
 }
 

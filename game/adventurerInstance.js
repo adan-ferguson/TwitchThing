@@ -6,7 +6,6 @@ import {
   getAdventurerOrbsData
 } from './adventurer.js'
 import FighterInstance from './fighterInstance.js'
-import { performVenturingTicks } from '../server/actionsAndTicks/performVenturingTicks.js'
 
 export default class AdventurerInstance extends FighterInstance{
 
@@ -39,13 +38,5 @@ export default class AdventurerInstance extends FighterInstance{
 
   get orbs(){
     return getAdventurerOrbsData(this.adventurer)
-  }
-
-  /**
-   * Pass time (out of combat)
-   * @param time
-   */
-  passTime(time){
-    return performVenturingTicks(Math.floor(time / 1000))
   }
 }

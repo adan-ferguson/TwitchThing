@@ -10,24 +10,26 @@ router.use('/:dungeonRunID', async (req, res, next) => {
   if(!req.dungeonRun){
     throw { code: 400, message: 'Invalid dungeon run ID' }
   }
-  if(!req.dungeonRun.adventurer.userID.equals(req.user._id)){
-    throw { code: 400, message: 'Invalid dungeon run ID' }
-  }
   next()
 })
 
 router.use('/:dungeonRunID', verifiedRouter)
 
-verifiedRouter.post('/results', async (req, res) => {
+verifiedRouter.post('/', async (req, res, next) => {
+  res.send({ dungeonRun: req.dungeonRun })
+})
+
+verifiedRouter.post('/finalize', async (req, res, next) => {
   if(!req.dungeonRun.finished){
     throw { code: 400, message: 'Can not show results, dungeon run is not finished yet.' }
   }
-  if(!req.dungeonRun.finalizedData){
+  if(!req.dungeonRun.adventurer.userID.equals(req.user?._id)){
+    throw { code: 400, message: 'Invalid dungeon run ID' }
+  }
+  if(!req.dungeonRun.finalized){
     await finalize(req.dungeonRun)
   }
-  res.send({
-    dungeonRun: req.dungeonRun
-  })
+  res.status(200).send({})
 })
 
 export default router

@@ -38,7 +38,7 @@ export default class AdminCommandTab extends HTMLElement{
     this._input.value = ''
     this._output.value = `Running command "${command}":`
 
-    const { result } = await fizzetch('/admin/runcommand', { command })
+    const { result } = await fizzetch('/game/admin/runcommand', { command })
     this._output.value += '\n' + result
   }
 }

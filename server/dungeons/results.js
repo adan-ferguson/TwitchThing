@@ -39,7 +39,7 @@ export function addRewards(rewards, toAdd){
 
 export async function finalize(dungeonRunDoc){
 
-  if(dungeonRunDoc.finalizedData){
+  if(dungeonRunDoc.finalized){
     throw { error: 'Dungeon run has already been finalized' }
   }
 
@@ -110,7 +110,7 @@ export async function finalize(dungeonRunDoc){
   }
 
   async function saveDungeonRun(){
-    dungeonRunDoc.finalizedData = calculateResults(dungeonRunDoc)
+    dungeonRunDoc.finalized = true
     await DungeonRuns.save(dungeonRunDoc)
   }
 }

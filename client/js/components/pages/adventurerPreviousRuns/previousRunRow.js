@@ -31,9 +31,7 @@ export default class PreviousRunRow extends HTMLElement{
   constructor(run){
     super()
     this._run = run
-
-    const finalizedData = run.finalizedData
-    this.innerHTML = HTML(run._id, finalizedData)
+    this.innerHTML = HTML(run._id, run.results)
   }
 
 }

@@ -5,6 +5,8 @@ import { continueRelicEvent } from './relics.js'
 import { generateEvent } from './dungeonEventPlanner.js'
 import { addRewards } from './results.js'
 import { ADVANCEMENT_INTERVAL } from './dungeonRunner.js'
+import calculateResults from '../../game/dungeonRunResults.js'
+import { performVenturingTicks } from '../actionsAndTicks/performVenturingTicks.js'
 
 export default class DungeonRunInstance extends EventEmitter{
 
@@ -130,28 +132,30 @@ export default class DungeonRunInstance extends EventEmitter{
       this.doc.rewards = addRewards(this.doc.rewards, event.rewards)
     }
     event.duration = Math.ceil(event.duration / ADVANCEMENT_INTERVAL) * ADVANCEMENT_INTERVAL
-    event.adventurerState = this.adventurerInstance.currentState
-    event.tickUpdates = this._passTime(event)
-    this.doc.adventurerState = this.adventurerInstance.currentState
+    this._updateStateAndPerformTicks(event)
     this.doc.elapsedTime += event.duration
   }
 
   _finish(){
     console.log('run finished', this.adventurer.name)
+    this.doc.results = calculateResults(this.events)
     this.doc.finished = true
   }
 
   /**
-   * Reduce cooldowns of actives, tick buffs/debuffs, perform regeneration, etc
    * @private
    * @param event
    */
-  _passTime(event){
-    let state = event.adventurerState || this.doc.adventurerState
+  _updateStateAndPerformTicks(event){
+
+    const instance = this.adventurerInstance
+    instance.currentState = event.adventurerState ?? instance.currentState
+    event.adventurerState = instance.currentState
+
     if (!event.passTimeOverride){ // Combats handle their own passage of time.
-      const adv = new AdventurerInstance(this.adventurer, state)
-      return adv.passTime(event.duration)
+      event.tickUpdates = performVenturingTicks(instance, Math.floor(event.duration / 1000))
     }
-    return []
+
+    this.doc.adventurerState = instance.currentState
   }
 }

@@ -118,7 +118,7 @@ verifiedRouter.post('/previousruns', async(req, res, next) => {
   const runs = await DungeonRuns.find({
     query: {
       'adventurer._id': req.adventurer._id,
-      finalizedData: { $ne: null }
+      finalized: { $ne: null }
     },
     projection: {
       events: 0

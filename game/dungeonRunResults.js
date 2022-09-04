@@ -28,7 +28,7 @@ function monstersKilled(eventsList){
   const obj = {}
   eventsList.forEach(event => {
     if(event.monster?.defeated){
-      obj[event.monster.name] = (obj[event.monster.name] ?? 0) + 1
+      obj[event.monster.baseType] = (obj[event.monster.baseType] ?? 0) + 1
     }
   })
   return Object.keys(obj).map(name => { return { name, amount: obj[name] }} )

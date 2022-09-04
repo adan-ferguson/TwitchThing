@@ -1,15 +1,19 @@
 import Page from '../page.js'
 import { getSocket, joinSocketRoom, leaveSocketRoom } from '../../../socketClient.js'
-import CombatPage from '../combat/combatPage.js'
 import Zones, { floorToZone, floorToZoneName } from '../../../../../game/zones.js'
 import Timeline from '../../../../../game/timeline.js'
-import tippy from 'tippy.js'
+import AdventurerInstance from '../../../../../game/adventurerInstance.js'
+import fizzetch from '../../../fizzetch.js'
+import FighterInstancePane from '../../combat/fighterInstancePane.js'
+import CombatEnactment from '../../../combatEnactment.js'
 
 const HTML = `
 <div class='content-columns'>
   <div class='content-rows'>
-    <di-fighter-instance-pane></di-fighter-instance-pane>
-    <div class="flex-no-grow content-well">
+    <div class="content-well fill-contents">
+      <di-fighter-instance-pane class="adventurer"></di-fighter-instance-pane>
+    </div>
+    <div class="bot-row content-well">
       <di-dungeon-timeline-controls></di-dungeon-timeline-controls>
     </div>
   </div>
@@ -17,7 +21,7 @@ const HTML = `
     <div class="content-well">
       <di-dungeon-event></di-dungeon-event>
     </div>
-    <div class="state flex-no-grow content-well">
+    <div class="state bot-row content-well">
       <di-dungeon-state></di-dungeon-state>
     </div>
   </div>
@@ -42,34 +46,16 @@ export default class DungeonPage extends Page{
     super()
     this._dungeonRunID = dungeonRunID
     this.innerHTML = HTML
-    this._adventurerPane = this.querySelector('di-dungeon-adventurer-pane')
+    this._adventurerPane = this.querySelector('di-fighter-instance-pane.adventurer')
+      .setOptions({
+        fadeOutOnDefeat: false
+      })
     this._eventEl = this.querySelector('di-dungeon-event')
-    this._eventEl.addEventListener('view_combat', () => {
-      this._goToCombat()
-    })
     this._stateEl = this.querySelector('di-dungeon-state')
     this._timelineEl = this.querySelector('di-dungeon-timeline-controls')
-    this._timelineEl.addEventListener('tick', () => {})
+    this._timelineEl.ticker.on('tick', () => this._tick())
     this._timelineEl.addEventListener('event_changed', e => {
       this._update(e.detail)
-    })
-    this._timelineEl.addEventListener('finished', () => {
-      if(this.isReplay || this.currentEvent.runFinished){
-        this._finish()
-      }
-    })
-
-    this.querySelector('.permalink').addEventListener('click', e => {
-      const txt = `${window.location.origin}/dungeonrun/${this._dungeonRunID}`
-      navigator?.clipboard?.writeText(txt)
-      console.log('Copied', txt, navigator?.clipboard ? true : false)
-      tippy(e.currentTarget, {
-        showOnCreate: true,
-        content: 'Link copied to clipboard',
-        onHidden(instance){
-          instance.destroy()
-        }
-      })
     })
   }
 
@@ -82,7 +68,7 @@ export default class DungeonPage extends Page{
   }
 
   get watching(){
-    return this.dungeonRun?.finalizedData || this.app.publicView
+    return false //this.dungeonRun?.finalizedData || this.app.publicView
   }
 
   get titleText(){
@@ -98,7 +84,7 @@ export default class DungeonPage extends Page{
   }
 
   get isReplay(){
-    return this.dungeonRun.finalizedData ? true : false
+    return this.dungeonRun.finished ? true : false
   }
 
   async load(){
@@ -106,20 +92,16 @@ export default class DungeonPage extends Page{
     const { dungeonRun } = await this.fetchData()
     this.dungeonRun = dungeonRun
 
-    if(this.dungeonRun.finished && !this.watching){
-      return this.redirectTo(DungeonPage.path(this._dungeonRunID))
-    }
-
     if(!this.isReplay){
       joinSocketRoom(this.dungeonRun._id)
       getSocket().on('dungeon run update', this._socketUpdate)
     }
 
     this._stateEl.setup(dungeonRun)
-    this._setupTimeline(dungeonRun, previousPage)
-    this._adventurerPane.setAdventurer(this.adventurer)
+    this._setupTimeline(dungeonRun)
+    this._adventurerPane.setFighter(new AdventurerInstance(this.adventurer, dungeonRun.adventurerState))
     this._eventEl.setAdventurer(this.adventurer)
-    this._update({ sourcePage: previousPage, animate: false })
+    this._update({ animate: false })
   }
 
   async unload(){
@@ -147,38 +129,44 @@ export default class DungeonPage extends Page{
 
     options = {
       animate: true,
-      viewCombat: this._timelineEl.viewCombat,
-      sourcePage: 'self',
       ...options
-    }
-
-    if(this.currentEvent.combatID && (!this.isReplay || options.viewCombat)){
-      if(!(options.sourcePage instanceof CombatPage)){
-        return this._goToCombat()
-      }
     }
 
     const animate = options.animate
     this._adventurerPane.setState(this.currentEvent.adventurerState, animate)
-    this._stateEl.update(this._timelineEl.elapsedEvents, animate || options.sourcePage instanceof CombatPage)
-    this._eventEl.update(this.currentEvent, animate)
+    this._stateEl.update(this._timelineEl.elapsedEvents, animate)
+
+    if(this._ce){
+      this._ce.destroy()
+    }
+
+    if(this.currentEvent.combatID){
+      this._enactCombat(animate)
+    }else{
+      if(this.dungeonRun.results && this.currentEvent.runFinished){
+        this.currentEvent.results = this.dungeonRun.results
+      }
+      this._eventEl.update(this.currentEvent, animate)
+    }
+
     this._updateBackground()
   }
 
-  async _finish(){
-    // TODO: no more redirecting
-    // this.redirectTo(`/dungeon/${this.dungeonRun._id}/results`)
+  async _enactCombat(animate = false){
+    const { combat } = await fizzetch(`/game/combat/${this.currentEvent.combatID}`)
+    const enemyPane = new FighterInstancePane()
+    this._eventEl.setContents(enemyPane, animate)
+    const ce = new CombatEnactment(this._adventurerPane, enemyPane, combat)
+    ce.on('destroyed', () => {
+      this._ce = null
+    })
+    this._ce = ce
   }
 
-  _goToCombat(){
-    if(!this.currentEvent?.combatID){
-      return
+  _tick(){
+    if(this._ce){
+      this._ce.timeline.time = this._timeline.timeSinceLastEntry
     }
-    // TODO: no more redirecting to combat page
-    // return this.redirectTo(new CombatPage(this.currentEvent.combatID, {
-    //   isReplay: this.isReplay,
-    //   returnPage: this
-    // }))
   }
 
   _updateBackground(){
@@ -186,17 +174,10 @@ export default class DungeonPage extends Page{
     this.app.setBackground(zone.color, zone.texture)
   }
 
-  _setupTimeline(dungeonRun, previousPage){
+  _setupTimeline(dungeonRun){
     this._timeline = new Timeline(dungeonRun.events)
-    if(!this.isReplay){
-      this._timeline.time = dungeonRun.virtualTime
-    }else if(previousPage instanceof CombatPage){
-      const combatIndex = this._timeline.entries.findIndex(entry => entry.combatID === previousPage.combatID)
-      const combatEntry = this._timeline.entries[combatIndex]
-      if(!combatEntry){
-        debugger
-      }
-      this._timeline.time = combatEntry.time + combatEntry.duration
+    if(!dungeonRun.finalized){
+      this._timeline.time = dungeonRun.virtualTime ?? dungeonRun.elapsedTime
     }
     this._timelineEl.setup(this._timeline, this.adventurer, {
       isReplay: this.isReplay

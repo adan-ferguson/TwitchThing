@@ -28,5 +28,9 @@ export default class ErrorPage extends Page{
       this.redirectToMain()
     }
   }
+
+  get useHistory(){
+    return false
+  }
 }
 customElements.define('di-error-page', ErrorPage)

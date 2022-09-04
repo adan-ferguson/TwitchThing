@@ -1,6 +1,11 @@
 di-combat-page
 
   .mid-thing
+    flex: 0 0 40rem !important
+    display: flex
+    align-items: center
+    justify-content: center
+
     span
       background-color: white
       border: 0.5rem solid #bb5454
@@ -10,32 +15,8 @@ di-combat-page
   .content-well
     border-color: #bb5454 !important
 
-  di-fighter-instance-pane
-    > .name
-      position: absolute
-      top: -13rem
-      background-color: white
-      border: 0.5rem solid #bb5454
-      padding: 3rem 14rem
-
-  di-bar.action
-    margin-top: 0.25em
-    height: 1.25em
-
-  .mid-thing
-    flex: 0 0 40rem !important
-    display: flex
-    align-items: center
-    justify-content: center
-
   .feed
     flex: 0 0 50rem !important
-
-  di-combat-fighter-pane
-    > div > .flex-rows
-      margin-top: -6rem
-      > *
-        margin-top: 6rem
 
   di-combat-time-controls
 
@@ -58,3 +39,20 @@ di-combat-page
     button
       margin-left: -1px
       width: 50rem
+
+di-fighter-instance-pane
+  > .name
+    position: absolute
+    top: -13rem
+    background-color: white
+    border: 0.5rem solid #bb5454
+    padding: 3rem 14rem
+
+  > div > .flex-rows
+    margin-top: -6rem
+    > *
+      margin-top: 6rem
+
+  di-bar.action
+    margin-top: 0.25em
+    height: 1.25em

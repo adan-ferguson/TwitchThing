@@ -27,6 +27,10 @@ export default class Page extends HTMLElement{
     return []
   }
 
+  get useHistory(){
+    return true
+  }
+
   /**
    * @return string
    */

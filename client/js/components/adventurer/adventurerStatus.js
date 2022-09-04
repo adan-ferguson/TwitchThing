@@ -1,7 +1,7 @@
 import { OrbsDisplayStyle } from '../orbRow.js'
 import { getAdventurerOrbsData } from '../../../../game/adventurer.js'
 import dateFormat from 'dateformat'
-import { toDisplayName } from '../../../../game/utilFunctions.js'
+import MonsterInstance from '../../../../game/monsterInstance.js'
 
 const HTML = `
 <span style="text-align:center">
@@ -70,7 +70,8 @@ export default class AdventurerStatus extends HTMLElement{
     function eventText(){
       const currentEvent = dungeonRun.currentEvent || dungeonRun.events.at(-1)
       if(currentEvent?.monster){
-        return `Battling a ${toDisplayName(currentEvent.monster.name)}`
+        const monsterInstance = new MonsterInstance(currentEvent.monster)
+        return `Battling a ${monsterInstance.displayName}`
       }else if(currentEvent?.relic){
         return 'Investigating a Relic'
       }

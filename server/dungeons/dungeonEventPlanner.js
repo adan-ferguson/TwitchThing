@@ -44,6 +44,6 @@ export async function generateEvent(dungeonRun){
   }
 
   return {
-    message: `${adventurerInstance.name} is wandering around.`
+    message: `${adventurerInstance.displayName} is wandering around.`
   }
 }

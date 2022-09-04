@@ -21,7 +21,11 @@ export default class Timeline extends EventEmitter{
   }
 
   set time(val){
+    const before = this._time
     this._time = Math.max(0, Math.min(this.duration, val))
+    if(this._time !== before){
+      this.emit('timechange', before, this._time)
+    }
   }
 
   get finished(){

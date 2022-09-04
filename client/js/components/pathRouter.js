@@ -6,6 +6,7 @@ import DungeonPage from './pages/dungeon/dungeonPage.js'
 import { isObject } from '../../../game/utilFunctions.js'
 import SimPage from './pages/sim/simPage.js'
 import CombatPage from './pages/combat/combatPage.js'
+import AdminPage from './pages/admin/adminPage.js'
 
 const pages = [
   AdventurerPage,
@@ -13,7 +14,8 @@ const pages = [
   ErrorPage,
   DungeonPage,
   SimPage,
-  CombatPage
+  CombatPage,
+  AdminPage
 ]
 
 export function pathToPage(location, queryStringArgs = {}){

@@ -1,6 +1,7 @@
 import RELICS from '../../../relicDisplayInfo.js'
 import { toDisplayName } from '../../../../../game/utilFunctions.js'
 import AdventurerInstance from '../../../../../game/adventurerInstance.js'
+import MonsterInstance from '../../../../../game/monsterInstance.js'
 
 const ROW_HTML = (floor, room, description) => `
 <span class="floor">${floor}-${room}</span>
@@ -114,7 +115,7 @@ const DESCRIPTION_FNS = {
   relic: event => `Relic (${RELICS[event.relic.tier].displayName} ${event.relic.type})`,
   stairs: event => 'Stairs',
   entrance: event => 'Entrance',
-  combat: event => `Combat vs. ${toDisplayName(event.monster.name)}`
+  combat: event => `Combat vs. ${new MonsterInstance(event.monster).displayName}`
 }
 
 customElements.define('di-event-log', EventLog)

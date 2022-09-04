@@ -1,12 +1,8 @@
 import CustomAnimation from '../../../customAnimation.js'
-import { floorToZoneName } from '../../../../../game/zones.js'
 import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
 
 const innerHTML = `
 <div>
-  <div>
-      <span class="zone-name"></span>
-  </div>
   <div class="floor-and-room"></div>
   <div>
     <span class="pace"></span> Pace
@@ -25,14 +21,12 @@ export default class State extends HTMLElement{
   _chests
   _shareLink
 
-  _zoneNameEl
   _floorEl
   _roomEl
 
   constructor(){
     super()
     this.innerHTML = innerHTML
-    this._zoneNameEl = this.querySelector('.zone-name')
     this._floorAndRoomEl = this.querySelector('.floor-and-room')
     this.xp = this.querySelector('.xp-reward')
     this.xpVal = null
@@ -48,8 +42,6 @@ export default class State extends HTMLElement{
 
     const currentEvent = eventsList.at(-1)
     const results = new DungeonRunResults(eventsList)
-
-    this._zoneNameEl.textContent = floorToZoneName(currentEvent.floor)
 
     this._floorAndRoomEl.textContent = `Floor ${currentEvent.floor} - ${currentEvent.room ? 'Room ' + currentEvent.room : 'Entrance'}`
 
