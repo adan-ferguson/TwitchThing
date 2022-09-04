@@ -12,17 +12,6 @@ const HTML = `
 <div class='content-columns'>
   <di-adventurer-pane></di-adventurer-pane>
   <div class='content-rows results' style='flex-grow:1.5'>
-    <div class="content-well scrollable">
-      <di-tabz>
-        <di-tab data-tab-name="Results"></di-tab>
-        <di-tab data-tab-name="Monsters Killed"></di-tab>
-        <di-tab data-tab-name="Relics"></di-tab>
-      </di-tabz>
-    </div>
-    <div class="buttons-row">
-      <button class="done hidden">Okay</button>
-      <button class="clickable replay">Replay <i class="fa-solid fa-rotate"></i></button>
-    </div>
   </div>
 </div>
 `

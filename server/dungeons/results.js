@@ -6,7 +6,6 @@ import { generateLevelup } from '../adventurer/bonuses.js'
 import { emit } from '../socketServer.js'
 import { generateItemDef } from '../items/generator.js'
 import DungeonRuns from '../collections/dungeonRuns.js'
-import calculateResults from '../../game/dungeonRunResults.js'
 import { floorToZone } from '../../game/zones.js'
 
 const REWARDS_TYPES = {

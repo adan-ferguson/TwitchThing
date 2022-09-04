@@ -27,6 +27,10 @@ export default class Tabz extends HTMLElement{
     this._setTab(first)
   }
 
+  getContentEl(name){
+    return this.querySelector(`.tabz-content [data-tab-name=${name}]`)
+  }
+
   _setTab(name){
     this.querySelectorAll('.tabz-list .tab').forEach(tab => {
       tab.classList.toggle('active', tab.getAttribute('data-tab-name') === name)

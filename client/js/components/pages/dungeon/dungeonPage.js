@@ -6,6 +6,9 @@ import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 import fizzetch from '../../../fizzetch.js'
 import FighterInstancePane from '../../combat/fighterInstancePane.js'
 import CombatEnactment from '../../../combatEnactment.js'
+import EventContentsResults from './eventContentsResults.js'
+import AdventurerPage from '../adventurer/adventurerPage.js'
+import { showLoader } from '../../../loader.js'
 
 const HTML = `
 <div class='content-columns'>
@@ -68,6 +71,7 @@ export default class DungeonPage extends Page{
   }
 
   get watching(){
+    // TODO: we're watching if this is either already finalized, or if we don't own the dungeonrun
     return false //this.dungeonRun?.finalizedData || this.app.publicView
   }
 
@@ -132,30 +136,44 @@ export default class DungeonPage extends Page{
       ...options
     }
 
-    const animate = options.animate
-    this._adventurerPane.setState(this.currentEvent.adventurerState, animate)
-    this._stateEl.update(this._timelineEl.elapsedEvents, animate)
-
     if(this._ce){
       this._ce.destroy()
     }
 
+    const animate = options.animate
+    this._adventurerPane.setState(this.currentEvent.adventurerState, animate)
+      .setOptions({
+        inCombat: false
+      })
+    this._stateEl.update(this._timelineEl.elapsedEvents, animate)
+
     if(this.currentEvent.combatID){
-      this._enactCombat(animate)
+      this._enactCombat()
+    }else if(this.dungeonRun.results && this.currentEvent.runFinished){
+      this._showResults()
     }else{
-      if(this.dungeonRun.results && this.currentEvent.runFinished){
-        this.currentEvent.results = this.dungeonRun.results
-      }
       this._eventEl.update(this.currentEvent, animate)
     }
 
     this._updateBackground()
   }
 
-  async _enactCombat(animate = false){
+  _showResults(){
+    const results = new EventContentsResults(this.dungeonRun)
+    this._eventEl.setContents(results, false)
+    if(!this.watching){
+      this._stateEl.showFinalizerButton(async () => {
+        showLoader()
+        await fizzetch(`/game/dungeonrun/${this._dungeonRunID}/finalize`)
+        this.redirectTo(AdventurerPage.path(this.adventurer._id))
+      })
+    }
+  }
+
+  async _enactCombat(){
     const { combat } = await fizzetch(`/game/combat/${this.currentEvent.combatID}`)
     const enemyPane = new FighterInstancePane()
-    this._eventEl.setContents(enemyPane, animate)
+    this._eventEl.setContents(enemyPane, false)
     const ce = new CombatEnactment(this._adventurerPane, enemyPane, combat)
     ce.on('destroyed', () => {
       this._ce = null

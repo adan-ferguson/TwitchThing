@@ -1,6 +1,5 @@
 import { fadeIn, fadeOut } from '../../../animationHelper.js'
 import EventContentsNormal from './eventContentsNormal.js'
-import EventContentsResults from './eventContentsResults.js'
 
 export default class Event extends HTMLElement{
 
@@ -19,16 +18,11 @@ export default class Event extends HTMLElement{
   }
 
   update(dungeonEvent, animate = true){
-
-    if(dungeonEvent.runFinished){
-      this.setContents(new EventContentsResults(dungeonEvent))
+    const wasNormal = this._currentContents instanceof EventContentsNormal
+    if(wasNormal && sameRoom(this._currentContents.dungeonEvent, dungeonEvent)){
+      this._currentContents.update(dungeonEvent, animate)
     }else{
-      const wasNormal = this._currentContents instanceof EventContentsNormal
-      if(wasNormal && sameRoom(this._currentContents.dungeonEvent, dungeonEvent)){
-        this._currentContents.update(dungeonEvent, animate)
-      }else{
-        this.setContents(new EventContentsNormal(dungeonEvent), animate)
-      }
+      this.setContents(new EventContentsNormal(dungeonEvent), animate)
     }
   }
 

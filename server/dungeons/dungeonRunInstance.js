@@ -117,6 +117,9 @@ export default class DungeonRunInstance extends EventEmitter{
       duration: ADVANCEMENT_INTERVAL,
       ...event
     }
+    if(nextEvent.runFinished){
+      nextEvent.duration = 0
+    }
     // Make it a multiple of the advancement interval
     nextEvent.duration = Math.ceil(-0.01 + nextEvent.duration / ADVANCEMENT_INTERVAL) * ADVANCEMENT_INTERVAL
     this.doc.room = nextEvent.room

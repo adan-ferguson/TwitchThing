@@ -2,7 +2,7 @@ import CustomAnimation from '../../../customAnimation.js'
 import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
 
 const innerHTML = `
-<div>
+<div class="content">
   <div class="floor-and-room"></div>
   <div>
     <span class="pace"></span> Pace
@@ -14,6 +14,7 @@ const innerHTML = `
       Chests: <span class="chests">0</span>
   </div>
 </div>
+<button class="finalizer displaynone">Finish</button>
 `
 
 export default class State extends HTMLElement{
@@ -28,6 +29,8 @@ export default class State extends HTMLElement{
     super()
     this.innerHTML = innerHTML
     this._floorAndRoomEl = this.querySelector('.floor-and-room')
+    this._contentEl = this.querySelector('.content')
+    this._finalizerEl = this.querySelector('.finalizer')
     this.xp = this.querySelector('.xp-reward')
     this.xpVal = null
     this._chests = this.querySelector('.chests')
@@ -48,7 +51,14 @@ export default class State extends HTMLElement{
     this._setXP(results.xp, animate)
     this._updateChests(results.chests, animate)
 
-    // this._shareLink.setAttribute('href', '/watch/dungeonrun/' + dungeonRun._id)
+    this._contentEl.classList.remove('displaynone')
+    this._finalizerEl.classList.add('displaynone')
+  }
+
+  showFinalizerButton(fn){
+    this._contentEl.classList.add('displaynone')
+    this._finalizerEl.classList.remove('displaynone')
+    this._finalizerEl.onclick = fn
   }
 
   _setXP(xp, animate){

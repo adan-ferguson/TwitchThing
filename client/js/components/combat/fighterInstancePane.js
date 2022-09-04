@@ -31,7 +31,8 @@ export default class FighterInstancePane extends HTMLElement{
   _loadoutEl
 
   _options = {
-    fadeOutOnDefeat: true
+    fadeOutOnDefeat: true,
+    inCombat: false
   }
 
   constructor(){
@@ -56,6 +57,7 @@ export default class FighterInstancePane extends HTMLElement{
 
   setOptions(options){
     this._options = mergeOptionsObjects(this._options, options)
+    this._actionBarEl.classList.toggle('hidden', !this._options.inCombat)
     return this
   }
 
@@ -71,11 +73,13 @@ export default class FighterInstancePane extends HTMLElement{
 
     this._orbRowEl.setData(fighterInstance.orbs)
     this._update(false)
+    return this
   }
 
   setState(state, animate = false){
     this.fighterInstance.currentState = state
     this._update(animate)
+    return this
   }
 
   advanceTime(ms){
