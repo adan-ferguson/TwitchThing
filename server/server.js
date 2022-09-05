@@ -51,6 +51,9 @@ async function init(){
     .use('/user', userRouter)
     .use('/', publicRouter)
     .use('/', express.static('client_dist'))
+    .get(new RegExp('.*'), (req, res) => {
+      res.redirect('/')
+    })
     .use(errorHandler)
 
   try {

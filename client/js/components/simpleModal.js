@@ -1,5 +1,5 @@
 import Modal from './modal.js'
-import { convertNewlinesToBreaks, toArray } from '../../../game/utilFunctions.js'
+import { toArray } from '../../../game/utilFunctions.js'
 import { fadeIn, fadeOut } from '../animationHelper.js'
 
 const SIMPLE_MODAL_HTML = `
@@ -55,8 +55,8 @@ export default class SimpleModal extends Modal{
       options = {
         text: 'text',
         style: 'normal',
-        fn: () => {
-        }, // Called on click. If it returns false, the modal won't close after clicking.
+        value: null,
+        fn: () => {}, // Called on click. If it returns false, the modal won't close after clicking.
         ...options
       }
 
@@ -66,10 +66,22 @@ export default class SimpleModal extends Modal{
       btn.addEventListener('click', () => {
         const ret = options.fn()
         if (ret !== false){
-          this.hide()
+          this.hide(options.value)
+          this._result = options.value
         }
       })
       buttonsEl.appendChild(btn)
+    })
+  }
+
+  awaitResult(){
+    return new Promise(res => {
+      if(this._result){
+        return res(this._result)
+      }
+      this.addEventListener('hide', e => {
+        res(e.detail.result)
+      })
     })
   }
 }

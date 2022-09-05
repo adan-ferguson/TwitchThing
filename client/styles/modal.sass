@@ -40,8 +40,21 @@ $padding: 20rem
     button
       padding: 4rem 16rem
       margin-left: 2rem
+      transition: background-color 0.3s ease, color 0.3s ease
 
       &.style-scary
-        background-color: red
+        border-color: #d25050
+        background-color: #d25050
         color: white
+        &:hover
+          color: #d25050
+          background-color: white
+
+      &.style-good
+        border-color: #8eb48e
+        background-color: #8eb48e
+        color: white
+        &:hover
+          color: #8eb48e
+          background-color: white
 

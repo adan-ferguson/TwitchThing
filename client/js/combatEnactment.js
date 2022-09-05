@@ -103,7 +103,6 @@ export default class CombatEnactment extends EventEmitter{
     }else if(this._fighterPane2.fighterInstance.uniqueID === fighterId){
       return this._fighterPane2
     }
-    debugger
     throw 'Tried to get pane from fighter id, but there was none.'
   }
 

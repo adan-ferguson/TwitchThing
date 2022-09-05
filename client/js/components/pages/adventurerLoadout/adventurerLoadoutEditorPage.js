@@ -4,6 +4,8 @@ import fizzetch from '../../../fizzetch.js'
 import setupEditable from '../../loadout/setupEditable.js'
 import { adventurerLoadoutItem } from '../../../adventurer.js'
 import { OrbsDisplayStyle } from '../../orbRow.js'
+import { showLoader } from '../../../loader.js'
+import SimpleModal from '../../simpleModal.js'
 
 const HTML = `
 <div class="content-columns">
@@ -23,6 +25,8 @@ const HTML = `
 `
 
 export default class AdventurerLoadoutEditorPage extends Page{
+
+  _saved = false
 
   constructor(adventurerID){
     super()
@@ -46,11 +50,32 @@ export default class AdventurerLoadoutEditorPage extends Page{
     return this.adventurer.name + ' - Edit Equipment'
   }
 
-  get confirmLeavePageMessage(){
-    if(this.adventurerPane.loadoutEl.hasChanges){
-      return 'Your adventurer has unsaved changes.'
+  async unload(){
+
+    if(!this.adventurerPane.loadoutEl.hasChanges || this._saved){
+      return false
     }
-    return null
+
+    const result = await new SimpleModal('Save changes before leaving page?', [{
+      text: 'Leave Without Saving',
+      style: 'scary',
+      value: 'leave'
+    },{
+      text: 'Save',
+      style: 'good',
+      value: 'save'
+    }]).show().awaitResult()
+
+    if(result === 'leave'){
+      return false
+    }else if(result === 'save'){
+      if(await this._save()){
+        return false
+      }
+    }
+
+    // Neither button clicked, modal was closed, stay on the page
+    return true
   }
 
   async load(){
@@ -74,20 +99,27 @@ export default class AdventurerLoadoutEditorPage extends Page{
       if(!this.adventurerPane.loadoutEl.hasChanges){
         return this.redirectTo(AdventurerPage.path(this.adventurerID))
       }
-      this._saving = true
-      this._updateSaveButton()
-      const items = this.adventurerPane.loadoutEl.objs.map(item => item?.id)
-      const { error, success } = await fizzetch('/game' + this.path + '/save', {
-        items
-      })
-      if(!success){
-        console.error(error || 'Saving failed for some reason')
-        this._saving = false
-        this._updateSaveButton()
-      }else{
+      if(await this._save()){
         this.redirectTo(AdventurerPage.path(this.adventurerID))
       }
     })
+  }
+
+  async _save(){
+    this._saving = true
+    this._updateSaveButton()
+    const items = this.adventurerPane.loadoutEl.objs.map(item => item?.id)
+    const { error, success } = await fizzetch('/game' + this.path + '/save', {
+      items
+    })
+    if(!success){
+      console.error(error || 'Saving failed for some reason')
+      this._saving = false
+      this._updateSaveButton()
+      return false
+    }
+    this._saved = true
+    return true
   }
 
   _updateSaveButton(){

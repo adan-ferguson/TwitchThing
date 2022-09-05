@@ -33,11 +33,16 @@ export default class Modal extends HTMLElement{
 
   show = () => {
     document.body.appendChild(this)
+    return this
   }
 
-  hide = () => {
+  hide = (result = null) => {
     this.remove()
-    this.dispatchEvent(new CustomEvent('hide'))
+    this.dispatchEvent(new CustomEvent('hide', {
+      detail: {
+        result
+      }
+    }))
   }
 }
 customElements.define('di-modal', Modal)

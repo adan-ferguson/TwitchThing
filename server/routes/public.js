@@ -1,8 +1,7 @@
 import express from 'express'
 import config from '../config.js'
-import { getAllActiveRuns, getRunData } from '../dungeons/dungeonRunner.js'
+import { getRunData } from '../dungeons/dungeonRunner.js'
 import db from '../db.js'
-import Combats from '../collections/combats.js'
 
 const router = express.Router()
 

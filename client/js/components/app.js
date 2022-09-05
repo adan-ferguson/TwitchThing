@@ -53,16 +53,12 @@ export default class App extends HTMLElement{
 
     const page = pathToPage(path, queryArgs)
 
-    Loader.showLoader()
-    hideAllTippys()
-    closeAllModals()
-
     // Update the user whenever we change pages
     this._fetchUser()
 
     const previousPage = this.currentPage
     if(previousPage){
-      if(previousPage.loaded){
+      if(previousPage.loadstate === 'loaded'){
         const preventUnload = await previousPage.unload()
         if(preventUnload){
           return
@@ -71,6 +67,10 @@ export default class App extends HTMLElement{
       previousPage.loadstate = 'unloaded'
       previousPage.remove()
     }
+
+    Loader.showLoader()
+    hideAllTippys()
+    closeAllModals()
 
     this.currentPage = page
     page.app = this
@@ -117,23 +117,6 @@ export default class App extends HTMLElement{
   async _fetchUser(){
     this.user = await fizzetch('/user')
     this.header.update()
-  }
-
-  _confirmLeavePage(message){
-    return new Promise(res => {
-      new SimpleModal(message, [{
-        text: 'Leave Page',
-        style: 'scary',
-        fn: () => {
-          res(true)
-        }
-      },{
-        text: 'Never Mind',
-        fn: () => {
-          res(false)
-        }
-      }]).show()
-    })
   }
 }
 

@@ -4,7 +4,7 @@ import { generatePath } from '../pathRouter.js'
 export default class Page extends HTMLElement{
 
   app
-  unloaded = false
+  loadstate = 'none'
 
   constructor(){
     super()
