@@ -1,5 +1,5 @@
 import { getMonsterOrbsData } from '../../game/monster.js'
-import MonsterAbilityInstance from '../../game/monsterAbility.js'
+import MonsterItemInstance from '../../game/monsterItemInstance.js'
 import StatsList from './components/stats/statsList.js'
 import { StatsDisplayStyle } from './statsDisplayInfo.js'
 import { wrap } from '../../game/utilFunctions.js'
@@ -9,7 +9,7 @@ export function monsterLoadoutContents(monster){
     getOrbsData: loadoutItems => {
       return getMonsterOrbsData({ ...monster, mods: loadoutItems.map(li => li?.obj) })
     },
-    loadoutItems: monster.abilities.map(monsterLoadoutItem)
+    loadoutItems: monster.items.map(monsterLoadoutItem)
   }
 }
 
@@ -17,7 +17,7 @@ export function monsterLoadoutItem(abilityDef){
   if(!abilityDef){
     return null
   }
-  const abilityInstance = new MonsterAbilityInstance(abilityDef)
+  const abilityInstance = new MonsterItemInstance(abilityDef)
   return {
     obj: abilityInstance,
     name: abilityInstance.name,

@@ -4,7 +4,7 @@ export default {
     speed: '-15%',
     magicPower: '+20%'
   },
-  abilities: [
+  items: [
     {
       name: 'Spell Caster',
       description: 'Deals magic damage.',

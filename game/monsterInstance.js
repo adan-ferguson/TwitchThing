@@ -1,7 +1,7 @@
 import FighterInstance  from './fighterInstance.js'
 import { getMonsterMods, getMonsterStats, monsterLevelToHp, monsterLevelToPower } from './monster.js'
-import { toDisplayName } from './utilFunctions.js'
 import * as Monsters from './monsters/combined.js'
+import MonsterItemInstance from './monsterItemInstance.js'
 
 export default class MonsterInstance extends FighterInstance{
 
@@ -14,7 +14,7 @@ export default class MonsterInstance extends FighterInstance{
     this.monster = {
       description: null,
       baseStats: {},
-      abilities: [],
+      items: [],
       ...baseInfo,
       ...monsterDef
     }
@@ -28,6 +28,10 @@ export default class MonsterInstance extends FighterInstance{
     return this.monster.level ?? 1
   }
 
+  get ItemClass(){
+    return MonsterItemInstance
+  }
+
   get baseHp(){
     return monsterLevelToHp(this.level)
   }
@@ -36,16 +40,23 @@ export default class MonsterInstance extends FighterInstance{
     return monsterLevelToPower(this.level)
   }
 
-  get displayName(){
-    return this.monster.displayName || toDisplayName(this.monster.name)
-  }
-
   get stats(){
-    return getMonsterStats(this.monster, this._currentState)
+    return getMonsterStats(this.monster)
   }
 
   get mods(){
-    return getMonsterMods(this.monster, this._currentState)
+    return getMonsterMods(this.monster)
   }
+
+
+  get itemInstances(){
+    return this.adventurer.items.map((item, index) => {
+      if(item){
+        return new MonsterItemInstance(item, this._currentState.itemStates[index])
+      }
+      return null
+    })
+  }
+
 
 }

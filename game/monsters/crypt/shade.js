@@ -5,7 +5,7 @@ export default {
     hpMax: '-40%'
   },
   description: 'Very fast!',
-  abilities: [
+  items: [
     {
       name: 'Ethereal',
       stats: {

@@ -3,7 +3,7 @@ export default {
     physPower: '+30%'
   },
   description: 'Vulnerable to magic in a roundabout way because it only has phys defense.',
-  abilities: [
+  items: [
     {
       name: 'Regeneration',
       stats: {

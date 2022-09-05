@@ -3,13 +3,47 @@ import { gainHealth } from './common.js'
 
 export function performCombatAction(combat, actor){
   actor.resetTimeSinceLastAction()
+  const index = actor.nextActiveItemIndex()
+  if(index > -1){
+    return useItemAbility(combat, actor, index)
+  }
   return {
     ability: 'basicAttack',
-    results: basicAttack(combat, actor).filter(r => r)
+    results: attack(combat, actor).filter(r => r)
   }
 }
 
-function basicAttack(combat, actor){
+function useItemAbility(combat, actor, index){
+  const itemInstance = actor.itemInstances[index]
+  if(!itemInstance?.activeAbility){
+    throw 'Can not use item ability so I\'m not sure what\'s going on here'
+  }
+
+  const results = []
+  itemInstance.active.actions.forEach(actionDef => {
+    results.push(...doAction(combat, actor, actionDef))
+  })
+
+  itemInstance.enterCooldown()
+  return {
+    ability: index,
+    results: results.filter(r => r)
+  }
+}
+
+function doAction(combat, actor, actionDef){
+  if(actionDef.type === 'attack'){
+    return attack(combat, actor, actionDef)
+  }
+}
+
+function attack(combat, actor, actionDef = {}){
+
+  actionDef = {
+    damageMulti: 1,
+    damageType: 'auto',
+    ...actionDef
+  }
 
   const enemy = combat.getEnemyOf(actor)
   const dodged = attemptDodge(enemy)
@@ -21,21 +55,35 @@ function basicAttack(combat, actor){
     }]
   }
 
-  const magicAttack = actor.mods.contains(Mods.magicAttack)
+  if(actionDef.damageType === 'auto'){
+    actionDef.damageType = actor.mods.contains(Mods.magicAttack) ? 'magic' : 'phys'
+  }
+
+  let baseDamage = actor.basePower
+  baseDamage *= actor.stats.get(actionDef.damageType + 'Power').value
+  baseDamage *= actionDef.damageMulti
+
   const damageInfo = {
     resultType: 'damage',
     subject: enemy.uniqueID,
-    damageType: magicAttack ? 'magic' : 'phys',
-    baseDamage: Math.ceil(actor.basePower * actor.stats.get(magicAttack ? 'magicPower' : 'physPower').value)
+    damageType: actionDef.damageType,
+    baseDamage
   }
 
   if(attemptCrit(actor)){
-    damageInfo.baseDamage *= (1 + actor.stats.get('critDamage').value)
+    baseDamage *= (1 + actor.stats.get('critDamage').value)
     damageInfo.crit = true
   }
 
   const damageResult = takeDamage(enemy, damageInfo)
-  return [damageResult, lifesteal(actor, damageResult)]
+
+  // TODO: triggers for "onDealDamage"
+  // , lifesteal(actor, damageResult)
+
+  return {
+    ability: 'basicAttack',
+    results: [damageResult].filter(r => r)
+  }
 }
 
 function attemptCrit(actor){
@@ -50,15 +98,16 @@ function takeDamage(subject, damageInfo){
   const blocked = Math.floor(damageInfo.baseDamage * subject.stats.get(damageInfo.damageType + 'Def').value)
   const finalDamage = Math.min(subject.hp, damageInfo.baseDamage - blocked)
   subject.hp -= finalDamage
+  // TODO: triggers for "onTakeDamage"
   return { ...damageInfo, blocked, finalDamage }
 }
 
-function lifesteal(actor, damageResult){
-  const lifesteal = Math.min(
-    actor.hpMax - actor.hp,
-    Math.ceil(actor.stats.get('lifesteal').value * damageResult.finalDamage)
-  )
-  if(lifesteal){
-    return gainHealth(actor, lifesteal)
-  }
-}
+// function lifesteal(actor, damageResult){
+//   const lifesteal = Math.min(
+//     actor.hpMax - actor.hp,
+//     Math.ceil(actor.stats.get('lifesteal').value * damageResult.finalDamage)
+//   )
+//   if(lifesteal){
+//     return gainHealth(actor, lifesteal)
+//   }
+// }

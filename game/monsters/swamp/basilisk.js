@@ -1,6 +1,6 @@
 export default {
   description: 'Wow what a good idea!',
-  abilities: [
+  items: [
     {
       name: 'Deadly Gaze',
       description: 'Chance to instantly kill you. Use your imagination for this, okay?',

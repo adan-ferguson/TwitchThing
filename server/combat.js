@@ -1,5 +1,4 @@
 import Combats from './collections/combats.js'
-import { toDisplayName } from '../game/utilFunctions.js'
 import { randomOrder } from '../game/rando.js'
 import { generateMonster } from './dungeons/monsters.js'
 import MonsterInstance from '../game/monsterInstance.js'

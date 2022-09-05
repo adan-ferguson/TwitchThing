@@ -1,5 +1,5 @@
 import { getAdventurerOrbsData } from '../../game/adventurer.js'
-import ItemInstance from '../../game/item.js'
+import AdventurerItemInstance from '../../game/adventurerItemInstance.js'
 import ItemDetails from './components/itemDetails.js'
 import StatsList from './components/stats/statsList.js'
 import { StatsDisplayStyle } from './statsDisplayInfo.js'
@@ -18,7 +18,7 @@ export function adventurerLoadoutItem(itemDef){
   if(!itemDef){
     return null
   }
-  const itemInstance = new ItemInstance(itemDef)
+  const itemInstance = new AdventurerItemInstance(itemDef)
   return {
     obj: itemInstance,
     orbs: itemInstance.orbs,

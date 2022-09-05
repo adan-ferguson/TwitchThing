@@ -6,7 +6,7 @@ export default {
     speed: '-10%'
   },
   description: 'Head\'s up!',
-  abilities: [
+  items: [
     {
       name: 'Boss Monster',
       description: 'Hardest monster type in the zone, stronger and gives extra rewards.',

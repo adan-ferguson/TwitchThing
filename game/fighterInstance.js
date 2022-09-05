@@ -1,31 +1,53 @@
 import Stats from './stats/stats.js'
 
-const STATE_DEFAULTS = {
-  timeSinceLastAction: 0
-}
-
-// Just getting rid of error
+// Stupid
 new Stats()
 
 export const COMBAT_BASE_TURN_TIME = 3000
 
+/**
+ * Format:
+ * {
+ *   timeSinceLastAction: 0,
+ *   hp: 0,
+ *   itemStates: []
+ * }
+ */
 export default class FighterInstance{
 
   _baseFighterDef
   _currentState
+  _itemInstances
+
   startState
 
-  constructor(baseFighterDef, initialState = {}){
-    this._baseFighterDef = baseFighterDef
-    this.currentState = initialState
+  constructor(fighterData, initialState = {}){
+    this._fighterData = fighterData
     this.startState = { ...this._currentState }
+
+    const itemStates = initialState.itemStates ?? []
+    this._itemInstances = []
+    for(let i = 0; i < 8; i++){
+      if(fighterData.items[i]){
+        this._itemInstances[i] = new this.ItemClass(fighterData.items[i], itemStates[i])
+      }else{
+        this._itemInstances[i] = null
+      }
+    }
+
+    this._currentState = { ...initialState }
+    delete this._currentState.itemStates
   }
 
   /**
    * @return {object}
    */
-  get baseFighterDef(){
-    return this._baseFighterDef
+  get fighterData(){
+    return this._fighterData
+  }
+
+  get ItemClass(){
+    throw 'Not implemented'
   }
 
   /**
@@ -33,6 +55,10 @@ export default class FighterInstance{
    */
   get uniqueID(){
     throw 'Not implemented'
+  }
+
+  get itemInstances(){
+    return this._itemInstances
   }
 
   /**
@@ -46,13 +72,6 @@ export default class FighterInstance{
    * @returns {number}
    */
   get basePower(){
-    throw 'Not implemented'
-  }
-
-  /**
-   * @return {string}
-   */
-  get displayName(){
     throw 'Not implemented'
   }
 
@@ -75,14 +94,15 @@ export default class FighterInstance{
   }
 
   get currentState(){
+    const baseState = { ...this._currentState }
+    baseState.itemStates = this._itemInstances.map(ii => {
+      if(ii){
+        return null
+      }else{
+        return ii.currentState
+      }
+    })
     return { ...this._currentState }
-  }
-
-  set currentState(val){
-    this._currentState = {
-      ...STATE_DEFAULTS,
-      ...val
-    }
   }
 
   get actionTime(){
@@ -125,8 +145,21 @@ export default class FighterInstance{
 
   advanceTime(ms){
     this._currentState.timeSinceLastAction += ms
+    this.itemInstances.forEach((itemInstance, index) => {
+      if(itemInstance){
+        itemInstance.advanceTime(ms)
+        this._currentState.itemStates[index] = itemInstance.state
+      }
+    })
     // TODO advance buff/debuff times
-    // TODO advance active timers
+  }
+
+  nextActiveItemIndex(){
+    return this.itemInstances.findIndex(itemInstance => {
+      if(itemInstance.activeAbilityReady){
+        return true
+      }
+    })
   }
 
   resetTimeSinceLastAction(){

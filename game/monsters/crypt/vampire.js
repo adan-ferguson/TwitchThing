@@ -1,5 +1,5 @@
 export default {
-  abilities: [
+  items: [
     {
       name: 'Lifesteal',
       stats: {

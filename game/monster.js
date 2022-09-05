@@ -35,7 +35,7 @@ export function monsterLevelToPower(lvl){
  * @returns {Stats}
  */
 export function getMonsterStats(monsterInstance){
-  const loadoutStatAffectors = (monsterInstance.abilities || [])
+  const loadoutStatAffectors = (monsterInstance.items || [])
     .map(modDef => modDef?.stats)
     .filter(s => s)
   loadoutStatAffectors.push(monsterInstance.baseStats ?? {})
@@ -48,7 +48,7 @@ export function getMonsterStats(monsterInstance){
  * @param monsterInstance
  */
 export function getMonsterMods(monsterInstance){
-  const loadoutMods = (monsterInstance.abilities || [])
+  const loadoutMods = (monsterInstance.items || [])
     .map(modDef => modDef?.mods)
     .filter(m => m)
   const stateMods = []

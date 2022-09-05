@@ -11,13 +11,17 @@ export default class AdventurerInstance extends FighterInstance{
 
   adventurer
 
-  constructor(adventurer, initialState = {}){
-    super(adventurer, initialState)
-    this.adventurer = adventurer
+  constructor(adventurerDef, initialState = {}){
+    super(adventurerDef, initialState)
+    this._adventurerDef = adventurerDef
   }
 
   get uniqueID(){
     return this.adventurer._id.toString()
+  }
+
+  get ItemClass(){
+    return AdventurerInstance
   }
 
   get baseHp(){
@@ -28,19 +32,15 @@ export default class AdventurerInstance extends FighterInstance{
     return adventurerLevelToPower(this.adventurer.level)
   }
 
-  get displayName(){
-    return this.adventurer.name
-  }
-
   get stats(){
-    return getAdventurerStats(this.adventurer, this._currentState)
+    return getAdventurerStats(this)
   }
 
   get mods(){
-    return getAdventurerMods(this.adventurer, this._currentState)
+    return getAdventurerMods(this)
   }
 
   get orbs(){
-    return getAdventurerOrbsData(this.adventurer)
+    return getAdventurerOrbsData(this)
   }
 }

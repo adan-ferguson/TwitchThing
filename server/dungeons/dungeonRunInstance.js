@@ -18,7 +18,6 @@ export default class DungeonRunInstance extends EventEmitter{
     }
     this.user = user
     this._time = this.currentEvent?.time ?? 0
-    this.adventurerInstance = new AdventurerInstance(this.doc.adventurer, this.doc.adventurerState)
   }
 
   get time(){
@@ -75,6 +74,11 @@ export default class DungeonRunInstance extends EventEmitter{
     }else{
       this._time = this.nextEventTime
     }
+
+    // Reset this each advancement to make sure that everything is synced up.
+    // If we just let this roll, then it's possible the doc state is wrong but
+    // we would never notice unless the server reloaded.
+    this.adventurerInstance = new AdventurerInstance(this.doc.adventurer, this.doc.adventurerState)
 
     if(this.currentEvent?.stayInRoom){
       await this._continueEvent(this.currentEvent)

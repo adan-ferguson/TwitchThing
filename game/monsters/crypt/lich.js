@@ -3,7 +3,7 @@ export default {
     magicDef: '+50%',
     magicPower: '+20%'
   },
-  abilities: [
+  items: [
     {
       name: 'Spell Caster',
       description: 'Deals magic damage.',

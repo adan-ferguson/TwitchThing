@@ -4,7 +4,7 @@ export default {
     hpMax: '-30%'
   },
   description: 'It\'s a giant bat. Look, just assume that all of the animals are giant, okay?',
-  abilities: [
+  items: [
     {
       name: 'Fluttering',
       description: 'It\'s juking and/or jiving!',

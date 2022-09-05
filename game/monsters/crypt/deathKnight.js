@@ -2,7 +2,7 @@ export default {
   baseStats: {
     speed: '-25%'
   },
-  abilities: [
+  items: [
     {
       name: 'Deadly Weapon',
       stats: {

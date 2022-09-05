@@ -5,7 +5,7 @@ export default {
     hpMax: '+100%'
   },
   description: 'Hard hitting, back breaking.',
-  abilities: [
+  items: [
     {
       name: 'Boss Monster',
       description: 'Hardest monster type in the zone, stronger and gives extra rewards.',

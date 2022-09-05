@@ -1,6 +1,14 @@
+import { attackAction } from '../../actions.js'
+
 export default {
-  stats: {
-    physPower: '+10%'
+  active: {
+    cooldown: 10,
+    actions: [
+      attackAction({
+        damageMulti: 1.5
+      })
+    ]
   },
+  tags: 'weapon',
   orbs: 1
 }
