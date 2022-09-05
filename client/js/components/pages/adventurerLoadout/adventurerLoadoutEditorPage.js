@@ -34,6 +34,14 @@ export default class AdventurerLoadoutEditorPage extends Page{
     this.saveButton = this.querySelector('button.save')
   }
 
+  static get pathDef(){
+    return ['adventurer', 0, 'editloadout']
+  }
+
+  get pathArgs(){
+    return [this.adventurerID]
+  }
+
   get titleText(){
     return this.adventurer.name + ' - Edit Equipment'
   }
@@ -45,8 +53,8 @@ export default class AdventurerLoadoutEditorPage extends Page{
     return null
   }
 
-  async load(_){
-    const { adventurer, items } = await fizzetch(`/game/adventurer/${this.adventurerID}/editloadout`)
+  async load(){
+    const { adventurer, items } = await this.fetchData()
     this.adventurer = adventurer
     this.inventory.setup(
       Object.values(items).map(itemDef => adventurerLoadoutItem(itemDef)),
@@ -69,7 +77,7 @@ export default class AdventurerLoadoutEditorPage extends Page{
       this._saving = true
       this._updateSaveButton()
       const items = this.adventurerPane.loadoutEl.objs.map(item => item?.id)
-      const { error, success } = await fizzetch(`/game/adventurer/${this.adventurerID}/editloadout/save`, {
+      const { error, success } = await fizzetch('/game' + this.path + '/save', {
         items
       })
       if(!success){

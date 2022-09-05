@@ -43,7 +43,7 @@ export default class MainPage extends Page{
   async load(){
     const { adventurers } = await this.fetchData()
     this._populateAdventurers(adventurers, this.user.inventory.adventurerSlots)
-    history.replaceState(null, null, ' ')
+    history.replaceState(null, null, '')
     joinSocketRoom('user all adventurers ' + this.app.user._id)
     getSocket().on('user dungeon run update', this._dungeonRunUpdates)
   }

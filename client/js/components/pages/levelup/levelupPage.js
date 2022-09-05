@@ -3,6 +3,7 @@ import { fadeIn, fadeOut } from '../../../animationHelper.js'
 import { hideLoader, showLoader } from '../../../loader.js'
 import BonusDetails from './bonusDetails.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
+import fizzetch from '../../../fizzetch.js'
 
 const HTML = `
 <div class="content-rows">
@@ -22,12 +23,20 @@ export default class LevelupPage extends Page{
     this._options = this.querySelector('.options')
   }
 
+  static get pathDef(){
+    return ['adventurer', 0, 'levelup']
+  }
+
+  get pathArgs(){
+    return [this.adventurerID]
+  }
+
   get titleText(){
     return this._titleText
   }
 
-  async load(previousPage){
-    const { adventurer } = await this.fetchData(`/game/adventurer/${this.adventurerID}`)
+  async load(){
+    const { adventurer } = await this.fetchData()
     if(!adventurer.nextLevelUp){
       return this.redirectTo(AdventurerPage.path(this.adventurerID))
     }
@@ -56,7 +65,7 @@ export default class LevelupPage extends Page{
   async _select(index){
     this._selected = true
     showLoader()
-    const { nextLevelUp } = await this.fetchData(`/game/adventurer/${this.adventurerID}/selectbonus/${index}`)
+    const { nextLevelUp } = await fizzetch(`/game/adventurer/${this.adventurerID}/selectbonus/${index}`)
     if(!nextLevelUp){
       return this.redirectTo(AdventurerPage.path(this.adventurerID))
     }

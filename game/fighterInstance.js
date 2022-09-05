@@ -29,6 +29,13 @@ export default class FighterInstance{
   }
 
   /**
+   * @return {string}
+   */
+  get uniqueID(){
+    throw 'Not implemented'
+  }
+
+  /**
    * @return {number}
    */
   get baseHp(){
@@ -95,6 +102,9 @@ export default class FighterInstance{
   }
 
   set hp(val){
+    if(isNaN(val)){
+      debugger
+    }
     this._currentState.hp = Math.max(0, Math.min(this.hpMax, val))
     if(this.hp === this.hpMax){
       this._currentState.hpRemainder = 0
@@ -102,7 +112,11 @@ export default class FighterInstance{
   }
 
   get hpMax(){
-    return Math.round(this.baseHp * this.stats.get('hpMax').value)
+    const hpMax = Math.round(this.baseHp * this.stats.get('hpMax').value)
+    if(hpMax === 0){
+      debugger
+    }
+    return hpMax
   }
 
   get hpPct(){

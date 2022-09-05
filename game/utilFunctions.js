@@ -1,3 +1,5 @@
+import { v4 } from 'uuid'
+
 export function toArray(arrayOrVal){
   return Array.isArray(arrayOrVal) ? arrayOrVal : [arrayOrVal]
 }
@@ -101,4 +103,8 @@ export function wait(ms = 0){
 
 export function isString(val){
   return typeof val === 'string' || val instanceof String
+}
+
+export function uuid(){
+  return v4()
 }

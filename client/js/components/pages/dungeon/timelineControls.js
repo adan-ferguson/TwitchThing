@@ -2,6 +2,7 @@ import Ticker from '../../../ticker.js'
 import dateformat from 'dateformat'
 import Modal from '../../modal.js'
 import EventLog from './eventLog.js'
+import { mergeOptionsObjects } from '../../../../../game/utilFunctions.js'
 
 const HTML = `
 <di-bar class="event-time-bar"></di-bar>
@@ -9,7 +10,7 @@ const HTML = `
   <di-timer></di-timer>
   <div class="flex-columns buttons">
     <button class="log" title="View event log"><i class="fa-solid fa-list"></i></button>
-    <select class="speed">
+    <select class="speed replay-yes">
       <option value="25">25%</option>
       <option value="50">50%</option>
       <option value="100">100%</option>
@@ -35,6 +36,7 @@ export default class TimelineControls extends HTMLElement{
   }
   _eventTimeBarEl
   _eventLog
+  _currentEvent
 
   _playEl
   _pauseEl
@@ -86,14 +88,17 @@ export default class TimelineControls extends HTMLElement{
         this._tick()
       })
       .on('ended', overflow => {
-        this._nextEvent(overflow)
+        this._updateEvent()
+        if(this._timeline.finished){
+          this.dispatchEvent(new CustomEvent('finished'))
+        }
       })
 
     this.pause()
   }
 
   get speed(){
-    if(this._options.isReplay){
+    if(!this._options.isReplay){
       return 1
     }
     return this._speedEl.value / 100
@@ -113,24 +118,27 @@ export default class TimelineControls extends HTMLElement{
 
   setup(timeline, adventurer, options = {}){
 
-    this._options = {
-      isReplay: false,
-      ...options
-    }
-    this.querySelectorAll(`.replay-${options.isReplay ? 'no' : 'yes'}`).forEach(el => {
-      el.classList.add('displaynone')
-    })
-
+    this.setOptions(options)
     this._timeline = timeline
     this._setupEventLog(adventurer)
-    this._ticker.setOptions({
-      speed: this.speed
-    })
 
     setTimeout(() => {
       this._updateEvent()
       this.play()
     }, 0)
+  }
+
+  setOptions(options = {}){
+    this._options = mergeOptionsObjects(this._options, options)
+    this.querySelectorAll(`.replay-${options.isReplay ? 'no' : 'yes'}`).forEach(el => {
+      el.classList.add('displaynone')
+    })
+    this.querySelectorAll(`.replay-${options.isReplay ? 'yes' : 'no'}`).forEach(el => {
+      el.classList.remove('displaynone')
+    })
+    this._ticker.setOptions({
+      speed: this.speed
+    })
   }
 
   addEvent(event){
@@ -143,8 +151,7 @@ export default class TimelineControls extends HTMLElement{
 
   jumpTo(time, options = {}){
     this._timeline.time = time
-    this._triggerEvent(options)
-    this._updateEvent()
+    this._updateEvent(options)
   }
 
   jumpToIndex(index, options = {}){
@@ -200,33 +207,32 @@ export default class TimelineControls extends HTMLElement{
 
   _tick(){
     this._timeline.time = this._timeline.currentEntry.time + this._ticker.currentTime
-    this._eventTimeBarEl.setValue(this._ticker.currentTime)
     this._eventTimeBarEl.setOptions({
       max: this._ticker.endTime,
       label: dateformat(this._timeline.time, 'M:ss')
     })
+    this._eventTimeBarEl.setValue(this._ticker.currentTime)
   }
 
   _nextEvent(){
-    if(!this._timeline.finished){
-      this._triggerEvent()
-      this._updateEvent()
-    }else{
-      this.dispatchEvent(new CustomEvent('finished'))
+    this._updateEvent()
+  }
+
+  _updateEvent(options){
+
+    if(this._currentEvent === this._timeline.currentEntry){
+      return
     }
-  }
 
-  _triggerEvent(options = {}){
-    this.dispatchEvent(new CustomEvent('event_changed', {
-      detail: options
-    }))
-  }
-
-  _updateEvent(){
+    this._currentEvent = this._timeline.currentEntry
     this._prevEvent = this._timeline.currentEntry
     this._ticker.currentTime = this._timeline.timeSinceLastEntry
     this._ticker.endTime = this._timeline.currentEntry.duration
     this._tick()
+
+    this.dispatchEvent(new CustomEvent('event_changed', {
+      detail: options
+    }))
   }
 
   _showEventLogModal(){

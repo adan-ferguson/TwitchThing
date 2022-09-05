@@ -62,7 +62,7 @@ export function generateRelicEvent(dungeonRun){
     roomType: 'relic',
     stayInRoom: true,
     attempts: 0,
-    message: `${dungeonRun.adventurerInstance.name} found a relic and is attempting to interpret it.`
+    message: `${dungeonRun.adventurerInstance.displayName} found a relic and is attempting to interpret it.`
   }
 }
 
@@ -71,7 +71,7 @@ export async function continueRelicEvent(dungeonRun, previousEvent){
   const relic = previousEvent.relic
   const attemptNo = previousEvent.attempts + 1
   const solveChance = TIERS[relic.tier].solveChance * dungeonRun.adventurerInstance.stats.get('relicSolveChance').value
-  const advName = dungeonRun.adventurerInstance.name
+  const advName = dungeonRun.adventurerInstance.displayName
 
   let newEvent
 

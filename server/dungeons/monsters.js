@@ -2,6 +2,7 @@ import { generateRandomChest } from './chests.js'
 import { chooseOne } from '../../game/rando.js'
 import { all as Monsters } from '../../game/monsters/combined.js'
 import { getMonsterStats, levelToXpReward } from '../../game/monster.js'
+import { uuid } from '../../game/utilFunctions.js'
 
 const monstersByFloor = {
   // Caves
@@ -146,6 +147,7 @@ function getBasicMonsterDefinition(floor){
     throw `Could not find monster for floor ${floor}`
   }
   return {
+    _id: 'basic-' + uuid(),
     baseType: monstersByFloor[floor].name,
     level: floor
   }

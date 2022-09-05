@@ -18,6 +18,7 @@ export default class DungeonRunInstance extends EventEmitter{
     }
     this.user = user
     this._time = this.currentEvent?.time ?? 0
+    this.adventurerInstance = new AdventurerInstance(this.doc.adventurer, this.doc.adventurerState)
   }
 
   get time(){
@@ -55,10 +56,6 @@ export default class DungeonRunInstance extends EventEmitter{
     return this.currentEvent ? true : false
   }
 
-  get adventurerInstance(){
-    return new AdventurerInstance(this.adventurer, this.doc.adventurerState)
-  }
-
   get nextEventTime(){
     return this.currentEvent ? this.currentEvent.time + this.currentEvent.duration : 0
   }
@@ -69,15 +66,14 @@ export default class DungeonRunInstance extends EventEmitter{
 
   async advance(nextEvent){
 
+    this.shouldEmit = true
+
     if(this._time + ADVANCEMENT_INTERVAL < this.nextEventTime){
       this._time += ADVANCEMENT_INTERVAL
+      this.shouldEmit = false
       return
     }else{
       this._time = this.nextEventTime
-    }
-
-    if(this.currentEvent?.runFinished){
-      return this._finish()
     }
 
     if(this.currentEvent?.stayInRoom){
@@ -137,12 +133,11 @@ export default class DungeonRunInstance extends EventEmitter{
     event.duration = Math.ceil(event.duration / ADVANCEMENT_INTERVAL) * ADVANCEMENT_INTERVAL
     this._updateStateAndPerformTicks(event)
     this.doc.elapsedTime += event.duration
-  }
 
-  _finish(){
-    console.log('run finished', this.adventurer.name)
-    this.doc.results = calculateResults(this.events)
-    this.doc.finished = true
+    if(event.runFinished){
+      this.doc.results = calculateResults(this.events)
+      this.doc.finished = true
+    }
   }
 
   /**
@@ -151,14 +146,16 @@ export default class DungeonRunInstance extends EventEmitter{
    */
   _updateStateAndPerformTicks(event){
 
-    const instance = this.adventurerInstance
-    instance.currentState = event.adventurerState ?? instance.currentState
-    event.adventurerState = instance.currentState
+    event.adventurerState = this.adventurerInstance.currentState
 
-    if (!event.passTimeOverride){ // Combats handle their own passage of time.
-      event.tickUpdates = performVenturingTicks(instance, Math.floor(event.duration / 1000))
+    if('hp' in this.adventurerInstance.currentState && isNaN(this.adventurerInstance.currentState.hp)){
+      debugger
     }
 
-    this.doc.adventurerState = instance.currentState
+    if (!event.passTimeOverride){ // Combats handle their own passage of time.
+      event.tickUpdates = performVenturingTicks(this.adventurerInstance, Math.floor(event.duration / 1000))
+    }
+
+    this.doc.adventurerState = this.adventurerInstance.currentState
   }
 }

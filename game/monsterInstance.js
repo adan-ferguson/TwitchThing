@@ -20,6 +20,10 @@ export default class MonsterInstance extends FighterInstance{
     }
   }
 
+  get uniqueID(){
+    return this.monster._id
+  }
+
   get level(){
     return this.monster.level ?? 1
   }

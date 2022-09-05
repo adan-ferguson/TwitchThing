@@ -5,9 +5,13 @@ import CombatEnactment from '../../../combatEnactment.js'
 const HTML = `
 <div class='content-rows'>
   <div class='content-columns'>
-    <di-fighter-instance-pane class="fighter1"></di-fighter-instance-pane>
+    <div class="content-well fill-contents">
+      <di-fighter-instance-pane class="fighter1"></di-fighter-instance-pane>
+    </div>
     <div class="mid-thing"><span>VS</span></div>
-    <di-fighter-instance-pane class="fighter2"></di-fighter-instance-pane>
+    <div class="content-well fill-contents">
+      <di-fighter-instance-pane class="fighter2"></di-fighter-instance-pane>
+    </div>
   </div>
   <div class="content-columns content-no-grow">
     <div class="content-well">
@@ -37,8 +41,7 @@ export default class CombatPage extends Page{
     this._fighterPane2 = this.querySelector('.fighter2')
     this._combatFeedEl = this.querySelector('di-combat-feed')
     this._timeControlsEl = this.querySelector('di-combat-time-controls')
-    this._timeControlsEl.addEventListener('tick', e => this._tick())
-    this._timeControlsEl.addEventListener('jumped', e => this._jump())
+    this._timeControlsEl.addEventListener('timechange', e => this._update())
     this._combatID = combatID
   }
 
@@ -69,7 +72,7 @@ export default class CombatPage extends Page{
 
     this._ce = new CombatEnactment(this._fighterPane1, this._fighterPane2, combat)
     this._timeControlsEl.setup(this.timeline.time, this.timeline.duration)
-    this.timeline.play()
+    this._timeControlsEl.ticker.start()
   }
 
   async unload(){
@@ -77,34 +80,8 @@ export default class CombatPage extends Page{
     this._ce.destroy()
   }
 
-  _jump(){
-    this._timeline.time = this._timeControlsEl.time
-    this._updatePanes(false)
-    if(this._timeline.finished){
-      this._finish()
-    }
-  }
-
-  _tick(){
-    if(this._cancelled){
-      return
-    }
-    this._timeline.time += this._timeControlsEl.time - this._timeline.time
-    if(this._timeline.finished){
-      this._finish()
-    }
-  }
-
-  _finish(){
-    const fighter1 = this._ce.fighterInstance1
-    const fighter2 = this._ce.fighterInstance2
-    if(fighter2.hp <= 0){
-      this._combatFeedEl.setText(`${fighter2.displayName} has been defeated.`)
-    }else if(fighter1.hp <= 0){
-      this._combatFeedEl.setText(`${fighter1.displayName} has been defeated.`)
-    }else{
-      this._combatFeedEl.setText('Time is up, combat is not going anywhere.')
-    }
+  _update(){
+    this.timeline.time = this._timeControlsEl.time
   }
 }
 

@@ -121,6 +121,13 @@ export default class DungeonPage extends Page{
     if(this.dungeonRun._id !== dungeonRun._id){
       return
     }
+
+    if(dungeonRun.finished){
+      this._timelineEl.setOptions({
+        isReplay: true
+      })
+    }
+
     this.dungeonRun = dungeonRun
     this._timelineEl.addEvent(dungeonRun.currentEvent)
     this._timelineEl.play()

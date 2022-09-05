@@ -174,6 +174,9 @@ function emitSocketEvents(){
   const liveMap = []
 
   Object.values(activeRuns).forEach(dri => {
+    if(!dri.shouldEmit){
+      return
+    }
     const truncated = truncatedRun(dri)
     emit(truncated._id, 'dungeon run update', truncated)
     if(!perUser[truncated.adventurer.userID]){

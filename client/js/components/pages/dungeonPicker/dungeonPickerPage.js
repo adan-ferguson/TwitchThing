@@ -51,13 +51,21 @@ export default class DungeonPickerPage extends Page{
     this.querySelector('.stuff').appendChild(this._formEl)
   }
 
+  static get pathDef(){
+    return ['adventurer', 0, 'dungeonpicker']
+  }
+
+  get pathArgs(){
+    return [this.adventurerID]
+  }
+
   get titleText(){
     return this.adventurer.name + ' - Entering Dungeon'
   }
 
-  async load(_){
+  async load(){
 
-    const { adventurer, error } = await fizzetch(`/game/adventurer/${this.adventurerID}/dungeonpicker`)
+    const { adventurer, error } = await this.fetchData()
     if(error){
       return error
     }

@@ -98,7 +98,13 @@ export default class CombatEnactment extends EventEmitter{
   }
 
   _getPaneFromFighterId(fighterId){
-    return fighterId === 1 ? this._fighterPane1 : this._fighterPane2
+    if(this._fighterPane1.fighterInstance.uniqueID === fighterId){
+      return this._fighterPane1
+    }else if(this._fighterPane2.fighterInstance.uniqueID === fighterId){
+      return this._fighterPane2
+    }
+    debugger
+    throw 'Tried to get pane from fighter id, but there was none.'
   }
 
   _performTickUpdate(tickUpdate){

@@ -47,7 +47,7 @@ export default class EventContentsNormal extends HTMLElement{
     for(let key in rewards){
       let val = rewards[key]
       if(key === 'chests'){
-        html += `<div>${this._adventurer.name} found a treasure chest</div>`
+        html += '<div>Found a treasure chest</div>'
       }else{
         html += `<div>+${val} ${key}</div>`
       }

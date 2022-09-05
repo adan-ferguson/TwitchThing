@@ -76,6 +76,9 @@ export default class Bar extends HTMLElement{
     }
 
     if(this.animation){
+      if(options.animate && this.animation.targetVal === val){
+        return
+      }
       this.animation.cancel()
     }
 
@@ -168,10 +171,15 @@ export default class Bar extends HTMLElement{
           this._updateLabel(this._pctToVal(currentWidth))
         }
       })
+
+      this.animation.targetVal = val
     })
   }
 
   _pct(val){
+    if(this._options.max - this._options.min <= 0){
+      return 1
+    }
     const pct = (val - this._options.min) / (this._options.max - this._options.min)
     return Math.min(1, Math.max(0, pct))
   }

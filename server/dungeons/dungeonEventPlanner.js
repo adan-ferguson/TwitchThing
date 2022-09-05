@@ -15,15 +15,15 @@ export async function generateEvent(dungeonRun){
 
   if(floor === 30 && room >= 200){
     return {
-      message: `${adventurerInstance.name} gets bored and leaves.`,
+      message: `${adventurerInstance.displayName} gets bored and leaves.`,
       runFinished: true
     }
   }
 
   if(dungeonRun.user.accomplishments.firstRunFinished && foundStairs(floor, room, dungeonRun.pace)){
     const message = dungeonRun.pace === 'Brisk' ?
-      `${adventurerInstance.name} found the stairs and goes deeper.` :
-      `${adventurerInstance.name} feels like they've finished exploring this floor.`
+      `${adventurerInstance.displayName} found the stairs and goes deeper.` :
+      `${adventurerInstance.displayName} feels like they've finished exploring this floor.`
     return {
       nextRoom: 1,
       nextFloor: floor + 1,

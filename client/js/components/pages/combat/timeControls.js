@@ -19,7 +19,7 @@ const HTML = `
       <button class="play" title="Play"><i class="fa-solid fa-play"></i></button>
       <button class="finish" title="Finish"><i class="fa-solid fa-forward-fast"></i></button> 
     </div>
-    <button class="permalink" title="Share"><i class="fa-solid fa-clipboard"></i></button>
+    <button class="permalink" title="Event Log"><i class="fa-solid fa-clipboard"></i></button>
   </div>
 </div>
 `
@@ -55,7 +55,6 @@ export default class TimeControls extends HTMLElement{
 
     this._ticker = new Ticker().on('tick', () => {
       this._update()
-      this.dispatchEvent(new CustomEvent('tick'))
     })
   }
 
@@ -65,6 +64,10 @@ export default class TimeControls extends HTMLElement{
 
   get time(){
     return this._ticker.currentTime
+  }
+
+  get ticker(){
+    return this._ticker
   }
 
   setup(startTime, endTime){
@@ -84,7 +87,6 @@ export default class TimeControls extends HTMLElement{
   jumpTo(time, options = {}){
     this._ticker.currentTime = time
     this._update()
-    this.dispatchEvent(new CustomEvent('jumped'))
   }
 
   destroy(){
@@ -110,6 +112,7 @@ export default class TimeControls extends HTMLElement{
       label: dateformat(this._ticker.currentTime, 'M:ss.L')
     })
     this._eventTimeBarEl.setValue(this._ticker.currentTime)
+    this.dispatchEvent(new CustomEvent('timechange'))
   }
 
   _setupPlayPause(){

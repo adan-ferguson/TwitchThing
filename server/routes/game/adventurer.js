@@ -75,6 +75,7 @@ verifiedRouter.post('/editloadout', validateIdle, async (req, res) => {
 })
 
 verifiedRouter.post('/editloadout/save', validateIdle, async (req, res) => {
+  requireOwnsAdventurer(req)
   const items = validateParam(req.body.items, { type: 'array' })
   await commitAdventurerLoadout(req.adventurer, req.user, items)
   await Adventurers.save(req.adventurer)
@@ -82,7 +83,7 @@ verifiedRouter.post('/editloadout/save', validateIdle, async (req, res) => {
   res.status(200).send({ success: 1 })
 })
 
-verifiedRouter.post('', async(req, res, next) => {
+verifiedRouter.post(['', '/levelup'], async(req, res, next) => {
   res.send({ adventurer: req.adventurer, user: req.user })
 })
 
@@ -107,6 +108,7 @@ verifiedRouter.post('/status', async(req, res, next) => {
 })
 
 verifiedRouter.post('/selectbonus/:index', async(req, res, next) => {
+  requireOwnsAdventurer(req)
   const index = validateParam(req.params.index, {
     type: 'integer',
     validationFn: val => val >= 0 && val <= 2

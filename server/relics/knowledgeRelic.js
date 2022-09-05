@@ -25,7 +25,7 @@ export default {
       rewards: {
         xp: Math.floor(xp * (0.5 + Math.random() / 2))
       },
-      message: TIERS[relicTier].message(dungeonRun.adventurerInstance.name)
+      message: TIERS[relicTier].message(dungeonRun.adventurerInstance.displayName)
     }
   }
 }

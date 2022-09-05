@@ -7,6 +7,9 @@ import { isObject } from '../../../game/utilFunctions.js'
 import SimPage from './pages/sim/simPage.js'
 import CombatPage from './pages/combat/combatPage.js'
 import AdminPage from './pages/admin/adminPage.js'
+import LevelupPage from './pages/levelup/levelupPage.js'
+import AdventurerLoadoutEditorPage from './pages/adventurerLoadout/adventurerLoadoutEditorPage.js'
+import DungeonPickerPage from './pages/dungeonPicker/dungeonPickerPage.js'
 
 const pages = [
   AdventurerPage,
@@ -15,12 +18,13 @@ const pages = [
   DungeonPage,
   SimPage,
   CombatPage,
-  AdminPage
+  AdminPage,
+  LevelupPage,
+  AdventurerLoadoutEditorPage,
+  DungeonPickerPage
 ]
 
 export function pathToPage(location, queryStringArgs = {}){
-
-  console.log('nav to', location, queryStringArgs)
 
   let segments = arrayTrim(location.split('/'))
   if(segments[0] === 'game'){
@@ -59,6 +63,9 @@ export function generatePath(pathDef, pathArgs){
 }
 
 function findMatch(params, segments){
+  if(params.length !== segments.length){
+    return false
+  }
   const args = []
   for(let i = 0; i < params.length; i++){
     if(Number.isInteger(params[i])){

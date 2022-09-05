@@ -16,6 +16,10 @@ export default class AdventurerInstance extends FighterInstance{
     this.adventurer = adventurer
   }
 
+  get uniqueID(){
+    return this.adventurer._id.toString()
+  }
+
   get baseHp(){
     return adventurerLevelToHp(this.adventurer.level)
   }

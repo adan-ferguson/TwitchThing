@@ -7,7 +7,7 @@ export function gainHealth(actor, amount){
   const finalAmount = actor.hp - hpBefore
   if(finalAmount > 0){
     return {
-      subject: actor.fighterId,
+      subject: actor.uniqueID,
       resultType: 'gainHealth',
       amount: actor.hp - hpBefore
     }

@@ -94,9 +94,7 @@ class Combat{
 
   constructor(fighterInstance1, fighterInstance2){
     this.fighterInstance1 = fighterInstance1
-    fighterInstance1.fighterId = 1
     this.fighterInstance2 = fighterInstance2
-    fighterInstance2.fighterId = 2
     this._currentTime = 0
     this.timeline = []
     this._addTimelineEntry()
@@ -174,7 +172,7 @@ class Combat{
       if(actor.actionReady){
         const { ability, results } = performCombatAction(this, actor)
         actions.push({
-          actor: actor.fighterId,
+          actor: actor.uniqueID,
           ability,
           results
         })

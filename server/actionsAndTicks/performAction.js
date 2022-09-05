@@ -16,7 +16,7 @@ function basicAttack(combat, actor){
 
   if(dodged){
     return [{
-      subject: enemy.fighterId,
+      subject: enemy.uniqueID,
       resultType: 'dodge'
     }]
   }
@@ -24,7 +24,7 @@ function basicAttack(combat, actor){
   const magicAttack = actor.mods.contains(Mods.magicAttack)
   const damageInfo = {
     resultType: 'damage',
-    subject: enemy.fighterId,
+    subject: enemy.uniqueID,
     damageType: magicAttack ? 'magic' : 'phys',
     baseDamage: Math.ceil(actor.basePower * actor.stats.get(magicAttack ? 'magicPower' : 'physPower').value)
   }
