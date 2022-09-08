@@ -1,8 +1,8 @@
 import Users from '../collections/users.js'
 import { chooseOne } from '../../game/rando.js'
 import Bonuses from '../../game/bonuses/combined.js'
-import { getAdventurerOrbsData } from '../../game/adventurer.js'
 import Adventurers from '../collections/adventurers.js'
+import AdventurerInstance from '../../game/adventurerInstance.js'
 
 const FIRST_LEVEL_BONUSES = {
   fighter: 'strength',
@@ -38,7 +38,7 @@ export async function selectBonus(adventurerDoc, index){
 async function generateBonusOptions(adventurerDoc, level){
 
   const user = await Users.findByID(adventurerDoc.userID)
-  const orbsData = getAdventurerOrbsData(adventurerDoc)
+  const orbsData = new AdventurerInstance(adventurerDoc).orbs
   const classOptions = orbsData.classes.slice(0,3)
 
   for(let i = classOptions.length; i < 3; i++){

@@ -150,9 +150,9 @@ export default class DungeonRunInstance extends EventEmitter{
    */
   _updateStateAndPerformTicks(event){
 
-    event.adventurerState = this.adventurerInstance.currentState
+    event.adventurerState = this.adventurerInstance.state
 
-    if('hp' in this.adventurerInstance.currentState && isNaN(this.adventurerInstance.currentState.hp)){
+    if('hp' in this.adventurerInstance.state && isNaN(this.adventurerInstance.state.hp)){
       debugger
     }
 
@@ -160,6 +160,6 @@ export default class DungeonRunInstance extends EventEmitter{
       event.tickUpdates = performVenturingTicks(this.adventurerInstance, Math.floor(event.duration / 1000))
     }
 
-    this.doc.adventurerState = this.adventurerInstance.currentState
+    this.doc.adventurerState = this.adventurerInstance.state
   }
 }

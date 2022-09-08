@@ -2,9 +2,6 @@ import Page from '../page.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import fizzetch from '../../../fizzetch.js'
 import setupEditable from '../../loadout/setupEditable.js'
-import { adventurerLoadoutItem } from '../../../adventurer.js'
-import { OrbsDisplayStyle } from '../../orbRow.js'
-import { showLoader } from '../../../loader.js'
 import SimpleModal from '../../simpleModal.js'
 
 const HTML = `

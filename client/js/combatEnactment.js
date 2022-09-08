@@ -17,13 +17,11 @@ export default class CombatEnactment extends EventEmitter{
     this._fighterPane2 = fighterPane2
     this._combat = combat
 
-    const fighterInstance1 = toFighterInstance(combat.fighter1.data, combat.fighter1.startState)
-    const fighterInstance2 = toFighterInstance(combat.fighter2.data, combat.fighter2.startState)
-    this._fighterPane1.setFighter(fighterInstance1)
+    this._fighterPane1.setFighter(combat.fighter1.data, combat.fighter1.startState)
       .setOptions({
         inCombat: true
       })
-    this._fighterPane2.setFighter(fighterInstance2)
+    this._fighterPane2.setFighter(combat.fighter2.data, combat.fighter2.startState)
       .setOptions({
         inCombat: true
       })
@@ -51,13 +49,15 @@ export default class CombatEnactment extends EventEmitter{
     this._timeline = new Timeline(combat.timeline)
     this._prevEntryIndex = this._timeline.currentEntryIndex
     this._timeline.on('timechange', (oldTime, newTime) => {
-      if(this._prevEntryIndex !== this._timeline.currentEntryIndex){
+      if(this._prevEntryIndex > this._timeline.currentEntryIndex){
+        this._updatePanes(false)
+      }else if(this._prevEntryIndex !== this._timeline.currentEntryIndex){
         this._applyEntries(this._timeline.entries.slice(this._prevEntryIndex + 1, this._timeline.currentEntryIndex + 1))
-        this._prevEntryIndex = this._timeline.currentEntryIndex
       }else{
         this._fighterPane1.advanceTime(newTime - oldTime)
         this._fighterPane2.advanceTime(newTime - oldTime)
       }
+      this._prevEntryIndex = this._timeline.currentEntryIndex
     })
   }
 

@@ -15,15 +15,15 @@ export const COMBAT_BASE_TURN_TIME = 3000
  */
 export default class FighterInstance{
 
-  _baseFighterDef
-  _currentState
+  _fighterData
+  _state
   _itemInstances
 
   startState
 
   constructor(fighterData, initialState = {}){
     this._fighterData = fighterData
-    this.startState = { ...this._currentState }
+    this.startState = { ...this._state }
 
     const itemStates = initialState.itemStates ?? []
     this._itemInstances = []
@@ -35,8 +35,12 @@ export default class FighterInstance{
       }
     }
 
-    this._currentState = { ...initialState }
-    delete this._currentState.itemStates
+    this._state = {
+      timeSinceLastAction: 0,
+      ...initialState
+    }
+
+    delete this._state.itemStates
   }
 
   /**
@@ -89,20 +93,23 @@ export default class FighterInstance{
     throw 'Not implemented'
   }
 
+  /**
+   * @return {OrbsData}
+   */
   get orbs(){
-    return null
+    throw 'Not implemented'
   }
 
-  get currentState(){
-    const baseState = { ...this._currentState }
+  get state(){
+    const baseState = { ...this._state }
     baseState.itemStates = this._itemInstances.map(ii => {
-      if(ii){
+      if(!ii){
         return null
       }else{
-        return ii.currentState
+        return ii.state
       }
     })
-    return { ...this._currentState }
+    return { ...baseState }
   }
 
   get actionTime(){
@@ -110,7 +117,7 @@ export default class FighterInstance{
   }
 
   get timeUntilNextAction(){
-    return Math.ceil(Math.max(0, (this.actionTime - this._currentState.timeSinceLastAction)))
+    return Math.ceil(Math.max(0, (this.actionTime - this._state.timeSinceLastAction)))
   }
 
   get actionReady(){
@@ -118,16 +125,16 @@ export default class FighterInstance{
   }
 
   get hp(){
-    return Math.floor(this._currentState.hp ?? this.hpMax)
+    return Math.floor(this._state.hp ?? this.hpMax)
   }
 
   set hp(val){
     if(isNaN(val)){
       debugger
     }
-    this._currentState.hp = Math.max(0, Math.min(this.hpMax, val))
+    this._state.hp = Math.max(0, Math.min(this.hpMax, val))
     if(this.hp === this.hpMax){
-      this._currentState.hpRemainder = 0
+      this._state.hpRemainder = 0
     }
   }
 
@@ -144,11 +151,10 @@ export default class FighterInstance{
   }
 
   advanceTime(ms){
-    this._currentState.timeSinceLastAction += ms
+    this._state.timeSinceLastAction += ms
     this.itemInstances.forEach((itemInstance, index) => {
       if(itemInstance){
         itemInstance.advanceTime(ms)
-        this._currentState.itemStates[index] = itemInstance.state
       }
     })
     // TODO advance buff/debuff times
@@ -156,14 +162,14 @@ export default class FighterInstance{
 
   nextActiveItemIndex(){
     return this.itemInstances.findIndex(itemInstance => {
-      if(itemInstance.activeAbilityReady){
+      if(itemInstance?.activeAbilityReady){
         return true
       }
     })
   }
 
   resetTimeSinceLastAction(){
-    this._currentState.timeSinceLastAction = 0
+    this._state.timeSinceLastAction = 0
   }
 
   /**
@@ -171,8 +177,8 @@ export default class FighterInstance{
    * @param amount
    */
   changeHpWithDecimals(amount){
-    amount = amount + (this._currentState.hpRemainder ?? 0)
-    this._currentState.hpRemainder = amount % 1
+    amount = amount + (this._state.hpRemainder ?? 0)
+    this._state.hpRemainder = amount % 1
     this.hp += Math.floor(amount)
   }
 }

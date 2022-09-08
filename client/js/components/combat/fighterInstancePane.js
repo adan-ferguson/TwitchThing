@@ -1,5 +1,4 @@
 import AdventurerInstance from '../../../../game/adventurerInstance.js'
-import { adventurerLoadoutContents } from '../../adventurer.js'
 import { OrbsDisplayStyle } from '../orbRow.js'
 import Modal from '../modal.js'
 import AdventurerInfo from '../adventurer/adventurerInfo.js'
@@ -9,6 +8,9 @@ import FlyingTextEffect from '../effects/flyingTextEffect.js'
 import { all as Mods } from '../../../../game/mods/combined.js'
 import CustomAnimation from '../../customAnimation.js'
 import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
+import { adventurerLoadoutContents } from '../../adventurer.js'
+import { monsterDisplayName } from '../../monsterDisplayInfo.js'
+import { toFighterInstance } from '../../../../game/toFighterInstance.js'
 
 const HTML = `
 <div class="name"></div>
@@ -61,23 +63,28 @@ export default class FighterInstancePane extends HTMLElement{
     return this
   }
 
-  setFighter(fighterInstance){
-    this.fighterInstance = fighterInstance
-    this.querySelector('.name').textContent = fighterInstance.displayName
+  setFighter(fighterData, fighterState = {}){
 
+    const fighterInstance = toFighterInstance(fighterData, fighterState)
+    this.fighterInstance=  fighterInstance
+
+    let displayName
     if(fighterInstance instanceof AdventurerInstance){
-      this._loadoutEl.setContents(adventurerLoadoutContents(fighterInstance.adventurer))
+      this._loadoutEl.setContents(adventurerLoadoutContents(fighterInstance.fighterData))
+      displayName = fighterInstance.fighterData.name
     }else{
-      this._loadoutEl.setContents(monsterLoadoutContents(fighterInstance.monster))
+      this._loadoutEl.setContents(monsterLoadoutContents(fighterInstance.fighterData))
+      displayName = monsterDisplayName(fighterInstance)
     }
 
+    this.querySelector('.name').textContent = displayName
     this._orbRowEl.setData(fighterInstance.orbs)
     this._update(false)
     return this
   }
 
-  setState(state, animate = false){
-    this.fighterInstance.currentState = state
+  setState(newState, animate = false){
+    this.fighterInstance = toFighterInstance(this.fighterInstance.fighterData, newState)
     this._update(animate)
     return this
   }
@@ -180,7 +187,7 @@ export default class FighterInstancePane extends HTMLElement{
 
   _updateCooldowns(){
     this._actionBarEl.setTime(
-      this.fighterInstance._currentState.timeSinceLastAction,
+      this.fighterInstance._state.timeSinceLastAction,
       this.fighterInstance.timeUntilNextAction
     )
     // TODO: update cooldowns for items and effects

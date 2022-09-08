@@ -1,5 +1,3 @@
-import { getAdventurerOrbsData } from '../../game/adventurer.js'
-
 /**
  * Throw an http exception if this loadout transaction is invalid. The parameters are all
  * assumed to have been processed, i.e. they are a non-null adventurer, user, and item id array.
@@ -7,6 +5,8 @@ import { getAdventurerOrbsData } from '../../game/adventurer.js'
  * @param user [UserDoc]
  * @param itemIDs [string]
  */
+import AdventurerInstance from '../../game/adventurerInstance.js'
+
 export function commitAdventurerLoadout(adventurer, user, itemIDs){
 
   validateDuplicates(itemIDs)
@@ -77,7 +77,7 @@ function validateDuplicates(itemIDs){
 }
 
 function validateLoadout(adventurer){
-  const orbsData = getAdventurerOrbsData(adventurer)
+  const orbsData = new AdventurerInstance(adventurer).orbs
   if(!orbsData.isValid){
     throw { code: 403, error: 'Loadout orbs are invalid.' }
   }

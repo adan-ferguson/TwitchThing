@@ -1,7 +1,7 @@
 import { OrbsDisplayStyle } from '../orbRow.js'
-import { getAdventurerOrbsData } from '../../../../game/adventurer.js'
 import dateFormat from 'dateformat'
 import MonsterInstance from '../../../../game/monsterInstance.js'
+import AdventurerInstance from '../../../../game/adventurerInstance.js'
 
 const HTML = `
 <span style="text-align:center">
@@ -37,7 +37,7 @@ export default class AdventurerStatus extends HTMLElement{
         style: OrbsDisplayStyle.MAX_ONLY,
         showTooltips: false
       })
-      .setData(getAdventurerOrbsData(adventurer))
+      .setData(new AdventurerInstance(adventurer).orbs)
 
     this.setDungeonRun(adventurer.dungeonRun)
     return this

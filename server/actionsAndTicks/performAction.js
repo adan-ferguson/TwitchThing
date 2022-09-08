@@ -1,5 +1,4 @@
 import { all as Mods } from '../../game/mods/combined.js'
-import { gainHealth } from './common.js'
 
 export function performCombatAction(combat, actor){
   actor.resetTimeSinceLastAction()
@@ -20,7 +19,7 @@ function useItemAbility(combat, actor, index){
   }
 
   const results = []
-  itemInstance.active.actions.forEach(actionDef => {
+  itemInstance.activeAbility.actions.forEach(actionDef => {
     results.push(...doAction(combat, actor, actionDef))
   })
 
@@ -31,10 +30,17 @@ function useItemAbility(combat, actor, index){
   }
 }
 
+/**
+ * @param combat
+ * @param actor
+ * @param actionDef
+ * @returns {array}
+ */
 function doAction(combat, actor, actionDef){
   if(actionDef.type === 'attack'){
     return attack(combat, actor, actionDef)
   }
+  return []
 }
 
 function attack(combat, actor, actionDef = {}){
@@ -80,10 +86,7 @@ function attack(combat, actor, actionDef = {}){
   // TODO: triggers for "onDealDamage"
   // , lifesteal(actor, damageResult)
 
-  return {
-    ability: 'basicAttack',
-    results: [damageResult].filter(r => r)
-  }
+  return [damageResult]
 }
 
 function attemptCrit(actor){
@@ -96,7 +99,7 @@ function attemptDodge(actor){
 
 function takeDamage(subject, damageInfo){
   const blocked = Math.floor(damageInfo.baseDamage * subject.stats.get(damageInfo.damageType + 'Def').value)
-  const finalDamage = Math.min(subject.hp, damageInfo.baseDamage - blocked)
+  const finalDamage = Math.ceil(Math.min(subject.hp, damageInfo.baseDamage - blocked))
   subject.hp -= finalDamage
   // TODO: triggers for "onTakeDamage"
   return { ...damageInfo, blocked, finalDamage }

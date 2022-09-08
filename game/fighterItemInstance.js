@@ -43,8 +43,12 @@ export default class FighterItemInstance{
     return this.activeAbility && !this._state.cooldown
   }
 
+  get cooldownRemaining(){
+    return this._state.cooldown || 0
+  }
+
   get cooldown(){
-    return this.activeAbility?.cooldown
+    return this.activeAbility?.cooldown || 0
   }
 
   advanceTime(ms){

@@ -1,42 +1,46 @@
-import { getMonsterOrbsData } from '../../game/monster.js'
 import MonsterItemInstance from '../../game/monsterItemInstance.js'
 import StatsList from './components/stats/statsList.js'
 import { StatsDisplayStyle } from './statsDisplayInfo.js'
 import { wrap } from '../../game/utilFunctions.js'
+import MonsterInstance from '../../game/monsterInstance.js'
 
 export function monsterLoadoutContents(monster){
   return {
     getOrbsData: loadoutItems => {
-      return getMonsterOrbsData({ ...monster, mods: loadoutItems.map(li => li?.obj) })
+      const mi = new MonsterInstance({
+        ...monster,
+        items: loadoutItems.map(li => li?.obj)
+      })
+      return mi.orbsData
     },
     loadoutItems: monster.items.map(monsterLoadoutItem)
   }
 }
 
-export function monsterLoadoutItem(abilityDef){
-  if(!abilityDef){
+export function monsterLoadoutItem(itemDef){
+  if(!itemDef){
     return null
   }
-  const abilityInstance = new MonsterItemInstance(abilityDef)
+  const itemInstance = new MonsterItemInstance(itemDef)
   return {
-    obj: abilityInstance,
-    name: abilityInstance.name,
+    obj: itemInstance,
+    name: itemInstance.name,
     makeTooltip: () => {
 
       const tt = document.createElement('div')
 
-      if(abilityInstance.stats){
+      if(itemInstance.stats){
         const statsList = new StatsList()
         statsList.setOptions({
           showTooltips: false,
           statsDisplayStyle: StatsDisplayStyle.ADDITIONAL
         })
-        statsList.setStats(abilityInstance.stats)
+        statsList.setStats(itemInstance.stats)
         tt.appendChild(statsList)
       }
 
-      if(abilityInstance.description){
-        tt.appendChild(wrap(abilityInstance.description, {
+      if(itemInstance.description){
+        tt.appendChild(wrap(itemInstance.description, {
           class: 'subtitle'
         }))
       }

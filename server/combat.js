@@ -49,13 +49,13 @@ export async function generateCombat(fighterInstance1, fighterInstance2, params 
     duration: combat.duration,
     fighter1: {
       id: 1,
-      data: fighterInstance1.baseFighterDef,
+      data: fighterInstance1.fighterData,
       startState: fighterInstance1.startState,
       endState: combat.fighterEndState1
     },
     fighter2: {
       id: 2,
-      data: fighterInstance2.baseFighterDef,
+      data: fighterInstance2.fighterData,
       startState: fighterInstance2.startState,
       endState: combat.fighterEndState2
     },
@@ -98,8 +98,8 @@ class Combat{
     this.timeline = []
     this._addTimelineEntry()
     this._run()
-    this.fighterEndState1 = cleanupState(this.fighterInstance1.currentState)
-    this.fighterEndState2 = cleanupState(this.fighterInstance2.currentState)
+    this.fighterEndState1 = cleanupState(this.fighterInstance1.state)
+    this.fighterEndState2 = cleanupState(this.fighterInstance2.state)
     this.duration = this._currentTime
   }
 
@@ -191,8 +191,8 @@ class Combat{
       time: this._currentTime,
       actions: [],
       tickUpdates: [],
-      fighterState1: this.fighterInstance1.currentState,
-      fighterState2: this.fighterInstance2.currentState,
+      fighterState1: this.fighterInstance1.state,
+      fighterState2: this.fighterInstance2.state,
       ...options
     })
   }

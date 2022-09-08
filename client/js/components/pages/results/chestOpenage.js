@@ -1,7 +1,6 @@
 import CHESTS from '../../../chestDisplayInfo.js'
 import { fillArray, makeEl, wait } from '../../../../../game/utilFunctions.js'
 import LoadoutRow from '../../loadout/loadoutRow.js'
-import { adventurerLoadoutItem } from '../../../adventurer.js'
 
 const UNOPENED_HTML = `
 <span class="unopened">

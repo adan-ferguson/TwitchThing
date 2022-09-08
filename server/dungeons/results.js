@@ -1,6 +1,5 @@
 import Adventurers from '../collections/adventurers.js'
 import Users from '../collections/users.js'
-import { xpToLevel as advXpToLevel } from '../../game/adventurer.js'
 import { toArray } from '../../game/utilFunctions.js'
 import { generateLevelup } from '../adventurer/bonuses.js'
 import { emit } from '../socketServer.js'

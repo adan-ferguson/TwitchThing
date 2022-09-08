@@ -1,6 +1,6 @@
 import LoadoutRow from './loadoutRow.js'
-import { getAdventurerOrbsData } from '../../../../game/adventurer.js'
 import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
+import AdventurerInstance from '../../../../game/adventurerInstance.js'
 
 const HTML = `
 <div class="content-rows">
@@ -108,7 +108,11 @@ export default class Inventory extends HTMLElement{
 }
 
 function isCompatible(adventurer, itemInstance){
-  return getAdventurerOrbsData(adventurer, [itemInstance]).isValid
+  const ai = new AdventurerInstance({
+    ...adventurer,
+    items: [itemInstance]
+  })
+  return ai.isValid
 }
 
 const SORT_FUNCTIONS = {

@@ -1,7 +1,6 @@
 import { generateRandomChest } from './chests.js'
 import { chooseOne } from '../../game/rando.js'
 import { all as Monsters } from '../../game/monsters/combined.js'
-import { getMonsterStats, levelToXpReward } from '../../game/monster.js'
 import { uuid } from '../../game/utilFunctions.js'
 
 const monstersByFloor = {
