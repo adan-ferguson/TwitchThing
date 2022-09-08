@@ -2,7 +2,7 @@ import { attackAction } from '../../actions.js'
 
 export default {
   active: {
-    cooldown: 10,
+    cooldown: 10000,
     actions: [
       attackAction({
         damageMulti: 1.5

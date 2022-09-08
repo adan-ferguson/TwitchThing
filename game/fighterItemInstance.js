@@ -40,25 +40,29 @@ export default class FighterItemInstance{
   }
 
   get activeAbilityReady(){
-    return this.activeAbility && !this._state.cooldown
+    return this.activeAbility && !this._state.cooldownRemaining
   }
 
   get cooldownRemaining(){
-    return this._state.cooldown || 0
+    return this._state.cooldownRemaining || 0
   }
 
   get cooldown(){
     return this.activeAbility?.cooldown || 0
   }
 
+  setState(newState = {}){
+    this._state = { ...newState }
+  }
+
   advanceTime(ms){
-    if(this._state.cooldown){
-      this._state.cooldown = Math.max(0, this._state.cooldown - ms)
+    if(this._state.cooldownRemaining){
+      this._state.cooldownRemaining = Math.max(0, this._state.cooldownRemaining - ms)
     }
   }
 
   enterCooldown(){
-    this._state.cooldown = this.cooldown
+    this._state.cooldownRemaining = this.cooldown
   }
 
 }

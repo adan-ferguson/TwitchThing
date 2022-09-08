@@ -41,7 +41,8 @@ export function flash(el, color, duration = 250){
       { backgroundColor: color },
       { backgroundColor: originalBackgroundColor }
     ], {
-      duration
+      duration,
+      easing: 'ease-out'
     }).onfinish = () => {
       res()
     }

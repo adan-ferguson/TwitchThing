@@ -3,6 +3,7 @@ import SimpleModal from '../simpleModal.js'
 import { wrap } from '../../../../game/utilFunctions.js'
 
 const HTML = `
+<di-bar class="cooldown"></di-bar>
 <di-item-row></di-item-row>
 <div class="new-badge hidden">New!</div>
 `
@@ -19,6 +20,11 @@ export default class LoadoutRow extends HTMLElement{
     this.innerHTML = HTML
     this._newBadge = this.querySelector('.new-badge')
     this._itemRowEl = this.querySelector('di-item-row')
+    this._cooldownBarEl = this.querySelector('di-bar.cooldown')
+      .setOptions({
+        showLabel: false,
+        showValue: false
+      })
     this._tippy = tippy(this, {
       theme: 'light',
       allowHTML: true
@@ -78,6 +84,19 @@ export default class LoadoutRow extends HTMLElement{
     this._itemRowEl.setItem(loadoutItem)
     this._tippy.enable()
     this._tippy.setContent(this.tooltip)
+  }
+
+  update(){
+    const state = this.loadoutItem?.activeAbilityState
+    if(!state){
+      return
+    }
+    this.setAttribute('active-ability', state.ready ? 'ready' : 'recharging')
+    this._cooldownBarEl
+      .setOptions({
+        max: state.cooldown
+      })
+      .setValue(state.cooldown - state.cooldownRemaining)
   }
 
   _setupBlank(){

@@ -17,11 +17,11 @@ export default class CombatEnactment extends EventEmitter{
     this._fighterPane2 = fighterPane2
     this._combat = combat
 
-    this._fighterPane1.setFighter(combat.fighter1.data, combat.fighter1.startState)
+    this._fighterPane1.setFighter(toFighterInstance(combat.fighter1.data, combat.fighter1.startState))
       .setOptions({
         inCombat: true
       })
-    this._fighterPane2.setFighter(combat.fighter2.data, combat.fighter2.startState)
+    this._fighterPane2.setFighter(toFighterInstance(combat.fighter2.data, combat.fighter2.startState))
       .setOptions({
         inCombat: true
       })
@@ -91,7 +91,7 @@ export default class CombatEnactment extends EventEmitter{
   }
 
   _performAction(action){
-    this._getPaneFromFighterId(action.actor).displayActionPerformed(action.ability)
+    this._getPaneFromFighterId(action.actor).displayActionPerformed(action.ability, action.results)
     action.results.forEach(result => {
       this._getPaneFromFighterId(result.subject).displayResult(result)
     })

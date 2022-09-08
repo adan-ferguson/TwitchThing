@@ -1,7 +1,12 @@
 import Stats from './stats/stats.js'
+import { all as Mods } from './mods/combined.js'
 
 // Stupid
 new Stats()
+
+const STATE_DEFAULTS = {
+  timeSinceLastAction: 0
+}
 
 export const COMBAT_BASE_TURN_TIME = 3000
 
@@ -23,24 +28,18 @@ export default class FighterInstance{
 
   constructor(fighterData, initialState = {}){
     this._fighterData = fighterData
-    this.startState = { ...this._state }
 
-    const itemStates = initialState.itemStates ?? []
     this._itemInstances = []
     for(let i = 0; i < 8; i++){
       if(fighterData.items[i]){
-        this._itemInstances[i] = new this.ItemClass(fighterData.items[i], itemStates[i])
+        this._itemInstances[i] = new this.ItemClass(fighterData.items[i])
       }else{
         this._itemInstances[i] = null
       }
     }
 
-    this._state = {
-      timeSinceLastAction: 0,
-      ...initialState
-    }
-
-    delete this._state.itemStates
+    this.setState(initialState)
+    this.startState = { ...this._state }
   }
 
   /**
@@ -148,6 +147,27 @@ export default class FighterInstance{
 
   get hpPct(){
     return this.hp / this.hpMax
+  }
+
+  get basicAttackType(){
+    return this.mods.contains(Mods.magicAttack) ? 'magic' : 'phys'
+  }
+
+  /**
+   * Generally want to avoid using this. Do a full update of this fighter
+   * instance's state.
+   * @param newState
+   */
+  setState(newState){
+    const itemStates = newState.itemStates ?? []
+    this.itemInstances.forEach((itemInstance, i) => {
+      itemInstance?.setState(itemStates[i])
+    })
+    this._state = {
+      ...STATE_DEFAULTS,
+      ...newState
+    }
+    delete this._state.itemStates
   }
 
   advanceTime(ms){

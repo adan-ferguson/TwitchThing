@@ -3,14 +3,14 @@ import { OrbsDisplayStyle } from '../orbRow.js'
 import Modal from '../modal.js'
 import AdventurerInfo from '../adventurer/adventurerInfo.js'
 import MonsterInfo from '../monsterInfo.js'
-import { monsterLoadoutContents } from '../../monster.js'
 import FlyingTextEffect from '../effects/flyingTextEffect.js'
 import { all as Mods } from '../../../../game/mods/combined.js'
 import CustomAnimation from '../../customAnimation.js'
 import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
-import { adventurerLoadoutContents } from '../../adventurer.js'
-import { monsterDisplayName } from '../../monsterDisplayInfo.js'
 import { toFighterInstance } from '../../../../game/toFighterInstance.js'
+import { flash } from '../../animationHelper.js'
+import FighterItemDisplayInfo from '../../fighterItemDisplayInfo.js'
+import { fighterInstanceDisplayName } from '../../fighterInstance.js'
 
 const HTML = `
 <div class="name"></div>
@@ -25,6 +25,8 @@ const HTML = `
 </div>
 <di-loadout></di-loadout>
 `
+
+const TRIGGER_FLASH_COLOR = '#55FF99'
 
 export default class FighterInstancePane extends HTMLElement{
 
@@ -63,28 +65,17 @@ export default class FighterInstancePane extends HTMLElement{
     return this
   }
 
-  setFighter(fighterData, fighterState = {}){
-
-    const fighterInstance = toFighterInstance(fighterData, fighterState)
-    this.fighterInstance=  fighterInstance
-
-    let displayName
-    if(fighterInstance instanceof AdventurerInstance){
-      this._loadoutEl.setContents(adventurerLoadoutContents(fighterInstance.fighterData))
-      displayName = fighterInstance.fighterData.name
-    }else{
-      this._loadoutEl.setContents(monsterLoadoutContents(fighterInstance.fighterData))
-      displayName = monsterDisplayName(fighterInstance)
-    }
-
-    this.querySelector('.name').textContent = displayName
+  setFighter(fighterInstance){
+    this.fighterInstance = fighterInstance
+    this._loadoutEl.setContents(fighterInstance.itemInstances.map(ii => ii ? new FighterItemDisplayInfo(ii) : null))
+    this.querySelector('.name').textContent = fighterInstanceDisplayName(fighterInstance)
     this._orbRowEl.setData(fighterInstance.orbs)
     this._update(false)
     return this
   }
 
   setState(newState, animate = false){
-    this.fighterInstance = toFighterInstance(this.fighterInstance.fighterData, newState)
+    this.fighterInstance.setState(newState)
     this._update(animate)
     return this
   }
@@ -94,12 +85,18 @@ export default class FighterInstancePane extends HTMLElement{
     this._updateCooldowns()
   }
 
-  displayActionPerformed(ability){
-    // if(action.actionType === 'attack'){
-    //   if(action.lifesteal){
-    //     this.displayLifeGained(result.lifesteal)
-    //   }
-    // }
+  displayActionPerformed(ability, results){
+    if(ability === 'basicAttack'){
+      const statEl = this.statsList.querySelector(`di-stat-row[stat-key="${this.fighterInstance.basicAttackType}Power"]`)
+      if(statEl){
+        flash(statEl, TRIGGER_FLASH_COLOR, 500)
+      }
+      return
+    }
+    const loadoutRow = this._loadoutEl.getRow(ability)
+    if(loadoutRow){
+      flash(loadoutRow, TRIGGER_FLASH_COLOR, 500)
+    }
   }
 
   displayResult(result){
@@ -190,7 +187,7 @@ export default class FighterInstancePane extends HTMLElement{
       this.fighterInstance._state.timeSinceLastAction,
       this.fighterInstance.timeUntilNextAction
     )
-    // TODO: update cooldowns for items and effects
+    this._loadoutEl.updateAllRows()
   }
 
   _showFighterInfoModal(){

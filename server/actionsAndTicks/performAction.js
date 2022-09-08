@@ -62,7 +62,7 @@ function attack(combat, actor, actionDef = {}){
   }
 
   if(actionDef.damageType === 'auto'){
-    actionDef.damageType = actor.mods.contains(Mods.magicAttack) ? 'magic' : 'phys'
+    actionDef.damageType = actor.basicAttackType
   }
 
   let baseDamage = actor.basePower

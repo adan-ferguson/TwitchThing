@@ -11,8 +11,6 @@ export default class Loadout extends HTMLElement{
     editable: false
   }
 
-  _contents
-
   constructor(){
     super()
     this.innerHTML = HTML
@@ -33,9 +31,9 @@ export default class Loadout extends HTMLElement{
   }
 
   get orbsData(){
-    if(this._contents){
-      return this._contents.getOrbsData(this.loadoutItems)
-    }
+    // if(this._contents){
+    //   return this._contents.getOrbsData(this.loadoutItems)
+    // }
     return new OrbsData()
   }
 
@@ -62,6 +60,10 @@ export default class Loadout extends HTMLElement{
     return this.loadoutItems.map(loadoutItem => loadoutItem?.obj)
   }
 
+  getRow(i){
+    return this._rows[i]
+  }
+
   setOptions(options = {}){
     for (let key in options){
       this._options[key] = options[key]
@@ -71,8 +73,7 @@ export default class Loadout extends HTMLElement{
   }
 
   setContents(loadoutContents){
-    this._contents = loadoutContents
-    this._originalItems = [...loadoutContents.loadoutItems]
+    this._originalItems = [...loadoutContents]
     for(let i = 0; i < 8; i++){
       this._rows[i].setItem(this._originalItems[i])
     }
@@ -105,6 +106,12 @@ export default class Loadout extends HTMLElement{
   update(){
     this.classList.toggle('editable', this._options.editable)
     this.list.setRows(this._rows)
+  }
+
+  updateAllRows(){
+    this._rows.forEach(loadoutRow => {
+      loadoutRow.update()
+    })
   }
 }
 
