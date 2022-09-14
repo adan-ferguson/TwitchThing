@@ -57,14 +57,14 @@ export default class LoadoutRow extends HTMLElement{
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
 
-    tooltip.appendChild(wrap(this.loadoutItem.makeTooltip(true), {
+    tooltip.appendChild(wrap(this.loadoutItem.makeTooltip(), {
       class: 'tooltip-content',
       allowHTML: true
     }))
 
     if(this.loadoutItem.makeDetails){
-      tooltip.appendChild(wrap('Right-click for more info (not)', {
-        class: 'right-click'
+      tooltip.appendChild(wrap('Right-click for more info', {
+        class: 'right-click subtitle'
       }))
     }
 

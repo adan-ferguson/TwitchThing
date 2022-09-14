@@ -1,8 +1,7 @@
-import { itemDisplayName } from './item.js'
 import StatsList from './components/stats/statsList.js'
 import { StatsDisplayStyle } from './statsDisplayInfo.js'
-import { wrap } from '../../game/utilFunctions.js'
 import ItemDetails from './components/itemDetails.js'
+import ActiveAbilityDescription from './components/activeAbilityDescription.js'
 
 export default class FighterItemDisplayInfo{
 
@@ -15,7 +14,7 @@ export default class FighterItemDisplayInfo{
   }
 
   get displayName(){
-    return itemDisplayName(this.itemInstance)
+    return this.itemInstance.displayName
   }
 
   get isNew(){
@@ -37,6 +36,10 @@ export default class FighterItemDisplayInfo{
 
     const tt = document.createElement('div')
 
+    if(this.itemInstance.activeAbility){
+      tt.appendChild(new ActiveAbilityDescription(this.itemInstance))
+    }
+
     if(this.itemInstance.stats){
       const statsList = new StatsList()
       statsList.setOptions({
@@ -47,13 +50,13 @@ export default class FighterItemDisplayInfo{
       tt.appendChild(statsList)
     }
 
-    if(this.itemInstance.description){
-      tt.appendChild(wrap(this.itemInstance.description, {
-        class: 'subtitle'
-      }))
-    }
+    // if(this.itemInstance.description){
+    //   tt.appendChild(wrap(this.itemInstance.description, {
+    //     class: 'subtitle'
+    //   }))
+    // }
 
-    return tt
+    return tt.innerHTML
   }
 
   makeDetails(){

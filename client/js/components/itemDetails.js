@@ -3,39 +3,34 @@ import { StatsDisplayStyle } from '../statsDisplayInfo.js'
 
 const HTML = `
 <div class="inset-title"></div>
-<div class="top-part">
-  <div class="type-line"></div>
-  <div class="description subtitle"></div>
-</div>
+<!--<div class="top-part">-->
+<!--&lt;!&ndash;  <div class="type-line"></div>&ndash;&gt;-->
+<!--</div>-->
+<di-active-ability-description></di-active-ability-description>
 <di-stats-list></di-stats-list>
+<div class="item-description subtitle"></div>
 <di-orb-row></di-orb-row>
-<!--<di-stats-list></di-stats-list>-->
-<!--<div class='item-abilities'>&#45;&#45; TODO: add other abilities here &#45;&#45;</div>-->
 `
 
 export default class ItemDetails extends HTMLElement{
-
-  _loadoutRow
-  _statsText
-  _statsList
-  _abilitiesList
 
   constructor(itemInstance, options = {}){
     super()
     this.innerHTML = HTML
     this.querySelector('.inset-title').textContent = itemInstance.displayName
-    this.querySelector('.type-line').textContent = 'Standard Item'
+    // this.querySelector('.type-line').textContent = 'Standard Item'
     this.querySelector('di-orb-row')
       .setOptions({
         style: OrbsDisplayStyle.MAX_ONLY
       })
       .setData(itemInstance.orbs)
+    this.querySelector('di-active-ability-description').setItem(itemInstance)
     this.querySelector('di-stats-list')
       .setOptions({
         statsDisplayStyle: StatsDisplayStyle.ADDITIONAL
       })
       .setStats(itemInstance.stats)
-    this.querySelector('.description').textContent = itemInstance.description
+    this.querySelector('.item-description').textContent = itemInstance.description
   }
 }
 

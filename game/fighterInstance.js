@@ -32,7 +32,7 @@ export default class FighterInstance{
     this._itemInstances = []
     for(let i = 0; i < 8; i++){
       if(fighterData.items[i]){
-        this._itemInstances[i] = new this.ItemClass(fighterData.items[i])
+        this._itemInstances[i] = new this.ItemClass(fighterData.items[i], null, this)
       }else{
         this._itemInstances[i] = null
       }
@@ -47,6 +47,10 @@ export default class FighterInstance{
    */
   get fighterData(){
     return this._fighterData
+  }
+
+  get displayName(){
+    throw 'Not implemented'
   }
 
   get ItemClass(){
@@ -151,6 +155,14 @@ export default class FighterInstance{
 
   get basicAttackType(){
     return this.mods.contains(Mods.magicAttack) ? 'magic' : 'phys'
+  }
+
+  get magicPower(){
+    return this.stats.get('magicPower').value * this.basePower
+  }
+
+  get physPower(){
+    return this.stats.get('physPower').value * this.basePower
   }
 
   /**

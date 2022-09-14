@@ -3,7 +3,7 @@ import FighterItemInstance from './fighterItemInstance.js'
 
 export default class AdventurerItemInstance extends FighterItemInstance{
 
-  constructor(itemDef, state = null){
+  constructor(itemDef, state = null, owner = null){
 
     let itemData
     if(itemDef instanceof AdventurerItemInstance){
@@ -16,7 +16,7 @@ export default class AdventurerItemInstance extends FighterItemInstance{
       }
     }
 
-    super(itemData, state)
+    super(itemData, state, owner)
     this._itemDef = itemDef
   }
 

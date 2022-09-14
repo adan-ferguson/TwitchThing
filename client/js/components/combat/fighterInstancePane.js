@@ -7,10 +7,7 @@ import FlyingTextEffect from '../effects/flyingTextEffect.js'
 import { all as Mods } from '../../../../game/mods/combined.js'
 import CustomAnimation from '../../customAnimation.js'
 import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
-import { toFighterInstance } from '../../../../game/toFighterInstance.js'
 import { flash } from '../../animationHelper.js'
-import FighterItemDisplayInfo from '../../fighterItemDisplayInfo.js'
-import { fighterInstanceDisplayName } from '../../fighterInstance.js'
 
 const HTML = `
 <div class="name"></div>
@@ -26,7 +23,7 @@ const HTML = `
 <di-loadout></di-loadout>
 `
 
-const TRIGGER_FLASH_COLOR = '#55FF99'
+const TRIGGER_FLASH_COLOR = '#71e1e5'
 
 export default class FighterInstancePane extends HTMLElement{
 
@@ -67,8 +64,8 @@ export default class FighterInstancePane extends HTMLElement{
 
   setFighter(fighterInstance){
     this.fighterInstance = fighterInstance
-    this._loadoutEl.setContents(fighterInstance.itemInstances.map(ii => ii ? new FighterItemDisplayInfo(ii) : null))
-    this.querySelector('.name').textContent = fighterInstanceDisplayName(fighterInstance)
+    this._loadoutEl.setFighterInstance(fighterInstance)
+    this.querySelector('.name').textContent = fighterInstance.displayName
     this._orbRowEl.setData(fighterInstance.orbs)
     this._update(false)
     return this

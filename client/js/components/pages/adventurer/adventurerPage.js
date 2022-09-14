@@ -70,7 +70,8 @@ export default class AdventurerPage extends Page{
     return [this.adventurerID]
   }
 
-  async load(previousPage){
+  async load(){
+
     const { adventurer, user } = await this.fetchData()
 
     if(adventurer.dungeonRunID){

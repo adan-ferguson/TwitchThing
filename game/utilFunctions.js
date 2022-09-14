@@ -81,7 +81,8 @@ export function makeEl(options = {}){
   }
 
   if (options.class){
-    el.classList.add(...toArray(options.class))
+    const classArray = Array.isArray(options.class) ? options.class : options.class.split(' ')
+    el.classList.add(...classArray)
   }
 
   return el

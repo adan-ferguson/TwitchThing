@@ -65,8 +65,7 @@ function attack(combat, actor, actionDef = {}){
     actionDef.damageType = actor.basicAttackType
   }
 
-  let baseDamage = actor.basePower
-  baseDamage *= actor.stats.get(actionDef.damageType + 'Power').value
+  let baseDamage = actor[actionDef.damageType + 'Power']
   baseDamage *= actionDef.damageMulti
 
   const damageInfo = {

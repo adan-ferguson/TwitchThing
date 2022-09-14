@@ -65,7 +65,8 @@ di-loadout-row
       visibility: visible
 
   &[active-ability='ready']
-    border-color: #b5fcaf
+    background-color: #e9ffff
+    border-color: #71e1e5
     border-width: 2rem
 
 di-adventurer-loadout-editor-page
@@ -99,3 +100,46 @@ di-adventurer-loadout-editor-page
     font-size: 0.9em
     margin-top: 10rem
     font-style: italic
+
+di-active-ability-description
+  white-space: initial
+  display: flex
+  flex-direction: column
+  position: relative
+  border: 0.5rem solid #71e1e5
+  padding: 6rem 6rem 2rem
+  margin-bottom: 6rem
+  background-color: #e9ffff
+
+  .cooldown
+    float: right
+
+  .fa-hourglass
+    margin-right: -3rem
+
+  .name
+    font-weight: bold
+
+  .description
+    margin-top: 5rem
+    .action-row
+      display: flex
+      flex-direction: row
+      align-items: center
+
+    .damage-type
+      display: flex
+      flex-direction: row
+      align-items: center
+      margin: 0 5rem
+
+      img
+        height: 1em
+        margin-bottom: 4rem
+        margin-right: 2rem
+
+    .damage-type-magic
+      color: #4488FF
+
+    .damage-type-phys
+      color: #DD5533

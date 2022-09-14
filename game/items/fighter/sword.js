@@ -2,6 +2,7 @@ import { attackAction } from '../../actions.js'
 
 export default {
   active: {
+    displayName: 'Slash',
     cooldown: 10000,
     actions: [
       attackAction({
@@ -9,6 +10,10 @@ export default {
       })
     ]
   },
+  stats: {
+    physPower: '+10%'
+  },
+  description: 'This is a generic sword for testing.',
   tags: 'weapon',
   orbs: 1
 }

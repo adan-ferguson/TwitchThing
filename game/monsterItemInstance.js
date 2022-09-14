@@ -2,7 +2,7 @@ import FighterItemInstance from './fighterItemInstance.js'
 
 export default class MonsterItemInstance extends FighterItemInstance{
 
-  constructor(itemDef, state = null){
+  constructor(itemDef, state = null, owner = null){
 
     let itemData
     if(itemDef instanceof MonsterItemInstance){
@@ -12,6 +12,6 @@ export default class MonsterItemInstance extends FighterItemInstance{
       itemData = { ...itemDef }
     }
 
-    super(itemData, state)
+    super(itemData, state, owner)
   }
 }

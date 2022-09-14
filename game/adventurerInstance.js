@@ -37,6 +37,10 @@ export default class AdventurerInstance extends FighterInstance{
     super(adventurerDef, initialState)
   }
 
+  get displayName(){
+    return this.fighterData.name
+  }
+
   get uniqueID(){
     return this.fighterData._id.toString()
   }

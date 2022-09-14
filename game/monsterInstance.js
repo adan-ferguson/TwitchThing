@@ -5,6 +5,7 @@ import scaledValue from './scaledValue.js'
 import Stats from './stats/stats.js'
 import ModsCollection from './modsCollection.js'
 import OrbsData from './orbsData.js'
+import { toDisplayName } from './utilFunctions.js'
 
 const REWARD_MULTIPLIER = 0.17
 const POWER_MULTIPLIER = 0.19
@@ -51,6 +52,10 @@ export default class MonsterInstance extends FighterInstance{
     super(monsterData, initialState)
 
     this.monsterDef = monsterDef
+  }
+
+  get displayName(){
+    return this.monsterDef.displayName ?? toDisplayName(this.fighterData.name)
   }
 
   get uniqueID(){

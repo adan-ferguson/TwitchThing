@@ -1,4 +1,4 @@
-import AdventurerInstance from '../../../../game/adventurerInstance.js'
+import AdventurerInstance, { levelToXp, xpToLevel } from '../../../../game/adventurerInstance.js'
 import { OrbsDisplayStyle } from '../orbRow.js'
 import Modal from '../modal.js'
 import AdventurerInfo from './adventurerInfo.js'
@@ -50,8 +50,8 @@ export default class AdventurerPane extends HTMLElement{
   setAdventurer(adventurer){
     this.adventurer = adventurer
     this._name.textContent = adventurer.name
-    this.xpBar.setValue(this.adventurer.xp)
-    this.loadoutEl.setContents(adventurerLoadoutContents(this.adventurer))
+    this.xpBar.setValue(adventurer.xp)
+    this.loadoutEl.setFighterInstance(new AdventurerInstance(adventurer))
     this.update()
   }
 

@@ -5,7 +5,6 @@ import Page from '../page.js'
 import MonsterInstance from '../../../../../game/monsterInstance.js'
 import { makeEl } from '../../../../../game/utilFunctions.js'
 import CombatPage from '../combat/combatPage.js'
-import { monsterDisplayName } from '../../../monsterDisplayInfo.js'
 
 const HTML = `
 <div class="content-columns">
@@ -135,6 +134,6 @@ customElements.define('di-sim-page', SimPage)
 function makeMonsterRow(monsterInstance){
   return makeEl({
     class: ['monster-row', 'buttonish'],
-    text: `Lvl. ${monsterInstance.level} ${monsterDisplayName(monsterInstance)}`
+    text: `Lvl. ${monsterInstance.level} ${monsterInstance.displayName}`
   })
 }

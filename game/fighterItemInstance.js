@@ -1,13 +1,23 @@
 import Stats from './stats/stats.js'
+import { toDisplayName } from './utilFunctions.js'
 
 // Stupid
 new Stats()
 
 export default class FighterItemInstance{
 
-  constructor(itemData, state = null){
+  constructor(itemData, state = null, owner = null){
     this._itemData = { ...itemData }
     this._state = state ? { ...state } : {}
+    this.owner = owner
+  }
+
+  get displayName(){
+    return this.itemData.displayName ?? toDisplayName(this.itemData.name)
+  }
+
+  get description(){
+    return this.itemData.description ?? ''
   }
 
   get itemData(){

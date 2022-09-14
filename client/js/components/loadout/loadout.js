@@ -1,5 +1,6 @@
 import LoadoutRow from './loadoutRow.js'
 import OrbsData from '../../../../game/orbsData.js'
+import FighterItemDisplayInfo from '../../fighterItemDisplayInfo.js'
 
 const HTML = `
 <di-list></di-list>
@@ -78,6 +79,10 @@ export default class Loadout extends HTMLElement{
       this._rows[i].setItem(this._originalItems[i])
     }
     this.update()
+  }
+
+  setFighterInstance(fighterInstance){
+    this.setContents(fighterInstance.itemInstances.map(ii => ii ? new FighterItemDisplayInfo(ii) : null))
   }
 
   addItem(item){
