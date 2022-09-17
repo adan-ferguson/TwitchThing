@@ -240,7 +240,7 @@ export default class FighterInstance{
     return this._state.effects.find(effect => effect.type === effectType)
   }
 
-  multiplyNextTurnTime(amount){
+  multiplyNextActionTime(amount){
     this._state.nextActionTimeMultiplier *= amount
   }
 }

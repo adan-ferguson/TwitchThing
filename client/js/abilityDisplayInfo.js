@@ -23,6 +23,10 @@ export default class AbilityDisplayInfo{
     return this._ability.cooldown ?? null
   }
 
+  get actionTimeMultiplier(){
+    return this._ability?.actionTime ?? 1
+  }
+
   get triggerText(){
     return null
   }

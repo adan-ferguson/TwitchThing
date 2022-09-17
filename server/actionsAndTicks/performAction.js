@@ -13,18 +13,19 @@ export function performCombatAction(combat, actor){
 
 function useItemAbility(combat, actor, index){
   const itemInstance = actor.itemInstances[index]
-  if(!itemInstance?.ability){
+  const ability = itemInstance?.ability
+  if(!ability){
     throw 'Can not use item ability so I\'m not sure what\'s going on here'
   }
 
   const results = []
-  itemInstance.ability.actions.forEach(actionDef => {
+  ability.actions.forEach(actionDef => {
     results.push(...doAction(combat, actor, actionDef))
   })
 
   itemInstance.enterCooldown()
-  if(itemInstance.itemData.turnTime){
-    actor.multiplyNextTurnTime(itemInstance.itemData.turnTime)
+  if(ability.actionTime){
+    actor.multiplyNextActionTime(ability.actionTime)
   }
 
   return {
