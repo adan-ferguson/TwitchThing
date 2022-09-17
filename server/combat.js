@@ -9,8 +9,6 @@ import { toFighterInstance } from '../game/toFighterInstance.js'
 const START_TIME_DELAY = 1000
 const MAX_TIME = 120000
 
-const STATE_VALUES_TO_CLEAR = ['timeSinceLastAction']
-
 export async function generateCombatEvent(dungeonRun){
 
   const adventurerInstance = dungeonRun.adventurerInstance
@@ -92,14 +90,18 @@ export async function finishCombatEvent(dungeonRun, combatEvent){
 class Combat{
 
   constructor(fighterInstance1, fighterInstance2){
+    fighterInstance1.inCombat = true
+    fighterInstance2.inCombat = true
     this.fighterInstance1 = fighterInstance1
     this.fighterInstance2 = fighterInstance2
     this._currentTime = 0
     this.timeline = []
     this._addTimelineEntry()
     this._run()
-    this.fighterEndState1 = cleanupState(this.fighterInstance1.state)
-    this.fighterEndState2 = cleanupState(this.fighterInstance2.state)
+    fighterInstance1.inCombat = false
+    fighterInstance2.inCombat = false
+    this.fighterEndState1 = { ...this.fighterInstance1.state }
+    this.fighterEndState2 = { ...this.fighterInstance2.state }
     this.duration = this._currentTime
   }
 

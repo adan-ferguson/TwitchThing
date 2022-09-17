@@ -20,11 +20,12 @@ export default {
       name: 'Heavy Attack',
       ability: {
         type: 'active',
+        initialCooldown: 10000,
         cooldown: 10000,
         actionTime: 1.5,
         actions: [
           attackAction({
-            damageMulti: 1.6
+            damageMulti: 2
           })
         ]
       },

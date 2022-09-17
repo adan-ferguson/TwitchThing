@@ -1,4 +1,7 @@
 export function performCombatAction(combat, actor){
+  if(!actor.inCombat){
+    throw 'Actor is not in combat'
+  }
   actor.resetTimeSinceLastAction()
   const index = actor.nextActiveItemIndex()
   if(index > -1){

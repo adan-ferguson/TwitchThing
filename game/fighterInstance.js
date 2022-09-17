@@ -7,6 +7,7 @@ new Stats()
 const STATE_DEFAULTS = {
   timeSinceLastAction: 0,
   nextActionTimeMultiplier: 1,
+  inCombat: false,
   effects: []
 }
 
@@ -118,7 +119,8 @@ export default class FighterInstance{
   }
 
   get nextActionTime(){
-    return this._state.nextActionTimeMultiplier * COMBAT_BASE_TURN_TIME / this.stats.get('speed').value
+    const slowAmount = 1 / this.getEffects('slow').reduce((val, effect) => val * (1 - effect.amount), 1)
+    return this._state.nextActionTimeMultiplier * COMBAT_BASE_TURN_TIME * slowAmount / this.stats.get('speed').value
   }
 
   get timeUntilNextAction(){
@@ -167,6 +169,19 @@ export default class FighterInstance{
     return this.stats.get('physPower').value * this.basePower
   }
 
+  get inCombat(){
+    return this._state.inCombat
+  }
+
+  set inCombat(val){
+    this._state.inCombat = val
+    if(!val){
+      this._state.effects = this._state.effects.filter(effect => {
+        return effect.duration === 'combat' ? false : true
+      })
+    }
+  }
+
   /**
    * Generally want to avoid using this. Do a full update of this fighter
    * instance's state.
@@ -192,6 +207,9 @@ export default class FighterInstance{
       }
     })
     this._state.effects = this._state.effects.filter(effect => {
+      if(effect.duration === 'combat'){
+        return this.inCombat
+      }
       if(effect.duration > 0){
         effect.duration -= ms
       }
@@ -233,11 +251,19 @@ export default class FighterInstance{
   }
 
   gainEffect(effect){
+    if(effect.duration === 'combat' && !this.inCombat){
+      debugger
+      return
+    }
     this._state.effects.push(effect)
   }
 
+  getEffects(effectType){
+    return this._state.effects.filter(effect => effect.type === effectType)
+  }
+
   hasEffect(effectType){
-    return this._state.effects.find(effect => effect.type === effectType)
+    return this._state.effects.find(effect => effect.type === effectType) ? true : false
   }
 
   multiplyNextActionTime(amount){

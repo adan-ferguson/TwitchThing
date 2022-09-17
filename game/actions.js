@@ -11,10 +11,11 @@ export function attackAction(def){
  * An effect action grant one or both fighters an effect.
  * @param effect
  */
-export function effectAction(effect){
+export function effectAction(effect, options = {}){
   return {
     type: 'effect',
     affects: 'self', //'enemy'|'both'
+    ...options,
     effect
   }
 }

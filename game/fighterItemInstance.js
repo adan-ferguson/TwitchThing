@@ -63,6 +63,9 @@ export default class FighterItemInstance{
 
   setState(newState = {}){
     this._state = { ...newState }
+    if(this._state.cooldownRemaining === undefined && this.ability){
+      this._state.cooldownRemaining = this.ability.initialCooldown ?? 0
+    }
   }
 
   advanceTime(ms){
