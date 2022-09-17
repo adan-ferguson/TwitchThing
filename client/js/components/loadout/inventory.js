@@ -40,7 +40,7 @@ export default class Inventory extends HTMLElement{
   }
 
   filterFn = (el) => {
-    return isCompatible(this.adventurer, el.loadoutItem.obj)
+    return isCompatible(this.adventurer, el.loadoutItem.itemInstance)
   }
 
   setup(items, adventurer){
@@ -112,15 +112,15 @@ function isCompatible(adventurer, itemInstance){
     ...adventurer,
     items: [itemInstance]
   })
-  return ai.isValid
+  return ai.orbs.isValid
 }
 
 const SORT_FUNCTIONS = {
   date: null, // Default sorting is by date, so unsorted is just as good
   class: (rowA, rowB) => {
 
-    const orbsA = rowA.loadoutItem.obj.orbs
-    const orbsB = rowB.loadoutItem.obj.orbs
+    const orbsA = rowA.loadoutItem.orbs
+    const orbsB = rowB.loadoutItem.orbs
 
     const classesA = Object.keys(orbsA)
     const classesB = Object.keys(orbsB)
@@ -149,7 +149,7 @@ const SORT_FUNCTIONS = {
       return -1
     }
 
-    return rowA.loadoutItem.obj.displayName - rowB.loadoutItem.obj.displayName
+    return rowA.loadoutItem.displayName - rowB.loadoutItem.displayName
   }
 }
 

@@ -1,12 +1,17 @@
 import StatsList from './components/stats/statsList.js'
 import { StatsDisplayStyle } from './statsDisplayInfo.js'
 import ItemDetails from './components/itemDetails.js'
-import ActiveAbilityDescription from './components/activeAbilityDescription.js'
+import AbilityDescription from './components/abilityDescription.js'
+import { makeEl } from '../../game/utilFunctions.js'
 
 export default class FighterItemDisplayInfo{
 
   constructor(itemInstance){
     this.itemInstance = itemInstance
+  }
+
+  get obj(){
+    return this.itemInstance
   }
 
   get orbs(){
@@ -21,12 +26,13 @@ export default class FighterItemDisplayInfo{
     return this.itemInstance.itemDef.isNew
   }
 
-  get activeAbilityState(){
-    if(!this.itemInstance.activeAbility){
+  get abilityState(){
+    if(!this.itemInstance.ability){
       return null
     }
     return {
-      ready: this.itemInstance.activeAbilityReady,
+      type: this.itemInstance.ability.type,
+      ready: this.itemInstance.abilityReady,
       cooldown: this.itemInstance.cooldown,
       cooldownRemaining: this.itemInstance.cooldownRemaining
     }
@@ -34,10 +40,12 @@ export default class FighterItemDisplayInfo{
 
   makeTooltip(){
 
-    const tt = document.createElement('div')
+    const tt = makeEl({
+      class: 'tooltip-content'
+    })
 
-    if(this.itemInstance.activeAbility){
-      tt.appendChild(new ActiveAbilityDescription(this.itemInstance))
+    if(this.itemInstance.ability){
+      tt.appendChild(new AbilityDescription(this.itemInstance))
     }
 
     if(this.itemInstance.stats){
@@ -56,7 +64,7 @@ export default class FighterItemDisplayInfo{
     //   }))
     // }
 
-    return tt.innerHTML
+    return tt
   }
 
   makeDetails(){

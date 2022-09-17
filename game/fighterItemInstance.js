@@ -45,12 +45,12 @@ export default class FighterItemInstance{
   /**
    * @return {object}
    */
-  get activeAbility(){
-    return this.itemData.active
+  get ability(){
+    return this.itemData.ability
   }
 
-  get activeAbilityReady(){
-    return this.activeAbility && !this._state.cooldownRemaining
+  get abilityReady(){
+    return this.ability && !this._state.cooldownRemaining
   }
 
   get cooldownRemaining(){
@@ -58,7 +58,7 @@ export default class FighterItemInstance{
   }
 
   get cooldown(){
-    return this.activeAbility?.cooldown || 0
+    return this.ability?.cooldown || 0
   }
 
   setState(newState = {}){
@@ -73,6 +73,19 @@ export default class FighterItemInstance{
 
   enterCooldown(){
     this._state.cooldownRemaining = this.cooldown
+  }
+
+  shouldTrigger(triggerName){
+    if(!this.ability || this.ability.type !== 'triggered'){
+      return false
+    }
+    if(!this.ability.trigger === triggerName){
+      return false
+    }
+    if(!this.abilityReady){
+      return false
+    }
+    return true
   }
 
 }

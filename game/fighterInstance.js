@@ -5,7 +5,9 @@ import { all as Mods } from './mods/combined.js'
 new Stats()
 
 const STATE_DEFAULTS = {
-  timeSinceLastAction: 0
+  timeSinceLastAction: 0,
+  nextActionTimeMultiplier: 1,
+  effects: []
 }
 
 export const COMBAT_BASE_TURN_TIME = 3000
@@ -115,12 +117,12 @@ export default class FighterInstance{
     return { ...baseState }
   }
 
-  get actionTime(){
-    return COMBAT_BASE_TURN_TIME / this.stats.get('speed').value
+  get nextActionTime(){
+    return this._state.nextActionTimeMultiplier * COMBAT_BASE_TURN_TIME / this.stats.get('speed').value
   }
 
   get timeUntilNextAction(){
-    return Math.ceil(Math.max(0, (this.actionTime - this._state.timeSinceLastAction)))
+    return Math.ceil(Math.max(0, (this.nextActionTime - this._state.timeSinceLastAction)))
   }
 
   get actionReady(){
@@ -184,24 +186,40 @@ export default class FighterInstance{
 
   advanceTime(ms){
     this._state.timeSinceLastAction += ms
-    this.itemInstances.forEach((itemInstance, index) => {
+    this.itemInstances.forEach(itemInstance => {
       if(itemInstance){
         itemInstance.advanceTime(ms)
       }
     })
-    // TODO advance buff/debuff times
+    this._state.effects = this._state.effects.filter(effect => {
+      if(effect.duration > 0){
+        effect.duration -= ms
+      }
+      return effect.duration > 0
+    })
   }
 
   nextActiveItemIndex(){
     return this.itemInstances.findIndex(itemInstance => {
-      if(itemInstance?.activeAbilityReady){
+      if(itemInstance?.abilityReady && itemInstance?.ability.type === 'active'){
         return true
       }
     })
   }
 
+  triggeredAbilities(trigger){
+    const indexes = []
+    this.itemInstances.forEach((itemInstance, i) => {
+      if(itemInstance?.shouldTrigger(trigger)){
+        indexes.push(i)
+      }
+    })
+    return indexes
+  }
+
   resetTimeSinceLastAction(){
     this._state.timeSinceLastAction = 0
+    this._state.nextActionTimeMultiplier = 1
   }
 
   /**
@@ -212,5 +230,17 @@ export default class FighterInstance{
     amount = amount + (this._state.hpRemainder ?? 0)
     this._state.hpRemainder = amount % 1
     this.hp += Math.floor(amount)
+  }
+
+  gainEffect(effect){
+    this._state.effects.push(effect)
+  }
+
+  hasEffect(effectType){
+    return this._state.effects.find(effect => effect.type === effectType)
+  }
+
+  multiplyNextTurnTime(amount){
+    this._state.nextActionTimeMultiplier *= amount
   }
 }

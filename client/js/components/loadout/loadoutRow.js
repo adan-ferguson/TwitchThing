@@ -57,10 +57,7 @@ export default class LoadoutRow extends HTMLElement{
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
 
-    tooltip.appendChild(wrap(this.loadoutItem.makeTooltip(), {
-      class: 'tooltip-content',
-      allowHTML: true
-    }))
+    tooltip.appendChild(this.loadoutItem.makeTooltip())
 
     if(this.loadoutItem.makeDetails){
       tooltip.appendChild(wrap('Right-click for more info', {
@@ -87,11 +84,11 @@ export default class LoadoutRow extends HTMLElement{
   }
 
   update(){
-    const state = this.loadoutItem?.activeAbilityState
+    const state = this.loadoutItem?.abilityState
     if(!state){
       return
     }
-    this.setAttribute('active-ability', state.ready ? 'ready' : 'recharging')
+    this.setAttribute('ability', state.ready ? state.type : 'recharging')
     this._cooldownBarEl
       .setOptions({
         max: state.cooldown

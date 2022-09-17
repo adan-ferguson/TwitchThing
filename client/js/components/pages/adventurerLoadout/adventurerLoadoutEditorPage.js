@@ -3,6 +3,8 @@ import AdventurerPage from '../adventurer/adventurerPage.js'
 import fizzetch from '../../../fizzetch.js'
 import setupEditable from '../../loadout/setupEditable.js'
 import SimpleModal from '../../simpleModal.js'
+import FighterItemDisplayInfo from '../../../fighterItemDisplayInfo.js'
+import AdventurerItemInstance from '../../../../../game/adventurerItemInstance.js'
 
 const HTML = `
 <div class="content-columns">
@@ -79,7 +81,7 @@ export default class AdventurerLoadoutEditorPage extends Page{
     const { adventurer, items } = await this.fetchData()
     this.adventurer = adventurer
     this.inventory.setup(
-      Object.values(items).map(itemDef => adventurerLoadoutItem(itemDef)),
+      Object.values(items).map(itemDef => new FighterItemDisplayInfo(new AdventurerItemInstance(itemDef))),
       adventurer
     )
     this.adventurerPane.setAdventurer(adventurer)

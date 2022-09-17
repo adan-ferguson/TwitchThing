@@ -169,12 +169,7 @@ class Combat{
 
     const doAction = actor => {
       if(actor.actionReady){
-        const { ability, results } = performCombatAction(this, actor)
-        actions.push({
-          actor: actor.uniqueID,
-          ability,
-          results
-        })
+        actions.push(performCombatAction(this, actor))
       }
     }
 

@@ -93,7 +93,11 @@ export default class CombatEnactment extends EventEmitter{
   _performAction(action){
     this._getPaneFromFighterId(action.actor).displayActionPerformed(action.ability, action.results)
     action.results.forEach(result => {
-      this._getPaneFromFighterId(result.subject).displayResult(result)
+      if(result.results){
+        this._performAction(result)
+      }else{
+        this._getPaneFromFighterId(result.subject).displayResult(result)
+      }
     })
   }
 

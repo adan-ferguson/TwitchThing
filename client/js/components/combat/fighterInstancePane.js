@@ -23,7 +23,11 @@ const HTML = `
 <di-loadout></di-loadout>
 `
 
-const TRIGGER_FLASH_COLOR = '#71e1e5'
+const FLASH_COLORS = {
+  attack: '#9fff9f',
+  active: '#71e1e5',
+  triggered: '#ffa227'
+}
 
 export default class FighterInstancePane extends HTMLElement{
 
@@ -86,13 +90,13 @@ export default class FighterInstancePane extends HTMLElement{
     if(ability === 'basicAttack'){
       const statEl = this.statsList.querySelector(`di-stat-row[stat-key="${this.fighterInstance.basicAttackType}Power"]`)
       if(statEl){
-        flash(statEl, TRIGGER_FLASH_COLOR, 500)
+        flash(statEl, FLASH_COLORS.active, 500)
       }
       return
     }
     const loadoutRow = this._loadoutEl.getRow(ability)
     if(loadoutRow){
-      flash(loadoutRow, TRIGGER_FLASH_COLOR, 500)
+      flash(loadoutRow, FLASH_COLORS[loadoutRow.loadoutItem.abilityState.type], 500)
     }
   }
 

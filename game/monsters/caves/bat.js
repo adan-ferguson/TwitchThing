@@ -1,3 +1,5 @@
+import { dodgeAbility } from '../../abilities.js'
+
 export default {
   baseStats: {
     speed: '+5%',
@@ -7,10 +9,7 @@ export default {
   items: [
     {
       name: 'Fluttering',
-      description: 'It\'s juking and/or jiving!',
-      stats: {
-        dodgeChance: '25%'
-      }
+      ability: dodgeAbility(10000)
     }
   ]
 }

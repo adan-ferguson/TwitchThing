@@ -1,5 +1,3 @@
-import { all as Mods } from '../../game/mods/combined.js'
-
 export function performCombatAction(combat, actor){
   actor.resetTimeSinceLastAction()
   const index = actor.nextActiveItemIndex()
@@ -8,24 +6,30 @@ export function performCombatAction(combat, actor){
   }
   return {
     ability: 'basicAttack',
+    actor: actor.uniqueID,
     results: attack(combat, actor).filter(r => r)
   }
 }
 
 function useItemAbility(combat, actor, index){
   const itemInstance = actor.itemInstances[index]
-  if(!itemInstance?.activeAbility){
+  if(!itemInstance?.ability){
     throw 'Can not use item ability so I\'m not sure what\'s going on here'
   }
 
   const results = []
-  itemInstance.activeAbility.actions.forEach(actionDef => {
+  itemInstance.ability.actions.forEach(actionDef => {
     results.push(...doAction(combat, actor, actionDef))
   })
 
   itemInstance.enterCooldown()
+  if(itemInstance.itemData.turnTime){
+    actor.multiplyNextTurnTime(itemInstance.itemData.turnTime)
+  }
+
   return {
     ability: index,
+    actor: actor.uniqueID,
     results: results.filter(r => r)
   }
 }
@@ -40,6 +44,15 @@ function doAction(combat, actor, actionDef){
   if(actionDef.type === 'attack'){
     return attack(combat, actor, actionDef)
   }
+  if(actionDef.type === 'effect'){
+    const subject = actionDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
+    subject.gainEffect(actionDef.effect)
+    return [{
+      resultType: 'gainEffect',
+      effect: actionDef.effect,
+      subject: subject.uniqueID
+    }]
+  }
   return []
 }
 
@@ -51,14 +64,17 @@ function attack(combat, actor, actionDef = {}){
     ...actionDef
   }
 
+  const results = []
   const enemy = combat.getEnemyOf(actor)
+  results.push(...triggerBeforeAttacked(combat, enemy))
   const dodged = attemptDodge(enemy)
 
   if(dodged){
-    return [{
+    results.push({
       subject: enemy.uniqueID,
       resultType: 'dodge'
-    }]
+    })
+    return results
   }
 
   if(actionDef.damageType === 'auto'){
@@ -81,11 +97,12 @@ function attack(combat, actor, actionDef = {}){
   }
 
   const damageResult = takeDamage(enemy, damageInfo)
+  results.push(damageResult)
 
   // TODO: triggers for "onDealDamage"
   // , lifesteal(actor, damageResult)
 
-  return [damageResult]
+  return results
 }
 
 function attemptCrit(actor){
@@ -93,6 +110,9 @@ function attemptCrit(actor){
 }
 
 function attemptDodge(actor){
+  if(actor.hasEffect('dodge')){
+    return true
+  }
   return Math.random() + actor.stats.get('dodgeChance').value > 1
 }
 
@@ -102,6 +122,17 @@ function takeDamage(subject, damageInfo){
   subject.hp -= finalDamage
   // TODO: triggers for "onTakeDamage"
   return { ...damageInfo, blocked, finalDamage }
+}
+
+function triggerBeforeAttacked(combat, owner){
+  // TODO: this seems prone to infinite loops
+  const abilities = owner.triggeredAbilities('beforeAttacked')
+  const results = []
+  abilities.forEach(abilityIndex => {
+    results.push(useItemAbility(combat, owner, abilityIndex))
+  })
+  // TODO: triggered effects
+  return results
 }
 
 // function lifesteal(actor, damageResult){

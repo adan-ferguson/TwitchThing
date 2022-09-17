@@ -6,7 +6,7 @@ const HTML = `
 <!--<div class="top-part">-->
 <!--&lt;!&ndash;  <div class="type-line"></div>&ndash;&gt;-->
 <!--</div>-->
-<di-active-ability-description></di-active-ability-description>
+<di-ability-description></di-ability-description>
 <di-stats-list></di-stats-list>
 <div class="item-description subtitle"></div>
 <di-orb-row></di-orb-row>
@@ -24,7 +24,7 @@ export default class ItemDetails extends HTMLElement{
         style: OrbsDisplayStyle.MAX_ONLY
       })
       .setData(itemInstance.orbs)
-    this.querySelector('di-active-ability-description').setItem(itemInstance)
+    this.querySelector('di-ability-description').setItem(itemInstance)
     this.querySelector('di-stats-list')
       .setOptions({
         statsDisplayStyle: StatsDisplayStyle.ADDITIONAL

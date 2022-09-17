@@ -1,3 +1,8 @@
+$activeAbilityColor: #71e1e5
+$activeAbilityColorBg: #d9fdff
+$triggeredAbilityColor: #ffa227
+$triggeredAbilityColorBg: #fdefd1
+
 di-loadout
   flex: 0 0 300rem !important
 
@@ -60,13 +65,18 @@ di-loadout-row
     .bar-border
       border: none !important
 
-  &[active-ability='recharging']
+  &[ability=recharging]
     .cooldown
       visibility: visible
 
-  &[active-ability='ready']
-    background-color: #e9ffff
-    border-color: #71e1e5
+  &[ability=active]
+    background-color: $activeAbilityColorBg
+    border-color: $activeAbilityColor
+    border-width: 2rem
+
+  &[ability=triggered]
+    background-color: $triggeredAbilityColorBg
+    border-color: $triggeredAbilityColor
     border-width: 2rem
 
 di-adventurer-loadout-editor-page
@@ -101,15 +111,28 @@ di-adventurer-loadout-editor-page
     margin-top: 10rem
     font-style: italic
 
-di-active-ability-description
+di-ability-description
   white-space: initial
   display: flex
   flex-direction: column
   position: relative
-  border: 0.5rem solid #71e1e5
-  padding: 6rem 6rem 2rem
+  border: 0.5rem solid
+  padding: 3rem 7rem 3rem
   margin-bottom: 6rem
-  background-color: #e9ffff
+
+  &[ability-type=active]
+    border-color: $activeAbilityColor
+    background-color: $activeAbilityColorBg
+
+  &[ability-type=triggered]
+    border-color: $triggeredAbilityColor
+    background-color: $triggeredAbilityColorBg
+
+  .description
+    font-size: 0.94em
+    .action-description
+      display: flex
+      align-items: center
 
   .cooldown
     float: right
