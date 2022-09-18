@@ -3,13 +3,16 @@ import AbilityDisplayInfo from '../abilityDisplayInfo.js'
 import actionIcon from '../../assets/icons/action.svg'
 import tippy from 'tippy.js'
 
-const HTML = (actionTime, cooldown) => `
-<span class="description"></span>
-<div class="bot-row">
-  <span class="action-time subtitle${actionTime === 1 ? ' displaynone' : ''}"><img src="${actionIcon}">${actionTime * 100}%</span>
-  <span class="cooldown subtitle"><i class="fa-solid fa-hourglass"></i>${roundToFixed(cooldown / 1000, 2)}s</span>
-</div>
-`
+const HTML = (actionTime, cooldown, initialCooldown = 0) => {
+  return `
+  <span class="description"></span>
+  <div class="bot-row">
+    <span class="action-time${actionTime === 1 ? ' displaynone' : ''}"><img src="${actionIcon}">${actionTime * 100}%</span>
+    <span class="initial-cooldown${!initialCooldown ? ' displaynone' : ''}"><i class="fa-solid fa-lock"></i>${roundToFixed(initialCooldown / 1000, 2)}s</span>
+    <span class="cooldown${!cooldown ? ' displaynone' : ''}"><i class="fa-solid fa-hourglass"></i>${roundToFixed(cooldown / 1000, 2)}s</span>
+  </div>
+  `
+}
 
 export default class AbilityDescription extends HTMLElement{
 
@@ -30,11 +33,16 @@ export default class AbilityDescription extends HTMLElement{
     }
     this.setAttribute('ability-type', displayInfo.type)
 
-    this.innerHTML = HTML(displayInfo.actionTimeMultiplier, displayInfo.cooldown)
+    this.innerHTML = HTML(displayInfo.actionTimeMultiplier, displayInfo.cooldown, displayInfo.initialCooldown)
 
     tippy(this.querySelector('.action-time'), {
       theme: 'light',
       content: 'Next action time is multiplied by this'
+    })
+
+    tippy(this.querySelector('.initial-cooldown'), {
+      theme: 'light',
+      content: 'Initial cooldown of the ability when combat starts'
     })
 
     tippy(this.querySelector('.cooldown'), {

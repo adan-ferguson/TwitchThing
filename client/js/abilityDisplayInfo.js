@@ -1,6 +1,6 @@
 import physPowerIcon from '../assets/icons/physPower.svg'
 import magicPowerIcon from '../assets/icons/magicPower.svg'
-import { wrap } from '../../game/utilFunctions.js'
+import { roundToFixed, wrap } from '../../game/utilFunctions.js'
 
 export default class AbilityDisplayInfo{
   constructor(ability, owner = null){
@@ -23,6 +23,10 @@ export default class AbilityDisplayInfo{
     return this._ability.cooldown ?? null
   }
 
+  get initialCooldown(){
+    return this._ability.initialCooldown ?? null
+  }
+
   get actionTimeMultiplier(){
     return this._ability?.actionTime ?? 1
   }
@@ -39,6 +43,9 @@ export default class AbilityDisplayInfo{
       if(action.type === 'attack'){
         return attackDescription(action, this._owner)
       }
+      if(action.type === 'effect'){
+        return effectAction(action, this._owner)
+      }
     })
   }
 }
@@ -49,8 +56,13 @@ function attackDescription(action, owner){
   if(showFlat){
     amount = Math.ceil(amount * owner.physPower)
   }
-  const txt = `Attack for ${showFlat ? '' : 'x'}${damageWrap(action.damageType, amount)} damage`
-  return descWrap(txt)
+  return descWrap(`Attack for ${showFlat ? '' : 'x'}${damageWrap(action.damageType, amount)} damage.`)
+}
+
+function effectAction(action, owner){
+  if(action.effect.type === 'slow'){
+    return descWrap(`Slow ${targetString(action.affects)} by ${toPct(action.effect.amount)} ${durationString(action.effect.duration)}`)
+  }
 }
 
 function descWrap(txt){
@@ -68,4 +80,19 @@ function damageWrap(damageType, amount){
   ${amount}
 </span>
 `
+}
+
+function targetString(affectsVal, type = 0){
+  return affectsVal === 'enemy' ? 'the enemy' : 'yourself'
+}
+
+function toPct(amount){
+  return amount * 100 + '%'
+}
+
+function durationString(duration){
+  if(duration === 'combat'){
+    return 'until the end of combat.'
+  }
+  return `for ${roundToFixed(duration / 1000, 2)} seconds.`
 }
