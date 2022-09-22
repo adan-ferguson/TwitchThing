@@ -13,11 +13,12 @@ export default class ActionBar extends Bar{
   }
 
   setTime(elapsed, remaining){
-    const timeInSeconds = (Math.ceil(remaining / 100) / 10).toFixed(1) + 's'
+    const timeInSeconds = (remaining / 1000).toFixed(1)
+    const totalInSeconds = ((elapsed + remaining) / 1000).toFixed(1)
     this.setValue(elapsed)
     this.setOptions({
       max: elapsed + remaining,
-      label: timeInSeconds
+      label: timeInSeconds + 's / ' + totalInSeconds + 's'
     })
   }
 }

@@ -8,8 +8,7 @@ new Stats()
 const STATE_DEFAULTS = {
   timeSinceLastAction: 0,
   nextActionTimeMultiplier: 1,
-  inCombat: false,
-  effects: []
+  inCombat: false
 }
 
 export const COMBAT_BASE_TURN_TIME = 3000
@@ -42,8 +41,8 @@ export default class FighterInstance{
       }
     }
 
-    this.setState(initialState)
     this.effectsData = new EffectsData(this)
+    this.setState(initialState)
     this.startState = { ...this._state }
   }
 
@@ -102,8 +101,13 @@ export default class FighterInstance{
     const loadoutStatAffectors = this.itemInstances.filter(s => s).map(ii => ii.stats)
 
     // lol
-    const effectAffectors = this.effectsData.getByType('stat').map(effect => {
-      return effect.stats
+    const effectAffectors = []
+    this.effectsData.stateVal.forEach(effect => {
+      if(effect.stats){
+        for(let i = 0; i < (effect.stacks ?? 1); i++){
+          effectAffectors.push(effect.stats)
+        }
+      }
     })
 
     return new Stats([...baseStatAffectors, ...loadoutStatAffectors], effectAffectors)
@@ -132,6 +136,7 @@ export default class FighterInstance{
         return ii.state
       }
     })
+    baseState.effects = this.effectsData.stateVal
     return { ...baseState }
   }
 
@@ -193,11 +198,6 @@ export default class FighterInstance{
 
   set inCombat(val){
     this._state.inCombat = val
-    if(!val){
-      this._state.effects = this._state.effects.filter(effect => {
-        return effect.duration === 'combat' ? false : true
-      })
-    }
   }
 
   /**
@@ -210,11 +210,13 @@ export default class FighterInstance{
     this.itemInstances.forEach((itemInstance, i) => {
       itemInstance?.setState(itemStates[i])
     })
+    this.effectsData.stateVal = newState.effects
     this._state = {
       ...STATE_DEFAULTS,
       ...newState
     }
     delete this._state.itemStates
+    delete this._state.effects
   }
 
   advanceTime(ms){
@@ -224,11 +226,7 @@ export default class FighterInstance{
         itemInstance.advanceTime(ms)
       }
     })
-    this._state.effects.filter(effect => {
-      if(effect.duration > 0){
-        effect.duration -= ms
-      }
-    })
+    this.effectsData.advanceTime(ms)
   }
 
   nextActiveItemIndex(){
@@ -270,9 +268,5 @@ export default class FighterInstance{
 
   gainEffect(effect){
     this.effectsData.add(effect)
-  }
-
-  updateEffectsState(){
-    this._state.effects = this.effectsData.stateVal
   }
 }

@@ -19,11 +19,11 @@ export function effectAction(options = {}){
   }
 
   if(!action.effect){
-    throw 'Effect action is missing an effect'
+    console.error('Effect action is missing an effect', action)
   }
 
-  if(!action.effect.name){
-    throw 'Effect is missing a name'
+  if(!action.effect.id){
+    console.error('Effect is missing an id', action)
   }
 
   return action

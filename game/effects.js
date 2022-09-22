@@ -1,7 +1,8 @@
 export class EffectsData{
 
+  _effects = []
+
   constructor(fighterInstance){
-    this._effects = fighterInstance.state.effects
     this._fighterInstance = fighterInstance
   }
 
@@ -10,21 +11,36 @@ export class EffectsData{
     return [...this._effects]
   }
 
+  set stateVal(val){
+    this._effects = val ?? []
+  }
+
+  advanceTime(ms){
+    this.stateVal.forEach(effect => {
+      if(effect.duration > 0){
+        effect.duration -= ms
+      }
+    })
+  }
+
   add(effect){
 
+    effect = { ...effect }
     if(effect.stacking){
-      const existing = this.getById(effect.name)
-      if(existing){
+      const index = this.stateVal.findIndex(e => e.id === effect.id)
+      if(index >= 0){
+        const existing = this._effects[index]
         existing.duration = effect.duration
         if(effect.stacking !== 'replace'){
-          existing.stacks = (existing.stacks ?? 1) + 1
+          effect.stacks = (existing.stacks ?? 1) + 1
+          console.log('stacks', effect.stacks)
         }
+        this._effects[index] = effect
+        return
       }
-    }else{
-      this._effects.push({ ...effect })
     }
 
-    this._fighterInstance.updateEffectsState()
+    this._effects.push(effect)
   }
 
   /**
@@ -35,15 +51,15 @@ export class EffectsData{
     if(!id){
       return []
     }
-    return this._effects.find(effect => effect.name === id)
+    return this.stateVal.find(effect => effect.id === id)
   }
 
   getByType(effectType){
-    return this._effects.filter(effect => effect.type === effectType)
+    return this.stateVal.filter(effect => effect.type === effectType)
   }
 
   hasType(effectType){
-    return this._effects.find(effect => effect.type === effectType) ? true : false
+    return this.stateVal.find(effect => effect.type === effectType) ? true : false
   }
 
   /**

@@ -1,4 +1,3 @@
-import { dodgeEffect } from './effects.js'
 import { effectAction } from './actions.js'
 
 /**
@@ -14,7 +13,9 @@ export function dodgeAbility(cooldown){
     name: 'dodge',
     actions: [
       effectAction({
-        type: 'dodge'
+        effect: {
+          id: 'dodge'
+        }
       })
     ]
   }

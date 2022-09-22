@@ -53,7 +53,7 @@ export default class FighterInstancePane extends HTMLElement{
       iconsOnly: true,
       excluded: ['hpMax','speed']
     })
-    this._effectsListEl = this.querySelector('di-effect-list')
+    this._effectsListEl = this.querySelector('di-effects-list')
 
     this.querySelector('.top-section').addEventListener('click', e => {
       this._showFighterInfoModal()
@@ -77,6 +77,7 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   setState(newState, animate = false){
+    console.log('set state', newState)
     this.fighterInstance.setState(newState)
     this._update(animate)
     return this

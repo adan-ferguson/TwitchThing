@@ -24,7 +24,7 @@ export default class EffectsList extends HTMLElement{
       if(!shouldShow(effect)){
         return
       }
-      const key = effectKey(effect)
+      const key = effect.id
       if(effectRows[key]){
         effectRows[key].update(effect, animate)
         delete expiredEffectRows[key]
@@ -57,10 +57,4 @@ customElements.define('di-effects-list', EffectsList)
 function shouldShow(effect){
   // Some effects shouldn't show in the list, but unclear how to designate that
   return true
-}
-
-function effectKey(effect){
-  debugger
-  // Some effects stack and some don't, the effect key has to sort of reflect this
-  return effect.name
 }
