@@ -1,5 +1,5 @@
 import CustomAnimation from '../../customAnimation.js'
-import FlyingTextEffect from '../effects/flyingTextEffect.js'
+import FlyingTextEffect from '../visualEffects/flyingTextEffect.js'
 import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
 
 const innerHTML = `

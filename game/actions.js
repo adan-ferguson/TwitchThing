@@ -1,21 +1,30 @@
 export function attackAction(def){
   return {
-    type: 'attack',
     damageType: 'phys',
     damageMulti: 1,
-    ...def
+    ...def,
+    type: 'attack',
   }
 }
 
 /**
  * An effect action grant one or both fighters an effect.
- * @param effect
+ * @param options
  */
-export function effectAction(effect, options = {}){
-  return {
-    type: 'effect',
-    affects: 'self', //'enemy'|'both'
+export function effectAction(options = {}){
+  const action = {
+    affects: 'self', // 'enemy' | 'both'
     ...options,
-    effect
+    type: 'effect',
   }
+
+  if(!action.effect){
+    throw 'Effect action is missing an effect'
+  }
+
+  if(!action.effect.name){
+    throw 'Effect is missing a name'
+  }
+
+  return action
 }

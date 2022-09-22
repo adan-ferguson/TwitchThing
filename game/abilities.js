@@ -13,7 +13,9 @@ export function dodgeAbility(cooldown){
     cooldown,
     name: 'dodge',
     actions: [
-      effectAction(dodgeEffect())
+      effectAction({
+        type: 'dodge'
+      })
     ]
   }
 }

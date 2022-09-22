@@ -3,7 +3,7 @@ import { OrbsDisplayStyle } from '../orbRow.js'
 import Modal from '../modal.js'
 import AdventurerInfo from '../adventurer/adventurerInfo.js'
 import MonsterInfo from '../monsterInfo.js'
-import FlyingTextEffect from '../effects/flyingTextEffect.js'
+import FlyingTextEffect from '../visualEffects/flyingTextEffect.js'
 import { all as Mods } from '../../../../game/mods/combined.js'
 import CustomAnimation from '../../customAnimation.js'
 import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
@@ -15,9 +15,7 @@ const HTML = `
   <di-hp-bar></di-hp-bar>
   <di-action-bar></di-action-bar>
   <di-stats-list></di-stats-list>
-  <div>
-    Buff/debuff zone
-  </div>
+  <di-effects-list></di-effects-list>
   <di-orb-row class="fighter-orbs"></di-orb-row>
 </div>
 <di-loadout></di-loadout>
@@ -34,6 +32,7 @@ export default class FighterInstancePane extends HTMLElement{
   _orbRowEl
   _hpBarEl
   _loadoutEl
+  _effectsListEl
 
   _options = {
     fadeOutOnDefeat: true,
@@ -54,6 +53,7 @@ export default class FighterInstancePane extends HTMLElement{
       iconsOnly: true,
       excluded: ['hpMax','speed']
     })
+    this._effectsListEl = this.querySelector('di-effect-list')
 
     this.querySelector('.top-section').addEventListener('click', e => {
       this._showFighterInfoModal()
@@ -71,6 +71,7 @@ export default class FighterInstancePane extends HTMLElement{
     this._loadoutEl.setFighterInstance(fighterInstance)
     this.querySelector('.name').textContent = fighterInstance.displayName
     this._orbRowEl.setData(fighterInstance.orbs)
+    this._effectsListEl.setFighterInstance(fighterInstance)
     this._update(false)
     return this
   }
@@ -169,7 +170,6 @@ export default class FighterInstancePane extends HTMLElement{
       })
     }
     this.statsList.setStats(this.fighterInstance.stats, this.fighterInstance)
-
     this._updateCooldowns()
 
     if(!this.fighterInstance.hp && this._options.fadeOutOnDefeat){
@@ -189,6 +189,7 @@ export default class FighterInstancePane extends HTMLElement{
       this.fighterInstance.timeUntilNextAction
     )
     this._loadoutEl.updateAllRows()
+    this._effectsListEl.update()
   }
 
   _showFighterInfoModal(){

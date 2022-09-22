@@ -1,5 +1,6 @@
 import Stats from './stats/stats.js'
 import { all as Mods } from './mods/combined.js'
+import { EffectsData } from './effects.js'
 
 // Stupid
 new Stats()
@@ -42,6 +43,7 @@ export default class FighterInstance{
     }
 
     this.setState(initialState)
+    this.effectsData = new EffectsData(this)
     this.startState = { ...this._state }
   }
 
@@ -86,10 +88,25 @@ export default class FighterInstance{
   }
 
   /**
+   * @returns {array}
+   */
+  get baseStats(){
+    throw 'Not implemented'
+  }
+
+  /**
    * @returns {Stats}
    */
   get stats(){
-    throw 'Not implemented'
+    const baseStatAffectors = this.baseStats
+    const loadoutStatAffectors = this.itemInstances.filter(s => s).map(ii => ii.stats)
+
+    // lol
+    const effectAffectors = this.effectsData.getByType('stat').map(effect => {
+      return effect.stats
+    })
+
+    return new Stats([...baseStatAffectors, ...loadoutStatAffectors], effectAffectors)
   }
 
   /**
@@ -119,8 +136,9 @@ export default class FighterInstance{
   }
 
   get nextActionTime(){
-    const slowAmount = 1 / this.getEffects('slow').reduce((val, effect) => val * (1 - effect.amount), 1)
-    return this._state.nextActionTimeMultiplier * COMBAT_BASE_TURN_TIME * slowAmount / this.stats.get('speed').value
+    const slow = Math.min(0.99, this.stats.get('slow').value)
+    const speed = this.stats.get('speed').value
+    return this._state.nextActionTimeMultiplier * COMBAT_BASE_TURN_TIME / (speed * (1 - slow))
   }
 
   get timeUntilNextAction(){
@@ -206,14 +224,10 @@ export default class FighterInstance{
         itemInstance.advanceTime(ms)
       }
     })
-    this._state.effects = this._state.effects.filter(effect => {
-      if(effect.duration === 'combat'){
-        return this.inCombat
-      }
+    this._state.effects.filter(effect => {
       if(effect.duration > 0){
         effect.duration -= ms
       }
-      return effect.duration > 0
     })
   }
 
@@ -250,23 +264,15 @@ export default class FighterInstance{
     this.hp += Math.floor(amount)
   }
 
-  gainEffect(effect){
-    if(effect.duration === 'combat' && !this.inCombat){
-      debugger
-      return
-    }
-    this._state.effects.push(effect)
-  }
-
-  getEffects(effectType){
-    return this._state.effects.filter(effect => effect.type === effectType)
-  }
-
-  hasEffect(effectType){
-    return this._state.effects.find(effect => effect.type === effectType) ? true : false
-  }
-
   multiplyNextActionTime(amount){
     this._state.nextActionTimeMultiplier *= amount
+  }
+
+  gainEffect(effect){
+    this.effectsData.add(effect)
+  }
+
+  updateEffectsState(){
+    this._state.effects = this.effectsData.stateVal
   }
 }

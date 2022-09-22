@@ -114,7 +114,7 @@ function attemptCrit(actor){
 }
 
 function attemptDodge(actor){
-  if(actor.hasEffect('dodge')){
+  if(actor.effectsData.hasType('dodge')){
     return true
   }
   return Math.random() + actor.stats.get('dodgeChance').value > 1
@@ -135,7 +135,7 @@ function triggerBeforeAttacked(combat, owner){
   abilities.forEach(abilityIndex => {
     results.push(useItemAbility(combat, owner, abilityIndex))
   })
-  // TODO: triggered effects
+  // TODO: triggered visualEffects
   return results
 }
 

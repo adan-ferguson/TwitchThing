@@ -57,19 +57,8 @@ export default class AdventurerInstance extends FighterInstance{
     return adventurerLevelToPower(this.fighterData.level)
   }
 
-  get stats(){
-    const bonusStatAffectors = this.fighterData.bonuses
-      .map(bonusDef => new Bonus(bonusDef).stats)
-
-    const loadoutStatAffectors = this.fighterData.items.filter(itemDef => itemDef)
-      .map(itemDef => new AdventurerItemInstance(itemDef).stats)
-
-    // TODO: extraz
-    const stateAffectors = null
-    return new Stats([
-      ...bonusStatAffectors,
-      ...loadoutStatAffectors
-    ], stateAffectors)
+  get baseStats(){
+    return this.fighterData.bonuses.map(bonusDef => new Bonus(bonusDef).stats)
   }
 
   get mods(){

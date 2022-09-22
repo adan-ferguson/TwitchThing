@@ -23,10 +23,6 @@ export default class StatsList extends HTMLElement{
   _stats = new Stats()
   _owner = null
 
-  constructor(){
-    super()
-  }
-
   get stats(){
     return this._stats
   }

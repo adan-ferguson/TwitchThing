@@ -69,6 +69,10 @@ const defs = {
   speed: {
     type: StatType.MULTIPLIER
   },
+  slow: {
+    type: StatType.PERCENTAGE,
+    inverted: true
+  }
 }
 
 for(let key in defs){

@@ -1,7 +1,7 @@
 import Page from '../page.js'
 import '../../adventurer/adventurerPane.js'
 import fizzetch from '../../../fizzetch.js'
-import tippyCallout from '../../effects/tippyCallout.js'
+import tippyCallout from '../../visualEffects/tippyCallout.js'
 import { showLoader } from '../../../loader.js'
 import SimpleModal from '../../simpleModal.js'
 import AdventurerPreviousRunsPage from '../adventurerPreviousRuns/adventurerPreviousRunsPage.js'

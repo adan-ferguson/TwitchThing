@@ -1,6 +1,6 @@
 import { mergeOptionsObjects } from '../../../../../game/utilFunctions.js'
 import ZONES from '../../../../../game/zones.js'
-import tippyCallout from '../../effects/tippyCallout.js'
+import tippyCallout from '../../visualEffects/tippyCallout.js'
 
 const HTML = `
 <div class='flex-rows slider-entries'></div>

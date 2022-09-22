@@ -78,12 +78,8 @@ export default class MonsterInstance extends FighterInstance{
     return monsterLevelToPower(this.level)
   }
 
-  get stats(){
-    const loadoutStatAffectors = this.itemInstances
-      .filter(s => s)
-      .map(ii => ii.stats)
-    loadoutStatAffectors.push(this._fighterData.baseStats ?? {})
-    return new Stats(loadoutStatAffectors)
+  get baseStats(){
+    return [this._fighterData.baseStats] ?? []
   }
 
   get mods(){

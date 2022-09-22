@@ -128,6 +128,10 @@ class Combat{
       const tickUpdates = this._tick()
       const actions = this._doActions()
 
+      // Cleanup effects which are expired or finished or whatever
+      this.fighterInstance1.updateEffectsState()
+      this.fighterInstance2.updateEffectsState()
+
       if(actions.length || tickUpdates.length){
         this._addTimelineEntry({
           actions,
@@ -193,12 +197,4 @@ class Combat{
       ...options
     })
   }
-}
-
-function cleanupState(state){
-  const cleanedupState = { ...state }
-  STATE_VALUES_TO_CLEAR.forEach(key => {
-    delete cleanedupState[key]
-  })
-  return cleanedupState
 }

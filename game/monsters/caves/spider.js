@@ -9,16 +9,19 @@ export default {
         type: 'active',
         cooldown: 9000,
         actions: [
-          effectAction(
-            {
-              type: 'slow',
-              amount: 0.2,
-              duration: 'combat'
+          effectAction({
+            effect: {
+              // TODO: make this sharable somehow
+              id: 'spiderweb',
+              displayName: 'Webbed',
+              stacking: true,
+              duration: 'combat',
+              stats: {
+                slow: 0.2
+              }
             },
-            {
-              affects: 'enemy'
-            }
-          )
+            affects: 'enemy'
+          })
         ]
       }
     }

@@ -34,7 +34,7 @@ export function fadeIn(el){
   })
 }
 
-export function flash(el, color, duration = 250){
+export function flash(el, color = '#bbffcf', duration = 250){
   const originalBackgroundColor = el.style.backgroundColor || 'transparent'
   return new Promise(res => {
     el.animate([
