@@ -25,7 +25,15 @@ export class EffectsData{
 
   add(effect){
 
-    effect = { ...effect }
+    effect = {
+      duration: 1,
+      ...effect
+    }
+
+    if(parseInt(effect.duration)){
+      effect.initialDuration = effect.duration
+    }
+
     if(effect.stacking){
       const index = this.stateVal.findIndex(e => e.id === effect.id)
       if(index >= 0){
@@ -33,7 +41,6 @@ export class EffectsData{
         existing.duration = effect.duration
         if(effect.stacking !== 'replace'){
           effect.stacks = (existing.stacks ?? 1) + 1
-          console.log('stacks', effect.stacks)
         }
         this._effects[index] = effect
         return
@@ -72,7 +79,7 @@ export class EffectsData{
       }else if(effect.duration === 'perma'){
         return true
       }
-      return effect.duration > 0
+      return effect.duration >= 0
     })
   }
 }

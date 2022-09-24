@@ -22,6 +22,11 @@ di-adventurer-page
         color: white !important
         background-color: red !important
 
+di-adventurer-pane
+  .top-section
+    di-stats-list
+      flex-grow: 1 !important
+
 di-adventurer-pane, di-fighter-instance-pane
 
   .adventurer-orbs
@@ -48,10 +53,6 @@ di-adventurer-pane, di-fighter-instance-pane
         pointer-events: none
 
   .top-section
-
-    di-stats-list
-      flex-grow: 1 !important
-
     transition: background-color 0.2s
 
     &:hover

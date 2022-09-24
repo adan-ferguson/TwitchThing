@@ -57,3 +57,29 @@ di-fighter-instance-pane
   di-bar.action
     margin-top: 0.25em
     height: 1.25em
+
+  di-effects-list
+    display: flex
+    flex-direction: row
+    flex-wrap: wrap
+    flex-grow: 1 !important
+    align-items: start
+
+    di-effect-row
+      position: relative
+      display: flex
+      align-items: center
+      justify-content: center
+      min-width: 90rem
+
+      di-bar.di-bar
+        position: absolute
+        top: 0
+        left: 0
+        height: 100%
+        width: 100%
+        z-index: 1
+
+      .display-text
+        padding: 2rem 8rem 0
+        z-index: 2

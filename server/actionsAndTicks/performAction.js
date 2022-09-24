@@ -114,7 +114,7 @@ function attemptCrit(actor){
 }
 
 function attemptDodge(actor){
-  if(actor.effectsData.hasType('dodge')){
+  if(actor.effectsData.getById('dodge')){
     return true
   }
   return Math.random() + actor.stats.get('dodgeChance').value > 1

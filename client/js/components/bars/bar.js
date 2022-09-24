@@ -42,6 +42,7 @@ export default class Bar extends HTMLElement{
     this._barLabel = this.querySelector('.bar-label')
     this._barBackground = this.querySelector('.bar-background')
     this._barForeground = this.querySelector('.bar-foreground')
+    this._barBorder = this.querySelector('.bar-border')
     this.setValue(0)
   }
 
@@ -55,7 +56,9 @@ export default class Bar extends HTMLElement{
 
   setOptions(options){
     this._options = mergeOptionsObjects(this._options, options)
-    this._update()
+    this._barLabel.classList.toggle('hidden', !this._options.showLabel)
+    this._updateLabel()
+    this._updateColors()
     return this
   }
 
@@ -106,7 +109,7 @@ export default class Bar extends HTMLElement{
       this._barBackground.classList.add('hidden')
       this._barBackground.style.width = `${this._pct(val) * 100}%`
       this._barForeground.style.width = `${this._pct(val) * 100}%`
-      this._barForeground.style.backgroundColor = this._options.color
+      this._updateColors()
     }else {
       await this._animateToValue(val)
     }
@@ -201,9 +204,9 @@ export default class Bar extends HTMLElement{
     new FlyingTextEffect(this, text, options)
   }
 
-  _update(){
-    this._barLabel.classList.toggle('hidden', !this._options.showLabel)
-    this._updateLabel()
+  _updateColors(){
+    this._barBorder.style.borderColor = this._options.color
+    this._barForeground.style.backgroundColor = this._options.color
   }
 
   _updateLabel(valOverride){

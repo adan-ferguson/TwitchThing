@@ -16,8 +16,9 @@ export default {
               displayName: 'Webbed',
               stacking: true,
               duration: 'combat',
+              buff: false,
               stats: {
-                slow: 0.2
+                slow: 2000
               }
             },
             affects: 'enemy'

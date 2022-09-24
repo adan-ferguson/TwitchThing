@@ -70,8 +70,9 @@ const defs = {
     type: StatType.MULTIPLIER
   },
   slow: {
-    type: StatType.PERCENTAGE,
-    inverted: true
+    type: StatType.FLAT,
+    inverted: true,
+    minValue: 0
   }
 }
 

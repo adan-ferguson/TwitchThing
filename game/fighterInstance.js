@@ -141,9 +141,9 @@ export default class FighterInstance{
   }
 
   get nextActionTime(){
-    const slow = Math.min(0.99, this.stats.get('slow').value)
+    const slow = this.stats.get('slow').value
     const speed = this.stats.get('speed').value
-    return this._state.nextActionTimeMultiplier * COMBAT_BASE_TURN_TIME / (speed * (1 - slow))
+    return slow + this._state.nextActionTimeMultiplier * COMBAT_BASE_TURN_TIME / speed
   }
 
   get timeUntilNextAction(){

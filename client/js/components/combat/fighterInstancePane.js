@@ -77,7 +77,6 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   setState(newState, animate = false){
-    console.log('set state', newState)
     this.fighterInstance.setState(newState)
     this._update(animate)
     return this

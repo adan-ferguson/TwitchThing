@@ -37,7 +37,7 @@ export default class AbilityDisplayInfo{
 
   get actionDescriptions(){
     if(this._ability.name === 'dodge'){
-      return descWrap('Automatically dodge an enemy action.')
+      return descWrap('Automatically dodge an enemy attack.')
     }
     return this._ability.actions.map(action => {
       if(action.type === 'attack'){
@@ -60,8 +60,8 @@ function attackDescription(action, owner){
 }
 
 function effectAction(action, owner){
-  if(action.effect.type === 'slow'){
-    return descWrap(`Slow ${targetString(action.affects)} by ${toPct(action.effect.amount)} ${durationString(action.effect.duration)}`)
+  if(action.effect.id === 'spiderweb'){
+    return descWrap(`Slows ${targetString(action.affects)}, increasing their turn time by ${action.effect.stats.slow/1000}s. Lasts ${durationString(action.effect.duration)}`)
   }
 }
 

@@ -1,4 +1,4 @@
-import { fadeOut, flash } from '../../animationHelper.js'
+import { fadeOut } from '../../animationHelper.js'
 import EffectRow from './effectRow.js'
 
 export default class EffectsList extends HTMLElement{
@@ -39,8 +39,6 @@ export default class EffectsList extends HTMLElement{
   _addRow(key, effect, animate){
     const effectRow = new EffectRow(key, effect, animate)
     this.appendChild(effectRow)
-    // color should be based on if buff/debuff?
-    flash(effectRow)
     return effectRow
   }
 
@@ -55,6 +53,8 @@ export default class EffectsList extends HTMLElement{
 customElements.define('di-effects-list', EffectsList)
 
 function shouldShow(effect){
-  // Some effects shouldn't show in the list, but unclear how to designate that
+  if(!effect.duration){
+    return false
+  }
   return true
 }
