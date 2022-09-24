@@ -7,6 +7,13 @@ export function attackAction(def){
   }
 }
 
+export function timeAction(ms){
+  return {
+    type: 'time',
+    ms
+  }
+}
+
 /**
  * An effect action grant one or both fighters an effect.
  * @param options

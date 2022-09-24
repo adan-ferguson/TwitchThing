@@ -1,4 +1,4 @@
-import { attackAction } from '../../actions.js'
+import { attackAction, timeAction } from '../../actions.js'
 
 export default {
   description: 'Like a small lizard person.',
@@ -8,11 +8,11 @@ export default {
       ability: {
         type: 'active',
         cooldown: 10000,
-        actionTime: 0.5,
         actions: [
           attackAction({
             damageMulti: 0.8
-          })
+          }),
+          timeAction(1500)
         ]
       }
     },
@@ -22,11 +22,11 @@ export default {
         type: 'active',
         initialCooldown: 10000,
         cooldown: 10000,
-        actionTime: 1.5,
         actions: [
           attackAction({
             damageMulti: 2
-          })
+          }),
+          timeAction(-3000)
         ]
       },
     }

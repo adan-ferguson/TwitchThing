@@ -46,6 +46,9 @@ export default class AbilityDisplayInfo{
       if(action.type === 'effect'){
         return effectAction(action, this._owner)
       }
+      if(action.type === 'time'){
+        return timeAction(action.ms)
+      }
     })
   }
 }
@@ -63,6 +66,13 @@ function effectAction(action, owner){
   if(action.effect.id === 'spiderweb'){
     return descWrap(`Slows ${targetString(action.affects)}, increasing their turn time by ${action.effect.stats.slow/1000}s. Lasts ${durationString(action.effect.duration)}`)
   }
+}
+
+function timeAction(ms){
+  if(ms > 0){
+    return descWrap(`User's next turn is ${roundToFixed(ms/1000, 2)}s faster.`)
+  }
+  return descWrap(`User's next turn is ${roundToFixed(ms/-1000, 2)}s slower.`)
 }
 
 function descWrap(txt){
@@ -84,10 +94,6 @@ function damageWrap(damageType, amount){
 
 function targetString(affectsVal, type = 0){
   return affectsVal === 'enemy' ? 'the enemy' : 'yourself'
-}
-
-function toPct(amount){
-  return amount * 100 + '%'
 }
 
 function durationString(duration){

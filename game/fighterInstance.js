@@ -7,7 +7,6 @@ new Stats()
 
 const STATE_DEFAULTS = {
   timeSinceLastAction: 0,
-  nextActionTimeMultiplier: 1,
   inCombat: false
 }
 
@@ -143,7 +142,7 @@ export default class FighterInstance{
   get nextActionTime(){
     const slow = this.stats.get('slow').value
     const speed = this.stats.get('speed').value
-    return slow + this._state.nextActionTimeMultiplier * COMBAT_BASE_TURN_TIME / speed
+    return slow + COMBAT_BASE_TURN_TIME / speed
   }
 
   get timeUntilNextAction(){
@@ -249,7 +248,6 @@ export default class FighterInstance{
 
   resetTimeSinceLastAction(){
     this._state.timeSinceLastAction = 0
-    this._state.nextActionTimeMultiplier = 1
   }
 
   /**
@@ -262,8 +260,8 @@ export default class FighterInstance{
     this.hp += Math.floor(amount)
   }
 
-  multiplyNextActionTime(amount){
-    this._state.nextActionTimeMultiplier *= amount
+  adjustNextActionTime(ms){
+    this._state.timeSinceLastAction += ms
   }
 
   gainEffect(effect){

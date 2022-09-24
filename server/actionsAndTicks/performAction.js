@@ -27,9 +27,6 @@ function useItemAbility(combat, actor, index){
   })
 
   itemInstance.enterCooldown()
-  if(ability.actionTime){
-    actor.multiplyNextActionTime(ability.actionTime)
-  }
 
   return {
     ability: index,
@@ -47,8 +44,7 @@ function useItemAbility(combat, actor, index){
 function doAction(combat, actor, actionDef){
   if(actionDef.type === 'attack'){
     return attack(combat, actor, actionDef)
-  }
-  if(actionDef.type === 'effect'){
+  }else if(actionDef.type === 'effect'){
     const subject = actionDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
     subject.gainEffect(actionDef.effect)
     return [{
@@ -56,6 +52,8 @@ function doAction(combat, actor, actionDef){
       effect: actionDef.effect,
       subject: subject.uniqueID
     }]
+  }else if(actionDef.type === 'time'){
+    actor.adjustNextActionTime(actionDef.ms)
   }
   return []
 }
