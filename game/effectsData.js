@@ -1,3 +1,15 @@
+/*
+
+Effect params:
+id: string (required),
+displayName: string,
+stacking: true | 'replace' | ,
+duration: 'combat' | 'dungeon' | integer,
+buff: bool,
+mods: [],
+stats: {object}
+ */
+
 export class EffectsData{
 
   _effects = []
@@ -8,15 +20,15 @@ export class EffectsData{
 
   get stateVal(){
     this._cleanup()
-    return [...this._effects]
+    return JSON.parse(JSON.stringify(this._effects))
   }
 
   set stateVal(val){
-    this._effects = val ?? []
+    this._effects = JSON.parse(JSON.stringify(val ?? []))
   }
 
   advanceTime(ms){
-    this.stateVal.forEach(effect => {
+    this._effects.forEach(effect => {
       if(effect.duration > 0){
         effect.duration -= ms
       }
@@ -35,7 +47,7 @@ export class EffectsData{
     }
 
     if(effect.stacking){
-      const index = this.stateVal.findIndex(e => e.id === effect.id)
+      const index = this._effects.findIndex(e => e.id === effect.id)
       if(index >= 0){
         const existing = this._effects[index]
         existing.duration = effect.duration
@@ -76,7 +88,7 @@ export class EffectsData{
     this._effects = this._effects.filter(effect => {
       if(effect.duration === 'combat'){
         return this._fighterInstance.inCombat
-      }else if(effect.duration === 'perma'){
+      }else if(effect.duration === 'dungeon'){
         return true
       }
       return effect.duration >= 0

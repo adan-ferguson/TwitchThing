@@ -170,6 +170,7 @@ export default class FighterInstancePane extends HTMLElement{
       })
     }
     this.statsList.setStats(this.fighterInstance.stats, this.fighterInstance)
+    this._effectsListEl.update()
     this._updateCooldowns()
 
     if(!this.fighterInstance.hp && this._options.fadeOutOnDefeat){
@@ -189,7 +190,7 @@ export default class FighterInstancePane extends HTMLElement{
       this.fighterInstance.timeUntilNextAction
     )
     this._loadoutEl.updateAllRows()
-    this._effectsListEl.update()
+    this._effectsListEl.updateDurations()
   }
 
   _showFighterInfoModal(){

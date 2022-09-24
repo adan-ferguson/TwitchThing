@@ -1,4 +1,5 @@
 import { effectAction } from './actions.js'
+import { dodgeEffect } from './effects/dodge.js'
 
 /**
  * An ability that lets you automatically dodge the enemy's next ability.
@@ -13,9 +14,7 @@ export function dodgeAbility(cooldown){
     name: 'dodge',
     actions: [
       effectAction({
-        effect: {
-          id: 'dodge'
-        }
+        effect: dodgeEffect()
       })
     ]
   }

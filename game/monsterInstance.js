@@ -82,14 +82,6 @@ export default class MonsterInstance extends FighterInstance{
     return [this._fighterData.baseStats] ?? []
   }
 
-  get mods(){
-    const loadoutMods = this.itemInstances
-      .filter(m => m)
-      .map(ii => ii.mods)
-    const stateMods = []
-    return new ModsCollection(...loadoutMods, ...stateMods)
-  }
-
   get orbs(){
     return new OrbsData()
   }

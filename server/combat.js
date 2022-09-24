@@ -2,7 +2,7 @@ import Combats from './collections/combats.js'
 import { randomOrder } from '../game/rando.js'
 import { generateMonster } from './dungeons/monsters.js'
 import MonsterInstance from '../game/monsterInstance.js'
-import { performCombatAction } from './actionsAndTicks/performAction.js'
+import { takeCombatTurn } from './actionsAndTicks/performAction.js'
 import { performCombatTick } from './actionsAndTicks/performCombatTick.js'
 import { toFighterInstance } from '../game/toFighterInstance.js'
 
@@ -173,7 +173,7 @@ class Combat{
 
     const doAction = actor => {
       if(actor.actionReady){
-        actions.push(performCombatAction(this, actor))
+        actions.push(takeCombatTurn(this, actor))
       }
     }
 

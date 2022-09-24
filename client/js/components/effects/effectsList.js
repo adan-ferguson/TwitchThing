@@ -8,6 +8,10 @@ export default class EffectsList extends HTMLElement{
     this.update(false)
   }
 
+  updateDurations(){
+    this.update()
+  }
+
   update(animate = true){
 
     if(!this._fighterInstance){
@@ -26,8 +30,10 @@ export default class EffectsList extends HTMLElement{
       }
       const key = effect.id
       if(effectRows[key]){
-        effectRows[key].update(effect, animate)
-        delete expiredEffectRows[key]
+        if(Number.isInteger(effect.duration) && effect.duration >= 0){
+          effectRows[key].update(effect, animate)
+          delete expiredEffectRows[key]
+        }
       }else{
         effectRows[key] = this._addRow(key, effect, animate)
       }
@@ -43,9 +49,6 @@ export default class EffectsList extends HTMLElement{
   }
 
   async _removeRow(row, animate){
-    if(animate){
-      await fadeOut(row)
-    }
     row.remove()
   }
 }
@@ -53,7 +56,7 @@ export default class EffectsList extends HTMLElement{
 customElements.define('di-effects-list', EffectsList)
 
 function shouldShow(effect){
-  if(!effect.duration){
+  if(effect.duration <= 0){
     return false
   }
   return true

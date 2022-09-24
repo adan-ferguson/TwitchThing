@@ -1,4 +1,5 @@
 import { flash } from '../../animationHelper.js'
+import { toDisplayName } from '../../../../game/utilFunctions.js'
 
 const HTML = `
 <di-bar></di-bar>
@@ -27,7 +28,7 @@ export default class EffectRow extends HTMLElement{
   update(effect, animate = false){
     
     this._cachedEffect = effect
-    let txt = `${effect.displayName}`
+    let txt = `${effect.displayName ?? toDisplayName(effect.id)}`
     if(effect.stacks >= 2){
       txt += ` x${effect.stacks}`
     }

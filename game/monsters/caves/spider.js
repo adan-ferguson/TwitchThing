@@ -1,4 +1,5 @@
 import { effectAction } from '../../actions.js'
+import { webbedEffect } from '../../effects/webbed.js'
 
 export default {
   description: 'It moves like it\'s stop-motion animated.',
@@ -10,17 +11,7 @@ export default {
         cooldown: 9000,
         actions: [
           effectAction({
-            effect: {
-              // TODO: make this sharable somehow
-              id: 'spiderweb',
-              displayName: 'Webbed',
-              stacking: true,
-              duration: 'combat',
-              buff: false,
-              stats: {
-                slow: 2000
-              }
-            },
+            effect: webbedEffect(),
             affects: 'enemy'
           })
         ]

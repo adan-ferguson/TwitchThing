@@ -1,4 +1,4 @@
-import { attackAction, timeAction } from '../../actions.js'
+import { attackAction, timeAdjustmentAction } from '../../actions.js'
 
 export default {
   description: 'Like a small lizard person.',
@@ -12,7 +12,7 @@ export default {
           attackAction({
             damageMulti: 0.8
           }),
-          timeAction(1500)
+          timeAdjustmentAction(1500)
         ]
       }
     },
@@ -26,7 +26,7 @@ export default {
           attackAction({
             damageMulti: 2
           }),
-          timeAction(-3000)
+          timeAdjustmentAction(-3000)
         ]
       },
     }

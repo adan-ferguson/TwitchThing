@@ -61,12 +61,8 @@ export default class AdventurerInstance extends FighterInstance{
     return this.fighterData.bonuses.map(bonusDef => new Bonus(bonusDef).stats)
   }
 
-  get mods(){
-    const bonusMods = this.fighterData.bonuses.map(bonus => new Bonus(bonus).mods)
-    const loadoutMods = this.fighterData.items.filter(itemDef => itemDef)
-      .map(itemDef => new AdventurerItemInstance(itemDef).mods)
-    const stateMods = []
-    return new ModsCollection(bonusMods, loadoutMods, stateMods)
+  get baseMods(){
+    return this.fighterData.bonuses.map(bonus => new Bonus(bonus).mods)
   }
 
   get orbs(){

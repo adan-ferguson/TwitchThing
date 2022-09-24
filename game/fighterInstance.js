@@ -1,6 +1,7 @@
 import Stats from './stats/stats.js'
 import { all as Mods } from './mods/combined.js'
-import { EffectsData } from './effects.js'
+import { EffectsData } from './effectsData.js'
+import ModsCollection from './modsCollection.js'
 
 // Stupid
 new Stats()
@@ -112,11 +113,19 @@ export default class FighterInstance{
     return new Stats([...baseStatAffectors, ...loadoutStatAffectors], effectAffectors)
   }
 
+  get baseMods(){
+    return []
+  }
+
   /**
    * @returns {ModsCollection}
    */
   get mods(){
-    throw 'Not implemented'
+    const loadoutMods = this.itemInstances
+      .filter(m => m)
+      .map(ii => ii.mods)
+    const stateMods = this.effectsData.stateVal.map(effect => effect.mods ?? [])
+    return new ModsCollection(this.baseMods, loadoutMods, stateMods)
   }
 
   /**
@@ -219,7 +228,9 @@ export default class FighterInstance{
   }
 
   advanceTime(ms){
-    this._state.timeSinceLastAction += ms
+    if(!this.mods.contains(Mods.freezeActionBar)){
+      this._state.timeSinceLastAction += ms
+    }
     this.itemInstances.forEach(itemInstance => {
       if(itemInstance){
         itemInstance.advanceTime(ms)

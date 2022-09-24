@@ -1,4 +1,4 @@
-export function performCombatAction(combat, actor){
+export function takeCombatTurn(combat, actor){
   if(!actor.inCombat){
     throw 'Actor is not in combat'
   }
@@ -22,9 +22,14 @@ function useItemAbility(combat, actor, index){
   }
 
   const results = []
-  ability.actions.forEach(actionDef => {
-    results.push(...doAction(combat, actor, actionDef))
-  })
+  for(let i = 0; i < ability.actions.length; i++){
+    const actionResults = doAction(combat, actor, ability.actions[i])
+    results.push(...actionResults)
+    if(actionResults.at(-1).failed){
+      // TODO: not necessarily the correct thing to do
+      break
+    }
+  }
 
   itemInstance.enterCooldown()
 
@@ -74,7 +79,8 @@ function attack(combat, actor, actionDef = {}){
   if(dodged){
     results.push({
       subject: enemy.uniqueID,
-      resultType: 'dodge'
+      resultType: 'dodge',
+      failed: true
     })
     return results
   }
@@ -112,9 +118,6 @@ function attemptCrit(actor){
 }
 
 function attemptDodge(actor){
-  if(actor.effectsData.getById('dodge')){
-    return true
-  }
   return Math.random() + actor.stats.get('dodgeChance').value > 1
 }
 

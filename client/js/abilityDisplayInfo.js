@@ -59,20 +59,22 @@ function attackDescription(action, owner){
   if(showFlat){
     amount = Math.ceil(amount * owner.physPower)
   }
-  return descWrap(`Attack for ${showFlat ? '' : 'x'}${damageWrap(action.damageType, amount)} damage.`)
+  return descWrap(`Attack for ${showFlat ? '' : 'x'}${damageWrap(action.damageType, amount)} damage`)
 }
 
 function effectAction(action, owner){
   if(action.effect.id === 'spiderweb'){
     return descWrap(`Slows ${targetString(action.affects)}, increasing their turn time by ${action.effect.stats.slow/1000}s. Lasts ${durationString(action.effect.duration)}`)
+  }else if(action.effect.id === 'stun'){
+    return descWrap(`Stuns the target for ${roundToFixed(action.effect.duration/1000, 2)}s`)
   }
 }
 
 function timeAction(ms){
   if(ms > 0){
-    return descWrap(`User's next turn is ${roundToFixed(ms/1000, 2)}s faster.`)
+    return descWrap(`User's next turn is ${roundToFixed(ms/1000, 2)}s faster`)
   }
-  return descWrap(`User's next turn is ${roundToFixed(ms/-1000, 2)}s slower.`)
+  return descWrap(`User's next turn is ${roundToFixed(ms/-1000, 2)}s slower`)
 }
 
 function descWrap(txt){
@@ -100,5 +102,5 @@ function durationString(duration){
   if(duration === 'combat'){
     return 'until the end of combat.'
   }
-  return `for ${roundToFixed(duration / 1000, 2)} seconds.`
+  return `for ${roundToFixed(duration / 1000, 2)} seconds`
 }
