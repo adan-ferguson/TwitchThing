@@ -1,14 +1,4 @@
-/*
-
-Effect params:
-id: string (required),
-displayName: string,
-stacking: true | 'replace' | ,
-duration: 'combat' | 'dungeon' | integer,
-buff: bool,
-mods: [],
-stats: {object}
- */
+import Effect from './effect.js'
 
 export class EffectsData{
 
@@ -29,18 +19,15 @@ export class EffectsData{
 
   advanceTime(ms){
     this._effects.forEach(effect => {
-      if(effect.duration > 0){
+      if(Number.isInteger(effect.duration)){
         effect.duration -= ms
       }
     })
   }
 
-  add(effect){
+  add(effectDef){
 
-    effect = {
-      duration: 1,
-      ...effect
-    }
+    const effect = new Effect(effectDef)
 
     if(parseInt(effect.duration)){
       effect.initialDuration = effect.duration
@@ -86,12 +73,17 @@ export class EffectsData{
    */
   _cleanup(){
     this._effects = this._effects.filter(effect => {
-      if(effect.duration === 'combat'){
-        return this._fighterInstance.inCombat
-      }else if(effect.duration === 'dungeon'){
-        return true
-      }
-      return effect.duration >= 0
+      return !effectExpired(effect, this._fighterInstance)
     })
   }
+}
+
+export function effectExpired(effect, owner){
+  if(effect.scope === 'combat'){
+    return !owner.inCombat
+  }
+  if(Number.isInteger(effect.duration)){
+    return effect.duration < 0
+  }
+  return false
 }

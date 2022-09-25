@@ -278,4 +278,12 @@ export default class FighterInstance{
   gainEffect(effect){
     this.effectsData.add(effect)
   }
+
+  meetsConditions(conditions){
+    return Object.keys(conditions).every(conditionName => {
+      if(conditionName === 'hpPctBelow'){
+        return this.hpPct <= conditions[conditionName]
+      }
+    })
+  }
 }

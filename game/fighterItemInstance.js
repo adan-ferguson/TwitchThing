@@ -50,7 +50,21 @@ export default class FighterItemInstance{
   }
 
   get abilityReady(){
-    return this.ability && !this._state.cooldownRemaining
+    if(!this.ability){
+      return false
+    }
+    if(this._state.cooldownRemaining){
+      return false
+    }
+    if(this.ability.uses && this._state.timesUsed >= this.ability.uses){
+      return false
+    }
+    if(this.ability.conditions && this.owner){
+      if(!this.owner.meetsConditions(this.ability.conditions)){
+        return false
+      }
+    }
+    return true
   }
 
   get cooldownRemaining(){
@@ -74,8 +88,9 @@ export default class FighterItemInstance{
     }
   }
 
-  enterCooldown(){
+  used(){
     this._state.cooldownRemaining = this.cooldown
+    this._state.timesUsed = (this._state.timesUsed ?? 0) + 1
   }
 
   shouldTrigger(triggerName){
@@ -86,6 +101,9 @@ export default class FighterItemInstance{
       return false
     }
     if(!this.abilityReady){
+      return false
+    }
+    if(this.ability.chance && Math.random() > this.ability.chance){
       return false
     }
     return true

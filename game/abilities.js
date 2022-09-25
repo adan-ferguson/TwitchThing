@@ -1,5 +1,5 @@
 import { effectAction } from './actions.js'
-import { dodgeEffect } from './effects/dodge.js'
+import { dodgeEffect } from './effects/generic/dodge.js'
 
 /**
  * An ability that lets you automatically dodge the enemy's next ability.

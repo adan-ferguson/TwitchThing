@@ -1,5 +1,5 @@
 import { attackAction, effectAction } from '../../actions.js'
-import { stunEffect } from '../../effects/stun.js'
+import { stunEffect } from '../../effects/generic/stun.js'
 
 export default {
   ability: {

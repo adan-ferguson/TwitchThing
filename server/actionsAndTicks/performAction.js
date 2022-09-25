@@ -4,6 +4,7 @@ export function takeCombatTurn(combat, actor){
   }
   actor.resetTimeSinceLastAction()
   const index = actor.nextActiveItemIndex()
+  console.log('next item', index)
   if(index > -1){
     return useItemAbility(combat, actor, index)
   }
@@ -25,13 +26,13 @@ function useItemAbility(combat, actor, index){
   for(let i = 0; i < ability.actions.length; i++){
     const actionResults = doAction(combat, actor, ability.actions[i])
     results.push(...actionResults)
-    if(actionResults.at(-1).failed){
+    if(actionResults.at(-1)?.failed){
       // TODO: not necessarily the correct thing to do
       break
     }
   }
 
-  itemInstance.enterCooldown()
+  itemInstance.used()
 
   return {
     ability: index,
