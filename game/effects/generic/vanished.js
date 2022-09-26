@@ -3,5 +3,6 @@ export default {
     dodgeChance: '+100%',
     regen: '5%'
   },
+  mods: ['freezeActionBar'],
   buff: true
 }

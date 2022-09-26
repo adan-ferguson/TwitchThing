@@ -1,4 +1,5 @@
-import Effect from './effect.js'
+import Effect, { EffectStacking } from './effect.js'
+import _ from 'lodash'
 
 export class EffectsData{
 
@@ -8,45 +9,44 @@ export class EffectsData{
     this._fighterInstance = fighterInstance
   }
 
+  get effects(){
+    return [...this._effects]
+  }
+
   get stateVal(){
-    this._cleanup()
-    return JSON.parse(JSON.stringify(this._effects))
+    return this._effects.map(effect => effect.stateVal)
   }
 
   set stateVal(val){
-    this._effects = JSON.parse(JSON.stringify(val ?? []))
+    this._effects = []
+    val.forEach(effectDef => this.add(effectDef))
   }
 
   advanceTime(ms){
     this._effects.forEach(effect => {
-      if(Number.isInteger(effect.duration)){
-        effect.duration -= ms
-      }
+      effect.advanceTime(ms)
     })
+    this._cleanupExpired()
   }
 
+  /**
+   * @param effectDef
+   * @returns {Effect}
+   */
   add(effectDef){
 
-    const effect = new Effect(effectDef)
-
-    if(parseInt(effect.duration)){
-      effect.initialDuration = effect.duration
-    }
-
-    if(effect.stacking){
-      const index = this._effects.findIndex(e => e.id === effect.id)
-      if(index >= 0){
-        const existing = this._effects[index]
-        existing.duration = effect.duration
-        if(effect.stacking !== 'replace'){
-          effect.stacks = (existing.stacks ?? 1) + 1
-        }
-        this._effects[index] = effect
-        return
+    const existing = this._getByDef(effectDef)
+    if(existing){
+      if(existing.stacking === EffectStacking.REFRESH){
+        return existing.refreshDuration()
+      }else if(existing.stacking === EffectStacking.STACKING){
+        return existing.addStack().refreshDuration()
       }
     }
 
+    const effect = new Effect(effectDef)
     this._effects.push(effect)
+    return effect
   }
 
   /**
@@ -57,33 +57,30 @@ export class EffectsData{
     if(!id){
       return []
     }
-    return this.stateVal.find(effect => effect.id === id)
+    return this._effects.find(effect => effect.id === id)
   }
 
   getByType(effectType){
-    return this.stateVal.filter(effect => effect.type === effectType)
+    return this._effects.filter(effect => effect.type === effectType)
   }
 
   hasType(effectType){
-    return this.stateVal.find(effect => effect.type === effectType) ? true : false
+    return this._effects.find(effect => effect.type === effectType) ? true : false
   }
 
   /**
    * Remove expired effects
    */
-  _cleanup(){
+  _cleanupExpired(){
     this._effects = this._effects.filter(effect => {
-      return !effectExpired(effect, this._fighterInstance)
+      return effect.expired || (effect.combatOnly && !this._fighterInstance.inCombat)
     })
   }
-}
 
-export function effectExpired(effect, owner){
-  if(effect.scope === 'combat'){
-    return !owner.inCombat
+  /**
+   * @private
+   */
+  _getByDef(effectDef){
+    return this._effects.find(effect => _.isEqual(effectDef, effect.def))
   }
-  if(Number.isInteger(effect.duration)){
-    return effect.duration < 0
-  }
-  return false
 }

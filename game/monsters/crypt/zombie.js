@@ -1,5 +1,5 @@
 import { effectAction } from '../../actions.js'
-import { diseased } from '../../effects/generic/diseased.js'
+import { all as Effects } from '../../effects/combined.js'
 
 export default {
   baseStats: {
@@ -12,10 +12,9 @@ export default {
       ability: {
         type: 'triggered',
         trigger: 'onAttack',
-        chance: 0.3,
+        chance: 0.25,
         actions: [
-          effectAction({
-            effect: diseased(),
+          effectAction(Effects.diseased, {
             affects: 'enemy'
           })
         ]

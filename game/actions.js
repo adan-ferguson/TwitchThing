@@ -21,22 +21,16 @@ export function timeAdjustmentAction(ms){
 
 /**
  * An effect action grant one or both fighters an effect.
+ * @param effect
  * @param options
  */
-export function effectAction(options = {}){
+export function effectAction(effect, options = {}){
   const action = {
     affects: 'self', // 'enemy' | 'both'
+    effect: {},
     ...options,
     type: 'effect',
   }
-
-  if(!action.effect){
-    console.error('Effect action is missing an effect', action)
-  }
-
-  if(!action.effect.id){
-    console.error('Effect is missing an id', action)
-  }
-
+  action.effect.name = effect.name
   return action
 }

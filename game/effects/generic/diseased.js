@@ -1,6 +1,6 @@
 export default {
   stacking: true,
-  scope: 'dungeon',
+  combatOnly: false,
   stats: {
     physPower: '-20%'
   }

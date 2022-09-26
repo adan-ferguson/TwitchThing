@@ -24,13 +24,13 @@ export default class EffectsList extends HTMLElement{
     })
     const expiredEffectRows = { ...effectRows }
 
-    this._fighterInstance.state.effects.forEach(effect => {
+    this._fighterInstance.effectsData.forEach(effect => {
       if(!shouldShow(effect)){
         return
       }
-      const key = effect.id
+      const key = effect.options.id
       if(effectRows[key]){
-        if(Number.isInteger(effect.duration) && effect.duration >= 0){
+        if(!effect.expired){
           effectRows[key].update(effect, animate)
           delete expiredEffectRows[key]
         }
@@ -56,7 +56,7 @@ export default class EffectsList extends HTMLElement{
 customElements.define('di-effects-list', EffectsList)
 
 function shouldShow(effect){
-  if(effect.duration <= 0){
+  if(effect.expired){
     return false
   }
   return true

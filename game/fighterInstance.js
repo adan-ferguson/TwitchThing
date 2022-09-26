@@ -101,15 +101,7 @@ export default class FighterInstance{
     const loadoutStatAffectors = this.itemInstances.filter(s => s).map(ii => ii.stats)
 
     // lol
-    const effectAffectors = []
-    this.effectsData.stateVal.forEach(effect => {
-      if(effect.stats){
-        for(let i = 0; i < (effect.stacks ?? 1); i++){
-          effectAffectors.push(effect.stats)
-        }
-      }
-    })
-
+    const effectAffectors = this.effectsData.effects.map(effect => effect.stats)
     return new Stats([...baseStatAffectors, ...loadoutStatAffectors], effectAffectors)
   }
 
@@ -124,7 +116,7 @@ export default class FighterInstance{
     const loadoutMods = this.itemInstances
       .filter(m => m)
       .map(ii => ii.mods)
-    const stateMods = this.effectsData.stateVal.map(effect => effect.mods ?? [])
+    const stateMods = this.effectsData.effects.map(effect => effect.mods ?? [])
     return new ModsCollection(this.baseMods, loadoutMods, stateMods)
   }
 

@@ -1,5 +1,5 @@
 import { effectAction, timeAdjustmentAction } from '../../actions.js'
-import { vanishEffect } from '../../effects/generic/vanish.js'
+import { all as Effects } from '../../effects/combined.js'
 
 export default {
   baseStats: {
@@ -18,10 +18,11 @@ export default {
         },
         uses: 1,
         actions: [
-          effectAction({
-            effect: vanishEffect()
-          }),
-          timeAdjustmentAction(-5000)
+          effectAction(Effects.vanished, {
+            effect: {
+              duration: 5000
+            }
+          })
         ]
       }
     }
