@@ -1,5 +1,6 @@
 import { all as Effects } from './effects/combined.js'
 import Stats from './stats/stats.js'
+import { toDisplayName } from './utilFunctions.js'
 
 export const EffectStacking = {
   NONE: 0,
@@ -10,16 +11,19 @@ export const EffectStacking = {
 export default class Effect{
 
   data
-  time
-  stacks
+  state
 
-  constructor(effectDef){
+  constructor(def, state = {}){
 
-    if(!effectDef.name){
+    if(!def.name){
       throw 'effectDef missing required value "name"'
     }
 
-    const baseEffectDef = Effects[effectDef.id]
+    const baseEffectDef = Effects[def.name]
+
+    if(!baseEffectDef){
+      throw 'baseEffectDef not found'
+    }
 
     this.data = {
       name: null,
@@ -32,39 +36,40 @@ export default class Effect{
       mods: [],
       stats: {},
       ...baseEffectDef,
-      ...effectDef
+      ...def
     }
 
-    this.def = effectDef
-    this.time = 0
-    this.stacks = 1
+    this.def = def
+    this.state = {
+      time: 0,
+      stacks: 1,
+      ...state
+    }
+  }
+
+  get displayName(){
+    return this.data.displayName ?? toDisplayName(this.data.name)
   }
 
   get expired(){
     if(this.data.duration){
-      return this.time >= this.data.duration
+      return this.state.time >= this.data.duration
     }
     return false
   }
 
   get stateVal(){
-    const val = {
-      def: this.def
-    }
-    if(this.data.duration){
-      val.time = this.time
-    }
-    if(this.data.stacking){
-      val.stacks = this.stacks
-    }
-    return val
+    return JSON.parse(JSON.stringify({
+      def: this.def,
+      state: this.state
+    }))
   }
 
   /**
    * return {Stats}
    */
   get stats(){
-    const repetitions = this.data.stacking ? this.stacks : 1
+    const repetitions = this.data.stacking ? this.state.stacks : 1
     return new Stats(Array(repetitions).fill(this.data.stats))
   }
 
@@ -76,20 +81,20 @@ export default class Effect{
   }
 
   refreshDuration(){
-    this.time = 0
+    this.state.time = 0
     return this
   }
 
   addStack(){
     if(this.data.stacking){
-      this.stacks++
+      this.state.stacks++
     }
     return this
   }
 
   advanceTime(ms){
     if(this.data.duration){
-      this.time += ms
+      this.state.time += ms
     }
   }
 }

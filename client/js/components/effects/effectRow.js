@@ -28,17 +28,17 @@ export default class EffectRow extends HTMLElement{
   update(effect, animate = false){
     
     this._cachedEffect = effect
-    let txt = `${effect.options.displayName ?? toDisplayName(effect.options.id)}`
-    if(effect.stacks >= 2){
-      txt += ` x${effect.stacks}`
+    let txt = `${effect.displayName}`
+    if(effect.state.stacks >= 2){
+      txt += ` x${effect.state.stacks}`
     }
 
-    const intDuration = parseInt(effect.options.duration) || null
+    const intDuration = parseInt(effect.data.duration) || null
 
     if(txt !== this._cachedTxt){
       this.querySelector('.display-text').textContent = txt
       this._cachedTxt = txt
-      const color = effect.options.buff ? BUFF_COLOR : DEBUFF_COLOR
+      const color = effect.data.buff ? BUFF_COLOR : DEBUFF_COLOR
       const max = intDuration ?? 1
       this._barEl.setOptions({ max, color })
       if(!intDuration){
@@ -50,7 +50,7 @@ export default class EffectRow extends HTMLElement{
     }
 
     if(intDuration){
-      this._barEl.setValue(intDuration)
+      this._barEl.setValue(intDuration - effect.state.time)
     }
   }
 }

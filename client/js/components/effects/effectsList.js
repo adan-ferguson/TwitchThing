@@ -24,11 +24,11 @@ export default class EffectsList extends HTMLElement{
     })
     const expiredEffectRows = { ...effectRows }
 
-    this._fighterInstance.effectsData.forEach(effect => {
+    this._fighterInstance.effectsData.effects.forEach(effect => {
       if(!shouldShow(effect)){
         return
       }
-      const key = effect.options.id
+      const key = effect.data.name
       if(effectRows[key]){
         if(!effect.expired){
           effectRows[key].update(effect, animate)

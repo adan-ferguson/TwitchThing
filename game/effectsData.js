@@ -19,7 +19,11 @@ export class EffectsData{
 
   set stateVal(val){
     this._effects = []
-    val.forEach(effectDef => this.add(effectDef))
+    if(val){
+      val.forEach(effectStateVal => {
+        this._effects.push(new Effect(effectStateVal.def, effectStateVal.state))
+      })
+    }
   }
 
   advanceTime(ms){
@@ -73,7 +77,7 @@ export class EffectsData{
    */
   _cleanupExpired(){
     this._effects = this._effects.filter(effect => {
-      return effect.expired || (effect.combatOnly && !this._fighterInstance.inCombat)
+      return !effect.expired && (!effect.combatOnly || this._fighterInstance.inCombat)
     })
   }
 

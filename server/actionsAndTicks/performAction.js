@@ -4,7 +4,6 @@ export function takeCombatTurn(combat, actor){
   }
   actor.resetTimeSinceLastAction()
   const index = actor.nextActiveItemIndex()
-  console.log('next item', index)
   if(index > -1){
     return useItemAbility(combat, actor, index)
   }
