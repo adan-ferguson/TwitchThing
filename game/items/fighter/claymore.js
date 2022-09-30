@@ -1,5 +1,5 @@
-import { attackAction, effectAction } from '../../actions.js'
-import { all as Effects } from '../../effects/combined.js'
+import { attackAction } from '../../actions.js'
+import { all as Effects } from '../../statusEffects/combined.js'
 
 export default {
   ability: {
@@ -7,12 +7,12 @@ export default {
     cooldown: 12000,
     actions: [
       attackAction(),
-      effectAction(Effects.stunned, {
-        affects: 'enemy',
-        effect: {
-          duration: 2000
-        }
-      })
+      // effectAction(Effects.stunned, {
+      //   affects: 'enemy',
+      //   effect: {
+      //     duration: 2000
+      //   }
+      // })
     ]
   },
   stats: {

@@ -2,14 +2,20 @@ import Bonuses from './bonuses/combined.js'
 import Stats from './stats/stats.js'
 import OrbsData from './orbsData.js'
 import { toDisplayName } from './utilFunctions.js'
+import EffectInstance from './effectInstance.js'
 
-export default class Bonus{
+export default class BonusInstance extends EffectInstance{
 
   constructor({ group, name }){
+    super()
     this.bonusDef = Bonuses[group][name] ?? {
       name: '1st Level',
       group
     }
+  }
+
+  get id(){
+    return this.name
   }
 
   get group(){

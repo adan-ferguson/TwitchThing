@@ -1,5 +1,5 @@
-import { effectAction, timeAdjustmentAction } from '../../actions.js'
-import { all as Effects } from '../../effects/combined.js'
+// import { effectAction, timeAdjustmentAction } from '../../actions.js'
+import { all as Effects } from '../../statusEffects/combined.js'
 
 export default {
   baseStats: {
@@ -18,11 +18,11 @@ export default {
         },
         uses: 1,
         actions: [
-          effectAction(Effects.vanished, {
-            effect: {
-              duration: 5000
-            }
-          })
+          // effectAction(Effects.vanished, {
+          //   effect: {
+          //     duration: 5000
+          //   }
+          // })
         ]
       }
     }

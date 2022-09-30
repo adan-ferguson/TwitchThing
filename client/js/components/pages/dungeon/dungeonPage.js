@@ -148,18 +148,17 @@ export default class DungeonPage extends Page{
     }
 
     const animate = options.animate
-    this._adventurerPane.setState(this.currentEvent.adventurerState, animate)
-      .setOptions({
-        inCombat: false
-      })
-    this._stateEl.update(this._timelineEl.elapsedEvents, animate)
 
     if(this.currentEvent.combatID){
       this._enactCombat()
-    }else if(this.dungeonRun.results && this.currentEvent.runFinished){
-      this._showResults()
     }else{
-      this._eventEl.update(this.currentEvent, animate)
+      this._adventurerPane.setState(this.currentEvent.adventurerState, animate)
+      this._stateEl.update(this._timelineEl.elapsedEvents, animate)
+      if(this.dungeonRun.results && this.currentEvent.runFinished){
+        this._showResults()
+      }else{
+        this._eventEl.update(this.currentEvent, animate)
+      }
     }
 
     this._updateBackground()

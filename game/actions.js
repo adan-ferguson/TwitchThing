@@ -7,6 +7,15 @@ export function attackAction(def){
   }
 }
 
+export function selfDamageAction(def){
+  return {
+    damageType: 'phys',
+    amount: 0,
+    ...def,
+    type: 'damage'
+  }
+}
+
 /**
  * Adjusts a user's next action time bar
  * @param ms
@@ -17,20 +26,4 @@ export function timeAdjustmentAction(ms){
     type: 'time',
     ms
   }
-}
-
-/**
- * An effect action grant one or both fighters an effect.
- * @param effect
- * @param options
- */
-export function effectAction(effect, options = {}){
-  const action = {
-    affects: 'self', // 'enemy' | 'both'
-    effect: {},
-    ...options,
-    type: 'effect',
-  }
-  action.effect.name = effect.name
-  return action
 }

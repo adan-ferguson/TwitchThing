@@ -6,6 +6,7 @@ import { emit } from '../socketServer.js'
 import { generateItemDef } from '../items/generator.js'
 import DungeonRuns from '../collections/dungeonRuns.js'
 import { floorToZone } from '../../game/zones.js'
+import { advXpToLevel } from '../../game/adventurerInstance.js'
 
 const REWARDS_TYPES = {
   xp: 'int',

@@ -50,13 +50,13 @@ export async function generateCombat(fighterInstance1, fighterInstance2, params 
     fighter1: {
       id: 1,
       data: fighterInstance1.fighterData,
-      startState: fighterInstance1.startState,
+      startState: combat.fighterStartState1,
       endState: combat.fighterEndState1
     },
     fighter2: {
       id: 2,
       data: fighterInstance2.fighterData,
-      startState: fighterInstance2.startState,
+      startState: combat.fighterStartState2,
       endState: combat.fighterEndState2
     },
     timeline: combat.timeline,
@@ -74,11 +74,11 @@ export async function finishCombatEvent(dungeonRun, combatEvent){
     passTimeOverride: true
   }
   const monsterInstance = new MonsterInstance(enemy.data)
-  if(!fighter.endState.hp){
+  if(fighter.endState.hp === 0){
     event.runFinished = true
     event.roomType = 'dead'
     event.message = `${fighter.data.name} has defeated by the ${monsterInstance.displayName}.`
-  }else if(!enemy.endState.hp){
+  }else if(enemy.endState.hp === 0){
     event.rewards = enemy.data.rewards
     event.message = `${fighter.data.name} defeated the ${monsterInstance.displayName}.`
     event.monster = { ...combatEvent.monster, defeated: true }
@@ -94,6 +94,8 @@ class Combat{
   constructor(fighterInstance1, fighterInstance2){
     fighterInstance1.inCombat = true
     fighterInstance2.inCombat = true
+    this.fighterStartState1 = { ...fighterInstance1.state }
+    this.fighterStartState2 = { ...fighterInstance2.state }
     this.fighterInstance1 = fighterInstance1
     this.fighterInstance2 = fighterInstance2
     this._currentTime = 0
@@ -102,8 +104,8 @@ class Combat{
     this._run()
     fighterInstance1.inCombat = false
     fighterInstance2.inCombat = false
-    this.fighterEndState1 = { ...this.fighterInstance1.state }
-    this.fighterEndState2 = { ...this.fighterInstance2.state }
+    this.fighterEndState1 = { ...fighterInstance1.state }
+    this.fighterEndState2 = { ...fighterInstance2.state }
     this.duration = this._currentTime
   }
 

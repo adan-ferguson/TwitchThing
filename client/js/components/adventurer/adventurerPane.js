@@ -1,4 +1,4 @@
-import AdventurerInstance, { levelToXp, xpToLevel } from '../../../../game/adventurerInstance.js'
+import AdventurerInstance, { advLevelToXp, advXpToLevel } from '../../../../game/adventurerInstance.js'
 import { OrbsDisplayStyle } from '../orbRow.js'
 import Modal from '../modal.js'
 import AdventurerInfo from './adventurerInfo.js'
@@ -27,7 +27,7 @@ export default class AdventurerPane extends HTMLElement{
     this.innerHTML = HTML
     this._name = this.querySelector('div.name')
     this.xpBar = this.querySelector('di-xp-bar')
-    this.xpBar.setLevelFunctions(xpToLevel, levelToXp)
+    this.xpBar.setLevelFunctions(advXpToLevel, advLevelToXp)
     this.orbRow = this.querySelector('di-orb-row')
       .setOptions({
         style: OrbsDisplayStyle.SHOW_MAX

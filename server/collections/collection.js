@@ -23,6 +23,9 @@ export default class Collection{
   }
 
   async saveMany(docs){
+    if(!docs.length){
+      return
+    }
     docs.forEach(doc => this.validateSave())
     return await db.saveMany(docs.map(doc => db.fix(doc, this.defaults)), this.collectionName)
   }

@@ -1,6 +1,6 @@
 import Stats from './stats/stats.js'
 import { all as Mods } from './mods/combined.js'
-import { EffectsData } from './effectsData.js'
+import { StatusEffectsData } from './statusEffectsData.js'
 import ModsCollection from './modsCollection.js'
 
 // Stupid
@@ -27,8 +27,6 @@ export default class FighterInstance{
   _state
   _itemInstances
 
-  startState
-
   constructor(fighterData, initialState = {}){
     this._fighterData = fighterData
 
@@ -41,9 +39,8 @@ export default class FighterInstance{
       }
     }
 
-    this.effectsData = new EffectsData(this)
+    this.statusEffectsData = new StatusEffectsData(this)
     this.setState(initialState)
-    this.startState = { ...this._state }
   }
 
   /**
@@ -101,7 +98,7 @@ export default class FighterInstance{
     const loadoutStatAffectors = this.itemInstances.filter(s => s).map(ii => ii.stats)
 
     // lol
-    const effectAffectors = this.effectsData.effects.map(effect => effect.stats)
+    const effectAffectors = this.statusEffectsData.instances.map(effect => effect.stats)
     return new Stats([...baseStatAffectors, ...loadoutStatAffectors], effectAffectors)
   }
 
@@ -116,7 +113,7 @@ export default class FighterInstance{
     const loadoutMods = this.itemInstances
       .filter(m => m)
       .map(ii => ii.mods)
-    const stateMods = this.effectsData.effects.map(effect => effect.mods ?? [])
+    const stateMods = this.statusEffectsData.instances.map(effect => effect.mods ?? [])
     return new ModsCollection(this.baseMods, loadoutMods, stateMods)
   }
 
@@ -136,7 +133,7 @@ export default class FighterInstance{
         return ii.state
       }
     })
-    baseState.effects = this.effectsData.stateVal
+    baseState.effects = this.statusEffectsData.stateVal
     return { ...baseState }
   }
 
@@ -210,7 +207,7 @@ export default class FighterInstance{
     this.itemInstances.forEach((itemInstance, i) => {
       itemInstance?.setState(itemStates[i])
     })
-    this.effectsData.stateVal = newState.effects
+    this.statusEffectsData.stateVal = newState.effects
     this._state = {
       ...STATE_DEFAULTS,
       ...newState
@@ -228,7 +225,7 @@ export default class FighterInstance{
         itemInstance.advanceTime(ms)
       }
     })
-    this.effectsData.advanceTime(ms)
+    this.statusEffectsData.advanceTime(ms)
   }
 
   nextActiveItemIndex(){
@@ -239,14 +236,20 @@ export default class FighterInstance{
     })
   }
 
-  triggeredAbilities(trigger){
-    const indexes = []
-    this.itemInstances.forEach((itemInstance, i) => {
-      if(itemInstance?.shouldTrigger(trigger)){
-        indexes.push(i)
+  triggeredEffects(triggerType){
+    const effects = []
+    this.itemInstances.forEach((itemInstance) => {
+      if(itemInstance?.shouldTrigger(triggerType)){
+        effects.push(itemInstance)
       }
     })
-    return indexes
+    // TODO: bonusInstances
+    this.statusEffectsData.instances.forEach(sei => {
+      if(sei.shouldTrigger(triggerType)){
+        effects.push(sei)
+      }
+    })
+    return effects
   }
 
   resetTimeSinceLastAction(){
@@ -265,10 +268,6 @@ export default class FighterInstance{
 
   adjustNextActionTime(ms){
     this._state.timeSinceLastAction += ms
-  }
-
-  gainEffect(effect){
-    this.effectsData.add(effect)
   }
 
   meetsConditions(conditions){

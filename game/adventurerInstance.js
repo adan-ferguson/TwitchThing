@@ -1,9 +1,7 @@
 import FighterInstance from './fighterInstance.js'
-import Bonus from './bonus.js'
+import BonusInstance from './bonusInstance.js'
 import AdventurerItemInstance from './adventurerItemInstance.js'
 import OrbsData from './orbsData.js'
-import ModsCollection from './modsCollection.js'
-import Stats from './stats/stats.js'
 import LevelCalculator from './levelCalculator.js'
 import scaledValue from './scaledValue.js'
 
@@ -15,11 +13,11 @@ const HP_GROWTH_PCT = 0.15
 const POWER_BASE = 10
 const POWER_GROWTH_PCT = 0.11
 
-export function xpToLevel(xp){
+export function advXpToLevel(xp){
   return LevelCalculator.xpToLevel(LEVEL_2_XP, XP_MULTIPLIER, xp)
 }
 
-export function levelToXp(lvl){
+export function advLevelToXp(lvl){
   return LevelCalculator.levelToXp(LEVEL_2_XP, XP_MULTIPLIER, lvl)
 }
 
@@ -35,6 +33,7 @@ export default class AdventurerInstance extends FighterInstance{
 
   constructor(adventurerDef, initialState = {}){
     super(adventurerDef, initialState)
+    this.bonuses = adventurerDef.bonuses.map(bonus => new BonusInstance(bonus))
   }
 
   get displayName(){
@@ -58,16 +57,16 @@ export default class AdventurerInstance extends FighterInstance{
   }
 
   get baseStats(){
-    return this.fighterData.bonuses.map(bonusDef => new Bonus(bonusDef).stats)
+    return this.bonuses.map(bonusDef => new BonusInstance(bonusDef).stats)
   }
 
   get baseMods(){
-    return this.fighterData.bonuses.map(bonus => new Bonus(bonus).mods)
+    return this.bonuses.map(bonus => new BonusInstance(bonus).mods)
   }
 
   get orbs(){
-    const used = this.fighterData.bonuses.map(bonusDef => {
-      return new Bonus(bonusDef).orbsData.maxOrbs
+    const used = this.bonuses.map(bonusInstance => {
+      return bonusInstance.orbsData.maxOrbs
     })
     const max = this.itemInstances.map(ii => ii?.orbs || {})
     return new OrbsData(used, max)

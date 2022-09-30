@@ -36,7 +36,6 @@ export default class FighterInstancePane extends HTMLElement{
 
   _options = {
     fadeOutOnDefeat: true,
-    inCombat: false
   }
 
   constructor(){
@@ -62,7 +61,6 @@ export default class FighterInstancePane extends HTMLElement{
 
   setOptions(options){
     this._options = mergeOptionsObjects(this._options, options)
-    this._actionBarEl.classList.toggle('hidden', !this._options.inCombat)
     return this
   }
 
@@ -169,6 +167,9 @@ export default class FighterInstancePane extends HTMLElement{
         forced: ['physPower']
       })
     }
+
+    console.log('incombat', this.fighterInstance.inCombat)
+    this._actionBarEl.classList.toggle('displaynone', !this.fighterInstance.inCombat)
     this.statsList.setStats(this.fighterInstance.stats, this.fighterInstance)
     this._effectsListEl.update()
     this._updateCooldowns()

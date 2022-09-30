@@ -39,9 +39,9 @@ export async function generateEvent(dungeonRun){
     return await generateCombatEvent(dungeonRun)
   }
 
-  if(encounterPossible && foundRelic(dungeonRun)){
-    return generateRelicEvent(dungeonRun)
-  }
+  // if(encounterPossible && foundRelic(dungeonRun)){
+  //   return generateRelicEvent(dungeonRun)
+  // }
 
   return {
     message: `${adventurerInstance.displayName} is wandering around.`

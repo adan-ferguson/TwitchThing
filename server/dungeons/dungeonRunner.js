@@ -146,7 +146,6 @@ function validateNew(adventurerDoc, userDoc, { startingFloor }){
   }
 }
 
-
 async function advanceRuns(){
   lastAdvancement = new Date()
   for(const id in activeRuns){

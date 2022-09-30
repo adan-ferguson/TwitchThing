@@ -1,5 +1,4 @@
-import { effectAction } from '../../actions.js'
-import { all as Effects } from '../../effects/combined.js'
+import { all as Effects } from '../../statusEffects/combined.js'
 
 export default {
   description: 'It moves like it\'s stop-motion animated.',
@@ -10,9 +9,9 @@ export default {
         type: 'active',
         cooldown: 9000,
         actions: [
-          effectAction(Effects.webbed, {
-            affects: 'enemy'
-          })
+          // effectAction(Effects.webbed, {
+          //   affects: 'enemy'
+          // })
         ]
       }
     }

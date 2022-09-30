@@ -26,7 +26,7 @@ export default class EffectRow extends HTMLElement{
   }
 
   update(effect, animate = false){
-    
+
     this._cachedEffect = effect
     let txt = `${effect.displayName}`
     if(effect.state.stacks >= 2){

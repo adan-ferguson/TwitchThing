@@ -1,3 +1,6 @@
+import { gainHealth } from './common.js'
+import { applyStatusEffect } from './applyStatusEffect.js'
+
 export function takeCombatTurn(combat, actor){
   if(!actor.inCombat){
     throw 'Actor is not in combat'
@@ -5,7 +8,7 @@ export function takeCombatTurn(combat, actor){
   actor.resetTimeSinceLastAction()
   const index = actor.nextActiveItemIndex()
   if(index > -1){
-    return useItemAbility(combat, actor, index)
+    return useEffectAbility(combat, actor.itemInstances[index])
   }
   return {
     ability: 'basicAttack',
@@ -14,16 +17,19 @@ export function takeCombatTurn(combat, actor){
   }
 }
 
-function useItemAbility(combat, actor, index){
-  const itemInstance = actor.itemInstances[index]
-  const ability = itemInstance?.ability
+export function useEffectAbility(combat, effect){
+  const ability = effect?.ability
   if(!ability){
+    debugger
     throw 'Can not use item ability so I\'m not sure what\'s going on here'
   }
-
+  if(!effect.owner){
+    debugger
+    throw 'Effect has no owner, so hard for its ability to get triggered'
+  }
   const results = []
   for(let i = 0; i < ability.actions.length; i++){
-    const actionResults = doAction(combat, actor, ability.actions[i])
+    const actionResults = doAction(combat, effect.owner, ability.actions[i])
     results.push(...actionResults)
     if(actionResults.at(-1)?.failed){
       // TODO: not necessarily the correct thing to do
@@ -31,10 +37,10 @@ function useItemAbility(combat, actor, index){
     }
   }
 
-  itemInstance.used()
+  effect.used()
 
   return {
-    ability: index,
+    ability: effect.id,
     actor: actor.uniqueID,
     results: results.filter(r => r)
   }
@@ -49,12 +55,11 @@ function useItemAbility(combat, actor, index){
 function doAction(combat, actor, actionDef){
   if(actionDef.type === 'attack'){
     return attack(combat, actor, actionDef)
-  }else if(actionDef.type === 'effect'){
+  }else if(actionDef.type === 'statusEffect'){
     const subject = actionDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
-    subject.gainEffect(actionDef.effect)
     return [{
       resultType: 'gainEffect',
-      effect: actionDef.effect,
+      effect: applyStatusEffect(combat, actor, subject, actionDef.effect).data,
       subject: subject.uniqueID
     }]
   }else if(actionDef.type === 'time'){
@@ -104,11 +109,8 @@ function attack(combat, actor, actionDef = {}){
     damageInfo.crit = true
   }
 
-  const damageResult = takeDamage(enemy, damageInfo)
-  results.push(damageResult)
-
-  // TODO: triggers for "onDealDamage"
-  // , lifesteal(actor, damageResult)
+  results.push(...dealDamage(actor, enemy, damageInfo))
+  results.push(...triggerAttackHit(combat, actor, enemy))
 
   return results
 }
@@ -121,6 +123,24 @@ function attemptDodge(actor){
   return Math.random() + actor.stats.get('dodgeChance').value > 1
 }
 
+function dealDamage(actor, enemy, damageInfo){
+
+  const results = []
+  const damageResult = takeDamage(enemy, damageInfo)
+  results.push(damageResult)
+
+  const lifesteal = Math.min(
+    actor.hpMax - actor.hp,
+    Math.ceil(actor.stats.get('lifesteal').value * damageResult.finalDamage)
+  )
+
+  if(lifesteal){
+    results.push(gainHealth(actor, lifesteal))
+  }
+
+  return results
+}
+
 function takeDamage(subject, damageInfo){
   const blocked = Math.floor(damageInfo.baseDamage * subject.stats.get(damageInfo.damageType + 'Def').value)
   const finalDamage = Math.ceil(Math.min(subject.hp, damageInfo.baseDamage - blocked))
@@ -130,22 +150,22 @@ function takeDamage(subject, damageInfo){
 }
 
 function triggerBeforeAttacked(combat, owner){
+
   // TODO: this seems prone to infinite loops
-  const abilities = owner.triggeredAbilities('beforeAttacked')
+  const effects = owner.triggeredEffects('beforeAttacked')
   const results = []
-  abilities.forEach(abilityIndex => {
-    results.push(useItemAbility(combat, owner, abilityIndex))
+  effects.forEach(effect => {
+    results.push(useEffectAbility(combat, effect))
   })
-  // TODO: triggered visualEffects
   return results
 }
 
-// function lifesteal(actor, damageResult){
-//   const lifesteal = Math.min(
-//     actor.hpMax - actor.hp,
-//     Math.ceil(actor.stats.get('lifesteal').value * damageResult.finalDamage)
-//   )
-//   if(lifesteal){
-//     return gainHealth(actor, lifesteal)
-//   }
-// }
+function triggerAttackHit(combat, actor){
+
+  const effects = actor.triggeredEffects('attackHit')
+  const results = []
+  effects.forEach(effect => {
+    results.push(useEffectAbility(combat, effect))
+  })
+  return results
+}

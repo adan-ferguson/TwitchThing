@@ -2,6 +2,7 @@ import { generateRandomChest } from './chests.js'
 import { chooseOne } from '../../game/rando.js'
 import { all as Monsters } from '../../game/monsters/combined.js'
 import { uuid } from '../../game/utilFunctions.js'
+import MonsterInstance, { levelToXpReward } from '../../game/monsterInstance.js'
 
 const monstersByFloor = {
   // Caves
@@ -77,9 +78,9 @@ export async function generateMonster(dungeonRun){
   }
 
   function generateRewards(){
+    const monsterInstance = new MonsterInstance(monsterDefinition)
     const advStats = dungeonRun.adventurerInstance.stats
-    const monsterStats = getMonsterStats(monsterDefinition)
-    const rewardBonus = monsterStats.get('rewards').value
+    const rewardBonus = monsterInstance.stats.get('rewards').value
     const rewards = {
       xp: levelToXpReward(level) * advStats.get('combatXP').value * rewardBonus
     }

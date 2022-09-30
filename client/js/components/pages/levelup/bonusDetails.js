@@ -1,7 +1,7 @@
 import { StatsDisplayStyle } from '../../../statsDisplayInfo.js'
 import classDisplayInfo from '../../../classDisplayInfo.js'
 import { OrbsDisplayStyle } from '../../orbRow.js'
-import Bonus from '../../../../../game/bonus.js'
+import BonusInstance from '../../../../../game/bonusInstance.js'
 
 const HTML = (name, description) => `
 <div class="header">
@@ -16,7 +16,7 @@ export default class BonusDetails extends HTMLElement{
 
   constructor(bonusDef){
     super()
-    const bonus = new Bonus(bonusDef)
+    const bonus = new BonusInstance(bonusDef)
     const classInfo = classDisplayInfo(bonus.group)
     this.innerHTML = HTML(bonus.displayName, bonus.description)
 

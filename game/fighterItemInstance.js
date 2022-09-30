@@ -1,15 +1,21 @@
 import Stats from './stats/stats.js'
 import { toDisplayName } from './utilFunctions.js'
+import EffectInstance from './effectInstance.js'
 
 // Stupid
 new Stats()
 
-export default class FighterItemInstance{
+export default class FighterItemInstance extends EffectInstance{
 
   constructor(itemData, state = null, owner = null){
+    super()
     this._itemData = { ...itemData }
     this._state = state ? { ...state } : {}
     this.owner = owner
+  }
+
+  get id(){
+    return this._itemData._id
   }
 
   get displayName(){
@@ -59,6 +65,9 @@ export default class FighterItemInstance{
     if(this.ability.uses && this._state.timesUsed >= this.ability.uses){
       return false
     }
+    if(this.ability.combatOnly !== false && !this.owner.inCombat){
+      return false
+    }
     if(this.ability.conditions && this.owner){
       if(!this.owner.meetsConditions(this.ability.conditions)){
         return false
@@ -97,7 +106,7 @@ export default class FighterItemInstance{
     if(!this.ability || this.ability.type !== 'triggered'){
       return false
     }
-    if(!this.ability.trigger === triggerName){
+    if(this.ability.trigger !== triggerName){
       return false
     }
     if(!this.abilityReady){

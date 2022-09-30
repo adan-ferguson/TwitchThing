@@ -157,6 +157,7 @@ export default class DungeonRunInstance extends EventEmitter{
     }
 
     if (!event.passTimeOverride){ // Combats handle their own passage of time.
+      this.adventurerInstance.advanceTime(event.duration)
       event.tickUpdates = performVenturingTicks(this.adventurerInstance, Math.floor(event.duration / 1000))
     }
 

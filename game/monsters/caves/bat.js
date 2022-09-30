@@ -1,5 +1,4 @@
-import { effectAction } from '../../actions.js'
-import { all as Effects } from '../../effects/combined.js'
+import { all as Effects } from '../../statusEffects/combined.js'
 
 export default {
   baseStats: {
@@ -16,11 +15,11 @@ export default {
         cooldown: 10000,
         name: 'dodge',
         actions: [
-          effectAction(Effects.dodging, {
-            effect: {
-              duration: 0
-            }
-          })
+          // effectAction(Effects.dodging, {
+          //   effect: {
+          //     duration: 0
+          //   }
+          // })
         ]
       }
     }

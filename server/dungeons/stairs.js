@@ -1,10 +1,9 @@
 import { floorSize } from '../../game/zones.js'
 
-const MIN_FLOOR_TRAVERSAL_PCT = 0.30
-
+const MIN_FLOOR_TRAVERSAL_PCT = 0.20
 
 export function foundStairs(floor, room, pace = 'Brisk'){
-  if(floor === 30){
+  if(floor === 50){
     // TODO: remove this restriction
     return false
   }
