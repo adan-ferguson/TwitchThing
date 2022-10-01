@@ -6,7 +6,7 @@ export default {
       dps: source.magicPower * (params.damage ?? 1)
     }
   },
-  def: stateVal => {
+  defFn: stateParams => {
     return {
       stacking: true,
       combatOnly: false,
@@ -16,7 +16,7 @@ export default {
         actions: [
           selfDamageAction({
             damageType: 'magic',
-            damage: stateVal.dps
+            damage: stateParams.dps
           })
         ]
       }

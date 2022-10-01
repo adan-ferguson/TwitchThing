@@ -33,7 +33,7 @@ export default class AdventurerInstance extends FighterInstance{
 
   constructor(adventurerDef, initialState = {}){
     super(adventurerDef, initialState)
-    this.bonuses = adventurerDef.bonuses.map(bonus => new BonusInstance(bonus))
+    this.bonuses = adventurerDef.bonuses.map(bonus => new BonusInstance(bonus, this))
   }
 
   get displayName(){
@@ -57,11 +57,11 @@ export default class AdventurerInstance extends FighterInstance{
   }
 
   get baseStats(){
-    return this.bonuses.map(bonusDef => new BonusInstance(bonusDef).stats)
+    return this.bonuses.map(bonusInstance => bonusInstance.stats)
   }
 
   get baseMods(){
-    return this.bonuses.map(bonus => new BonusInstance(bonus).mods)
+    return this.bonuses.map(bonusInstance => bonusInstance.mods)
   }
 
   get orbs(){

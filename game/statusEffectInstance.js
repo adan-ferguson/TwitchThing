@@ -2,7 +2,6 @@ import { all as Effects } from './statusEffects/combined.js'
 import Stats from './stats/stats.js'
 import { toDisplayName } from './utilFunctions.js'
 import EffectInstance from './effectInstance.js'
-import _ from 'lodash'
 
 export default class StatusEffectInstance extends EffectInstance{
 
@@ -11,36 +10,33 @@ export default class StatusEffectInstance extends EffectInstance{
   state
 
   constructor(data, owner = null, state = {}){
-    super()
+    super(owner, state)
     this.data = data
     this.owner = owner
-    this.state = {
-      time: 0,
-      stacks: 1,
-      ...state
-    }
-
     if(!this.baseEffect){
       throw 'Base effect not found'
     }
+    this._options = this._makeOptions()
   }
 
-  get options(){
-    return {
-      name: null,
-      group: 'generic',
-      displayName: null,
-      stacking: false, // true | false | 'refresh'
-      duration: null, // null | integer
-      combatOnly: true, // boolean
-      buff: false, // boolean
-      mods: [],
-      stats: {},
-      params: {},
-      ability: null,
-      ...this.baseEffect.def,
-      ...this.data
-    }
+  get id(){
+    return this.options.name
+  }
+
+  get ability(){
+    return this._options.ability
+  }
+
+  get mods(){
+    return this._options.mods
+  }
+
+  get stacks(){
+    return this.state.stacks || 1
+  }
+
+  get stats(){
+    return new Stats(Array(this.stacks).fill(this.options.stats))
   }
 
   get baseEffect(){
@@ -65,58 +61,53 @@ export default class StatusEffectInstance extends EffectInstance{
     }))
   }
 
-  /**
-   * return {Stats}
-   */
-  get stats(){
-    const repetitions = this.options.stacking ? this.state.stacks : 1
-    return new Stats(Array(repetitions).fill(this.options.stats))
-  }
-
-  /**
-   * return {[string]}
-   */
-  get mods(){
-    return this.options.mods
-  }
-
   refreshDuration(){
-    this.state.time = 0
+    this._state.time = 0
     return this
   }
 
   addStack(){
     if(this.options.stacking){
-      this.state.stacks++
+      this._state.stacks = this.stacks + 1
     }
     return this
   }
 
-  advanceTime(ms){
-    this.state.time += ms
-  }
-
-  /**
-   * @param combat
-   */
-  apply(combat){
-    if(this.baseEffect.apply){
-      return this.baseEffect.apply(combat, this.owner)
+  setState(newState = {}){
+    super.setState(newState)
+    if(!this._state.time){
+      this._state.time = 0
     }
   }
-}
 
-export function applyStatusEffect({ effectDef, combat, source, subject, options }){
-  // effectDef = _.isFunction(effectDef) ? effectDef({
-  //   source,
-  //   params: options.params ?? {}
-  // }) : effectDef
-
-  const effectData = {
-    ...JSON.parse(JSON.stringify(options)),
-    name: effectDef.name,
-    source: source.uniqueID
+  advanceTime(ms){
+    super.advanceTime(ms)
+    this._state.time += ms
   }
 
-  return subject.gainStatusEffect(effectData)
+  _makeOptions(){
+    let baseDef = this.baseEffect
+    if(baseDef.defFn){
+      baseDef = {
+        name: baseDef.name,
+        group: baseDef.group,
+        ...baseDef.defFn(this.data.params)
+      }
+    }
+    return {
+      name: null,
+      group: 'generic',
+      displayName: null,
+      stacking: false, // true | false | 'refresh'
+      duration: null, // null | integer
+      combatOnly: true, // boolean
+      buff: false, // boolean
+      mods: [],
+      stats: {},
+      params: {},
+      ability: null,
+      ...baseDef,
+      ...this.data
+    }
+  }
 }

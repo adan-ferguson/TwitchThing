@@ -20,11 +20,9 @@ export function takeCombatTurn(combat, actor){
 export function useEffectAbility(combat, effect){
   const ability = effect?.ability
   if(!ability){
-    debugger
     throw 'Can not use item ability so I\'m not sure what\'s going on here'
   }
   if(!effect.owner){
-    debugger
     throw 'Effect has no owner, so hard for its ability to get triggered'
   }
   const results = []
@@ -41,7 +39,7 @@ export function useEffectAbility(combat, effect){
 
   return {
     ability: effect.id,
-    actor: actor.uniqueID,
+    actor: effect.owner.uniqueID,
     results: results.filter(r => r)
   }
 }
@@ -161,6 +159,10 @@ function triggerBeforeAttacked(combat, owner){
 }
 
 function triggerAttackHit(combat, actor){
+
+  if(!actor){
+    debugger
+  }
 
   const effects = actor.triggeredEffects('attackHit')
   const results = []

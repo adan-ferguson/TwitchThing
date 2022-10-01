@@ -35,8 +35,12 @@ export function applyStatusEffect(combat, actor, subject, statusEffectData){
   if(baseEffect.stateParamsFn){
     statusEffectData = {
       ...statusEffectData,
-      params: baseEffect.stateParamsFn(actor, statusEffectData.params)
+      params: baseEffect.stateParamsFn({
+        source: actor,
+        params: statusEffectData.params
+      })
     }
   }
   subject.statusEffectsData.add(statusEffectData)
+  return statusEffectData
 }
