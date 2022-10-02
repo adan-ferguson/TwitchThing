@@ -1,4 +1,4 @@
-
+import { uuid } from './utilFunctions.js'
 
 // Stupid
 import Stats from './stats/stats.js'
@@ -44,6 +44,10 @@ export default class EffectInstance{
 
   get state(){
     return { ...this._state }
+  }
+
+  get stacks(){
+    return 1
   }
 
   get abilityReady(){
@@ -101,6 +105,9 @@ export default class EffectInstance{
 
   setState(newState = {}){
     this._state = { ...newState }
+    if(!this._state.uniqueID){
+      this._state.uniqueID = uuid()
+    }
     if(this._state.cooldownRemaining === undefined && this.ability?.cooldown){
       this._state.cooldownRemaining = this.ability.initialCooldown ?? 0
     }

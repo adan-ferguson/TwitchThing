@@ -7,9 +7,9 @@ export default {
       dps: roundToFixed(source.magicPower * (params.damage ?? 1), 2)
     }
   },
-  defFn: stateParams => {
+  defFn: (stateParams, stacks) => {
     return {
-      stacking: true,
+      stacking: false,
       combatOnly: false,
       ability: {
         type: 'triggered',
@@ -17,7 +17,7 @@ export default {
         actions: [
           takeDamageAction({
             damageType: 'magic',
-            damage: stateParams.dps,
+            damage: stateParams.dps * stacks,
             useDecimals: true
           })
         ]

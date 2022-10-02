@@ -1,5 +1,4 @@
 import { flash } from '../../animationHelper.js'
-import { toDisplayName } from '../../../../game/utilFunctions.js'
 
 const HTML = `
 <di-bar></di-bar>

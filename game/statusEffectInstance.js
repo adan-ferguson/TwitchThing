@@ -13,7 +13,6 @@ export default class StatusEffectInstance extends EffectInstance{
     if(!this.baseEffect){
       throw 'Base effect not found'
     }
-    this.options = this._makeOptions()
     this.setState(state)
   }
 
@@ -59,6 +58,32 @@ export default class StatusEffectInstance extends EffectInstance{
     }))
   }
 
+  get options(){
+    let baseDef = this.baseEffect
+    if(baseDef.defFn){
+      baseDef = {
+        name: baseDef.name,
+        group: baseDef.group,
+        ...baseDef.defFn(this.data.params, this.stacks)
+      }
+    }
+    return {
+      name: null,
+      group: 'generic',
+      displayName: null,
+      stacking: false, // true | false | 'refresh'
+      duration: null, // null | integer
+      combatOnly: true, // boolean
+      buff: false, // boolean
+      mods: [],
+      stats: {},
+      params: {},
+      ability: null,
+      ...baseDef,
+      ...this.data
+    }
+  }
+
   refreshDuration(){
     this._state.time = 0
     return this
@@ -81,31 +106,5 @@ export default class StatusEffectInstance extends EffectInstance{
   advanceTime(ms){
     super.advanceTime(ms)
     this._state.time += ms
-  }
-
-  _makeOptions(){
-    let baseDef = this.baseEffect
-    if(baseDef.defFn){
-      baseDef = {
-        name: baseDef.name,
-        group: baseDef.group,
-        ...baseDef.defFn(this.data.params)
-      }
-    }
-    return {
-      name: null,
-      group: 'generic',
-      displayName: null,
-      stacking: false, // true | false | 'refresh'
-      duration: null, // null | integer
-      combatOnly: true, // boolean
-      buff: false, // boolean
-      mods: [],
-      stats: {},
-      params: {},
-      ability: null,
-      ...baseDef,
-      ...this.data
-    }
   }
 }

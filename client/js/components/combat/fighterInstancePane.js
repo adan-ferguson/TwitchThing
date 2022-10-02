@@ -168,7 +168,6 @@ export default class FighterInstancePane extends HTMLElement{
       })
     }
 
-    console.log('incombat', this.fighterInstance.inCombat)
     this._actionBarEl.classList.toggle('displaynone', !this.fighterInstance.inCombat)
     this.statsList.setStats(this.fighterInstance.stats, this.fighterInstance)
     this._effectsListEl.update()
