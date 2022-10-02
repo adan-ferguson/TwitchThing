@@ -14,4 +14,8 @@ export default class MonsterItemInstance extends FighterItemInstance{
 
     super(itemData, state, owner)
   }
+
+  get id(){
+    return this._itemData.name
+  }
 }

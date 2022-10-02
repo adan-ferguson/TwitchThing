@@ -1,4 +1,3 @@
-import { fadeOut } from '../../animationHelper.js'
 import EffectRow from './effectRow.js'
 
 export default class EffectsList extends HTMLElement{
@@ -24,7 +23,7 @@ export default class EffectsList extends HTMLElement{
     })
     const expiredEffectRows = { ...effectRows }
 
-    this._fighterInstance.effectsData.effects.forEach(effect => {
+    this._fighterInstance.statusEffectsData.instances.forEach(effect => {
       if(!shouldShow(effect)){
         return
       }

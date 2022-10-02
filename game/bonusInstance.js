@@ -7,11 +7,12 @@ import EffectInstance from './effectInstance.js'
 export default class BonusInstance extends EffectInstance{
 
   constructor({ group, name }, owner = null, state = {}){
-    super(owner, state)
+    super(owner)
     this.bonusDef = Bonuses[group][name] ?? {
       name: '1st Level',
       group
     }
+    this.setState(state)
   }
 
   get id(){

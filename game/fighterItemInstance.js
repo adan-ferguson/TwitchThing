@@ -2,16 +2,16 @@ import Stats from './stats/stats.js'
 import { toDisplayName } from './utilFunctions.js'
 import EffectInstance from './effectInstance.js'
 
-
 export default class FighterItemInstance extends EffectInstance{
 
   constructor(itemData, state = {}, owner = null){
-    super(state, owner)
+    super(owner)
     this._itemData = { ...itemData }
+    this.setState(state)
   }
 
   get id(){
-    return this._itemData._id
+    return this._itemData._id.toString()
   }
 
   get ability(){

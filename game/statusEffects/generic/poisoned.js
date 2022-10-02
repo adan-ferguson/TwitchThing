@@ -1,9 +1,10 @@
-import { selfDamageAction } from '../../actions.js'
+import { takeDamageAction } from '../../actions.js'
+import { roundToFixed } from '../../utilFunctions.js'
 
 export default {
   stateParamsFn: ({ source, params = {} }) => {
     return {
-      dps: source.magicPower * (params.damage ?? 1)
+      dps: roundToFixed(source.magicPower * (params.damage ?? 1), 2)
     }
   },
   defFn: stateParams => {
@@ -14,9 +15,10 @@ export default {
         type: 'triggered',
         trigger: 'tick',
         actions: [
-          selfDamageAction({
+          takeDamageAction({
             damageType: 'magic',
-            damage: stateParams.dps
+            damage: stateParams.dps,
+            useDecimals: true
           })
         ]
       }

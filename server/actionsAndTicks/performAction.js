@@ -12,7 +12,7 @@ export function takeCombatTurn(combat, actor){
   }
   return {
     ability: 'basicAttack',
-    actor: actor.uniqueID,
+    owner: actor.uniqueID,
     results: attack(combat, actor).filter(r => r)
   }
 }
@@ -39,29 +39,31 @@ export function useEffectAbility(combat, effect){
 
   return {
     ability: effect.id,
-    actor: effect.owner.uniqueID,
+    owner: effect.owner.uniqueID,
     results: results.filter(r => r)
   }
 }
 
 /**
  * @param combat
- * @param actor
+ * @param owner
  * @param actionDef
  * @returns {array}
  */
-function doAction(combat, actor, actionDef){
+function doAction(combat, owner, actionDef){
   if(actionDef.type === 'attack'){
-    return attack(combat, actor, actionDef)
+    return attack(combat, owner, actionDef)
   }else if(actionDef.type === 'statusEffect'){
-    const subject = actionDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
+    const subject = actionDef.affects === 'self' ? owner : combat.getEnemyOf(owner)
     return [{
       resultType: 'gainEffect',
-      effect: applyStatusEffect(combat, actor, subject, actionDef.effect).data,
+      effect: applyStatusEffect(combat, owner, subject, actionDef.effect),
       subject: subject.uniqueID
     }]
   }else if(actionDef.type === 'time'){
-    actor.adjustNextActionTime(actionDef.ms)
+    owner.adjustNextActionTime(actionDef.ms)
+  }else if(actionDef.type === 'takeDamage'){
+    return [takeDamage(owner, actionDef)]
   }
   return []
 }
@@ -92,18 +94,18 @@ function attack(combat, actor, actionDef = {}){
     actionDef.damageType = actor.basicAttackType
   }
 
-  let baseDamage = actor[actionDef.damageType + 'Power']
-  baseDamage *= actionDef.damageMulti
+  let damage = actor[actionDef.damageType + 'Power']
+  damage *= actionDef.damageMulti
 
   const damageInfo = {
     resultType: 'damage',
     subject: enemy.uniqueID,
     damageType: actionDef.damageType,
-    baseDamage
+    damage
   }
 
   if(attemptCrit(actor)){
-    baseDamage *= (1 + actor.stats.get('critDamage').value)
+    damage *= (1 + actor.stats.get('critDamage').value)
     damageInfo.crit = true
   }
 
@@ -140,9 +142,20 @@ function dealDamage(actor, enemy, damageInfo){
 }
 
 function takeDamage(subject, damageInfo){
-  const blocked = Math.floor(damageInfo.baseDamage * subject.stats.get(damageInfo.damageType + 'Def').value)
-  const finalDamage = Math.ceil(Math.min(subject.hp, damageInfo.baseDamage - blocked))
-  subject.hp -= finalDamage
+
+  damageInfo = {
+    damage: null,
+    damageType: 'phys',
+    useDecimals: false,
+    ...damageInfo
+  }
+
+  const blocked = Math.floor(damageInfo.damage * subject.stats.get(damageInfo.damageType + 'Def').value)
+  let finalDamage = Math.min(subject.hp, damageInfo.damage - blocked)
+  if(damageInfo.useDecimals){
+    finalDamage = Math.ceil(finalDamage)
+  }
+  subject.changeHpWithDecimals(-finalDamage)
   // TODO: triggers for "onTakeDamage"
   return { ...damageInfo, blocked, finalDamage }
 }
@@ -159,11 +172,6 @@ function triggerBeforeAttacked(combat, owner){
 }
 
 function triggerAttackHit(combat, actor){
-
-  if(!actor){
-    debugger
-  }
-
   const effects = actor.triggeredEffects('attackHit')
   const results = []
   effects.forEach(effect => {

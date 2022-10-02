@@ -78,6 +78,7 @@ export default class CombatEnactment extends EventEmitter{
       return
     }
     const currentEntry = this._timeline.currentEntry
+    console.log(currentEntry)
     this._timeline.time = currentEntry.time
     this._fighterPane1.setState(currentEntry.fighterState1, animate)
     this._fighterPane2.setState(currentEntry.fighterState2, animate)
@@ -86,7 +87,7 @@ export default class CombatEnactment extends EventEmitter{
   }
 
   _performAction(action){
-    this._getPaneFromFighterId(action.actor).displayActionPerformed(action.ability, action.results)
+    this._getPaneFromFighterId(action.owner).displayActionPerformed(action.ability, action.results)
     action.results.forEach(result => {
       if(result.results){
         this._performAction(result)
@@ -106,6 +107,6 @@ export default class CombatEnactment extends EventEmitter{
   }
 
   _performTickUpdate(tickUpdate){
-    this._getPaneFromFighterId(tickUpdate.subject).displayResult(tickUpdate)
+    this._getPaneFromFighterId(tickUpdate.owner).displayResult(tickUpdate)
   }
 }

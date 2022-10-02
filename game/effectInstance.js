@@ -6,16 +6,16 @@ new Stats()
 
 export default class EffectInstance{
 
-  constructor(state = {}, owner = null){
-    this.setState = state
+  _state = {}
+
+  constructor(owner = null){
     this.owner = owner
   }
 
   /**
    * Something to identify this effect so that when we parse an action, we can find
    * the source of the action.
-   *
-   * @returns {string}
+   * @return {string}
    */
   get id(){
     throw 'id gettter not defined'

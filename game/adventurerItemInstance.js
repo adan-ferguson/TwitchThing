@@ -24,10 +24,6 @@ export default class AdventurerItemInstance extends FighterItemInstance{
     return this._itemDef
   }
 
-  get id(){
-    return this._itemDef.id
-  }
-
   get orbs(){
     return { [this.itemData.group]: this.itemData.orbs }
   }

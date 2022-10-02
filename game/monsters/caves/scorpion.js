@@ -17,9 +17,9 @@ export default {
             affects: 'enemy',
             effect: {
               name: Effects.poisoned.name,
-              duration: 10000,
+              duration: 5000,
               params: {
-                damage: 1.2
+                damage: 0.1
               }
             }
           }

@@ -5,18 +5,16 @@ import EffectInstance from './effectInstance.js'
 
 export default class StatusEffectInstance extends EffectInstance{
 
-  owner = null
   data
-  state
 
   constructor(data, owner = null, state = {}){
-    super(owner, state)
+    super(owner)
     this.data = data
-    this.owner = owner
     if(!this.baseEffect){
       throw 'Base effect not found'
     }
-    this._options = this._makeOptions()
+    this.options = this._makeOptions()
+    this.setState(state)
   }
 
   get id(){
@@ -24,11 +22,11 @@ export default class StatusEffectInstance extends EffectInstance{
   }
 
   get ability(){
-    return this._options.ability
+    return this.options.ability
   }
 
   get mods(){
-    return this._options.mods
+    return this.options.mods ?? []
   }
 
   get stacks(){

@@ -23,7 +23,7 @@ export class StatusEffectsData{
       val.forEach(effectStateVal => {
         this._instances.push(
           new StatusEffectInstance(
-            effectStateVal.def,
+            effectStateVal.data,
             this._fighterInstance,
             effectStateVal.state
           ))
@@ -45,9 +45,9 @@ export class StatusEffectsData{
   add(statusEffectData){
     const existing = this._getByData(statusEffectData)
     if(existing){
-      if(existing.data.stacking === 'refresh'){
+      if(existing.options.stacking === 'refresh'){
         return existing.refreshDuration()
-      }else if(existing.data.stacking === true){
+      }else if(existing.options.stacking === true){
         return existing.addStack().refreshDuration()
       }
     }
@@ -87,7 +87,9 @@ export class StatusEffectsData{
   /**
    * @private
    */
-  _getByData(effectDef){
-    return this._instances.find(effect => _.isEqual(effectDef, effect.def))
+  _getByData(effectData){
+    return this._instances.find(statusEffectInstance => {
+      return _.isEqual(effectData, statusEffectInstance.data)
+    })
   }
 }

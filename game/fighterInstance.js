@@ -98,7 +98,12 @@ export default class FighterInstance{
     const loadoutStatAffectors = this.itemInstances.filter(s => s).map(ii => ii.stats)
 
     // lol
-    const effectAffectors = this.statusEffectsData.instances.map(effect => effect.stats)
+    const effectAffectors = this.statusEffectsData.instances.map(effect => {
+      if(!effect){
+        debugger
+      }
+      return effect.stats
+    })
     return new Stats([...baseStatAffectors, ...loadoutStatAffectors], effectAffectors)
   }
 

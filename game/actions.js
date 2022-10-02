@@ -7,12 +7,12 @@ export function attackAction(def){
   }
 }
 
-export function selfDamageAction(def){
+export function takeDamageAction(def){
   return {
     damageType: 'phys',
-    amount: 0,
+    damage: 0,
     ...def,
-    type: 'damage'
+    type: 'takeDamage'
   }
 }
 
