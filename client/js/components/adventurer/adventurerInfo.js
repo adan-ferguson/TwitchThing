@@ -1,9 +1,9 @@
 import BonusDetails from '../pages/levelup/bonusDetails.js'
 import classDisplayInfo from '../../classDisplayInfo.js'
-import BonusInstance from '../../../../game/bonusInstance.js'
-import { wrap } from '../../../../game/utilFunctions.js'
+import { wrapContent } from '../../../../game/utilFunctions.js'
 import tippy from 'tippy.js'
 import { StatsDisplayStyle } from '../../statsDisplayInfo.js'
+import { advLevelToXp, advXpToLevel } from '../../../../game/adventurerInstance.js'
 
 const HTML = `
 <div class="flex-rows">
@@ -17,10 +17,11 @@ const HTML = `
 </div>
 `
 
-const BONUS_HTML = (count, icon, name) => `
-<img class="flex-no-grow" src="${icon}">
+const BONUS_HTML = (level, icon, name) => `
 <span class="name">${name}</span>
-<span class="flex-no-grow">${count > 1 ? 'x' + count : ''}</span>
+<span>
+  <img class="flex-no-grow" src="${icon}"><span>${level}</span>
+</span>
 `
 
 export default class AdventurerInfo extends HTMLElement{
@@ -40,42 +41,28 @@ export default class AdventurerInfo extends HTMLElement{
       })
       .setStats(adventurerInstance.stats, adventurerInstance)
 
-    this._setBonuses(adventurerInstance.baseFighterDef.bonuses)
+    this._setBonuses(adventurerInstance.bonusesData)
     this.querySelector('di-xp-bar')
       .setLevelFunctions(advXpToLevel, advLevelToXp)
-      .setValue(adventurerInstance.baseFighterDef.xp)
+      .setValue(adventurerInstance.fighterData.xp)
   }
 
-  _setBonuses(bonuses){
+  _setBonuses(bonusesData){
     const bonusesList = this.querySelector('.bonuses-list')
 
-    const conglomerated = {}
-    bonuses.forEach(({ group, name }) => {
-      if (!conglomerated[group]){
-        conglomerated[group] = {}
-      }
-      if (!conglomerated[group][name]){
-        conglomerated[group][name] = 0
-      }
-      conglomerated[group][name]++
-    })
-
-    Object.keys(conglomerated).forEach(group => {
-      Object.keys(conglomerated[group]).forEach(name => {
-        const bonus = new BonusInstance({ group, name })
-        const info = classDisplayInfo(bonus.group)
-        const item = wrap(BONUS_HTML(conglomerated[group][name], info.orbIcon, bonus.displayName), {
-          allowHTML: true,
-          class: ['bonus-item', 'flex-columns']
-        })
-        item.style.color = info.color
-        tippy(item, {
-          theme: 'light',
-          allowHTML: true,
-          content: new BonusDetails({ group, name })
-        })
-        bonusesList.appendChild(item)
+    bonusesData.instances.forEach(bonusInstance => {
+      const info = classDisplayInfo(bonusInstance.group)
+      const item = wrapContent(BONUS_HTML(bonusInstance.level, info.orbIcon, bonusInstance.displayName), {
+        allowHTML: true,
+        class: ['bonus-item', 'flex-columns']
       })
+      item.style.color = info.color
+      tippy(item, {
+        theme: 'light',
+        allowHTML: true,
+        content: new BonusDetails(bonusInstance)
+      })
+      bonusesList.appendChild(item)
     })
   }
 }

@@ -56,7 +56,7 @@ export default class DungeonPage extends Page{
     this._eventEl = this.querySelector('di-dungeon-event')
     this._stateEl = this.querySelector('di-dungeon-state')
     this._timelineEl = this.querySelector('di-dungeon-timeline-controls')
-    this._timelineEl.ticker.on('tick', () => this._tick())
+    this._timelineEl.ticker.on('tick', ms => this._tick(ms))
     this._timelineEl.addEventListener('event_changed', e => {
       this._update(e.detail)
     })
@@ -187,9 +187,12 @@ export default class DungeonPage extends Page{
     this._ce = ce
   }
 
-  _tick(){
+  _tick(ms){
     if(this._ce){
       this._ce.timeline.time = this._timeline.timeSinceLastEntry
+    }
+    if(!this.currentEvent.passTimeOverride){
+      this._adventurerPane.advanceTime(ms)
     }
   }
 

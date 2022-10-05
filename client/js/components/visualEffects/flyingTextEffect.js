@@ -1,17 +1,13 @@
-const DEFAULTS = {
-  direction: 'up',
-  color: 'black',
-  distance: 40,
-  duration: 3000
-}
+import { EventEmitter } from 'events'
 
 const EFFECT_HTML = (text, color) => `
 <span style='color:${color};'>${text}</span>
 `
 
-export default class FlyingTextEffect{
+export default class FlyingTextEffect extends EventEmitter{
 
   constructor(origin, text, options = {}){
+    super()
 
     origin = origin.getBoundingClientRect ? origin.getBoundingClientRect() : origin
 
@@ -22,7 +18,17 @@ export default class FlyingTextEffect{
       text = (number > 0 ? '+' : '') + number
     }
 
-    this.options = Object.assign({ origin, text }, DEFAULTS, options)
+    this.options = {
+      origin,
+      text,
+      direction: 'up',
+      color: 'black',
+      distance: 40,
+      duration: 3000,
+      autoStart: true,
+      ...options
+    }
+
     this.el = document.createElement('div')
     this.el.classList.add('flying-text-effect')
     this.el.innerHTML = EFFECT_HTML(this.options.text, this.options.color)
@@ -34,20 +40,23 @@ export default class FlyingTextEffect{
 
     document.querySelector('body').appendChild(this.el)
 
-    setTimeout(() => {
-      this._start()
-      setTimeout(() => {
-        this.el.remove()
-      }, this.options.duration)
-    })
+    if(this.options.autoStart){
+      this.start()
+    }
   }
 
-  _start(){
-    const currentTransform = getComputedStyle(this.el).transform
-    const distance = this.options.distance * (this.options.direction === 'down' ? 1 : -1)
-    const translateStr = ` translateY(${distance}rem)`
-    this.el.style.transform = currentTransform + translateStr
-    this.el.style.opacity = '0'
+  start(){
+    setTimeout(() => {
+      const currentTransform = getComputedStyle(this.el).transform
+      const distance = this.options.distance * (this.options.direction === 'down' ? 1 : -1)
+      const translateStr = ` translateY(${distance}rem)`
+      this.el.style.transform = currentTransform + translateStr
+      this.el.style.opacity = '0'
+      setTimeout(() => {
+        this.el.remove()
+        this.emit('finish')
+      }, this.options.duration)
+    })
   }
 }
 

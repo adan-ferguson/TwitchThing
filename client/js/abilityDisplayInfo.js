@@ -1,6 +1,6 @@
 import physPowerIcon from '../assets/icons/physPower.svg'
 import magicPowerIcon from '../assets/icons/magicPower.svg'
-import { roundToFixed, wrap } from '../../game/utilFunctions.js'
+import { roundToFixed, wrapContent } from '../../game/utilFunctions.js'
 
 export default class AbilityDisplayInfo{
   constructor(ability, owner = null){
@@ -78,7 +78,7 @@ function timeAction(ms){
 }
 
 function descWrap(txt){
-  return wrap(txt, {
+  return wrapContent(txt, {
     elementType: 'span',
     class: 'action-description',
     allowHTML: true

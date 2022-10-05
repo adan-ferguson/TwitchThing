@@ -73,9 +73,10 @@ export default class Ticker extends EventEmitter{
         this._ticking = false
         return
       }
+      const prevTime = this._currentTime
       const elapsedTime = Math.round((new Date() - this._startingTimestamp) * this._options.speed)
       this._currentTime = Math.max(0, Math.min(this.endTime, this._startingTime + elapsedTime))
-      this.emit('tick')
+      this.emit('tick', this._currentTime - prevTime)
       if(this.currentTime === this.endTime){
         this._ticking = false
         this.emit('ended', elapsedTime - this.currentTime)

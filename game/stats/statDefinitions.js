@@ -2,6 +2,7 @@ export const StatType = {
   FLAT: 0,
   MULTIPLIER: 1, // 0 to infinity, default is 1
   PERCENTAGE: 2, // 0 to 1, default is 0
+  COMPOSITE: 3
 }
 
 const DEFAULT_DEFINITION = {
@@ -34,7 +35,7 @@ const defs = {
     type: StatType.PERCENTAGE
   },
   hpMax: {
-    type: StatType.MULTIPLIER
+    type: StatType.COMPOSITE
   },
   landmarkFind: {
     type: StatType.MULTIPLIER
@@ -43,13 +44,13 @@ const defs = {
     minValue: 0
   },
   magicPower: {
-    type: StatType.MULTIPLIER
+    type: StatType.COMPOSITE
   },
   magicDef: {
     type: StatType.PERCENTAGE
   },
   physPower: {
-    type: StatType.MULTIPLIER
+    type: StatType.COMPOSITE
   },
   physDef: {
     type: StatType.PERCENTAGE

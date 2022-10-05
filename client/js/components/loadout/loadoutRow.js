@@ -1,6 +1,6 @@
 import tippy from 'tippy.js'
 import SimpleModal from '../simpleModal.js'
-import { wrap } from '../../../../game/utilFunctions.js'
+import { wrapContent } from '../../../../game/utilFunctions.js'
 
 const HTML = `
 <di-bar class="cooldown"></di-bar>
@@ -60,7 +60,7 @@ export default class LoadoutRow extends HTMLElement{
     tooltip.appendChild(this.loadoutItem.makeTooltip())
 
     if(this.loadoutItem.makeDetails){
-      tooltip.appendChild(wrap('Right-click for more info', {
+      tooltip.appendChild(wrapContent('Right-click for more info', {
         class: 'right-click subtitle'
       }))
     }

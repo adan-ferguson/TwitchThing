@@ -10,8 +10,11 @@ export default class FighterItemInstance extends EffectInstance{
     this.setState(state)
   }
 
+  /**
+   * @return {string}
+   */
   get id(){
-    return this._itemData._id.toString()
+    throw 'Not defined'
   }
 
   get ability(){

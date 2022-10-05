@@ -4,7 +4,7 @@ import DIForm from '../../form.js'
 import FormModal from '../../formModal.js'
 import { getSocket, joinSocketRoom, leaveSocketRoom } from '../../../socketClient.js'
 import '../../list.js'
-import { wrap } from '../../../../../game/utilFunctions.js'
+import { wrapContent } from '../../../../../game/utilFunctions.js'
 import LiveDungeonMapPage from '../liveDungeonMap/liveDungeonMapPage.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 
@@ -74,7 +74,7 @@ export default class MainPage extends Page{
           this._showNewAdventurerModal()
         })
       }else{
-        rows.push(wrap(`Reach floor ${1 + i * 10} to unlock.`, {
+        rows.push(wrapContent(`Reach floor ${1 + i * 10} to unlock.`, {
           class: 'blank-row'
         }))
       }

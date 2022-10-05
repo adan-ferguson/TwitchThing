@@ -6,29 +6,43 @@ import EffectInstance from './effectInstance.js'
 
 export default class BonusInstance extends EffectInstance{
 
-  constructor({ group, name }, owner = null, state = {}){
+  constructor({ group, name, level, owner = null, state = {} }){
     super(owner)
-    this.bonusDef = Bonuses[group][name] ?? {
+    this._bonusDef = Bonuses[group][name] ?? {
       name: '1st Level',
       group
     }
+    this._level = level
+    this._effectData = this._bonusDef.effect(level)
     this.setState(state)
   }
 
+  get level(){
+    return this._level
+  }
+
   get id(){
-    return this.bonusDef.name
+    return this._bonusDef.name
+  }
+
+  get name(){
+    return this._bonusDef.name
+  }
+
+  get group(){
+    return this._bonusDef.group
   }
 
   get ability(){
-    return this.bonusDef.ability
+    return this._effectData.ability
   }
 
   get mods(){
-    return this.bonusDef.mods
+    return this._effectData.mods
   }
 
   get stats(){
-    return new Stats(this.bonusDef.stats)
+    return new Stats(this._effectData.stats)
   }
 
   get displayName(){
@@ -37,11 +51,12 @@ export default class BonusInstance extends EffectInstance{
 
   get orbsData(){
     const orbs = {}
-    orbs[this.bonusDef.group] = this.bonusDef.orbs || 1
+    orbs[this._bonusDef.group] = this.level
+    // TODO: more complicated (+1 to others, +2 to self, etc)
     return new OrbsData(orbs)
   }
 
   get description(){
-    return this.bonusDef.description || ''
+    return this._bonusDef.description || ''
   }
 }

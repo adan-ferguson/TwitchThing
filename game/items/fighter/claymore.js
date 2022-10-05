@@ -6,13 +6,14 @@ export default {
     type: 'active',
     cooldown: 12000,
     actions: [
-      attackAction(),
-      // effectAction(Effects.stunned, {
-      //   affects: 'enemy',
-      //   effect: {
-      //     duration: 2000
-      //   }
-      // })
+      attackAction(), {
+        type: 'statusEffect',
+        affects: 'enemy',
+        effect: {
+          name: Effects.stunned.name,
+          duration: 2000
+        }
+      }
     ]
   },
   stats: {

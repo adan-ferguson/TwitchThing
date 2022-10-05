@@ -98,8 +98,6 @@ function attack(combat, actor, actionDef = {}){
   damage *= actionDef.damageMulti
 
   const damageInfo = {
-    resultType: 'damage',
-    subject: enemy.uniqueID,
     damageType: actionDef.damageType,
     damage
   }
@@ -152,12 +150,12 @@ function takeDamage(subject, damageInfo){
 
   const blocked = Math.floor(damageInfo.damage * subject.stats.get(damageInfo.damageType + 'Def').value)
   let finalDamage = Math.min(subject.hp, damageInfo.damage - blocked)
-  if(damageInfo.useDecimals){
+  if(!damageInfo.useDecimals){
     finalDamage = Math.ceil(finalDamage)
   }
   subject.changeHpWithDecimals(-finalDamage)
   // TODO: triggers for "onTakeDamage"
-  return { ...damageInfo, blocked, finalDamage }
+  return { ...damageInfo, blocked, finalDamage, resultType: 'damage', subject: subject.uniqueID }
 }
 
 function triggerBeforeAttacked(combat, owner){

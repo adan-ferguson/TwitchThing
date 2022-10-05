@@ -1,9 +1,9 @@
 import FighterInstance from './fighterInstance.js'
-import BonusInstance from './bonusInstance.js'
 import AdventurerItemInstance from './adventurerItemInstance.js'
 import OrbsData from './orbsData.js'
 import LevelCalculator from './levelCalculator.js'
 import scaledValue from './scaledValue.js'
+import BonusesData from './bonusesData.js'
 
 const LEVEL_2_XP = 100
 const XP_MULTIPLIER = 0.35
@@ -33,7 +33,11 @@ export default class AdventurerInstance extends FighterInstance{
 
   constructor(adventurerDef, initialState = {}){
     super(adventurerDef, initialState)
-    this.bonuses = adventurerDef.bonuses.map(bonus => new BonusInstance(bonus, this))
+    this.bonusesData = new BonusesData(adventurerDef.bonuses)
+  }
+
+  get bonuses(){
+    return this.bonusesData.instances
   }
 
   get displayName(){
@@ -70,5 +74,9 @@ export default class AdventurerInstance extends FighterInstance{
     })
     const max = this.itemInstances.map(ii => ii?.orbs || {})
     return new OrbsData(used, max)
+  }
+
+  get effectInstances(){
+    return [...this.bonuses, ...super.effectInstances]
   }
 }

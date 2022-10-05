@@ -1,5 +1,5 @@
 import Zones, { floorSize } from '../../../game/zones.js'
-import { makeEl, wrap } from '../../../game/utilFunctions.js'
+import { makeEl, wrapContent } from '../../../game/utilFunctions.js'
 import tippy from 'tippy.js'
 import AdventurerStatus from './adventurer/adventurerStatus.js'
 
@@ -21,7 +21,7 @@ export default class LiveDungeonMap extends HTMLElement{
     this.innerHTML = HTML
     const runsEl = this.querySelector('.runs')
     Zones.forEach((zone, zoneIndex) => {
-      const zoneEl = wrap(ZONE_HTML(zone), {
+      const zoneEl = wrapContent(ZONE_HTML(zone), {
         class: 'zone',
         allowHTML: true
       })
@@ -69,7 +69,7 @@ export default class LiveDungeonMap extends HTMLElement{
   _makeDungeonRunEl({ _id, adventurer }){
     const el = makeEl({ class: ['dungeon-run-dot', 'clickable'] })
     const status = new AdventurerStatus(adventurer)
-    status.appendChild(wrap('Click to watch', {
+    status.appendChild(wrapContent('Click to watch', {
       class: 'subtitle',
       elementType: 'span'
     }))

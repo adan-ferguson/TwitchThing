@@ -1,3 +1,4 @@
+import { uuid } from './utilFunctions.js'
 import FighterItemInstance from './fighterItemInstance.js'
 
 export default class MonsterItemInstance extends FighterItemInstance{
@@ -13,9 +14,11 @@ export default class MonsterItemInstance extends FighterItemInstance{
     }
 
     super(itemData, state, owner)
+
+    this._id = uuid()
   }
 
   get id(){
-    return this._itemData.name
+    return this._id
   }
 }

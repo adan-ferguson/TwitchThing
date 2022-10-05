@@ -4,6 +4,8 @@ import { hideLoader, showLoader } from '../../../loader.js'
 import BonusDetails from './bonusDetails.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import fizzetch from '../../../fizzetch.js'
+import { makeEl } from '../../../../../game/utilFunctions.js'
+import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 
 const HTML = `
 <div class="content-rows">
@@ -14,6 +16,7 @@ const HTML = `
 
 export default class LevelupPage extends Page{
 
+  _adventurer
   _titleText = ''
 
   constructor(adventurerID){
@@ -40,7 +43,7 @@ export default class LevelupPage extends Page{
     if(!adventurer.nextLevelUp){
       return this.redirectTo(AdventurerPage.path(this.adventurerID))
     }
-    this._adventurer = adventurer
+    this._adventurer = new AdventurerInstance(adventurer)
     this._setupNext(adventurer.nextLevelUp)
   }
 
@@ -49,13 +52,26 @@ export default class LevelupPage extends Page{
     this._selected = false
 
     nextLevelUp.options.forEach((bonus, index) => {
+      const bonusOption = makeEl({ class: 'bonus-option' })
+      if(bonus.level > 1){
+        const current = {
+          ...bonus,
+          level: bonus.level - 1
+        }
+        bonusOption.appendChild(new BonusDetails(current))
+        bonusOption.appendChild(makeEl({
+          class: 'bonus-arrow',
+          content: '<i class="fa-solid fa-arrow-right"></i>'
+        }))
+      }
       const details = new BonusDetails(bonus)
-      details.addEventListener('click', () => {
+      bonusOption.addEventListener('click', () => {
         if(!this._selected){
           this._select(index)
         }
       })
-      this._options.appendChild(details)
+      bonusOption.appendChild(details)
+      this._options.appendChild(bonusOption)
     })
 
     this._titleText = `${this._adventurer.name} - Level ${nextLevelUp.level}`

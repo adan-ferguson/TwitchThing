@@ -31,6 +31,11 @@ export function roundToFixed(val, digits){
   return val / multi
 }
 
+export function roundToNearestIntervalOf(val, interval){
+  const newVal = interval * Math.round(val / interval)
+  return interval < 1 ? roundToFixed(newVal, Math.ceil(-Math.log10(interval))) : newVal
+}
+
 export function isObject(val){
   if (val === null){ return false}
   return ( (typeof val === 'function') || (typeof val === 'object') )
@@ -46,7 +51,7 @@ export function mergeOptionsObjects(currentOptions, newOptions){
   return options
 }
 
-export function wrap(content, options = {}){
+export function wrapContent(content, options = {}){
   if(options.allowHTML){
     return makeEl({
       content: content,

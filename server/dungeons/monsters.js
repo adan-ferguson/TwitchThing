@@ -82,7 +82,7 @@ export async function generateMonster(dungeonRun){
     const advStats = dungeonRun.adventurerInstance.stats
     const rewardBonus = monsterInstance.stats.get('rewards').value
     const rewards = {
-      xp: levelToXpReward(level) * advStats.get('combatXP').value * rewardBonus
+      xp: levelToXpReward(level) * advStats.get('combatXP').value * rewardBonus * 50
     }
     if(dungeonRun.user.accomplishments.firstRunFinished){
       // TODO: chest rarity

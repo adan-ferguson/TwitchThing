@@ -17,37 +17,37 @@ const statDefinitionsInfo = {
   hpMax: {
     text: 'Max Health',
     icon: healthIcon,
-    displayedValueFn: (value, { style, owner }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
-        return Math.round(value * owner.baseHp)
-      }
-    },
-    descriptionFn: (value, { style, owner }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
-        return `Max Health (${owner.baseHp} + ${Math.round(value * 100 - 100)}%)`
-      }
-      return 'Max Health'
-    },
+    // displayedValueFn: (value, { style, owner }) => {
+    //   if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
+    //     return Math.round(value * owner.baseHp)
+    //   }
+    // },
+    // descriptionFn: (value, { style, owner }) => {
+    //   if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
+    //     return `Max Health (${owner.baseHp} + ${Math.round(value * 100 - 100)}%)`
+    //   }
+    //   return 'Max Health'
+    // },
   },
   physPower: {
     text: 'Phys Power',
     icon: physPowerIcon,
-    displayedValueFn: (value, { style, owner }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE && owner?.basePower){
-        return Math.ceil(value * owner.basePower)
-      }
-    },
-    description: 'Phys power (basic attack damage)',
+    // displayedValueFn: (value, { style, owner }) => {
+    //   if(style === StatsDisplayStyle.CUMULATIVE && owner?.basePower){
+    //     return Math.ceil(value * owner.basePower)
+    //   }
+    // },
+    // description: 'Phys power (basic attack damage)',
   },
   magicPower: {
     text: 'Magic Power',
     icon: magicPowerIcon,
-    displayedValueFn: (value, { style, owner }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE && owner?.basePower){
-        return Math.ceil(value * owner.basePower)
-      }
-    },
-    description: 'Magic power',
+    // displayedValueFn: (value, { style, owner }) => {
+    //   if(style === StatsDisplayStyle.CUMULATIVE && owner?.basePower){
+    //     return Math.ceil(value * owner.basePower)
+    //   }
+    // },
+    // description: 'Magic power',
   },
   physDef: {
     text: 'Phys Defense',

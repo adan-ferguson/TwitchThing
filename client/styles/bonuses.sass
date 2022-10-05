@@ -12,14 +12,22 @@ di-levelup-page
     align-items: center
     justify-content: space-evenly
 
-  di-bonus-details
-    cursor: pointer
-    width: 250rem
-    border: 2rem dotted currentColor
+    .bonus-option
+      display: flex
+      flex-direction: row
+      cursor: pointer
+      align-items: center
 
-    &:hover
-      border-style: solid
+      .bonus-arrow
+        margin: 0 20rem
 
+      di-bonus-details
+        width: 220rem
+        border: 2rem dotted currentColor
+
+      &:hover
+        di-bonus-details
+          border-style: solid
 
 di-bonus-details
   position: relative

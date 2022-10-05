@@ -4,6 +4,7 @@ export default {
   [StatType.FLAT]: flatValue,
   [StatType.MULTIPLIER]: multiplierValue,
   [StatType.PERCENTAGE]: percentageValue,
+  [StatType.COMPOSITE]: compositeValue
 }
 
 function flatValue(values, defaultValue){
@@ -54,6 +55,28 @@ function multiplierValue(values, defaultValue){
   return value
 }
 
+function compositeValue(values, defaultValue){
+  const mods = compositeMods(values)
+  let value = defaultValue
+
+  value = mods.flatPlus.reduce((val, mod) => {
+    return val + mod
+  }, value)
+
+  value = mods.flatMinus.reduce((val, mod) => {
+    return val - mod
+  }, value)
+
+  value = mods.pctPlus.reduce((val, mod) => {
+    return val * (1 + mod)
+  }, value)
+
+  value = mods.pctMinus.reduce((val, mod) => {
+    return val * (1 - mod)
+  }, value)
+
+  return value
+}
 
 /**
  * flatPlus example: 5

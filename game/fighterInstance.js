@@ -94,6 +94,12 @@ export default class FighterInstance{
    * @returns {Stats}
    */
   get stats(){
+
+    const derivedStats = {
+      physPower: this.basePower,
+      magicPower: this.basePower,
+      hpMax: this.baseHp
+    }
     const baseStatAffectors = this.baseStats
     const loadoutStatAffectors = this.itemInstances.filter(s => s).map(ii => ii.stats)
 
@@ -104,22 +110,22 @@ export default class FighterInstance{
       }
       return effect.stats
     })
-    return new Stats([...baseStatAffectors, ...loadoutStatAffectors], effectAffectors)
+    return new Stats([derivedStats, ...baseStatAffectors, ...loadoutStatAffectors], effectAffectors)
   }
 
   get baseMods(){
     return []
   }
 
+  get effectInstances(){
+    return [...this.itemInstances.filter(ii => ii), ...this.statusEffectsData.instances]
+  }
+
   /**
    * @returns {ModsCollection}
    */
   get mods(){
-    const loadoutMods = this.itemInstances
-      .filter(m => m)
-      .map(ii => ii.mods)
-    const stateMods = this.statusEffectsData.instances.map(effect => effect.mods ?? [])
-    return new ModsCollection(this.baseMods, loadoutMods, stateMods)
+    return new ModsCollection(this.effectInstances.map(ei => ei.mods).filter(m => m))
   }
 
   /**
@@ -171,7 +177,7 @@ export default class FighterInstance{
   }
 
   get hpMax(){
-    const hpMax = Math.round(this.baseHp * this.stats.get('hpMax').value)
+    const hpMax = this.stats.get('hpMax').value
     if(hpMax === 0){
       debugger
     }
@@ -187,11 +193,11 @@ export default class FighterInstance{
   }
 
   get magicPower(){
-    return this.stats.get('magicPower').value * this.basePower
+    return this.stats.get('magicPower').value
   }
 
   get physPower(){
-    return this.stats.get('physPower').value * this.basePower
+    return this.stats.get('physPower').value
   }
 
   get inCombat(){
@@ -222,7 +228,7 @@ export default class FighterInstance{
   }
 
   advanceTime(ms){
-    if(!this.mods.contains(Mods.freezeActionBar)){
+    if(!this.mods.contains(Mods.freezeActionBar) && this.inCombat){
       this._state.timeSinceLastAction += ms
     }
     this.itemInstances.forEach(itemInstance => {

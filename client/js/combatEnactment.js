@@ -107,6 +107,10 @@ export default class CombatEnactment extends EventEmitter{
   }
 
   _performTickUpdate(tickUpdate){
-    this._getPaneFromFighterId(tickUpdate.owner).displayResult(tickUpdate)
+    if(tickUpdate.results){
+      this._performAction(tickUpdate)
+    }else{
+      this._getPaneFromFighterId(tickUpdate.owner).displayResult(tickUpdate)
+    }
   }
 }

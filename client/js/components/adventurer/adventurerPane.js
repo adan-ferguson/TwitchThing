@@ -89,7 +89,7 @@ export default class AdventurerPane extends HTMLElement{
 
   _showAdventurerInfoModal(){
     const modal = new Modal()
-    modal.innerPane.appendChild(new AdventurerInfo(this.adventurer, this.statsList.stats))
+    modal.innerPane.appendChild(new AdventurerInfo(new AdventurerInstance(this.adventurer), this.statsList.stats))
     modal.show()
   }
 }

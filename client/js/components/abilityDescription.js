@@ -1,4 +1,4 @@
-import { roundToFixed, toArray, wrap } from '../../../game/utilFunctions.js'
+import { roundToFixed, toArray, wrapContent } from '../../../game/utilFunctions.js'
 import AbilityDisplayInfo from '../abilityDisplayInfo.js'
 import actionIcon from '../../assets/icons/action.svg'
 import tippy from 'tippy.js'
@@ -46,7 +46,7 @@ export default class AbilityDescription extends HTMLElement{
 
     const desc = this.querySelector('.description')
     if(displayInfo.triggerText){
-      desc.append(wrap(displayInfo.triggerText + ':', {
+      desc.append(wrapContent(displayInfo.triggerText + ':', {
         class: 'trigger-text'
       }))
     }

@@ -94,8 +94,14 @@ class Combat{
   constructor(fighterInstance1, fighterInstance2){
     fighterInstance1.inCombat = true
     fighterInstance2.inCombat = true
-    this.fighterStartState1 = { ...fighterInstance1.state }
-    this.fighterStartState2 = { ...fighterInstance2.state }
+    this.fighterStartState1 = {
+      ...fighterInstance1.state,
+      timeSinceLastAction: 0
+    }
+    this.fighterStartState2 = {
+      ...fighterInstance2.state,
+      timeSinceLastAction: 0
+    }
     this.fighterInstance1 = fighterInstance1
     this.fighterInstance2 = fighterInstance2
     this._currentTime = 0
