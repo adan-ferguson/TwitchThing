@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { floorSize } from '../../../../server/dungeons/stairs.js'
-import scaledValue from '../../../../game/scaledValue.js'
+import { scaledValue } from '../../../../game/scaledValue.js'
 
 describe('floorSize function', () => {
 

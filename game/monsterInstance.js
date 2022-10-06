@@ -1,7 +1,7 @@
 import FighterInstance  from './fighterInstance.js'
 import * as Monsters from './monsters/combined.js'
 import MonsterItemInstance from './monsterItemInstance.js'
-import scaledValue from './scaledValue.js'
+import { scaledValue } from './scaledValue.js'
 import Stats from './stats/stats.js'
 import ModsCollection from './modsCollection.js'
 import OrbsData from './orbsData.js'

@@ -2,7 +2,7 @@ import FighterInstance from './fighterInstance.js'
 import AdventurerItemInstance from './adventurerItemInstance.js'
 import OrbsData from './orbsData.js'
 import LevelCalculator from './levelCalculator.js'
-import scaledValue from './scaledValue.js'
+import { scaledValue } from './scaledValue.js'
 import BonusesData from './bonusesData.js'
 
 const LEVEL_2_XP = 100

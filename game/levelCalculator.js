@@ -1,4 +1,4 @@
-import scaledValue from './scaledValue.js'
+import { scaledValue } from './scaledValue.js'
 
 export default class LevelCalculator{
 

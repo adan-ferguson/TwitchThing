@@ -1,4 +1,4 @@
-import scaledValue from '../../game/scaledValue.js'
+import { scaledValue } from '../../game/scaledValue.js'
 import { chooseOne } from '../../game/rando.js'
 import KnowledgeRelic from '../relics/knowledgeRelic.js'
 import HealingRelic from '../relics/healingRelic.js'

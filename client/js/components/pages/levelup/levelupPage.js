@@ -74,7 +74,7 @@ export default class LevelupPage extends Page{
       this._options.appendChild(bonusOption)
     })
 
-    this._titleText = `${this._adventurer.name} - Level ${nextLevelUp.level}`
+    this._titleText = `${this._adventurer.displayName} - Level ${nextLevelUp.level}`
     this.app.updateTitle()
   }
 

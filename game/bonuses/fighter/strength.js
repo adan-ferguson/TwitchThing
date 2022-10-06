@@ -6,7 +6,7 @@ const BASE = 5
 export default {
   effect: level => ({
     stats: {
-      physPower: Math.ceil(scaledValueCumulative(SCALING, level - 1, BASE))
+      physPower: Math.ceil(scaledValueCumulative(SCALING, level, BASE))
     }
   }),
   rarity: 0,

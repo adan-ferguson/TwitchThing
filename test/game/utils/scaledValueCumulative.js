@@ -1,6 +1,7 @@
 import { scaledValueCumulative } from '../../../game/scaledValue.js'
 
-console.log(scaledValueCumulative(1.1, 1))
-console.log(scaledValueCumulative(1.1, 2))
-console.log(scaledValueCumulative(1.1, 3))
-console.log(scaledValueCumulative(1.1, 4))
+console.log(scaledValueCumulative(0.1, 0, 10))
+console.log(scaledValueCumulative(0.1, 1, 10))
+console.log(scaledValueCumulative(0.1, 2, 10))
+console.log(scaledValueCumulative(0.1, 3, 10))
+console.log(scaledValueCumulative(0.1, 4, 10))

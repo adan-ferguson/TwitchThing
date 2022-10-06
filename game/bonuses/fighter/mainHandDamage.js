@@ -1,4 +1,4 @@
-import scaledValue from '../../scaledValue.js'
+import { scaledValue } from '../../scaledValue.js'
 import { roundToFixed } from '../../utilFunctions.js'
 
 const SCALING = 0.25
