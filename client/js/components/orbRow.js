@@ -5,7 +5,7 @@ import { mergeOptionsObjects } from '../../../game/utilFunctions.js'
 import OrbsData from '../../../game/orbsData.js'
 
 const ORB_ENTRY_HTML = (src, text) => `
-  <img src="${src}"> <span>+${text}</span>
+  <img src="${src}"> <span>${text}</span>
 `
 
 export const OrbsDisplayStyle = {

@@ -5,7 +5,7 @@ export function performCombatTick(combat, fighterInstance){
   const tickUpdates = []
   tickUpdates.push(regen(fighterInstance))
   fighterInstance.triggeredEffects('tick').forEach(effectInstance => {
-    tickUpdates.push(useEffectAbility(combat, effectInstance))
+    tickUpdates.push(useTriggeredAbility(combat, effectInstance, 'tick'))
   })
   return tickUpdates.filter(t => t)
 }

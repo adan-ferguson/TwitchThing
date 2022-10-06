@@ -20,7 +20,10 @@ function flatValue(values, defaultValue){
     return val - mod
   }, value)
 
-  return value
+  return {
+    value,
+    mods
+  }
 }
 
 function percentageValue(values, defaultValue){
@@ -37,7 +40,10 @@ function percentageValue(values, defaultValue){
     return val * (1 - mod)
   }, value)
 
-  return value
+  return {
+    value,
+    mods
+  }
 }
 function multiplierValue(values, defaultValue){
 
@@ -52,7 +58,10 @@ function multiplierValue(values, defaultValue){
     return val * mod
   }, value)
 
-  return value
+  return {
+    value,
+    mods
+  }
 }
 
 function compositeValue(values, defaultValue){
@@ -75,7 +84,10 @@ function compositeValue(values, defaultValue){
     return val * (1 - mod)
   }, value)
 
-  return value
+  return {
+    value,
+    mods
+  }
 }
 
 /**

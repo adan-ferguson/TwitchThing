@@ -14,8 +14,7 @@ export default class BonusesData{
         this._instances.push(new BonusInstance({
           group,
           name,
-          level: bonusesObj[group][name],
-          owner
+          level: bonusesObj[group][name]
         }))
       }
     }

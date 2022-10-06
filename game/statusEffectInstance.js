@@ -1,31 +1,52 @@
 import { all as Effects } from './statusEffects/combined.js'
 import Stats from './stats/stats.js'
-import { toDisplayName } from './utilFunctions.js'
+import { uuid } from './utilFunctions.js'
 import EffectInstance from './effectInstance.js'
 
 export default class StatusEffectInstance extends EffectInstance{
 
   data
 
-  constructor(data, owner = null, state = {}){
-    super(owner)
-    this.data = data
-    if(!this.baseEffect){
-      throw 'Base effect not found'
+  constructor(data, state = {}, owner = null){
+
+    // return {
+    //   name: null,
+    //   group: 'generic',
+    //   displayName: null,
+    //   stacking: false, // true | false | 'refresh'
+    //   duration: null, // null | integer
+    //   combatOnly: true, // boolean
+    //   buff: false, // boolean
+    //   mods: [],
+    //   stats: {},
+    //   params: {},
+    //   ability: null,
+    //   ...baseDef,
+    //   ...this.data
+    // }
+
+    super(state, owner)
+    this._data = data
+    this._id = uuid()
+  }
+
+  get effectData(){
+    let effectData
+    const baseDef = Effects[this._data.name]
+    if(baseDef.defFn){
+      effectData = {
+        name: baseDef.name,
+        group: baseDef.group,
+        ...baseDef.defFn(this._data.params, this._state)
+      }
+    }else{
+      effectData = baseDef
     }
-    this.setState(state)
+    return effectData
   }
 
   get id(){
-    return this.options.name
-  }
-
-  get ability(){
-    return this.options.ability
-  }
-
-  get mods(){
-    return this.options.mods ?? []
+    return this._id
   }
 
   get stacks(){
@@ -36,17 +57,9 @@ export default class StatusEffectInstance extends EffectInstance{
     return new Stats(Array(this.stacks).fill(this.options.stats))
   }
 
-  get baseEffect(){
-    return Effects[this.data.name]
-  }
-
-  get displayName(){
-    return this.options.displayName ?? toDisplayName(this.options.name)
-  }
-
   get expired(){
-    if(this.options.duration){
-      return this.state.time >= this.options.duration
+    if(this._effectData.duration){
+      return this._state.time >= this._effectData.duration
     }
     return false
   }
@@ -56,32 +69,6 @@ export default class StatusEffectInstance extends EffectInstance{
       data: this.data,
       state: this.state
     }))
-  }
-
-  get options(){
-    let baseDef = this.baseEffect
-    if(baseDef.defFn){
-      baseDef = {
-        name: baseDef.name,
-        group: baseDef.group,
-        ...baseDef.defFn(this.data.params, this.stacks)
-      }
-    }
-    return {
-      name: null,
-      group: 'generic',
-      displayName: null,
-      stacking: false, // true | false | 'refresh'
-      duration: null, // null | integer
-      combatOnly: true, // boolean
-      buff: false, // boolean
-      mods: [],
-      stats: {},
-      params: {},
-      ability: null,
-      ...baseDef,
-      ...this.data
-    }
   }
 
   refreshDuration(){
@@ -96,8 +83,8 @@ export default class StatusEffectInstance extends EffectInstance{
     return this
   }
 
-  setState(newState = {}){
-    super.setState(newState)
+  fixState(){
+    super.fixState()
     if(!this._state.time){
       this._state.time = 0
     }

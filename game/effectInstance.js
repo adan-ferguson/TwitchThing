@@ -1,15 +1,17 @@
-import { uuid } from './utilFunctions.js'
+import { toDisplayName, uuid } from './utilFunctions.js'
 
 // Stupid
 import Stats from './stats/stats.js'
+import AbilitiesData from './abilitiesData.js'
 new Stats()
 
 export default class EffectInstance{
 
   _state = {}
 
-  constructor(owner = null){
+  constructor(state = {}, owner = null){
     this.owner = owner
+    this._state = state
   }
 
   /**
@@ -18,104 +20,70 @@ export default class EffectInstance{
    * @return {string}
    */
   get id(){
-    throw 'id gettter not defined'
+    throw 'id getter not defined'
   }
 
-  /**
-   * @return {object}
-   */
-  get ability(){
-    throw 'ability getter not defined'
+  get effectData(){
+    throw 'effectData getter not defined'
   }
 
-  /**
-   * @return {array}
-   */
-  get mods(){
-    throw 'mods getter not defined'
+  get abilitiesData(){
+    return new AbilitiesData(this.effectData.abilities, this.owner)
+  }
+
+  get displayName(){
+    return this.effectData.displayName ?? toDisplayName(this.effectData.name)
+  }
+
+  get description(){
+    return this.effectData.description ?? ''
   }
 
   /**
    * @return {Stats}
    */
   get stats(){
-    throw 'stats getter not defined'
+    return new Stats(this.effectData.stats)
   }
 
   get state(){
-    return { ...this._state }
-  }
-
-  get stacks(){
-    return 1
-  }
-
-  get abilityReady(){
-    if(!this.ability){
-      return false
+    this.fixState()
+    return {
+      ...this._state
     }
-    if(this._state.cooldownRemaining){
-      return false
-    }
-    if(this.ability.uses && this._state.timesUsed >= this.ability.uses){
-      return false
-    }
-    if(this.ability.combatOnly !== false && !this.owner.inCombat){
-      return false
-    }
-    if(this.ability.conditions && this.owner){
-      if(!this.owner.meetsConditions(this.ability.conditions)){
-        return false
-      }
-    }
-    return true
-  }
-
-  get cooldownRemaining(){
-    return this._state.cooldownRemaining || 0
-  }
-
-  get cooldown(){
-    return this.ability?.cooldown || 0
   }
 
   /**
-   *
+   * @return {array}
    */
-  used(){
-    this._state.cooldownRemaining = this.cooldown
-    this._state.timesUsed = (this._state.timesUsed ?? 0) + 1
+  get mods(){
+    return this.effectData.mods || []
+  }
+
+  set state(newState){
+    this._state = {
+      ...newState
+    }
+    this.fixState()
   }
 
   shouldTrigger(triggerName){
-    if(!this.ability || this.ability.type !== 'triggered'){
-      return false
-    }
-    if(this.ability.trigger !== triggerName){
-      return false
-    }
-    if(!this.abilityReady){
-      return false
-    }
-    if(this.ability.chance && Math.random() > this.ability.chance){
+    const abilityInstance = this.abilitiesData.instances[triggerName]
+    if(!abilityInstance?.shouldTrigger()){
       return false
     }
     return true
   }
 
-  setState(newState = {}){
-    this._state = { ...newState }
-    if(!this._state.uniqueID){
-      this._state.uniqueID = uuid()
-    }
-    if(this._state.cooldownRemaining === undefined && this.ability?.cooldown){
-      this._state.cooldownRemaining = this.ability.initialCooldown ?? 0
-    }
+  advanceTime(ms){
+    this._state.abilities = this.abilitiesData.advanceTime(ms).stateVal
   }
 
-  advanceTime(ms){
-    if(this._state.cooldownRemaining){
-      this._state.cooldownRemaining = Math.max(0, this._state.cooldownRemaining - ms)
+  fixState(){
+    this._state = {
+      abilities: this.abilitiesData.stateVal,
+      uniqueID: uuid(),
+      ...this._state
     }
   }
 }

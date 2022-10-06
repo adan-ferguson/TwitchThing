@@ -216,7 +216,9 @@ export default class FighterInstance{
   setState(newState){
     const itemStates = newState.itemStates ?? []
     this.itemInstances.forEach((itemInstance, i) => {
-      itemInstance?.setState(itemStates[i])
+      if(itemInstance){
+        itemInstance.state = itemStates[i]
+      }
     })
     this.statusEffectsData.stateVal = newState.effects
     this._state = {
@@ -241,7 +243,7 @@ export default class FighterInstance{
 
   nextActiveItemIndex(){
     return this.itemInstances.findIndex(itemInstance => {
-      if(itemInstance?.abilityReady && itemInstance?.ability.type === 'active'){
+      if(itemInstance?.activeAbilityReady){
         return true
       }
     })
@@ -249,15 +251,9 @@ export default class FighterInstance{
 
   triggeredEffects(triggerType){
     const effects = []
-    this.itemInstances.forEach((itemInstance) => {
-      if(itemInstance?.shouldTrigger(triggerType)){
-        effects.push(itemInstance)
-      }
-    })
-    // TODO: bonusInstances
-    this.statusEffectsData.instances.forEach(sei => {
-      if(sei.shouldTrigger(triggerType)){
-        effects.push(sei)
+    this.effectInstances.forEach(effectInstance => {
+      if(effectInstance?.shouldTrigger(triggerType)){
+        effects.push(effectInstance)
       }
     })
     return effects
@@ -282,6 +278,9 @@ export default class FighterInstance{
   }
 
   meetsConditions(conditions){
+    if(!conditions){
+      return true
+    }
     return Object.keys(conditions).every(conditionName => {
       if(conditionName === 'hpPctBelow'){
         return this.hpPct <= conditions[conditionName]

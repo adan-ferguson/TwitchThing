@@ -7,7 +7,7 @@ export default {
       dps: roundToFixed(source.magicPower * (params.damage ?? 1), 2)
     }
   },
-  defFn: (stateParams, stacks) => {
+  defFn: (stateParams, { stacks }) => {
     return {
       stacking: false,
       combatOnly: false,

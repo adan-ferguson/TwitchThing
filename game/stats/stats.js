@@ -30,11 +30,13 @@ export default class Stats{
       throw 'Missing value function for stat type: ' + statObj.type
     }
 
-    statObj.baseValue = shine(fn(extractValues(this.baseAffectors, name), statObj.defaultValue))
-    statObj.value = shine(fn(extractValues(this.affectors, name), statObj.defaultValue))
+    const base = fn(extractValues(this.baseAffectors, name), statObj.defaultValue)
+    statObj.baseValue = shine(base.value)
+    statObj.baseMods = base.mods
 
-    statObj.baseValue = shine(statObj.baseValue)
-    statObj.value = shine(statObj.value)
+    const current = fn(extractValues(this.affectors, name), statObj.defaultValue)
+    statObj.value = shine(current.value)
+    statObj.mods = current.mods
 
     statObj.diff = calcStatDiff(statObj)
 
