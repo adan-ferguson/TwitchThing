@@ -5,7 +5,7 @@ import db  from '../../db.js'
 import Users from '../../collections/users.js'
 import { commitAdventurerLoadout } from '../../loadouts/adventurer.js'
 import { requireRegisteredUser, validateParam } from '../../validations.js'
-import { selectBonus } from '../../adventurer/bonuses.js'
+import { rerollBonus, selectBonus } from '../../adventurer/bonuses.js'
 import DungeonRuns from '../../collections/dungeonRuns.js'
 
 const router = express.Router()
@@ -114,6 +114,12 @@ verifiedRouter.post('/selectbonus/:index', async(req, res, next) => {
     validationFn: val => val >= 0 && val <= 2
   })
   res.send({ nextLevelUp: await selectBonus(req.adventurer, index) })
+})
+
+verifiedRouter.post('/rerollbonus', async(req, res, next) => {
+  requireOwnsAdventurer(req)
+  // TODO: money cost
+  res.send({ nextLevelUp: await rerollBonus(req.adventurer) })
 })
 
 verifiedRouter.post('/previousruns', async(req, res, next) => {

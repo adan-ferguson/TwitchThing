@@ -48,6 +48,15 @@ export async function selectBonus(adventurerDoc, index){
   return adventurerDoc.nextLevelUp
 }
 
+export async function rerollBonus(adventurerDoc){
+  if(!adventurerDoc.nextLevelUp){
+    throw { message: 'Adventurer does not have a pending levelup, can not reroll bonus.' }
+  }
+  adventurerDoc.nextLevelUp = await generateLevelup(adventurerDoc)
+  await Adventurers.save(adventurerDoc)
+  return adventurerDoc.nextLevelUp
+}
+
 export async function generateBonusOptions(userDoc, adventurerDoc){
 
   const ai = new AdventurerInstance(adventurerDoc)

@@ -1,5 +1,5 @@
 export default {
-  effect: {},
+  effect: () => ({}),
   rarity: 2,
   minOrbs: 5
 }

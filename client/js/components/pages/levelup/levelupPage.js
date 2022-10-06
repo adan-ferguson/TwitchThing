@@ -9,8 +9,11 @@ import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 
 const HTML = `
 <div class="content-rows">
+  <div class="flex-rows flex-no-grow">
     <div class="text">Select a Bonus</div>
-    <div class="options flex-rows"></div>
+    <button class="reroll">Reroll</button>
+  </div>
+  <div class="options flex-rows"></div>
 </div>
 `
 
@@ -24,6 +27,9 @@ export default class LevelupPage extends Page{
     this.adventurerID = adventurerID
     this.innerHTML = HTML
     this._options = this.querySelector('.options')
+    this.querySelector('.reroll').addEventListener('click', () => {
+      this._reroll()
+    })
   }
 
   static get pathDef(){
@@ -85,6 +91,15 @@ export default class LevelupPage extends Page{
     if(!nextLevelUp){
       return this.redirectTo(AdventurerPage.path(this.adventurerID))
     }
+    await fadeOut(this._options)
+    this._setupNext(nextLevelUp)
+    hideLoader()
+    fadeIn(this._options)
+  }
+
+  async _reroll(){
+    showLoader()
+    const { nextLevelUp } = await fizzetch(`/game/adventurer/${this.adventurerID}/rerollbonus`)
     await fadeOut(this._options)
     this._setupNext(nextLevelUp)
     hideLoader()
