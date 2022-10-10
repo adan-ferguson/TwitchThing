@@ -33,7 +33,7 @@ export default class AdventurerInstance extends FighterInstance{
 
   constructor(adventurerDef, initialState = {}){
     super(adventurerDef, initialState)
-    this.bonusesData = new BonusesData(adventurerDef.bonuses)
+    this.bonusesData = new BonusesData(adventurerDef.bonuses, this)
   }
 
   get bonuses(){

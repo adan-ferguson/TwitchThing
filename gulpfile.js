@@ -81,6 +81,7 @@ function exporterConcater(targetFile){
     }
     str += '}\n'
     str += `export const all = { ${all.join(',')} }\n`
+    str += `export { ${all.join(',')} }\n`
     return str
   }
 }

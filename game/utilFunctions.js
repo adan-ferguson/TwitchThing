@@ -5,6 +5,9 @@ export function toArray(arrayOrVal){
 }
 
 export function toDisplayName(str){
+  if(!str){
+    return ''
+  }
   let displayName = ''
   let prevLowerCase = false
   for(let i = 0; i < str.length; i++){

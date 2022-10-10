@@ -5,11 +5,11 @@ export default class AbilitiesData{
   _owner
   instances
 
-  constructor(abilities, owner){
-    this._owner = owner
+  constructor(abilities, states, parentEffect){
+    this._owner = parentEffect
     this.instances = {}
     for(let key in abilities){
-      this.instances[key] = new AbilityInstance(abilities[key], owner)
+      this.instances[key] = new AbilityInstance(abilities[key], states[key], parentEffect)
     }
   }
 

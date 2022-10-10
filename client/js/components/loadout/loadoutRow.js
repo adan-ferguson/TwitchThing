@@ -88,12 +88,28 @@ export default class LoadoutRow extends HTMLElement{
     if(!state){
       return
     }
-    this.setAttribute('ability', state.ready ? state.type : 'recharging')
-    this._cooldownBarEl
-      .setOptions({
-        max: state.cooldown
-      })
-      .setValue(state.cooldown - state.cooldownRemaining)
+
+    let attrVal
+    if(state.type === 'active'){
+      attrVal = (state.ability.ready && state.ability.meetsConditions) ? 'active' : 'recharging'
+    }else{
+      attrVal = state.ability.ready ? 'triggered' : 'recharging'
+    }
+    this.setAttribute('ability', attrVal)
+
+    if(state.ability.cooldown){
+      this._cooldownBarEl
+        .setOptions({
+          max: state.ability.cooldown
+        })
+        .setValue(state.ability.cooldown - state.ability.cooldownRemaining)
+    }else if(state.ability.uses){
+      this._cooldownBarEl
+        .setOptions({
+          max: state.ability.uses
+        })
+        .setValue(state.ability.uses - state.ability.timesUsed)
+    }
   }
 
   _setupBlank(){

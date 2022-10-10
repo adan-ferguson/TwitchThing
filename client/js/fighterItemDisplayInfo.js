@@ -27,14 +27,14 @@ export default class FighterItemDisplayInfo{
   }
 
   get abilityState(){
-    if(!this.itemInstance.ability){
+    const abilities = this.itemInstance.generateAbilitiesData().instances
+    if(!Object.values(abilities).length){
       return null
     }
+    const [eventName, ability] = Object.entries(abilities)[0]
     return {
-      type: this.itemInstance.ability.type,
-      ready: this.itemInstance.abilityReady,
-      cooldown: this.itemInstance.cooldown,
-      cooldownRemaining: this.itemInstance.cooldownRemaining
+      type: eventName === 'active' ? 'active' : 'triggered',
+      ability
     }
   }
 

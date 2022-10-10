@@ -9,7 +9,7 @@ export default class EffectInstance{
 
   _state = {}
 
-  constructor(state = {}, owner = null){
+  constructor(owner, state = {}){
     this.owner = owner
     this._state = state
   }
@@ -25,10 +25,6 @@ export default class EffectInstance{
 
   get effectData(){
     throw 'effectData getter not defined'
-  }
-
-  get abilitiesData(){
-    return new AbilitiesData(this.effectData.abilities, this.owner)
   }
 
   get displayName(){
@@ -48,9 +44,7 @@ export default class EffectInstance{
 
   get state(){
     this.fixState()
-    return {
-      ...this._state
-    }
+    return JSON.parse(JSON.stringify(this._state))
   }
 
   /**
@@ -67,8 +61,25 @@ export default class EffectInstance{
     this.fixState()
   }
 
+  generateAbilitiesData(){
+    return new AbilitiesData(this.effectData.abilities, this._state.abilities ?? {}, this)
+  }
+
+  /**
+   * @param eventName {string}
+   */
+  getAbility(eventName){
+    return this.generateAbilitiesData().instances[eventName]
+  }
+
+  useAbility(eventName){
+    const ad = this.generateAbilitiesData()
+    ad.instances[eventName].use()
+    this._state.abilities = ad.stateVal
+  }
+
   shouldTrigger(triggerName){
-    const abilityInstance = this.abilitiesData.instances[triggerName]
+    const abilityInstance = this.getAbility(triggerName)
     if(!abilityInstance?.shouldTrigger()){
       return false
     }
@@ -76,12 +87,14 @@ export default class EffectInstance{
   }
 
   advanceTime(ms){
-    this._state.abilities = this.abilitiesData.advanceTime(ms).stateVal
+    const ad = this.generateAbilitiesData()
+    ad.advanceTime(ms)
+    this._state.abilities = ad.stateVal
   }
 
   fixState(){
     this._state = {
-      abilities: this.abilitiesData.stateVal,
+      abilities: this.generateAbilitiesData().stateVal,
       uniqueID: uuid(),
       ...this._state
     }

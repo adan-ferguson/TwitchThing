@@ -5,32 +5,20 @@ import EffectInstance from './effectInstance.js'
 
 export default class StatusEffectInstance extends EffectInstance{
 
-  data
-
-  constructor(data, state = {}, owner = null){
-
-    // return {
-    //   name: null,
-    //   group: 'generic',
-    //   displayName: null,
-    //   stacking: false, // true | false | 'refresh'
-    //   duration: null, // null | integer
-    //   combatOnly: true, // boolean
-    //   buff: false, // boolean
-    //   mods: [],
-    //   stats: {},
-    //   params: {},
-    //   ability: null,
-    //   ...baseDef,
-    //   ...this.data
-    // }
-
-    super(state, owner)
+  constructor(data, owner, state = {}, ){
+    super(owner, state)
     this._data = data
     this._id = uuid()
   }
 
+  get data(){
+    return this._data
+  }
+
   get effectData(){
+    if(!this.data.name){
+      return this.data // Phantom effect
+    }
     let effectData
     const baseDef = Effects[this._data.name]
     if(baseDef.defFn){
@@ -42,33 +30,50 @@ export default class StatusEffectInstance extends EffectInstance{
     }else{
       effectData = baseDef
     }
-    return effectData
+    return {
+      ...effectData,
+      ...this.data
+    }
   }
 
   get id(){
     return this._id
   }
 
+  /**
+   * @returns {'refresh'|boolean}
+   */
+  get stacking(){
+    return this.effectData.stacking ?? false
+  }
+
+  get buff(){
+    return this.effectData.buff ?? false
+  }
+
   get stacks(){
-    return this.state.stacks || 1
+    return this._state.stacks ?? 1
   }
 
   get stats(){
-    return new Stats(Array(this.stacks).fill(this.options.stats))
+    return new Stats(Array(this.stacks).fill(super.stats))
+  }
+
+  get duration(){
+    return this.effectData.duration
   }
 
   get expired(){
-    if(this._effectData.duration){
-      return this._state.time >= this._effectData.duration
+    if(Number.isFinite(this.duration)){
+      return (this._state.time ?? 0) >= this.duration
     }
     return false
   }
 
-  get stateVal(){
-    return JSON.parse(JSON.stringify({
-      data: this.data,
-      state: this.state
-    }))
+  get state(){
+    const state = super.state
+    state.data = this._data
+    return state
   }
 
   refreshDuration(){
@@ -77,7 +82,7 @@ export default class StatusEffectInstance extends EffectInstance{
   }
 
   addStack(){
-    if(this.options.stacking){
+    if(this.effectData.stacking){
       this._state.stacks = this.stacks + 1
     }
     return this

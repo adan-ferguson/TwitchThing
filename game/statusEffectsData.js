@@ -14,7 +14,7 @@ export class StatusEffectsData{
   }
 
   get stateVal(){
-    return this._instances.map(effect => effect.stateVal)
+    return this._instances.map(effect => effect.state)
   }
 
   set stateVal(val){
@@ -25,7 +25,7 @@ export class StatusEffectsData{
           new StatusEffectInstance(
             effectStateVal.data,
             this._fighterInstance,
-            effectStateVal.state
+            effectStateVal
           ))
       })
     }
@@ -35,7 +35,16 @@ export class StatusEffectsData{
     this._instances.forEach(effect => {
       effect.advanceTime(ms)
     })
-    this._cleanupExpired()
+    this.cleanupExpired()
+  }
+
+  /**
+   * Remove expired effects
+   */
+  cleanupExpired(){
+    this._instances = this._instances.filter(effect => {
+      return !effect.expired && (!effect.combatOnly || this._fighterInstance.inCombat)
+    })
   }
 
   /**
@@ -45,9 +54,9 @@ export class StatusEffectsData{
   add(statusEffectData){
     const existing = this._getByData(statusEffectData)
     if(existing){
-      if(existing.options.stacking === 'refresh'){
+      if(existing.stacking === 'refresh'){
         return existing.refreshDuration()
-      }else if(existing.options.stacking === true){
+      }else if(existing.stacking === true){
         return existing.addStack().refreshDuration()
       }
     }
@@ -73,15 +82,6 @@ export class StatusEffectsData{
 
   hasType(effectType){
     return this._instances.find(effect => effect.type === effectType) ? true : false
-  }
-
-  /**
-   * Remove expired effects
-   */
-  _cleanupExpired(){
-    this._instances = this._instances.filter(effect => {
-      return !effect.expired && (!effect.combatOnly || this._fighterInstance.inCombat)
-    })
   }
 
   /**

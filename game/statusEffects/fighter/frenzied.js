@@ -4,11 +4,11 @@ export default {
       perStack: params.perStack
     }
   },
-  defFn: (stateParams, stacks) => {
+  defFn: (stateParams) => {
     return {
       stacking: true,
       stats: {
-        physPower: stateParams.perStack * stacks
+        physPower: stateParams.perStack
       }
     }
   }

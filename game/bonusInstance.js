@@ -4,8 +4,8 @@ import EffectInstance from './effectInstance.js'
 
 export default class BonusInstance extends EffectInstance{
 
-  constructor(bonusDef, state = {}, owner = null){
-    super(state, owner)
+  constructor(bonusDef, owner = null, state = {}){
+    super(owner, state)
     this._bonusDef = bonusDef
   }
 

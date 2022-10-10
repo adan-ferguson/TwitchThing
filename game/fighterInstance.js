@@ -50,6 +50,9 @@ export default class FighterInstance{
     return this._fighterData
   }
 
+  /**
+   * @return {string}
+   */
   get displayName(){
     throw 'Not implemented'
   }
@@ -193,11 +196,11 @@ export default class FighterInstance{
   }
 
   get magicPower(){
-    return this.stats.get('magicPower').value
+    return Math.ceil(this.stats.get('magicPower').value)
   }
 
   get physPower(){
-    return this.stats.get('physPower').value
+    return Math.ceil(this.stats.get('physPower').value)
   }
 
   get inCombat(){
@@ -243,7 +246,8 @@ export default class FighterInstance{
 
   nextActiveItemIndex(){
     return this.itemInstances.findIndex(itemInstance => {
-      if(itemInstance?.activeAbilityReady){
+      const ability = itemInstance?.getAbility('active')
+      if(ability?.ready && ability?.meetsConditions){
         return true
       }
     })
@@ -286,5 +290,9 @@ export default class FighterInstance{
         return this.hpPct <= conditions[conditionName]
       }
     })
+  }
+
+  cleanup(){
+    this.statusEffectsData.cleanupExpired()
   }
 }

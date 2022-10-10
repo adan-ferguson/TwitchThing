@@ -3,7 +3,7 @@ import EffectInstance from './effectInstance.js'
 export default class FighterItemInstance extends EffectInstance{
 
   constructor(itemData, state = {}, owner = null){
-    super(state, owner)
+    super(owner, state)
     this.itemData = itemData
   }
 
@@ -19,6 +19,6 @@ export default class FighterItemInstance extends EffectInstance{
   }
 
   get activeAbility(){
-    return this.abilitiesData.instances.active
+    return this.getAbility('active')
   }
 }

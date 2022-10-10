@@ -1,11 +1,8 @@
-import { regen } from './common.js'
-import { useEffectAbility } from './performAction.js'
+import { regen, triggerEvent } from './common.js'
 
 export function performCombatTick(combat, fighterInstance){
   const tickUpdates = []
   tickUpdates.push(regen(fighterInstance))
-  fighterInstance.triggeredEffects('tick').forEach(effectInstance => {
-    tickUpdates.push(useTriggeredAbility(combat, effectInstance, 'tick'))
-  })
+  tickUpdates.push(...triggerEvent(combat, fighterInstance, 'tick'))
   return tickUpdates.filter(t => t)
 }

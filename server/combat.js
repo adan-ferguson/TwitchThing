@@ -138,6 +138,9 @@ class Combat{
       const tickUpdates = this._tick()
       const actions = this._doActions()
 
+      this.fighterInstance1.cleanup()
+      this.fighterInstance2.cleanup()
+
       if(actions.length || tickUpdates.length){
         this._addTimelineEntry({
           actions,

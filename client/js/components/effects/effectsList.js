@@ -27,7 +27,7 @@ export default class EffectsList extends HTMLElement{
       if(!shouldShow(effect)){
         return
       }
-      const key = effect.state.uniqueID ?? effect.data.name
+      const key = effect.state.uniqueID
       if(effectRows[key]){
         if(!effect.expired){
           effectRows[key].update(effect, animate)
@@ -55,6 +55,9 @@ export default class EffectsList extends HTMLElement{
 customElements.define('di-effects-list', EffectsList)
 
 function shouldShow(effect){
+  if(!effect.displayName || effect.duration === 0){
+    return false // Phantom effect
+  }
   if(effect.expired){
     return false
   }

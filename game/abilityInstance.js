@@ -1,9 +1,13 @@
 export default class AbilityInstance{
 
-  constructor(abilityDef, parentEffect){
+  constructor(abilityDef, state, parentEffect){
     this._abilityDef = abilityDef
     this._parentEffect = parentEffect
-    this.state = {}
+    this._state = state ?? {}
+  }
+
+  get actions(){
+    return this._abilityDef.actions
   }
 
   get fighterInstance(){
@@ -33,12 +37,16 @@ export default class AbilityInstance{
     return this._abilityDef.uses ?? 0
   }
 
+  get timesUsed(){
+    return this._state.timesUsed ?? 0
+  }
+
   get conditions(){
     return this._abilityDef.conditions ?? null
   }
 
   get ready(){
-    if(this.cooldownRemaining){
+    if(!this.fighterInstance || this.cooldownRemaining){
       return false
     }
     if(this.uses && this._state.timesUsed >= this.uses){
@@ -47,19 +55,24 @@ export default class AbilityInstance{
     if(this._abilityDef.combatOnly !== false && !this.fighterInstance.inCombat){
       return false
     }
-    if(!this.fighterInstance.meetsConditions(this.conditions)){
-      return false
-    }
     return true
   }
 
+  get meetsConditions(){
+    return this.fighterInstance.meetsConditions(this.conditions)
+  }
+
   shouldTrigger(){
-    if(!this.ready){
+    if (!this.ready){
       return false
     }
-    if(this._abilityDef.chance && Math.random() > this._abilityDef.chance){
+    if(!this.meetsConditions){
       return false
     }
+    if (this._abilityDef.chance && Math.random() > this._abilityDef.chance){
+      return false
+    }
+    return true
   }
 
   advanceTime(ms){
@@ -69,7 +82,10 @@ export default class AbilityInstance{
   }
 
   use(){
-    this._state.cooldownRemaining = this.cooldown
+    if(this.cooldown){
+      this._state.cooldownRemaining = this.cooldown
+    }
     this._state.timesUsed = (this._state.timesUsed ?? 0) + 1
+    return this
   }
 }

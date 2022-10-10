@@ -15,7 +15,7 @@ export default class BonusesData{
           group,
           name,
           level: bonusesObj[group][name]
-        }))
+        }, owner))
       }
     }
   }
