@@ -1,35 +1,41 @@
 import statusEffect from '../../actions/generic/statusEffect.js'
 import takeDamage from '../../actions/generic/takeDamage.js'
 import attack from '../../actions/generic/attack.js'
+import { scaledValueCumulative } from '../../scaledValue.js'
+
+const SCALING = 0.2
+const BASE = 4
 
 export default {
-  abilities: {
-    active: {
-      cooldown: 10000,
-      actions: [
-        takeDamage({
-          damagePct: 0.1,
-          ignoreDefense: true
-        }),
-        (combat, owner, prevResults) => {
-          const dmgResult = prevResults.at(-1)
-          return statusEffect({
-            effect: {
-              duration: 0,
-              stats: {
-                physPower: dmgResult.data.finalDamage * 1.5
+  levelFn: level => ({
+    abilities: {
+      active: {
+        cooldown: 10000,
+        actions: [
+          takeDamage({
+            damagePct: 0.1,
+            ignoreDefense: true
+          }),
+          (combat, owner, prevResults) => {
+            const dmgResult = prevResults.at(-1)
+            return statusEffect({
+              effect: {
+                duration: 0,
+                stats: {
+                  physPower: dmgResult.data.finalDamage * 1.5
+                }
               }
-            }
-          })
-        },
-        attack()
-      ]
-    }
-  },
-  stats: {
-    physPower: '+10%'
-  },
+            })
+          },
+          attack()
+        ]
+      }
+    },
+    stats: {
+      physPower: Math.ceil(scaledValueCumulative(SCALING, level, BASE))
+    },
+  }),
   description: 'This is a generic sword for testing.',
-  orbs: 1,
-  displayName: 'Sword With Display Name'
+  displayName: 'Sword With Display Name',
+  orbs: 1
 }

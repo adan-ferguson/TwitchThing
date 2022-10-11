@@ -5,15 +5,12 @@ export default class AdventurerItemInstance extends FighterItemInstance{
 
   constructor(itemDef, state = null, owner = null){
 
-    let itemData
-    if(itemDef instanceof AdventurerItemInstance){
-      itemData = itemDef.itemData
-      state = state ? state : itemDef.state
-    }else{
-      const baseItem = Items[itemDef.baseType.group][itemDef.baseType.name] ?? {}
-      itemData = {
-        ...baseItem
-      }
+    const baseItem = Items[itemDef.baseType.group][itemDef.baseType.name] ?? {}
+    const level = itemDef.level ?? 1
+    const itemData = {
+      ...baseItem,
+      ...baseItem.levelFn(level),
+      orbs: baseItem.orbs * level
     }
 
     super(itemData, state, owner)

@@ -11,13 +11,6 @@ export default class FighterItemInstance extends EffectInstance{
     return this.itemData
   }
 
-  /**
-   * @return {string}
-   */
-  get id(){
-    throw 'id getter not defined'
-  }
-
   get activeAbility(){
     return this.getAbility('active')
   }
