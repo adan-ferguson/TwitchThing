@@ -1,4 +1,3 @@
-import { all as Effects } from '../../statusEffects/combined.js'
 import removeStatusEffect from '../../actions/generic/removeStatusEffect.js'
 
 export default {
@@ -22,7 +21,7 @@ export default {
           cooldown: 10000,
           actions: [removeStatusEffect({
             affects: 'self',
-            buff: true
+            isBuff: false
           })]
         }
       }

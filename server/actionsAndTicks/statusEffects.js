@@ -12,16 +12,25 @@ export function performStatusEffectAction(combat, actor, actionDef){
 
 export function performRemoveStatusEffectAction(combat, actor, actionDef){
   const subject = actionDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
-  const candidateEffects = subject.statusEffectsData.instances.forEach(sei => {
-    return sei.buff === actionDef.buff
+  const candidateEffects = subject.statusEffectsData.instances.filter(sei => {
+    return sei.isBuff === actionDef.isBuff && !sei.expired && !sei.phantom
   })
-  const toRemove = actionDef.count === 'all' ? candidateEffects : candidateEffects.slice(-actionDef.count)
-  subject.remvo
+
+  let sliceVal = undefined
+  if(actionDef.count !== 'all'){
+    if(actionDef.order === 'newest'){
+      sliceVal = actionDef.count * -1
+    }else if (actionDef.order === 'oldest'){
+      sliceVal = actionDef.count
+    }
+  }
+  const toRemove = candidateEffects.slice(sliceVal)
+  subject.statusEffectsData.remove(toRemove)
 
   return makeActionResult({
     type: 'removeEffect',
     data: {
-
+      removed: toRemove.map(instance => instance.id)
     },
     subject: subject.uniqueID
   })

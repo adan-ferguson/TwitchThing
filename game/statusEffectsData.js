@@ -1,5 +1,6 @@
 import StatusEffectInstance  from './statusEffectInstance.js'
 import _ from 'lodash'
+import { toArray } from './utilFunctions.js'
 
 export class StatusEffectsData{
 
@@ -63,6 +64,16 @@ export class StatusEffectsData{
     const instance = new StatusEffectInstance(statusEffectData, this._fighterInstance)
     this._instances.push(instance)
     return instance
+  }
+
+  remove(toRemove){
+    toRemove = toArray(toRemove)
+    this._instances = this._instances.filter(instance => {
+      if(toRemove.indexOf(instance) > -1){
+        return false
+      }
+      return true
+    })
   }
 
   /**

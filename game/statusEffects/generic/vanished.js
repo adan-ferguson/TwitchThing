@@ -4,5 +4,5 @@ export default {
     regen: '5%'
   },
   mods: ['freezeActionBar'],
-  buff: true
+  isBuff: true
 }

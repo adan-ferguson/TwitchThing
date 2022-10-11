@@ -1,22 +1,26 @@
-import { all as Effects } from '../../statusEffects/combined.js'
+import statusEffect from '../../actions/generic/statusEffect.js'
+import { diseased } from '../../statusEffects/combined.js'
 
 export default {
   baseStats: {
-    hpMax: '+60%',
+    hpMax: '+260%',
     speed: '-30%'
   },
   items: [
     {
       name: 'Diseased',
-      ability: {
-        type: 'triggered',
-        trigger: 'attackHit',
-        chance: 0.25,
-        actions: [
-          // effectAction(Effects.diseased, {
-          //   affects: 'enemy'
-          // })
-        ]
+      abilities: {
+        attackHit: {
+          chance: 0.8,
+          actions: [
+            statusEffect({
+              affects: 'enemy',
+              effect: {
+                name: diseased.name
+              }
+            })
+          ]
+        }
       }
     }
   ]

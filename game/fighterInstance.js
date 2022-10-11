@@ -288,7 +288,12 @@ export default class FighterInstance{
     return Object.keys(conditions).every(conditionName => {
       if(conditionName === 'hpPctBelow'){
         return this.hpPct <= conditions[conditionName]
+      }else if(conditionName === 'debuffed'){
+        return this.statusEffectsData.instances.some(sei => {
+          return !sei.isBuff && !sei.expired && !sei.phantom
+        })
       }
+      throw `Undefined condition: ${conditionName}`
     })
   }
 

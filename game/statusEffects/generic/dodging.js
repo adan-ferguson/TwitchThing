@@ -1,5 +1,5 @@
 export default {
-  buff: true,
+  isBuff: true,
   stats: {
     dodgeChance: '+100%'
   }

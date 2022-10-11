@@ -11,13 +11,17 @@ export default class StatusEffectInstance extends EffectInstance{
     this._id = uuid()
   }
 
+  get phantom(){
+    return this.data.name ? false : true
+  }
+
   get data(){
     return this._data
   }
 
   get effectData(){
-    if(!this.data.name){
-      return this.data // Phantom effect
+    if(this.phantom){
+      return this.data
     }
     let effectData
     const baseDef = Effects[this._data.name]
@@ -47,8 +51,8 @@ export default class StatusEffectInstance extends EffectInstance{
     return this.effectData.stacking ?? false
   }
 
-  get buff(){
-    return this.effectData.buff ?? false
+  get isBuff(){
+    return this.effectData.isBuff ?? false
   }
 
   get stacks(){

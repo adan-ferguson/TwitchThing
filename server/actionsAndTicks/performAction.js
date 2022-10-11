@@ -1,7 +1,7 @@
 import { performAttack } from './attacks.js'
 import _ from 'lodash'
 import { takeDamage } from './common.js'
-import { performRemoveStatusEffectAction, performStatusEffectAction } from './addStatusEffect.js'
+import { performRemoveStatusEffectAction, performStatusEffectAction } from './statusEffects.js'
 import { validateActionResult } from '../../game/actionResult.js'
 
 export function takeCombatTurn(combat, actor){
