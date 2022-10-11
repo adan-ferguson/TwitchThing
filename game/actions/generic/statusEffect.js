@@ -1,10 +1,14 @@
 export default function(def){
-  if(!def.effect){
-    throw 'effect not provided to statusEffect action, probably a bug'
+  if(!def.effect && !def.base){
+    throw 'effect or base not provided to statusEffect action, probably a bug'
+  }
+  const effect = def.effect ?? {}
+  if(def.base){
+    effect.name = def.base.name
   }
   return {
     affects: 'self',
-    effect: null,
+    effect,
     ...def,
     type: 'statusEffect'
   }

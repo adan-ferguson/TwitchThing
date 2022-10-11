@@ -1,5 +1,5 @@
 import statusEffect from '../../actions/generic/statusEffect.js'
-import { diseased } from '../../statusEffects/combined.js'
+import { diseasedStatusEffect } from '../../statusEffects/combined.js'
 
 export default {
   baseStats: {
@@ -14,10 +14,8 @@ export default {
           chance: 0.8,
           actions: [
             statusEffect({
-              affects: 'enemy',
-              effect: {
-                name: diseased.name
-              }
+              base: diseasedStatusEffect,
+              affects: 'enemy'
             })
           ]
         }

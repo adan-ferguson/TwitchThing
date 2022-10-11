@@ -25,7 +25,7 @@ function copyAssets(){
 function generateRegistries(){
   const pipes = REGISTRIES.map(t => {
     return gulp.src('./game/' + t + '/*/**/*.js')
-      .pipe(exporterConcater('./game/' + t + '/combined.js'))
+      .pipe(exporterConcater(t, './game/' + t + '/combined.js'))
       .pipe(gulp.dest('.'))
   })
   return merge(...pipes)
@@ -37,7 +37,7 @@ function importComponents(){
     .pipe(gulp.dest('.'))
 }
 
-function exporterConcater(targetFile){
+function exporterConcater(itemType, targetFile){
   const files = []
 
   return through.obj(function(file, encoding, callback){
@@ -81,9 +81,13 @@ function exporterConcater(targetFile){
     }
     str += '}\n'
     str += `export const all = { ${all.join(',')} }\n`
-    str += `export { ${all.join(',')} }\n`
+    str += `export { ${all.map(name => `${name} as ${name + capFirst(itemType)}`).join(',')} }\n`
     return str
   }
+}
+
+function capFirst(str){
+  return str.slice(0, 1).toUpperCase() + str.slice(1, str.length - 1)
 }
 
 function makeComponentImporter(targetPath){

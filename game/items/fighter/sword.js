@@ -2,6 +2,7 @@ import statusEffect from '../../actions/generic/statusEffect.js'
 import takeDamage from '../../actions/generic/takeDamage.js'
 import attack from '../../actions/generic/attack.js'
 import { scaledValueCumulative } from '../../scaledValue.js'
+import physScaling from '../../mods/generic/physScaling.js'
 
 const SCALING = 0.2
 const BASE = 4
@@ -37,5 +38,6 @@ export default {
   }),
   description: 'This is a generic sword for testing.',
   displayName: 'Sword With Display Name',
-  orbs: 1
+  orbs: 1,
+  mods: [physScaling]
 }

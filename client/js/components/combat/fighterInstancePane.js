@@ -4,10 +4,10 @@ import Modal from '../modal.js'
 import AdventurerInfo from '../adventurer/adventurerInfo.js'
 import MonsterInfo from '../monsterInfo.js'
 import FlyingTextEffect from '../visualEffects/flyingTextEffect.js'
-import { all as Mods } from '../../../../game/mods/combined.js'
 import CustomAnimation from '../../customAnimation.js'
 import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
 import { flash } from '../../animationHelper.js'
+import { magicAttackMod, magicScalingMod, physScalingMod } from '../../../../game/mods/combined.js'
 
 const HTML = `
 <div class="name"></div>
@@ -49,8 +49,7 @@ export default class FighterInstancePane extends HTMLElement{
       style: OrbsDisplayStyle.MAX_ONLY
     })
     this.statsList = this.querySelector('di-stats-list').setOptions({
-      iconsOnly: true,
-      excluded: ['hpMax','speed']
+      iconsOnly: true
     })
     this._effectsListEl = this.querySelector('di-effects-list')
 
@@ -161,12 +160,9 @@ export default class FighterInstancePane extends HTMLElement{
       }
     }
 
-    const isMagic = this.fighterInstance.mods.contains(Mods.magicAttack) ?  true : false
-    if(!isMagic){
-      this.statsList.setOptions({
-        forced: ['physPower']
-      })
-    }
+    this.statsList.setOptions({
+      excluded: this._excluded()
+    })
 
     this._actionBarEl.classList.toggle('displaynone', !this.fighterInstance.inCombat)
     this.statsList.setStats(this.fighterInstance.stats, this.fighterInstance)
@@ -201,6 +197,20 @@ export default class FighterInstancePane extends HTMLElement{
       modal.innerPane.appendChild(new MonsterInfo(this.fighterInstance))
     }
     modal.show()
+  }
+
+  _excluded(){
+    const excluded = ['hpMax','speed']
+    const magicAttack = this.fighterInstance.mods.contains(magicAttackMod)
+    const showPhys = this.fighterInstance.mods.contains(physScalingMod)
+    const showMagic = this.fighterInstance.mods.contains(magicScalingMod)
+    if(showPhys && showMagic){
+      return [...excluded]
+    }else if(magicAttack && !showPhys){
+      return [...excluded, 'physPower']
+    }else{
+      return [...excluded, 'magicPower']
+    }
   }
 }
 

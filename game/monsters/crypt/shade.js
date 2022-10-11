@@ -1,5 +1,5 @@
 // import { effectAction, timeAdjustmentAction } from '../../actions.js'
-import { all as Effects } from '../../statusEffects/combined.js'
+import { all as Effects, vanishedStatusEffect } from '../../statusEffects/combined.js'
 import statusEffect from '../../actions/generic/statusEffect.js'
 
 export default {
@@ -19,9 +19,9 @@ export default {
           },
           cooldown: 20000,
           actions: [statusEffect({
+            base: vanishedStatusEffect,
             affects: 'self',
             effect: {
-              name: Effects.vanished.name,
               duration: 5000
             }
           })]

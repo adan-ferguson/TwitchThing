@@ -1,3 +1,1 @@
-export default {
-  descriptions: 'It\'s green?'
-}
+export default {}
