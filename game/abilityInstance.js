@@ -6,6 +6,10 @@ export default class AbilityInstance{
     this._state = state ?? {}
   }
 
+  get name(){
+    return this._abilityDef.name
+  }
+
   get actions(){
     return this._abilityDef.actions
   }

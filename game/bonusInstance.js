@@ -22,8 +22,8 @@ export default class BonusInstance extends EffectInstance{
     return this._bonusDef.level
   }
 
-  get id(){
-    return this._bonusDef.name
+  get effectId(){
+    return 'bonus-' + this._bonusDef.name
   }
 
   get name(){

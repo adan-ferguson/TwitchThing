@@ -8,7 +8,7 @@ const HTML = `
 <!--</div>-->
 <di-ability-description></di-ability-description>
 <di-stats-list></di-stats-list>
-<div class="item-description subtitle"></div>
+<div class="item-description"></div>
 <di-orb-row></di-orb-row>
 `
 
@@ -30,7 +30,7 @@ export default class ItemDetails extends HTMLElement{
         statsDisplayStyle: StatsDisplayStyle.ADDITIONAL
       })
       .setStats(itemInstance.stats)
-    this.querySelector('.item-description').textContent = itemInstance.description
+    this.querySelector('.item-description').textContent = 'TODO: effect description same thing for tooltip + details'
   }
 }
 

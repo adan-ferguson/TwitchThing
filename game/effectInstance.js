@@ -1,26 +1,20 @@
-import { toDisplayName, uuid } from './utilFunctions.js'
+import { toDisplayName } from './utilFunctions.js'
 
 // Stupid
 import Stats from './stats/stats.js'
 import AbilitiesData from './abilitiesData.js'
+import ModsCollection from './modsCollection.js'
 new Stats()
 
 export default class EffectInstance{
 
+  owner
   _state = {}
+  effectId = ''
 
   constructor(owner, state = {}){
     this.owner = owner
     this._state = state
-  }
-
-  /**
-   * Something to identify this effect so that when we parse an action, we can find
-   * the source of the action.
-   * @return {string}
-   */
-  get id(){
-    throw 'id getter not defined'
   }
 
   get effectData(){
@@ -48,10 +42,10 @@ export default class EffectInstance{
   }
 
   /**
-   * @return {array}
+   * @return {ModsCollection}
    */
   get mods(){
-    return this.effectData.mods || []
+    return new ModsCollection(this.effectData.mods || [])
   }
 
   set state(newState){
@@ -59,6 +53,14 @@ export default class EffectInstance{
       ...newState
     }
     this.fixState()
+  }
+
+  get hasAbilities(){
+    return Object.keys(this.effectData.abilities ?? {}).length > 0
+  }
+
+  get abilities(){
+    return this.generateAbilitiesData().instances
   }
 
   generateAbilitiesData(){
@@ -95,7 +97,6 @@ export default class EffectInstance{
   fixState(){
     this._state = {
       abilities: this.generateAbilitiesData().stateVal,
-      uniqueID: uuid(),
       ...this._state
     }
   }

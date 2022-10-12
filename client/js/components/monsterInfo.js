@@ -17,7 +17,7 @@ export default class MonsterInfo extends HTMLElement{
     super()
     this.innerHTML = HTML
     this.querySelector('.name').textContent = monsterInstance.displayName
-    this.querySelector('.description').textContent = monsterInstance.monster.description
+    this.querySelector('.description').textContent = monsterInstance.description
 
     this.querySelector('di-stats-list')
       .setOptions({

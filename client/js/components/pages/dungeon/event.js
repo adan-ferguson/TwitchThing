@@ -1,4 +1,4 @@
-import { fadeIn, fadeOut } from '../../../animationHelper.js'
+import { fadeIn, fadeOut } from '../../../animations/simple.js'
 import EventContentsNormal from './eventContentsNormal.js'
 
 export default class Event extends HTMLElement{

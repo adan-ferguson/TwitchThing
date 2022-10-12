@@ -1,4 +1,4 @@
-import statusEffect from '../../actions/generic/statusEffect.js'
+import statusEffect from '../../actions/generic/statusEffectAction.js'
 import takeDamage from '../../actions/generic/takeDamage.js'
 import attack from '../../actions/generic/attack.js'
 import { scaledValueCumulative } from '../../scaledValue.js'

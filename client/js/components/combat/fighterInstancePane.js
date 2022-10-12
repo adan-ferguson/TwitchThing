@@ -4,10 +4,12 @@ import Modal from '../modal.js'
 import AdventurerInfo from '../adventurer/adventurerInfo.js'
 import MonsterInfo from '../monsterInfo.js'
 import FlyingTextEffect from '../visualEffects/flyingTextEffect.js'
-import CustomAnimation from '../../customAnimation.js'
+import CustomAnimation from '../../animations/customAnimation.js'
 import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
-import { flash } from '../../animationHelper.js'
 import { magicAttackMod, magicScalingMod, physScalingMod } from '../../../../game/mods/combined.js'
+import { DAMAGE_COLORS, FLASH_COLORS } from '../../colors.js'
+import { flash } from '../../animations/simple.js'
+import LoadoutRow from '../loadout/loadoutRow.js'
 
 const HTML = `
 <div class="name"></div>
@@ -21,28 +23,22 @@ const HTML = `
 <di-loadout></di-loadout>
 `
 
-const FLASH_COLORS = {
-  attack: '#9fff9f',
-  active: '#71e1e5',
-  triggered: '#ffa227'
-}
-
 export default class FighterInstancePane extends HTMLElement{
 
   _orbRowEl
-  _hpBarEl
   _loadoutEl
   _effectsListEl
-
   _options = {
     fadeOutOnDefeat: true,
   }
+
+  hpBarEl
 
   constructor(){
     super()
     this.classList.add('flex-rows')
     this.innerHTML = HTML
-    this._hpBarEl = this.querySelector('di-hp-bar')
+    this.hpBarEl = this.querySelector('di-hp-bar')
     this._actionBarEl = this.querySelector('di-action-bar')
     this._loadoutEl = this.querySelector('di-loadout')
     this._orbRowEl = this.querySelector('.fighter-orbs').setOptions({
@@ -56,6 +52,10 @@ export default class FighterInstancePane extends HTMLElement{
     this.querySelector('.top-section').addEventListener('click', e => {
       this._showFighterInfoModal()
     })
+  }
+
+  get basicAttackStatEl(){
+    return this.statsList.querySelector(`di-stat-row[stat-key="${this.fighterInstance.basicAttackType}Power"]`)
   }
 
   setOptions(options){
@@ -84,54 +84,54 @@ export default class FighterInstancePane extends HTMLElement{
     this._updateCooldowns()
   }
 
-  displayActionPerformed(ability, results){
-    if(ability === 'basicAttack'){
-      const statEl = this.statsList.querySelector(`di-stat-row[stat-key="${this.fighterInstance.basicAttackType}Power"]`)
-      if(statEl){
-        flash(statEl, FLASH_COLORS.active, 500)
+  displayActionPerformed(action){
+    if(action.basicAttack){
+      const color = DAMAGE_COLORS[this.fighterInstance.basicAttackType]
+      flash(this.basicAttackStatEl, color)
+    }else{
+      const effectEl = this._getEffectEl(action.effect)
+      // const loadoutRow = this._loadoutEl.getRow(action.)
+      if(effectEl instanceof LoadoutRow){
+        flash(effectEl, FLASH_COLORS[effectEl.loadoutItem.abilityState.type], 500)
       }
-      return
-    }
-    const loadoutRow = this._loadoutEl.getRow(ability)
-    if(loadoutRow){
-      flash(loadoutRow, FLASH_COLORS[loadoutRow.loadoutItem.abilityState.type], 500)
     }
   }
 
   displayResult(result){
-    if(result.resultType === 'dodge'){
+    if(result.type === 'dodge'){
       this._displayDodge()
-    }else if(result.resultType === 'damage'){
+    }else if(result.type === 'damage'){
       this._displayDamageResult(result)
-    }else if(result.resultType === 'gainHealth'){
+    }else if(result.type === 'gainHealth'){
       this._displayLifeGained(result.amount)
     }
   }
 
   _displayLifeGained(amount){
-    new FlyingTextEffect(this._hpBarEl, amount)
+    new FlyingTextEffect(this.hpBarEl, amount)
   }
 
   _displayDodge(){
-    new FlyingTextEffect(this._hpBarEl, 'Dodged!')
+    new FlyingTextEffect(this.hpBarEl, 'Dodged!')
   }
 
   _displayDamageResult(damageResult){
 
+    const data = damageResult.data
     const classes = ['damage']
-    if(damageResult.crit){
+    if(data.crit){
       classes.push('crit')
     }
-    if(damageResult.damageType === 'magic'){
+    if(data.damageType === 'magic'){
       classes.push('magic')
     }
-    let html = `<span class="${classes.join(' ')}">-${damageResult.finalDamage}${damageResult.crit ? '!!' : ''}</span>`
+    let html = `<span class="${classes.join(' ')}">-${data.finalDamage}${data.crit ? '!!' : ''}</span>`
 
-    if(damageResult.blocked){
-      html += `<span class="blocked">(${damageResult.blocked} blocked)</span>`
+    if(data.blocked){
+      html += `<span class="blocked">(${data.blocked} blocked)</span>`
     }
 
-    new FlyingTextEffect(this._hpBarEl, html, {
+    new FlyingTextEffect(this.hpBarEl, html, {
       html: true
     })
   }
@@ -148,15 +148,15 @@ export default class FighterInstancePane extends HTMLElement{
       }
     }
 
-    this._hpBarEl.setOptions({ max: this.fighterInstance.hpMax })
+    this.hpBarEl.setOptions({ max: this.fighterInstance.hpMax })
 
-    if(this.fighterInstance.hp !== this._hpBarEl.value){
+    if(this.fighterInstance.hp !== this.hpBarEl.value){
       if(animate){
-        this._hpBarEl.setValue(this.fighterInstance.hp, {
+        this.hpBarEl.setValue(this.fighterInstance.hp, {
           animate: true
         })
       }else{
-        this._hpBarEl.setValue(this.fighterInstance.hp)
+        this.hpBarEl.setValue(this.fighterInstance.hp)
       }
     }
 
@@ -211,6 +211,19 @@ export default class FighterInstancePane extends HTMLElement{
     }else{
       return [...excluded, 'magicPower']
     }
+  }
+
+  _getEffectEl(effectId, eventName){
+    const loadoutRow = this._loadoutEl._rows.find(el => {
+      // TODO: eventName should have to be the main event for the effect
+      return el.loadoutItem?.obj.effectId === effectId
+    })
+    if(loadoutRow){
+      return loadoutRow
+    }
+    return [...this._effectsListEl.querySelectorAll('di-effect-row')].find(el => {
+      debugger
+    })
   }
 }
 

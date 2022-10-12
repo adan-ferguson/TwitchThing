@@ -1,4 +1,4 @@
-import { flash } from '../../animationHelper.js'
+import { flash } from '../../animations/simple.js'
 
 const HTML = `
 <di-bar></di-bar>

@@ -1,9 +1,8 @@
-import { roundToFixed, toArray, wrapContent } from '../../../game/utilFunctions.js'
+import { roundToFixed } from '../../../game/utilFunctions.js'
 import AbilityDisplayInfo from '../abilityDisplayInfo.js'
-import actionIcon from '../../assets/icons/action.svg'
 import tippy from 'tippy.js'
 
-const HTML = (actionTime, cooldown, initialCooldown = 0) => {
+const HTML = (cooldown, initialCooldown = 0) => {
   return `
   <span class="description"></span>
   <div class="bot-row">
@@ -22,35 +21,32 @@ export default class AbilityDescription extends HTMLElement{
     }
   }
 
-  setItem(itemInstance){
+  setItem(itemInstance, tooltips = false){
 
-    const displayInfo = new AbilityDisplayInfo(itemInstance.ability, itemInstance.owner)
-    if(displayInfo.noAbility){
+    if(!itemInstance.hasAbilities){
       this.innerHTML = ''
       this.classList.add('displaynone')
       return
     }
+
+    const displayInfo = new AbilityDisplayInfo(itemInstance.abilities, itemInstance.owner)
     this.setAttribute('ability-type', displayInfo.type)
+    this.innerHTML = HTML(displayInfo.mainAbility.instance.cooldown, displayInfo.mainAbility.instance.initialCooldown)
 
-    this.innerHTML = HTML(displayInfo.actionTimeMultiplier, displayInfo.cooldown, displayInfo.initialCooldown)
+    const descriptionEl = this.querySelector('.description')
+    descriptionEl.innerHTML = displayInfo.descriptionHTML
 
-    tippy(this.querySelector('.initial-cooldown'), {
-      theme: 'light',
-      content: 'Initial cooldown of the ability when combat starts'
-    })
-
-    tippy(this.querySelector('.cooldown'), {
-      theme: 'light',
-      content: 'Cooldown time of this ability'
-    })
-
-    const desc = this.querySelector('.description')
-    if(displayInfo.triggerText){
-      desc.append(wrapContent(displayInfo.triggerText + ':', {
-        class: 'trigger-text'
-      }))
+    if(tooltips){
+      tippy(this.querySelector('.initial-cooldown'), {
+        theme: 'light',
+        content: 'Initial cooldown of the ability when combat starts'
+      })
+      tippy(this.querySelector('.cooldown'), {
+        theme: 'light',
+        content: 'Cooldown time of this ability'
+      })
+      // TODO: description tooltips
     }
-    desc.append(...toArray(displayInfo.actionDescriptions))
   }
 }
 

@@ -72,7 +72,10 @@ export default class CombatPage extends Page{
 
     this._ce = new CombatEnactment(this._fighterPane1, this._fighterPane2, combat)
     this._timeControlsEl.setup(this.timeline.time, this.timeline.duration)
-    this._timeControlsEl.play()
+
+    setTimeout(() => {
+      this._timeControlsEl.play()
+    }, 1000)
   }
 
   async unload(){

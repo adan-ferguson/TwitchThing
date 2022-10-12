@@ -1,6 +1,15 @@
 export default class CustomAnimation{
 
   /**
+   * Shortcut for async animation
+   * @param options
+   * @returns {Promise}
+   */
+  static async create(options){
+    return new CustomAnimation(options)._go()
+  }
+
+  /**
    * Options:
    * duration - Length of animation
    * start    - Function to call immediately after the first animation frame, before the first tick

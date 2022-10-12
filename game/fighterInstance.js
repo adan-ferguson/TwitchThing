@@ -1,5 +1,5 @@
 import Stats from './stats/stats.js'
-import { all as Mods } from './mods/combined.js'
+import { all as Mods, sneakAttackMod } from './mods/combined.js'
 import { StatusEffectsData } from './statusEffectsData.js'
 import ModsCollection from './modsCollection.js'
 
@@ -34,6 +34,7 @@ export default class FighterInstance{
     for(let i = 0; i < 8; i++){
       if(fighterData.items[i]){
         this._itemInstances[i] = new this.ItemClass(fighterData.items[i], null, this)
+        this._itemInstances[i].effectId = 'item-' + i
       }else{
         this._itemInstances[i] = null
       }
@@ -180,7 +181,7 @@ export default class FighterInstance{
   }
 
   get hpMax(){
-    const hpMax = this.stats.get('hpMax').value
+    const hpMax = Math.ceil(this.stats.get('hpMax').value)
     if(hpMax === 0){
       debugger
     }
@@ -299,5 +300,14 @@ export default class FighterInstance{
 
   cleanup(){
     this.statusEffectsData.cleanupExpired()
+  }
+
+  startCombat(){
+    this.inCombat = true
+    this._state.timeSinceLastAction = this.mods.contains(sneakAttackMod) ? this.nextActionTime - 1 : 0
+  }
+
+  endCombat(){
+    this.inCombat = false
   }
 }

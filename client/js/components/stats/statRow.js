@@ -24,6 +24,8 @@ export default class StatRow extends HTMLElement{
       theme: 'light'
     })
     this.statsDisplayInfo = statsDisplayInfo
+    this.innerHTML = '<div class="content"></div>'
+    this._contentEl = this.querySelector('.content')
     this.setOptions(options)
   }
 
@@ -50,7 +52,7 @@ export default class StatRow extends HTMLElement{
       this._tippy.disable()
     }
 
-    this.innerHTML = (this._options.iconsOnly ? ICONS_ONLY_HTML : HTML)(this.statsDisplayInfo)
+    this._contentEl.innerHTML = (this._options.iconsOnly ? ICONS_ONLY_HTML : HTML)(this.statsDisplayInfo)
     this.setAttribute('stat-key', this.statsDisplayInfo.stat.name)
     this.setAttribute('diff', this.statsDisplayInfo.stat.diff)
     this.style.order = this.statsDisplayInfo.order

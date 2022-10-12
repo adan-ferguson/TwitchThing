@@ -1,4 +1,4 @@
-import CustomAnimation from '../../../customAnimation.js'
+import CustomAnimation from '../../../animations/customAnimation.js'
 import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
 
 const innerHTML = `

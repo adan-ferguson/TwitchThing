@@ -1,4 +1,4 @@
-import CustomAnimation from '../../customAnimation.js'
+import CustomAnimation from '../../animations/customAnimation.js'
 import FlyingTextEffect from '../visualEffects/flyingTextEffect.js'
 import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
 

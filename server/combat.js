@@ -5,6 +5,7 @@ import MonsterInstance from '../game/monsterInstance.js'
 import { takeCombatTurn } from './actionsAndTicks/performAction.js'
 import { performCombatTick } from './actionsAndTicks/performCombatTick.js'
 import { toFighterInstance } from '../game/toFighterInstance.js'
+import { sneakAttackMod } from '../game/mods/combined.js'
 
 const START_TIME_DELAY = 1000
 const MAX_TIME = 120000
@@ -94,13 +95,13 @@ class Combat{
   constructor(fighterInstance1, fighterInstance2){
     fighterInstance1.inCombat = true
     fighterInstance2.inCombat = true
+    fighterInstance1.startCombat()
+    fighterInstance2.startCombat()
     this.fighterStartState1 = {
-      ...fighterInstance1.state,
-      timeSinceLastAction: 0
+      ...fighterInstance1.state
     }
     this.fighterStartState2 = {
-      ...fighterInstance2.state,
-      timeSinceLastAction: 0
+      ...fighterInstance2.state
     }
     this.fighterInstance1 = fighterInstance1
     this.fighterInstance2 = fighterInstance2
@@ -108,6 +109,8 @@ class Combat{
     this.timeline = []
     this._addTimelineEntry()
     this._run()
+    fighterInstance1.endCombat()
+    fighterInstance2.endCombat()
     fighterInstance1.inCombat = false
     fighterInstance2.inCombat = false
     this.fighterEndState1 = { ...fighterInstance1.state }
@@ -154,8 +157,10 @@ class Combat{
     const nextTickTime = 1000 - (this._currentTime % 1000)
     const timeToAdvance = Math.ceil(Math.min(nextTickTime, this.fighterInstance1.timeUntilNextAction, this.fighterInstance2.timeUntilNextAction))
     this._currentTime += timeToAdvance
-    this.fighterInstance1.advanceTime(timeToAdvance)
-    this.fighterInstance2.advanceTime(timeToAdvance)
+    if(timeToAdvance){
+      this.fighterInstance1.advanceTime(timeToAdvance)
+      this.fighterInstance2.advanceTime(timeToAdvance)
+    }
   }
 
   _tick(){

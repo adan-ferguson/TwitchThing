@@ -3,53 +3,50 @@ import magicPowerIcon from '../assets/icons/magicPower.svg'
 import { roundToFixed, wrapContent } from '../../game/utilFunctions.js'
 
 export default class AbilityDisplayInfo{
-  constructor(ability, owner = null){
-    if(!ability){
-      return
-    }
-    this._ability = ability
+  constructor(abilities, owner = null){
+    this._abilities = abilities
     this._owner = owner
   }
 
   get noAbility(){
-    return this._ability ? false : true
+    return !this.mainAbility
+  }
+
+  get mainAbility(){
+    const active = this._abilities.active
+    if(active){
+      return { type: 'active', ability: active }
+    }
+    const type = Object.keys(this._abilities)[0]
+    if(!type){
+      return null
+    }
+    return { type, instance: this._abilities[type] }
   }
 
   get type(){
-    return this._ability.type
-  }
-
-  get cooldown(){
-    return this._ability.cooldown ?? null
-  }
-
-  get initialCooldown(){
-    return this._ability.initialCooldown ?? null
-  }
-
-  get actionTimeMultiplier(){
-    return this._ability?.actionTime ?? 1
-  }
-
-  get triggerText(){
-    return null
-  }
-
-  get actionDescriptions(){
-    if(this._ability.name === 'dodge'){
-      return descWrap('Automatically dodge an enemy attack.')
+    if(this.noAbility){
+      return 'none'
     }
-    return this._ability.actions.map(action => {
-      if(action.type === 'attack'){
-        return attackDescription(action, this._owner)
-      }
-      if(action.type === 'effect'){
-        return effectAction(action, this._owner)
-      }
-      if(action.type === 'time'){
-        return timeAction(action.ms)
-      }
-    })
+    return this.mainAbility.type === 'active' ? 'active' : 'triggered'
+  }
+
+  get descriptionHTML(){
+    if(this.mainAbility.instance.name === 'dodgeOne'){
+      return 'Automatically dodge an attack.'
+    }
+    return ''
+    // return this._ability.actions.map(action => {
+    //   if(action.type === 'attack'){
+    //     return attackDescription(action, this._owner)
+    //   }
+    //   if(action.type === 'effect'){
+    //     return effectAction(action, this._owner)
+    //   }
+    //   if(action.type === 'time'){
+    //     return timeAction(action.ms)
+    //   }
+    // })
   }
 }
 

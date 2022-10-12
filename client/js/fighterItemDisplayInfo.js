@@ -2,7 +2,7 @@ import StatsList from './components/stats/statsList.js'
 import { StatsDisplayStyle } from './statsDisplayInfo.js'
 import ItemDetails from './components/itemDetails.js'
 import AbilityDescription from './components/abilityDescription.js'
-import { makeEl } from '../../game/utilFunctions.js'
+import { makeEl, wrapContent } from '../../game/utilFunctions.js'
 
 export default class FighterItemDisplayInfo{
 
@@ -44,7 +44,7 @@ export default class FighterItemDisplayInfo{
       class: 'tooltip-content'
     })
 
-    if(this.itemInstance.ability){
+    if(this.itemInstance.hasAbilities){
       tt.appendChild(new AbilityDescription(this.itemInstance))
     }
 
@@ -58,11 +58,13 @@ export default class FighterItemDisplayInfo{
       tt.appendChild(statsList)
     }
 
-    // if(this.itemInstance.description){
-    //   tt.appendChild(wrap(this.itemInstance.description, {
-    //     class: 'subtitle'
-    //   }))
-    // }
+    const descEl = makeEl()
+    this.itemInstance.mods.list.forEach(mod => {
+      if(mod.description){
+        descEl.appendChild(wrapContent(mod.description))
+      }
+    })
+    tt.appendChild(descEl)
 
     return tt
   }

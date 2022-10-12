@@ -51,7 +51,7 @@ export function useEffectAbility(combat, effect, eventName){
   effect.useAbility(eventName)
 
   return {
-    effect: effect.id,
+    effect: effect.effectId,
     eventName,
     owner: effect.owner.uniqueID,
     results: results.filter(r => r)

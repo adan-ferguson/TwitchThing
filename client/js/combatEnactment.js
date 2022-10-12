@@ -2,6 +2,8 @@ import { EventEmitter } from 'events'
 import { toFighterInstance } from '../../game/toFighterInstance.js'
 import Timeline from '../../game/timeline.js'
 import { toArray } from '../../game/utilFunctions.js'
+import { DAMAGE_COLORS } from './colors.js'
+import { flash } from './animations/simple.js'
 
 export default class CombatEnactment extends EventEmitter{
 
@@ -86,18 +88,15 @@ export default class CombatEnactment extends EventEmitter{
     this._fighterPane2.advanceTime(this._timeline.timeSinceLastEntry)
   }
 
-  _performAction(action){
-    this._getPaneFromFighterId(action.owner).displayActionPerformed(action.ability, action.results)
+  async _performAction(action){
+    this._getPane(action.owner).displayActionPerformed(action)
     action.results.forEach(result => {
-      if(result.results){
-        this._performAction(result)
-      }else{
-        this._getPaneFromFighterId(result.subject).displayResult(result)
-      }
+      this._getPane(result.subject).displayResult(result)
+      result.triggeredEvents.forEach(action => this._performAction(action))
     })
   }
 
-  _getPaneFromFighterId(fighterId){
+  _getPane(fighterId){
     if(this._fighterPane1.fighterInstance.uniqueID === fighterId){
       return this._fighterPane1
     }else if(this._fighterPane2.fighterInstance.uniqueID === fighterId){
@@ -106,11 +105,20 @@ export default class CombatEnactment extends EventEmitter{
     throw 'Tried to get pane from fighter id, but there was none.'
   }
 
+  _getEnemyPane(fighterId){
+    if(this._fighterPane1.fighterInstance.uniqueID === fighterId){
+      return this._fighterPane2
+    }else if(this._fighterPane2.fighterInstance.uniqueID === fighterId){
+      return this._fighterPane1
+    }
+    throw 'Tried to get pane from fighter id, but there was none.'
+  }
+
   _performTickUpdate(tickUpdate){
     if(tickUpdate.results){
       this._performAction(tickUpdate)
     }else{
-      this._getPaneFromFighterId(tickUpdate.owner ?? tickUpdate.subject).displayResult(tickUpdate)
+      this._getPane(tickUpdate.owner ?? tickUpdate.subject).displayResult(tickUpdate)
     }
   }
 }

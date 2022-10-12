@@ -1,6 +1,6 @@
 import Modal from './modal.js'
 import { toArray } from '../../../game/utilFunctions.js'
-import { fadeIn, fadeOut } from '../animationHelper.js'
+import { fadeIn, fadeOut } from '../animations/simple.js'
 
 const SIMPLE_MODAL_HTML = `
   <div class='content'></div>

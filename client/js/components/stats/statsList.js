@@ -2,7 +2,7 @@ import StatRow from './statRow.js'
 import { getStatDisplayInfo, StatsDisplayStyle } from '../../statsDisplayInfo.js'
 import Stats from '../../../../game/stats/stats.js'
 import { wait } from '../../../../game/utilFunctions.js'
-import { flash } from '../../animationHelper.js'
+import { flash } from '../../animations/simple.js'
 
 const STAT_INCREASE_COLOR = '#c0ffc0'
 const STAT_DECREASE_COLOR = '#fabcbc'

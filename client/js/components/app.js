@@ -4,7 +4,7 @@ import { hideAll as hideAllTippys } from 'tippy.js'
 import SimpleModal from './simpleModal.js'
 import { getSocket } from '../socketClient.js'
 import { showPopup } from './popup.js'
-import { fadeIn } from '../animationHelper.js'
+import { fadeIn } from '../animations/simple.js'
 import { addPageToHistory } from '../history.js'
 import { pathToPage } from './pathRouter.js'
 
