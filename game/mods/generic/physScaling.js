@@ -1,3 +1,2 @@
-export default {
-  description: 'Phys power should be visible.'
-}
+// Marks that the effect scales with phys power
+export default {}

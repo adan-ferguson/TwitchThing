@@ -23,14 +23,18 @@ export default class AbilityInstance{
   }
 
   set state(newVal){
-    if(this._state.cooldownRemaining === undefined && this.cooldown){
-      this._state.cooldownRemaining = this._abilityDef.initialCooldown ?? 0
-    }
     this._state = { ...newVal }
   }
 
   get cooldownRemaining(){
-    return this._state.cooldownRemaining ?? 0
+    if(this._state.cooldownRemaining === undefined && this.cooldown){
+      return this._abilityDef.initialCooldown ?? 0
+    }
+    return this._state.cooldownRemaining
+  }
+
+  set cooldownRemaining(val){
+    this._state.cooldownRemaining = val
   }
 
   get cooldown(){
@@ -80,14 +84,14 @@ export default class AbilityInstance{
   }
 
   advanceTime(ms){
-    if(this._state.cooldownRemaining){
-      this._state.cooldownRemaining = Math.max(0, this._state.cooldownRemaining - ms)
+    if(this.cooldownRemaining){
+      this.cooldownRemaining = Math.max(0, this.cooldownRemaining - ms)
     }
   }
 
   use(){
     if(this.cooldown){
-      this._state.cooldownRemaining = this.cooldown
+      this.cooldownRemaining = this.cooldown
     }
     this._state.timesUsed = (this._state.timesUsed ?? 0) + 1
     return this

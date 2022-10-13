@@ -1,3 +1,2 @@
-export default {
-  description: 'Fighter\'s action bar doesn\'t advance, they\'re stunned or frozen or something.'
-}
+// Prevent's owner's action bar from advancing
+export default {}

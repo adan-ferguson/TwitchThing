@@ -23,11 +23,13 @@ const statDefinitionsInfo = {
     text: 'Phys Power',
     icon: physPowerIcon,
     description: 'Phys power (basic attack damage)',
+    displayedValueFn: value => `${Math.round(value)}`
   },
   magicPower: {
     text: 'Magic Power',
     icon: magicPowerIcon,
-    description: 'Magic power'
+    description: 'Magic power',
+    displayedValueFn: value => `${Math.round(value)}`
   },
   physDef: {
     text: 'Phys Defense',

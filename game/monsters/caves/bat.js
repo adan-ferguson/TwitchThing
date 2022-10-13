@@ -1,5 +1,5 @@
 import { dodgingStatusEffect } from '../../statusEffects/combined.js'
-import statusEffectAction from '../../actions/generic/statusEffectAction.js'
+import statusEffectAction from '../../actions/statusEffectAction.js'
 
 export default {
   baseStats: {

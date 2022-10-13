@@ -1,3 +1,2 @@
-export default {
-  description: 'Magic power should be visible.'
-}
+// Marks that the effect scales with magic power
+export default {}

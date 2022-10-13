@@ -15,7 +15,7 @@ export default class AbilityDisplayInfo{
   get mainAbility(){
     const active = this._abilities.active
     if(active){
-      return { type: 'active', ability: active }
+      return { type: 'active', instance: active }
     }
     const type = Object.keys(this._abilities)[0]
     if(!type){
@@ -32,21 +32,23 @@ export default class AbilityDisplayInfo{
   }
 
   get descriptionHTML(){
+    // Hardcoded descriptions
     if(this.mainAbility.instance.name === 'dodgeOne'){
       return 'Automatically dodge an attack.'
     }
-    return ''
-    // return this._ability.actions.map(action => {
-    //   if(action.type === 'attack'){
-    //     return attackDescription(action, this._owner)
-    //   }
-    //   if(action.type === 'effect'){
-    //     return effectAction(action, this._owner)
-    //   }
-    //   if(action.type === 'time'){
-    //     return timeAction(action.ms)
-    //   }
-    // })
+    // Derived descriptions
+    // TODO: add the trigger
+    return this.mainAbility.instance.actions.map(action => {
+      if(action.type === 'attack'){
+        return attackDescription(action, this._owner)
+      }
+      if(action.type === 'effect'){
+        return effectAction(action, this._owner)
+      }
+      if(action.type === 'time'){
+        return timeAction(action.ms)
+      }
+    })
   }
 }
 
@@ -56,7 +58,7 @@ function attackDescription(action, owner){
   if(showFlat){
     amount = Math.ceil(amount * owner.physPower)
   }
-  return descWrap(`Attack for ${showFlat ? '' : 'x'}${damageWrap(action.damageType, amount)} damage`)
+  return `Attack for ${showFlat ? '' : 'x'}${damageWrap(action.damageType, amount)} damage`
 }
 
 function effectAction(action, owner){

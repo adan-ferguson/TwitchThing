@@ -1,6 +1,6 @@
 // import { effectAction, timeAdjustmentAction } from '../../actions.js'
 import { all as Effects, vanishedStatusEffect } from '../../statusEffects/combined.js'
-import statusEffect from '../../actions/generic/statusEffectAction.js'
+import statusEffect from '../../actions/statusEffectAction.js'
 
 export default {
   baseStats: {

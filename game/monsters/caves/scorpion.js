@@ -1,5 +1,5 @@
 import { all as Effects, poisonedStatusEffect } from '../../statusEffects/combined.js'
-import statusEffect from '../../actions/generic/statusEffectAction.js'
+import statusEffect from '../../actions/statusEffectAction.js'
 
 export default {
   baseStats: {
