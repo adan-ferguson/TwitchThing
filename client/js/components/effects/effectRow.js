@@ -1,12 +1,11 @@
 import { flash } from '../../animations/simple.js'
+import tippy from 'tippy.js'
+import { effectDisplayInfo } from '../../effectDisplayInfo.js'
 
 const HTML = `
 <di-bar></di-bar>
 <span class="display-text"></span>
 `
-
-const BUFF_COLOR = '#ddffba'
-const DEBUFF_COLOR = '#ffc0c0'
 
 export default class EffectRow extends HTMLElement{
 
@@ -21,35 +20,28 @@ export default class EffectRow extends HTMLElement{
       .setOptions({
         showLabel: false
       })
+    this._tippy = tippy(this, {
+      theme: 'light'
+    })
     this.update(effect, animate)
   }
 
   update(effect, animate = false){
 
-    this._cachedEffect = effect
-    let txt = `${effect.displayName}`
-    if(effect.stacks >= 2){
-      txt += ` x${effect.stacks}`
+    this.effect = effect
+    const info = effectDisplayInfo(effect)
+
+    this._barEl.setValue(info.barValue)
+    if(this._cachedTxt === info.text){
+      return
     }
 
-    const intDuration = parseInt(effect.duration) || null
-
-    if(txt !== this._cachedTxt){
-      this.querySelector('.display-text').textContent = txt
-      this._cachedTxt = txt
-      const color = effect.buff ? BUFF_COLOR : DEBUFF_COLOR
-      const max = intDuration ?? 1
-      this._barEl.setOptions({ max, color })
-      if(!intDuration){
-        this._barEl.setValue(1)
-      }
-      if(animate){
-        flash(this, color)
-      }
-    }
-
-    if(intDuration){
-      this._barEl.setValue(intDuration - effect.state.time)
+    this.querySelector('.display-text').textContent = info.text
+    this._cachedTxt = info.text
+    this._barEl.setOptions({ max: info.barMax, color: info.color })
+    this._tippy.setContent(info.tooltip)
+    if(animate){
+      flash(this, info.color)
     }
   }
 }

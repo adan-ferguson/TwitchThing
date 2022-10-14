@@ -273,9 +273,9 @@ export default class FighterInstance{
    * @param amount
    */
   changeHpWithDecimals(amount){
-    amount = amount + (this._state.hpRemainder ?? 0)
-    this._state.hpRemainder = amount % 1
-    this.hp += Math.floor(amount)
+    const hpAfter = this.hp + amount + (this._state.hpRemainder ?? 0)
+    this.hp = Math.floor(hpAfter)
+    this._state.hpRemainder = hpAfter - this.hp
   }
 
   adjustNextActionTime(ms){

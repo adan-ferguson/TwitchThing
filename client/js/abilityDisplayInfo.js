@@ -1,6 +1,7 @@
 import physPowerIcon from '../assets/icons/physPower.svg'
 import magicPowerIcon from '../assets/icons/magicPower.svg'
 import { roundToFixed, wrapContent } from '../../game/utilFunctions.js'
+import { expandStatusEffectsDef } from '../../game/statusEffectsData.js'
 
 export default class AbilityDisplayInfo{
   constructor(abilities, owner = null){
@@ -42,13 +43,16 @@ export default class AbilityDisplayInfo{
       if(action.type === 'attack'){
         return attackDescription(action, this._owner)
       }
-      if(action.type === 'effect'){
-        return effectAction(action, this._owner)
+      if(action.type === 'statusEffect'){
+        return statusEffectDescription(action, this._owner)
       }
-      if(action.type === 'time'){
-        return timeAction(action.ms)
-      }
-    })
+      // if(action.type === 'effect'){
+      //   return effectAction(action, this._owner)
+      // }
+      // if(action.type === 'time'){
+      //   return timeAction(action.ms)
+      // }
+    }).join(' ')
   }
 }
 
@@ -58,15 +62,20 @@ function attackDescription(action, owner){
   if(showFlat){
     amount = Math.ceil(amount * owner.physPower)
   }
-  return `Attack for ${showFlat ? '' : 'x'}${damageWrap(action.damageType, amount)} damage`
+  return `Attack for ${showFlat ? '' : 'x'}${damageWrap(action.damageType, amount)} damage.`
 }
 
-function effectAction(action, owner){
-  if(action.effect.id === 'spiderweb'){
-    return descWrap(`Slows ${targetString(action.affects)}, increasing their turn time by ${action.effect.stats.slow/1000}s. Lasts ${durationString(action.effect.duration)}`)
-  }else if(action.effect.id === 'stun'){
-    return descWrap(`Stuns the target for ${roundToFixed(action.effect.duration/1000, 2)}s`)
+function statusEffectDescription(action, owner){
+  const data = expandStatusEffectsDef(owner, action.effect)
+  if(data.name === 'poisoned'){
+    return `Poisons the target for ${damageWrap('magic', data.params.dps)} dps for ${data.duration / 1000} seconds.`
   }
+
+  // if(action.effect.id === 'spiderweb'){
+  //   return descWrap(`Slows ${targetString(action.affects)}, increasing their turn time by ${action.effect.stats.slow/1000}s. Lasts ${durationString(action.effect.duration)}`)
+  // }else if(action.effect.id === 'stun'){
+  //   return descWrap(`Stuns the target for ${roundToFixed(action.effect.duration/1000, 2)}s`)
+  // }
 }
 
 function timeAction(ms){

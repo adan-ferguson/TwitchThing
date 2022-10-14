@@ -1,5 +1,6 @@
 import { all as Effects } from '../../game/statusEffects/combined.js'
 import { makeActionResult } from '../../game/actionResult.js'
+import { expandStatusEffectsDef } from '../../game/statusEffectsData.js'
 
 export function performStatusEffectAction(combat, actor, actionDef){
   const subject = actionDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
@@ -40,21 +41,10 @@ export function performRemoveStatusEffectAction(combat, actor, actionDef){
  * @param combat
  * @param actor
  * @param subject
- * @param statusEffectData
+ * @param def
  */
-export function addStatusEffect(combat, actor, subject, statusEffectData){
-  if(statusEffectData.name){
-    const baseEffect = Effects[statusEffectData.name]
-    if(baseEffect.stateParamsFn){
-      statusEffectData = {
-        ...statusEffectData,
-        params: baseEffect.stateParamsFn({
-          source: actor,
-          params: statusEffectData.params
-        })
-      }
-    }
-  }
-  subject.statusEffectsData.add(statusEffectData)
-  return statusEffectData
+export function addStatusEffect(combat, actor, subject, def){
+  const data = expandStatusEffectsDef(actor, def)
+  subject.statusEffectsData.add(data)
+  return data
 }

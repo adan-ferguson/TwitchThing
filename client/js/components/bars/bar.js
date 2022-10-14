@@ -1,6 +1,7 @@
 import CustomAnimation from '../../animations/customAnimation.js'
 import FlyingTextEffect from '../visualEffects/flyingTextEffect.js'
 import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
+import _ from 'lodash'
 
 const innerHTML = `
 <div class="bar-badge displaynone">
@@ -55,7 +56,13 @@ export default class Bar extends HTMLElement{
   }
 
   setOptions(options){
-    this._options = mergeOptionsObjects(this._options, options)
+
+    const newOptions = mergeOptionsObjects(this._options, options)
+    if(_.isEqual(newOptions, this._options)){
+      return this
+    }
+
+    this._options = newOptions
     this._barLabel.classList.toggle('hidden', !this._options.showLabel)
     this._updateLabel()
     this._updateColors()

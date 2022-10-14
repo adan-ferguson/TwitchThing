@@ -49,7 +49,9 @@ export function takeDamage(combat, subject, damageInfo){
     result.finalDamage = Math.ceil(result.finalDamage)
   }
 
+  const hpBefore = subject.hp
   subject.changeHpWithDecimals(-result.finalDamage)
+  result.finalIntDamage = hpBefore - subject.hp
 
   if(result.finalDamage > 0){
     triggeredEvents.push(...triggerEvent(combat, subject, 'takeDamage'))

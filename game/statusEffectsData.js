@@ -1,6 +1,28 @@
 import StatusEffectInstance  from './statusEffectInstance.js'
 import _ from 'lodash'
 import { toArray } from './utilFunctions.js'
+import { all as Effects } from './statusEffects/combined.js'
+
+/**
+ * @param actor
+ * @param def
+ * @returns {object}
+ */
+export function expandStatusEffectsDef(actor, def){
+  if(def.name){
+    const baseEffect = Effects[def.name]
+    if(baseEffect.stateParamsFn){
+      return {
+        ...def,
+        params: baseEffect.stateParamsFn({
+          source: actor,
+          params: def.params
+        })
+      }
+    }
+  }
+  return { ...def }
+}
 
 export class StatusEffectsData{
 

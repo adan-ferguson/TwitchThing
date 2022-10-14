@@ -125,7 +125,7 @@ export default class FighterInstancePane extends HTMLElement{
     if(data.damageType === 'magic'){
       classes.push('magic')
     }
-    let html = `<span class="${classes.join(' ')}">-${data.finalDamage}${data.crit ? '!!' : ''}</span>`
+    let html = `<span class="${classes.join(' ')}">-${data.finalIntDamage}${data.crit ? '!!' : ''}</span>`
 
     if(data.blocked){
       html += `<span class="blocked">(${data.blocked} blocked)</span>`
@@ -222,7 +222,7 @@ export default class FighterInstancePane extends HTMLElement{
       return loadoutRow
     }
     return [...this._effectsListEl.querySelectorAll('di-effect-row')].find(el => {
-      debugger
+      return el.effect.effectId === effectId
     })
   }
 }

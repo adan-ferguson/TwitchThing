@@ -1,30 +1,35 @@
-import { all as Effects, poisonedStatusEffect } from '../../statusEffects/combined.js'
+import { poisonedStatusEffect } from '../../statusEffects/combined.js'
 import statusEffect from '../../actions/statusEffectAction.js'
+import attackAction from '../../actions/attackAction.js'
+import { magicScalingMod } from '../../mods/combined.js'
 
 export default {
   baseStats: {
-    hpMax: '+500%',
+    hpMax: '+30%',
     speed: '-30%'
   },
   items: [
     {
-      name: 'Poison Sting',
+      name: 'Tail Sting',
       abilities: {
-        attackHit: {
+        active: {
+          cooldown: 12000,
           actions: [
+            attackAction(),
             statusEffect({
               base: poisonedStatusEffect,
               affects: 'enemy',
               effect: {
                 duration: 30000,
                 params: {
-                  damage: 0.1
+                  damage: 0.03
                 }
               }
             })
           ]
         }
-      }
-    }
+      },
+      mods: [magicScalingMod]
+    },
   ]
 }

@@ -1,4 +1,5 @@
 import { v4 } from 'uuid'
+import _ from 'lodash'
 
 export function toArray(arrayOrVal){
   return Array.isArray(arrayOrVal) ? arrayOrVal : [arrayOrVal]
