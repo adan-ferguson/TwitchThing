@@ -1,8 +1,9 @@
 import StatRow from './statRow.js'
 import { getStatDisplayInfo, StatsDisplayStyle } from '../../statsDisplayInfo.js'
 import Stats from '../../../../game/stats/stats.js'
-import { wait } from '../../../../game/utilFunctions.js'
+import { mergeOptionsObjects, wait } from '../../../../game/utilFunctions.js'
 import { flash } from '../../animations/simple.js'
+import _ from 'lodash'
 
 const STAT_INCREASE_COLOR = '#c0ffc0'
 const STAT_DECREASE_COLOR = '#fabcbc'
@@ -28,11 +29,11 @@ export default class StatsList extends HTMLElement{
   }
 
   setOptions(options){
-    for (let key in options){
-      if(key in this._options){
-        this._options[key] = options[key]
-      }
+    const newOptions = mergeOptionsObjects(this._options, options)
+    if(_.isEqual(newOptions, this._options)){
+      return this
     }
+    this._options = newOptions
     this._update()
     return this
   }
@@ -54,6 +55,7 @@ export default class StatsList extends HTMLElement{
     })
 
     const statsToShow = this._stats.getAll(this._options.forced)
+    console.log('statsupdate')
 
     for(let key in statsToShow){
       if(this._options.excluded.indexOf(key) > -1){

@@ -31,8 +31,8 @@ export default class Bar extends HTMLElement{
   }
 
   _barLabel
-  _barBackground
-  _barForeground
+  backgroundEl
+  foregroundEl
 
   _val = 0
 
@@ -41,8 +41,8 @@ export default class Bar extends HTMLElement{
     this.classList.add('di-bar')
     this.innerHTML = innerHTML
     this._barLabel = this.querySelector('.bar-label')
-    this._barBackground = this.querySelector('.bar-background')
-    this._barForeground = this.querySelector('.bar-foreground')
+    this.backgroundEl = this.querySelector('.bar-background')
+    this.foregroundEl = this.querySelector('.bar-foreground')
     this._barBorder = this.querySelector('.bar-border')
     this.setValue(0)
   }
@@ -113,9 +113,9 @@ export default class Bar extends HTMLElement{
     if(!options.animate){
       this._val = val
       this._updateLabel()
-      this._barBackground.classList.add('hidden')
-      this._barBackground.style.width = `${this._pct(val) * 100}%`
-      this._barForeground.style.width = `${this._pct(val) * 100}%`
+      this.backgroundEl.classList.add('hidden')
+      this.backgroundEl.style.width = `${this._pct(val) * 100}%`
+      this.foregroundEl.style.width = `${this._pct(val) * 100}%`
       this._updateColors()
     }else {
       await this._animateToValue(val)
@@ -141,14 +141,14 @@ export default class Bar extends HTMLElement{
       let animatingBar
       let snappingBar
       if(secondaryColor){
-        animatingBar = growing ? this._barForeground : this._barBackground
-        snappingBar = !growing ? this._barForeground : this._barBackground
-        this._barBackground.classList.remove('hidden')
-        this._barBackground.style.backgroundColor = secondaryColor
+        animatingBar = growing ? this.foregroundEl : this.backgroundEl
+        snappingBar = !growing ? this.foregroundEl : this.backgroundEl
+        this.backgroundEl.classList.remove('hidden')
+        this.backgroundEl.style.backgroundColor = secondaryColor
       }else{
-        animatingBar = this._barForeground
+        animatingBar = this.foregroundEl
         snappingBar = null
-        this._barBackground.classList.add('hidden')
+        this.backgroundEl.classList.add('hidden')
       }
 
       // Figure out our target width
@@ -213,7 +213,7 @@ export default class Bar extends HTMLElement{
 
   _updateColors(){
     this._barBorder.style.borderColor = this._options.color
-    this._barForeground.style.backgroundColor = this._options.color
+    this.foregroundEl.style.backgroundColor = this._options.color
   }
 
   _updateLabel(valOverride){

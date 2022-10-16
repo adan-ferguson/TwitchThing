@@ -5,7 +5,12 @@ export const FLASH_COLORS = {
   triggered: '#ffa227'
 }
 export const STATUSEFFECT_COLORS = {
-  buff: '#ddffba',
-  debuff: '#ffc0c0',
-  barrier: '#e5e5e5'
+  buff: {
+    bar: '#ddffba',
+    flash: '#74e514'
+  },
+  debuff: {
+    bar: '#ffc0c0',
+    flash: '#ff0000'
+  },
 }

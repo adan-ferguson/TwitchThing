@@ -1,4 +1,3 @@
-import { all as Effects } from '../../game/statusEffects/combined.js'
 import { makeActionResult } from '../../game/actionResult.js'
 import { expandStatusEffectsDef } from '../../game/statusEffectsData.js'
 

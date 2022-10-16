@@ -1,6 +1,6 @@
 import { all as Effects } from './statusEffects/combined.js'
 import Stats from './stats/stats.js'
-import { uuid } from './utilFunctions.js'
+import { roundToFixed, uuid } from './utilFunctions.js'
 import EffectInstance from './effectInstance.js'
 
 export default class StatusEffectInstance extends EffectInstance{
@@ -132,7 +132,7 @@ export default class StatusEffectInstance extends EffectInstance{
       return 0
     }
     const barrierDamage = Math.min(amount, this.barrierPointsRemaining)
-    this._state.barrierDamage = this.barrierDamage + barrierDamage
+    this._state.barrierDamage = roundToFixed(this.barrierDamage + barrierDamage, 2)
     return barrierDamage
   }
 }

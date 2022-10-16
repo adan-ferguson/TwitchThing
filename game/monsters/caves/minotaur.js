@@ -1,16 +1,24 @@
 export default {
   baseStats: {
-    physPower: '+30%',
+    physPower: '+25%',
     speed: '-20%',
-    hpMax: '+100%'
+    hpMax: '+125%'
   },
-  description: 'Hard hitting, back breaking.',
   items: [
     {
       name: 'Boss Monster',
-      description: 'Hardest monster type in the zone, stronger and gives extra rewards.',
+      description: 'Guards the stairs.',
       stats: {
-        rewards: '+100%'
+        rewards: '+200%'
+      }
+    },{
+      name: 'Enrage',
+      description: 'Doubles physical power after 30 seconds.',
+      conditions: {
+        combatTimeAbove: 30000
+      },
+      stats: {
+        physPower: '+100%'
       }
     }
   ]

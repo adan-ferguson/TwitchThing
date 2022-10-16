@@ -29,10 +29,22 @@ export default class EffectInstance{
     return this.effectData.description ?? ''
   }
 
+  get meetsConditions(){
+    if(this.effectData.conditions && this.owner){
+      if(!this.owner.meetsConditions(this.effectData.conditions)){
+        return false
+      }
+    }
+    return true
+  }
+
   /**
    * @return {Stats}
    */
   get stats(){
+    if(!this.meetsConditions){
+      return new Stats()
+    }
     return new Stats(this.effectData.stats)
   }
 
@@ -45,6 +57,9 @@ export default class EffectInstance{
    * @return {ModsCollection}
    */
   get mods(){
+    if(!this.meetsConditions){
+      return new ModsCollection()
+    }
     return new ModsCollection(this.effectData.mods || [])
   }
 
@@ -60,6 +75,9 @@ export default class EffectInstance{
   }
 
   get abilities(){
+    if(!this.meetsConditions){
+      return {}
+    }
     return this.generateAbilitiesData().instances
   }
 

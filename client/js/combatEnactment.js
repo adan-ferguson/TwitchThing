@@ -2,8 +2,6 @@ import { EventEmitter } from 'events'
 import { toFighterInstance } from '../../game/toFighterInstance.js'
 import Timeline from '../../game/timeline.js'
 import { toArray } from '../../game/utilFunctions.js'
-import { DAMAGE_COLORS } from './colors.js'
-import { flash } from './animations/simple.js'
 
 export default class CombatEnactment extends EventEmitter{
 

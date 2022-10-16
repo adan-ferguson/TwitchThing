@@ -70,6 +70,9 @@ function statusEffectDescription(action, owner){
   if(data.name === 'poisoned'){
     return `Poisons the target for ${damageWrap('magic', data.params.dps)} dps for ${data.duration / 1000} seconds.`
   }
+  if(data.name === 'barrier'){
+    return `Gain a barrier that blocks ${damageWrap('magic', data.params.barrierPoints)} damage.`
+  }
 
   // if(action.effect.id === 'spiderweb'){
   //   return descWrap(`Slows ${targetString(action.affects)}, increasing their turn time by ${action.effect.stats.slow/1000}s. Lasts ${durationString(action.effect.duration)}`)

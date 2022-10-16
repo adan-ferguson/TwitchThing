@@ -5,7 +5,6 @@ import MonsterInstance from '../game/monsterInstance.js'
 import { takeCombatTurn } from './actionsAndTicks/performAction.js'
 import { performCombatTick } from './actionsAndTicks/performCombatTick.js'
 import { toFighterInstance } from '../game/toFighterInstance.js'
-import { sneakAttackMod } from '../game/mods/combined.js'
 
 const START_TIME_DELAY = 1000
 const MAX_TIME = 120000
@@ -95,8 +94,8 @@ class Combat{
   constructor(fighterInstance1, fighterInstance2){
     fighterInstance1.inCombat = true
     fighterInstance2.inCombat = true
-    fighterInstance1.startCombat()
-    fighterInstance2.startCombat()
+    fighterInstance1.startCombat(this)
+    fighterInstance2.startCombat(this)
     this.fighterStartState1 = {
       ...fighterInstance1.state
     }

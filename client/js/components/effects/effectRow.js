@@ -1,5 +1,7 @@
 import tippy from 'tippy.js'
 import { effectDisplayInfo } from '../../effectDisplayInfo.js'
+import { flash } from '../../animations/simple.js'
+import { FLASH_COLORS } from '../../colors.js'
 
 const HTML = `
 <di-bar></di-bar>
@@ -31,12 +33,16 @@ export default class EffectRow extends HTMLElement{
     animate = info.animateChanges && animate
 
     this.querySelector('.display-text').textContent = info.text
-    this._barEl.setOptions({ max: info.barMax, color: info.color })
+    this._barEl.setOptions({ max: info.barMax, color: info.colors.bar })
     this._barEl.setValue(info.barValue, { animate: animate })
     this._tippy.setContent(info.tooltip)
     // if(info.animateChanges){
     //   flash(this, info.color)
     // }
+  }
+
+  flash(){
+    flash(this._barEl.foregroundEl, effectDisplayInfo(this.effect).colors.flash, 500)
   }
 }
 customElements.define('di-effect-row', EffectRow)

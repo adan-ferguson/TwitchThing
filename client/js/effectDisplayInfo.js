@@ -8,10 +8,10 @@ export function effectDisplayInfo(effectInstance){
     text += ` x${effectInstance.stacks}`
   }
   if(effectInstance.barrier){
-    text += ` ${effectInstance.barrierPointsRemaining}`
+    text += ` ${Math.ceil(effectInstance.barrierPointsRemaining)}`
   }
 
-  const color = getColor(effectInstance)
+  const colors = getColors(effectInstance)
 
   let barMax = 1
   let barValue = 1
@@ -29,7 +29,7 @@ export function effectDisplayInfo(effectInstance){
     text,
     barValue,
     barMax,
-    color,
+    colors,
     tooltip,
     animateChanges: effectInstance.duration ? false : true
   }
@@ -42,9 +42,6 @@ function makeTooltip(effect){
   return 'No Tooltip LOL'
 }
 
-function getColor(effectInstance){
-  if(effectInstance.barrier){
-    return STATUSEFFECT_COLORS.barrier
-  }
+function getColors(effectInstance){
   return STATUSEFFECT_COLORS[effectInstance.isBuff ? 'buff' : 'debuff']
 }

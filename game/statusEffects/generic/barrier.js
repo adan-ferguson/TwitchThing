@@ -7,6 +7,7 @@ export default {
   defFn: stateParams => {
     return {
       stacking: 'refresh',
+      isBuff: true,
       barrier: {
         points: stateParams.barrierPoints
       }

@@ -7,7 +7,6 @@ import ModsCollection from './modsCollection.js'
 new Stats()
 
 const STATE_DEFAULTS = {
-  timeSinceLastAction: 0,
   inCombat: false
 }
 
@@ -170,10 +169,6 @@ export default class FighterInstance{
     return Math.floor(this._state.hp ?? this.hpMax)
   }
 
-  get barrierEffects(){
-
-  }
-
   set hp(val){
     if(isNaN(val)){
       debugger
@@ -243,6 +238,9 @@ export default class FighterInstance{
         itemInstance.advanceTime(ms)
       }
     })
+    if(this.inCombat){
+      this._state.combatTime += ms
+    }
     this.statusEffectsData.advanceTime(ms)
   }
 
@@ -284,6 +282,8 @@ export default class FighterInstance{
         return this.statusEffectsData.instances.some(sei => {
           return !sei.isBuff && !sei.expired && !sei.phantom
         })
+      }else if(conditionName === 'combatTimeAbove'){
+        return this._state.combatTime >= conditions[conditionName]
       }
       throw `Undefined condition: ${conditionName}`
     })
@@ -295,10 +295,13 @@ export default class FighterInstance{
 
   startCombat(){
     this.inCombat = true
+    this._state.combatTime = 0
     this._state.timeSinceLastAction = this.mods.contains(sneakAttackMod) ? this.nextActionTime - 1 : 0
   }
 
   endCombat(){
     this.inCombat = false
+    delete this._state.combatTime
+    delete this._state.timeSinceLastAction
   }
 }

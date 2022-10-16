@@ -1,11 +1,10 @@
 import { magicAttackMod } from '../../mods/combined.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
-import { barrierStatusEffect } from '../../statusEffects/combined.js'
+import attackAction from '../../actions/attackAction.js'
 
 export default {
   baseStats: {
     hpMax: '-40%',
-    magicPower: '+10%'
+    magicPower: '-20%'
   },
   items: [
     {
@@ -13,19 +12,33 @@ export default {
       mods: [magicAttackMod]
     },
     {
-      name: 'Barrier',
+      name: 'Lightning Bolt',
       abilities: {
         active: {
-          cooldown: 1400,
+          cooldown: 10000,
+          initialCooldown: 10000,
           actions: [
-            statusEffectAction({
-              base: barrierStatusEffect,
-              params: {
-                power: 1.4
-              }
+            attackAction({
+              damageMulti: 2.5,
+              damageType: 'magic'
             })
           ]
         }
+      // name: 'Barrier',
+      // abilities: {
+      //   active: {
+      //     cooldown: 14000,
+      //     actions: [
+      //       statusEffectAction({
+      //         base: barrierStatusEffect,
+      //         effect: {
+      //           params: {
+      //             power: 1.4
+      //           }
+      //         }
+      //       })
+      //     ]
+      //   }
       }
     }
   ]

@@ -75,7 +75,7 @@ export default class CombatPage extends Page{
 
     setTimeout(() => {
       this._timeControlsEl.play()
-    }, 1000)
+    }, 100)
   }
 
   async unload(){

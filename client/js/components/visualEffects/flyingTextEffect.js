@@ -24,6 +24,7 @@ export default class FlyingTextEffect extends EventEmitter{
       direction: 'up',
       color: 'black',
       distance: 40,
+      fontSize: 1,
       duration: 3000,
       autoStart: true,
       ...options
@@ -37,6 +38,7 @@ export default class FlyingTextEffect extends EventEmitter{
     this.el.style.transition = `all ${this.options.duration/1000}s ease-out`
     this.el.style.left = startingPosition.x + 'px'
     this.el.style.top = startingPosition.y + 'px'
+    this.el.style.fontSize = this.options.fontSize + 'em'
 
     document.querySelector('body').appendChild(this.el)
 

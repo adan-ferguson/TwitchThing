@@ -11,6 +11,7 @@ export default {
   items: [
     {
       name: 'Tail Sting',
+      mods: [magicScalingMod],
       abilities: {
         active: {
           cooldown: 12000,
@@ -30,6 +31,5 @@ export default {
         }
       },
     },
-  ],
-  mods: [magicScalingMod]
+  ]
 }

@@ -5,11 +5,12 @@ import AdventurerInfo from '../adventurer/adventurerInfo.js'
 import MonsterInfo from '../monsterInfo.js'
 import FlyingTextEffect from '../visualEffects/flyingTextEffect.js'
 import CustomAnimation from '../../animations/customAnimation.js'
-import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
+import { mergeOptionsObjects, roundToFixed } from '../../../../game/utilFunctions.js'
 import { magicAttackMod, magicScalingMod, physScalingMod } from '../../../../game/mods/combined.js'
 import { DAMAGE_COLORS, FLASH_COLORS } from '../../colors.js'
 import { flash } from '../../animations/simple.js'
 import LoadoutRow from '../loadout/loadoutRow.js'
+import EffectRow from '../effects/effectRow.js'
 
 const HTML = `
 <div class="name"></div>
@@ -91,9 +92,10 @@ export default class FighterInstancePane extends HTMLElement{
       flash(this.basicAttackStatEl, color)
     }else{
       const effectEl = this._getEffectEl(action.effect)
-      // const loadoutRow = this._loadoutEl.getRow(action.)
       if(effectEl instanceof LoadoutRow){
         flash(effectEl, FLASH_COLORS[effectEl.loadoutItem.abilityState.type], 500)
+      }else if(effectEl instanceof EffectRow){
+        effectEl.flash()
       }
     }
   }
@@ -131,13 +133,15 @@ export default class FighterInstancePane extends HTMLElement{
       if(data.damageDistribution[key] === 0){
         continue
       }
-      let html = `<span class="${classes.join(' ')}">-${data.damageDistribution[key]}${data.crit ? '!!' : ''}</span>`
+      let dmgStr = roundToFixed(data.damageDistribution[key], 2)
+      let html = `<span class="${classes.join(' ')}">-${dmgStr}${data.crit ? '!!' : ''}</span>`
       let el = key === 'hp' ? this.hpBarEl : this._getEffectEl(key)
       if(!el){
         continue
       }
       new FlyingTextEffect(el, html, {
-        html: true
+        html: true,
+        fontSize: 0.9 + Math.min(0.5, dmgStr / this.fighterInstance.hpMax) * 2.1
       })
     }
 
@@ -220,7 +224,7 @@ export default class FighterInstancePane extends HTMLElement{
     const magicAttack = this.fighterInstance.mods.contains(magicAttackMod)
     const showPhys = this.fighterInstance.mods.contains(physScalingMod)
     const showMagic = this.fighterInstance.mods.contains(magicScalingMod)
-    if(showPhys && showMagic){
+    if((showPhys || !magicAttack) && showMagic){
       return [...excluded]
     }else if(magicAttack && !showPhys){
       return [...excluded, 'physPower']
