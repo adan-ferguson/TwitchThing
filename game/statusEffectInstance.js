@@ -8,7 +8,7 @@ export default class StatusEffectInstance extends EffectInstance{
   constructor(data, owner, state = {}, ){
     super(owner, state)
     this._data = data
-    this.effectId = 'statusEffect-' + uuid()
+    this.effectId = state.effectId ?? 'statusEffect-' + uuid()
   }
 
   get phantom(){
@@ -63,20 +63,50 @@ export default class StatusEffectInstance extends EffectInstance{
     return this.effectData.duration
   }
 
+  get durationRemaining(){
+    return Math.max(0, this.duration - this.time)
+  }
+
   get expired(){
-    if(Number.isFinite(this.duration)){
-      return (this._state.time ?? 0) >= this.duration
+    if(Number.isFinite(this.duration) && !this.durationRemaining){
+      return true
+    }
+    if(this.barrier && !this.barrierPointsRemaining){
+      return true
     }
     return false
+  }
+
+  get time(){
+    return this._state.time ?? 0
   }
 
   get state(){
     const state = super.state
     state.data = this._data
+    state.effectId = this.effectId
     return state
   }
 
-  refreshDuration(){
+  get barrier(){
+    return this.effectData.barrier ?? null
+  }
+
+  get barrierDamage(){
+    return this._state.barrierDamage ?? 0
+  }
+
+  get barrierPointsRemaining(){
+    if(!this.barrier){
+      return 0
+    }
+    return this.barrier.points - this.barrierDamage
+  }
+
+  refresh(){
+    if(this.barrier){
+      this._state.barrierDamage = 0
+    }
     this._state.time = 0
     return this
   }
@@ -88,15 +118,21 @@ export default class StatusEffectInstance extends EffectInstance{
     return this
   }
 
-  fixState(){
-    super.fixState()
-    if(!this._state.time){
-      this._state.time = 0
-    }
-  }
-
   advanceTime(ms){
     super.advanceTime(ms)
-    this._state.time += ms
+    this._state.time = this.time + ms
+  }
+
+  /**
+   * @param amount {number}
+   * @return {number} Amount reduced
+   */
+  reduceBarrierPoints(amount){
+    if(!this.barrier){
+      return 0
+    }
+    const barrierDamage = Math.min(amount, this.barrierPointsRemaining)
+    this._state.barrierDamage = this.barrierDamage + barrierDamage
+    return barrierDamage
   }
 }

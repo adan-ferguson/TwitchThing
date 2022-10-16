@@ -32,8 +32,8 @@ export async function generateCombatEvent(dungeonRun){
 }
 
 export async function generateSimulatedCombat(fighterDef1, fighterDef2){
-  fighterDef1.id += 'a'
-  fighterDef2.id += 'b'
+  fighterDef1._id += 'a'
+  fighterDef2._id += 'b'
   const i1 = toFighterInstance(fighterDef1)
   const i2 = toFighterInstance(fighterDef2)
   return await generateCombat(i1, i2, {

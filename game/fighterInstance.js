@@ -1,5 +1,5 @@
 import Stats from './stats/stats.js'
-import { all as Mods, sneakAttackMod } from './mods/combined.js'
+import { freezeActionBarMod, magicAttackMod, sneakAttackMod } from './mods/combined.js'
 import { StatusEffectsData } from './statusEffectsData.js'
 import ModsCollection from './modsCollection.js'
 
@@ -170,14 +170,15 @@ export default class FighterInstance{
     return Math.floor(this._state.hp ?? this.hpMax)
   }
 
+  get barrierEffects(){
+
+  }
+
   set hp(val){
     if(isNaN(val)){
       debugger
     }
     this._state.hp = Math.max(0, Math.min(this.hpMax, val))
-    if(this.hp === this.hpMax){
-      this._state.hpRemainder = 0
-    }
   }
 
   get hpMax(){
@@ -193,7 +194,7 @@ export default class FighterInstance{
   }
 
   get basicAttackType(){
-    return this.mods.contains(Mods.magicAttack) ? 'magic' : 'phys'
+    return this.mods.contains(magicAttackMod) ? 'magic' : 'phys'
   }
 
   get magicPower(){
@@ -234,7 +235,7 @@ export default class FighterInstance{
   }
 
   advanceTime(ms){
-    if(!this.mods.contains(Mods.freezeActionBar) && this.inCombat){
+    if(!this.mods.contains(freezeActionBarMod) && this.inCombat){
       this._state.timeSinceLastAction += ms
     }
     this.itemInstances.forEach(itemInstance => {
@@ -266,16 +267,6 @@ export default class FighterInstance{
 
   resetTimeSinceLastAction(){
     this._state.timeSinceLastAction = 0
-  }
-
-  /**
-   * Use this for things like regen/dots so that 0.3 per second doesn't result in nothing happening.
-   * @param amount
-   */
-  changeHpWithDecimals(amount){
-    const hpAfter = this.hp + amount + (this._state.hpRemainder ?? 0)
-    this.hp = Math.floor(hpAfter)
-    this._state.hpRemainder = hpAfter - this.hp
   }
 
   adjustNextActionTime(ms){

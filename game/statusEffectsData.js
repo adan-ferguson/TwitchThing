@@ -62,6 +62,26 @@ export class StatusEffectsData{
   }
 
   /**
+   * // TODO: maybe this is some sort of event
+   * Owner is taking damage, and the damage has been finalized.
+   * @param damage {number}
+   * @return {object} Damage distribution
+   */
+  ownerTakingDamage(damage){
+    let remaining = damage
+    const distribution = {}
+    this._instances.forEach(effect => {
+      if(!remaining || !effect.barrier){
+        return
+      }
+      remaining -= distribution[effect.effectId] = effect.reduceBarrierPoints(remaining)
+    })
+    distribution.hp = remaining
+    this.cleanupExpired()
+    return distribution
+  }
+
+  /**
    * Remove expired effects
    */
   cleanupExpired(){
@@ -78,9 +98,9 @@ export class StatusEffectsData{
     const existing = this._getByData(statusEffectData)
     if(existing){
       if(existing.stacking === 'refresh'){
-        return existing.refreshDuration()
+        return existing.refresh()
       }else if(existing.stacking === true){
-        return existing.addStack().refreshDuration()
+        return existing.addStack().refresh()
       }
     }
     const instance = new StatusEffectInstance(statusEffectData, this._fighterInstance)

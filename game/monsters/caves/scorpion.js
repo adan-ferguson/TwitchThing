@@ -29,7 +29,7 @@ export default {
           ]
         }
       },
-      mods: [magicScalingMod]
     },
-  ]
+  ],
+  mods: [magicScalingMod]
 }

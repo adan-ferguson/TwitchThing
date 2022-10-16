@@ -45,7 +45,8 @@ export default class FighterInstancePane extends HTMLElement{
       style: OrbsDisplayStyle.MAX_ONLY
     })
     this.statsList = this.querySelector('di-stats-list').setOptions({
-      iconsOnly: true
+      iconsOnly: true,
+      forced: ['physPower','magicPower'] // Excluded takes priority, so these might be hidden
     })
     this._effectsListEl = this.querySelector('di-effects-list')
 
@@ -125,15 +126,30 @@ export default class FighterInstancePane extends HTMLElement{
     if(data.damageType === 'magic'){
       classes.push('magic')
     }
-    let html = `<span class="${classes.join(' ')}">-${data.finalIntDamage}${data.crit ? '!!' : ''}</span>`
 
-    if(data.blocked){
-      html += `<span class="blocked">(${data.blocked} blocked)</span>`
+    for(let key in data.damageDistribution){
+      if(data.damageDistribution[key] === 0){
+        continue
+      }
+      let html = `<span class="${classes.join(' ')}">-${data.damageDistribution[key]}${data.crit ? '!!' : ''}</span>`
+      let el = key === 'hp' ? this.hpBarEl : this._getEffectEl(key)
+      if(!el){
+        continue
+      }
+      new FlyingTextEffect(el, html, {
+        html: true
+      })
     }
 
-    new FlyingTextEffect(this.hpBarEl, html, {
-      html: true
-    })
+    if(data.blocked){
+      const blockedHtml = `<span class="blocked">[${data.blocked}]</span>`
+      const statEl = this.statsList.querySelector(`di-stat-row[stat-key=${data.damageType}Def]`)
+      if(statEl){
+        new FlyingTextEffect(statEl, blockedHtml, {
+          html: true
+        })
+      }
+    }
   }
 
   _update(animate = false){

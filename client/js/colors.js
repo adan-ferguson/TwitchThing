@@ -4,5 +4,8 @@ export const FLASH_COLORS = {
   active: '#71e1e5',
   triggered: '#ffa227'
 }
-export const BUFF_COLOR = '#ddffba'
-export const DEBUFF_COLOR = '#ffc0c0'
+export const STATUSEFFECT_COLORS = {
+  buff: '#ddffba',
+  debuff: '#ffc0c0',
+  barrier: '#e5e5e5'
+}

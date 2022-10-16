@@ -1,11 +1,12 @@
 import { isString } from './utilFunctions.js'
 import Mods from '../game/mods/combined.js'
+import _ from 'lodash'
 
 export default class ModsCollection{
 
   constructor(){
 
-    const mods = [...arguments].flat(Infinity)
+    const mods = [...arguments].map(toModArray).flat(Infinity)
 
     this._mods = {}
     mods.forEach(mod => {
@@ -40,4 +41,13 @@ export default class ModsCollection{
     }
     return false
   }
+}
+
+function toModArray(val){
+  if(val instanceof ModsCollection){
+    return val.list
+  }else if(_.isArray(val)){
+    return val.map(toModArray)
+  }
+  return val
 }

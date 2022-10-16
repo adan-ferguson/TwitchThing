@@ -1,25 +1,37 @@
-import { BUFF_COLOR, DEBUFF_COLOR } from './colors.js'
+import { STATUSEFFECT_COLORS } from './colors.js'
 import { poisonedStatusEffect } from '../../game/statusEffects/combined.js'
 
-export function effectDisplayInfo(effect){
+export function effectDisplayInfo(effectInstance){
 
-  let text = `${effect.displayName}`
-  if(effect.stacks >= 2){
-    text += ` x${effect.stacks}`
+  let text = `${effectInstance.displayName}`
+  if(effectInstance.stacks >= 2){
+    text += ` x${effectInstance.stacks}`
+  }
+  if(effectInstance.barrier){
+    text += ` ${effectInstance.barrierPointsRemaining}`
   }
 
-  const intDuration = parseInt(effect.duration) || null
-  const color = effect.isBuff ? BUFF_COLOR : DEBUFF_COLOR
-  const barMax = intDuration ?? 1
-  const barValue = intDuration ? (intDuration - effect.state.time) : 1
-  const tooltip = makeTooltip(effect)
+  const color = getColor(effectInstance)
+
+  let barMax = 1
+  let barValue = 1
+  if(effectInstance.duration){
+    barMax = effectInstance.duration
+    barValue = effectInstance.durationRemaining
+  }else if(effectInstance.barrier){
+    barMax = effectInstance.barrier.points
+    barValue = effectInstance.barrierPointsRemaining
+  }
+
+  const tooltip = makeTooltip(effectInstance)
 
   return {
     text,
     barValue,
     barMax,
     color,
-    tooltip
+    tooltip,
+    animateChanges: effectInstance.duration ? false : true
   }
 }
 
@@ -28,4 +40,11 @@ function makeTooltip(effect){
     return `Taking ${effect.effectData.params.dps * effect.stacks} magic damage per second`
   }
   return 'No Tooltip LOL'
+}
+
+function getColor(effectInstance){
+  if(effectInstance.barrier){
+    return STATUSEFFECT_COLORS.barrier
+  }
+  return STATUSEFFECT_COLORS[effectInstance.isBuff ? 'buff' : 'debuff']
 }

@@ -1,13 +1,32 @@
+import { magicAttackMod } from '../../mods/combined.js'
+import statusEffectAction from '../../actions/statusEffectAction.js'
+import { barrierStatusEffect } from '../../statusEffects/combined.js'
+
 export default {
   baseStats: {
-    magicPower: '+50%',
-    hpMax: '-40%'
+    hpMax: '-40%',
+    magicPower: '+10%'
   },
   items: [
     {
-      name: 'Spell Caster',
-      description: 'Deals magic damage.',
-      mods: ['magicAttack']
+      name: 'Magic Attack',
+      mods: [magicAttackMod]
+    },
+    {
+      name: 'Barrier',
+      abilities: {
+        active: {
+          cooldown: 1400,
+          actions: [
+            statusEffectAction({
+              base: barrierStatusEffect,
+              params: {
+                power: 1.4
+              }
+            })
+          ]
+        }
+      }
     }
   ]
 }

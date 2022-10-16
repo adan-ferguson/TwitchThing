@@ -11,7 +11,7 @@ export default class EffectsList extends HTMLElement{
     this.update()
   }
 
-  update(animate = true){
+  update(){
 
     if(!this._fighterInstance){
       return
@@ -30,24 +30,24 @@ export default class EffectsList extends HTMLElement{
       const key = effect.state.uniqueID
       if(effectRows[key]){
         if(!effect.expired){
-          effectRows[key].update(effect, animate)
+          effectRows[key].update(effect)
           delete expiredEffectRows[key]
         }
       }else{
-        effectRows[key] = this._addRow(key, effect, animate)
+        effectRows[key] = this._addRow(key, effect)
       }
     })
 
-    Object.values(expiredEffectRows).forEach(row => this._removeRow(row, animate))
+    Object.values(expiredEffectRows).forEach(row => this._removeRow(row))
   }
 
-  _addRow(key, effect, animate){
-    const effectRow = new EffectRow(key, effect, animate)
+  _addRow(key, effect){
+    const effectRow = new EffectRow(key, effect)
     this.appendChild(effectRow)
     return effectRow
   }
 
-  async _removeRow(row, animate){
+  async _removeRow(row){
     row.remove()
   }
 }

@@ -61,7 +61,7 @@ function dealDamage(combat, actor, enemy, damageInfo){
 
   const lifesteal = Math.min(
     actor.hpMax - actor.hp,
-    Math.ceil(actor.stats.get('lifesteal').value * damageResult.data.finalDamage)
+    Math.ceil(actor.stats.get('lifesteal').value * damageResult.data.damageDistribution.hp)
   )
 
   if(lifesteal){

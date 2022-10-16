@@ -38,22 +38,22 @@ export function takeDamage(combat, subject, damageInfo){
     damageType: damageInfo.damageType
   }
   const triggeredEvents = []
-  result.finalDamage = result.baseDamage
+  let damage = result.baseDamage
 
   if(!damageInfo.ignoreDefense){
     const blocked = Math.floor(result.baseDamage * subject.stats.get(damageInfo.damageType + 'Def').value)
-    result.finalDamage = Math.min(subject.hp, result.baseDamage - blocked)
+    damage = result.baseDamage - blocked
+    result.blocked = blocked
   }
 
   if(!damageInfo.useDecimals){
-    result.finalDamage = Math.ceil(result.finalDamage)
+    damage = Math.ceil(damage)
   }
 
-  const hpBefore = subject.hp
-  subject.changeHpWithDecimals(-result.finalDamage)
-  result.finalIntDamage = hpBefore - subject.hp
+  result.damageDistribution = subject.statusEffectsData.ownerTakingDamage(damage)
+  subject.hp -= result.damageDistribution.hp
 
-  if(result.finalDamage > 0){
+  if(damage > 0){
     triggeredEvents.push(...triggerEvent(combat, subject, 'takeDamage'))
   }
 

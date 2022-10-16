@@ -1,4 +1,3 @@
-import { flash } from '../../animations/simple.js'
 import tippy from 'tippy.js'
 import { effectDisplayInfo } from '../../effectDisplayInfo.js'
 
@@ -9,10 +8,9 @@ const HTML = `
 
 export default class EffectRow extends HTMLElement{
 
-  _cachedTxt
   _barEl
 
-  constructor(key, effect, animate = false){
+  constructor(key, effect){
     super()
     this.innerHTML = HTML
     this.setAttribute('effect-key', key)
@@ -23,26 +21,22 @@ export default class EffectRow extends HTMLElement{
     this._tippy = tippy(this, {
       theme: 'light'
     })
-    this.update(effect, animate)
+    this.update(effect, false)
   }
 
-  update(effect, animate = false){
+  update(effect, animate = true){
 
     this.effect = effect
     const info = effectDisplayInfo(effect)
-
-    this._barEl.setValue(info.barValue)
-    if(this._cachedTxt === info.text){
-      return
-    }
+    animate = info.animateChanges && animate
 
     this.querySelector('.display-text').textContent = info.text
-    this._cachedTxt = info.text
     this._barEl.setOptions({ max: info.barMax, color: info.color })
+    this._barEl.setValue(info.barValue, { animate: animate })
     this._tippy.setContent(info.tooltip)
-    if(animate){
-      flash(this, info.color)
-    }
+    // if(info.animateChanges){
+    //   flash(this, info.color)
+    // }
   }
 }
 customElements.define('di-effect-row', EffectRow)
