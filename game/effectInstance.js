@@ -29,6 +29,10 @@ export default class EffectInstance{
     return this.effectData.description ?? ''
   }
 
+  get failsConditions(){
+    return !this.meetsConditions
+  }
+
   get meetsConditions(){
     if(this.effectData.conditions && this.owner){
       if(!this.owner.meetsConditions(this.effectData.conditions)){

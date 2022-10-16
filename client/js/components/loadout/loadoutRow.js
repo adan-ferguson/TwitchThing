@@ -84,6 +84,9 @@ export default class LoadoutRow extends HTMLElement{
   }
 
   update(){
+
+    this.classList.toggle('disabled', this.loadoutItem?.obj?.failsConditions)
+
     const state = this.loadoutItem?.abilityState
     if(!state){
       return

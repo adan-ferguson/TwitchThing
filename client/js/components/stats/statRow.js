@@ -24,8 +24,8 @@ export default class StatRow extends HTMLElement{
       theme: 'light'
     })
     this.statsDisplayInfo = statsDisplayInfo
-    this.innerHTML = '<div class="content"></div>'
-    this._contentEl = this.querySelector('.content')
+    this.innerHTML = '<div class="stat-content"></div>'
+    this._contentEl = this.querySelector('.stat-content')
     this.setOptions(options)
   }
 

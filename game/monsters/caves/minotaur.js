@@ -6,8 +6,8 @@ export default {
   },
   items: [
     {
-      name: 'Boss Monster',
-      description: 'Guards the stairs.',
+      name: 'Boss',
+      description: 'Guards the stairs to the next zone.',
       stats: {
         rewards: '+200%'
       }
