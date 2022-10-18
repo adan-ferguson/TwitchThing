@@ -2,7 +2,6 @@ import { EventEmitter } from 'events'
 import { toFighterInstance } from '../../game/toFighterInstance.js'
 import Timeline from '../../game/timeline.js'
 import { toArray } from '../../game/utilFunctions.js'
-import { makeActionResult } from '../../game/actionResult.js'
 
 export default class CombatEnactment extends EventEmitter{
 

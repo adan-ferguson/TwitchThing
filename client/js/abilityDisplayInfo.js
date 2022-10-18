@@ -33,9 +33,8 @@ export default class AbilityDisplayInfo{
   }
 
   get descriptionHTML(){
-    // Hardcoded descriptions
-    if(this.mainAbility.instance.name === 'dodgeOne'){
-      return 'Automatically dodge an attack.'
+    if(this.mainAbility.instance.description){
+      return this.mainAbility.instance.description
     }
     // Derived descriptions
     // TODO: add the trigger

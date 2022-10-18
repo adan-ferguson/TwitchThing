@@ -28,7 +28,6 @@ export function takeDamage(combat, subject, damageInfo){
     damageType: 'phys',
     damagePct: 0, // pct CURRENT health damage
     ignoreDefense: false,
-    useDecimals: false,
     ...damageInfo
   }
 
@@ -46,9 +45,7 @@ export function takeDamage(combat, subject, damageInfo){
     result.blocked = blocked
   }
 
-  if(!damageInfo.useDecimals){
-    damage = Math.ceil(damage)
-  }
+  damage = Math.ceil(damage)
 
   result.damageDistribution = subject.statusEffectsData.ownerTakingDamage(damage)
   subject.hp -= result.damageDistribution.hp

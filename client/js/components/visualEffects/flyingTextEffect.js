@@ -14,7 +14,7 @@ export default class FlyingTextEffect extends EventEmitter{
     if(!isNaN(text) && !options.color){
       // Integer mode, positive is green and has a leading plus sign
       const number = parseInt(text)
-      options.color = number > 0 ? 'green' : 'red'
+      options.color = number > 0 ? '#75e075' : 'red'
       text = (number > 0 ? '+' : '') + number
     }
 

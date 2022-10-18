@@ -1,5 +1,4 @@
 import { STATUSEFFECT_COLORS } from './colors.js'
-import { poisonedStatusEffect } from '../../game/statusEffects/combined.js'
 
 export function effectDisplayInfo(effectInstance){
 
@@ -23,23 +22,13 @@ export function effectDisplayInfo(effectInstance){
     barValue = effectInstance.barrierPointsRemaining
   }
 
-  const tooltip = makeTooltip(effectInstance)
-
   return {
     text,
     barValue,
     barMax,
     colors,
-    tooltip,
     animateChanges: effectInstance.duration ? false : true
   }
-}
-
-function makeTooltip(effect){
-  if(effect.effectData.name === poisonedStatusEffect.name){
-    return `Taking ${effect.effectData.params.dps * effect.stacks} magic damage per second`
-  }
-  return 'No Tooltip LOL'
 }
 
 function getColors(effectInstance){

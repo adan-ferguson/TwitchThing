@@ -41,6 +41,7 @@ const statDefinitionsInfo = {
     icon: magicDefIcon,
     description: 'Blocks magical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
   },
+  missChance: {},
   speed: {
     text: 'Speed',
     displayInverted: true,

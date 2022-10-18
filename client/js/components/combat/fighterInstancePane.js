@@ -106,11 +106,14 @@ export default class FighterInstancePane extends HTMLElement{
     }else if(result.type === 'damage'){
       this._displayDamageResult(result)
     }else if(result.type === 'gainHealth'){
-      this._displayLifeGained(result.amount)
+      this._displayLifeGained(result.data.amount)
     }
   }
 
   _displayLifeGained(amount){
+    if(!amount){
+      return
+    }
     new FlyingTextEffect(this.hpBarEl, amount)
   }
 

@@ -55,6 +55,7 @@ export default class FighterItemDisplayInfo{
         showTooltips: false,
         statsDisplayStyle: StatsDisplayStyle.ADDITIONAL
       })
+      // Use this instead of itemInstance.stats because stats might be 0 if the item is disabled
       statsList.setStats(new Stats(this.itemInstance.itemData.stats))
       tt.appendChild(statsList)
     }
@@ -65,7 +66,7 @@ export default class FighterItemDisplayInfo{
       })
       this.itemInstance.mods.list.forEach(mod => {
         if(mod.description){
-          modsEl.appendChild(wrapContent(toDisplayName(mod.name)))
+          modsEl.appendChild(wrapContent(mod.description))
         }
       })
       tt.appendChild(modsEl)
@@ -79,6 +80,14 @@ export default class FighterItemDisplayInfo{
         conditionsEl.appendChild(wrapContent(describeCondition(key, val)))
       })
       tt.appendChild(conditionsEl)
+    }
+
+    if(this.itemInstance.itemData.description){
+      const descriptionEl = makeEl({
+        class: 'item-description',
+        text: this.itemInstance.itemData.description
+      })
+      tt.appendChild(descriptionEl)
     }
 
     return tt

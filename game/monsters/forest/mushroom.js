@@ -10,7 +10,7 @@ const burningSpores = statusEffect({
   effect: {
     displayName: 'Burning Spores',
     params: {
-      damage: 0.02
+      damage: 0.03
     }
   }
 })
@@ -20,6 +20,8 @@ const slowingSpores = statusEffect({
   effect: {
     stacking: true,
     displayName: 'Slowing Spores',
+    description: 'Slowed',
+    duration: 15000,
     stats: {
       slow: 1000
     }
@@ -31,6 +33,7 @@ const sleepSpores = statusEffect({
   effect: {
     stacking: 'refresh',
     displayName: 'Sleepy Spores',
+    description: 'Zzzzz',
     mods: [freezeActionBarMod],
     duration: 5000
   }
@@ -62,29 +65,30 @@ const silenceSpores = statusEffect({
   effect: {
     stacking: 'refresh',
     displayName: 'Silence Spores',
-    duration: 10000,
+    duration: 20000,
     mods: [silencedMod]
   }
 })
 
 export default {
   baseStats: {
-    hpMax: '+50%'
+    hpMax: '+60%'
   },
   items: [
     {
       name: 'Passive',
-      description: 'Can not perform actions',
+      description: 'Can not perform any actions.',
       mods: [freezeActionBarMod]
     },
     {
       name: 'Regeneration',
       abilities: {
         tick: {
+          description: 'Heal 4% max health.',
           cooldown: 5000,
           actions: [
             gainHealthAction({
-              pct: 0.02
+              pct: 0.04
             })
           ]
         }
@@ -94,6 +98,7 @@ export default {
       name: 'Weird Spores',
       abilities: {
         hitByAttack: {
+          description: 'When attacked, release spores which give the attacker a random debuff.',
           actions: [
             randomAction([{
               weight: 30, value: burningSpores

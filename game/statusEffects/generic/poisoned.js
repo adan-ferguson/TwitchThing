@@ -10,13 +10,13 @@ export default {
   defFn: (stateParams, { stacks = 1 }) => {
     return {
       stacking: true,
+      description: 'Taking damage per second',
       abilities: {
         tick: {
           actions: [
             takeDamage({
               damageType: 'magic',
-              damage: stateParams.dps * stacks,
-              useDecimals: true
+              damage: stateParams.dps * stacks
             })
           ]
         }

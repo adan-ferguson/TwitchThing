@@ -10,6 +10,10 @@ export default class AbilityInstance{
     return this._abilityDef.name
   }
 
+  get description(){
+    return this._abilityDef.description ?? null
+  }
+
   get actions(){
     return this._abilityDef.actions
   }

@@ -14,7 +14,7 @@ export default {
       abilities: {
         beforeAttacked: {
           cooldown: 10000,
-          name: 'dodgeOne',
+          description: 'Automatically dodge an attack.',
           actions: [
             statusEffectAction({
               base: dodgingStatusEffect,

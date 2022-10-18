@@ -4,6 +4,7 @@ import { hungryMod } from '../../mods/combined.js'
 export default {
   mods: [hungryMod],
   combatOnly: false,
+  description: 'Reduced stats, desperately needs to eat.',
   stats: {
     physPower: '-20%',
     magicPower: '-20%',

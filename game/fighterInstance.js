@@ -173,7 +173,7 @@ export default class FighterInstance{
     if(isNaN(val)){
       debugger
     }
-    this._state.hp = Math.max(0, Math.min(this.hpMax, val))
+    this._state.hp = Math.ceil(Math.max(0, Math.min(this.hpMax, val)))
   }
 
   get hpMax(){
