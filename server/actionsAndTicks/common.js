@@ -1,24 +1,24 @@
 import { useEffectAbility } from './performAction.js'
 import { makeActionResult } from '../../game/actionResult.js'
 
-export function gainHealth(actor, amount){
-  if(amount <= 0){
+export function performGainHealthAction(combat, actor, gainHealthDef){
+  let gain = 0
+  if(gainHealthDef.pct){
+    gain += actor.hpMax * gainHealthDef.pct
+  }
+  gain = Math.ceil(gain)
+  if(gain <= 0){
     return
   }
   const hpBefore = actor.hp
-  actor.changeHpWithDecimals(amount)
-  const finalAmount = actor.hp - hpBefore
-  if(finalAmount > 0){
-    return {
-      subject: actor.uniqueID,
-      type: 'gainHealth',
+  actor.hp += gain
+  return {
+    subject: actor.uniqueID,
+    type: 'gainHealth',
+    data: {
       amount: actor.hp - hpBefore
     }
   }
-}
-
-export function regen(fighterInstance){
-  return gainHealth(fighterInstance, fighterInstance.baseHp * fighterInstance.stats.get('regen').value)
 }
 
 export function takeDamage(combat, subject, damageInfo){
@@ -33,7 +33,7 @@ export function takeDamage(combat, subject, damageInfo){
   }
 
   const result = {
-    baseDamage: damageInfo.damage + subject.hp * damageInfo.damagePct,
+    baseDamage: subject.stats.get('damageTaken').value * (damageInfo.damage + subject.hp * damageInfo.damagePct),
     blocked: 0,
     damageType: damageInfo.damageType
   }

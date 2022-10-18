@@ -1,7 +1,6 @@
 import { EventEmitter } from 'events'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 import { finishCombatEvent } from '../combat.js'
-import { continueRelicEvent } from './relics.js'
 import { generateEvent } from './dungeonEventPlanner.js'
 import { addRewards } from './results.js'
 import { ADVANCEMENT_INTERVAL } from './dungeonRunner.js'
@@ -98,8 +97,6 @@ export default class DungeonRunInstance extends EventEmitter{
   async _continueEvent(event){
     if(event.combatID){
       this._addEvent(await finishCombatEvent(this, event))
-    }else if(event.relic){
-      this._addEvent(await continueRelicEvent(this, event))
     }
   }
 

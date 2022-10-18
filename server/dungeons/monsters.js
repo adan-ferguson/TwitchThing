@@ -4,41 +4,53 @@ import { all as Monsters } from '../../game/monsters/combined.js'
 import { uuid } from '../../game/utilFunctions.js'
 import MonsterInstance, { levelToXpReward } from '../../game/monsterInstance.js'
 
-const monstersByFloor = {
+const monstersByFloor = [
+  null,
   // Caves
-  1: Monsters.rat,
-  2: Monsters.troglodyte,
-  3: Monsters.bat,
-  4: Monsters.bandit,
-  5: Monsters.kobold,
-  6: Monsters.scorpion,
-  7: Monsters.ooze,
-  8: Monsters.sorcerer,
-  9: Monsters.rockGolem,
-  10: Monsters.minotaur,
+  Monsters.rat,
+  Monsters.troglodyte,
+  Monsters.bat,
+  Monsters.bandit,
+  Monsters.kobold,
+  Monsters.scorpion,
+  Monsters.ooze,
+  Monsters.sorcerer,
+  Monsters.rockGolem,
+  Monsters.minotaur,
+  // Forest
+  Monsters.woodElf,
+  Monsters.sprite,
+  Monsters.boar,
+  Monsters.spider,
+  // Monsters.centaur,
+  Monsters.mushroom,
+  // Monsters.bear,
+  // Monsters.druid,
+  // Monsters.treant,
+  // Monsters.behemoth,
   // Crypt
-  11: Monsters.skeleton,
-  12: Monsters.zombie,
-  13: Monsters.shade,
-  14: Monsters.banshee,
-  15: Monsters.necromancer,
-  16: Monsters.vampire,
-  17: Monsters.deathKnight,
-  18: Monsters.lich,
-  19: Monsters.abomination,
-  20: Monsters.boneDragon,
+  Monsters.skeleton,
+  Monsters.zombie,
+  Monsters.shade,
+  Monsters.banshee,
+  Monsters.necromancer,
+  Monsters.vampire,
+  Monsters.deathKnight,
+  Monsters.lich,
+  Monsters.abomination,
+  Monsters.boneDragon,
   // Swamp
-  21: Monsters.lizardPerson,
-  23: Monsters.gator,
-  22: Monsters.toad,
-  24: Monsters.naga,
-  26: Monsters.biteyPlant,
-  25: Monsters.troll,
-  27: Monsters.witch,
-  28: Monsters.basilisk,
-  29: Monsters.thing,
-  30: Monsters.hydra,
-}
+  Monsters.lizardPerson,
+  Monsters.toad,
+  Monsters.gator,
+  Monsters.naga,
+  Monsters.biteyPlant,
+  Monsters.troll,
+  Monsters.witch,
+  Monsters.basilisk,
+  Monsters.thing,
+  Monsters.hydra
+]
 
 const BONUS_CHESTS_UNTIL = 10
 const BONUS_CHEST_CHANCE = 0.45
@@ -120,7 +132,7 @@ export function generateFloorChoices(floor, range = 1, skew = 0){
  * @return {[object]}
  */
 export function getAllMonsters(){
-  return Object.keys(monstersByFloor).map(floor => getBasicMonsterDefinition(floor))
+  return monstersByFloor.slice(1).map((_, floor) => getBasicMonsterDefinition(floor + 1))
 }
 
 /**

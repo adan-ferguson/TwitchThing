@@ -1,3 +1,5 @@
+import { bossMod } from '../../mods/combined.js'
+
 export default {
   baseStats: {
     physPower: '+25%',
@@ -7,13 +9,9 @@ export default {
   items: [
     {
       name: 'Boss',
-      description: 'Guards the stairs to the next zone.',
-      stats: {
-        rewards: '+200%'
-      }
+      mods: [bossMod]
     },{
       name: 'Enrage',
-      description: 'Doubles physical power after 30 seconds.',
       conditions: {
         combatTimeAbove: 30000
       },

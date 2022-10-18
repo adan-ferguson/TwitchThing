@@ -7,11 +7,6 @@ export function makeActionResult(obj){
     data: null,
     subject: null,
   }, obj)
-  validateActionResult(obj)
-  return obj
-}
-
-export function validateActionResult(obj){
   if(!obj.type){
     throw 'ActionResult missing type'
   }
@@ -24,4 +19,10 @@ export function validateActionResult(obj){
   obj.triggeredEvents.forEach(event => {
     event.results.forEach(validateActionResult)
   })
+  return obj
+}
+
+export function validateActionResult(obj){
+  makeActionResult(obj)
+  return true
 }

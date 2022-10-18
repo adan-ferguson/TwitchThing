@@ -1,18 +1,28 @@
-import { all as Effects } from '../../statusEffects/combined.js'
+import statusEffect from '../../actions/statusEffectAction.js'
 
 export default {
-  description: 'It moves like it\'s stop-motion animated.',
+  baseStats: {
+    hpMax: '+10%'
+  },
   items: [
     {
       name: 'Web Shot',
-      ability: {
-        type: 'active',
-        cooldown: 9000,
-        actions: [
-          // effectAction(Effects.webbed, {
-          //   affects: 'enemy'
-          // })
-        ]
+      abilities: {
+        active: {
+          cooldown: 8000,
+          actions: [
+            statusEffect({
+              affects: 'enemy',
+              effect: {
+                stacking: true,
+                displayName: 'Webbed',
+                stats: {
+                  slow: 2000
+                }
+              }
+            })
+          ]
+        }
       }
     }
   ]

@@ -1,5 +1,4 @@
 import { foundMonster } from './monsters.js'
-import { foundRelic, generateRelicEvent } from './relics.js'
 import { foundStairs } from './stairs.js'
 import { generateCombatEvent } from '../combat.js'
 
@@ -33,15 +32,11 @@ export async function generateEvent(dungeonRun){
   }
 
   const previousEvent = dungeonRun.events.at(-1)
-  const encounterPossible = previousEvent?.monster || previousEvent?.relic ? false : true
+  const encounterPossible = previousEvent?.monster
 
   if(encounterPossible && foundMonster(dungeonRun)){
     return await generateCombatEvent(dungeonRun)
   }
-
-  // if(encounterPossible && foundRelic(dungeonRun)){
-  //   return generateRelicEvent(dungeonRun)
-  // }
 
   return {
     message: `${adventurerInstance.displayName} is wandering around.`

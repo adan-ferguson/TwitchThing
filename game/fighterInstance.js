@@ -1,5 +1,5 @@
 import Stats from './stats/stats.js'
-import { freezeActionBarMod, magicAttackMod, sneakAttackMod } from './mods/combined.js'
+import { freezeActionBarMod, magicAttackMod, silencedMod, sneakAttackMod } from './mods/combined.js'
 import { StatusEffectsData } from './statusEffectsData.js'
 import ModsCollection from './modsCollection.js'
 
@@ -245,6 +245,9 @@ export default class FighterInstance{
   }
 
   nextActiveItemIndex(){
+    if(this.mods.contains(silencedMod)){
+      return -1
+    }
     return this.itemInstances.findIndex(itemInstance => {
       const ability = itemInstance?.getAbility('active')
       if(ability?.ready && ability?.meetsConditions){

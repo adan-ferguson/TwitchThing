@@ -4,13 +4,12 @@ import takeDamage from '../../actions/takeDamage.js'
 export default {
   stateParamsFn: ({ source, params = {} }) => {
     return {
-      dps: roundToFixed(source.magicPower * (params.damage ?? 1), 2)
+      dps: roundToFixed(source.magicPower * (params.damage ?? 0.03), 2)
     }
   },
   defFn: (stateParams, { stacks = 1 }) => {
     return {
       stacking: true,
-      combatOnly: false,
       abilities: {
         tick: {
           actions: [

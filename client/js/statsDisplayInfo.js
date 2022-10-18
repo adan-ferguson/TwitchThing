@@ -1,6 +1,6 @@
 import { StatType } from '../../game/stats/statDefinitions.js'
 import { COMBAT_BASE_TURN_TIME } from '../../game/fighterInstance.js'
-import { roundToFixed } from '../../game/utilFunctions.js'
+import { roundToFixed, toDisplayName } from '../../game/utilFunctions.js'
 import healthIcon from '../assets/icons/health.svg'
 import actionIcon from '../assets/icons/action.svg'
 import physPowerIcon from '../assets/icons/physPower.svg'
@@ -52,6 +52,8 @@ const statDefinitionsInfo = {
     },
     description: 'Speed (combat turn time)',
   },
+  damageDealt: {},
+  damageTaken: {},
   critChance: {
     text: 'Crit Chance',
     description: 'Chance to deal bonus damage.',
@@ -92,21 +94,6 @@ const statDefinitionsInfo = {
     text: 'Rare Relic Chance',
     description: 'Chance to find high quality relics.'
   },
-  regen: {
-    text: 'Health Regeneration',
-    displayedValueFn: (value, { style, owner }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE && owner?.hpMax){
-        return `${roundToFixed(value * owner.hpMax, 1)}`
-      }
-      return `${roundToFixed(value * 100, 1)}%`
-    },
-    descriptionFn: (value, { style, owner }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE && owner?.hpMax){
-        return `Recover ${roundToFixed(value * owner.hpMax, 1)} health every second, both in and out of combat (scales with level).`
-      }
-      return `Recover (${roundToFixed(value * 100, 1)}% x max health) health every second, both in and out of combat.`
-    },
-  },
   chestFind: {
     text: 'Chest Find',
     description: 'Increased chance to find treasure chests from combat rewards or from treasure relics.',
@@ -129,10 +116,10 @@ export function getStatDisplayInfo(stat, options = {}){
     owner: null,
     ...options
   }
-  const info = { ...statDefinitionsInfo[stat.name] }
-  if(!info){
+  if(!statDefinitionsInfo[stat.name]){
     return null
   }
+  const info = { ...statDefinitionsInfo[stat.name] }
   if(info.displayedValueFn){
     info.displayedValue = info.displayedValueFn(stat.value, options)
   }
@@ -146,6 +133,7 @@ export function getStatDisplayInfo(stat, options = {}){
   delete info.displayedValueFn
   return {
     ...DEFAULTS,
+    text: toDisplayName(stat.name),
     ...info,
     stat,
     order: Object.keys(statDefinitionsInfo).indexOf(stat.name)

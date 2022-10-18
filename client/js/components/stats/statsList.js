@@ -55,7 +55,6 @@ export default class StatsList extends HTMLElement{
     })
 
     const statsToShow = this._stats.getAll(this._options.forced)
-    console.log('statsupdate')
 
     for(let key in statsToShow){
       if(this._options.excluded.indexOf(key) > -1){
@@ -81,7 +80,7 @@ export default class StatsList extends HTMLElement{
       owner,
       style: this._options.statsDisplayStyle
     })
-    if(this._options.iconsOnly && !statDisplayInfo.icon){
+    if(!statDisplayInfo || (this._options.iconsOnly && !statDisplayInfo.icon)){
       return
     }
     const row = this.querySelector(`di-stat-row[stat-key="${stat.name}"]`)

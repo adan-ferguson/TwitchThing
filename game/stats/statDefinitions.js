@@ -31,6 +31,13 @@ const defs = {
   critDamage: {
     type: StatType.MULTIPLIER
   },
+  damageDealt: {
+    type: StatType.MULTIPLIER
+  },
+  damageTaken: {
+    type: StatType.MULTIPLIER,
+    inverted: true
+  },
   dodgeChance: {
     type: StatType.PERCENTAGE
   },
@@ -44,13 +51,19 @@ const defs = {
     minValue: 0
   },
   magicPower: {
-    type: StatType.COMPOSITE
+    type: StatType.COMPOSITE,
+    minValue: 0
   },
   magicDef: {
     type: StatType.PERCENTAGE
   },
+  missChance: {
+    type: StatType.PERCENTAGE,
+    inverted: true
+  },
   physPower: {
-    type: StatType.COMPOSITE
+    type: StatType.COMPOSITE,
+    minValue: 0
   },
   physDef: {
     type: StatType.PERCENTAGE

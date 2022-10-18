@@ -60,7 +60,7 @@ function attackDescription(action, owner){
   let amount = action.damageMulti
   let showFlat = owner ? true : false
   if(showFlat){
-    amount = Math.ceil(amount * owner.physPower)
+    amount = Math.ceil(amount * owner[action.damageType + 'Power'])
   }
   return `Attack for ${showFlat ? '' : 'x'}${damageWrap(action.damageType, amount)} damage.`
 }
