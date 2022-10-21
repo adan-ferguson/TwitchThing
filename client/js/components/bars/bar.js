@@ -20,6 +20,7 @@ export default class Bar extends HTMLElement{
   _options = {
     label: '',
     color: '#DDD',
+    borderColor: null,
     showLabel: true,
     showValue: true,
     showMax: true,
@@ -212,7 +213,7 @@ export default class Bar extends HTMLElement{
   }
 
   _updateColors(){
-    this._barBorder.style.borderColor = this._options.color
+    this._barBorder.style.borderColor = this._options.borderColor ?? this._options.color
     this.foregroundEl.style.backgroundColor = this._options.color
   }
 

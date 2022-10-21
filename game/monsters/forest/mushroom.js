@@ -84,7 +84,6 @@ export default {
       name: 'Regeneration',
       abilities: {
         tick: {
-          description: 'Heal 4% max health.',
           cooldown: 5000,
           actions: [
             gainHealthAction({

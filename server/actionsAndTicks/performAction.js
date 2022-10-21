@@ -29,9 +29,6 @@ export function useEffectAbility(combat, effect, eventName){
   if(!ability.ready){
     throw 'Can not use ability, it is not ready.'
   }
-  if(!ability.meetsConditions){
-    throw 'Can nut use ability, conditions not met.'
-  }
   if(!effect.owner){
     throw 'Effect has no owner, so hard for its ability to get triggered'
   }

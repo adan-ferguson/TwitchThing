@@ -32,5 +32,8 @@ export function effectDisplayInfo(effectInstance){
 }
 
 function getColors(effectInstance){
+  if(effectInstance.barrier){
+    return STATUSEFFECT_COLORS.barrier
+  }
   return STATUSEFFECT_COLORS[effectInstance.isBuff ? 'buff' : 'debuff']
 }

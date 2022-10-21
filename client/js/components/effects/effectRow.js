@@ -1,7 +1,6 @@
 import tippy from 'tippy.js'
 import { effectDisplayInfo } from '../../effectDisplayInfo.js'
 import { flash } from '../../animations/simple.js'
-import { effectTooltip } from './effectTooltip.js'
 
 const HTML = `
 <di-bar></di-bar>
@@ -20,10 +19,12 @@ export default class EffectRow extends HTMLElement{
       .setOptions({
         showLabel: false
       })
-    this._tippy = tippy(this, {
-      theme: 'light'
-    })
-    this._tippy.setContent(effectTooltip(effect))
+    if(effect.description){
+      this._tippy = tippy(this, {
+        theme: 'light',
+        content: effect.description
+      })
+    }
     this.update(effect, false)
   }
 

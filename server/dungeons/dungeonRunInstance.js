@@ -149,7 +149,7 @@ export default class DungeonRunInstance extends EventEmitter{
 
     event.adventurerState = this.adventurerInstance.state
 
-    if('hp' in this.adventurerInstance.state && isNaN(this.adventurerInstance.state.hp)){
+    if('hp' in this.adventurerInstance.state && isNaN(this.adventurerInstance.state.hpPct)){
       debugger
     }
 

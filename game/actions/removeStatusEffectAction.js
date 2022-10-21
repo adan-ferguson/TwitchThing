@@ -1,4 +1,4 @@
-export default function(def){
+export default function(def = {}){
   return {
     affects: 'self', // 'self' | 'enemy'
     count: 1, // integer, 'all'

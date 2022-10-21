@@ -5,6 +5,7 @@ import MonsterInstance from '../game/monsterInstance.js'
 import { takeCombatTurn } from './actionsAndTicks/performAction.js'
 import { performCombatTick } from './actionsAndTicks/performCombatTick.js'
 import { toFighterInstance } from '../game/toFighterInstance.js'
+import { triggerEvent } from './actionsAndTicks/common.js'
 
 const START_TIME_DELAY = 1000
 const MAX_TIME = 120000
@@ -74,11 +75,11 @@ export async function finishCombatEvent(dungeonRun, combatEvent){
     passTimeOverride: true
   }
   const monsterInstance = new MonsterInstance(enemy.data)
-  if(fighter.endState.hp === 0){
+  if(fighter.endState.hpPct === 0){
     event.runFinished = true
     event.roomType = 'dead'
     event.message = `${fighter.data.name} has defeated by the ${monsterInstance.displayName}.`
-  }else if(enemy.endState.hp === 0){
+  }else if(enemy.endState.hpPct === 0){
     event.rewards = enemy.data.rewards
     event.message = `${fighter.data.name} defeated the ${monsterInstance.displayName}.`
     event.monster = { ...combatEvent.monster, defeated: true }
@@ -201,10 +202,17 @@ class Combat{
   }
 
   _addTimelineEntry(options = {}){
+    let tickUpdates = []
+    if(!this.time){
+      tickUpdates = [
+        ...triggerEvent(this, this.fighterInstance1, 'startOfCombat'),
+        ...triggerEvent(this, this.fighterInstance2, 'startOfCombat')
+      ]
+    }
     this.timeline.push({
       time: this._currentTime,
       actions: [],
-      tickUpdates: [],
+      tickUpdates,
       fighterState1: this.fighterInstance1.state,
       fighterState2: this.fighterInstance2.state,
       ...options

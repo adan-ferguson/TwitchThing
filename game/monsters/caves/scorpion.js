@@ -1,5 +1,5 @@
 import { poisonedStatusEffect } from '../../statusEffects/combined.js'
-import statusEffect from '../../actions/statusEffectAction.js'
+import statusEffectAction from '../../actions/statusEffectAction.js'
 import attackAction from '../../actions/attackAction.js'
 import { magicScalingMod } from '../../mods/combined.js'
 
@@ -17,7 +17,7 @@ export default {
           cooldown: 12000,
           actions: [
             attackAction(),
-            statusEffect({
+            statusEffectAction({
               base: poisonedStatusEffect,
               affects: 'enemy',
               effect: {

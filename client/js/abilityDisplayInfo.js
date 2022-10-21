@@ -1,7 +1,14 @@
-import physPowerIcon from '../assets/icons/physPower.svg'
-import magicPowerIcon from '../assets/icons/magicPower.svg'
 import { roundToFixed, wrapContent } from '../../game/utilFunctions.js'
 import { expandStatusEffectsDef } from '../../game/statusEffectsData.js'
+import healthIcon from '../assets/icons/health.svg'
+import physPower from '../assets/icons/physPower.svg'
+import magicPower from '../assets/icons/magicPower.svg'
+
+const ICONS = {
+  magic: magicPower,
+  phys: physPower,
+  health: healthIcon
+}
 
 export default class AbilityDisplayInfo{
   constructor(abilities, owner = null){
@@ -45,6 +52,9 @@ export default class AbilityDisplayInfo{
       if(action.type === 'statusEffect'){
         return statusEffectDescription(action, this._owner)
       }
+      if(action.type === 'gainHealth'){
+        return gainHealthDescription(action, this._owner)
+      }
       // if(action.type === 'effect'){
       //   return effectAction(action, this._owner)
       // }
@@ -61,23 +71,28 @@ function attackDescription(action, owner){
   if(showFlat){
     amount = Math.ceil(amount * owner[action.damageType + 'Power'])
   }
-  return `Attack for ${showFlat ? '' : 'x'}${damageWrap(action.damageType, amount)} damage.`
+  return `Attack for ${showFlat ? '' : 'x'}${scalingWrap(action.damageType, amount)} damage.`
 }
 
 function statusEffectDescription(action, owner){
   const data = expandStatusEffectsDef(owner, action.effect)
   if(data.name === 'poisoned'){
-    return `Poisons the target for ${damageWrap('magic', data.params.dps)} dps for ${data.duration / 1000} seconds.`
+    return `Poisons the target for ${scalingWrap('magic', data.params.dps)} dps for ${data.duration / 1000} seconds.`
   }
   if(data.name === 'barrier'){
-    return `Gain a barrier that blocks ${damageWrap('magic', data.params.barrierPoints)} damage.`
+    return `Gain a barrier that blocks ${scalingWrap('magic', data.params.barrierPoints)} damage.`
   }
+}
 
-  // if(action.effect.id === 'spiderweb'){
-  //   return descWrap(`Slows ${targetString(action.affects)}, increasing their turn time by ${action.effect.stats.slow/1000}s. Lasts ${durationString(action.effect.duration)}`)
-  // }else if(action.effect.id === 'stun'){
-  //   return descWrap(`Stuns the target for ${roundToFixed(action.effect.duration/1000, 2)}s`)
-  // }
+function gainHealthDescription(action, owner){
+  const strs = []
+  if(action.scaledPower){
+    strs.push(`Restore ${scalingWrap('magic', action.scaledPower * owner.magicPower)} health.`)
+  }
+  if(action.pct){
+    strs.push(`Restore ${scalingWrap('health', action.pct * owner.hpMax)} health.`)
+  }
+  return strs.join(' ')
 }
 
 function timeAction(ms){
@@ -95,10 +110,10 @@ function descWrap(txt){
   })
 }
 
-function damageWrap(damageType, amount){
+function scalingWrap(damageType, amount){
   return `
-<span class="damage-type damage-type-${damageType}">
-  <img src="${damageType === 'phys' ? physPowerIcon : magicPowerIcon}">
+<span class="scaling-type scaling-type-${damageType}">
+  <img src="${ICONS[damageType]}">
   ${amount}
 </span>
 `

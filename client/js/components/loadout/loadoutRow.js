@@ -1,6 +1,7 @@
 import tippy from 'tippy.js'
 import SimpleModal from '../simpleModal.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
+import { ITEM_ROW_COLORS } from '../../colors.js'
 
 const HTML = `
 <di-bar class="cooldown"></di-bar>
@@ -85,34 +86,35 @@ export default class LoadoutRow extends HTMLElement{
 
   update(){
 
-    this.classList.toggle('disabled', this.loadoutItem?.obj?.failsConditions)
+    this._cooldownBarEl.style.visibility = this.loadoutItem ? 'visible' : 'hidden'
 
-    const state = this.loadoutItem?.abilityState
-    if(!state){
+    const info = this.loadoutItem?.abilityStateInfo
+    if(!info){
       return
     }
 
-    let attrVal
-    if(state.type === 'active'){
-      attrVal = (state.ability.ready && state.ability.meetsConditions) ? 'active' : 'recharging'
-    }else{
-      attrVal = state.ability.ready ? 'triggered' : 'recharging'
-    }
-    this.setAttribute('ability', attrVal)
+    this.classList.toggle('disabled', info.state === 'disabled')
+    this.setAttribute('ability-type', info.type)
+    this.setAttribute('ability-state', info.state)
 
-    if(state.ability.cooldown){
-      this._cooldownBarEl
-        .setOptions({
-          max: state.ability.cooldown
-        })
-        .setValue(state.ability.cooldown - state.ability.cooldownRemaining)
-    }else if(state.ability.uses){
-      this._cooldownBarEl
-        .setOptions({
-          max: state.ability.uses
-        })
-        .setValue(state.ability.uses - state.ability.timesUsed)
+    const color = ITEM_ROW_COLORS[info.state === 'disabled' ? 'disabled' : info.type]
+    const borderColor = info.state === 'ready' ? color : ITEM_ROW_COLORS.disabled
+    let max, val
+    if(info.ability.cooldown){
+      max = info.ability.cooldown
+      val = info.ability.cooldown - info.ability.cooldownRemaining
+    }else if(info.ability.uses){
+      max = info.ability.uses
+      val = info.ability.uses - info.ability.timesUsed
     }
+
+    this._cooldownBarEl
+      .setOptions({
+        color,
+        borderColor,
+        max
+      })
+      .setValue(info.state === 'disabled' ? 0 : val)
   }
 
   _setupBlank(){

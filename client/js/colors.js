@@ -7,6 +7,13 @@ export const FLASH_COLORS = {
   active: '#71e1e5',
   triggered: '#ffa227'
 }
+
+export const ITEM_ROW_COLORS = {
+  active: '#71e1e5',
+  triggered: '#ffa227',
+  disabled: '#bbbbbb'
+}
+
 export const STATUSEFFECT_COLORS = {
   buff: {
     bar: '#ddffba',
@@ -16,4 +23,8 @@ export const STATUSEFFECT_COLORS = {
     bar: '#ffc0c0',
     flash: '#ff0000'
   },
+  barrier: {
+    bar: '#ddd',
+    flash: '#fff'
+  }
 }

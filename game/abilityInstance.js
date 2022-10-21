@@ -42,7 +42,7 @@ export default class AbilityInstance{
   }
 
   get cooldown(){
-    return this._abilityDef.cooldown ?? 0
+    return this._abilityDef.cooldown ?? this._abilityDef.initialCooldown ?? 0
   }
 
   get uses(){
@@ -58,27 +58,21 @@ export default class AbilityInstance{
   }
 
   get ready(){
-    if(!this.fighterInstance || this.cooldownRemaining){
-      return false
-    }
+    return !this.cooldownRemaining && this.enabled
+  }
+
+  get enabled(){
     if(this.uses && this._state.timesUsed >= this.uses){
       return false
     }
     if(this._abilityDef.combatOnly !== false && !this.fighterInstance.inCombat){
       return false
     }
-    return true
-  }
-
-  get meetsConditions(){
     return this.fighterInstance.meetsConditions(this.conditions)
   }
 
   shouldTrigger(){
-    if (!this.ready){
-      return false
-    }
-    if(!this.meetsConditions){
+    if (this.cooldownRemaining || !this.enabled){
       return false
     }
     if (this._abilityDef.chance && Math.random() > this._abilityDef.chance){

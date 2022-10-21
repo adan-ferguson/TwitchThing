@@ -42,6 +42,7 @@ export default class CombatEnactment extends EventEmitter{
   _setupTimeline(combat){
     this._timeline = new Timeline(combat.timeline)
     this._prevEntryIndex = this._timeline.currentEntryIndex
+    this._applyEntries(this._timeline.entries[0], false)
     this._timeline.on('timechange', (oldTime, newTime) => {
       if(this._prevEntryIndex > this._timeline.currentEntryIndex){
         this._updatePanes(false)

@@ -1,4 +1,4 @@
-import removeStatusEffect from '../../actions/removeStatusEffect.js'
+import removeStatusEffect from '../../actions/removeStatusEffectAction.js'
 
 export default {
   baseStats: {

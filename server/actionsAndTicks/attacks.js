@@ -1,4 +1,4 @@
-import { performGainHealthAction, takeDamage, triggerEvent } from './common.js'
+import { takeDamage, triggerEvent } from './common.js'
 import { makeActionResult } from '../../game/actionResult.js'
 
 export function performAttack(combat, attacker, actionDef = {}){

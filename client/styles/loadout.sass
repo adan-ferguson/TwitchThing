@@ -1,8 +1,3 @@
-$activeAbilityColor: #71e1e5
-$activeAbilityColorBg: #d9fdff
-$triggeredAbilityColor: #ffa227
-$triggeredAbilityColorBg: #fdefd1
-
 di-loadout
   flex: 0 0 300rem !important
 
@@ -33,7 +28,7 @@ di-inventory
   position: absolute
 
 di-loadout-row
-  border: 0.5rem solid #CCC
+  //border: 0.5rem solid #CCC
   position: relative
   margin-bottom: 5rem
   box-sizing: border-box
@@ -62,25 +57,20 @@ di-loadout-row
     left: 0
     right: 0
     height: 100%
-    visibility: hidden
     z-index: -1
 
+    .bar-foreground
+      opacity: 0.3
+
+    //.bar-border
+    //  border: none !important
+
+  &[ability-state=ready]
     .bar-border
-      border: none !important
+      border-width: 2rem
 
-  &[ability=recharging]
-    .cooldown
-      visibility: visible
-
-  &[ability=active]
-    background-color: $activeAbilityColorBg
-    border-color: $activeAbilityColor
-    border-width: 2rem
-
-  &[ability=triggered]
-    background-color: $triggeredAbilityColorBg
-    border-color: $triggeredAbilityColor
-    border-width: 2rem
+    //.cooldown .bar-foreground
+    //  opacity: 1
 
 di-adventurer-loadout-editor-page
   .content-columns > *
@@ -123,13 +113,13 @@ di-ability-description
   padding: 3rem 7rem 3rem
   margin-bottom: 6rem
 
-  &[ability-type=active]
-    border-color: $activeAbilityColor
-    background-color: $activeAbilityColorBg
-
-  &[ability-type=triggered]
-    border-color: $triggeredAbilityColor
-    background-color: $triggeredAbilityColorBg
+  //&[ability-type=active]
+  //  border-color: $activeAbilityColor
+  //  background-color: $activeAbilityColorBg
+  //
+  //&[ability-type=triggered]
+  //  border-color: $triggeredAbilityColor
+  //  background-color: $triggeredAbilityColorBg
 
   .description
     font-size: 0.94em
@@ -161,23 +151,29 @@ di-ability-description
 
   .description
     margin-top: 5rem
+    display: inline-flex
+
     .action-row
       display: flex
       flex-direction: row
       align-items: center
 
-    .damage-type
+    .scaling-type
       display: inline-flex
       flex-direction: row
       align-items: center
+      margin: 0 4rem
 
       img
         height: 1em
         margin-bottom: 4rem
         margin-right: 2rem
 
-    .damage-type-magic
+    .scaling-type-magic
       color: #4488FF
 
-    .damage-type-phys
+    .scaling-type-phys
       color: #DD5533
+
+    .scaling-type-hp
+      color: #8be369

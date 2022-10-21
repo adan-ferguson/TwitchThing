@@ -6,6 +6,9 @@ export function performGainHealthAction(combat, actor, gainHealthDef){
   if(gainHealthDef.pct){
     gain += actor.hpMax * gainHealthDef.pct
   }
+  if(gainHealthDef.scaledPower){
+    gain += actor.magicPower * gainHealthDef.scaledPower
+  }
   gain = Math.ceil(gain)
   if(gain <= 0){
     return

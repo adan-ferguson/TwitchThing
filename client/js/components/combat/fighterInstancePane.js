@@ -24,6 +24,9 @@ const HTML = `
 <di-loadout></di-loadout>
 `
 
+const TEXT_EFFECT_MIN = 0.9
+const TEXT_EFFECT_MAX = 2.1
+
 export default class FighterInstancePane extends HTMLElement{
 
   _orbRowEl
@@ -93,7 +96,7 @@ export default class FighterInstancePane extends HTMLElement{
     }else{
       const effectEl = this._getEffectEl(action.effect)
       if(effectEl instanceof LoadoutRow){
-        flash(effectEl, FLASH_COLORS[effectEl.loadoutItem.abilityState.type], 500)
+        flash(effectEl, FLASH_COLORS[effectEl.loadoutItem.abilityStateInfo.type], 500)
       }else if(effectEl instanceof EffectRow){
         effectEl.flash()
       }
@@ -114,7 +117,9 @@ export default class FighterInstancePane extends HTMLElement{
     if(!amount){
       return
     }
-    new FlyingTextEffect(this.hpBarEl, amount)
+    new FlyingTextEffect(this.hpBarEl, amount, {
+      fontSize: TEXT_EFFECT_MIN + Math.min(0.5, amount / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX
+    })
   }
 
   _displayDodge(){
@@ -144,7 +149,7 @@ export default class FighterInstancePane extends HTMLElement{
       }
       new FlyingTextEffect(el, html, {
         html: true,
-        fontSize: 0.9 + Math.min(0.5, dmgStr / this.fighterInstance.hpMax) * 2.1
+        fontSize: TEXT_EFFECT_MIN + Math.min(0.5, dmgStr / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX
       })
     }
 

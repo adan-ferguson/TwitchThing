@@ -166,14 +166,14 @@ export default class FighterInstance{
   }
 
   get hp(){
-    return Math.floor(this._state.hp ?? this.hpMax)
+    return Math.ceil((this._state.hpPct ?? 1) * this.hpMax)
   }
 
   set hp(val){
     if(isNaN(val)){
       debugger
     }
-    this._state.hp = Math.ceil(Math.max(0, Math.min(this.hpMax, val)))
+    this._state.hpPct = Math.max(0, Math.min(1, val / this.hpMax))
   }
 
   get hpMax(){
@@ -185,7 +185,7 @@ export default class FighterInstance{
   }
 
   get hpPct(){
-    return this.hp / this.hpMax
+    return this._state.hpPct
   }
 
   get basicAttackType(){
@@ -250,7 +250,7 @@ export default class FighterInstance{
     }
     return this.itemInstances.findIndex(itemInstance => {
       const ability = itemInstance?.getAbility('active')
-      if(ability?.ready && ability?.meetsConditions){
+      if(ability?.ready){
         return true
       }
     })
