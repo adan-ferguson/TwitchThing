@@ -26,7 +26,10 @@ export default {
                 targeted: {
                   actions: [
                     removeStackAction(),
-                    'cancel'
+                    {
+                      type: 'cancel',
+                      reason: 'absorbed'
+                    }
                   ]
                 }
               }

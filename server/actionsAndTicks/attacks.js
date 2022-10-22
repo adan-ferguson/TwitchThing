@@ -30,19 +30,13 @@ export function performAttackAction(combat, attacker, actionDef = {}){
   if(dodgeAttack(enemy)){
     return makeActionResult({
       ...resultObj,
-      cancelled: true,
-      data: {
-        dodged: true
-      }
+      cancelled: 'dodged'
     })
   }
   if(missAttack(attacker)){
     return makeActionResult({
       ...resultObj,
-      cancelled: true,
-      data: {
-        missed: true
-      }
+      cancelled: 'missed'
     })
   }
 

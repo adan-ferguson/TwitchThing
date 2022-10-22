@@ -104,8 +104,8 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   displayResult(result){
-    if(result.type === 'dodge'){
-      this._displayDodge()
+    if(result.type === 'attack'){
+      this._displayAttackResult(result)
     }else if(result.type === 'damage'){
       this._displayDamageResult(result)
     }else if(result.type === 'gainHealth'){
@@ -122,8 +122,25 @@ export default class FighterInstancePane extends HTMLElement{
     })
   }
 
-  _displayDodge(){
-    new FlyingTextEffect(this.hpBarEl, 'Dodged!')
+  _displayAttackResult(result){
+    if(result.cancelled){
+      if(result.cancelled !== true){
+        // Sort of hacky, if result.cancelled is a string, that's the non-effect
+        // reason for cancellation, so like a dodge or miss.
+        new FlyingTextEffect(this.hpBarEl, makeExciting(result.cancelled))
+      }else{
+        const cancellerEvent = result.triggeredEvents.find(event => event.cancelled)
+        if(cancellerEvent){
+          const cancellerResult = cancellerEvent.results.find(result => result.cancelled)
+          new FlyingTextEffect(
+            this._getEffectEl(cancellerEvent.effect),
+            makeExciting(cancellerResult.data.reason)
+          )
+        }
+      }
+    }else{
+      this._displayDamageResult(result)
+    }
   }
 
   _displayDamageResult(damageResult){
@@ -256,3 +273,7 @@ export default class FighterInstancePane extends HTMLElement{
 }
 
 customElements.define('di-fighter-instance-pane', FighterInstancePane )
+
+function makeExciting(str){
+  return str.slice(0,1).toUpperCase() + str.slice(1) + '!'
+}

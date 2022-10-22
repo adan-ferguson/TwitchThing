@@ -90,9 +90,6 @@ export default class CombatEnactment extends EventEmitter{
   async _performAction(action){
     this._getPane(action.owner).displayActionPerformed(action)
     action.results.forEach(result => {
-      if(result.type === 'cancel'){
-        return
-      }
       this._getPane(result.subject).displayResult(result)
       result.triggeredEvents?.forEach(action => this._performAction(action))
     })

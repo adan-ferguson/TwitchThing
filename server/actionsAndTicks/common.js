@@ -81,15 +81,16 @@ export function performRemoveStackAction(combat, owner, effect){
   effect.removeStack()
   return makeActionResult({
     type: 'removeStack',
-    subject: owner.uniqueID,
-    data: {
-      effect: effect.effectId
-    }
+    subject: owner.uniqueID
   })
 }
 
-export function performCancelAction(){
+export function performCancelAction(owner, def){
   return makeActionResult({
+    data: {
+      reason: def.reason ?? 'cancelled',
+    },
+    subject: owner.uniqueID,
     type: 'cancel',
     cancelled: true
   })

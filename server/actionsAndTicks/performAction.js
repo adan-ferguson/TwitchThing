@@ -83,7 +83,7 @@ function doAction(combat, effect, actionDef){
   }else if(type === 'removeStack'){
     return performRemoveStackAction(combat, owner, effect)
   }else if(type === 'cancel'){
-    return performCancelAction()
+    return performCancelAction(owner, actionDef)
   }
   throw 'Undefined action'
 }
