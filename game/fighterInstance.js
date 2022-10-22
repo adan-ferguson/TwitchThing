@@ -185,7 +185,7 @@ export default class FighterInstance{
   }
 
   get hpPct(){
-    return this._state.hpPct
+    return this._state.hpPct ?? 1
   }
 
   get basicAttackType(){

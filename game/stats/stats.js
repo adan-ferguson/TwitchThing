@@ -1,9 +1,12 @@
 import { StatDefinitions, StatType } from './statDefinitions.js'
-import statValueFns from './statValueFns.js'
+import statValueFns, { parseStatVal } from './statValueFns.js'
 import { calcStatDiff } from './statDiff.js'
 import { roundToFixed } from '../utilFunctions.js'
+import _ from 'lodash'
 
 export default class Stats{
+
+  _scaleFn
 
   baseAffectors = []
   additionalAffectors = []
@@ -21,6 +24,17 @@ export default class Stats{
     return this.baseAffectors.concat(this.additionalAffectors)
   }
 
+  get scale(){
+    if(this._scaleFn){
+      return this._scaleFn()
+    }
+    return 1
+  }
+
+  set scaleFn(val){
+    this._scaleFn = val
+  }
+
   get(name){
     const statObj = makeStatObject(name)
 
@@ -35,7 +49,7 @@ export default class Stats{
     statObj.baseMods = base.mods
 
     const current = fn(extractValues(this.affectors, name), statObj.defaultValue)
-    statObj.value = shine(current.value)
+    statObj.value = shine(current.value * this.scale)
     statObj.mods = current.mods
 
     statObj.diff = calcStatDiff(statObj)

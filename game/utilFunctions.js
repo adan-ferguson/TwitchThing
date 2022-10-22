@@ -118,3 +118,7 @@ export function isString(val){
 export function uuid(){
   return v4()
 }
+
+export function minMax(min, val, max){
+  return Math.max(min, Math.min(max, val))
+}

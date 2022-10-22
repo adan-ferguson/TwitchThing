@@ -1,4 +1,5 @@
 import { bossMod } from '../../mods/combined.js'
+import attackAction from '../../actions/attackAction.js'
 
 export default {
   baseStats: {
@@ -11,12 +12,16 @@ export default {
       name: 'Boss',
       mods: [bossMod]
     },{
-      name: 'Enrage',
-      conditions: {
-        combatTimeAbove: 30000
-      },
-      stats: {
-        physPower: '+100%'
+      name: 'Execute',
+      abilities: {
+        active: {
+          initialCooldown: 30000,
+          actions: [
+            attackAction({
+              damageMulti: 5
+            })
+          ]
+        }
       }
     }
   ]

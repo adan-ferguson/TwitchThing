@@ -41,7 +41,7 @@ export default class AbilityDisplayInfo{
 
   get descriptionHTML(){
     if(this.mainAbility.instance.description){
-      return this.mainAbility.instance.description
+      return toHTML(this.mainAbility.instance.description, this._owner)
     }
     // Derived descriptions
     // TODO: add the trigger
@@ -63,6 +63,10 @@ export default class AbilityDisplayInfo{
       // }
     }).join(' ')
   }
+}
+
+function toHTML(description, owner){
+
 }
 
 function attackDescription(action, owner){

@@ -1,7 +1,7 @@
 import { takeDamage, triggerEvent } from './common.js'
 import { makeActionResult } from '../../game/actionResult.js'
 
-export function performAttack(combat, attacker, actionDef = {}){
+export function performAttackAction(combat, attacker, actionDef = {}){
 
   actionDef = {
     damageMulti: 1,
@@ -9,30 +9,40 @@ export function performAttack(combat, attacker, actionDef = {}){
     ...actionDef
   }
 
-  const triggeredEvents = []
   const enemy = combat.getEnemyOf(attacker)
+  const resultObj = {
+    type: 'attack',
+    triggeredEvents: [],
+    subject: enemy.uniqueID
+  }
 
   if(actionDef.damageType === 'auto'){
     actionDef.damageType = attacker.basicAttackType
   }
 
-  triggeredEvents.push(...triggerEvent(combat, enemy, 'beforeAttacked'))
-
-  if(dodgeAttack(enemy)){
+  resultObj.triggeredEvents.push(...triggerEvent(combat, enemy, 'targeted'))
+  if(resultObj.triggeredEvents.at(-1)?.cancelled){
     return makeActionResult({
-      subject: enemy.uniqueID,
-      type: 'dodge',
-      data: { failed: true },
-      triggeredEvents
+      ...resultObj,
+      cancelled: true
     })
   }
-
+  if(dodgeAttack(enemy)){
+    return makeActionResult({
+      ...resultObj,
+      cancelled: true,
+      data: {
+        dodged: true
+      }
+    })
+  }
   if(missAttack(attacker)){
     return makeActionResult({
-      subject: enemy.uniqueID,
-      type: 'miss',
-      data: { failed: true },
-      triggeredEvents
+      ...resultObj,
+      cancelled: true,
+      data: {
+        missed: true
+      }
     })
   }
 
@@ -49,13 +59,14 @@ export function performAttack(combat, attacker, actionDef = {}){
     damageInfo.crit = true
   }
 
-  const result = dealDamage(combat, attacker, enemy, damageInfo)
+  const damageResult = dealDamage(combat, attacker, enemy, damageInfo)
 
-  result.triggeredEvents = [...triggeredEvents, ...result.triggeredEvents]
-  result.triggeredEvents.push(...triggerEvent(combat, attacker, 'attackHit'))
-  result.triggeredEvents.push(...triggerEvent(combat, enemy, 'hitByAttack'))
+  resultObj.data = damageResult.data
+  resultObj.triggeredEvents.push(...damageResult.triggeredEvents)
+  resultObj.triggeredEvents.push(...triggerEvent(combat, attacker, 'attackHit'))
+  resultObj.triggeredEvents.push(...triggerEvent(combat, enemy, 'hitByAttack'))
 
-  return result
+  return makeActionResult(resultObj)
 }
 
 function attemptCrit(actor){

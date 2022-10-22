@@ -7,6 +7,21 @@ export default {
   [StatType.COMPOSITE]: compositeValue
 }
 
+export function parseStatVal(val){
+  val = val + ''
+  let value = parseFloat(val)
+  if(val.charAt(val.length - 1) === '%'){
+    return {
+      isPct: true,
+      value: value / 100
+    }
+  }
+  return {
+    isPct: false,
+    value
+  }
+}
+
 function flatValue(values, defaultValue){
 
   const mods = flatMods(values)
@@ -104,12 +119,7 @@ function flatMods(values){
     flatMinus: [],
   }
 
-  values.forEach(change => {
-    let changeStr = change + ''
-    let value = parseFloat(changeStr)
-    if(changeStr.charAt(changeStr.length - 1) === '%'){
-      value /= 100
-    }
+  values.forEach(value => {
     if(value > 0){
       mods.flatPlus.push(value)
     }else if(value < 0){
@@ -139,22 +149,18 @@ function compositeMods(values){
   }
 
   values.forEach(change => {
-    let changeStr = change + ''
-    if(changeStr.charAt(changeStr.length - 1) === '%'){
-      if(changeStr.charAt(0) === '+'){
-        changeStr = changeStr.slice(1)
-      }
-      const value = parseFloat(changeStr) / 100
+    const { value, isPct } = parseStatVal(change)
+    if(isPct){
       if(value > 0){
         mods.pctPlus.push(value)
       }else if(value < 0){
         mods.pctMinus.push(-value)
       }
     }else{
-      if(change > 0){
-        mods.flatPlus.push(change)
+      if(value > 0){
+        mods.flatPlus.push(value)
       }else if(change < 0){
-        mods.flatMinus.push(-change)
+        mods.flatMinus.push(-value)
       }
     }
   })
@@ -177,19 +183,11 @@ function percentageMods(values){
   }
 
   values.forEach(change => {
-    let changeStr = change + ''
-    if(changeStr.charAt(changeStr.length - 1) === '%'){
-      if(changeStr.charAt(0) === '+'){
-        changeStr = changeStr.slice(1)
-      }
-      change = parseFloat(changeStr) / 100
-    }else{
-      change = change - 1
-    }
-    if(change > 0){
-      mods.plus.push(change)
-    }else if(change < 0){
-      mods.minus.push(1 + change)
+    const { value } = parseStatVal(change)
+    if(value > 0){
+      mods.plus.push(value)
+    }else if(value < 0){
+      mods.minus.push(1 + value)
     }
   })
 

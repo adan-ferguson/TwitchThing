@@ -12,7 +12,7 @@ export default {
     {
       name: 'Fluttering',
       abilities: {
-        beforeAttacked: {
+        targeted: {
           cooldown: 10000,
           description: 'Automatically dodge an attack.',
           actions: [

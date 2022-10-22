@@ -1,17 +1,43 @@
 import { makeActionResult } from '../../game/actionResult.js'
 import { expandStatusEffectsDef } from '../../game/statusEffectsData.js'
+import { triggerEvent } from './common.js'
 
 export function performStatusEffectAction(combat, actor, actionDef){
   const subject = actionDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
-  return makeActionResult({
+  const resultObj = {
     type: 'gainEffect',
-    data: addStatusEffect(combat, actor, subject, actionDef.effect),
+    triggeredEvents: [],
     subject: subject.uniqueID
-  })
+  }
+
+  if(subject !== actor){
+    resultObj.triggeredEvents.push(...triggerEvent(combat, subject, 'targeted'))
+    if(resultObj.triggeredEvents.at(-1).cancelled){
+      resultObj.cancelled = true
+      return makeActionResult(resultObj)
+    }
+  }
+
+  resultObj.data = addStatusEffect(combat, actor, subject, actionDef.effect)
+  return makeActionResult(resultObj)
 }
 
 export function performRemoveStatusEffectAction(combat, actor, actionDef){
   const subject = actionDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
+  const resultObj = {
+    type: 'removeEffect',
+    triggeredEvents: [],
+    subject: subject.uniqueID
+  }
+
+  if(subject !== actor){
+    resultObj.triggeredEvents.push(...triggerEvent(combat, subject, 'targeted'))
+    if(resultObj.triggeredEvents.at(-1).cancelled){
+      resultObj.cancelled = true
+      return makeActionResult(resultObj)
+    }
+  }
+
   const candidateEffects = subject.statusEffectsData.instances.filter(sei => {
     return sei.isBuff === actionDef.isBuff && !sei.expired && !sei.phantom
   })
@@ -26,14 +52,11 @@ export function performRemoveStatusEffectAction(combat, actor, actionDef){
   }
   const toRemove = candidateEffects.slice(sliceVal)
   subject.statusEffectsData.remove(toRemove)
+  resultObj.data = {
+    removed: toRemove.map(instance => instance.id)
+  }
 
-  return makeActionResult({
-    type: 'removeEffect',
-    data: {
-      removed: toRemove.map(instance => instance.id)
-    },
-    subject: subject.uniqueID
-  })
+  return makeActionResult(resultObj)
 }
 
 /**

@@ -5,16 +5,11 @@ export function makeActionResult(obj){
     triggeredEvents: [],
     type: null,
     data: null,
+    cancelled: false,
     subject: null,
   }, obj)
   if(!obj.type){
     throw 'ActionResult missing type'
-  }
-  if(!obj.data){
-    throw 'ActionResult missing data'
-  }
-  if(!obj.subject){
-    throw 'ActionResult missing subject'
   }
   obj.triggeredEvents.forEach(event => {
     event.results.forEach(validateActionResult)

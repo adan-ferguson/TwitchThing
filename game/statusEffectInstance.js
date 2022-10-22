@@ -74,6 +74,9 @@ export default class StatusEffectInstance extends EffectInstance{
     if(this.barrier && !this.barrierPointsRemaining){
       return true
     }
+    if(this.stacks === 0){
+      return true
+    }
     return false
   }
 
@@ -114,6 +117,13 @@ export default class StatusEffectInstance extends EffectInstance{
   addStack(){
     if(this.effectData.stacking){
       this._state.stacks = this.stacks + 1
+    }
+    return this
+  }
+
+  removeStack(){
+    if(this.effectData.stacking){
+      this._state.stacks = Math.max(0, this.stacks - 1)
     }
     return this
   }

@@ -1,9 +1,10 @@
 import { toDisplayName } from './utilFunctions.js'
-
-// Stupid
-import Stats from './stats/stats.js'
+import Stats  from './stats/stats.js'
 import AbilitiesData from './abilitiesData.js'
 import ModsCollection from './modsCollection.js'
+import { scaleStats } from './stats/statScaling.js'
+
+// Stupid
 new Stats()
 
 export default class EffectInstance{
@@ -48,6 +49,10 @@ export default class EffectInstance{
   get stats(){
     if(!this.meetsConditions){
       return new Stats()
+    }
+    const scaledStats = this.effectData.scaledStats
+    if(scaledStats){
+      return new Stats(scaleStats(scaledStats.stats, scaledStats.scaling, this.owner))
     }
     return new Stats(this.effectData.stats)
   }

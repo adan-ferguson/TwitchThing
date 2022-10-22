@@ -27,7 +27,7 @@ const monstersByFloor = [
   Monsters.centaur,
   Monsters.druid,
   Monsters.treant,
-  // Monsters.dino,
+  Monsters.tyrannosaurus,
   // Crypt
   Monsters.skeleton,
   Monsters.zombie,

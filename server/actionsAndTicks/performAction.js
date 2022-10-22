@@ -1,6 +1,6 @@
-import { performAttack } from './attacks.js'
+import { performAttackAction } from './attacks.js'
 import _ from 'lodash'
-import { performGainHealthAction, takeDamage } from './common.js'
+import { performCancelAction, performGainHealthAction, performRemoveStackAction, takeDamage } from './common.js'
 import { performRemoveStatusEffectAction, performStatusEffectAction } from './statusEffects.js'
 import { validateActionResult } from '../../game/actionResult.js'
 import { chooseOne } from '../../game/rando.js'
@@ -17,7 +17,7 @@ export function takeCombatTurn(combat, actor){
   return {
     basicAttack: true,
     owner: actor.uniqueID,
-    results: [performAttack(combat, actor)]
+    results: [performAttackAction(combat, actor)]
   }
 }
 
@@ -33,15 +33,17 @@ export function useEffectAbility(combat, effect, eventName){
     throw 'Effect has no owner, so hard for its ability to get triggered'
   }
   const results = []
+  let cancelled = false
   for(let i = 0; i < ability.actions.length; i++){
     let actionDef = ability.actions[i]
     if(_.isFunction(actionDef)){
       actionDef = actionDef(combat, effect.owner, results)
     }
-    const actionResult = doAction(combat, effect.owner, actionDef)
+    const actionResult = doAction(combat, effect, actionDef) ?? { type: 'blank' }
     validateActionResult(actionResult)
     results.push(actionResult)
-    if(actionResult.data.failed && !actionDef.continueOnFailure){
+    if(actionResult.cancelled){
+      cancelled = true
       break
     }
   }
@@ -51,6 +53,7 @@ export function useEffectAbility(combat, effect, eventName){
   return {
     effect: effect.effectId,
     eventName,
+    cancelled,
     owner: effect.owner.uniqueID,
     results: results.filter(r => r)
   }
@@ -58,23 +61,29 @@ export function useEffectAbility(combat, effect, eventName){
 
 /**
  * @param combat
- * @param owner
+ * @param effect
  * @param actionDef
  * @returns {object}
  */
-function doAction(combat, owner, actionDef){
-  if(actionDef.type === 'attack'){
-    return performAttack(combat, owner, actionDef)
-  }else if(actionDef.type === 'takeDamage'){
+function doAction(combat, effect, actionDef){
+  const owner = effect.owner
+  const type = _.isString(actionDef) ? actionDef : actionDef.type
+  if(type === 'attack'){
+    return performAttackAction(combat, owner, actionDef)
+  }else if(type === 'takeDamage'){
     return takeDamage(combat, owner, actionDef)
-  }else if(actionDef.type === 'statusEffect'){
+  }else if(type === 'statusEffect'){
     return performStatusEffectAction(combat, owner, actionDef)
-  }else if(actionDef.type === 'removeStatusEffect'){
+  }else if(type === 'removeStatusEffect'){
     return performRemoveStatusEffectAction(combat, owner, actionDef)
-  }else if(actionDef.type === 'random'){
+  }else if(type === 'random'){
     return doAction(combat, owner, chooseOne(actionDef.choices))
-  }else if(actionDef.type === 'gainHealth'){
+  }else if(type === 'gainHealth'){
     return performGainHealthAction(combat, owner, actionDef)
+  }else if(type === 'removeStack'){
+    return performRemoveStackAction(combat, owner, effect)
+  }else if(type === 'cancel'){
+    return performCancelAction()
   }
   throw 'Undefined action'
 }

@@ -9,6 +9,9 @@ export function performGainHealthAction(combat, actor, gainHealthDef){
   if(gainHealthDef.scaledPower){
     gain += actor.magicPower * gainHealthDef.scaledPower
   }
+  if(gainHealthDef.flat){
+    gain += gainHealthDef.flat
+  }
   gain = Math.ceil(gain)
   if(gain <= 0){
     return
@@ -72,4 +75,22 @@ export function triggerEvent(combat, owner, eventName){
     results.push(useEffectAbility(combat, effect, eventName))
   })
   return results
+}
+
+export function performRemoveStackAction(combat, owner, effect){
+  effect.removeStack()
+  return makeActionResult({
+    type: 'removeStack',
+    subject: owner.uniqueID,
+    data: {
+      effect: effect.effectId
+    }
+  })
+}
+
+export function performCancelAction(){
+  return makeActionResult({
+    type: 'cancel',
+    cancelled: true
+  })
 }
