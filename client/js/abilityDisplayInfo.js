@@ -3,6 +3,7 @@ import { expandStatusEffectsDef } from '../../game/statusEffectsData.js'
 import healthIcon from '../assets/icons/health.svg'
 import physPower from '../assets/icons/physPower.svg'
 import magicPower from '../assets/icons/magicPower.svg'
+import { parseAbilityDescriptionString } from './abilityDescription.js'
 
 const ICONS = {
   magic: magicPower,
@@ -66,7 +67,21 @@ export default class AbilityDisplayInfo{
 }
 
 function toHTML(description, owner){
-
+  const { chunks, props } = parseAbilityDescriptionString(description)
+  let formatted = ''
+  chunks.forEach((chunk, i) => {
+    if(i !== 0){
+      let { type, val } = props[i-1]
+      if(type === 'P'){
+        val *= owner.physPower
+      }else if(type === 'M'){
+        val *= owner.magicPower
+      }
+      formatted += scalingWrap(type === 'P' ? 'phys' : 'magic', val)
+    }
+    formatted += `<span>${chunk}</span>`
+  })
+  return formatted
 }
 
 function attackDescription(action, owner){

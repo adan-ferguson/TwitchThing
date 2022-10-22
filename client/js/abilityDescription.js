@@ -1,14 +1,14 @@
-export function parseAbilityDescription(description, owner = null){
+export function parseAbilityDescriptionString(description, owner = null){
   const props = []
-  const formatted = description.replace(/\[(\w)([\d.]+)]/g, (_, prop, val) => {
+  const formatted = description.replace(/\[(\w)([\d.]+)]/g, (_, type, val) => {
     props.push({
-      prop,
+      type,
       val
     })
-    return '$' + (props.length - 1)
+    return '@'
   })
   return {
-    formatted,
+    chunks: formatted.split('@'),
     props
   }
 }

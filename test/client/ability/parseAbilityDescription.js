@@ -1,7 +1,7 @@
-import { parseAbilityDescription } from '../../../client/js/abilityDescription.js'
+import { parseAbilityDescriptionString } from '../../../client/js/abilityDescription.js'
 
 
-console.log(parseAbilityDescription('Normal'))
-console.log(parseAbilityDescription('[P1.2]'))
-console.log(parseAbilityDescription('[M1.2]'))
-console.log(parseAbilityDescription('Blah blah [P0.7] and [M12]'))
+console.log(parseAbilityDescriptionString('Normal'))
+console.log(parseAbilityDescriptionString('[P1.2]'))
+console.log(parseAbilityDescriptionString('[M1.2]'))
+console.log(parseAbilityDescriptionString('Blah blah [P0.7] and [M12]'))
