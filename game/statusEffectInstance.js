@@ -77,6 +77,9 @@ export default class StatusEffectInstance extends EffectInstance{
     if(this.stacks === 0){
       return true
     }
+    if(this.turns && this.turnsTaken > this.turns){
+      return true
+    }
     return false
   }
 
@@ -106,6 +109,14 @@ export default class StatusEffectInstance extends EffectInstance{
     return this.barrier.points - this.barrierDamage
   }
 
+  get turns(){
+    return this.effectData.turns ?? null
+  }
+
+  get turnsTaken(){
+    return this._state.turnsTaken ?? 0
+  }
+
   refresh(){
     if(this.barrier){
       this._state.barrierDamage = 0
@@ -131,6 +142,12 @@ export default class StatusEffectInstance extends EffectInstance{
   advanceTime(ms){
     super.advanceTime(ms)
     this._state.time = this.time + ms
+  }
+
+  nextTurn(){
+    if(this.turns){
+      this._state.turnsTaken = this.turnsTaken + 1
+    }
   }
 
   /**

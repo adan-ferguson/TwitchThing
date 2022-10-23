@@ -43,8 +43,7 @@ function flatValue(values, defaultValue){
 
 function percentageValue(values, defaultValue){
 
-  const mods =
-    compositeMods(values)
+  const mods = compositeMods(values)
   let value = defaultValue
 
   value = [...mods.flatPlus, ...mods.pctPlus].reduce((val, mod) => {
@@ -119,7 +118,8 @@ function flatMods(values){
     flatMinus: [],
   }
 
-  values.forEach(value => {
+  values.forEach(v => {
+    const { value } = parseStatVal(v)
     if(value > 0){
       mods.flatPlus.push(value)
     }else if(value < 0){

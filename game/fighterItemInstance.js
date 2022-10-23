@@ -11,6 +11,11 @@ export default class FighterItemInstance extends EffectInstance{
     return this.itemData
   }
 
+  get slot(){
+    const match = this.effectId.match(/item-(\d)/)
+    return match ? parseInt(match[1]) : -1
+  }
+
   get activeAbility(){
     return this.getAbility('active')
   }

@@ -3,7 +3,7 @@ import { diseasedStatusEffect } from '../../statusEffects/combined.js'
 
 export default {
   baseStats: {
-    hpMax: '+260%',
+    hpMax: '+60%',
     speed: '-30%'
   },
   items: [
@@ -11,7 +11,8 @@ export default {
       name: 'Diseased',
       abilities: {
         attackHit: {
-          chance: 0.8,
+          chance: 0.2,
+          description: 'Attacks have 20% chance to disease the enemy.',
           actions: [
             statusEffect({
               base: diseasedStatusEffect,

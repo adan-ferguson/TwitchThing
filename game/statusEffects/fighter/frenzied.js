@@ -1,5 +1,5 @@
 export default {
-  stateParamsFn: ({ source, params = {} }) => {
+  stateParamsFn: ({ params = {} }) => {
     return {
       perStack: params.perStack
     }

@@ -1,7 +1,9 @@
 import { STATUSEFFECT_COLORS } from './colors.js'
+import { getAbilityStateInfo } from './abilityStateInfo.js'
 
 export function effectDisplayInfo(effectInstance){
 
+  debugger
   let text = `${effectInstance.displayName}`
   if(effectInstance.stacks >= 2){
     text += ` x${effectInstance.stacks}`
@@ -27,6 +29,7 @@ export function effectDisplayInfo(effectInstance){
     barValue,
     barMax,
     colors,
+    abilityStateInfo: getAbilityStateInfo(effectInstance),
     animateChanges: effectInstance.duration ? false : true
   }
 }

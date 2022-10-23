@@ -1,4 +1,5 @@
 import { scaledValue } from './scaledValue.js'
+import { toNumberOfDigits } from './utilFunctions.js'
 
 export default class LevelCalculator{
 
@@ -19,18 +20,8 @@ export default class LevelCalculator{
     let xp = level2xp
     for(let i = 2; i < lvl; i++){
       xp += scaledValue(xpMultiplier, i - 2, level2xp)
-      xp = toThreeDigits(xp)
+      xp = toNumberOfDigits(xp, 3)
     }
     return xp
-
-    function toThreeDigits(x){
-      x = Math.ceil(x)
-      if(x < 1000){
-        return x
-      }
-      x = x + ''
-      const divisor = Math.pow(10, x.length - 3)
-      return Math.ceil(x / divisor) * divisor
-    }
   }
 }

@@ -3,7 +3,7 @@ import * as Monsters from './monsters/combined.js'
 import MonsterItemInstance from './monsterItemInstance.js'
 import { scaledValue } from './scaledValue.js'
 import OrbsData from './orbsData.js'
-import { toDisplayName } from './utilFunctions.js'
+import { toDisplayName, toNumberOfDigits } from './utilFunctions.js'
 
 const REWARD_MULTIPLIER = 0.17
 const POWER_MULTIPLIER = 0.19
@@ -25,11 +25,11 @@ export function levelToXpReward(lvl){
 }
 
 export function monsterLevelToHp(lvl){
-  return Math.ceil(getScalingValue(lvl, HP_MULTIPLIER) * HP_BASE)
+  return toNumberOfDigits(Math.ceil(getScalingValue(lvl, HP_MULTIPLIER) * HP_BASE), 2)
 }
 
 export function monsterLevelToPower(lvl){
-  return Math.ceil(getScalingValue(lvl, POWER_MULTIPLIER) * POWER_BASE)
+  return toNumberOfDigits(Math.ceil(getScalingValue(lvl, POWER_MULTIPLIER) * POWER_BASE), 2)
 }
 
 export default class MonsterInstance extends FighterInstance{

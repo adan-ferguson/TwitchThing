@@ -5,6 +5,7 @@ import AbilityDescription from './components/abilityDescription.js'
 import { makeEl, wrapContent } from '../../game/utilFunctions.js'
 import Stats from '../../game/stats/stats.js'
 import { silencedMod } from '../../game/mods/combined.js'
+import { getAbilityStateInfo } from './abilityStateInfo.js'
 
 export default class FighterItemDisplayInfo{
 
@@ -26,33 +27,6 @@ export default class FighterItemDisplayInfo{
 
   get isNew(){
     return this.itemInstance.itemDef.isNew
-  }
-
-  get abilityStateInfo(){
-
-    const abilities = this.itemInstance.generateAbilitiesData().instances
-    if(!Object.values(abilities).length){
-      return null
-    }
-    
-    const [eventName, ability] = Object.entries(abilities)[0]
-
-    let state
-    if(this.itemInstance.owner.mods.contains(silencedMod)){
-      state = 'disabled'
-    }else if(ability.ready){
-      state = 'ready'
-    }else if(ability.enabled){
-      state = 'recharging'
-    }else{
-      state = 'disabled'
-    }
-
-    return {
-      type: eventName === 'active' ? 'active' : 'triggered',
-      state,
-      ability
-    }
   }
 
   makeTooltip(){
@@ -111,6 +85,10 @@ export default class FighterItemDisplayInfo{
 
   makeDetails(){
     return new ItemDetails(this.itemInstance)
+  }
+
+  abilityStateInfo(){
+    return getAbilityStateInfo(this.itemInstance)
   }
 }
 

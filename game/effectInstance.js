@@ -30,24 +30,21 @@ export default class EffectInstance{
     return this.effectData.description ?? ''
   }
 
-  get failsConditions(){
-    return !this.meetsConditions
-  }
-
-  get meetsConditions(){
-    if(this.effectData.conditions && this.owner){
-      if(!this.owner.meetsConditions(this.effectData.conditions)){
-        return false
-      }
+  get disabled(){
+    if(!this.owner){
+      return false
     }
-    return true
+    if(this.owner.isEffectDisabled(this)){
+      return true
+    }
+    return false
   }
 
   /**
    * @return {Stats}
    */
   get stats(){
-    if(!this.meetsConditions){
+    if(this.disabled){
       return new Stats()
     }
     const scaledStats = this.effectData.scaledStats
@@ -66,7 +63,7 @@ export default class EffectInstance{
    * @return {ModsCollection}
    */
   get mods(){
-    if(!this.meetsConditions){
+    if(this.disabled){
       return new ModsCollection()
     }
     return new ModsCollection(this.effectData.mods || [])
@@ -84,7 +81,7 @@ export default class EffectInstance{
   }
 
   get abilities(){
-    if(!this.meetsConditions){
+    if(this.disabled){
       return {}
     }
     return this.generateAbilitiesData().instances
@@ -108,6 +105,9 @@ export default class EffectInstance{
   }
 
   shouldTrigger(triggerName){
+    if(this.disabled){
+      return false
+    }
     const abilityInstance = this.getAbility(triggerName)
     if(!abilityInstance?.shouldTrigger()){
       return false

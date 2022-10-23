@@ -1,10 +1,10 @@
 import { roundToFixed } from '../../utilFunctions.js'
-import takeDamage from '../../actions/takeDamage.js'
+import takeDamage from '../../actions/damageSelfAction.js'
 
 export default {
-  stateParamsFn: ({ source, params = {} }) => {
+  stateParamsFn: ({ sourceEffect, params = {} }) => {
     return {
-      dps: roundToFixed(source.magicPower * (params.damage ?? 0.03), 2)
+      dps: roundToFixed(sourceEffect.owner.magicPower * (params.damage ?? 0.03), 2)
     }
   },
   defFn: (stateParams, { stacks = 1 }) => {

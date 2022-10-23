@@ -9,16 +9,19 @@ export function takeCombatTurn(combat, actor){
   if(!actor.inCombat){
     throw 'Actor is not in combat'
   }
-  actor.resetTimeSinceLastAction()
   const index = actor.nextActiveItemIndex()
+  let ability
   if(index > -1){
-    return useEffectAbility(combat, actor.itemInstances[index], 'active')
+    ability = useEffectAbility(combat, actor.itemInstances[index], 'active')
+  }else{
+    ability = {
+      basicAttack: true,
+      owner: actor.uniqueID,
+      results: [performAttackAction(combat, actor)]
+    }
   }
-  return {
-    basicAttack: true,
-    owner: actor.uniqueID,
-    results: [performAttackAction(combat, actor)]
-  }
+  actor.nextTurn()
+  return ability
 }
 
 export function useEffectAbility(combat, effect, eventName){
@@ -42,7 +45,7 @@ export function useEffectAbility(combat, effect, eventName){
     const actionResult = doAction(combat, effect, actionDef) ?? { type: 'blank' }
     validateActionResult(actionResult)
     results.push(actionResult)
-    if(actionResult.cancelled){
+    if(actionResult.cancelled && !actionDef.continueIfCancelled){
       cancelled = true
       break
     }
@@ -73,7 +76,7 @@ function doAction(combat, effect, actionDef){
   }else if(type === 'takeDamage'){
     return takeDamage(combat, owner, actionDef)
   }else if(type === 'statusEffect'){
-    return performStatusEffectAction(combat, owner, actionDef)
+    return performStatusEffectAction(combat, effect, actionDef)
   }else if(type === 'removeStatusEffect'){
     return performRemoveStatusEffectAction(combat, owner, actionDef)
   }else if(type === 'random'){

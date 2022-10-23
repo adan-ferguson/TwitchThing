@@ -31,13 +31,13 @@ const monstersByFloor = [
   // Crypt
   Monsters.skeleton,
   Monsters.zombie,
-  Monsters.shade,
+  Monsters.ghastlySkull,
+  Monsters.assassin,
   Monsters.banshee,
   Monsters.necromancer,
-  Monsters.vampire,
   Monsters.deathKnight,
+  Monsters.vampire,
   Monsters.lich,
-  Monsters.abomination,
   Monsters.boneDragon,
   // Swamp
   Monsters.lizardPerson,

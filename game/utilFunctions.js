@@ -122,3 +122,13 @@ export function uuid(){
 export function minMax(min, val, max){
   return Math.max(min, Math.min(max, val))
 }
+
+export function toNumberOfDigits(val, digits){
+  val = Math.ceil(val)
+  if(val < Math.pow(10, digits)){
+    return val
+  }
+  val = val + ''
+  const divisor = Math.pow(10, val.length - digits)
+  return Math.ceil(val / divisor) * divisor
+}

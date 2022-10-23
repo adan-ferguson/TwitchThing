@@ -1,5 +1,5 @@
 import statusEffect from '../../actions/statusEffectAction.js'
-import takeDamage from '../../actions/takeDamage.js'
+import takeDamage from '../../actions/damageSelfAction.js'
 import attack from '../../actions/attackAction.js'
 import { scaledValueCumulative } from '../../scaledValue.js'
 import physScaling from '../../mods/generic/physScaling.js'

@@ -58,7 +58,9 @@ const statDefinitionsInfo = {
   critChance: {
     text: 'Crit Chance',
     description: 'Chance to deal bonus damage.',
-    displayedValueFn: value => `${Math.round(value * 100)}%`,
+    displayedValueFn: value => {
+      return `${Math.round(value * 100)}%`
+    },
   },
   critDamage: {
     text: 'Crit Damage',

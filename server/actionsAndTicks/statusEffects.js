@@ -2,7 +2,8 @@ import { makeActionResult } from '../../game/actionResult.js'
 import { expandStatusEffectsDef } from '../../game/statusEffectsData.js'
 import { triggerEvent } from './common.js'
 
-export function performStatusEffectAction(combat, actor, actionDef){
+export function performStatusEffectAction(combat, sourceEffect, actionDef){
+  const actor = sourceEffect.owner
   const subject = actionDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
   const resultObj = {
     type: 'gainEffect',
@@ -12,13 +13,13 @@ export function performStatusEffectAction(combat, actor, actionDef){
 
   if(subject !== actor){
     resultObj.triggeredEvents.push(...triggerEvent(combat, subject, 'targeted'))
-    if(resultObj.triggeredEvents.at(-1).cancelled){
+    if(resultObj.triggeredEvents.at(-1)?.cancelled){
       resultObj.cancelled = true
       return makeActionResult(resultObj)
     }
   }
 
-  resultObj.data = addStatusEffect(combat, actor, subject, actionDef.effect)
+  resultObj.data = addStatusEffect(combat, sourceEffect, subject, actionDef.effect)
   return makeActionResult(resultObj)
 }
 
@@ -32,7 +33,7 @@ export function performRemoveStatusEffectAction(combat, actor, actionDef){
 
   if(subject !== actor){
     resultObj.triggeredEvents.push(...triggerEvent(combat, subject, 'targeted'))
-    if(resultObj.triggeredEvents.at(-1).cancelled){
+    if(resultObj.triggeredEvents.at(-1)?.cancelled){
       resultObj.cancelled = true
       return makeActionResult(resultObj)
     }
@@ -61,12 +62,12 @@ export function performRemoveStatusEffectAction(combat, actor, actionDef){
 
 /**
  * @param combat
- * @param actor
+ * @param sourceEffect
  * @param subject
  * @param def
  */
-export function addStatusEffect(combat, actor, subject, def){
-  const data = expandStatusEffectsDef(actor, def)
+export function addStatusEffect(combat, sourceEffect, subject, def){
+  const data = expandStatusEffectsDef(sourceEffect, def)
   subject.statusEffectsData.add(data)
   return data
 }

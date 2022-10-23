@@ -1,7 +1,7 @@
 export default {
-  stateParamsFn: ({ source, params = {} }) => {
+  stateParamsFn: ({ sourceEffect, params = {} }) => {
     return {
-      barrierPoints: Math.ceil(source.magicPower * (params.power ?? 1))
+      barrierPoints: Math.ceil(sourceEffect.owner.magicPower * (params.power ?? 1))
     }
   },
   defFn: stateParams => {

@@ -1,13 +1,15 @@
 import { takeDamage, triggerEvent } from './common.js'
 import { makeActionResult } from '../../game/actionResult.js'
+import attackAction from '../../game/actions/attackAction.js'
 
 export function performAttackAction(combat, attacker, actionDef = {}){
 
-  actionDef = {
+  actionDef = attackAction({
     damageMulti: 1,
     damageType: 'auto',
+    damageScaling: 'auto',
     ...actionDef
-  }
+  })
 
   const enemy = combat.getEnemyOf(attacker)
   const resultObj = {
@@ -20,7 +22,19 @@ export function performAttackAction(combat, attacker, actionDef = {}){
     actionDef.damageType = attacker.basicAttackType
   }
 
+  if(actionDef.damageScaling === 'auto'){
+    actionDef.damageScaling = actionDef.damageType
+  }
+
   resultObj.triggeredEvents.push(...triggerEvent(combat, enemy, 'targeted'))
+  resultObj.triggeredEvents.push(...triggerEvent(combat, enemy, 'attacked'))
+
+  if(actionDef.damageType === 'phys'){
+    resultObj.triggeredEvents.push(...triggerEvent(combat, enemy, 'physAttacked'))
+  }else if(actionDef.damageType === 'magic'){
+    resultObj.triggeredEvents.push(...triggerEvent(combat, enemy, 'magicAttacked'))
+  }
+
   if(resultObj.triggeredEvents.at(-1)?.cancelled){
     return makeActionResult({
       ...resultObj,
@@ -40,8 +54,9 @@ export function performAttackAction(combat, attacker, actionDef = {}){
     })
   }
 
-  let damage = attacker[actionDef.damageType + 'Power']
+  let damage = attacker[actionDef.damageScaling + 'Power']
   damage *= actionDef.damageMulti
+  damage += actionDef.targetHpPct * enemy.hp
 
   const damageInfo = {
     damageType: actionDef.damageType,
@@ -59,6 +74,10 @@ export function performAttackAction(combat, attacker, actionDef = {}){
   resultObj.triggeredEvents.push(...damageResult.triggeredEvents)
   resultObj.triggeredEvents.push(...triggerEvent(combat, attacker, 'attackHit'))
   resultObj.triggeredEvents.push(...triggerEvent(combat, enemy, 'hitByAttack'))
+
+  if(damageInfo.crit){
+    resultObj.triggeredEvents.push(...triggerEvent(combat, attacker, 'crit'))
+  }
 
   return makeActionResult(resultObj)
 }

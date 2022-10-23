@@ -2,6 +2,7 @@ import Stats from './stats/stats.js'
 import { freezeActionBarMod, magicAttackMod, silencedMod, sneakAttackMod } from './mods/combined.js'
 import { StatusEffectsData } from './statusEffectsData.js'
 import ModsCollection from './modsCollection.js'
+import FighterItemInstance from './fighterItemInstance.js'
 
 // Stupid
 new Stats()
@@ -266,8 +267,9 @@ export default class FighterInstance{
     return effects
   }
 
-  resetTimeSinceLastAction(){
+  nextTurn(){
     this._state.timeSinceLastAction = 0
+    this.statusEffectsData.nextTurn()
   }
 
   adjustNextActionTime(ms){
@@ -306,5 +308,20 @@ export default class FighterInstance{
     this.inCombat = false
     delete this._state.combatTime
     delete this._state.timeSinceLastAction
+  }
+
+  isEffectDisabled(effect){
+    if(effect.effectData.conditions){
+      if(!this.meetsConditions(effect.effectData.conditions)){
+        return true
+      }
+    }
+    // Check for status effects which might be disabling this item
+    if(effect instanceof FighterItemInstance){
+      if(this.statusEffectsData.instances.find(sei => sei.effectData.disarmedItemSlot === effect.slot)){
+        return true
+      }
+    }
+    return false
   }
 }

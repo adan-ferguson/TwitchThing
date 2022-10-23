@@ -4,18 +4,18 @@ import { toArray } from './utilFunctions.js'
 import { all as Effects } from './statusEffects/combined.js'
 
 /**
- * @param actor
+ * @param sourceEffect
  * @param def
  * @returns {object}
  */
-export function expandStatusEffectsDef(actor, def){
+export function expandStatusEffectsDef(sourceEffect, def){
   if(def.name){
     const baseEffect = Effects[def.name]
     if(baseEffect.stateParamsFn){
       return {
         ...def,
         params: baseEffect.stateParamsFn({
-          source: actor,
+          sourceEffect,
           params: def.params
         })
       }
@@ -40,9 +40,10 @@ export class StatusEffectsData{
     return this._instances.map(effect => effect.state)
   }
 
-  set stateVal(val){
+  set stateVal(val ){
     this._instances = []
     if(val){
+      val = JSON.parse(JSON.stringify(val))
       val.forEach(effectStateVal => {
         this._instances.push(
           new StatusEffectInstance(
@@ -58,6 +59,11 @@ export class StatusEffectsData{
     this._instances.forEach(effect => {
       effect.advanceTime(ms)
     })
+    this.cleanupExpired()
+  }
+
+  nextTurn(){
+    this._instances.forEach(sei => sei.nextTurn())
     this.cleanupExpired()
   }
 
