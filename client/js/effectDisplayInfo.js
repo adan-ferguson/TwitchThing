@@ -1,9 +1,8 @@
 import { STATUSEFFECT_COLORS } from './colors.js'
-import { getAbilityStateInfo } from './abilityStateInfo.js'
+import AbilityDisplayInfo from './abilityDisplayInfo.js'
 
 export function effectDisplayInfo(effectInstance){
 
-  debugger
   let text = `${effectInstance.displayName}`
   if(effectInstance.stacks >= 2){
     text += ` x${effectInstance.stacks}`
@@ -14,22 +13,20 @@ export function effectDisplayInfo(effectInstance){
 
   const colors = getColors(effectInstance)
 
-  let barMax = 1
-  let barValue = 1
+  let barPct = 1
   if(effectInstance.duration){
-    barMax = effectInstance.duration
-    barValue = effectInstance.durationRemaining
+    barPct = effectInstance.durationRemaining / effectInstance.duration
   }else if(effectInstance.barrier){
-    barMax = effectInstance.barrier.points
-    barValue = effectInstance.barrierPointsRemaining
+    barPct = effectInstance.barrierPointsRemaining / effectInstance.barrier.points
   }
+
+  const abilityDisplayInfo = new AbilityDisplayInfo(effectInstance)
 
   return {
     text,
-    barValue,
-    barMax,
+    barPct,
+    miniBarPct: abilityDisplayInfo.barPct,
     colors,
-    abilityStateInfo: getAbilityStateInfo(effectInstance),
     animateChanges: effectInstance.duration ? false : true
   }
 }

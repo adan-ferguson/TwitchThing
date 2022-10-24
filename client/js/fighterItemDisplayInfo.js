@@ -4,8 +4,7 @@ import ItemDetails from './components/itemDetails.js'
 import AbilityDescription from './components/abilityDescription.js'
 import { makeEl, wrapContent } from '../../game/utilFunctions.js'
 import Stats from '../../game/stats/stats.js'
-import { silencedMod } from '../../game/mods/combined.js'
-import { getAbilityStateInfo } from './abilityStateInfo.js'
+import AbilityDisplayInfo from './abilityDisplayInfo.js'
 
 export default class FighterItemDisplayInfo{
 
@@ -27,6 +26,10 @@ export default class FighterItemDisplayInfo{
 
   get isNew(){
     return this.itemInstance.itemDef.isNew
+  }
+
+  get abilityDisplayInfo(){
+    return new AbilityDisplayInfo(this.itemInstance)
   }
 
   makeTooltip(){
@@ -85,10 +88,6 @@ export default class FighterItemDisplayInfo{
 
   makeDetails(){
     return new ItemDetails(this.itemInstance)
-  }
-
-  abilityStateInfo(){
-    return getAbilityStateInfo(this.itemInstance)
   }
 }
 

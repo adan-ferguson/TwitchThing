@@ -96,7 +96,7 @@ export default class FighterInstancePane extends HTMLElement{
     }else{
       const effectEl = this._getEffectEl(action.effect)
       if(effectEl instanceof LoadoutRow){
-        flash(effectEl, FLASH_COLORS[effectEl.loadoutItem.abilityStateInfo.type], 500)
+        flash(effectEl, FLASH_COLORS[effectEl.loadoutItem.abilityDisplayInfo.type], 500)
       }else if(effectEl instanceof EffectRow){
         effectEl.flash()
       }

@@ -1,9 +1,11 @@
 import tippy from 'tippy.js'
 import { effectDisplayInfo } from '../../effectDisplayInfo.js'
 import { flash } from '../../animations/simple.js'
+import { ACTION_COLOR } from '../../colors.js'
 
 const HTML = `
 <di-bar></di-bar>
+<di-mini-bar></di-mini-bar>
 <span class="display-text"></span>
 `
 
@@ -19,6 +21,10 @@ export default class EffectRow extends HTMLElement{
       .setOptions({
         showLabel: false
       })
+    this._miniBarEl = this.querySelector('di-mini-bar')
+      .setOptions({
+        color: ACTION_COLOR
+      })
     if(effect.description){
       this._tippy = tippy(this, {
         theme: 'light',
@@ -33,14 +39,10 @@ export default class EffectRow extends HTMLElement{
     const info = effectDisplayInfo(effect)
     animate = info.animateChanges && animate
 
-    // TODO: poison tooltip
-    // if(info.tooltipOutdated){
-    //   this._updateTooltip()
-    // }
-
     this.querySelector('.display-text').textContent = info.text
-    this._barEl.setOptions({ max: info.barMax, color: info.colors.bar })
-    this._barEl.setValue(info.barValue, { animate: animate })
+    this._barEl.setOptions({ max: 1, color: info.colors.bar })
+    this._barEl.setValue(info.barPct) //, { animate })
+    this._miniBarEl.setValue(info.miniBarPct)
   }
 
   flash(){

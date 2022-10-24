@@ -4,6 +4,7 @@ import healthIcon from '../assets/icons/health.svg'
 import physPower from '../assets/icons/physPower.svg'
 import magicPower from '../assets/icons/magicPower.svg'
 import { parseAbilityDescriptionString } from './abilityDescription.js'
+import { silencedMod } from '../../game/mods/combined.js'
 
 const ICONS = {
   magic: magicPower,
@@ -11,10 +12,17 @@ const ICONS = {
   health: healthIcon
 }
 
+export const AbilityState = {
+  NONE: 'none',
+  DISABLED: 'disabled',
+  READY: 'ready',
+  RECHARGING: 'recharging'
+}
+
 export default class AbilityDisplayInfo{
-  constructor(abilities, owner = null){
-    this._abilities = abilities
-    this._owner = owner
+  constructor(effectInstance){
+    this._abilities = effectInstance.abilities
+    this._owner = effectInstance.owner
   }
 
   get noAbility(){
@@ -63,6 +71,31 @@ export default class AbilityDisplayInfo{
       //   return timeAction(action.ms)
       // }
     }).join(' ')
+  }
+
+  get state(){
+    if(!this.mainAbility){
+      return AbilityState.NONE
+    }else if(this._owner.mods.contains(silencedMod)){
+      return AbilityState.DISABLED
+    }else if(this.mainAbility.instance.ready){
+      return AbilityState.READY
+    }else if(this.mainAbility.instance.enabled){
+      return AbilityState.RECHARGING
+    }
+    return AbilityState.DISABLED
+  }
+
+  get barPct(){
+    if(!this.mainAbility || this.state === AbilityState.DISABLED){
+      return 0
+    }
+    if(this.mainAbility.instance.cooldown){
+      return 1 - this.mainAbility.instance.cooldownRemaining / this.mainAbility.instance.cooldown
+    }else if(this.mainAbility.instance.uses){
+      return 1 - this.mainAbility.instance.timesUsed / this.mainAbility.instance.uses
+    }
+    return 0
   }
 }
 

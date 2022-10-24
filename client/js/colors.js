@@ -28,3 +28,5 @@ export const STATUSEFFECT_COLORS = {
     flash: '#fff'
   }
 }
+
+export const ACTION_COLOR = '#a8c7ff'

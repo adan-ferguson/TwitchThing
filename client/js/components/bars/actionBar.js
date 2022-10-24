@@ -1,6 +1,5 @@
 import Bar from './bar.js'
-
-const ACTION_BAR_COLOR = 'rgb(168, 199, 255)'
+import { ACTION_COLOR } from '../../colors.js'
 
 export default class ActionBar extends Bar{
   constructor(){
@@ -8,7 +7,7 @@ export default class ActionBar extends Bar{
     this.setOptions({
       showMax: false,
       showValue: false,
-      color: ACTION_BAR_COLOR
+      color: ACTION_COLOR
     })
   }
 

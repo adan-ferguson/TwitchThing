@@ -29,7 +29,7 @@ export default class AbilityDescription extends HTMLElement{
       return
     }
 
-    const displayInfo = new AbilityDisplayInfo(itemInstance.abilities, itemInstance.owner)
+    const displayInfo = new AbilityDisplayInfo(itemInstance)
     this.setAttribute('ability-type', displayInfo.type)
     this.innerHTML = HTML(displayInfo.mainAbility.instance.cooldown, displayInfo.mainAbility.instance.initialCooldown)
 

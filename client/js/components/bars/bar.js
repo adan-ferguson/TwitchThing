@@ -28,7 +28,7 @@ export default class Bar extends HTMLElement{
     decreaserColor: null,
     min: 0,
     max: 100,
-    rounding: true
+    rounding: false
   }
 
   _barLabel

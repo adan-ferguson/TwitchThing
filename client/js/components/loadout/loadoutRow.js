@@ -2,7 +2,7 @@ import tippy from 'tippy.js'
 import SimpleModal from '../simpleModal.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
 import { ITEM_ROW_COLORS } from '../../colors.js'
-import { getAbilityStateInfo } from '../../abilityStateInfo.js'
+import { AbilityState } from '../../abilityDisplayInfo.js'
 
 const HTML = `
 <di-bar class="cooldown"></di-bar>
@@ -89,34 +89,26 @@ export default class LoadoutRow extends HTMLElement{
 
     this._cooldownBarEl.style.visibility = this.loadoutItem ? 'visible' : 'hidden'
 
-    const info = this.loadoutItem?.abilityStateInfo
+    const info = this.loadoutItem?.abilityDisplayInfo
     if(!info){
       return
     }
 
-    const disabled = this.loadoutItem.itemInstance.disabled || info.state === 'disabled'
+    const disabled = this.loadoutItem.itemInstance.disabled || info.state === AbilityState.DISABLED
     this.classList.toggle('disabled', disabled)
     this.setAttribute('ability-type', info.type)
     this.setAttribute('ability-state', info.state)
 
-    const color = ITEM_ROW_COLORS[info.state === 'disabled' ? 'disabled' : info.type]
+    const color = ITEM_ROW_COLORS[info.state === AbilityState.DISABLED ? 'disabled' : info.type]
     const borderColor = info.state === 'ready' ? color : ITEM_ROW_COLORS.disabled
-    let max = 1, val = 1
-    if(info.ability.cooldown){
-      max = info.ability.cooldown
-      val = info.ability.cooldown - info.ability.cooldownRemaining
-    }else if(info.ability.uses){
-      max = info.ability.uses
-      val = info.ability.uses - info.ability.timesUsed
-    }
 
     this._cooldownBarEl
       .setOptions({
         color,
         borderColor,
-        max
+        max: 1
       })
-      .setValue(info.state === 'disabled' ? 0 : val)
+      .setValue(info.barPct)
   }
 
   _setupBlank(){
