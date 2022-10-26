@@ -154,8 +154,7 @@ class Combat{
   }
 
   _advanceTime(){
-    const nextTickTime = 1000 - (this._currentTime % 1000)
-    const timeToAdvance = Math.ceil(Math.min(nextTickTime, this.fighterInstance1.timeUntilNextAction, this.fighterInstance2.timeUntilNextAction))
+    const timeToAdvance = Math.ceil(Math.min(this.fighterInstance1.timeUntilNextUpdate, this.fighterInstance2.timeUntilNextUpdate))
     this._currentTime += timeToAdvance
     if(timeToAdvance){
       this.fighterInstance1.advanceTime(timeToAdvance)
@@ -164,10 +163,6 @@ class Combat{
   }
 
   _tick(){
-
-    if(this._currentTime % 1000 !== 0){
-      return []
-    }
 
     const tickUpdates = []
 

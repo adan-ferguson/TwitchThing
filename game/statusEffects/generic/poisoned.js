@@ -13,6 +13,7 @@ export default {
       description: 'Taking damage per second',
       abilities: {
         tick: {
+          initialCooldown: 1000,
           actions: [
             takeDamage({
               damageType: 'magic',

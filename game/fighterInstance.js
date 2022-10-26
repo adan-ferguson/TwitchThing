@@ -158,6 +158,10 @@ export default class FighterInstance{
     return slow + COMBAT_BASE_TURN_TIME / speed
   }
 
+  get timeUntilNextUpdate(){
+    return Math.min(this.timeUntilNextAction, this.statusEffectsData.nextTickUpdate)
+  }
+
   get timeUntilNextAction(){
     return Math.ceil(Math.max(0, (this.nextActionTime - this._state.timeSinceLastAction)))
   }

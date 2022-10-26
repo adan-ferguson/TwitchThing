@@ -55,6 +55,17 @@ export class StatusEffectsData{
     }
   }
 
+  get nextTickUpdate(){
+    let next = Infinity
+    this._instances.forEach(sei => {
+      const tickAbility = sei.getAbility('tick')
+      if(tickAbility){
+        next = Math.min(next, tickAbility.cooldownRemaining)
+      }
+    })
+    return next
+  }
+
   advanceTime(ms){
     this._instances.forEach(effect => {
       effect.advanceTime(ms)

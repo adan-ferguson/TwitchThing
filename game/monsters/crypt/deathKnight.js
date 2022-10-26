@@ -25,11 +25,11 @@ export default {
                   displayName: 'Cursed',
                   stacking: true,
                   stats: {
-                    enemyCritChance: '+20%'
+                    enemyCritChance: '+10%'
                   }
                 }
               }),
-              chance: 1 //1/3
+              chance: 1/3
             }),
           ]
         }
