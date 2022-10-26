@@ -159,7 +159,14 @@ export default class FighterInstance{
   }
 
   get timeUntilNextUpdate(){
-    return Math.min(this.timeUntilNextAction, this.statusEffectsData.nextTickUpdate)
+    let nextTick = Infinity
+    this.effectInstances.forEach(ei => {
+      const tickAbility = ei.getAbility('tick')
+      if(tickAbility){
+        nextTick = Math.min(nextTick, tickAbility.cooldownRemaining)
+      }
+    })
+    return Math.min(this.timeUntilNextAction, nextTick)
   }
 
   get timeUntilNextAction(){

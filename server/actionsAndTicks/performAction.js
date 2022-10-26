@@ -80,7 +80,7 @@ function doAction(combat, effect, actionDef){
   }else if(type === 'removeStatusEffect'){
     return performRemoveStatusEffectAction(combat, owner, actionDef)
   }else if(type === 'random'){
-    return doAction(combat, owner, chooseOne(actionDef.choices))
+    return doAction(combat, effect, chooseOne(actionDef.choices))
   }else if(type === 'gainHealth'){
     return performGainHealthAction(combat, owner, actionDef)
   }else if(type === 'removeStack'){
