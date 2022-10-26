@@ -30,6 +30,10 @@ export default class AbilityInstance{
     this._state = { ...newVal }
   }
 
+  get isPositive(){
+    return this._abilityDef.isPositive ?? this._parentEffect.isBuff ?? true
+  }
+
   get cooldownRemaining(){
     if(this._state.cooldownRemaining === undefined && this.cooldown){
       return this._abilityDef.initialCooldown ?? 0

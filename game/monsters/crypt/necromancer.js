@@ -18,7 +18,7 @@ export default {
       name: 'Skeleton Archer',
       abilities: {
         active: {
-          cooldown: 10000,
+          cooldown: 6000,
           description: 'Summons a skeleton archer to shoot the opponent. Shoots every 3 seconds for [M0.4] phys damage.',
           actions: [
             statusEffectAction({
@@ -34,7 +34,7 @@ export default {
                       attackAction({
                         damageType: 'phys',
                         damageScaling: 'magic',
-                        damageMulti: 0.4
+                        damageMulti: 0.5
                       })
                     ]
                   }

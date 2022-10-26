@@ -62,6 +62,13 @@ const statDefinitionsInfo = {
       return `${Math.round(value * 100)}%`
     },
   },
+  enemyCritChance: {
+    text: 'Enemy Crit Chance',
+    description: 'Increases enemy\'s crit chance.',
+    displayedValueFn: value => {
+      return `${Math.round(value * 100)}%`
+    },
+  },
   critDamage: {
     text: 'Crit Damage',
     description: 'Increases damage deal by crits.',

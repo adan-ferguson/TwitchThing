@@ -2,7 +2,7 @@ import { performAttackAction } from './attacks.js'
 import _ from 'lodash'
 import { performCancelAction, performGainHealthAction, performRemoveStackAction, takeDamage } from './common.js'
 import { performRemoveStatusEffectAction, performStatusEffectAction } from './statusEffects.js'
-import { validateActionResult } from '../../game/actionResult.js'
+import { blankActionResult, validateActionResult } from '../../game/actionResult.js'
 import { chooseOne } from '../../game/rando.js'
 
 export function takeCombatTurn(combat, actor){
@@ -87,6 +87,12 @@ function doAction(combat, effect, actionDef){
     return performRemoveStackAction(combat, owner, effect)
   }else if(type === 'cancel'){
     return performCancelAction(owner, actionDef)
+  }else if(type === 'maybe'){
+    if(Math.random() <= actionDef.chance){
+      return doAction(combat, effect, actionDef.action)
+    }else{
+      return blankActionResult()
+    }
   }
   throw 'Undefined action'
 }

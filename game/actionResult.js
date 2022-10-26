@@ -24,3 +24,10 @@ export function validateActionResult(obj){
   makeActionResult(obj)
   return true
 }
+
+export function blankActionResult(subject){
+  return makeActionResult({
+    type: 'blank',
+    subject: 'none'
+  })
+}

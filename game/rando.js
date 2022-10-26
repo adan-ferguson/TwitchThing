@@ -1,12 +1,3 @@
-/**
- * Randomly round up or down in a statistical way.
- * Eg. 0.3 gets rounded to 0 70% of the time and 1 30% of the time.
- * @param val
- */
-export function randomRound(val){
-  return (val % 1) < Math.random() ? Math.floor(val) : Math.ceil(val)
-}
-
 export function chooseOne(choices){
   return chooseMulti(choices, 1)[0]
 }

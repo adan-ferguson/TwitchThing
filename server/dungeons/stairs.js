@@ -2,7 +2,11 @@ import { floorSize } from '../../game/zones.js'
 
 const MIN_FLOOR_TRAVERSAL_PCT = 0.20
 
-export function foundStairs(floor, room, pace = 'Brisk'){
+export function foundStairs(dungeonRun){
+  const floor = dungeonRun.floor
+  const room = dungeonRun.room
+  const pace = dungeonRun.pace ?? 'Brisk'
+  const adventurer = dungeonRun.adventurer
   if(floor === 50){
     // TODO: remove this restriction
     return false

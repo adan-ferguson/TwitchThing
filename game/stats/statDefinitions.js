@@ -41,6 +41,9 @@ const defs = {
   dodgeChance: {
     type: StatType.PERCENTAGE
   },
+  enemyCritChance: {
+    inverted: true
+  },
   hpMax: {
     type: StatType.COMPOSITE
   },

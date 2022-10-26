@@ -19,7 +19,7 @@ export async function generateEvent(dungeonRun){
     }
   }
 
-  if(dungeonRun.user.accomplishments.firstRunFinished && foundStairs(floor, room, dungeonRun.pace)){
+  if(dungeonRun.user.accomplishments.firstRunFinished && foundStairs(dungeonRun)){
     const message = dungeonRun.pace === 'Brisk' ?
       `${adventurerInstance.displayName} found the stairs and goes deeper.` :
       `${adventurerInstance.displayName} feels like they've finished exploring this floor.`
