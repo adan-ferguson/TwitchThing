@@ -44,13 +44,19 @@ export function performAttackAction(combat, attacker, actionDef = {}){
   if(dodgeAttack(enemy)){
     return makeActionResult({
       ...resultObj,
-      cancelled: 'dodged'
+      data: {
+        cancelReason: 'Dodged'
+      },
+      cancelled: true
     })
   }
   if(missAttack(attacker)){
     return makeActionResult({
       ...resultObj,
-      cancelled: 'missed'
+      data: {
+        cancelReason: 'Missed'
+      },
+      cancelled: true
     })
   }
 
@@ -100,12 +106,13 @@ function dealDamage(combat, actor, enemy, damageInfo){
 
   const lifesteal = Math.min(
     actor.hpMax - actor.hp,
-    Math.ceil(actor.stats.get('lifesteal').value * damageResult.data.damageDistribution.hp)
+    Math.ceil(actor.stats.get('lifesteal').value * damageResult.data.totalDamage)
   )
 
-  // if(lifesteal){
-  //   damageResult.triggeredEvents.push(performGainHealthAction(actor, lifesteal))
-  // }
+  if(lifesteal){
+    actor.hp += lifesteal
+    damageResult.data.lifesteal = lifesteal
+  }
 
   return damageResult
 }

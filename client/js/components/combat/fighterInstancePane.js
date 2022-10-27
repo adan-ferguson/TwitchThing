@@ -5,7 +5,7 @@ import AdventurerInfo from '../adventurer/adventurerInfo.js'
 import MonsterInfo from '../monsterInfo.js'
 import FlyingTextEffect from '../visualEffects/flyingTextEffect.js'
 import CustomAnimation from '../../animations/customAnimation.js'
-import { mergeOptionsObjects, roundToFixed } from '../../../../game/utilFunctions.js'
+import { mergeOptionsObjects, roundToFixed, toDisplayName } from '../../../../game/utilFunctions.js'
 import { magicAttackMod, magicScalingMod, physScalingMod } from '../../../../game/mods/combined.js'
 import { DAMAGE_COLORS, FLASH_COLORS } from '../../colors.js'
 import { flash } from '../../animations/simple.js'
@@ -93,7 +93,7 @@ export default class FighterInstancePane extends HTMLElement{
     if(action.basicAttack){
       const color = DAMAGE_COLORS[this.fighterInstance.basicAttackType]
       flash(this.basicAttackStatEl, color)
-    }else{
+    }else if(action.effect){
       const effectEl = this._getEffectEl(action.effect)
       if(effectEl instanceof LoadoutRow){
         flash(effectEl, FLASH_COLORS[effectEl.loadoutItem.abilityDisplayInfo.type], 500)
@@ -103,13 +103,15 @@ export default class FighterInstancePane extends HTMLElement{
     }
   }
 
-  displayResult(result){
+  displayResult(result, effect){
     if(result.type === 'attack'){
       this._displayAttackResult(result)
     }else if(result.type === 'damage'){
       this._displayDamageResult(result)
     }else if(result.type === 'gainHealth'){
       this._displayLifeGained(result.data.amount)
+    }else if(result.type === 'cancel'){
+      this._displayCancellation(result, effect)
     }
   }
 
@@ -123,22 +125,7 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   _displayAttackResult(result){
-    if(result.cancelled){
-      if(result.cancelled !== true){
-        // Sort of hacky, if result.cancelled is a string, that's the non-effect
-        // reason for cancellation, so like a dodge or miss.
-        new FlyingTextEffect(this.hpBarEl, makeExciting(result.cancelled))
-      }else{
-        const cancellerEvent = result.triggeredEvents.find(event => event.cancelled)
-        if(cancellerEvent){
-          const cancellerResult = cancellerEvent.results.find(result => result.cancelled)
-          new FlyingTextEffect(
-            this._getEffectEl(cancellerEvent.effect),
-            makeExciting(cancellerResult.data.reason)
-          )
-        }
-      }
-    }else{
+    if(!result.cancelled){
       this._displayDamageResult(result)
     }
   }
@@ -175,7 +162,8 @@ export default class FighterInstancePane extends HTMLElement{
       const statEl = this.statsList.querySelector(`di-stat-row[stat-key=${data.damageType}Def]`)
       if(statEl){
         new FlyingTextEffect(statEl, blockedHtml, {
-          html: true
+          html: true,
+          color: '#000'
         })
       }
     }
@@ -270,10 +258,16 @@ export default class FighterInstancePane extends HTMLElement{
       return el.effect.effectId === effectId
     })
   }
+
+  _displayCancellation(result, effect){
+    if(result.data?.cancelReason){
+      const targetEl = this._getEffectEl(effect) ?? this._actionBarEl
+      new FlyingTextEffect(
+        targetEl,
+        result.data.cancelReason
+      )
+    }
+  }
 }
 
-customElements.define('di-fighter-instance-pane', FighterInstancePane )
-
-function makeExciting(str){
-  return str.slice(0,1).toUpperCase() + str.slice(1) + '!'
-}
+customElements.define('di-fighter-instance-pane', FighterInstancePane)

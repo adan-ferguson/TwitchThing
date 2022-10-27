@@ -53,7 +53,7 @@ export default class FlyingTextEffect extends EventEmitter{
       const distance = this.options.distance * (this.options.direction === 'down' ? 1 : -1)
       const translateStr = ` translateY(${distance}rem)`
       this.el.style.transform = currentTransform + translateStr
-      this.el.style.opacity = '0.5'
+      this.el.style.opacity = '0.7'
       setTimeout(() => {
         this.el.remove()
         this.emit('finish')

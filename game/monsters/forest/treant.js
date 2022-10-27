@@ -28,7 +28,7 @@ export default {
                     removeStackAction(),
                     {
                       type: 'cancel',
-                      reason: 'absorbed'
+                      cancelReason: 'Absorbed'
                     }
                   ]
                 }

@@ -4,6 +4,7 @@ import { performCancelAction, performGainHealthAction, performRemoveStackAction,
 import { performRemoveStatusEffectAction, performStatusEffectAction } from './statusEffects.js'
 import { blankActionResult, validateActionResult } from '../../game/actionResult.js'
 import { chooseOne } from '../../game/rando.js'
+import { noBasicAttackMod } from '../../game/mods/combined.js'
 
 export function takeCombatTurn(combat, actor){
   if(!actor.inCombat){
@@ -13,6 +14,14 @@ export function takeCombatTurn(combat, actor){
   let ability
   if(index > -1){
     ability = useEffectAbility(combat, actor.itemInstances[index], 'active')
+  }else if(actor.mods.contains(noBasicAttackMod)){
+    ability = {
+      basicAttack: true,
+      owner: actor.uniqueID,
+      results: [performCancelAction(actor, {
+        cancelReason: 'Can\'t attack'
+      })]
+    }
   }else{
     ability = {
       basicAttack: true,

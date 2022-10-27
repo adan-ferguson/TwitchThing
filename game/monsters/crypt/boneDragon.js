@@ -1,16 +1,34 @@
+import { bossMod, noBasicAttackMod } from '../../mods/combined.js'
+import statusEffectAction from '../../actions/statusEffectAction.js'
+
 export default {
   baseStats: {
-    physPower: '+20%',
-    physDef: '+20%',
-    hpMax: '+50%'
+    physPower: '+90%',
+    physDef: '+30%',
+    speed: '-15%',
+    hpMax: '+70%'
   },
-  description: 'Blarg.',
   items: [
     {
-      name: 'Boss Monster',
-      description: 'Hardest monster type in the zone, stronger and gives extra rewards.',
-      stats: {
-        rewards: '+100%'
+      name: 'Boss',
+      mods: [bossMod]
+    },
+    {
+      name: 'Screech',
+      abilities: {
+        active: {
+          cooldown: 30000,
+          actions: [
+            statusEffectAction({
+              affects: 'enemy',
+              effect: {
+                duration: 10000,
+                mods: [noBasicAttackMod],
+                displayName: 'Terror'
+              }
+            })
+          ]
+        }
       }
     }
   ]

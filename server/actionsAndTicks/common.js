@@ -55,6 +55,7 @@ export function takeDamage(combat, subject, damageInfo){
 
   result.damageDistribution = subject.statusEffectsData.ownerTakingDamage(damage)
   subject.hp -= result.damageDistribution.hp
+  result.totalDamage = Object.values(result.damageDistribution).reduce((prev, val) => prev + val)
 
   if(damage > 0){
     triggeredEvents.push(...triggerEvent(combat, subject, 'takeDamage'))
@@ -88,7 +89,7 @@ export function performRemoveStackAction(combat, owner, effect){
 export function performCancelAction(owner, def){
   return makeActionResult({
     data: {
-      reason: def.reason ?? 'cancelled',
+      cancelReason: def.cancelReason,
     },
     subject: owner.uniqueID,
     type: 'cancel',

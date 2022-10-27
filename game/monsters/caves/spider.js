@@ -17,7 +17,7 @@ export default {
                 stacking: true,
                 displayName: 'Webbed',
                 stats: {
-                  slow: 2000
+                  slow: 1500
                 }
               }
             })

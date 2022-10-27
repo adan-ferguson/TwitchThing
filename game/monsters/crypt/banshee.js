@@ -34,7 +34,7 @@ export default {
           actions: [
             {
               type: 'cancel',
-              reason: 'missed'
+              cancelReason: 'Missed'
             }
           ]
         }

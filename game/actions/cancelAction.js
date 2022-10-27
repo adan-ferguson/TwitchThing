@@ -1,6 +1,6 @@
 export default function(def){
   return {
-    reason: null,
+    cancelReason: null,
     ...def,
     type: 'cancel'
   }

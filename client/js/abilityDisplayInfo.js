@@ -1,5 +1,4 @@
 import { roundToFixed, wrapContent } from '../../game/utilFunctions.js'
-import { expandStatusEffectsDef } from '../../game/statusEffectsData.js'
 import healthIcon from '../assets/icons/health.svg'
 import physPower from '../assets/icons/physPower.svg'
 import magicPower from '../assets/icons/magicPower.svg'
@@ -57,9 +56,6 @@ export default class AbilityDisplayInfo{
     return this.mainAbility.instance.actions.map(action => {
       if(action.type === 'attack'){
         return attackDescription(action, this._owner)
-      }
-      if(action.type === 'statusEffect'){
-        return statusEffectDescription(action, this._owner)
       }
       if(action.type === 'gainHealth'){
         return gainHealthDescription(action, this._owner)
@@ -124,16 +120,6 @@ function attackDescription(action, owner){
     amount = Math.ceil(amount * owner[action.damageType + 'Power'])
   }
   return `Attack for ${showFlat ? '' : 'x'}${scalingWrap(action.damageType, amount)} damage.`
-}
-
-function statusEffectDescription(action, owner){
-  const data = expandStatusEffectsDef(owner, action.effect)
-  if(data.name === 'poisoned'){
-    return `Poisons the target for ${scalingWrap('magic', data.params.dps)} dps for ${data.duration / 1000} seconds.`
-  }
-  if(data.name === 'barrier'){
-    return `Gain a barrier that blocks ${scalingWrap('magic', data.params.barrierPoints)} damage.`
-  }
 }
 
 function gainHealthDescription(action, owner){
