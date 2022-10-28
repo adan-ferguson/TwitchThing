@@ -24,21 +24,6 @@ export default {
             })
           ]
         }
-      // name: 'Barrier',
-      // abilities: {
-      //   active: {
-      //     cooldown: 14000,
-      //     actions: [
-      //       statusEffectAction({
-      //         base: barrierStatusEffect,
-      //         effect: {
-      //           params: {
-      //             power: 1.4
-      //           }
-      //         }
-      //       })
-      //     ]
-      //   }
       }
     }
   ]

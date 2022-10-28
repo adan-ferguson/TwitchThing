@@ -41,14 +41,14 @@ const monstersByFloor = [
   Monsters.boneDragon,
   // Swamp
   Monsters.lizardPerson,
-  Monsters.toad,
-  Monsters.gator,
-  Monsters.naga,
+  Monsters.wasp,
+  Monsters.orc,
   Monsters.biteyPlant,
+  Monsters.naga,
   Monsters.troll,
-  Monsters.witch,
   Monsters.basilisk,
-  Monsters.thing,
+  Monsters.witch,
+  Monsters.wyvern,
   Monsters.hydra
 ]
 

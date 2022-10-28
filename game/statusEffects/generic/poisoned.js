@@ -4,7 +4,7 @@ import takeDamage from '../../actions/damageSelfAction.js'
 export default {
   stateParamsFn: ({ sourceEffect, params = {} }) => {
     return {
-      dps: roundToFixed(sourceEffect.owner.magicPower * (params.damage ?? 0.03), 2)
+      dps: roundToFixed(sourceEffect.owner.magicPower * (params.damage ?? 0.2), 2)
     }
   },
   defFn: (stateParams, { stacks = 1 }) => {
@@ -13,7 +13,7 @@ export default {
       description: 'Taking damage per second',
       abilities: {
         tick: {
-          initialCooldown: 1000,
+          initialCooldown: 5000,
           actions: [
             takeDamage({
               damageType: 'magic',

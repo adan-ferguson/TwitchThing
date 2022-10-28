@@ -220,6 +220,10 @@ export default class FighterInstance{
     this._state.inCombat = val
   }
 
+  set nextTurnOffset(val){
+    this._state.nextTurnOffset = val
+  }
+
   /**
    * Generally want to avoid using this. Do a full update of this fighter
    * instance's state.
@@ -279,7 +283,8 @@ export default class FighterInstance{
   }
 
   nextTurn(){
-    this._state.timeSinceLastAction = 0
+    this._state.timeSinceLastAction = this._state.nextTurnOffset ?? 0
+    delete this._state.nextTurnOffset
     this.statusEffectsData.nextTurn()
   }
 
