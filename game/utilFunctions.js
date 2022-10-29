@@ -11,11 +11,15 @@ export function toDisplayName(str){
   }
   let displayName = ''
   let prevLowerCase = false
+  let forceNextUpper = false
   for(let i = 0; i < str.length; i++){
     let nextChar = str[i]
-    let forceUpper = i === 0 ? true : false
+    let forceUpper = i === 0 ? true : forceNextUpper
+    forceNextUpper = false
     if(nextChar === nextChar.toUpperCase()){
-      if(prevLowerCase){
+      if(nextChar.toUpperCase() === nextChar.toLowerCase()){
+        forceNextUpper = true
+      }else if(prevLowerCase){
         displayName += ' '
         forceUpper = true
       }

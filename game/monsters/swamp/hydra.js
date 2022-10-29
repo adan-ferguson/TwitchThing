@@ -32,14 +32,14 @@ export default {
         }
       }
     },
-    {
-      name: 'Regrow Head',
-      actions: {
-        active: {
-
-        },
-
-      }
-    }
+    // {
+    //   name: 'Regrow Head',
+    //   actions: {
+    //     active: {
+    //
+    //     },
+    //
+    //   }
+    // }
   ]
 }
