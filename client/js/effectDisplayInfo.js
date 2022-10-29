@@ -7,27 +7,29 @@ export function effectDisplayInfo(effectInstance){
   if(effectInstance.stacks >= 2){
     text += ` x${effectInstance.stacks}`
   }
-  if(effectInstance.barrier){
-    text += ` ${Math.ceil(effectInstance.barrierPointsRemaining)}`
-  }
 
   const colors = getColors(effectInstance)
 
-  let barPct = 1
+  let barValue = 1, barMax = 1, showValue = false
   if(effectInstance.duration){
-    barPct = effectInstance.durationRemaining / effectInstance.duration
+    barValue = effectInstance.durationRemaining
+    barMax = effectInstance.duration
   }else if(effectInstance.barrier){
-    barPct = effectInstance.barrierPointsRemaining / effectInstance.barrier.points
+    barValue = effectInstance.barrierPointsRemaining
+    barMax = effectInstance.barrier.points
+    showValue = true
   }
 
   const abilityDisplayInfo = new AbilityDisplayInfo(effectInstance)
 
   return {
     text,
-    barPct,
+    barValue,
+    barMax,
     miniBarPct: abilityDisplayInfo.barPct,
     colors,
-    animateChanges: effectInstance.duration ? false : true
+    animateChanges: effectInstance.duration ? false : true,
+    showValue
   }
 }
 

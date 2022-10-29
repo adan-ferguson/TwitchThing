@@ -53,7 +53,9 @@ export default class TimeControls extends HTMLElement{
       this.jumpTo(this._ticker.endTime)
     })
 
-    this._ticker = new Ticker().on('tick', () => {
+    this._ticker = new Ticker({
+      live: false
+    }).on('tick', () => {
       this._update()
     })
   }

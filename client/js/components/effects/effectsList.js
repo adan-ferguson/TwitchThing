@@ -11,7 +11,7 @@ export default class EffectsList extends HTMLElement{
     this.update()
   }
 
-  update(){
+  update(cancelAnimations = false){
 
     if(!this._fighterInstance){
       return
@@ -30,7 +30,7 @@ export default class EffectsList extends HTMLElement{
       const key = effect.effectId
       if(effectRows[key]){
         if(!effect.expired){
-          effectRows[key].update(effect)
+          effectRows[key].update(effect, cancelAnimations)
           delete expiredEffectRows[key]
         }
       }else{

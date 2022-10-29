@@ -13,6 +13,7 @@ export default class Ticker extends EventEmitter{
     super()
     this._options = {
       speed: 1,
+      live: true, // If true, then keep synced up if tab is unfocused or JS is paused.
       ...options
     }
   }
@@ -49,6 +50,10 @@ export default class Ticker extends EventEmitter{
     }
   }
 
+  get waitFn(){
+    return this._options.live ? setTimeout : requestAnimationFrame.bind(window)
+  }
+
   setOptions(options = {}){
     this._options = mergeOptionsObjects(this._options, options)
     this._tick()
@@ -74,19 +79,28 @@ export default class Ticker extends EventEmitter{
         return
       }
       const prevTime = this._currentTime
-      const elapsedTime = Math.round((new Date() - this._startingTimestamp) * this._options.speed)
+      let elapsedTime = Math.round(
+        this._options.live ?
+          (Date.now() - this._startingTimestamp) * this._options.speed :
+          (Date.now() - this._previousTimestamp) * this._options.speed + prevTime
+      )
+      if(!this._options.live){
+        // Don't support ticks which are longer than a 30fps tick
+        elapsedTime = Math.min(prevTime + 1000/30, elapsedTime)
+      }
+
       this._currentTime = Math.max(0, Math.min(this.endTime, this._startingTime + elapsedTime))
       this.emit('tick', this._currentTime - prevTime)
       if(this.currentTime === this.endTime){
         this._ticking = false
         this.emit('ended', elapsedTime - this.currentTime)
       }else{
-        setTimeout(() => {
-          doTick()
-        })
+        this._previousTimestamp = Date.now()
+        this.waitFn(() => doTick())
       }
     }
 
+    this._previousTimestamp = Date.now()
     this._startingTimestamp = Date.now()
     this._startingTime = this.currentTime
 
@@ -94,7 +108,7 @@ export default class Ticker extends EventEmitter{
       return
     }
     this._ticking = true
-    setTimeout(() => {
+    this.waitFn(() => {
       doTick()
     })
   }

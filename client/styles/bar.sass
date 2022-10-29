@@ -21,6 +21,9 @@
   .bar-border
     flex-grow: 1
     position: relative
+    display: flex
+    align-items: center
+    justify-content: center
 
     border: 0.5rem solid #BBB
 
@@ -33,13 +36,21 @@
 
       background-color: #DDD
 
+    .bar-foreground
+      z-index: 2
+
+    .bar-background
+      z-index: 1
+
     .bar-label
       $t: 0.2rem
-      position: absolute
-      top: 50%
-      left: 50%
-      transform: translate(-50%, -50%)
       white-space: nowrap
+      z-index: 3
+
+      &.linebreak
+        display: flex
+        flex-direction: column
+        text-align: center
 
       > *
         padding-right: 3rem
@@ -58,6 +69,7 @@ di-xp-bar
     border-right: none
 
 di-mini-bar.di-bar
+  background-color: transparent
   height: 2rem
   .bar-label
     display: none

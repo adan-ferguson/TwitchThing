@@ -5,7 +5,7 @@ import AdventurerInfo from '../adventurer/adventurerInfo.js'
 import MonsterInfo from '../monsterInfo.js'
 import FlyingTextEffect from '../visualEffects/flyingTextEffect.js'
 import CustomAnimation from '../../animations/customAnimation.js'
-import { mergeOptionsObjects, roundToFixed, toDisplayName } from '../../../../game/utilFunctions.js'
+import { mergeOptionsObjects, roundToFixed } from '../../../../game/utilFunctions.js'
 import { magicAttackMod, magicScalingMod, physScalingMod } from '../../../../game/mods/combined.js'
 import { DAMAGE_COLORS, FLASH_COLORS } from '../../colors.js'
 import { flash } from '../../animations/simple.js'
@@ -78,9 +78,9 @@ export default class FighterInstancePane extends HTMLElement{
     return this
   }
 
-  setState(newState, animate = false){
+  setState(newState, cancelAnimations = false){
     this.fighterInstance.setState(newState)
-    this._update(animate)
+    this._update(cancelAnimations)
     return this
   }
 
@@ -147,11 +147,12 @@ export default class FighterInstancePane extends HTMLElement{
       }
       let dmgStr = roundToFixed(data.damageDistribution[key], 2)
       let html = `<span class="${classes.join(' ')}">-${dmgStr}${data.crit ? '!!' : ''}</span>`
-      let el = key === 'hp' ? this.hpBarEl : this._getEffectEl(key)
-      if(!el){
+      let barEl = key === 'hp' ? this.hpBarEl : this._getEffectEl(key).barEl
+      if(!barEl){
         continue
       }
-      new FlyingTextEffect(el, html, {
+      barEl.setValue(-data.damageDistribution[key], { relative: true, animate: true })
+      new FlyingTextEffect(barEl, html, {
         html: true,
         fontSize: TEXT_EFFECT_MIN + Math.min(0.5, dmgStr / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX
       })
@@ -169,7 +170,11 @@ export default class FighterInstancePane extends HTMLElement{
     }
   }
 
-  _update(animate = false){
+  /**
+   * @param cancelAnimations
+   * @private
+   */
+  _update(cancelAnimations = false){
 
     if(this._finished){
       if(this.fighterInstance.hp){
@@ -184,12 +189,10 @@ export default class FighterInstancePane extends HTMLElement{
     this.hpBarEl.setOptions({ max: this.fighterInstance.hpMax })
 
     if(this.fighterInstance.hp !== this.hpBarEl.value){
-      if(animate){
-        this.hpBarEl.setValue(this.fighterInstance.hp, {
-          animate: true
-        })
-      }else{
+      if(cancelAnimations || !this.hpBarEl.animating){
         this.hpBarEl.setValue(this.fighterInstance.hp)
+      }else{
+        console.log('Prevented bar set because it was animating.')
       }
     }
 
@@ -199,7 +202,7 @@ export default class FighterInstancePane extends HTMLElement{
 
     this._actionBarEl.classList.toggle('displaynone', !this.fighterInstance.inCombat)
     this.statsList.setStats(this.fighterInstance.stats, this.fighterInstance)
-    this._effectsListEl.update()
+    this._effectsListEl.update(cancelAnimations)
     this._updateCooldowns()
 
     if(!this.fighterInstance.hp && this._options.fadeOutOnDefeat){

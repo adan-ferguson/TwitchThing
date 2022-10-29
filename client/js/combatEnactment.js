@@ -45,7 +45,7 @@ export default class CombatEnactment extends EventEmitter{
     this._applyEntries(this._timeline.entries[0], false)
     this._timeline.on('timechange', (oldTime, newTime) => {
       if(this._prevEntryIndex > this._timeline.currentEntryIndex){
-        this._updatePanes(false)
+        this._updatePanes(true)
       }else if(this._prevEntryIndex !== this._timeline.currentEntryIndex){
         const entries = this._timeline.entries.slice(this._prevEntryIndex + 1, this._timeline.currentEntryIndex + 1)
         this._prevEntryIndex = this._timeline.currentEntryIndex
@@ -71,18 +71,18 @@ export default class CombatEnactment extends EventEmitter{
         this._performTickUpdate(tickUpdate)
       })
     })
-    this._updatePanes(animate)
+    this._updatePanes()
   }
 
-  _updatePanes(animate){
+  _updatePanes(cancelAnimations = false){
     if(this._destroyed){
       return
     }
     const currentEntry = this._timeline.currentEntry
     console.log(currentEntry)
     this._timeline.time = currentEntry.time
-    this._fighterPane1.setState(currentEntry.fighterState1, animate)
-    this._fighterPane2.setState(currentEntry.fighterState2, animate)
+    this._fighterPane1.setState(currentEntry.fighterState1, cancelAnimations)
+    this._fighterPane2.setState(currentEntry.fighterState2, cancelAnimations)
     this._fighterPane1.advanceTime(this._timeline.timeSinceLastEntry)
     this._fighterPane2.advanceTime(this._timeline.timeSinceLastEntry)
   }

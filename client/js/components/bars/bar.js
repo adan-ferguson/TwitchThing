@@ -19,6 +19,7 @@ export default class Bar extends HTMLElement{
 
   _options = {
     label: '',
+    lineBreakLabel: false,
     color: '#DDD',
     borderColor: null,
     showLabel: true,
@@ -46,6 +47,10 @@ export default class Bar extends HTMLElement{
     this.foregroundEl = this.querySelector('.bar-foreground')
     this._barBorder = this.querySelector('.bar-border')
     this.setValue(0)
+  }
+
+  get animating(){
+    return this.animation ? true : false
   }
 
   get animSpeed(){
@@ -221,16 +226,18 @@ export default class Bar extends HTMLElement{
     const val = valOverride ?? this._val
     let html = ''
     if(this._options.showValue){
-      html += spwrap(val)
+      let valHtml = spwrap(val)
       if(this._options.showMax){
-        html += spwrap('/')
-        html += spwrap(this._options.max)
+        valHtml += spwrap('/')
+        valHtml += spwrap(this._options.max)
       }
+      html += spwrap(valHtml)
     }
     if(this._options.showLabel){
       html += spwrap(this._options.label)
     }
     this._barLabel.innerHTML = html
+    this._barLabel.classList.toggle('linebreak', this._options.lineBreakLabel)
   }
 }
 

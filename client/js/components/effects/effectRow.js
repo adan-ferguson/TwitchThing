@@ -6,21 +6,17 @@ import { ACTION_COLOR } from '../../colors.js'
 const HTML = `
 <di-bar></di-bar>
 <di-mini-bar></di-mini-bar>
-<span class="display-text"></span>
 `
 
 export default class EffectRow extends HTMLElement{
 
-  _barEl
+  barEl
 
   constructor(key, effect){
     super()
     this.innerHTML = HTML
     this.setAttribute('effect-key', key)
-    this._barEl = this.querySelector('di-bar')
-      .setOptions({
-        showLabel: false
-      })
+    this.barEl = this.querySelector('di-bar')
     this._miniBarEl = this.querySelector('di-mini-bar')
       .setOptions({
         color: ACTION_COLOR
@@ -34,19 +30,29 @@ export default class EffectRow extends HTMLElement{
     this.update(effect, false)
   }
 
-  update(effect, animate = true){
+  update(effect, cancelAnimations = false){
     this.effect = effect
     const info = effectDisplayInfo(effect)
-    animate = info.animateChanges && animate
 
-    this.querySelector('.display-text').textContent = info.text
-    this._barEl.setOptions({ max: 1, color: info.colors.bar })
-    this._barEl.setValue(info.barPct) //, { animate })
+    if(!this.barEl.animating || cancelAnimations){
+      this.barEl.setOptions({
+        max: info.barMax,
+        color: info.colors.bar,
+        label: info.text,
+        lineBreakLabel: true,
+        showValue: info.showValue,
+        showMax: false,
+        rounding: true
+      })
+      this.barEl.setValue(info.barValue)
+      return
+    }
+
     this._miniBarEl.setValue(info.miniBarPct)
   }
 
   flash(){
-    flash(this._barEl.foregroundEl, effectDisplayInfo(this.effect).colors.flash, 500)
+    flash(this.barEl.foregroundEl, effectDisplayInfo(this.effect).colors.flash, 500)
   }
 }
 customElements.define('di-effect-row', EffectRow)
