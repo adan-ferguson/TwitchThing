@@ -25,7 +25,7 @@ export default class FlyingTextEffect extends EventEmitter{
       color: 'black',
       distance: 40,
       fontSize: 1,
-      duration: 3000,
+      duration: 2000,
       autoStart: true,
       ...options
     }

@@ -101,12 +101,17 @@ export default class Bar extends HTMLElement{
     options = {
       animate: false,
       flyingText: false,
+      relative: false,
       ...options
     }
 
     if(document.hidden){
       options.animate = false
       options.flyingText = false
+    }
+
+    if(options.relative){
+      val = this._val + val
     }
 
     val = this._options.rounding ? Math.round(val) : val

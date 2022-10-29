@@ -26,6 +26,7 @@ const HTML = `
 
 const TEXT_EFFECT_MIN = 0.9
 const TEXT_EFFECT_MAX = 2.1
+const STAGGER_TIME = 120
 
 export default class FighterInstancePane extends HTMLElement{
 
@@ -37,6 +38,8 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   hpBarEl
+
+  _damageResultQueue
 
   constructor(){
     super()
@@ -53,6 +56,7 @@ export default class FighterInstancePane extends HTMLElement{
       forced: ['physPower','magicPower'] // Excluded takes priority, so these might be hidden
     })
     this._effectsListEl = this.querySelector('di-effects-list')
+    this._damageResultQueue = new ResultQueue(this._displayDamageResult)
 
     this.querySelector('.top-section').addEventListener('click', e => {
       this._showFighterInfoModal()
@@ -105,9 +109,9 @@ export default class FighterInstancePane extends HTMLElement{
 
   displayResult(result, effect){
     if(result.type === 'attack'){
-      this._displayAttackResult(result)
+      this._queueDamageResult(result)
     }else if(result.type === 'damage'){
-      this._displayDamageResult(result)
+      this._queueDamageResult(result)
     }else if(result.type === 'gainHealth'){
       this._displayLifeGained(result.data.amount)
     }else if(result.type === 'cancel'){
@@ -124,13 +128,14 @@ export default class FighterInstancePane extends HTMLElement{
     })
   }
 
-  _displayAttackResult(result){
-    if(!result.cancelled){
-      this._displayDamageResult(result)
+  _queueDamageResult(damageResult){
+    if(damageResult.cancelled){
+      return
     }
+    return this._damageResultQueue.add(damageResult)
   }
 
-  _displayDamageResult(damageResult){
+  _displayDamageResult = (damageResult) => {
 
     const data = damageResult.data
     const classes = ['damage']
@@ -274,3 +279,30 @@ export default class FighterInstancePane extends HTMLElement{
 }
 
 customElements.define('di-fighter-instance-pane', FighterInstancePane)
+
+class ResultQueue{
+
+  constructor(fn){
+    this._fn = fn
+    this._queue = []
+  }
+
+  add(result){
+    this._queue.push(result)
+    if(this._queue.length === 1){
+      this._next()
+    }
+  }
+
+  _next(){
+    if(!this._queue.length){
+      return
+    }
+    console.log('next')
+    this._fn(this._queue[0])
+    setTimeout(() => {
+      this._queue = this._queue.slice(1)
+      this._next()
+    }, STAGGER_TIME)
+  }
+}
