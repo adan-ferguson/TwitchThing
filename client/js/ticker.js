@@ -82,19 +82,19 @@ export default class Ticker extends EventEmitter{
         this._ticking = false
         return
       }
-      const prevTime = this._currentTime
-      let elapsedTime = Math.round(
-        this._options.live ?
-          (Date.now() - this._startingTimestamp) * this._options.speed :
-          (Date.now() - this._previousTimestamp) * this._options.speed + prevTime
-      )
 
-      if(!this._options.live){
-        // Don't support ticks which are longer than a 30fps tick
+      const prevTime = this._currentTime
+
+      let elapsedTime
+      if(this._options.live){
+        elapsedTime = (Date.now() - this._startingTimestamp) * this._options.speed + this._startingTime
+      }else{
+        elapsedTime = (Date.now() - this._previousTimestamp) * this._options.speed + prevTime
         elapsedTime = Math.min(prevTime + this._options.speed * 1000/30, elapsedTime)
       }
 
-      this._currentTime = Math.max(0, Math.min(this.endTime, this._startingTime + elapsedTime))
+      this._currentTime = Math.max(0, Math.min(this.endTime, Math.round(elapsedTime)))
+
       this.emit('tick', this._currentTime - prevTime)
       if(this.currentTime === this.endTime){
         this._ticking = false
