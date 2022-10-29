@@ -1,18 +1,14 @@
-import statusEffectAction from '../actions/statusEffectAction.js'
-import { dodgingStatusEffect } from '../statusEffects/combined.js'
+import cancelAction from '../actions/cancelAction.js'
 
 export default {
   name: 'Fluttering',
   abilities: {
-    targeted: {
+    attacked: {
       cooldown: 10000,
       description: 'Automatically dodge an attack.',
       actions: [
-        statusEffectAction({
-          base: dodgingStatusEffect,
-          effect: {
-            duration: 0
-          }
+        cancelAction({
+          cancelReason: 'dodged'
         })
       ]
     }

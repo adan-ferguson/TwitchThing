@@ -26,21 +26,17 @@ export function performAttackAction(combat, attacker, actionDef = {}){
     actionDef.damageScaling = actionDef.damageType
   }
 
-  resultObj.triggeredEvents.push(...triggerEvent(combat, enemy, 'targeted'))
-  resultObj.triggeredEvents.push(...triggerEvent(combat, enemy, 'attacked'))
-
-  if(actionDef.damageType === 'phys'){
-    resultObj.triggeredEvents.push(...triggerEvent(combat, enemy, 'physAttacked'))
-  }else if(actionDef.damageType === 'magic'){
-    resultObj.triggeredEvents.push(...triggerEvent(combat, enemy, 'magicAttacked'))
+  const eventsToTrigger = ['targeted', 'attacked', actionDef.damageType + 'Attacked']
+  for(let eventName of eventsToTrigger){
+    resultObj.triggeredEvents.push(...triggerEvent(combat, enemy, eventName))
+    if(resultObj.triggeredEvents.at(-1)?.cancelled){
+      return makeActionResult({
+        ...resultObj,
+        cancelled: true
+      })
+    }
   }
 
-  if(resultObj.triggeredEvents.at(-1)?.cancelled){
-    return makeActionResult({
-      ...resultObj,
-      cancelled: true
-    })
-  }
   if(dodgeAttack(enemy)){
     return makeActionResult({
       ...resultObj,

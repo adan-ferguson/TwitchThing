@@ -6,7 +6,7 @@ import statusEffectAction from '../../actions/statusEffectAction.js'
 export default {
   baseStats: {
     magicDef: '+30%',
-    speed: '+10%',
+    speed: 10,
     magicPower: '+50%'
   },
   items: [

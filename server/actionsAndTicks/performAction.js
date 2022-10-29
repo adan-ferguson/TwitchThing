@@ -26,7 +26,10 @@ export function takeCombatTurn(combat, actor){
     ability = {
       basicAttack: true,
       owner: actor.uniqueID,
-      results: [performAttackAction(combat, actor)]
+      results: []
+    }
+    for(let i = 0; i < actor.stats.get('attacks').value; i++){
+      ability.results.push(performAttackAction(combat, actor))
     }
   }
   actor.nextTurn()

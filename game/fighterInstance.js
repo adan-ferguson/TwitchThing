@@ -155,7 +155,15 @@ export default class FighterInstance{
   get nextActionTime(){
     const slow = this.stats.get('slow').value
     const speed = this.stats.get('speed').value
-    return slow + COMBAT_BASE_TURN_TIME / speed
+
+    let turnTime
+    if(speed >= 0){
+      turnTime = COMBAT_BASE_TURN_TIME * (100 / (speed + 100))
+    }else{
+      turnTime = COMBAT_BASE_TURN_TIME * (1 + speed / -100)
+    }
+
+    return slow + turnTime
   }
 
   get timeUntilNextUpdate(){

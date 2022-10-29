@@ -46,12 +46,7 @@ const statDefinitionsInfo = {
     text: 'Speed',
     displayInverted: true,
     icon: actionIcon,
-    displayedValueFn: (value, { style }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE){
-        return roundToFixed(COMBAT_BASE_TURN_TIME / (1000 * value), 2) + 's'
-      }
-    },
-    description: 'Speed (combat turn time)',
+    description: 'Speed. Each extra 100 speed is about +1 turn per 3 seconds.',
   },
   damageDealt: {},
   damageTaken: {},

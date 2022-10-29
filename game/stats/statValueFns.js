@@ -1,6 +1,7 @@
 import { StatType } from './statDefinitions.js'
 
 export default {
+  [StatType.FLAT]: flatValue,
   [StatType.MULTIPLIER]: multiplierValue,
   [StatType.PERCENTAGE]: percentageValue,
   [StatType.COMPOSITE]: compositeValue
@@ -24,6 +25,24 @@ export function parseStatVal(val){
     suffix: '',
     value
   }
+}
+
+function flatValue(values, defaultValue){
+  const mods = organizeMods(values)
+
+  if(mods.all.pct.length){
+    throw 'Flat stats can not have percentage values'
+  }
+
+  if(mods.all.multi.length){
+    throw 'Flat stats can not have multiplier values'
+  }
+
+  const value = mods.all.flat.reduce((val, mod) => {
+    return val + mod
+  }, defaultValue)
+
+  return { value, mods }
 }
 
 /**
@@ -149,32 +168,6 @@ function compositeValue(values, defaultValue){
     value,
     mods
   }
-}
-
-/**
- * flatPlus example: 5
- * flatMinus example: -5
- * @param values [number|string]
- * @returns {{flatPlus: *[], flatMinus: *[]}}
- * @private
- */
-function flatMods(values){
-
-  const mods = {
-    flatPlus: [],
-    flatMinus: [],
-  }
-
-  values.forEach(v => {
-    const { value } = parseStatVal(v)
-    if(value > 0){
-      mods.flatPlus.push(value)
-    }else if(value < 0){
-      mods.flatMinus.push(-value)
-    }
-  })
-
-  return mods
 }
 
 /**
