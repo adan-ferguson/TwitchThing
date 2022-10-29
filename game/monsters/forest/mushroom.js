@@ -31,7 +31,7 @@ const slowingSpores = statusEffect({
 const sleepSpores = statusEffect({
   affects: 'enemy',
   effect: {
-    stacking: 'refresh',
+    stacking: 'replace',
     displayName: 'Sleepy Spores',
     description: 'Zzzzz',
     mods: [freezeActionBarMod],
@@ -51,7 +51,7 @@ const starvingSpores = statusEffect({
 const dizzySpores = statusEffect({
   affects: 'enemy',
   effect: {
-    stacking: 'refresh',
+    stacking: 'replace',
     displayName: 'Dizzy Spores',
     duration: 10000,
     stats: {
@@ -63,7 +63,7 @@ const dizzySpores = statusEffect({
 const silenceSpores = statusEffect({
   affects: 'enemy',
   effect: {
-    stacking: 'refresh',
+    stacking: 'replace',
     displayName: 'Silence Spores',
     duration: 20000,
     mods: [silencedMod]

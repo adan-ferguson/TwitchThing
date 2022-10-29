@@ -1,18 +1,9 @@
 import { useEffectAbility } from './performAction.js'
 import { makeActionResult } from '../../game/actionResult.js'
+import scaledNumber from '../../game/scaledNumber.js'
 
 export function performGainHealthAction(combat, actor, gainHealthDef){
-  let gain = 0
-  if(gainHealthDef.pct){
-    gain += actor.hpMax * gainHealthDef.pct
-  }
-  if(gainHealthDef.scaledPower){
-    gain += actor.magicPower * gainHealthDef.scaledPower
-  }
-  if(gainHealthDef.flat){
-    gain += gainHealthDef.flat
-  }
-  gain = Math.ceil(gain)
+  const gain = Math.ceil(scaledNumber(actor, gainHealthDef))
   if(gain <= 0){
     return
   }

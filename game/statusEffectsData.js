@@ -101,10 +101,12 @@ export class StatusEffectsData{
    * @returns {StatusEffectInstance}
    */
   add(statusEffectData){
-    const existing = this._getByData(statusEffectData)
+    const { existing, index } = this._getExisting(statusEffectData)
     if(existing){
-      if(existing.stacking === 'refresh'){
-        return existing.refresh()
+      if(existing.stacking === 'replace'){
+        const instance = new StatusEffectInstance(statusEffectData, this._fighterInstance)
+        this._instances[index] = instance
+        return instance
       }else if(existing.stacking === true){
         return existing.addStack().refresh()
       }
@@ -146,9 +148,16 @@ export class StatusEffectsData{
   /**
    * @private
    */
-  _getByData(effectData){
-    return this._instances.find(statusEffectInstance => {
+  _getExisting(effectData){
+    const index = this._instances.findIndex(statusEffectInstance => {
+      if(effectData.stackingId && effectData.stackingId === statusEffectInstance.effectData.stackingId){
+        return true
+      }
       return _.isEqual(effectData, statusEffectInstance.data)
     })
+    return {
+      index,
+      existing: this._instances[index]
+    }
   }
 }

@@ -63,6 +63,7 @@ export function performAttackAction(combat, attacker, actionDef = {}){
   let damage = attacker[actionDef.damageScaling + 'Power']
   damage *= actionDef.damageMulti
   damage += actionDef.targetHpPct * enemy.hp
+  damage += actionDef.targetMaxHpPct * enemy.hpMax
 
   const damageInfo = {
     damageType: actionDef.damageType,

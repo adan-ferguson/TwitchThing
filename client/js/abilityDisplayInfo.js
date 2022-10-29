@@ -124,8 +124,8 @@ function attackDescription(action, owner){
 
 function gainHealthDescription(action, owner){
   const strs = []
-  if(action.scaledPower){
-    strs.push(`Restore ${scalingWrap('magic', action.scaledPower * owner.magicPower)} health.`)
+  if(action.magicScaling){
+    strs.push(`Restore ${scalingWrap('magic', action.magicScaling * owner.magicPower)} health.`)
   }
   if(action.pct){
     strs.push(`Restore ${scalingWrap('health', action.pct * owner.hpMax)} health.`)

@@ -1,12 +1,11 @@
 export const StatType = {
-  FLAT: 0,
   MULTIPLIER: 1, // 0 to infinity, default is 1
   PERCENTAGE: 2, // 0 to 1, default is 0
   COMPOSITE: 3
 }
 
 const DEFAULT_DEFINITION = {
-  type: StatType.FLAT,
+  type: StatType.COMPOSITE,
   minValue: null,           // derived from type if null
   maxValue: null,           // derived from type if nul
   defaultValue: null,       // derived from type if null
@@ -44,9 +43,7 @@ const defs = {
   enemyCritChance: {
     inverted: true
   },
-  hpMax: {
-    type: StatType.COMPOSITE
-  },
+  hpMax: {},
   landmarkFind: {
     type: StatType.MULTIPLIER
   },
@@ -54,7 +51,6 @@ const defs = {
     minValue: 0
   },
   magicPower: {
-    type: StatType.COMPOSITE,
     minValue: 0
   },
   magicDef: {
@@ -65,7 +61,6 @@ const defs = {
     inverted: true
   },
   physPower: {
-    type: StatType.COMPOSITE,
     minValue: 0
   },
   physDef: {
@@ -87,7 +82,6 @@ const defs = {
     type: StatType.MULTIPLIER
   },
   slow: {
-    type: StatType.FLAT,
     inverted: true,
     minValue: 0
   }

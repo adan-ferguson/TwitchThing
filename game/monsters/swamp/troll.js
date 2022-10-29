@@ -1,13 +1,25 @@
+import gainHealthAction from '../../actions/gainHealthAction.js'
+
 export default {
   baseStats: {
-    physPower: '+30%'
+    hpMax: '+20%',
+    physPower: '+10%',
+    physDef: '+30%',
+    speed: '-40%'
   },
-  description: 'Vulnerable to magic in a roundabout way because it only has phys defense.',
   items: [
     {
-      name: 'Regeneration',
-      stats: {
-        regen: '2%'
+      name: 'Hyper Regeneration',
+      abilities: {
+        tick: {
+          initialCooldown: 5000,
+          description: 'Regenerate 15% of missing health.',
+          actions: [
+            gainHealthAction({
+              pctMissing: 0.15
+            })
+          ]
+        }
       }
     }
   ]

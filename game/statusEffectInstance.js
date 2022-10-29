@@ -41,7 +41,7 @@ export default class StatusEffectInstance extends EffectInstance{
   }
 
   /**
-   * @returns {'refresh'|boolean}
+   * @returns {'replace'|boolean}
    */
   get stacking(){
     return this.effectData.stacking ?? false

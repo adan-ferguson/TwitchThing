@@ -51,7 +51,10 @@ export function useEffectAbility(combat, effect, eventName){
     if(_.isFunction(actionDef)){
       actionDef = actionDef(combat, effect.owner, results)
     }
-    const actionResult = doAction(combat, effect, actionDef) ?? { type: 'blank' }
+    const actionResult = doAction(combat, effect, actionDef) ?? {
+      type: 'blank',
+      subject: effect.owner.uniqueID
+    }
     validateActionResult(actionResult)
     results.push(actionResult)
     if(actionResult.cancelled && !actionDef.continueIfCancelled){

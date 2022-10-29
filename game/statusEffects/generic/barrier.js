@@ -1,12 +1,14 @@
+import scaledNumber from '../../scaledNumber.js'
+
 export default {
   stateParamsFn: ({ sourceEffect, params = {} }) => {
     return {
-      barrierPoints: Math.ceil(sourceEffect.owner.magicPower * (params.power ?? 1))
+      barrierPoints: Math.ceil(scaledNumber(sourceEffect.owner, params))
     }
   },
   defFn: stateParams => {
     return {
-      stacking: 'refresh',
+      stacking: 'replace',
       isBuff: true,
       barrier: {
         points: stateParams.barrierPoints

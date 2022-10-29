@@ -1,9 +1,9 @@
-export default function(def){
+export default function(scaling){
+  if(!scaling){
+    throw 'Scaling not defined for gainHealthAction'
+  }
   return {
-    scaledPower: 0,
-    pct: 0,
-    flat: 0,
-    ...def,
+    scaling,
     type: 'gainHealth'
   }
 }

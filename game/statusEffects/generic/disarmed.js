@@ -7,7 +7,7 @@ export default {
   },
   defFn: (stateParams) => {
     return {
-      stacking: 'refresh',
+      stacking: 'replace',
       description: `Slot ${stateParams.slot} item is disabled.`,
       disarmedItemSlot: stateParams.slot
     }

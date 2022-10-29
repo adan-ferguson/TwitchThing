@@ -8,9 +8,8 @@ export function scaleStats(statAffector, scalingDef, owner){
   }
   const scaled = {}
   Object.entries(statAffector).forEach(([key, val]) => {
-    const { isPct, value } = parseStatVal(val)
-    const newValue = (isPct ? 100 : 1) * value * factor
-    scaled[key] = newValue + (isPct ? '%' : '')
+    const { suffix, value } = parseStatVal(val)
+    scaled[key] = value * factor + suffix
   })
   return scaled
 }

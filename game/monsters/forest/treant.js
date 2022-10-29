@@ -12,7 +12,6 @@ export default {
     name: 'Sprout Saplings',
     abilities: {
       startOfCombat: {
-        uses: 1,
         mods: [magicScalingMod],
         description: 'At the start of combat, summon 3 saplings which each block an ability.',
         actions: Array(3).fill(

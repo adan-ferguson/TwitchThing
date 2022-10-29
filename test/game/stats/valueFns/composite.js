@@ -28,21 +28,39 @@ describe('composite valueFn', () => {
 
   it('Should be multiplicative with positive percentage values', () => {
     const val = compositeValue(['10%', '+20%'], 100)
-    expect(val.value).to.closeTo(132, 0.001, '10 times 1.1 times 1.2')
+    expect(val.value).to.closeTo(130, 0.001, '10 times 1.1 times 1.2')
   })
 
   it('Should be multiplicative with negative percentage values', () => {
-    const val = compositeValue(['-10%', '-20%'], 100)
-    expect(val.value).to.closeTo(72, 0.001, '100 times 0.9 times 0.8')
+    const val = compositeValue(['-10%', '-30%'], 100)
+    expect(val.value).to.closeTo(63, 0.001, '100 times 0.9 times 0.8')
   })
 
-  it('Pct types do not really cancel out', () => {
-    const val = compositeValue(['10%', '-20%', '+10%'], 1000)
-    expect(val.value).to.closeTo(968, 0.001, '1000 * 1.1 * 1.1 * 0.8')
+  it('Pct types cancel out', () => {
+    const val = compositeValue(['10%', '-30%', '+10%', '-10%'], 1000)
+    expect(val.value).to.closeTo(800, 0.001)
+    const val2 = compositeValue(['10%', '-10%', '+10%', '-30%'], 1000)
+    expect(val2.value).to.closeTo(800, 0.001)
   })
 
-  it('Should ignore order of flat and percentage', () => {
-    const val = compositeValue(['-20%', 10, '+10%', -20, '10%'], 1010)
-    expect(val.value).to.closeTo(968, 0.001, '(1010 - 20 + 10) * 1.1 * 1.1 * 0.8')
+  it('Multipliers', () => {
+    const val = compositeValue(['1.1x', '1.1x'], 1000)
+    expect(val.value).to.closeTo(1210, 0.001)
   })
+
+  it('Flat then multiply', () => {
+    const val = compositeValue([500, '1.1x'], 1000)
+    expect(val.value).to.closeTo(1650, 0.001, '1000 * 1.1 * 1.1 * 0.8')
+  })
+
+  it('Flat then pct', () => {
+    const val = compositeValue(['20%', 500, '20%'], 1000)
+    expect(val.value).to.closeTo(2100, 0.001, '1000 * 1.1 * 1.1 * 0.8')
+  })
+
+  it('Pct then multiply', () => {
+    const val = compositeValue(['20%', '-50%', '2x', '0.2x'], 1000)
+    expect(val.value).to.closeTo(280, 0.001, '1000 * 1.1 * 1.1 * 0.8')
+  })
+
 })
