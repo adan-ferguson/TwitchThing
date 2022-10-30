@@ -13,7 +13,7 @@ const lightningStorm = {
         cooldown: 1000,
         actions: [
           maybeAction({
-            chance: 1/4
+            chance: 1/3
           }),
           attackAction({
             damageType: 'magic',

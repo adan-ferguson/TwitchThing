@@ -3,7 +3,7 @@ import { makeActionResult } from '../../game/actionResult.js'
 import scaledNumber from '../../game/scaledNumber.js'
 
 export function performGainHealthAction(combat, actor, gainHealthDef){
-  const gain = Math.ceil(scaledNumber(actor, gainHealthDef))
+  const gain = Math.ceil(scaledNumber(actor, gainHealthDef.scaling))
   if(gain <= 0){
     return
   }

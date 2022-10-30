@@ -54,13 +54,13 @@ const monstersByFloor = [
   Monsters.legallyDistinctMurloc,
   Monsters.crab,
   Monsters.pirate,
+  Monsters.ancientTortoise,
   Monsters.siren,
   Monsters.twoHeadedShark,
   Monsters.mermaidSorceress,
-  // Monsters.ancientTortoise,
-  // Monsters.seaSerpent,
-  // Monsters.waterElemental,
-  // Monsters.kraken
+  Monsters.seaSerpent,
+  Monsters.waterElemental,
+  Monsters.kraken
 ]
 
 const BONUS_CHESTS_UNTIL = 10

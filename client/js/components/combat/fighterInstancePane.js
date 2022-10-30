@@ -39,7 +39,7 @@ export default class FighterInstancePane extends HTMLElement{
 
   hpBarEl
 
-  _damageResultQueue
+  _hpChangeQueue
 
   constructor(){
     super()
@@ -56,7 +56,7 @@ export default class FighterInstancePane extends HTMLElement{
       forced: ['physPower','magicPower'] // Excluded takes priority, so these might be hidden
     })
     this._effectsListEl = this.querySelector('di-effects-list')
-    this._damageResultQueue = new ResultQueue(this._displayDamageResult)
+    this._hpChangeQueue = new ResultQueue()
 
     this.querySelector('.top-section').addEventListener('click', e => {
       this._showFighterInfoModal()
@@ -109,11 +109,11 @@ export default class FighterInstancePane extends HTMLElement{
 
   displayResult(result, effect){
     if(result.type === 'attack'){
-      this._queueDamageResult(result)
+      this._queueHpChange(() => this._displayDamageResult(result))
     }else if(result.type === 'damage'){
-      this._queueDamageResult(result)
+      this._queueHpChange(() => this._displayDamageResult(result))
     }else if(result.type === 'gainHealth'){
-      this._displayLifeGained(result.data.amount)
+      this._queueHpChange(() => this._displayLifeGained(result.data.amount))
     }else if(result.type === 'cancel'){
       this._displayCancellation(result, effect)
     }
@@ -126,16 +126,19 @@ export default class FighterInstancePane extends HTMLElement{
     new FlyingTextEffect(this.hpBarEl, amount, {
       fontSize: TEXT_EFFECT_MIN + Math.min(0.5, amount / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX
     })
+    this.hpBarEl.setValue(amount, { relative: true, animate: true })
   }
 
-  _queueDamageResult(damageResult){
-    if(damageResult.cancelled){
-      return
-    }
-    return this._damageResultQueue.add(damageResult)
+  _queueHpChange(fn){
+    return this._hpChangeQueue.add(fn)
   }
 
   _displayDamageResult = (damageResult) => {
+
+    if(damageResult.cancelled){
+      debugger
+      return
+    }
 
     const data = damageResult.data
     const classes = ['damage']
@@ -282,13 +285,12 @@ customElements.define('di-fighter-instance-pane', FighterInstancePane)
 
 class ResultQueue{
 
-  constructor(fn){
-    this._fn = fn
+  constructor(){
     this._queue = []
   }
 
-  add(result){
-    this._queue.push(result)
+  add(fn){
+    this._queue.push(fn)
     if(this._queue.length === 1){
       this._next()
     }
@@ -298,7 +300,7 @@ class ResultQueue{
     if(!this._queue.length){
       return
     }
-    this._fn(this._queue[0])
+    this._queue[0]()
     setTimeout(() => {
       this._queue = this._queue.slice(1)
       this._next()
