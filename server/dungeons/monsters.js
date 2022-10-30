@@ -44,12 +44,23 @@ const monstersByFloor = [
   Monsters.wasp,
   Monsters.orc,
   Monsters.biteyPlant,
-  Monsters.naga,
+  Monsters.anaconda,
   Monsters.troll,
   Monsters.basilisk,
   Monsters.witch,
   Monsters.wyvern,
-  Monsters.hydra
+  Monsters.hydra,
+  // Water World
+  Monsters.legallyDistinctMurloc,
+  Monsters.crab,
+  Monsters.pirate,
+  Monsters.siren,
+  Monsters.twoHeadedShark,
+  Monsters.stormSorceress,
+  // Monsters.ancientTortoise,
+  // Monsters.seaSerpent,
+  // Monsters.waterElemental,
+  // Monsters.kraken
 ]
 
 const BONUS_CHESTS_UNTIL = 10

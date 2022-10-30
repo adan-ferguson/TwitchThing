@@ -19,9 +19,9 @@ const EXTRA_HEAD = statusEffectAction({
 export default {
   baseStats: {
     magicDef: '+30%',
-    hpMax: '-50%',
-    speed: -100,
-    physPower: '-50%'
+    hpMax: '-70%',
+    physPower: '-70%',
+    speed: -125
   },
   items: [
     bossMonsterItem,
@@ -29,19 +29,10 @@ export default {
       name: 'Multi-Headed',
       abilities: {
         startOfCombat: {
-          description: 'Start combat with five Extra Heads.',
-          actions: new Array(5).fill(EXTRA_HEAD)
+          description: 'Start combat with six Extra Heads.',
+          actions: new Array(6).fill(EXTRA_HEAD)
         }
       }
-    },
-    // {
-    //   name: 'Regrow Head',
-    //   actions: {
-    //     active: {
-    //
-    //     },
-    //
-    //   }
-    // }
+    }
   ]
 }

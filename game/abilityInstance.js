@@ -79,7 +79,7 @@ export default class AbilityInstance{
     if (this.cooldownRemaining || !this.enabled){
       return false
     }
-    if (this._abilityDef.chance && Math.random() > this._abilityDef.chance){
+    if (this._abilityDef.chance && Math.random() < this._abilityDef.chance){
       return false
     }
     return true

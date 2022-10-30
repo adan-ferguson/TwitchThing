@@ -66,7 +66,7 @@ export function performAttackAction(combat, attacker, actionDef = {}){
     damage: damage * attacker.stats.get('damageDealt').value
   }
 
-  if(attemptCrit(attacker, enemy)){
+  if(attemptCrit(attacker, enemy, actionDef.extraCritChance)){
     damageInfo.damage *= (1 + attacker.stats.get('critDamage').value)
     damageInfo.crit = true
   }
@@ -85,8 +85,11 @@ export function performAttackAction(combat, attacker, actionDef = {}){
   return makeActionResult(resultObj)
 }
 
-function attemptCrit(actor, target){
-  return Math.random() + target.stats.get('enemyCritChance').value + actor.stats.get('critChance').value > 1
+function attemptCrit(actor, target, bonusCritChance){
+  return Math.random() +
+    target.stats.get('enemyCritChance').value +
+    actor.stats.get('critChance').value +
+    bonusCritChance > 1
 }
 
 function dodgeAttack(actor){

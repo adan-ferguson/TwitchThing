@@ -5,6 +5,7 @@ export default function(def){
     damageScaling: 'auto',
     targetHpPct: 0,
     targetMaxHpPct: 0,
+    extraCritChance: 0,
     ...def,
     type: 'attack'
   }

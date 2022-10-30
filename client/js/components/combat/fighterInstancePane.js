@@ -5,7 +5,7 @@ import AdventurerInfo from '../adventurer/adventurerInfo.js'
 import MonsterInfo from '../monsterInfo.js'
 import FlyingTextEffect from '../visualEffects/flyingTextEffect.js'
 import CustomAnimation from '../../animations/customAnimation.js'
-import { mergeOptionsObjects, roundToFixed } from '../../../../game/utilFunctions.js'
+import { mergeOptionsObjects, roundToFixed, toDisplayName } from '../../../../game/utilFunctions.js'
 import { magicAttackMod, magicScalingMod, physScalingMod } from '../../../../game/mods/combined.js'
 import { DAMAGE_COLORS, FLASH_COLORS } from '../../colors.js'
 import { flash } from '../../animations/simple.js'
@@ -272,7 +272,7 @@ export default class FighterInstancePane extends HTMLElement{
       const targetEl = this._getEffectEl(effect) ?? this._actionBarEl
       new FlyingTextEffect(
         targetEl,
-        result.data.cancelReason
+        toDisplayName(result.data.cancelReason)
       )
     }
   }
@@ -298,7 +298,6 @@ class ResultQueue{
     if(!this._queue.length){
       return
     }
-    console.log('next')
     this._fn(this._queue[0])
     setTimeout(() => {
       this._queue = this._queue.slice(1)

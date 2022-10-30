@@ -24,7 +24,7 @@ export default class FlyingTextEffect extends EventEmitter{
       direction: 'up',
       color: 'black',
       distance: 40,
-      fontSize: 1,
+      fontSize: 1.2,
       duration: 2000,
       autoStart: true,
       ...options
@@ -35,7 +35,7 @@ export default class FlyingTextEffect extends EventEmitter{
     this.el.innerHTML = EFFECT_HTML(this.options.text, this.options.color)
 
     const startingPosition = getStartingPosition(this.options.origin, this.options.direction)
-    this.el.style.transition = `all ${this.options.duration/1000}s ease-out`
+    this.el.style.transition = `all ${this.options.duration/500}s ease-out, opacity 1s ease-out`
     this.el.style.left = startingPosition.x + 'px'
     this.el.style.top = startingPosition.y + 'px'
     this.el.style.fontSize = this.options.fontSize + 'em'
@@ -53,10 +53,12 @@ export default class FlyingTextEffect extends EventEmitter{
       const distance = this.options.distance * (this.options.direction === 'down' ? 1 : -1)
       const translateStr = ` translateY(${distance}rem)`
       this.el.style.transform = currentTransform + translateStr
-      this.el.style.opacity = '0.7'
       setTimeout(() => {
-        this.el.remove()
-        this.emit('finish')
+        this.el.style.opacity = '0'
+        setTimeout(() => {
+          this.el.remove()
+          this.emit('finish')
+        }, 500)
       }, this.options.duration)
     })
   }

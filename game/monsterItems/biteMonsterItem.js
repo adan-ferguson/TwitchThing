@@ -1,7 +1,7 @@
 import attackAction from '../actions/attackAction.js'
 import gainHealthAction from '../actions/gainHealthAction.js'
 
-export default function(){
+export default function(def){
   return {
     name: 'Bite',
     abilities: {
@@ -22,6 +22,7 @@ export default function(){
           }
         ]
       }
-    }
+    },
+    ...def
   }
 }
