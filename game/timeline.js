@@ -20,14 +20,6 @@ export default class Timeline extends EventEmitter{
     return this._time
   }
 
-  set time(val){
-    const before = this._time
-    this._time = Math.max(0, Math.min(this.duration, val))
-    if(this._time !== before){
-      this.emit('timechange', before, this._time)
-    }
-  }
-
   get finished(){
     return this._time >= this.duration
   }
@@ -58,6 +50,18 @@ export default class Timeline extends EventEmitter{
       }
     }
     return entryIndex
+  }
+
+  setTime(val, jumped = false){
+    const before = this._time
+    this._time = Math.max(0, Math.min(this.duration, val))
+    if(this._time !== before){
+      this.emit('timechange', {
+        before,
+        after: this._time,
+        jumped
+      })
+    }
   }
 
   addEntry(entry){

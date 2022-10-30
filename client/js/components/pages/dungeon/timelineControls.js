@@ -150,7 +150,7 @@ export default class TimelineControls extends HTMLElement{
   }
 
   jumpTo(time, options = {}){
-    this._timeline.time = time
+    this._timeline.setTime(time, true)
     this._updateEvent(options)
   }
 
@@ -206,7 +206,7 @@ export default class TimelineControls extends HTMLElement{
   }
 
   _tick(){
-    this._timeline.time = this._timeline.currentEntry.time + this._ticker.currentTime
+    this._timeline.setTime(this._timeline.currentEntry.time + this._ticker.currentTime)
     this._eventTimeBarEl.setOptions({
       max: this._ticker.endTime,
       label: dateformat(this._timeline.time, 'M:ss')

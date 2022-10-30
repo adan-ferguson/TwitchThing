@@ -41,7 +41,9 @@ export default class CombatPage extends Page{
     this._fighterPane2 = this.querySelector('.fighter2')
     this._combatFeedEl = this.querySelector('di-combat-feed')
     this._timeControlsEl = this.querySelector('di-combat-time-controls')
-    this._timeControlsEl.addEventListener('timechange', e => this._update())
+    this._timeControlsEl.addEventListener('timechange', e => {
+      this.timeline.setTime(this._timeControlsEl.time, e.detail.jumped)
+    })
     this._combatID = combatID
   }
 
@@ -81,10 +83,6 @@ export default class CombatPage extends Page{
   async unload(){
     this._timeControlsEl.pause()
     this._ce.destroy()
-  }
-
-  _update(){
-    this.timeline.time = this._timeControlsEl.time
   }
 }
 

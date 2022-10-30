@@ -189,7 +189,7 @@ export default class DungeonPage extends Page{
 
   _tick(ms){
     if(this._ce){
-      this._ce.timeline.time = this._timeline.timeSinceLastEntry
+      this._ce.timeline.setTime(this._timeline.timeSinceLastEntry)
     }
     if(!this.currentEvent.passTimeOverride){
       this._adventurerPane.advanceTime(ms)
@@ -204,7 +204,7 @@ export default class DungeonPage extends Page{
   _setupTimeline(dungeonRun){
     this._timeline = new Timeline(dungeonRun.events)
     if(!dungeonRun.finalized){
-      this._timeline.time = dungeonRun.virtualTime ?? dungeonRun.elapsedTime
+      this._timeline.setTime(dungeonRun.virtualTime ?? dungeonRun.elapsedTime, true)
     }
     this._timelineEl.setup(this._timeline, this.adventurer, {
       isReplay: this.isReplay

@@ -42,6 +42,11 @@ export default class TimeControls extends HTMLElement{
         showValue: false
       })
 
+    this._eventTimeBarEl.addEventListener('click', e => {
+      const pct = e.offsetX / this._eventTimeBarEl.clientWidth
+      this.jumpTo(this._ticker.endTime * pct)
+    })
+
     this._setupPlayPause()
     this._setupSpeed()
 
@@ -88,7 +93,7 @@ export default class TimeControls extends HTMLElement{
 
   jumpTo(time, options = {}){
     this._ticker.currentTime = time
-    this._update()
+    this._update(true)
   }
 
   destroy(){
@@ -108,13 +113,17 @@ export default class TimeControls extends HTMLElement{
     this._ticker.stop()
   }
 
-  _update(){
+  _update(jumped = false){
     this._eventTimeBarEl.setOptions({
       max: this._ticker.endTime,
       label: dateformat(this._ticker.currentTime, 'M:ss.L')
     })
     this._eventTimeBarEl.setValue(this._ticker.currentTime)
-    this.dispatchEvent(new CustomEvent('timechange'))
+    this.dispatchEvent(new CustomEvent('timechange', {
+      detail: {
+        jumped
+      }
+    }))
   }
 
   _setupPlayPause(){

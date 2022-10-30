@@ -21,6 +21,7 @@ export default {
         actions: [
           statusEffectAction({
             effect: {
+              displayName: 'Withdrawn',
               duration: 10000,
               mods: [freezeActionBarMod],
               stats: {
