@@ -45,7 +45,6 @@ export default class EffectRow extends HTMLElement{
         rounding: true
       })
       this.barEl.setValue(info.barValue)
-      return
     }
 
     this._miniBarEl.setValue(info.miniBarPct)

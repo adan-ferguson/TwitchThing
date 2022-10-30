@@ -18,19 +18,19 @@ export default {
               damageMulti: 1.2
             }),
             maybeAction({
-              action: statusEffectAction({
-                affects: 'enemy',
-                combatOnly: false,
-                effect: {
-                  displayName: 'Cursed',
-                  stacking: true,
-                  stats: {
-                    enemyCritChance: '+10%'
-                  }
-                }
-              }),
               chance: 1/3
             }),
+            statusEffectAction({
+              affects: 'enemy',
+              combatOnly: false,
+              effect: {
+                displayName: 'Cursed',
+                stacking: true,
+                stats: {
+                  enemyCritChance: '+10%'
+                }
+              }
+            })
           ]
         }
       }

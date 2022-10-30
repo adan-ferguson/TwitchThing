@@ -1,5 +1,7 @@
 import { magicAttackMod } from '../../mods/combined.js'
 import attackAction from '../../actions/attackAction.js'
+import statusEffectAction from '../../actions/statusEffectAction.js'
+import { stunnedStatusEffect } from '../../statusEffects/combined.js'
 
 export default {
   baseStats: {
@@ -19,8 +21,15 @@ export default {
           initialCooldown: 10000,
           actions: [
             attackAction({
-              damageMulti: 2.5,
+              damageMulti: 3,
               damageType: 'magic'
+            }),
+            statusEffectAction({
+              affects: 'enemy',
+              base: stunnedStatusEffect,
+              effect: {
+                duration: 1000
+              }
             })
           ]
         }

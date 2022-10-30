@@ -103,8 +103,8 @@ function doAction(combat, effect, actionDef){
   }else if(type === 'cancel'){
     return performCancelAction(owner, actionDef)
   }else if(type === 'maybe'){
-    if(Math.random() <= actionDef.chance){
-      return doAction(combat, effect, actionDef.action)
+    if(Math.random() > actionDef.chance){
+      return performCancelAction(owner)
     }else{
       return blankActionResult()
     }

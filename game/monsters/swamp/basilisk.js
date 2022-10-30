@@ -15,11 +15,10 @@ export default {
           cooldown: 7500,
           actions: [
             maybeAction({
-              chance: 0.1,
-              action:
-                attackAction({
-                  targetMaxHpPct: 1
-                })
+              chance: 0.1
+            }),
+            attackAction({
+              targetMaxHpPct: 1
             })
           ]
         }

@@ -56,7 +56,7 @@ const monstersByFloor = [
   Monsters.pirate,
   Monsters.siren,
   Monsters.twoHeadedShark,
-  Monsters.stormSorceress,
+  Monsters.mermaidSorceress,
   // Monsters.ancientTortoise,
   // Monsters.seaSerpent,
   // Monsters.waterElemental,

@@ -80,7 +80,7 @@ export function performRemoveStackAction(combat, owner, effect){
   })
 }
 
-export function performCancelAction(owner, def){
+export function performCancelAction(owner, def = {}){
   return makeActionResult({
     data: {
       cancelReason: def.cancelReason,
