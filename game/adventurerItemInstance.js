@@ -1,5 +1,6 @@
 import Items from './items/combined.js'
 import FighterItemInstance from './fighterItemInstance.js'
+import OrbsData from './orbsData.js'
 
 export default class AdventurerItemInstance extends FighterItemInstance{
 
@@ -25,7 +26,13 @@ export default class AdventurerItemInstance extends FighterItemInstance{
     return this._itemDef
   }
 
+  /**
+   * @returns {OrbsData}
+   */
   get orbs(){
-    return { [this.itemData.group]: this.itemData.orbs }
+    return new OrbsData([
+      { [this.itemData.group]: this.itemData.orbs },
+      ...this.applicableSlotEffects.map(slotEffect => slotEffect.orbs ?? {})
+    ])
   }
 }

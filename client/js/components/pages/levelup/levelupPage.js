@@ -1,7 +1,6 @@
 import Page from '../page.js'
 import { fadeIn, fadeOut } from '../../../animations/simple.js'
 import { hideLoader, showLoader } from '../../../loader.js'
-import BonusDetails from './bonusDetails.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import fizzetch from '../../../fizzetch.js'
 import { makeEl } from '../../../../../game/utilFunctions.js'

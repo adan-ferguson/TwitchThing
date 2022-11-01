@@ -1,5 +1,4 @@
 import { StatType } from '../../game/stats/statDefinitions.js'
-import { COMBAT_BASE_TURN_TIME } from '../../game/fighterInstance.js'
 import { roundToFixed, toDisplayName } from '../../game/utilFunctions.js'
 import healthIcon from '../assets/icons/health.svg'
 import actionIcon from '../assets/icons/action.svg'
@@ -7,6 +6,7 @@ import physPowerIcon from '../assets/icons/physPower.svg'
 import physDefIcon from '../assets/icons/physDef.svg'
 import magicPowerIcon from '../assets/icons/magicPower.svg'
 import magicDefIcon from '../assets/icons/magicDef.svg'
+import Stats from '../../game/stats/stats.js'
 
 export const StatsDisplayStyle = {
   CUMULATIVE: 0, // Eg. "50%", i.e. our total of this stat is 50%

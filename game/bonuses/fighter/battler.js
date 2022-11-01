@@ -1,13 +1,13 @@
-import { scaledValue }  from '../../scaledValue.js'
+import { exponentialValueCumulative } from '../../exponentialValue.js'
 import { roundToNearestIntervalOf } from '../../utilFunctions.js'
 
 const SCALING = 0.2
-const BASE = 1.2
+const BASE = 20
 
 export default {
   effect: level => ({
     stats: {
-      combatXP: roundToNearestIntervalOf(scaledValue(SCALING, level - 1, BASE), 0.05)
+      combatXP: roundToNearestIntervalOf(exponentialValueCumulative(SCALING, level, BASE), 5) + '%'
     }
   }),
   upgradable: true,

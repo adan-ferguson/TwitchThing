@@ -12,7 +12,7 @@ const HTML = (cooldown, initialCooldown = 0) => {
   `
 }
 
-export default class AbilityDescription extends HTMLElement{
+export default class AbilityDetails extends HTMLElement{
 
   constructor(itemInstance){
     super()
@@ -33,8 +33,10 @@ export default class AbilityDescription extends HTMLElement{
     this.setAttribute('ability-type', displayInfo.type)
     this.innerHTML = HTML(displayInfo.mainAbility.instance.cooldown, displayInfo.mainAbility.instance.initialCooldown)
 
-    const descriptionEl = this.querySelector('.description')
-    descriptionEl.innerHTML = displayInfo.descriptionHTML
+    const descriptionEl = displayInfo.descriptionEl
+    if(descriptionEl){
+      this.querySelector('.description').appendChild(descriptionEl)
+    }
 
     if(tooltips){
       tippy(this.querySelector('.initial-cooldown'), {
@@ -47,7 +49,9 @@ export default class AbilityDescription extends HTMLElement{
       })
       // TODO: description tooltips
     }
+
+    return this
   }
 }
 
-customElements.define('di-ability-description', AbilityDescription)
+customElements.define('di-ability-description', AbilityDetails)

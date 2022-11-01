@@ -1,7 +1,7 @@
 import FighterInstance  from './fighterInstance.js'
 import * as Monsters from './monsters/combined.js'
 import MonsterItemInstance from './monsterItemInstance.js'
-import { scaledValue } from './scaledValue.js'
+import { exponentialValue } from './exponentialValue.js'
 import OrbsData from './orbsData.js'
 import { toDisplayName, toNumberOfDigits } from './utilFunctions.js'
 
@@ -17,7 +17,7 @@ export function getScalingValue(lvl, multiplier){
   lvl = lvl - 1
   const zones = Math.floor(lvl / 10)
   const iterations = lvl + zones
-  return scaledValue(multiplier, iterations)
+  return exponentialValue(multiplier, iterations)
 }
 
 export function levelToXpReward(lvl){

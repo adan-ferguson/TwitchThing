@@ -13,8 +13,7 @@ export default class BonusInstance extends EffectInstance{
     const bonusDef = Bonuses[this._bonusDef.group][this._bonusDef.name]
     return {
       ...bonusDef.effect(this._bonusDef.level),
-      name: this._bonusDef.name,
-      description: bonusDef.description
+      name: this._bonusDef.name
     }
   }
 
@@ -39,4 +38,5 @@ export default class BonusInstance extends EffectInstance{
     orbs[this._bonusDef.group] = this.level
     return new OrbsData(orbs)
   }
+
 }

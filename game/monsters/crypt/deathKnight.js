@@ -12,7 +12,7 @@ export default {
       abilities: {
         active: {
           cooldown: 8000,
-          description: 'Deal [P1.2] phys damage. 1/3 chance to inflict curse.',
+          description: 'Deal [physScaling1.2] phys damage. 1/3 chance to inflict curse.',
           actions: [
             attackAction({
               damageMulti: 1.2

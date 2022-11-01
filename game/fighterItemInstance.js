@@ -19,4 +19,8 @@ export default class FighterItemInstance extends EffectInstance{
   get activeAbility(){
     return this.getAbility('active')
   }
+
+  get applicableSlotEffects(){
+    return this.owner?.slotEffects[this.slot] ?? []
+  }
 }

@@ -21,7 +21,7 @@ export default {
         active: {
           initialCooldown: 6000,
           cooldown: 20000,
-          description: 'Gain a barrier with [M3] health. Magic power is doubled while the barrier is up.',
+          description: 'Gain a barrier with [magicScaling3] health. Magic power is doubled while the barrier is up.',
           actions: [
             statusEffectAction({
               base: barrierStatusEffect,
@@ -43,7 +43,7 @@ export default {
       name: 'Tidal Wave',
       abilities: {
         active: {
-          description: 'Deal [M1] damage, and restore [M1] health.',
+          description: 'Deal [magicScaling1] damage, and restore [magicScaling1] health.',
           initialCooldown: 12000,
           cooldown: 20000,
           actions: [

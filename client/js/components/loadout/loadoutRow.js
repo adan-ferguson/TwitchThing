@@ -3,6 +3,7 @@ import SimpleModal from '../simpleModal.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
 import { ITEM_ROW_COLORS } from '../../colors.js'
 import { AbilityState } from '../../abilityDisplayInfo.js'
+import EffectDetails from '../effectDetails.js'
 
 const HTML = `
 <di-bar class="cooldown"></di-bar>
@@ -52,20 +53,16 @@ export default class LoadoutRow extends HTMLElement{
 
   get tooltip(){
 
-    if(!this.loadoutItem?.makeTooltip){
+    if(!this.loadoutItem?.obj){
       return ''
     }
 
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
-
-    tooltip.appendChild(this.loadoutItem.makeTooltip())
-
-    if(this.loadoutItem.makeDetails){
-      tooltip.appendChild(wrapContent('Right-click for more info', {
-        class: 'right-click subtitle'
-      }))
-    }
+    tooltip.appendChild(new EffectDetails().setEffect(this.loadoutItem.obj))
+    tooltip.appendChild(wrapContent('Right-click for more info', {
+      class: 'right-click subtitle'
+    }))
 
     return tooltip
   }

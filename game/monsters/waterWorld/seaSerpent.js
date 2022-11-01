@@ -1,7 +1,6 @@
 import { magicScalingMod } from '../../mods/combined.js'
 import attackAction from '../../actions/attackAction.js'
 import statusEffectAction from '../../actions/statusEffectAction.js'
-import { stunnedStatusEffect } from '../../statusEffects/combined.js'
 
 export default {
   baseStats: {},
@@ -12,18 +11,20 @@ export default {
       abilities: {
         active: {
           cooldown: 20000,
-          description: 'Deal [M2] magic damage and freeze the target for 5 seconds.',
+          description: 'Deal [magicScaling2] magic damage and slow the target.',
           actions: [
             attackAction({
               damageType: 'magic',
               damageMulti: 2
             }),
             statusEffectAction({
-              base: stunnedStatusEffect,
               affects: 'enemy',
               effect: {
-                displayName: 'Frozen',
-                duration: 5000
+                stacking: true,
+                displayName: 'Iced',
+                stats: {
+                  slow: 2000
+                }
               }
             })
           ]

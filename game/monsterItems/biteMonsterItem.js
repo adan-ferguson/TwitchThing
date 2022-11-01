@@ -7,7 +7,7 @@ export default function(def){
     abilities: {
       active: {
         initialCooldown: 10000,
-        description: 'Attack for [P1.5] damage. Heal for 50% of the damage dealt.',
+        description: 'Attack for [physScaling1.5] damage. Heal for 50% of the damage dealt.',
         actions: [
           attackAction({
             damagePct: 1.5

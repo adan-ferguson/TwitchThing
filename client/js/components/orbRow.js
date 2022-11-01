@@ -33,9 +33,14 @@ export default class OrbRow extends HTMLElement{
     return this
   }
 
+  /**
+   * @param orbsData
+   * @returns {OrbRow}
+   */
   setData(orbsData){
     this._orbsData = orbsData instanceof OrbsData ? orbsData : new OrbsData(orbsData)
     this._update()
+    return this
   }
 
   _update(){

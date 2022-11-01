@@ -87,6 +87,10 @@ export default class EffectInstance{
     return this.generateAbilitiesData().instances
   }
 
+  get slotEffect(){
+    return this.effectData.slotEffect ?? null
+  }
+
   generateAbilitiesData(){
     return new AbilitiesData(this.effectData.abilities, this._state.abilities ?? {}, this)
   }

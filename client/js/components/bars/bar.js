@@ -20,7 +20,7 @@ export default class Bar extends HTMLElement{
   _options = {
     label: '',
     lineBreakLabel: false,
-    color: '#DDD',
+    color: null,
     borderColor: null,
     showLabel: true,
     showValue: true,
@@ -223,8 +223,8 @@ export default class Bar extends HTMLElement{
   }
 
   _updateColors(){
-    this._barBorder.style.borderColor = this._options.borderColor ?? this._options.color
-    this.foregroundEl.style.backgroundColor = this._options.color
+    this._barBorder.style.borderColor = this._options.borderColor ?? this._options.color ?? ''
+    this.foregroundEl.style.backgroundColor = this._options.color ?? ''
   }
 
   _updateLabel(valOverride){

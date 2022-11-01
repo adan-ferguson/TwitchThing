@@ -2,7 +2,7 @@ import FighterInstance from './fighterInstance.js'
 import AdventurerItemInstance from './adventurerItemInstance.js'
 import OrbsData from './orbsData.js'
 import LevelCalculator from './levelCalculator.js'
-import { scaledValue } from './scaledValue.js'
+import { exponentialValue } from './exponentialValue.js'
 import BonusesData from './bonusesData.js'
 
 const LEVEL_2_XP = 100
@@ -22,11 +22,11 @@ export function advLevelToXp(lvl){
 }
 
 export function adventurerLevelToHp(lvl){
-  return Math.ceil(scaledValue(HP_GROWTH_PCT, lvl - 1, HP_BASE))
+  return Math.ceil(exponentialValue(HP_GROWTH_PCT, lvl - 1, HP_BASE))
 }
 
 export function adventurerLevelToPower(lvl){
-  return Math.ceil(scaledValue(POWER_GROWTH_PCT, lvl - 1, POWER_BASE))
+  return Math.ceil(exponentialValue(POWER_GROWTH_PCT, lvl - 1, POWER_BASE))
 }
 
 export default class AdventurerInstance extends FighterInstance{

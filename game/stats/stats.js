@@ -1,5 +1,5 @@
 import { StatDefinitions, StatType } from './statDefinitions.js'
-import statValueFns, { parseStatVal } from './statValueFns.js'
+import statValueFns from './statValueFns.js'
 import { calcStatDiff } from './statDiff.js'
 import { roundToFixed } from '../utilFunctions.js'
 import _ from 'lodash'

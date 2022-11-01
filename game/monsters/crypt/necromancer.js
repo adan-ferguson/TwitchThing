@@ -19,7 +19,7 @@ export default {
       abilities: {
         active: {
           cooldown: 6000,
-          description: 'Summons a skeleton archer to shoot the opponent. Shoots every 3 seconds for [M0.4] phys damage.',
+          description: 'Summons a skeleton archer to shoot the opponent. Shoots every 3 seconds for [magicScaling0.4] phys damage.',
           actions: [
             statusEffectAction({
               effect: {

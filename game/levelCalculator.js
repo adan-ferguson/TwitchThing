@@ -1,4 +1,4 @@
-import { scaledValue } from './scaledValue.js'
+import { exponentialValue } from './exponentialValue.js'
 import { toNumberOfDigits } from './utilFunctions.js'
 
 export default class LevelCalculator{
@@ -19,7 +19,7 @@ export default class LevelCalculator{
 
     let xp = level2xp
     for(let i = 2; i < lvl; i++){
-      xp += scaledValue(xpMultiplier, i - 2, level2xp)
+      xp += exponentialValue(xpMultiplier, i - 2, level2xp)
       xp = toNumberOfDigits(xp, 3)
     }
     return xp

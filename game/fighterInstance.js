@@ -232,6 +232,16 @@ export default class FighterInstance{
     this._state.nextTurnOffset = val
   }
 
+  get slotEffects(){
+    const slotEffects = new Array(8).fill('').map(() => [])
+    this.effectInstances.forEach(ei => {
+      if(ei.slotEffect){
+        slotEffects[ei.slotEffect.slotIndex].push(ei.slotEffect)
+      }
+    })
+    return slotEffects
+  }
+
   /**
    * Generally want to avoid using this. Do a full update of this fighter
    * instance's state.

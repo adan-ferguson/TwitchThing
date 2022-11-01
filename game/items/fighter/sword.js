@@ -1,7 +1,7 @@
 import statusEffect from '../../actions/statusEffectAction.js'
 import takeDamage from '../../actions/damageSelfAction.js'
 import attack from '../../actions/attackAction.js'
-import { scaledValueCumulative } from '../../scaledValue.js'
+import { exponentialValueCumulative } from '../../exponentialValue.js'
 import physScaling from '../../mods/generic/physScaling.js'
 
 const SCALING = 0.2
@@ -33,7 +33,7 @@ export default {
       }
     },
     stats: {
-      physPower: Math.ceil(scaledValueCumulative(SCALING, level, BASE))
+      physPower: Math.ceil(exponentialValueCumulative(SCALING, level, BASE))
     },
   }),
   description: 'This is a generic sword for testing.',

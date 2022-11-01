@@ -1,15 +1,5 @@
-import { roundToFixed, wrapContent } from '../../game/utilFunctions.js'
-import healthIcon from '../assets/icons/health.svg'
-import physPower from '../assets/icons/physPower.svg'
-import magicPower from '../assets/icons/magicPower.svg'
-import { parseAbilityDescriptionString } from './abilityDescription.js'
+import { parseDescriptionString } from './descriptionString.js'
 import { silencedMod } from '../../game/mods/combined.js'
-
-const ICONS = {
-  magic: magicPower,
-  phys: physPower,
-  health: healthIcon
-}
 
 export const AbilityState = {
   NONE: 'none',
@@ -47,26 +37,27 @@ export default class AbilityDisplayInfo{
     return this.mainAbility.type === 'active' ? 'active' : 'triggered'
   }
 
-  get descriptionHTML(){
+  get descriptionEl(){
     if(this.mainAbility.instance.description){
-      return toHTML(this.mainAbility.instance.description, this._owner)
+      return parseDescriptionString(this.mainAbility.instance.description, this._owner)
     }
+    return null
     // Derived descriptions
     // TODO: add the trigger
-    return this.mainAbility.instance.actions.map(action => {
-      if(action.type === 'attack'){
-        return attackDescription(action, this._owner)
-      }
-      if(action.type === 'gainHealth'){
-        return gainHealthDescription(action, this._owner)
-      }
-      // if(action.type === 'effect'){
-      //   return effectAction(action, this._owner)
-      // }
-      // if(action.type === 'time'){
-      //   return timeAction(action.ms)
-      // }
-    }).join(' ')
+    // return this.mainAbility.instance.actions.map(action => {
+    // if(action.type === 'attack'){
+    //   return attackDescription(action, this._owner)
+    // }
+    // if(action.type === 'gainHealth'){
+    //   return gainHealthDescription(action, this._owner)
+    // }
+    // if(action.type === 'effect'){
+    //   return effectAction(action, this._owner)
+    // }
+    // if(action.type === 'time'){
+    //   return timeAction(action.ms)
+    // }
+    // }).join(' ')
   }
 
   get state(){
@@ -93,77 +84,4 @@ export default class AbilityDisplayInfo{
     }
     return 0
   }
-}
-
-function toHTML(description, owner){
-  const { chunks, props } = parseAbilityDescriptionString(description)
-  let formatted = ''
-  chunks.forEach((chunk, i) => {
-    if(i !== 0){
-      let { type, val } = props[i-1]
-      if(type === 'P'){
-        val *= owner.physPower
-      }else if(type === 'M'){
-        val *= owner.magicPower
-      }
-      formatted += scalingWrap(type === 'P' ? 'phys' : 'magic', val)
-    }
-    formatted += `<span>${chunk}</span>`
-  })
-  return formatted
-}
-
-function attackDescription(action, owner){
-  let amount = action.damageMulti
-  let showFlat = owner ? true : false
-  if(showFlat){
-    amount = Math.ceil(amount * owner[action.damageType + 'Power'])
-  }
-  return `Attack for ${showFlat ? '' : 'x'}${scalingWrap(action.damageType, amount)} damage.`
-}
-
-function gainHealthDescription(action, owner){
-  const strs = []
-  if(action.magicScaling){
-    strs.push(`Restore ${scalingWrap('magic', action.magicScaling * owner.magicPower)} health.`)
-  }
-  if(action.pct){
-    strs.push(`Restore ${scalingWrap('health', action.pct * owner.hpMax)} health.`)
-  }
-  return strs.join(' ')
-}
-
-function timeAction(ms){
-  if(ms > 0){
-    return descWrap(`User's next turn is ${roundToFixed(ms/1000, 2)}s faster`)
-  }
-  return descWrap(`User's next turn is ${roundToFixed(ms/-1000, 2)}s slower`)
-}
-
-function descWrap(txt){
-  return wrapContent(txt, {
-    elementType: 'span',
-    class: 'action-description',
-    allowHTML: true
-  })
-}
-
-function scalingWrap(damageType, amount){
-  return `
-<span class="scaling-type scaling-type-${damageType}">
-  <img src="${ICONS[damageType]}">
-  ${amount}
-</span>
-`
-}
-
-function targetString(affectsVal, type = 0){
-  return affectsVal === 'enemy' ? 'the enemy' : 'yourself'
-}
-
-function durationString(duration){
-  if(duration === 'combat'){
-    return 'until the end of combat.'
-  }
-  return `for ${roundToFixed(duration / 1000, 2)} seconds`
 }

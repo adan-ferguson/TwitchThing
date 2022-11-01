@@ -1,9 +1,9 @@
-import BonusDetails from '../pages/levelup/bonusDetails.js'
 import classDisplayInfo from '../../classDisplayInfo.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
 import tippy from 'tippy.js'
 import { StatsDisplayStyle } from '../../statsDisplayInfo.js'
 import { advLevelToXp, advXpToLevel } from '../../../../game/adventurerInstance.js'
+import EffectDetails from '../effectDetails.js'
 
 const HTML = `
 <div class="flex-rows">
@@ -60,7 +60,7 @@ export default class AdventurerInfo extends HTMLElement{
       tippy(item, {
         theme: 'light',
         allowHTML: true,
-        content: new BonusDetails(bonusInstance)
+        content: new EffectDetails().setEffect(bonusInstance)
       })
       bonusesList.appendChild(item)
     })

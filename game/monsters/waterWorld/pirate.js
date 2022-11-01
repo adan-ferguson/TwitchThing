@@ -11,7 +11,7 @@ export default {
       abilities: {
         active: {
           initialCooldown: 8000,
-          description: 'Attack for [P1.4] damage, with an extra 1/3 chance to crit.',
+          description: 'Attack for [physScaling1.4] damage, with an extra 1/3 chance to crit.',
           actions: [
             attackAction({
               damageMulti: 1.5,
