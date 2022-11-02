@@ -6,6 +6,4 @@ export default {
       speed: BASE * level
     }
   }),
-  upgradable: true,
-  rarity: 0
 }

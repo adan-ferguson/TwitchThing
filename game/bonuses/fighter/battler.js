@@ -10,6 +10,5 @@ export default {
       combatXP: roundToNearestIntervalOf(exponentialValueCumulative(SCALING, level, BASE), 5) + '%'
     }
   }),
-  upgradable: true,
-  rarity: 0
+  rarity: 1
 }

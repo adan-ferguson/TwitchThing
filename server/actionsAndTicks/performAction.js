@@ -108,6 +108,8 @@ function doAction(combat, effect, actionDef){
     }else{
       return blankActionResult()
     }
+  }else if(type === 'turnTime'){
+    return performTurnTimeAction(combat, owner, actionDef)
   }
   throw 'Undefined action'
 }

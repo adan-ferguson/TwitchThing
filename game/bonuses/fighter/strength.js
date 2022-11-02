@@ -8,7 +8,5 @@ export default {
     stats: {
       physPower: Math.ceil(exponentialValueCumulative(SCALING, level, BASE))
     }
-  }),
-  rarity: 0,
-  upgradable: true
+  })
 }

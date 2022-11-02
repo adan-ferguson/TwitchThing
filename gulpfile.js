@@ -87,7 +87,13 @@ function exporterConcater(itemType, targetFile){
 }
 
 function capFirst(str){
-  return str.slice(0, 1).toUpperCase() + str.slice(1, str.length - 1)
+  // Remove 's'
+  str = str.slice(0, 1).toUpperCase() + str.slice(1, str.length - 1)
+  if(str.charAt(str.length - 1) === 'e'){
+    // Remove 'e'
+    str = str.slice(0, str.length - 1)
+  }
+  return str
 }
 
 function makeComponentImporter(targetPath){

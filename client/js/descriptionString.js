@@ -2,7 +2,7 @@ import healthIcon from '../assets/icons/health.svg'
 import physPower from '../assets/icons/physPower.svg'
 import magicPower from '../assets/icons/magicPower.svg'
 import { getStatDisplayInfo } from './statsDisplayInfo.js'
-import OrbRow from './components/orbRow.js'
+import OrbRow, { OrbsDisplayStyle } from './components/orbRow.js'
 import Stats from '../../game/stats/stats.js'
 import { makeEl, wrapContent } from '../../game/utilFunctions.js'
 
@@ -57,9 +57,11 @@ const FNS = {
 }
 
 function wrapOrbs(classType, val, owner){
-  return new OrbRow().setData({
-    [classType]: val
-  })
+  return new OrbRow()
+    .setOptions({ allowNegatives: true, style: OrbsDisplayStyle.MAX_ONLY })
+    .setData({
+      [classType]: val
+    })
 }
 
 function wrapStat(statType, val, owner){

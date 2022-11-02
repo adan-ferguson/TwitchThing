@@ -177,8 +177,20 @@ export default class FighterInstance{
     return Math.min(this.timeUntilNextAction, nextTick)
   }
 
+  get timeSinceLastAction(){
+    return this._state.timeSinceLastAction ?? 0
+  }
+
+  set timeSinceLastAction(val){
+    this._state.timeSinceLastAction = val
+  }
+
   get timeUntilNextAction(){
-    return Math.ceil(Math.max(0, (this.nextActionTime - this._state.timeSinceLastAction)))
+    return Math.ceil(Math.max(0, (this.nextActionTime - this.timeSinceLastAction)))
+  }
+
+  set timeUntilNextAction(val){
+    this._state.timeSinceLastAction = this.nextActionTime - Math.max(0, val)
   }
 
   get actionReady(){
@@ -304,10 +316,6 @@ export default class FighterInstance{
     this._state.timeSinceLastAction = this._state.nextTurnOffset ?? 0
     delete this._state.nextTurnOffset
     this.statusEffectsData.nextTurn()
-  }
-
-  adjustNextActionTime(ms){
-    this._state.timeSinceLastAction += ms
   }
 
   meetsConditions(conditions){

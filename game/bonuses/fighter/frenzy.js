@@ -25,7 +25,6 @@ export default {
       }
     }
   },
-  rarity: 1,
-  minOrbs: 10,
+  minOrbs: 20,
   upgradable: true
 }

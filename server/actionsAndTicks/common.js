@@ -90,3 +90,21 @@ export function performCancelAction(owner, def = {}){
     cancelled: true
   })
 }
+
+export function performTurnTimeAction(combat, owner, actionDef){
+  const timeBefore = owner.timeUntilNextAction
+  if(actionDef.remaining){
+    owner.timeUntilNextAction = actionDef.remaining
+  }else if(actionDef.change){
+    owner.timeSinceLastAction += actionDef.change
+  }
+  const timeAfter = owner.timeUntilNextAction
+  return makeActionResult({
+    type: 'turnTime',
+    data: {
+      timeBefore,
+      timeAfter
+    },
+    subject: owner.uniqueID
+  })
+}

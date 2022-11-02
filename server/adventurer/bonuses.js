@@ -15,7 +15,7 @@ const FIRST_LEVEL_BONUSES = {
 const RARITY_TO_WEIGHT = [
   1,
   0.5,
-  0.2
+  0.25
 ]
 
 export function firstLevelBonus(className){

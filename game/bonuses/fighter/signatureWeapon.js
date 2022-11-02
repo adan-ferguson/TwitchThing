@@ -8,9 +8,8 @@ export default {
           fighter: reduction
         }
       },
-      description: `Your top item slot becomes your main hand slot. The item there costs [Ofighter${reduction}].`
+      description: `Slot #1 becomes your Signature Weapon slot. The item there costs [Ofighter${reduction}].`
     }
   },
-  rarity: 2,
-  minOrbs: 5
+  rarity: 1
 }

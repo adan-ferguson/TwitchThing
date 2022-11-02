@@ -3,6 +3,7 @@ import classDisplayInfo from '../classDisplayInfo.js'
 import tippy from 'tippy.js'
 import { mergeOptionsObjects } from '../../../game/utilFunctions.js'
 import OrbsData from '../../../game/orbsData.js'
+import DIElement from './diElement.js'
 
 const ORB_ENTRY_HTML = (src, text) => `
   <img src="${src}"> <span>${text}</span>
@@ -15,22 +16,16 @@ export const OrbsDisplayStyle = {
   MAX_ONLY: 3
 }
 
-export default class OrbRow extends HTMLElement{
+export default class OrbRow extends DIElement{
 
   _orbsData = null
-  _options = {
-    style: OrbsDisplayStyle.USED_ONLY,
-    showTooltips: true
-  }
 
-  constructor(){
-    super()
-  }
-
-  setOptions(options){
-    this._options = mergeOptionsObjects(this._options, options)
-    this._update()
-    return this
+  get defaultOptions(){
+    return {
+      style: OrbsDisplayStyle.USED_ONLY,
+      showTooltips: true,
+      allowNegatives: false
+    }
   }
 
   /**
@@ -50,26 +45,28 @@ export default class OrbRow extends HTMLElement{
       return
     }
     this._orbsData.list.forEach(orbDatum => {
-      this.appendChild(new OrbEntry(orbDatum, this._options.style))
+      this.appendChild(new OrbEntry(orbDatum, this._options))
     })
   }
 }
 customElements.define('di-orb-row', OrbRow)
 
 class OrbEntry extends HTMLElement{
-  constructor(orbDatum, style){
+  constructor(orbDatum, { style, allowNegatives }){
     super()
 
     let text
+    let used = n(orbDatum.used)
+    let max = n(orbDatum.max)
     if(style === OrbsDisplayStyle.SHOW_MAX){
-      text = `${orbDatum.used}/${orbDatum.max}`
+      text = `${used}/${max}`
       this.classList.toggle('error', orbDatum.remaining < 0)
     }else if(style === OrbsDisplayStyle.MAX_ADDITIVE){
-      text = (orbDatum.max >= 0 ? '+' : '') + orbDatum.max
+      text = (max >= 0 ? '+' : '') + max
     }else if(style === OrbsDisplayStyle.MAX_ONLY){
-      text = '' + orbDatum.max
+      text = '' + max
     }else{
-      text = '' + orbDatum.used
+      text = '' + used
     }
 
     const classInfo = classDisplayInfo(orbDatum.className)
@@ -79,6 +76,10 @@ class OrbEntry extends HTMLElement{
       theme: 'light',
       content: `These orbs allow this adventurer to equip ${classInfo.displayName} items.`
     })
+
+    function n(val){
+      return allowNegatives ? val : Math.max(0, val)
+    }
   }
 }
 
