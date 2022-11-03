@@ -9,6 +9,7 @@ import DungeonPage from '../dungeon/dungeonPage.js'
 import AdventurerLoadoutEditorPage from '../adventurerLoadout/adventurerLoadoutEditorPage.js'
 import LevelupPage from '../levelup/levelupPage.js'
 import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
+import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 
 const HTML = `
 <div class="content-columns">
@@ -107,7 +108,8 @@ export default class AdventurerPage extends Page{
   }
 
   _setupTopRightButton(user){
-    if(this.adventurer.nextLevelUp){
+    const advInstance = new AdventurerInstance(this.adventurer)
+    if(advInstance.shouldLevelUp){
       this._topRightButton.classList.add('highlight')
       this._topRightButton.innerHTML = '<div>Level Up!<div/>'
       this._topRightButton.addEventListener('click', () => {

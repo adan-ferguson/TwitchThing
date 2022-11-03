@@ -4,7 +4,7 @@ import removeStackAction from '../../actions/removeStackAction.js'
 
 export default {
   baseStats: {
-    speed: '-40%',
+    speed: -80,
     hpMax: '+100%',
     physPower: '+50%'
   },

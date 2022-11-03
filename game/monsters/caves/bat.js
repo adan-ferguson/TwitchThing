@@ -2,7 +2,7 @@ import flutteringMonsterItem from '../../monsterItems/flutteringMonsterItem.js'
 
 export default {
   baseStats: {
-    speed: '+10%',
+    speed: 10,
     hpMax: '-10%',
     physPower: '-10%'
   },

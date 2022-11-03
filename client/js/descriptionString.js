@@ -14,7 +14,7 @@ const ICONS = {
 
 export function parseDescriptionString(description, owner = null){
   const props = []
-  const chunks = description.replace(/\[([A-Z]?)(\w*)([\d.-]+)]/g, (_, type, subtype, val) => {
+  const chunks = description.replace(/\[([A-Z]?)([A-Za-z]*)([\d.-]+)]/g, (_, type, subtype, val) => {
     props.push({
       type,
       subtype,

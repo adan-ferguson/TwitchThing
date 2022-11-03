@@ -1,5 +1,4 @@
 import { dualWieldMod } from '../../mods/combined.js'
-import { signatureWeaponBonus } from '../combined.js'
 
 export default {
   effect: {
@@ -7,6 +6,6 @@ export default {
     description: 'Slot #2 becomes another Signature Weapon slot and gains the same benefits.'
   },
   rarity: 2,
-  requires: signatureWeaponBonus.name,
+  requires: 'signatureWeapon',
   minOrbs: 20
 }

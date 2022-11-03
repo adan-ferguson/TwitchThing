@@ -74,7 +74,7 @@ const turtled = statusEffectAction({
 export default {
   baseStats: {
     hpMax: '-50%',
-    speed: '-10%',
+    speed: -15,
     magicPower: '+30%',
     magicDef: '+60%'
   },

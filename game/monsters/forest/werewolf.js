@@ -19,7 +19,7 @@ export default {
                 description: 'Increased phys power and attack speed.',
                 stats: {
                   physPower: '+10%',
-                  speed: '+20%'
+                  speed: 20
                 }
               }
             })

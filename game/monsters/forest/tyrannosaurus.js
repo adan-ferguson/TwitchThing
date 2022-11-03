@@ -1,12 +1,10 @@
 import { bossMod } from '../../mods/combined.js'
-import attackAction from '../../actions/attackAction.js'
-import gainHealthAction from '../../actions/gainHealthAction.js'
 import biteMonsterItem from '../../monsterItems/biteMonsterItem.js'
 
 export default {
   baseStats: {
     physPower: '+10%',
-    speed: '-30%',
+    speed: -50,
     hpMax: '+50%'
   },
   items: [
@@ -23,7 +21,7 @@ export default {
           inverted: true
         },
         stats: {
-          speed: '75%',
+          speed: 100,
           physPower: '75%',
           physDef: '50%'
         }

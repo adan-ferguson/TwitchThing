@@ -5,7 +5,7 @@ export default {
     hpMax: '+20%',
     physPower: '+10%',
     physDef: '+30%',
-    speed: '-40%'
+    speed: -80
   },
   items: [
     {

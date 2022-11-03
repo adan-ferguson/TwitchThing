@@ -65,6 +65,12 @@ const defs = {
   magicDef: {
     type: StatType.PERCENTAGE
   },
+  mainHandDamage: {
+    type: StatType.PERCENTAGE
+  },
+  mainHandCooldownReduction: {
+    type: StatType.PERCENTAGE
+  },
   missChance: {
     type: StatType.PERCENTAGE,
     inverted: true

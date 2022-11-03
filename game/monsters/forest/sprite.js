@@ -5,7 +5,7 @@ import { magicScalingMod } from '../../mods/combined.js'
 
 export default {
   baseStats: {
-    speed: '+50%',
+    speed: 50,
     hpMax: '-50%',
     physPower: '-40%'
   },

@@ -6,7 +6,7 @@ export default {
   baseStats: {
     hpMax: '-40%',
     physPower: '-40%',
-    speed: '+70%'
+    speed: 70
   },
   items: [{
     name: 'Toxic Sting',

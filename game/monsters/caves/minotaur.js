@@ -4,7 +4,7 @@ import attackAction from '../../actions/attackAction.js'
 export default {
   baseStats: {
     physPower: '+25%',
-    speed: '-20%',
+    speed: -20,
     hpMax: '+125%'
   },
   items: [

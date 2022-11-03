@@ -5,8 +5,9 @@ import db  from '../../db.js'
 import Users from '../../collections/users.js'
 import { commitAdventurerLoadout } from '../../loadouts/adventurer.js'
 import { requireRegisteredUser, validateParam } from '../../validations.js'
-import { rerollBonus, selectBonus } from '../../adventurer/bonuses.js'
+import { generateLevelup, rerollBonus, selectBonus } from '../../adventurer/bonuses.js'
 import DungeonRuns from '../../collections/dungeonRuns.js'
+import AdventurerInstance from '../../../game/adventurerInstance.js'
 
 const router = express.Router()
 const verifiedRouter = express.Router()
@@ -84,6 +85,14 @@ verifiedRouter.post('/editloadout/save', validateIdle, async (req, res) => {
 })
 
 verifiedRouter.post(['', '/levelup'], async(req, res, next) => {
+  const advInstance = new AdventurerInstance(req.adventurer)
+  if(!advInstance.shouldLevelUp){
+    throw { status: 400, message: 'Adventurer should not be leveling up.' }
+  }
+  if(!req.adventurer.nextLevelUp){
+    req.adventurer.nextLevelUp = await generateLevelup(req.adventurer)
+    await Adventurers.save(req.adventurer)
+  }
   res.send({ adventurer: req.adventurer, user: req.user })
 })
 

@@ -36,6 +36,10 @@ export default class AdventurerInstance extends FighterInstance{
     this.bonusesData = new BonusesData(adventurerDef.bonuses, this)
   }
 
+  get level(){
+    return advXpToLevel(this._fighterData.xp)
+  }
+
   get bonuses(){
     return this.bonusesData.instances
   }
@@ -53,11 +57,11 @@ export default class AdventurerInstance extends FighterInstance{
   }
 
   get baseHp(){
-    return adventurerLevelToHp(this.fighterData.level)
+    return adventurerLevelToHp(this.level)
   }
 
   get basePower(){
-    return adventurerLevelToPower(this.fighterData.level)
+    return adventurerLevelToPower(this.level)
   }
 
   get baseStats(){
@@ -69,14 +73,19 @@ export default class AdventurerInstance extends FighterInstance{
   }
 
   get orbs(){
-    const used = this.bonuses.map(bonusInstance => {
+    const max = this.bonuses.map(bonusInstance => {
       return bonusInstance.orbsData.maxOrbs
     })
-    const max = this.itemInstances.map(ii => ii?.orbs || {})
-    return new OrbsData(used, max)
+    const used = this.itemInstances.map(ii => ii?.orbs.maxOrbs || {})
+    return new OrbsData(max, used)
   }
 
   get effectInstances(){
     return [...this.bonuses, ...super.effectInstances]
+  }
+
+  get shouldLevelUp(){
+    const bonusesLevel = this.bonusesData.levelTotal
+    return bonusesLevel < this.level
   }
 }

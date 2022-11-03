@@ -5,6 +5,7 @@ import Adventurers from '../collections/adventurers.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 import BonusesData from '../../game/bonusesData.js'
 import { toArray } from '../../game/utilFunctions.js'
+import BonusInstance from '../../game/bonusInstance.js'
 
 const FIRST_LEVEL_BONUSES = {
   fighter: 'strength',
@@ -23,10 +24,11 @@ export function firstLevelBonus(className){
 }
 
 export async function generateLevelup(adventurerDoc){
-  const nextLevel = new BonusesData(adventurerDoc.bonuses).levelTotal + 1
-  if(nextLevel > adventurerDoc.level){
+  const advInstance = new AdventurerInstance(adventurerDoc)
+  if(!advInstance.shouldLevelUp){
     return null
   }
+  const nextLevel = advInstance.bonusesData.levelTotal + 1
   const userDoc = await Users.findByID(adventurerDoc.userID)
   return {
     options: await generateBonusOptions(userDoc, adventurerDoc, nextLevel),
@@ -103,7 +105,7 @@ export async function generateBonusOptions(userDoc, adventurerDoc){
     if(bonus.minOrbs > orbCount){
       return 0
     }
-    if(!bonus.upgradable){
+    if(!new BonusInstance(bonus).upgradable){
       if(ai.bonusesData.get(bonus)){
         return 0
       }
@@ -111,7 +113,7 @@ export async function generateBonusOptions(userDoc, adventurerDoc){
     if(bonus.requires){
       const arr = toArray(bonus.requires)
       if(!arr.every(requirement => {
-        ai.bonusesData.get({ group: bonus.group, name: requirement })
+        return ai.bonusesData.get({ group: bonus.group, name: requirement }) ? true : false
       })){
         return 0
       }

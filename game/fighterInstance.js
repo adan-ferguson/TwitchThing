@@ -45,6 +45,13 @@ export default class FighterInstance{
   }
 
   /**
+   * @return {number}
+   */
+  get level(){
+    throw 'Not implemented'
+  }
+
+  /**
    * @return {object}
    */
   get fighterData(){

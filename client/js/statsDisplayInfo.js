@@ -121,10 +121,10 @@ export function getStatDisplayInfo(stat, options = {}){
     owner: null,
     ...options
   }
-  if(!statDefinitionsInfo[stat.name]){
+  const info = { ...(statDefinitionsInfo[stat.name] ?? {}) }
+  if(info.hidden){
     return null
   }
-  const info = { ...statDefinitionsInfo[stat.name] }
   if(info.displayedValueFn){
     info.displayedValue = info.displayedValueFn(stat.value, options)
   }

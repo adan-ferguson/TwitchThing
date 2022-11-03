@@ -4,7 +4,7 @@ import { diseasedStatusEffect } from '../../statusEffects/combined.js'
 export default {
   baseStats: {
     hpMax: '+60%',
-    speed: '-30%'
+    speed: -60
   },
   items: [
     {

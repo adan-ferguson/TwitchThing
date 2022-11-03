@@ -6,7 +6,7 @@ export default {
   baseStats: {
     hpMax: '-20%',
     physPower: '-50%',
-    speed: '+50%'
+    speed: 50
   },
   items: [
     {

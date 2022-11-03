@@ -1,6 +1,7 @@
 import Bonuses from './bonuses/combined.js'
 import OrbsData from './orbsData.js'
 import EffectInstance from './effectInstance.js'
+import _ from 'lodash'
 
 export default class BonusInstance extends EffectInstance{
 
@@ -9,10 +10,15 @@ export default class BonusInstance extends EffectInstance{
     this._bonusDef = bonusDef
   }
 
+  get baseDef(){
+    return Bonuses[this._bonusDef.group][this._bonusDef.name]
+  }
+
   get effectData(){
-    const bonusDef = Bonuses[this._bonusDef.group][this._bonusDef.name]
+    const effect = this.baseDef.effect
+    const data = _.isFunction(effect) ? effect(this._bonusDef.level) : effect
     return {
-      ...bonusDef.effect(this._bonusDef.level),
+      ...data,
       name: this._bonusDef.name
     }
   }
@@ -37,6 +43,10 @@ export default class BonusInstance extends EffectInstance{
     const orbs = {}
     orbs[this._bonusDef.group] = this.level
     return new OrbsData(orbs)
+  }
+
+  get upgradable(){
+    return _.isFunction(this.baseDef.effect)
   }
 
 }

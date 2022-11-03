@@ -2,7 +2,7 @@ import { exponentialValueCumulative } from '../../exponentialValue.js'
 import { all as Effects } from '../../statusEffects/combined.js'
 
 const SCALING = 0.2
-const BASE = 4
+const BASE = 15
 
 export default {
   effect: level => {
