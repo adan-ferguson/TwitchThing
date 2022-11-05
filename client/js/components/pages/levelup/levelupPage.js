@@ -3,10 +3,7 @@ import { fadeIn, fadeOut } from '../../../animations/simple.js'
 import { hideLoader, showLoader } from '../../../loader.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import fizzetch from '../../../fizzetch.js'
-import { makeEl } from '../../../../../game/utilFunctions.js'
 import AdventurerInstance from '../../../../../game/adventurerInstance.js'
-import BonusInstance from '../../../../../game/bonusInstance.js'
-import EffectDetails from '../../effectDetails.js'
 import LevelupOption from './levelupOption.js'
 
 const HTML = `

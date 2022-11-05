@@ -1,7 +1,7 @@
-import { StatDefinitions, StatType } from './statDefinitions.js'
 import statValueFns from './statValueFns.js'
 import { calcStatDiff } from './statDiff.js'
 import { roundToFixed } from '../utilFunctions.js'
+import { makeStatObject } from './statObject.js'
 import _ from 'lodash'
 
 export default class Stats{
@@ -35,7 +35,9 @@ export default class Stats{
     this._scaleFn = val
   }
 
-  get(name){
+  get(nameOrStat){
+
+    const name = nameOrStat.name ?? nameOrStat
     const statObj = makeStatObject(name)
 
     const fn = statValueFns[statObj.type]
@@ -63,10 +65,10 @@ export default class Stats{
     }
 
     function shine(val){
-      if(statObj.minValue !== null){
+      if(_.isNumber(statObj.minValue)){
         val = Math.max(statObj.minValue, val)
       }
-      if(statObj.maxValue !== null){
+      if(_.isNumber(statObj.maxValue)){
         val = Math.min(statObj.maxValue, val)
       }
       return roundToFixed(val, statObj.roundingDecimals)
@@ -92,18 +94,6 @@ export default class Stats{
       serialized[statName] = statDef.value
     })
     return serialized
-  }
-}
-
-export function makeStatObject(name){
-  const stat = StatDefinitions[name]
-  if(!stat){
-    throw 'Unknown stat name: ' + name
-  }
-  return {
-    ...stat,
-    name,
-    defaultValue: defaultValue(stat)
   }
 }
 
@@ -139,14 +129,4 @@ function toAffectorsArray(val){
     }
   })
   return affectors
-}
-
-function defaultValue(stat){
-  if(stat.defaultValue !== null){
-    return stat.defaultValue
-  }
-  if(stat.type === StatType.MULTIPLIER){
-    return 1
-  }
-  return 0
 }

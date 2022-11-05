@@ -49,10 +49,10 @@ const scalingWrap = (damageType, amount) => `
 
 const FNS = {
   physScaling: (val, owner) => {
-    return scalingWrap('phys', val)
+    return wrapContent(scalingWrap('phys', val))
   },
   magicScaling: (val, owner) => {
-    return scalingWrap('magic', val)
+    return wrapContent(scalingWrap('magic', val))
   },
 }
 

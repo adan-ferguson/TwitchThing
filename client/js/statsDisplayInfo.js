@@ -1,4 +1,4 @@
-import { StatType } from '../../game/stats/statDefinitions.js'
+import { all as StatDefs } from '../../game/stats/combined.js'
 import { roundToFixed, toDisplayName } from '../../game/utilFunctions.js'
 import healthIcon from '../assets/icons/health.svg'
 import actionIcon from '../assets/icons/action.svg'
@@ -6,7 +6,7 @@ import physPowerIcon from '../assets/icons/physPower.svg'
 import physDefIcon from '../assets/icons/physDef.svg'
 import magicPowerIcon from '../assets/icons/magicPower.svg'
 import magicDefIcon from '../assets/icons/magicDef.svg'
-import Stats from '../../game/stats/stats.js'
+import { StatType } from '../../game/stats/statType.js'
 
 export const StatsDisplayStyle = {
   CUMULATIVE: 0, // Eg. "50%", i.e. our total of this stat is 50%
@@ -14,57 +14,57 @@ export const StatsDisplayStyle = {
 }
 
 const statDefinitionsInfo = {
-  hpMax: {
+  [StatDefs.hpMax.name]: {
     text: 'Max Health',
     icon: healthIcon,
     description: 'Max Health (good description)'
   },
-  physPower: {
+  [StatDefs.physPower.name]: {
     text: 'Phys Power',
     icon: physPowerIcon,
     description: 'Phys power (basic attack damage)',
     displayedValueFn: value => `${Math.round(value)}`
   },
-  magicPower: {
+  [StatDefs.magicPower.name]: {
     text: 'Magic Power',
     icon: magicPowerIcon,
     description: 'Magic power',
     displayedValueFn: value => `${Math.round(value)}`
   },
-  physDef: {
+  [StatDefs.physDef.name]: {
     text: 'Phys Defense',
     icon: physDefIcon,
     description: 'Blocks physical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
   },
-  magicDef: {
+  [StatDefs.magicDef.name]: {
     text: 'Magic Defense',
     icon: magicDefIcon,
     description: 'Blocks magical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
   },
-  missChance: {},
-  speed: {
+  [StatDefs.missChance.name]: {},
+  [StatDefs.speed.name]: {
     text: 'Speed',
     displayInverted: true,
     icon: actionIcon,
     description: 'Speed. Each extra 100 speed is about +1 turn per 3 seconds.',
   },
-  damageDealt: {},
-  damageTaken: {},
-  critChance: {
+  [StatDefs.damageDealt.name]: {},
+  [StatDefs.damageTaken.name]: {},
+  [StatDefs.critChance.name]: {
     text: 'Crit Chance',
     description: 'Chance to deal bonus damage.',
     displayedValueFn: value => {
       return `${Math.round(value * 100)}%`
     },
   },
-  enemyCritChance: {
+  [StatDefs.enemyCritChance.name]: {
     text: 'Enemy Crit Chance',
     description: 'Increases enemy\'s crit chance.',
     displayedValueFn: value => {
       return `${Math.round(value * 100)}%`
     },
   },
-  critDamage: {
+  [StatDefs.critDamage.name]: {
     text: 'Crit Damage',
     description: 'Increases damage deal by crits.',
     displayedValueFn: (value, { style }) => {
@@ -74,39 +74,21 @@ const statDefinitionsInfo = {
       return `+${Math.round((value - 1) * 100)}%`
     }
   },
-  dodgeChance: {
+  [StatDefs.dodgeChance.name]: {
     text: 'Dodge Chance',
     description: 'Chance to dodge attacks.',
   },
-  lifesteal: {
+  [StatDefs.lifesteal.name]: {
     text: 'Lifesteal',
     displayedValueFn: value => `${Math.round(value * 100)}%`,
     description: 'Gain health when dealing physical damage.',
   },
-  combatHarderChance: {
-    text: 'Stronger Monster Chance',
-    description: 'Increases chance to fight stronger (higher level) monsters.',
-  },
-  combatXP: {
+  [StatDefs.combatXP.name]: {
     text: 'Combat XP Gain',
     description: 'Increases XP gained from combat.',
   },
-  relicSolveChance: {
-    text: 'Relic Solve Chance',
-    description: 'Increased chance to solve relic puzzles. Rarer relics are harder to solve.',
-  },
-  relicRareChance: {
-    text: 'Rare Relic Chance',
-    description: 'Chance to find high quality relics.'
-  },
-  chestFind: {
-    text: 'Chest Find',
-    description: 'Increased chance to find treasure chests from combat rewards or from treasure relics.',
-  },
-  rewards: {
-    text: 'Rewards',
-    description: 'More xp for killing, better chests.'
-  }
+  [StatDefs.mainHandDamage.name]: { hidden: true },
+  [StatDefs.mainHandCooldownReduction.name]: { hidden: true }
 }
 
 const DEFAULTS = {
@@ -127,15 +109,15 @@ export function getStatDisplayInfo(stat, options = {}){
   }
   if(info.displayedValueFn){
     info.displayedValue = info.displayedValueFn(stat.value, options)
+    delete info.displayedValueFn
   }
   if(info.displayedValue === undefined){
     info.displayedValue = toText(stat.type, stat.value, options.style)
   }
   if(info.descriptionFn){
     info.description = info.descriptionFn(stat.value, options)
+    delete info.descriptionFn
   }
-  delete info.descriptionFn
-  delete info.displayedValueFn
   return {
     ...DEFAULTS,
     text: toDisplayName(stat.name),

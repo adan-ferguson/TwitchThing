@@ -2,7 +2,7 @@ import { takeDamage, triggerEvent } from './common.js'
 import { makeActionResult } from '../../game/actionResult.js'
 import attackAction from '../../game/actions/attackAction.js'
 
-export function performAttackAction(combat, attacker, actionDef = {}){
+export function performAttackAction(combat, attacker, effect = null, actionDef = {}){
 
   actionDef = attackAction({
     damageMulti: 1,
@@ -46,6 +46,7 @@ export function performAttackAction(combat, attacker, actionDef = {}){
       cancelled: true
     })
   }
+
   if(missAttack(attacker)){
     return makeActionResult({
       ...resultObj,
@@ -60,6 +61,11 @@ export function performAttackAction(combat, attacker, actionDef = {}){
   damage *= actionDef.damageMulti
   damage += actionDef.targetHpPct * enemy.hp
   damage += actionDef.targetMaxHpPct * enemy.hpMax
+  damage *= effect?.attackMultiplier
+
+  if(effect?.isSignatureWeapon){
+    damage *= attacker.stats.get('mainHandDamage').value
+  }
 
   const damageInfo = {
     damageType: actionDef.damageType,

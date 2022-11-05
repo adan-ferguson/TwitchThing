@@ -1,4 +1,4 @@
-import { StatType } from './statDefinitions.js'
+import { StatType } from './statType.js'
 
 export default {
   [StatType.FLAT]: flatValue,

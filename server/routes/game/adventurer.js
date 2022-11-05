@@ -84,14 +84,16 @@ verifiedRouter.post('/editloadout/save', validateIdle, async (req, res) => {
   res.status(200).send({ success: 1 })
 })
 
-verifiedRouter.post(['', '/levelup'], async(req, res, next) => {
-  const advInstance = new AdventurerInstance(req.adventurer)
-  if(!advInstance.shouldLevelUp){
-    throw { status: 400, message: 'Adventurer should not be leveling up.' }
-  }
+verifiedRouter.post('', async(req, res, next) => {
+  res.send({ adventurer: req.adventurer, user: req.user })
+})
+
+verifiedRouter.post('/levelup', async(req, res) => {
   if(!req.adventurer.nextLevelUp){
     req.adventurer.nextLevelUp = await generateLevelup(req.adventurer)
-    await Adventurers.save(req.adventurer)
+    if(req.adventurer.nextLevelUp){
+      await Adventurers.save(req.adventurer)
+    }
   }
   res.send({ adventurer: req.adventurer, user: req.user })
 })

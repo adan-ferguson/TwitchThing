@@ -1,10 +1,17 @@
 import { performAttackAction } from './attacks.js'
 import _ from 'lodash'
-import { performCancelAction, performGainHealthAction, performRemoveStackAction, takeDamage } from './common.js'
+import {
+  performCancelAction,
+  performGainHealthAction,
+  performRemoveStackAction,
+  performTurnTimeAction,
+  takeDamage
+} from './common.js'
 import { performRemoveStatusEffectAction, performStatusEffectAction } from './statusEffects.js'
 import { blankActionResult, validateActionResult } from '../../game/actionResult.js'
 import { chooseOne } from '../../game/rando.js'
 import { noBasicAttackMod } from '../../game/mods/combined.js'
+import doubleStrikeMod from '../../game/mods/fighter/doubleStrikeMod.js'
 
 export function takeCombatTurn(combat, actor){
   if(!actor.inCombat){
@@ -14,6 +21,12 @@ export function takeCombatTurn(combat, actor){
   let ability
   if(index > -1){
     ability = useEffectAbility(combat, actor.itemInstances[index], 'active')
+    // TODO: don't hardcode, this can be some sort of triggered ability
+    if(actor.mods.contains(doubleStrikeMod) && index === 0){
+      if(actor.itemInstances[1]?.getAbility('active')?.ready){
+        ability.result.push(useEffectAbility(combat, actor.itemInstances[1], 'active'))
+      }
+    }
   }else if(actor.mods.contains(noBasicAttackMod)){
     ability = {
       basicAttack: true,
@@ -87,7 +100,7 @@ function doAction(combat, effect, actionDef){
   const owner = effect.owner
   const type = _.isString(actionDef) ? actionDef : actionDef.type
   if(type === 'attack'){
-    return performAttackAction(combat, owner, actionDef)
+    return performAttackAction(combat, owner, effect, actionDef)
   }else if(type === 'takeDamage'){
     return takeDamage(combat, owner, actionDef)
   }else if(type === 'statusEffect'){

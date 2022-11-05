@@ -1,32 +1,42 @@
 import FighterInstance from './fighterInstance.js'
 import AdventurerItemInstance from './adventurerItemInstance.js'
 import OrbsData from './orbsData.js'
-import LevelCalculator from './levelCalculator.js'
-import { exponentialValue } from './exponentialValue.js'
+import { exponentialValueCumulative } from './exponentialValue.js'
 import BonusesData from './bonusesData.js'
+import { toNumberOfDigits } from './utilFunctions.js'
 
 const LEVEL_2_XP = 100
-const XP_MULTIPLIER = 0.35
+const XP_MULTIPLIER = 0.25
 
-const HP_BASE = 50
-const HP_GROWTH_PCT = 0.15
+const HP_BASE = 40
+const HP_GROWTH = 20
+const HP_GROWTH_PCT = 0.08
+
 const POWER_BASE = 10
-const POWER_GROWTH_PCT = 0.11
+const POWER_GROWTH = 5
+const POWER_GROWTH_PCT = 0.07
 
 export function advXpToLevel(xp){
-  return LevelCalculator.xpToLevel(LEVEL_2_XP, XP_MULTIPLIER, xp)
+  let lvl = 1
+  while(xp >= advLevelToXp(lvl + 1)){
+    lvl++
+  }
+  return lvl
 }
 
 export function advLevelToXp(lvl){
-  return LevelCalculator.levelToXp(LEVEL_2_XP, XP_MULTIPLIER, lvl)
+  return toNumberOfDigits(
+    Math.ceil(exponentialValueCumulative(XP_MULTIPLIER, lvl - 1, LEVEL_2_XP)),
+    3
+  )
 }
 
 export function adventurerLevelToHp(lvl){
-  return Math.ceil(exponentialValue(HP_GROWTH_PCT, lvl - 1, HP_BASE))
+  return HP_BASE + Math.ceil(exponentialValueCumulative(HP_GROWTH_PCT, lvl, HP_GROWTH))
 }
 
 export function adventurerLevelToPower(lvl){
-  return Math.ceil(exponentialValue(POWER_GROWTH_PCT, lvl - 1, POWER_BASE))
+  return POWER_BASE + Math.ceil(exponentialValueCumulative(POWER_GROWTH_PCT, lvl, POWER_GROWTH))
 }
 
 export default class AdventurerInstance extends FighterInstance{
@@ -85,7 +95,6 @@ export default class AdventurerInstance extends FighterInstance{
   }
 
   get shouldLevelUp(){
-    const bonusesLevel = this.bonusesData.levelTotal
-    return bonusesLevel < this.level
+    return this.bonusesData.levelTotal < this.level
   }
 }

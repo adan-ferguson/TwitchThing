@@ -136,7 +136,6 @@ export default class FighterInstancePane extends HTMLElement{
   _displayDamageResult = (damageResult) => {
 
     if(damageResult.cancelled){
-      debugger
       return
     }
 

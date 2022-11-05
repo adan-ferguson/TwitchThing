@@ -1,6 +1,7 @@
 import Items from './items/combined.js'
 import FighterItemInstance from './fighterItemInstance.js'
 import OrbsData from './orbsData.js'
+import { dualWieldBonus, signatureWeaponBonus } from './bonuses/combined.js'
 
 export default class AdventurerItemInstance extends FighterItemInstance{
 
@@ -34,5 +35,34 @@ export default class AdventurerItemInstance extends FighterItemInstance{
       { [this.itemData.group]: this.itemData.orbs },
       ...this.applicableSlotEffects.map(slotEffect => slotEffect.orbs ?? {})
     ])
+  }
+
+  get isSignatureWeapon(){
+    if(!this.owner){
+      return false
+    }
+    // TODO: figure out a real system for this
+    if(this.owner.bonusesData.contains(signatureWeaponBonus)){
+      if(this.slot === 0){
+        return true
+      }else if(this.slot === 1 && this.owner.bonusesData.contains(dualWieldBonus)){
+        return true
+      }
+    }
+    return false
+  }
+
+  get attackMultiplier(){
+    if(this.isSignatureWeapon){
+      return this.owner.stats.get('mainHandDamage').value
+    }
+    return 1
+  }
+
+  get cooldownReduction(){
+    if(this.isSignatureWeapon){
+      return this.owner.stats.get('mainHandCooldownReduction').value
+    }
+    return 0
   }
 }
