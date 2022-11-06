@@ -1,17 +1,5 @@
 import { advLevelToXp, advXpToLevel } from '../../../game/adventurerInstance.js'
 
-// console.log(geometricProgession(0.1, 0, 10))
-// console.log(geometricProgession(0.1, 1, 10))
-// console.log(geometricProgession(0.1, 2, 10))
-// console.log(geometricProgession(0.1, 3, 10))
-// console.log(geometricProgession(0.1, 4, 10))
-//
-// console.log(inverseGeometricProgression(0.1, 0, 10))
-// console.log(inverseGeometricProgression(0.1, 10, 10))
-// console.log(inverseGeometricProgression(0.1, 21, 10))
-// console.log(inverseGeometricProgression(0.1, 33, 10))
-// console.log(inverseGeometricProgression(0.1, 46, 10))
-
 console.log(advLevelToXp(1))
 console.log(advLevelToXp(5))
 console.log(advLevelToXp(10))

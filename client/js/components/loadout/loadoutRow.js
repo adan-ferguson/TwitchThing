@@ -85,7 +85,6 @@ export default class LoadoutRow extends HTMLElement{
 
   update(){
 
-    const t = new ConsoleTimer()
     this._cooldownBarEl.style.visibility = this.loadoutItem ? 'visible' : 'hidden'
 
     const info = this.loadoutItem?.abilityDisplayInfo
@@ -93,7 +92,6 @@ export default class LoadoutRow extends HTMLElement{
       return
     }
 
-    t.log()
     const disabled = this.loadoutItem.itemInstance.disabled || info.state === AbilityState.DISABLED
     this.classList.toggle('disabled', disabled)
     this.setAttribute('ability-type', info.type)
@@ -102,7 +100,6 @@ export default class LoadoutRow extends HTMLElement{
     const color = ITEM_ROW_COLORS[info.state === AbilityState.DISABLED ? 'disabled' : info.type]
     const borderColor = info.state === 'ready' ? color : ITEM_ROW_COLORS.disabled
 
-    t.log()
     this._cooldownBarEl
       .setOptions({
         color,
@@ -110,7 +107,6 @@ export default class LoadoutRow extends HTMLElement{
         max: 1
       })
       .setValue(info.barPct)
-    t.log()
   }
 
   _setupBlank(){
