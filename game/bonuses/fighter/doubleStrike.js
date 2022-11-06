@@ -1,4 +1,4 @@
-import doubleStrikeMod from '../../mods/fighter/doubleStrikeMod.js'
+import doubleStrikeMod from '../../mods/fighter/doubleStrike.js'
 
 export default {
   effect: {

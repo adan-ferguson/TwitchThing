@@ -1,10 +1,14 @@
-import { roundToFixed } from '../../utilFunctions.js'
+import { exponentialPercentage } from '../../exponentialValue.js'
+import { cooldownReductionStat } from '../../stats/combined.js'
 
 export default {
   effect: level => {
     return {
-      stats: {
-        mainHandCooldownReduction: 100 * (1 - roundToFixed(Math.pow(0.85, level), 2)) + '%'
+      slotEffect: {
+        slotTag: 'signatureWeapon',
+        stats: {
+          [cooldownReductionStat.name]: exponentialPercentage('15%', level)
+        }
       }
     }
   },

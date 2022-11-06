@@ -3,13 +3,20 @@ export default {
     const reduction = level * -2
     return {
       slotEffect: {
-        slotIndex: 0,
+        slotTag: 'signatureWeapon',
         orbs: {
           fighter: reduction
         }
       },
-      description: `Slot #1 becomes your Signature Weapon slot. The item there costs [Ofighter${reduction}].`
+      description: `Your Signature Weapon costs [Ofighter${reduction}].`,
     }
   },
-  rarity: 1
+  slotBonus: {
+    slotIndex: 0, // TODO: not hardcoded
+    tags: ['signatureWeapon'],
+    description: 'Your 1st item slot becomes your Signature Weapon.'
+    // displayName: 'Signature Weapon',
+  },
+  rarity: 1,
+  minOrbs: 5
 }

@@ -61,11 +61,7 @@ export function performAttackAction(combat, attacker, effect = null, actionDef =
   damage *= actionDef.damageMulti
   damage += actionDef.targetHpPct * enemy.hp
   damage += actionDef.targetMaxHpPct * enemy.hpMax
-  damage *= effect?.attackMultiplier
-
-  if(effect?.isSignatureWeapon){
-    damage *= attacker.stats.get('mainHandDamage').value
-  }
+  damage *= effect?.attackMultiplier ?? 1
 
   const damageInfo = {
     damageType: actionDef.damageType,

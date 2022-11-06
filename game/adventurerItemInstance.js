@@ -37,32 +37,11 @@ export default class AdventurerItemInstance extends FighterItemInstance{
     ])
   }
 
-  get isSignatureWeapon(){
-    if(!this.owner){
-      return false
-    }
-    // TODO: figure out a real system for this
-    if(this.owner.bonusesData.contains(signatureWeaponBonus)){
-      if(this.slot === 0){
-        return true
-      }else if(this.slot === 1 && this.owner.bonusesData.contains(dualWieldBonus)){
-        return true
-      }
-    }
-    return false
+  get slotBonus(){
+    return this.owner.getEquippedSlotBonus(this.slot)
   }
 
-  get attackMultiplier(){
-    if(this.isSignatureWeapon){
-      return this.owner.stats.get('mainHandDamage').value
-    }
-    return 1
-  }
-
-  get cooldownReduction(){
-    if(this.isSignatureWeapon){
-      return this.owner.stats.get('mainHandCooldownReduction').value
-    }
-    return 0
+  get slotTags(){
+    return this.slotBonus?.tags ?? []
   }
 }

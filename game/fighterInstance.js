@@ -1,8 +1,9 @@
 import Stats from './stats/stats.js'
-import { freezeActionBarMod, magicAttackMod, silencedMod, sneakAttackMod } from './mods/combined.js'
+import { dualWieldMod, freezeActionBarMod, magicAttackMod, silencedMod, sneakAttackMod } from './mods/combined.js'
 import { StatusEffectsData } from './statusEffectsData.js'
 import ModsCollection from './modsCollection.js'
 import FighterItemInstance from './fighterItemInstance.js'
+import { toArray } from './utilFunctions.js'
 
 // Stupid
 new Stats()
@@ -251,16 +252,6 @@ export default class FighterInstance{
     this._state.nextTurnOffset = val
   }
 
-  get slotEffects(){
-    const slotEffects = new Array(8).fill('').map(() => [])
-    this.effectInstances.forEach(ei => {
-      if(ei.slotEffect){
-        slotEffects[ei.slotEffect.slotIndex].push(ei.slotEffect)
-      }
-    })
-    return slotEffects
-  }
-
   /**
    * Generally want to avoid using this. Do a full update of this fighter
    * instance's state.
@@ -372,5 +363,26 @@ export default class FighterInstance{
       }
     }
     return false
+  }
+
+  getSlotEffectsFor(slotIndex){
+
+    const item = this.itemInstances[slotIndex]
+
+    if(!item){
+      // TODO: not necessarily correct
+      return []
+    }
+
+    const slotEffects = []
+    this.effectInstances.forEach(ei => {
+      if(ei.slotEffect){
+        if(ei.slotEffect.slotIndex === slotIndex || item.slotTags.indexOf(ei.slotEffect.slotTag) >= 0){
+          slotEffects.push(ei.slotEffect)
+        }
+      }
+    })
+
+    return slotEffects
   }
 }

@@ -49,4 +49,11 @@ export default class BonusInstance extends EffectInstance{
     return _.isFunction(this.baseDef.effect)
   }
 
+  get slotEffect(){
+    return this.effectData.slotEffect ?? null
+  }
+
+  get slotBonus(){
+    return this.baseDef.slotBonus ?? null
+  }
 }

@@ -2,8 +2,11 @@ const BASE = 20
 
 export default {
   effect: level => ({
-    stats: {
-      mainHandDamage: BASE * level + '%'
+    slotEffect: {
+      slotTag: 'signatureWeapon',
+      stats: {
+        attackDamage: BASE * level + '%'
+      }
     }
   }),
   requires: 'signatureWeapon',

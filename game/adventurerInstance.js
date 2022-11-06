@@ -97,4 +97,11 @@ export default class AdventurerInstance extends FighterInstance{
   get shouldLevelUp(){
     return this.bonusesData.levelTotal < this.level
   }
+
+  getEquippedSlotBonus(slotIndex){
+    // TODO: equipping of slot bonuses, for now the slot bonuses are just hardcoded
+    return this.bonusesData.instances.find(bonusInstance => {
+      return bonusInstance.slotBonus?.slotIndex === slotIndex
+    }).slotBonus
+  }
 }

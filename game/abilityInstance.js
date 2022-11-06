@@ -1,5 +1,3 @@
-import { minMax } from './utilFunctions.js'
-
 export default class AbilityInstance{
 
   constructor(abilityDef, state, parentEffect){
@@ -40,14 +38,28 @@ export default class AbilityInstance{
     if(!this.cooldown){
       return 0
     }
-    return this.cooldown * (1 - (this._state.cooldownElapsedPct ?? 0))
+    return this.cooldown * (1 - this.cooldownElapsedPct)
   }
 
   set cooldownRemaining(val){
+    this.cooldownElapsedPct = 1 - (val / this.cooldown)
+  }
+
+  get cooldownElapsedPct(){
+    if(!this.cooldown){
+      return 1
+    }
+    if(this._state.cooldownElapsedPct === undefined){
+      return 1 - (this._abilityDef.initialCooldown ?? 0) / this.cooldown
+    }
+    return this._state.cooldownElapsedPct
+  }
+
+  set cooldownElapsedPct(val){
     if(!this.cooldown){
       return
     }
-    this._state.cooldownElapsedPct = minMax(0, 1 - (val / this.cooldown) ,1)
+    this._state.cooldownElapsedPct = Math.min(val, 1)
   }
 
   get cooldown(){
@@ -99,7 +111,7 @@ export default class AbilityInstance{
 
   use(){
     if(this.cooldown){
-      this._state.cooldownElapsedPct = 0
+      this.cooldownElapsedPct = 0
     }
     this._state.timesUsed = (this._state.timesUsed ?? 0) + 1
     return this

@@ -86,9 +86,7 @@ const statDefinitionsInfo = {
   [StatDefs.combatXP.name]: {
     text: 'Combat XP Gain',
     description: 'Increases XP gained from combat.',
-  },
-  [StatDefs.mainHandDamage.name]: { hidden: true },
-  [StatDefs.mainHandCooldownReduction.name]: { hidden: true }
+  }
 }
 
 const DEFAULTS = {
@@ -103,10 +101,10 @@ export function getStatDisplayInfo(stat, options = {}){
     owner: null,
     ...options
   }
-  const info = { ...(statDefinitionsInfo[stat.name] ?? {}) }
-  if(info.hidden){
+  if(!statDefinitionsInfo[stat.name]){
     return null
   }
+  const info = { ...statDefinitionsInfo[stat.name] }
   if(info.displayedValueFn){
     info.displayedValue = info.displayedValueFn(stat.value, options)
     delete info.displayedValueFn

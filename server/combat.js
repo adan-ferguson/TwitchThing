@@ -184,7 +184,7 @@ class Combat{
 
     const doAction = actor => {
       if(actor.actionReady){
-        actions.push(takeCombatTurn(this, actor))
+        actions.push(...takeCombatTurn(this, actor))
       }
     }
 

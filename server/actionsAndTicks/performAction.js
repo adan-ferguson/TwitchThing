@@ -10,43 +10,41 @@ import {
 import { performRemoveStatusEffectAction, performStatusEffectAction } from './statusEffects.js'
 import { blankActionResult, validateActionResult } from '../../game/actionResult.js'
 import { chooseOne } from '../../game/rando.js'
-import { noBasicAttackMod } from '../../game/mods/combined.js'
-import doubleStrikeMod from '../../game/mods/fighter/doubleStrikeMod.js'
+import { doubleStrikeMod, noBasicAttackMod } from '../../game/mods/combined.js'
 
 export function takeCombatTurn(combat, actor){
   if(!actor.inCombat){
     throw 'Actor is not in combat'
   }
   const index = actor.nextActiveItemIndex()
-  let ability
+  const abilities = []
   if(index > -1){
-    ability = useEffectAbility(combat, actor.itemInstances[index], 'active')
+    abilities.push(useEffectAbility(combat, actor.itemInstances[index], 'active'))
     // TODO: don't hardcode, this can be some sort of triggered ability
     if(actor.mods.contains(doubleStrikeMod) && index === 0){
       if(actor.itemInstances[1]?.getAbility('active')?.ready){
-        ability.result.push(useEffectAbility(combat, actor.itemInstances[1], 'active'))
+        abilities.push(useEffectAbility(combat, actor.itemInstances[1], 'active'))
       }
     }
   }else if(actor.mods.contains(noBasicAttackMod)){
-    ability = {
+    abilities.push({
       basicAttack: true,
       owner: actor.uniqueID,
       results: [performCancelAction(actor, {
         cancelReason: 'Can\'t attack'
       })]
-    }
+    })
   }else{
-    ability = {
-      basicAttack: true,
-      owner: actor.uniqueID,
-      results: []
-    }
     for(let i = 0; i < actor.stats.get('attacks').value; i++){
-      ability.results.push(performAttackAction(combat, actor))
+      abilities.push({
+        basicAttack: true,
+        owner: actor.uniqueID,
+        results: [performAttackAction(combat, actor)]
+      })
     }
   }
   actor.nextTurn()
-  return ability
+  return abilities
 }
 
 export function useEffectAbility(combat, effect, eventName){
