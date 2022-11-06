@@ -11,6 +11,7 @@ import { DAMAGE_COLORS, FLASH_COLORS } from '../../colors.js'
 import { flash } from '../../animations/simple.js'
 import LoadoutRow from '../loadout/loadoutRow.js'
 import EffectRow from '../effects/effectRow.js'
+import ConsoleTimer from '../../../../game/consoleTimer.js'
 
 const HTML = `
 <div class="name"></div>

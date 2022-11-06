@@ -1,5 +1,6 @@
 import Ticker from '../../../ticker.js'
 import dateformat from 'dateformat'
+import { EventEmitter } from 'events'
 
 const HTML = `
 <di-bar class="event-time-bar"></di-bar>
@@ -119,11 +120,23 @@ export default class TimeControls extends HTMLElement{
       label: dateformat(this._ticker.currentTime, 'M:ss.L')
     })
     this._eventTimeBarEl.setValue(this._ticker.currentTime)
-    this.dispatchEvent(new CustomEvent('timechange', {
-      detail: {
-        jumped
-      }
-    }))
+    if(this._emitter){
+      this._emitter.emit('timechange', {
+        detail: {
+          jumped
+        }
+      })
+    }
+    // this.dispatchEvent(new CustomEvent('timechange', {
+    //   detail: {
+    //     jumped
+    //   }
+    // }))
+  }
+
+  on(){
+    this._emitter = new EventEmitter()
+    this._emitter.on(...arguments)
   }
 
   _setupPlayPause(){

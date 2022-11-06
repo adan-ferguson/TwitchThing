@@ -1,6 +1,7 @@
 import LoadoutRow from './loadoutRow.js'
 import OrbsData from '../../../../game/orbsData.js'
 import FighterItemDisplayInfo from '../../fighterItemDisplayInfo.js'
+import ConsoleTimer from '../../../../game/consoleTimer.js'
 
 const HTML = `
 <di-list></di-list>

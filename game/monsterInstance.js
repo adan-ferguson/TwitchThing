@@ -1,7 +1,7 @@
 import FighterInstance  from './fighterInstance.js'
 import * as Monsters from './monsters/combined.js'
 import MonsterItemInstance from './monsterItemInstance.js'
-import { exponentialValueCumulative } from './exponentialValue.js'
+import { geometricProgession } from './exponentialValue.js'
 import OrbsData from './orbsData.js'
 import { toDisplayName, toNumberOfDigits } from './utilFunctions.js'
 import { bossMod } from './mods/combined.js'
@@ -28,7 +28,7 @@ const BOSS_GOLD_BONUS = 5
 
 export function levelToXpReward(lvl){
   const zoneBonuses = Math.floor((lvl - 1) / 10)
-  const val = Math.ceil(exponentialValueCumulative(lvl - 1, XP_GROWTH_PCT) * XP_GROWTH * Math.pow(XP_ZONE_BONUS, zoneBonuses))
+  const val = Math.ceil(geometricProgession(lvl - 1, XP_GROWTH_PCT) * XP_GROWTH * Math.pow(XP_ZONE_BONUS, zoneBonuses))
   return toNumberOfDigits(
     XP_BASE + val,
     2
@@ -37,21 +37,21 @@ export function levelToXpReward(lvl){
 
 function levelToGoldReward(lvl){
   return toNumberOfDigits(
-    GOLD_BASE + Math.ceil(exponentialValueCumulative(lvl - 1, GOLD_GROWTH_PCT) * GOLD_GROWTH),
+    GOLD_BASE + Math.ceil(geometricProgession(lvl - 1, GOLD_GROWTH_PCT) * GOLD_GROWTH),
     2
   )
 }
 
 export function monsterLevelToHp(lvl){
   return toNumberOfDigits(
-    HP_BASE + Math.ceil(exponentialValueCumulative(HP_GROWTH_PCT, lvl - 1, HP_GROWTH)),
+    HP_BASE + Math.ceil(geometricProgession(HP_GROWTH_PCT, lvl - 1, HP_GROWTH)),
     2
   )
 }
 
 export function monsterLevelToPower(lvl){
   return toNumberOfDigits(
-    POWER_BASE + Math.ceil(exponentialValueCumulative(POWER_GROWTH_PCT, lvl - 1, POWER_GROWTH)),
+    POWER_BASE + Math.ceil(geometricProgession(POWER_GROWTH_PCT, lvl - 1, POWER_GROWTH)),
     2
   )
 }

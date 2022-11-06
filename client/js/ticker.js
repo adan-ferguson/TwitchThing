@@ -78,6 +78,7 @@ export default class Ticker extends EventEmitter{
     }
 
     const doTick = () => {
+
       if(!this.running){
         this._ticking = false
         return
@@ -94,13 +95,13 @@ export default class Ticker extends EventEmitter{
       }
 
       this._currentTime = Math.max(0, Math.min(this.endTime, Math.round(elapsedTime)))
+      this._previousTimestamp = Date.now()
 
       this.emit('tick', this._currentTime - prevTime)
       if(this.currentTime === this.endTime){
         this._ticking = false
         this.emit('ended', elapsedTime - this.currentTime)
       }else{
-        this._previousTimestamp = Date.now()
         this.waitFn(() => doTick())
       }
     }

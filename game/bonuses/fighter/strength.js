@@ -1,4 +1,4 @@
-import { exponentialValueCumulative } from '../../exponentialValue.js'
+import { geometricProgession } from '../../exponentialValue.js'
 
 const SCALING = 0.2
 const BASE = 5
@@ -6,7 +6,7 @@ const BASE = 5
 export default {
   effect: level => ({
     stats: {
-      physPower: Math.ceil(exponentialValueCumulative(SCALING, level, BASE))
+      physPower: Math.ceil(geometricProgession(SCALING, level, BASE))
     }
   })
 }

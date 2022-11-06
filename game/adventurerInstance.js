@@ -1,7 +1,7 @@
 import FighterInstance from './fighterInstance.js'
 import AdventurerItemInstance from './adventurerItemInstance.js'
 import OrbsData from './orbsData.js'
-import { exponentialValueCumulative } from './exponentialValue.js'
+import { geometricProgession, inverseGeometricProgression } from './exponentialValue.js'
 import BonusesData from './bonusesData.js'
 import { toNumberOfDigits } from './utilFunctions.js'
 
@@ -17,26 +17,23 @@ const POWER_GROWTH = 5
 const POWER_GROWTH_PCT = 0.07
 
 export function advXpToLevel(xp){
-  let lvl = 1
-  while(xp >= advLevelToXp(lvl + 1)){
-    lvl++
-  }
-  return lvl
+  const lvl = Math.floor(inverseGeometricProgression(XP_MULTIPLIER, xp, LEVEL_2_XP)) + 1
+  return advLevelToXp(lvl) <= xp ? lvl : lvl - 1
 }
 
 export function advLevelToXp(lvl){
   return toNumberOfDigits(
-    Math.ceil(exponentialValueCumulative(XP_MULTIPLIER, lvl - 1, LEVEL_2_XP)),
+    Math.ceil(geometricProgession(XP_MULTIPLIER, lvl - 1, LEVEL_2_XP)),
     3
   )
 }
 
 export function adventurerLevelToHp(lvl){
-  return HP_BASE + Math.ceil(exponentialValueCumulative(HP_GROWTH_PCT, lvl, HP_GROWTH))
+  return HP_BASE + Math.ceil(geometricProgession(HP_GROWTH_PCT, lvl, HP_GROWTH))
 }
 
 export function adventurerLevelToPower(lvl){
-  return POWER_BASE + Math.ceil(exponentialValueCumulative(POWER_GROWTH_PCT, lvl, POWER_GROWTH))
+  return POWER_BASE + Math.ceil(geometricProgession(POWER_GROWTH_PCT, lvl, POWER_GROWTH))
 }
 
 export default class AdventurerInstance extends FighterInstance{

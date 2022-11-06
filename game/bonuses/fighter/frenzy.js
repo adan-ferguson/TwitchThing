@@ -1,4 +1,4 @@
-import { exponentialValueCumulative } from '../../exponentialValue.js'
+import { geometricProgession } from '../../exponentialValue.js'
 import { all as Effects } from '../../statusEffects/combined.js'
 
 const SCALING = 0.2
@@ -6,7 +6,7 @@ const BASE = 15
 
 export default {
   effect: level => {
-    const val = Math.ceil(exponentialValueCumulative(SCALING, level, BASE))
+    const val = Math.ceil(geometricProgession(SCALING, level, BASE))
     return {
       abilities: {
         attackHit: {
