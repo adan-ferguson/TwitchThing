@@ -1,6 +1,7 @@
 import { takeDamage, triggerEvent } from './common.js'
 import { makeActionResult } from '../../game/actionResult.js'
 import attackAction from '../../game/actions/attackAction.js'
+import { attackDamageStat } from '../../game/stats/combined.js'
 
 export function performAttackAction(combat, attacker, effect = null, actionDef = {}){
 
@@ -61,7 +62,7 @@ export function performAttackAction(combat, attacker, effect = null, actionDef =
   damage *= actionDef.damageMulti
   damage += actionDef.targetHpPct * enemy.hp
   damage += actionDef.targetMaxHpPct * enemy.hpMax
-  damage *= effect?.attackMultiplier ?? 1
+  damage *= attacker.statsForEffect(effect).get(attackDamageStat).value
 
   const damageInfo = {
     damageType: actionDef.damageType,

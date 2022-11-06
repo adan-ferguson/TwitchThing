@@ -1,3 +1,5 @@
+import { cooldownReductionStat } from './stats/combined.js'
+
 export default class AbilityInstance{
 
   constructor(abilityDef, state, parentEffect){
@@ -63,7 +65,8 @@ export default class AbilityInstance{
   }
 
   get cooldown(){
-    return this._abilityDef.cooldown ?? this._abilityDef.initialCooldown ?? 0
+    return this._parentEffect.exclusiveStats.get(cooldownReductionStat).value *
+      (this._abilityDef.cooldown ?? this._abilityDef.initialCooldown ?? 0)
   }
 
   get uses(){
@@ -103,7 +106,6 @@ export default class AbilityInstance{
   }
 
   advanceTime(ms){
-    ms /= (1 - this._parentEffect.cooldownReduction ?? 0)
     if(this.cooldownRemaining){
       this.cooldownRemaining = Math.max(0, this.cooldownRemaining - ms)
     }

@@ -6,10 +6,8 @@ const EFFECT_HTML = (text, color) => `
 
 export default class FlyingTextEffect extends EventEmitter{
 
-  constructor(origin, text, options = {}){
+  constructor(source, text, options = {}){
     super()
-
-    origin = origin.getBoundingClientRect ? origin.getBoundingClientRect() : origin
 
     if(!isNaN(text) && !options.color){
       // Integer mode, positive is green and has a leading plus sign
@@ -18,16 +16,22 @@ export default class FlyingTextEffect extends EventEmitter{
       text = (number > 0 ? '+' : '') + number
     }
 
+    this.source = source
     this.options = {
-      origin,
+      origin: source.getBoundingClientRect ? source.getBoundingClientRect() : source,
       text,
       direction: 'up',
       color: 'black',
-      distance: 40,
+      distance: 80,
       fontSize: 1.2,
       duration: 2000,
       autoStart: true,
+      clearExistingForSource: false,
       ...options
+    }
+
+    if(options.clearExistingForSource && this.source.__flyingTextAnim){
+      this.source.__flyingTextAnim.remove()
     }
 
     this.el = document.createElement('div')
@@ -48,6 +52,7 @@ export default class FlyingTextEffect extends EventEmitter{
   }
 
   start(){
+    this.source.__flyingTextAnim = this.el
     setTimeout(() => {
       const currentTransform = getComputedStyle(this.el).transform
       const distance = this.options.distance * (this.options.direction === 'down' ? 1 : -1)
@@ -56,6 +61,7 @@ export default class FlyingTextEffect extends EventEmitter{
       setTimeout(() => {
         this.el.style.opacity = '0'
         setTimeout(() => {
+          delete this.source.__flyingTextAnim
           this.el.remove()
           this.emit('finish')
         }, 500)

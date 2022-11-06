@@ -54,6 +54,10 @@ export default class EffectInstance{
     return new Stats(this.effectData.stats)
   }
 
+  get exclusiveStats(){
+    return this.owner?.statsForEffect(this)
+  }
+
   get state(){
     this.fixState()
     return JSON.parse(JSON.stringify(this._state))

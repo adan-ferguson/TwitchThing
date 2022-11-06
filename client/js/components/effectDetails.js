@@ -1,7 +1,6 @@
 import AbilityDetails from './abilityDetails.js'
 import StatsList from './stats/statsList.js'
 import { StatsDisplayStyle } from '../statsDisplayInfo.js'
-import { makeEl } from '../../../game/utilFunctions.js'
 import DIElement from './diElement.js'
 import { parseDescriptionString } from '../descriptionString.js'
 

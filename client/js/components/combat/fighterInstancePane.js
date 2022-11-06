@@ -26,7 +26,7 @@ const HTML = `
 
 const TEXT_EFFECT_MIN = 0.9
 const TEXT_EFFECT_MAX = 2.1
-const STAGGER_TIME = 120
+const STAGGER_TIME = 200
 
 export default class FighterInstancePane extends HTMLElement{
 
@@ -124,7 +124,8 @@ export default class FighterInstancePane extends HTMLElement{
       return
     }
     new FlyingTextEffect(this.hpBarEl, amount, {
-      fontSize: TEXT_EFFECT_MIN + Math.min(0.5, amount / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX
+      fontSize: TEXT_EFFECT_MIN + Math.min(0.5, amount / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX,
+      clearExistingForSource: true
     })
     this.hpBarEl.setValue(amount, { relative: true, animate: true })
   }
@@ -161,7 +162,8 @@ export default class FighterInstancePane extends HTMLElement{
       barEl.setValue(-data.damageDistribution[key], { relative: true, animate: true })
       new FlyingTextEffect(barEl, html, {
         html: true,
-        fontSize: TEXT_EFFECT_MIN + Math.min(0.5, dmgStr / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX
+        fontSize: TEXT_EFFECT_MIN + Math.min(0.5, dmgStr / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX,
+        clearExistingForSource: true
       })
     }
 
@@ -171,7 +173,8 @@ export default class FighterInstancePane extends HTMLElement{
       if(statEl){
         new FlyingTextEffect(statEl, blockedHtml, {
           html: true,
-          color: '#000'
+          color: '#000',
+          clearExistingForSource: true
         })
       }
     }
@@ -274,7 +277,10 @@ export default class FighterInstancePane extends HTMLElement{
       const targetEl = this._getEffectEl(effect) ?? this._actionBarEl
       new FlyingTextEffect(
         targetEl,
-        toDisplayName(result.data.cancelReason)
+        toDisplayName(result.data.cancelReason),
+        {
+          clearExistingForSource: true
+        }
       )
     }
   }

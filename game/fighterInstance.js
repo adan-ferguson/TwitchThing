@@ -385,4 +385,12 @@ export default class FighterInstance{
 
     return slotEffects
   }
+
+  statsForEffect(effect){
+    // TODO: stupid
+    if(!effect || !effect.applicableSlotEffects){
+      return this.stats
+    }
+    return new Stats([this.stats, ...effect.applicableSlotEffects.map(se => se.stats ?? {})])
+  }
 }
