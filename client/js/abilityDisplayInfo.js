@@ -37,8 +37,9 @@ function getMainAbility(abilities){
 }
 
 function descriptionEl(ability){
-  if(ability.description){
-    return parseDescriptionString(ability.description, ability.fighterInstance)
+  const descStr = ability.description ?? deriveDescriptionString(ability)
+  if(descStr){
+    return parseDescriptionString(descStr, ability.fighterInstance)
   }
   return null
 }
@@ -75,3 +76,20 @@ function barMax(ability){
   }
   return 0
 }
+
+function deriveDescriptionString(ability){
+  const chunks = []
+  ability.actions.forEach(a => {
+    if(a.type === 'attack'){
+      chunks.push(toAttackString(a))
+    }
+  })
+  return chunks.join(' ')
+}
+
+function toAttackString(action){
+  debugger
+  const scaling = action.damageScaling === 'auto' ? action.damageType : action.damageScaling
+  return `Attack for [${scaling}Scaling${action.damageMulti}] ${action.damageType} damage.`
+}
+

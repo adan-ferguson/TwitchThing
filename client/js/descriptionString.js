@@ -35,7 +35,7 @@ export function parseDescriptionString(description, owner = null){
         el.appendChild(FNS[subtype](val, owner))
       }
     }
-    el.appendChild(wrapContent(chunk))
+    el.appendChild(makeEl({ text: chunk }))
   })
   return el
 }
@@ -49,10 +49,12 @@ const scalingWrap = (damageType, amount) => `
 
 const FNS = {
   physScaling: (val, owner) => {
-    return wrapContent(scalingWrap('phys', val))
+    val *= owner.stats.get('physPower').value
+    return makeEl({ content: scalingWrap('phys', val) })
   },
   magicScaling: (val, owner) => {
-    return wrapContent(scalingWrap('magic', val))
+    val *= owner.stats.get('magicPower').value
+    return makeEl({ content: scalingWrap('magic', val) })
   },
 }
 
