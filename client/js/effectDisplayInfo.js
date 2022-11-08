@@ -1,5 +1,5 @@
 import { STATUSEFFECT_COLORS } from './colors.js'
-import AbilityDisplayInfo from './abilityDisplayInfo.js'
+import abilityDisplayInfo from './abilityDisplayInfo.js'
 
 export function effectDisplayInfo(effectInstance){
 
@@ -20,13 +20,13 @@ export function effectDisplayInfo(effectInstance){
     showValue = true
   }
 
-  const abilityDisplayInfo = new AbilityDisplayInfo(effectInstance)
+  const abilityInfo = abilityDisplayInfo(effectInstance)
 
   return {
     text,
     barValue,
     barMax,
-    miniBarPct: abilityDisplayInfo.barPct,
+    abilityInfo,
     colors,
     animateChanges: effectInstance.duration ? false : true,
     showValue

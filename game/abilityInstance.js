@@ -52,7 +52,7 @@ export default class AbilityInstance{
       return 1
     }
     if(this._state.cooldownElapsedPct === undefined){
-      return 1 - (this._abilityDef.initialCooldown ?? 0) / this.cooldown
+      this._state.cooldownElapsedPct =  1 - (this._abilityDef.initialCooldown ?? 0) / this.cooldown
     }
     return this._state.cooldownElapsedPct
   }
@@ -65,7 +65,7 @@ export default class AbilityInstance{
   }
 
   get cooldown(){
-    return this._parentEffect.exclusiveStats.get(cooldownReductionStat).value *
+    return (1 - this._parentEffect.exclusiveStats.get(cooldownReductionStat).value) *
       (this._abilityDef.cooldown ?? this._abilityDef.initialCooldown ?? 0)
   }
 
@@ -106,7 +106,7 @@ export default class AbilityInstance{
   }
 
   advanceTime(ms){
-    if(this.cooldownRemaining){
+    if(this.cooldown){
       this.cooldownRemaining = Math.max(0, this.cooldownRemaining - ms)
     }
   }

@@ -1,10 +1,5 @@
-import StatsList from './components/stats/statsList.js'
-import { StatsDisplayStyle } from './statsDisplayInfo.js'
 import ItemFullDetails from './components/itemFullDetails.js'
-import AbilityDetails from './components/abilityDetails.js'
-import { makeEl, wrapContent } from '../../game/utilFunctions.js'
-import Stats from '../../game/stats/stats.js'
-import AbilityDisplayInfo from './abilityDisplayInfo.js'
+import abilityDisplayInfo from './abilityDisplayInfo.js'
 
 export default class FighterItemDisplayInfo{
 
@@ -29,7 +24,7 @@ export default class FighterItemDisplayInfo{
   }
 
   get abilityDisplayInfo(){
-    return new AbilityDisplayInfo(this.itemInstance)
+    return abilityDisplayInfo(this.itemInstance)
   }
 
   makeDetails(){

@@ -11,7 +11,6 @@ import { DAMAGE_COLORS, FLASH_COLORS } from '../../colors.js'
 import { flash } from '../../animations/simple.js'
 import LoadoutRow from '../loadout/loadoutRow.js'
 import EffectRow from '../effects/effectRow.js'
-import ConsoleTimer from '../../../../game/consoleTimer.js'
 
 const HTML = `
 <div class="name"></div>
@@ -90,8 +89,9 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   advanceTime(ms){
-    this.fighterInstance.advanceTime(ms)
-    this._updateCooldowns()
+    this._actionBarEl.advanceTime(ms)
+    this._loadoutEl.advanceTime(ms)
+    this._effectsListEl.advanceTime(ms)
   }
 
   displayActionPerformed(action){
@@ -201,6 +201,7 @@ export default class FighterInstancePane extends HTMLElement{
 
     if(this.fighterInstance.hp !== this.hpBarEl.value){
       if(cancelAnimations || !this.hpBarEl.animating){
+        this._hpChangeQueue.clear()
         this.hpBarEl.setValue(this.fighterInstance.hp)
       }else{
         console.log('Prevented bar set because it was animating.')
@@ -214,7 +215,11 @@ export default class FighterInstancePane extends HTMLElement{
     this._actionBarEl.classList.toggle('displaynone', !this.fighterInstance.inCombat)
     this.statsList.setStats(this.fighterInstance.stats, this.fighterInstance)
     this._effectsListEl.update(cancelAnimations)
-    this._updateCooldowns()
+    this._actionBarEl.setTime(
+      this.fighterInstance._state.timeSinceLastAction,
+      this.fighterInstance.timeUntilNextAction
+    )
+    this._loadoutEl.updateAllRows()
 
     if(!this.fighterInstance.hp && this._options.fadeOutOnDefeat){
       this._fadeAnim = new CustomAnimation({
@@ -225,15 +230,6 @@ export default class FighterInstancePane extends HTMLElement{
       })
       this._finished = true
     }
-  }
-
-  _updateCooldowns(){
-    this._actionBarEl.setTime(
-      this.fighterInstance._state.timeSinceLastAction,
-      this.fighterInstance.timeUntilNextAction
-    )
-    this._loadoutEl.updateAllRows()
-    this._effectsListEl.updateDurations()
   }
 
   _showFighterInfoModal(){
@@ -302,12 +298,17 @@ class ResultQueue{
     }
   }
 
+  clear(){
+    clearTimeout(this._timeout)
+    this._queue = []
+  }
+
   _next(){
     if(!this._queue.length){
       return
     }
     this._queue[0]()
-    setTimeout(() => {
+    this._timeout = setTimeout(() => {
       this._queue = this._queue.slice(1)
       this._next()
     }, STAGGER_TIME)

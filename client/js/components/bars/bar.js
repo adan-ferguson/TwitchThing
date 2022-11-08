@@ -239,7 +239,11 @@ export default class Bar extends HTMLElement{
       html += spwrap(valHtml)
     }
     if(this._options.showLabel){
-      html += spwrap(this._options.label)
+      if(_.isFunction(this._options.label)){
+        html += spwrap(this._options.label(val))
+      }else{
+        html += spwrap(this._options.label)
+      }
     }
     this._barLabel.innerHTML = html
     this._barLabel.classList.toggle('linebreak', this._options.lineBreakLabel)

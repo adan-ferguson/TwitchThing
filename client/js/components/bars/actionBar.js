@@ -7,18 +7,24 @@ export default class ActionBar extends Bar{
     this.setOptions({
       showMax: false,
       showValue: false,
-      color: ACTION_COLOR
+      color: ACTION_COLOR,
+      label: val => {
+        const timeInSeconds = (val / 1000).toFixed(1)
+        const totalInSeconds = (this._options.max / 1000).toFixed(1)
+        return timeInSeconds + 's / ' + totalInSeconds + 's'
+      }
     })
   }
 
   setTime(elapsed, remaining){
-    const timeInSeconds = (remaining / 1000).toFixed(1)
-    const totalInSeconds = ((elapsed + remaining) / 1000).toFixed(1)
     this.setValue(elapsed)
     this.setOptions({
-      max: elapsed + remaining,
-      label: timeInSeconds + 's / ' + totalInSeconds + 's'
+      max: elapsed + remaining
     })
+  }
+
+  advanceTime(ms){
+    this.setValue(ms, { relative: true })
   }
 }
 

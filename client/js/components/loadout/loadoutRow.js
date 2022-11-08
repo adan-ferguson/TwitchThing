@@ -4,7 +4,6 @@ import { wrapContent } from '../../../../game/utilFunctions.js'
 import { ITEM_ROW_COLORS } from '../../colors.js'
 import { AbilityState } from '../../abilityDisplayInfo.js'
 import EffectDetails from '../effectDetails.js'
-import ConsoleTimer from '../../../../game/consoleTimer.js'
 
 const HTML = `
 <di-bar class="cooldown"></di-bar>
@@ -16,6 +15,7 @@ export default class LoadoutRow extends HTMLElement{
 
   _newBadge
   _options
+  _usesCooldown
 
   loadoutItem
 
@@ -104,9 +104,17 @@ export default class LoadoutRow extends HTMLElement{
       .setOptions({
         color,
         borderColor,
-        max: 1
+        max: info.barMax
       })
-      .setValue(info.barPct)
+      .setValue(info.barValue)
+
+    this._usesCooldown = info.ability.cooldown ? true : false
+  }
+
+  advanceTime(ms){
+    if(this._usesCooldown){
+      this._cooldownBarEl.setValue(ms, { relative: true })
+    }
   }
 
   _setupBlank(){

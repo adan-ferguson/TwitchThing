@@ -7,10 +7,6 @@ export default class EffectsList extends HTMLElement{
     this.update(false)
   }
 
-  updateDurations(){
-    this.update()
-  }
-
   update(cancelAnimations = false){
 
     if(!this._fighterInstance){
@@ -39,6 +35,12 @@ export default class EffectsList extends HTMLElement{
     })
 
     Object.values(expiredEffectRows).forEach(row => this._removeRow(row))
+  }
+
+  advanceTime(ms){
+    this.querySelectorAll('di-effect-row').forEach(row => {
+      row.advanceTime(ms)
+    })
   }
 
   _addRow(key, effect){

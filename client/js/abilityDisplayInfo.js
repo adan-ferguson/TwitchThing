@@ -8,80 +8,70 @@ export const AbilityState = {
   RECHARGING: 'recharging'
 }
 
-export default class AbilityDisplayInfo{
-  constructor(effectInstance){
-    this._abilities = effectInstance.abilities
-    this._owner = effectInstance.owner
-  }
-
-  get noAbility(){
-    return !this.mainAbility
-  }
-
-  get mainAbility(){
-    const active = this._abilities.active
-    if(active){
-      return { type: 'active', instance: active }
-    }
-    const type = Object.keys(this._abilities)[0]
-    if(!type){
-      return null
-    }
-    return { type, instance: this._abilities[type] }
-  }
-
-  get type(){
-    if(this.noAbility){
-      return 'none'
-    }
-    return this.mainAbility.type === 'active' ? 'active' : 'triggered'
-  }
-
-  get descriptionEl(){
-    if(this.mainAbility.instance.description){
-      return parseDescriptionString(this.mainAbility.instance.description, this._owner)
-    }
+export default function(effectInstance){
+  const { ability, trigger } = getMainAbility(effectInstance.abilities)
+  if(!ability){
     return null
-    // Derived descriptions
-    // TODO: add the trigger
-    // return this.mainAbility.instance.actions.map(action => {
-    // if(action.type === 'attack'){
-    //   return attackDescription(action, this._owner)
-    // }
-    // if(action.type === 'gainHealth'){
-    //   return gainHealthDescription(action, this._owner)
-    // }
-    // if(action.type === 'effect'){
-    //   return effectAction(action, this._owner)
-    // }
-    // if(action.type === 'time'){
-    //   return timeAction(action.ms)
-    // }
-    // }).join(' ')
   }
+  return {
+    ability,
+    trigger,
+    type: trigger === 'active' ? 'active' : 'triggered',
+    descriptionEl: descriptionEl(ability),
+    state: state(ability),
+    barValue: barValue(ability),
+    barMax: barMax(ability)
+  }
+}
 
-  get state(){
-    if(!this.mainAbility){
-      return AbilityState.NONE
-    }else if(this._owner.mods.contains(silencedMod)){
-      return AbilityState.DISABLED
-    }else if(this.mainAbility.instance.ready){
-      return AbilityState.READY
-    }else if(this.mainAbility.instance.enabled){
-      return AbilityState.RECHARGING
-    }
+function getMainAbility(abilities){
+  const active = abilities.active
+  if(active){
+    return { trigger: 'active', ability: active }
+  }
+  const trigger = Object.keys(abilities)[0]
+  if(!trigger){
+    return {}
+  }
+  return { trigger, ability: abilities[trigger] }
+}
+
+function descriptionEl(ability){
+  if(ability.description){
+    return parseDescriptionString(ability.description, ability.fighterInstance)
+  }
+  return null
+}
+
+function state(ability){
+  if(!ability){
+    return AbilityState.NONE
+  }else if(ability.fighterInstance.mods.contains(silencedMod)){
     return AbilityState.DISABLED
+  }else if(ability.ready){
+    return AbilityState.READY
+  }else if(ability.enabled){
+    return AbilityState.RECHARGING
   }
+  return AbilityState.DISABLED
+}
 
-  get barPct(){
-    if(!this.mainAbility || this.state === AbilityState.DISABLED){
-      return 0
-    }
-    if(this.mainAbility.instance.cooldown){
-      return 1 - this.mainAbility.instance.cooldownRemaining / this.mainAbility.instance.cooldown
-    }else if(this.mainAbility.instance.uses){
-      return 1 - this.mainAbility.instance.timesUsed / this.mainAbility.instance.uses
-    }
-    return 0
+function barValue(ability){
+  if(ability?.cooldown){
+    return ability.cooldown - ability.cooldownRemaining
   }
+  if(ability?.uses){
+    return ability.uses - ability.timesUsed
+  }
+  return 0
+}
+
+function barMax(ability){
+  if(ability?.cooldown){
+    return ability.cooldown
+  }
+  if(ability?.uses){
+    return ability.uses
+  }
+  return 0
 }

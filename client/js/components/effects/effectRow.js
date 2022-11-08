@@ -31,6 +31,7 @@ export default class EffectRow extends HTMLElement{
   }
 
   update(effect, cancelAnimations = false){
+
     this.effect = effect
     const info = effectDisplayInfo(effect)
 
@@ -47,7 +48,18 @@ export default class EffectRow extends HTMLElement{
       this.barEl.setValue(info.barValue)
     }
 
-    this._miniBarEl.setValue(info.miniBarPct)
+    if(info.abilityInfo){
+      this._usesCooldown = info.abilityInfo.ability.cooldown ? true : false
+      this._miniBarEl
+        .setOptions({ max: info.abilityInfo.barMax })
+        .setValue(info.abilityInfo.barValue)
+    }
+  }
+
+  advanceTime(ms){
+    if(this._usesCooldown){
+      this._miniBarEl.setValue(ms, { relative : true } )
+    }
   }
 
   flash(){

@@ -1,6 +1,6 @@
 import { roundToFixed } from '../../../game/utilFunctions.js'
-import AbilityDisplayInfo from '../abilityDisplayInfo.js'
 import tippy from 'tippy.js'
+import abilityDisplayInfo from '../abilityDisplayInfo.js'
 
 const HTML = (cooldown, initialCooldown = 0) => {
   return `
@@ -23,15 +23,16 @@ export default class AbilityDetails extends HTMLElement{
 
   setItem(itemInstance, tooltips = false){
 
-    if(!itemInstance.hasAbilities){
+    const displayInfo = abilityDisplayInfo(itemInstance)
+
+    if(!displayInfo){
       this.innerHTML = ''
       this.classList.add('displaynone')
       return
     }
 
-    const displayInfo = new AbilityDisplayInfo(itemInstance)
     this.setAttribute('ability-type', displayInfo.type)
-    this.innerHTML = HTML(displayInfo.mainAbility.instance.cooldown, displayInfo.mainAbility.instance.initialCooldown)
+    this.innerHTML = HTML(displayInfo.ability.cooldown, displayInfo.ability.initialCooldown)
 
     const descriptionEl = displayInfo.descriptionEl
     if(descriptionEl){

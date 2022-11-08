@@ -119,6 +119,12 @@ export default class Loadout extends HTMLElement{
       loadoutRow.update()
     })
   }
+
+  advanceTime(ms){
+    this._rows.forEach(loadoutRow => {
+      loadoutRow.advanceTime(ms)
+    })
+  }
 }
 
 customElements.define('di-loadout', Loadout)
