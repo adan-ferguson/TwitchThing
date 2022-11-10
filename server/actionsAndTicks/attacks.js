@@ -39,6 +39,7 @@ export function performAttackAction(combat, attacker, effect = null, actionDef =
   }
 
   if(dodgeAttack(enemy)){
+    resultObj.triggeredEvents.push(...triggerEvent(combat, enemy, 'dodge'))
     return makeActionResult({
       ...resultObj,
       data: {

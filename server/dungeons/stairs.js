@@ -6,9 +6,8 @@ export function foundStairs(dungeonRun){
   const floor = dungeonRun.floor
   const room = dungeonRun.room
   const pace = dungeonRun.pace ?? 'Brisk'
-  const adventurer = dungeonRun.adventurer
-  if(floor === 50){
-    // TODO: remove this restriction
+  if(floor % 10 === 0){
+    // Have to beat boss to advance
     return false
   }
   if(room <= 2){

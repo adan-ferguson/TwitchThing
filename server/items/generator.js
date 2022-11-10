@@ -1,4 +1,4 @@
-import BaseItems from '../../game/items/combined.js'
+import BaseItems, { all as allItems } from '../../game/items/combined.js'
 import { v4 } from 'uuid'
 import Picker from '../../game/picker.js'
 
@@ -23,4 +23,11 @@ export function generateItemDef({ group, name }){
 export function generateRandomItemDef(chestLevel){
   const baseType = itemPicker.pick(chestLevel / 3)
   return generateItemDef(baseType)
+}
+
+export function generateTestInventory(itemsObj){
+  Object.values(BaseItems.fighter).forEach(i => {
+    const itemDef = generateItemDef(i)
+    itemsObj[itemDef.id] = itemDef
+  })
 }

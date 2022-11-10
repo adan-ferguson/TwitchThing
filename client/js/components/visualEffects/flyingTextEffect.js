@@ -30,9 +30,9 @@ export default class FlyingTextEffect extends EventEmitter{
       ...options
     }
 
-    if(options.clearExistingForSource && this.source.__flyingTextAnim){
-      this.source.__flyingTextAnim.remove()
-    }
+    // if(options.clearExistingForSource && this.source.__flyingTextAnim){
+    //   this.source.__flyingTextAnim.remove()
+    // }
 
     this.el = document.createElement('div')
     this.el.classList.add('flying-text-effect')

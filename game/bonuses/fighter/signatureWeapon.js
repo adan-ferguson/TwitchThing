@@ -1,6 +1,6 @@
 export default {
   effect: level => {
-    const reduction = level * -2
+    const reduction = level * -1
     return {
       slotEffect: {
         slotTag: 'signatureWeapon',

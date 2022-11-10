@@ -12,12 +12,13 @@ export async function generateEvent(dungeonRun){
   const room = dungeonRun.room
   const adventurerInstance = dungeonRun.adventurerInstance
 
-  if(floor === 30 && room >= 200){
-    return {
-      message: `${adventurerInstance.displayName} gets bored and leaves.`,
-      runFinished: true
-    }
-  }
+  // TODO: message after clearing floor 50 boss?
+  // if(floor === 30 && room >= 200){
+  //   return {
+  //     message: `${adventurerInstance.displayName} gets bored and leaves.`,
+  //     runFinished: true
+  //   }
+  // }
 
   if(dungeonRun.user.accomplishments.firstRunFinished && foundStairs(dungeonRun)){
     const message = dungeonRun.pace === 'Brisk' ?
@@ -32,7 +33,7 @@ export async function generateEvent(dungeonRun){
   }
 
   const previousEvent = dungeonRun.events.at(-1)
-  const encounterPossible = previousEvent?.monster
+  const encounterPossible = previousEvent?.monster ? false : true
 
   if(encounterPossible && foundMonster(dungeonRun)){
     return await generateCombatEvent(dungeonRun)

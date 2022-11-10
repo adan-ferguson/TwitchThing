@@ -76,21 +76,22 @@ const FLOOR_RANGE = 4
 const FLOOR_SKEW = -0.2
 
 export function foundMonster(dungeonRun){
-  return roomsSinceMonster() > MONSTER_ROOM_BUFFER && Math.random() < MONSTER_CHANCE
-  function roomsSinceMonster(){
-    let i
-    for(i = 1; i <= dungeonRun.events.length; i++){
-      if(dungeonRun.events.at(-i)?.monster){
-        break
-      }
-    }
-    return i - 1
-  }
+  return 1
+  // return roomsSinceMonster() > MONSTER_ROOM_BUFFER && Math.random() < MONSTER_CHANCE
+  // function roomsSinceMonster(){
+  //   let i
+  //   for(i = 1; i <= dungeonRun.events.length; i++){
+  //     if(dungeonRun.events.at(-i)?.monster){
+  //       break
+  //     }
+  //   }
+  //   return i - 1
+  // }
 }
 
 export async function generateMonster(dungeonRun){
 
-  const level = floorToLevel(dungeonRun.floor, dungeonRun.adventurerInstance.stats.get('combatHarderChance').value)
+  const level = floorToLevel(dungeonRun.floor)
   const monsterDefinition = getMonsterDefinition(level)
 
   return {
@@ -150,10 +151,9 @@ export function getAllMonsters(){
  * Given a floor, return a random level equal to this floor or less, but it has to be
  * the same zone (aka the tens digit must remain the same).
  * @param floor
- * @param harderMonsterChance
  */
-function floorToLevel(floor, harderMonsterChance = 1){
-  return chooseOne(generateFloorChoices(floor, FLOOR_RANGE, FLOOR_SKEW + harderMonsterChance - 1))
+function floorToLevel(floor){
+  return chooseOne(generateFloorChoices(floor, FLOOR_RANGE, FLOOR_SKEW - 1))
 }
 
 function getMonsterDefinition(floor, rarity = 1){

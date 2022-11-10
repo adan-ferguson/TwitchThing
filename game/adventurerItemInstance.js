@@ -1,7 +1,6 @@
 import Items from './items/combined.js'
 import FighterItemInstance from './fighterItemInstance.js'
 import OrbsData from './orbsData.js'
-import { dualWieldBonus, signatureWeaponBonus } from './bonuses/combined.js'
 
 export default class AdventurerItemInstance extends FighterItemInstance{
 

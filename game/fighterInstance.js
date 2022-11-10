@@ -1,9 +1,8 @@
 import Stats from './stats/stats.js'
-import { dualWieldMod, freezeActionBarMod, magicAttackMod, silencedMod, sneakAttackMod } from './mods/combined.js'
+import { freezeActionBarMod, magicAttackMod, silencedMod, sneakAttackMod } from './mods/combined.js'
 import { StatusEffectsData } from './statusEffectsData.js'
 import ModsCollection from './modsCollection.js'
 import FighterItemInstance from './fighterItemInstance.js'
-import { toArray } from './utilFunctions.js'
 
 // Stupid
 new Stats()

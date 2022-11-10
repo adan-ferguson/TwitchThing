@@ -9,7 +9,7 @@ export default {
       dodge: {
         description: 'Whenever you dodge something, refresh your turn timer.',
         actions: [turnTimeAction({
-          setRemaining: 1
+          setRemaining: 100
         })]
       }
     }

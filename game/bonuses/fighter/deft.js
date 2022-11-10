@@ -5,5 +5,5 @@ export default {
     stats: {
       speed: BASE * level
     }
-  }),
+  })
 }

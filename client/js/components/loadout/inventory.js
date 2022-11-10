@@ -110,7 +110,7 @@ export default class Inventory extends HTMLElement{
 function isCompatible(adventurer, itemInstance){
   const ai = new AdventurerInstance({
     ...adventurer,
-    items: [itemInstance]
+    items: [itemInstance.itemDef]
   })
   return ai.orbs.isValid
 }

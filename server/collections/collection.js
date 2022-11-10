@@ -37,6 +37,14 @@ export default class Collection{
     })
   }
 
+  async findOne(options = {}){
+    return await db.findOne(this.collectionName, {
+      ...options,
+      defaults: this.defaults
+    })
+  }
+
+
   async findByID(id, options = {}){
     if(!id){
       throw 'Tried to findOne with null value, probably a bug'

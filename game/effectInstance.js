@@ -55,7 +55,7 @@ export default class EffectInstance{
   }
 
   get exclusiveStats(){
-    return this.owner?.statsForEffect(this)
+    return this.owner?.statsForEffect(this) ?? new Stats()
   }
 
   get state(){
@@ -96,7 +96,7 @@ export default class EffectInstance{
   }
 
   generateAbilitiesData(){
-    return new AbilitiesData(this.effectData.abilities, this._state.abilities ?? {}, this)
+    return new AbilitiesData(this.effectData.abilities, this._state?.abilities ?? {}, this)
   }
 
   /**

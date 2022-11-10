@@ -5,7 +5,8 @@ export const AbilityState = {
   NONE: 'none',
   DISABLED: 'disabled',
   READY: 'ready',
-  RECHARGING: 'recharging'
+  RECHARGING: 'recharging',
+  IDLE: 'idle'
 }
 
 export default function(effectInstance){
@@ -13,14 +14,16 @@ export default function(effectInstance){
   if(!ability){
     return null
   }
+  const idle = !effectInstance.fighterInstance || effectInstance.fighterInstance.idle
   return {
     ability,
     trigger,
     type: trigger === 'active' ? 'active' : 'triggered',
     descriptionEl: descriptionEl(ability),
-    state: state(ability),
-    barValue: barValue(ability),
-    barMax: barMax(ability)
+    idle,
+    state: idle ? AbilityState.IDLE : state(ability),
+    barValue: idle ? 0 : barValue(ability),
+    barMax: idle ? 1 : barMax(ability)
   }
 }
 
@@ -39,7 +42,7 @@ function getMainAbility(abilities){
 function descriptionEl(ability){
   const descStr = ability.description ?? deriveDescriptionString(ability)
   if(descStr){
-    return parseDescriptionString(descStr, ability.fighterInstance)
+    return parseDescriptionString(descStr, ability.parentEffect.exclusiveStats)
   }
   return null
 }
@@ -80,7 +83,9 @@ function barMax(ability){
 function deriveDescriptionString(ability){
   const chunks = []
   ability.actions.forEach(a => {
-    if(a.type === 'attack'){
+    if(a.description){
+      chunks.push(a.description)
+    }else if(a.type === 'attack'){
       chunks.push(toAttackString(a))
     }
   })
@@ -88,8 +93,7 @@ function deriveDescriptionString(ability){
 }
 
 function toAttackString(action){
-  debugger
   const scaling = action.damageScaling === 'auto' ? action.damageType : action.damageScaling
-  return `Attack for [${scaling}Scaling${action.damageMulti}] ${action.damageType} damage.`
+  return `Attack for [${scaling}Attack${action.damageMulti}] ${action.damageType} damage.`
 }
 

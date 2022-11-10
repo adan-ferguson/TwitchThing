@@ -51,7 +51,7 @@ export default class Ticker extends EventEmitter{
   }
 
   get waitFn(){
-    return this._options.live ? setTimeout : requestAnimationFrame.bind(window)
+    return this._options.live ? setTimeout.bind(window) : requestAnimationFrame.bind(window)
   }
 
   setOptions(options = {}){

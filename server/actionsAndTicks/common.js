@@ -93,8 +93,8 @@ export function performCancelAction(owner, def = {}){
 
 export function performTurnTimeAction(combat, owner, actionDef){
   const timeBefore = owner.timeUntilNextAction
-  if(actionDef.remaining){
-    owner.timeUntilNextAction = actionDef.remaining
+  if(actionDef.setRemaining){
+    owner.timeUntilNextAction = actionDef.setRemaining
   }else if(actionDef.change){
     owner.timeSinceLastAction += actionDef.change
   }

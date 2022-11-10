@@ -8,6 +8,10 @@ export default class AbilityInstance{
     this._state = state ?? {}
   }
 
+  get parentEffect(){
+    return this._parentEffect
+  }
+
   get name(){
     return this._abilityDef.name
   }
