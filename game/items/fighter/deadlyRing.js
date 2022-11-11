@@ -1,12 +1,11 @@
 import { geometricProgession } from '../../exponentialValue.js'
-import { critChanceStat, critDamageStat, physPowerStat } from '../../stats/combined.js'
+import { critChanceStat, physPowerStat } from '../../stats/combined.js'
 
 export default {
   levelFn: level => ({
     stats: {
-      [physPowerStat.name]: Math.round(geometricProgession(0.3, level, 200)),
-      [critChanceStat.name]: 15 + level * 5 + '%',
-      [critDamageStat.name]: Math.round(geometricProgession(0.2, level, 20)) / 100
+      [physPowerStat.name]: Math.round(geometricProgession(0.3, level, 100)),
+      [critChanceStat.name]: 20 + level * 10 + '%',
     }
   }),
   orbs: 8

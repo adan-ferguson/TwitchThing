@@ -1,6 +1,6 @@
 import physScaling from '../../mods/generic/physScaling.js'
 import attackAction from '../../actions/attackAction.js'
-import { dodgeChanceStat, physPowerStat, speedStat } from '../../stats/combined.js'
+import { dodgeChanceStat, physPowerStat } from '../../stats/combined.js'
 import parentEffectAction from '../../actions/parentEffectAction.js'
 import { exponentialPercentage, geometricProgession } from '../../exponentialValue.js'
 
