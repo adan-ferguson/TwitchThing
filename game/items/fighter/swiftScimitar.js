@@ -1,26 +1,23 @@
 import physScaling from '../../mods/generic/physScaling.js'
 import attackAction from '../../actions/attackAction.js'
-import { geometricProgession } from '../../exponentialValue.js'
-
-const SCALING = 0.25
-const BASE = 4
+import { fillArray } from '../../utilFunctions.js'
 
 export default {
   levelFn: level => ({
     abilities: {
       active: {
-        cooldown: 15000,
+        cooldown: 12000,
         actions: [
-          attackAction({
-            damageMulti: 1.4 + level * 0.1
-          })
+          fillArray(() => attackAction({
+            damageMulti: 0.6
+          }), 2 + level)
         ]
       }
     },
     stats: {
-      physPower: geometricProgession(SCALING, level, BASE)
+      speed: 10 * level
     },
     mods: [physScaling]
   }),
-  orbs: 1
+  orbs: 5
 }

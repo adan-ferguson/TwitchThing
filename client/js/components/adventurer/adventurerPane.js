@@ -47,11 +47,16 @@ export default class AdventurerPane extends HTMLElement{
     })
   }
 
+  get derivedAdventurerInstance(){
+    const items = this.loadoutEl.loadoutItems.map(loadoutItem => loadoutItem?.obj.itemDef)
+    return new AdventurerInstance({ ...this.adventurer, items }, this._extraStats)
+  }
+
   setAdventurer(adventurer){
     this.adventurer = adventurer
     this._name.textContent = adventurer.name
     this.xpBar.setValue(adventurer.xp)
-    this.loadoutEl.setFighterInstance(new AdventurerInstance(adventurer))
+    this.loadoutEl.setFighterInstance(new AdventurerInstance(this.adventurer))
     this.update()
   }
 
@@ -67,13 +72,11 @@ export default class AdventurerPane extends HTMLElement{
   }
 
   updateOrbs(){
-    this.orbRow.setData(this.loadoutEl.orbsData)
+    this.orbRow.setData(this.derivedAdventurerInstance.orbs)
   }
 
   updateStats(showStatChangeEffect){
-    const items = this.loadoutEl.loadoutItems.map(loadoutItem => loadoutItem?.obj.itemDef)
-    const adventurerInstance = new AdventurerInstance({ ...this.adventurer, items }, this._extraStats)
-    this.statsList.setStats(adventurerInstance.stats, adventurerInstance, showStatChangeEffect)
+    this.statsList.setStats(this.derivedAdventurerInstance.stats, this.derivedAdventurerInstance, showStatChangeEffect)
   }
 
   async addXp(toAdd, options = { }){

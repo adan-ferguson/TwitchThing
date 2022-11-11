@@ -99,6 +99,6 @@ export default class AdventurerInstance extends FighterInstance{
     // TODO: equipping of slot bonuses, for now the slot bonuses are just hardcoded
     return this.bonusesData.instances.find(bonusInstance => {
       return bonusInstance.slotBonus?.slotIndex === slotIndex
-    }).slotBonus
+    })?.slotBonus
   }
 }

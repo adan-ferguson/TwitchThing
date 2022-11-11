@@ -32,13 +32,6 @@ export default class Loadout extends HTMLElement{
     this.update()
   }
 
-  get orbsData(){
-    // if(this._contents){
-    //   return this._contents.getOrbsData(this.loadoutItems)
-    // }
-    return new OrbsData()
-  }
-
   get loadoutItems(){
     return this._rows.map(row => row.loadoutItem)
   }

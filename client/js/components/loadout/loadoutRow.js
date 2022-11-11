@@ -9,6 +9,7 @@ const HTML = `
 <di-bar class="cooldown"></di-bar>
 <di-item-row></di-item-row>
 <div class="new-badge hidden">New!</div>
+<div class="hit-area"></div>
 `
 
 export default class LoadoutRow extends HTMLElement{

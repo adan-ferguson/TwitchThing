@@ -347,6 +347,7 @@ export default class FighterInstance{
     this.inCombat = false
     delete this._state.combatTime
     delete this._state.timeSinceLastAction
+    // TODO: clear non-lingering cooldowns
   }
 
   isEffectDisabled(effect){

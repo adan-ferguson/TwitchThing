@@ -14,7 +14,7 @@ export default function(effectInstance){
   if(!ability){
     return null
   }
-  const idle = !effectInstance.fighterInstance || effectInstance.fighterInstance.idle
+  const idle = !effectInstance.owner || effectInstance.owner.idle || false
   return {
     ability,
     trigger,

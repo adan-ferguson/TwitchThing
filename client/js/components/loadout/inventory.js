@@ -31,7 +31,7 @@ export default class Inventory extends HTMLElement{
     this._setupFilteringOptions()
     this.list = this.querySelector('di-list')
     this.list.setOptions({
-      pageSize: 15
+      pageSize: 14
     })
   }
 

@@ -10,7 +10,7 @@ export default {
     abilities: {
       active: {
         cooldown: 15000 + 5000 * level,
-        initialCooldown: '50%',
+        initialCooldown: 7500 + 2500 * level,
         actions: [
           attackAction({
             damageMulti: 2 + level * 0.25
@@ -21,8 +21,8 @@ export default {
     stats: {
       physPower: geometricProgession(SCALING, level, BASE),
       speed: -10 - 10 * level
-    }
+    },
+    mods: [physScaling]
   }),
-  orbs: 4,
-  mods: [physScaling]
+  orbs: 4
 }

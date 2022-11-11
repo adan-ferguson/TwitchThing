@@ -18,7 +18,7 @@ const HTML = `
     </div>
     <div class="content-rows">
         <di-adventurer-pane></di-adventurer-pane>
-        <button class="save content-no-grow" disabled="disabled">Save</button>
+        <button class="save content-no-grow">Save</button>
     </div>
 </div>
 `
@@ -122,7 +122,8 @@ export default class AdventurerLoadoutEditorPage extends Page{
   }
 
   _updateSaveButton(){
-    if(this.adventurerPane.loadoutEl.orbsData.isValid || this._saving){
+    const orbs = this.adventurerPane.derivedAdventurerInstance.orbs
+    if(orbs.isValid && !this._saving){
       this.saveButton.removeAttribute('disabled')
     }else{
       this.saveButton.setAttribute('disabled', 'disabled')
