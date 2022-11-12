@@ -57,6 +57,7 @@ export default class StatsList extends HTMLElement{
     const statsToShow = this._stats.getAll(this._options.forced)
 
     for(let key in statsToShow){
+      const stat = statsToShow[key]
       if(this._options.excluded.indexOf(key) > -1){
         continue
       }
