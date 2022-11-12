@@ -16,6 +16,7 @@ export default {
         ]
       },
       dodge: {
+        description: 'Whenever you dodge an attack, refresh this item\'s cooldown',
         actions: [
           parentEffectAction({
             refreshCooldown: true
@@ -24,7 +25,7 @@ export default {
       }
     },
     stats: {
-      [dodgeChanceStat.name]: exponentialPercentage(10, level),
+      [dodgeChanceStat.name]: exponentialPercentage(0.1, level),
       [physPowerStat.name]: Math.round(geometricProgession(0.4, level, 150))
     },
     mods: [physScaling]

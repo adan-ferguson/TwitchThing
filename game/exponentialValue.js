@@ -1,4 +1,5 @@
-import { roundToFixed } from './utilFunctions.js'
+import { roundToNearestIntervalOf } from './utilFunctions.js'
+import _ from 'lodash'
 
 export function exponentialValue(growthPct, iterations, base = 1){
   return Math.pow(growthPct + 1, iterations) * base
@@ -9,19 +10,22 @@ export function exponentialValue(growthPct, iterations, base = 1){
  * @param growthPct
  * @param iterations
  * @param base
+ * @param roundToNearest
  * @returns {number}
  */
-export function geometricProgession(growthPct, iterations, base = 1){
+export function geometricProgession(growthPct, iterations, base = 1, roundToNearest = null){
   iterations = Math.round(iterations)
   if(iterations <= 0){
     return 0
   }
-  return base * (Math.pow(1 + growthPct, iterations) - 1) / growthPct
+  const val =  base * (Math.pow(1 + growthPct, iterations) - 1) / growthPct
+  return roundToNearest ? roundToNearestIntervalOf(val, roundToNearest) : val
 }
 
 /**
  * @param growthPct
  * @param val {number}
+ * @param base
  */
 export function inverseGeometricProgression(growthPct, val, base = 1){
   return Math.log(val * growthPct / base + 1) / Math.log(1 + growthPct)
@@ -36,6 +40,12 @@ export function inverseGeometricProgression(growthPct, val, base = 1){
  * @return {string} Whole percentage
  */
 export function exponentialPercentage(val, iterations){
-  val = parseFloat(val) / 100
-  return 100 * (1 - roundToFixed(Math.pow(1 - val, iterations), 2)) + '%'
+  if(_.isString(val)){
+    val = parseFloat(val) / 100
+  }
+  if(val < 0 || val > 1){
+    throw 'Exponential percentage out of range, probably a bug'
+  }
+  val = roundToNearestIntervalOf(100 * (1 - Math.pow(1 - val, iterations)), 0.1) + '%'
+  return val
 }

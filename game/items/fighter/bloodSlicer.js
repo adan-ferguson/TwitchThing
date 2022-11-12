@@ -13,7 +13,7 @@ export default {
       abilities: {
         active: {
           cooldown: 20000,
-          description: '[action0]. If it crits, the target bleeds for the same amount over 10 seconds.',
+          description: '{A0} If it crits, the target bleeds for the same amount over 10 seconds.',
           actions: [
             attackAction({
               damageMulti
@@ -43,7 +43,7 @@ export default {
         }
       },
       stats: {
-        [critChanceStat.name]: 15 + level * 5 + '%',
+        [critChanceStat.name]: 0.15 + level * 0.05,
         [critDamageStat.name]: roundToNearestIntervalOf(geometricProgession(0.3, level, 20), 5) + '%'
       },
       mods: [physScaling]

@@ -4,8 +4,9 @@ import magicPower from '../assets/icons/magicPower.svg'
 import { getStatDisplayInfo } from './statsDisplayInfo.js'
 import OrbRow, { OrbsDisplayStyle } from './components/orbRow.js'
 import Stats from '../../game/stats/stats.js'
-import { makeEl } from '../../game/utilFunctions.js'
+import { makeEl, toArray } from '../../game/utilFunctions.js'
 import { attackDamageStat, magicPowerStat, physPowerStat } from '../../game/stats/combined.js'
+import _ from 'lodash'
 
 const ICONS = {
   magic: magicPower,
@@ -14,39 +15,41 @@ const ICONS = {
 }
 
 export function parseDescriptionString(description, stats = null){
-  const props = []
-  const chunks = description.replace(/\[([A-Z]?)([A-Za-z]*)([\d.-]+)]/g, (_, type, subtype, val) => {
-    props.push({
-      type,
-      subtype,
-      val
-    })
-    return '@'
-  }).split('@')
 
   const el = document.createElement('div')
+  const { chunks, props } = chunk(description)
   chunks.forEach((chunk, i) => {
     if(i !== 0){
-      const { type, subtype, val } = props[i-1]
-      if(type === 'O'){
-        el.appendChild(wrapOrbs(subtype, val, stats))
-      }else if(type === 'S'){
-        el.appendChild(wrapStat(subtype, val, stats))
-      }else if(FNS[subtype]){
-        el.appendChild(FNS[subtype](val, stats))
+      const parsed = parseProp(props[i-1])
+      if(parsed){
+        el.appendChild(...toArray(parsed))
       }
     }
     el.appendChild(makeEl({ text: chunk }))
   })
   return el
+
+  function parseProp({ type, subtype, val }){
+    if(type === 'O'){
+      return wrapOrbs(subtype, val, stats)
+    }else if(type === 'S'){
+      return wrapStat(subtype, val, stats)
+    }else if(FNS[subtype]){
+      return FNS[subtype](val, stats)
+    }
+    return null
+  }
 }
 
-const scalingWrap = (damageType, amount) => `
+const scalingWrap = (damageType, amount) => {
+  const valStr = _.isNumber(amount) ? Math.ceil(amount) : amount
+  return `
 <span class="scaling-type scaling-type-${damageType}">
   <img src="${ICONS[damageType]}">
-  ${Math.ceil(amount)}
+  ${valStr}
 </span>
 `
+}
 
 const FNS = {
   physScaling: (val, stats) => {
@@ -103,4 +106,17 @@ function wrapStat(statType, val){
 
 function toPct(val){
   return val * 100 + '%'
+}
+
+function chunk(descriptionString){
+  const props = []
+  const chunks = descriptionString.replace(/\[([A-Z]?)([A-Za-z]*)([\d.-]+)]/g, (_, type, subtype, val) => {
+    props.push({
+      type,
+      subtype,
+      val
+    })
+    return '@'
+  }).split('@')
+  return { props, chunks }
 }

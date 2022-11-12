@@ -2,8 +2,7 @@ import physScaling from '../../mods/generic/physScaling.js'
 import attackAction from '../../actions/attackAction.js'
 import { magicDefStat } from '../../stats/combined.js'
 import { minMax } from '../../utilFunctions.js'
-
-// TODO: something fun?
+import { exponentialPercentage } from '../../exponentialValue.js'
 
 export default {
   levelFn: level => {
@@ -26,7 +25,7 @@ export default {
         }
       },
       stats: {
-        [magicDefStat.name]: 1 - (0.6 * Math.pow(0.9, level - 1))
+        [magicDefStat.name]: exponentialPercentage(0.1, level)
       },
       mods: [physScaling]
     }

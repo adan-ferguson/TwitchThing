@@ -88,8 +88,7 @@ export default class AdventurerLoadoutEditorPage extends Page{
 
     setupEditable(this.inventory, this.adventurerPane.loadoutEl, {
       onChange: () => {
-        this.adventurerPane.updateStats(true)
-        this.adventurerPane.updateOrbs()
+        this.adventurerPane.update(true)
         this._updateSaveButton()
       }
     })
@@ -122,7 +121,7 @@ export default class AdventurerLoadoutEditorPage extends Page{
   }
 
   _updateSaveButton(){
-    const orbs = this.adventurerPane.derivedAdventurerInstance.orbs
+    const orbs = this.adventurerPane.adventurerInstance.orbs
     if(orbs.isValid && !this._saving){
       this.saveButton.removeAttribute('disabled')
     }else{

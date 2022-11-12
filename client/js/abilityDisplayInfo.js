@@ -15,11 +15,12 @@ export default function(effectInstance){
     return null
   }
   const idle = !effectInstance.owner || effectInstance.owner.idle || false
+  const stats = effectInstance.owner ? ability.parentEffect.exclusiveStats : null
   return {
     ability,
     trigger,
     type: trigger === 'active' ? 'active' : 'triggered',
-    descriptionEl: descriptionEl(ability),
+    descriptionEl: descriptionEl(ability, stats),
     idle,
     state: idle ? AbilityState.IDLE : state(ability),
     barValue: idle ? 0 : barValue(ability),
@@ -39,12 +40,17 @@ function getMainAbility(abilities){
   return { trigger, ability: abilities[trigger] }
 }
 
-function descriptionEl(ability){
-  const descStr = ability.description ?? deriveDescriptionString(ability)
-  if(descStr){
-    return parseDescriptionString(descStr, ability.parentEffect.exclusiveStats)
+function descriptionEl(ability, useStats = null){
+  const derivedActionStrings = ability.actions.map(deriveActionString)
+  let str
+  if(ability.description){
+    str = ability.description.replace(/{A(\d+)}/g, (a, b, c) => {
+      return derivedActionStrings[b]
+    })
+  }else{
+    str = derivedActionStrings.filter(s => s).join(' ')
   }
-  return null
+  return parseDescriptionString(str, useStats)
 }
 
 function state(ability){
@@ -80,16 +86,13 @@ function barMax(ability){
   return 0
 }
 
-function deriveDescriptionString(ability){
-  const chunks = []
-  ability.actions.forEach(a => {
-    if(a.description){
-      chunks.push(a.description)
-    }else if(a.type === 'attack'){
-      chunks.push(toAttackString(a))
-    }
-  })
-  return chunks.join(' ')
+function deriveActionString(action){
+  if(action.description){
+    return action.description
+  }else if(action.type === 'attack'){
+    return toAttackString(action)
+  }
+  return ''
 }
 
 function toAttackString(action){

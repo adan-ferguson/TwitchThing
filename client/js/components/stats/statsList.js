@@ -106,7 +106,7 @@ export default class StatsList extends HTMLElement{
     }
     if(showStatChangeEffect){
       rows.forEach(r => flash(r, STAT_DECREASE_COLOR, STAT_EFFECT_TIME))
-      await wait(STAT_EFFECT_TIME)
+      await wait(STAT_EFFECT_TIME / 2)
     }
     rows.forEach(r => r.remove())
   }

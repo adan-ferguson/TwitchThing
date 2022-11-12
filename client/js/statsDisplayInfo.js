@@ -22,14 +22,12 @@ const statDefinitionsInfo = {
   [StatDefs.physPower.name]: {
     text: 'Phys Power',
     icon: physPowerIcon,
-    description: 'Phys power (basic attack damage)',
-    displayedValueFn: value => `${Math.round(value)}`
+    description: 'Phys power (basic attack damage)'
   },
   [StatDefs.magicPower.name]: {
     text: 'Magic Power',
     icon: magicPowerIcon,
-    description: 'Magic power',
-    displayedValueFn: value => `${Math.round(value)}`
+    description: 'Magic power'
   },
   [StatDefs.physDef.name]: {
     text: 'Phys Defense',
@@ -53,16 +51,12 @@ const statDefinitionsInfo = {
   [StatDefs.critChance.name]: {
     text: 'Crit Chance',
     description: 'Chance to deal bonus damage.',
-    displayedValueFn: value => {
-      return `${Math.round(value * 100)}%`
-    },
+    displayedValueFn: flatValuePercentageDisplay
   },
   [StatDefs.enemyCritChance.name]: {
     text: 'Enemy Crit Chance',
     description: 'Increases enemy\'s crit chance.',
-    displayedValueFn: value => {
-      return `${Math.round(value * 100)}%`
-    },
+    displayedValueFn: flatValuePercentageDisplay
   },
   [StatDefs.critDamage.name]: {
     text: 'Crit Damage',
@@ -132,4 +126,12 @@ function toText(statType, value, style){
     return `${style === StatsDisplayStyle.ADDITIONAL ? '+' : ''}${roundToFixed(value * 100, 1)}%`
   }
   return `${value > 0 && style === StatsDisplayStyle.ADDITIONAL ? '+' : ''}${value}`
+}
+
+function flatValuePercentageDisplay(value, { style }){
+  let str = ''
+  if(style === StatsDisplayStyle.ADDITIONAL && value > 0){
+    str += '+'
+  }
+  return str + `${Math.round(value * 100)}%`
 }

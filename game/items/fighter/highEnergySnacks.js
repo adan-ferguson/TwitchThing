@@ -1,4 +1,5 @@
 import statusEffectAction from '../../actions/statusEffectAction.js'
+import { geometricProgession } from '../../exponentialValue.js'
 
 export default {
   levelFn: level => ({
@@ -8,10 +9,11 @@ export default {
           statusEffectAction({
             effect: {
               stacking: 'replace',
+              combatOnly: false,
               stackingId: 'highEnergySnacks',
               duration: 45000 + level * 15000,
               stats: {
-                speed: level * 25
+                speed: geometricProgession(0.10, level, 25, 5)
               }
             }
           })

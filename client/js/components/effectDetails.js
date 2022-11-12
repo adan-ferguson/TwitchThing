@@ -8,7 +8,7 @@ export default class EffectDetails extends DIElement{
 
   get defaultOptions(){
     return {
-      showTooltips: false
+      showTooltips: false,
     }
   }
 
@@ -52,16 +52,8 @@ export default class EffectDetails extends DIElement{
 
   _addDescription(){
     if(this._effectInstance.description){
-      this.appendChild(parseDescriptionString(this._effectInstance.description, this._effectInstance.owner))
+      this.appendChild(parseDescriptionString(this._effectInstance.description))
     }
-    // this._effectInstance.mods.list.forEach(mod => {
-    //   if(mod.description){
-    //     segments.push(mod.description)
-    //   }
-    // })
-    // this.appendChild(
-    //   content: segments.join(' ')
-    // }))
   }
 
 }

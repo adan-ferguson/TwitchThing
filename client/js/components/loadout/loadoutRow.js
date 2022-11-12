@@ -4,6 +4,7 @@ import { wrapContent } from '../../../../game/utilFunctions.js'
 import { ITEM_ROW_COLORS } from '../../colors.js'
 import { AbilityState } from '../../abilityDisplayInfo.js'
 import EffectDetails from '../effectDetails.js'
+import DIElement from '../diElement.js'
 
 const HTML = `
 <di-bar class="cooldown"></di-bar>
@@ -12,10 +13,9 @@ const HTML = `
 <div class="hit-area"></div>
 `
 
-export default class LoadoutRow extends HTMLElement{
+export default class LoadoutRow extends DIElement{
 
   _newBadge
-  _options
   _usesCooldown
 
   loadoutItem
@@ -34,9 +34,6 @@ export default class LoadoutRow extends HTMLElement{
       theme: 'light',
       allowHTML: true
     })
-    this._options = {
-      showNewBadge: false
-    }
     this._tippy.disable()
     this.index = index
     this.setItem(null)
@@ -55,13 +52,16 @@ export default class LoadoutRow extends HTMLElement{
 
   get tooltip(){
 
+    const tooltip = document.createElement('div')
+
     if(!this.loadoutItem?.obj){
-      return ''
+      return tooltip
     }
 
-    const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
-    tooltip.appendChild(new EffectDetails().setEffect(this.loadoutItem.obj))
+    tooltip.appendChild(
+      new EffectDetails().setEffect(this.loadoutItem.obj)
+    )
     tooltip.appendChild(wrapContent('Right-click for more info', {
       class: 'right-click subtitle'
     }))
@@ -81,6 +81,10 @@ export default class LoadoutRow extends HTMLElement{
     this.loadoutItem = loadoutItem
     this._itemRowEl.setItem(loadoutItem)
     this._tippy.enable()
+    this.updateTooltip()
+  }
+
+  updateTooltip(){
     this._tippy.setContent(this.tooltip)
   }
 
@@ -89,7 +93,7 @@ export default class LoadoutRow extends HTMLElement{
     this._cooldownBarEl.style.visibility = this.loadoutItem ? 'visible' : 'hidden'
 
     const info = this.loadoutItem?.abilityDisplayInfo
-    if(!info){
+    if(!info || info.idle){
       return
     }
 

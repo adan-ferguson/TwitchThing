@@ -47,16 +47,11 @@ export default class AdventurerPane extends HTMLElement{
     })
   }
 
-  get derivedAdventurerInstance(){
-    const items = this.loadoutEl.loadoutItems.map(loadoutItem => loadoutItem?.obj.itemDef)
-    return new AdventurerInstance({ ...this.adventurer, items }, this._extraStats)
-  }
-
   setAdventurer(adventurer){
-    this.adventurer = adventurer
+    this.adventurerInstance = new AdventurerInstance(adventurer)
     this._name.textContent = adventurer.name
     this.xpBar.setValue(adventurer.xp)
-    this.loadoutEl.setFighterInstance(new AdventurerInstance(this.adventurer))
+    this.loadoutEl.setFighterInstance(this.adventurerInstance)
     this.update()
   }
 
@@ -65,18 +60,24 @@ export default class AdventurerPane extends HTMLElement{
     this.update()
   }
 
+  updateItems(){
+    this.adventurerPane.updateStats(true)
+    this.adventurerPane.updateOrbs()
+  }
+
   update(showStatChangeEffect = false){
+    this.adventurerInstance._itemInstances = this.loadoutEl.loadoutItems.map(loadoutItem => loadoutItem?.itemInstance)
     this.updateStats(showStatChangeEffect)
     this.updateOrbs()
     this.loadoutEl.update()
   }
 
   updateOrbs(){
-    this.orbRow.setData(this.derivedAdventurerInstance.orbs)
+    this.orbRow.setData(this.adventurerInstance.orbs)
   }
 
   updateStats(showStatChangeEffect){
-    this.statsList.setStats(this.derivedAdventurerInstance.stats, this.derivedAdventurerInstance, showStatChangeEffect)
+    this.statsList.setStats(this.adventurerInstance.stats, this.adventurerInstance, showStatChangeEffect)
   }
 
   async addXp(toAdd, options = { }){

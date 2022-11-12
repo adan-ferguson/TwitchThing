@@ -62,6 +62,7 @@ export default class Inventory extends HTMLElement{
     if(!item){
       return
     }
+    item.itemInstance.owner = null
     const row = new LoadoutRow()
     row.setItem(item)
     this.list.addRow(row)
