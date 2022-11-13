@@ -1,4 +1,4 @@
-import BaseItems, { all as allItems } from '../../game/items/combined.js'
+import BaseItems from '../../game/items/combined.js'
 import { v4 } from 'uuid'
 import Picker from '../../game/picker.js'
 

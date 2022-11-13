@@ -29,11 +29,11 @@ export function advLevelToXp(lvl){
 }
 
 export function adventurerLevelToHp(lvl){
-  return HP_BASE + Math.ceil(geometricProgession(HP_GROWTH_PCT, lvl, HP_GROWTH))
+  return HP_BASE + Math.ceil(geometricProgession(HP_GROWTH_PCT, lvl - 1, HP_GROWTH))
 }
 
 export function adventurerLevelToPower(lvl){
-  return POWER_BASE + Math.ceil(geometricProgession(POWER_GROWTH_PCT, lvl, POWER_GROWTH))
+  return POWER_BASE + Math.ceil(geometricProgession(POWER_GROWTH_PCT, lvl - 1, POWER_GROWTH))
 }
 
 export default class AdventurerInstance extends FighterInstance{

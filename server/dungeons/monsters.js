@@ -2,6 +2,7 @@ import { chooseOne } from '../../game/rando.js'
 import { all as Monsters } from '../../game/monsters/combined.js'
 import { uuid } from '../../game/utilFunctions.js'
 import MonsterInstance from '../../game/monsterInstance.js'
+import { generateRandomChest } from './chests.js'
 
 const monstersByFloor = [
   null,
@@ -66,6 +67,8 @@ const BONUS_CHESTS_UNTIL = 10
 const BONUS_CHEST_CHANCE = 0.45
 
 const CHEST_DROP_CHANCE = 0.08
+const BOSS_XP_BONUS = 6
+
 const MONSTER_CHANCE = 0.45
 const MONSTER_ROOM_BUFFER = 2
 
@@ -103,21 +106,18 @@ export async function generateMonster(dungeonRun){
   function generateRewards(){
     const monsterInstance = new MonsterInstance(monsterDefinition)
     const advStats = dungeonRun.adventurerInstance.stats
-    // const rewardBonus = getRewardBonus(monsterInstance)
     const rewards = {
-      xp: monsterInstance.xpReward * advStats.get('combatXP').value,
-      gold: monsterInstance.goldReward
+      xp: monsterInstance.xpReward * advStats.get('combatXP').value * (monsterInstance.isBoss ? BOSS_XP_BONUS : 1)
     }
-    // if(dungeonRun.user.accomplishments.firstRunFinished){
-    //   // TODO: chest rarity
-    //   const userChests = dungeonRun.user.accomplishments.chestsFound ?? 0
-    //   const dropChance = userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE : CHEST_DROP_CHANCE
-    //   if(Math.random() < dropChance * advStats.get('chestFind').value){
-    //     rewards.chests = generateRandomChest(dungeonRun, {
-    //       tier: rewardBonus > 1 ? 1 : 0
-    //     })
-    //   }
-    // }
+    if(dungeonRun.user.accomplishments.firstRunFinished){
+      const userChests = dungeonRun.user.accomplishments.chestsFound ?? 0
+      const dropChance = userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE : CHEST_DROP_CHANCE
+      if(Math.random() < dropChance * advStats.get('chestFind').value){
+        rewards.chests = generateRandomChest(dungeonRun, {
+          size: monsterInstance.isBoss ? 5 : 1
+        })
+      }
+    }
     return rewards
   }
 }
