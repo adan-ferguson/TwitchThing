@@ -10,10 +10,11 @@ export function effectDisplayInfo(effectInstance){
 
   const colors = getColors(effectInstance)
 
-  let barValue = 1, barMax = 1, showValue = false
+  let barValue = 1, barMax = 1, showValue = false, timed = false
   if(effectInstance.duration){
     barValue = effectInstance.durationRemaining
     barMax = effectInstance.duration
+    timed = true
   }else if(effectInstance.barrier){
     barValue = effectInstance.barrierPointsRemaining
     barMax = effectInstance.barrier.points
@@ -28,6 +29,7 @@ export function effectDisplayInfo(effectInstance){
     barMax,
     abilityInfo,
     colors,
+    timed,
     animateChanges: effectInstance.duration ? false : true,
     showValue
   }

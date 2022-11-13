@@ -6,6 +6,7 @@ import { exponentialPercentage, geometricProgession } from '../../exponentialVal
 
 export default {
   levelFn: level => ({
+    description: 'Whenever you dodge, refresh this item\'s active ability.',
     abilities: {
       active: {
         cooldown: 18000,
@@ -16,7 +17,7 @@ export default {
         ]
       },
       dodge: {
-        description: 'Whenever you dodge an attack, refresh this item\'s cooldown',
+        minor: true,
         actions: [
           parentEffectAction({
             refreshCooldown: true

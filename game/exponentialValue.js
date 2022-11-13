@@ -37,15 +37,19 @@ export function inverseGeometricProgression(growthPct, val, base = 1){
  * 20%, 2 => 36%
  * @param val {number|string} 0 to 100
  * @param iterations {number} natural number
+ * @param base
  * @return {string} Whole percentage
  */
-export function exponentialPercentage(val, iterations){
+export function exponentialPercentage(val, iterations, base = 0){
   if(_.isString(val)){
     val = parseFloat(val) / 100
   }
   if(val < 0 || val > 1){
     throw 'Exponential percentage out of range, probably a bug'
   }
-  val = roundToNearestIntervalOf(100 * (1 - Math.pow(1 - val, iterations)), 0.1) + '%'
-  return val
+  if(base < 0 || base > 1){
+    throw 'Aaaaa'
+  }
+
+  return roundToNearestIntervalOf(100 * (1 - Math.pow(1 - val, iterations) * (1 - base)), 0.1) + '%'
 }

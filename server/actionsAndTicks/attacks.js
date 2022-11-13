@@ -83,6 +83,7 @@ export function performAttackAction(combat, attacker, effect = null, actionDef =
   resultObj.triggeredEvents.push(...triggerEvent(combat, enemy, 'hitByAttack'))
 
   if(damageInfo.crit){
+    resultObj.data.crit = true
     resultObj.triggeredEvents.push(...triggerEvent(combat, attacker, 'crit'))
   }
 

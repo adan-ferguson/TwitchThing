@@ -25,7 +25,7 @@ export default {
         }
       },
       stats: {
-        [magicDefStat.name]: exponentialPercentage(0.1, level)
+        [magicDefStat.name]: exponentialPercentage(0.2, level - 1, 0.4)
       },
       mods: [physScaling]
     }

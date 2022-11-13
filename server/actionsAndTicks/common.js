@@ -108,3 +108,16 @@ export function performTurnTimeAction(combat, owner, actionDef){
     subject: owner.uniqueID
   })
 }
+
+export function performParentEffectAction(combat, effect, actionDef){
+  const data = {}
+  if(actionDef.refreshCooldown){
+    effect.refreshCooldown()
+    data.refreshed = true
+  }
+  return makeActionResult({
+    type: 'parentEffect',
+    data,
+    subject: effect.owner.uniqueID
+  })
+}

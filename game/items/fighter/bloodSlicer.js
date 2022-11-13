@@ -4,7 +4,7 @@ import { geometricProgession } from '../../exponentialValue.js'
 import { critChanceStat, critDamageStat } from '../../stats/combined.js'
 import { roundToNearestIntervalOf } from '../../utilFunctions.js'
 import statusEffectAction from '../../actions/statusEffectAction.js'
-import { takeDamage } from '../../../server/actionsAndTicks/common.js'
+import damageSelfAction from '../../actions/damageSelfAction.js'
 
 export default {
   levelFn: level => {
@@ -17,9 +17,16 @@ export default {
           actions: [
             attackAction({
               damageMulti
-            },
+            }),
             (combat, owner, results) => {
-              debugger
+              const data = results[0].data
+              if(!data.crit){
+                return null
+              }
+              const damage = data.totalDamage / 10
+              if(!damage){
+                return null
+              }
               return statusEffectAction({
                 affects: 'enemy',
                 effect: {
@@ -29,16 +36,17 @@ export default {
                     tick: {
                       initialCooldown: 1000,
                       actions: [
-                        takeDamage({
+                        damageSelfAction({
                           damageType: 'phys',
-                          damage: results[0].damageOrSomething
+                          damage,
+                          ignoreDefense: true
                         })
                       ]
                     }
                   }
                 }
               })
-            })
+            }
           ]
         }
       },

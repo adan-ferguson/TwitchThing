@@ -46,10 +46,11 @@ export default class EffectRow extends HTMLElement{
         rounding: true
       })
       this.barEl.setValue(info.barValue)
+      this._timedBar = info.timed
     }
 
     if(info.abilityInfo){
-      this._usesCooldown = info.abilityInfo.ability.cooldown ? true : false
+      this._timedMiniBar = info.abilityInfo.ability.cooldown ? true : false
       this._miniBarEl
         .setOptions({ max: info.abilityInfo.barMax })
         .setValue(info.abilityInfo.barValue)
@@ -57,7 +58,11 @@ export default class EffectRow extends HTMLElement{
   }
 
   advanceTime(ms){
-    if(this._usesCooldown){
+    console.log('adv', ms)
+    if(this._timedBar){
+      this.barEl.setValue(-ms, { relative: true })
+    }
+    if(this._timedMiniBar){
       this._miniBarEl.setValue(ms, { relative : true } )
     }
   }

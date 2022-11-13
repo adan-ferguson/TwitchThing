@@ -33,4 +33,10 @@ export default class AbilitiesData{
     }
     return this
   }
+
+  refreshCooldowns(){
+    for(let key in this.instances){
+      this.instances[key].cooldownRemaining = 0
+    }
+  }
 }

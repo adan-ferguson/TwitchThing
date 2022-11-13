@@ -6,7 +6,7 @@ export function makeActionResult(obj){
     type: null,
     data: null,
     cancelled: false,
-    subject: null,
+    subject: null, // FighterInstance or fighterInstance.uniqueID
   }, obj)
   if(!obj.type){
     throw 'ActionResult missing type'
@@ -14,6 +14,7 @@ export function makeActionResult(obj){
   if(!obj.subject){
     throw 'ActionResult missing subject'
   }
+  obj.subject = obj.subject.uniqueID ?? obj.subject
   obj.triggeredEvents.forEach(event => {
     event.results.forEach(validateActionResult)
   })

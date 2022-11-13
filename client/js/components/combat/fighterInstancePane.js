@@ -26,7 +26,7 @@ const HTML = `
 
 const TEXT_EFFECT_MIN = 0.9
 const TEXT_EFFECT_MAX = 2.1
-const STAGGER_TIME = 250
+const STAGGER_TIME = 175
 
 export default class FighterInstancePane extends HTMLElement{
 

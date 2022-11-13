@@ -129,6 +129,12 @@ export default class EffectInstance{
     this._state.abilities = ad.stateVal
   }
 
+  refreshCooldown(){
+    const ad = this.generateAbilitiesData()
+    ad.refreshCooldowns()
+    this._state.abilities = ad.stateVal
+  }
+
   fixState(){
     this._state = {
       abilities: this.generateAbilitiesData().stateVal,

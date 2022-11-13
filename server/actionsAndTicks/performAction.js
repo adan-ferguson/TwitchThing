@@ -2,7 +2,7 @@ import { performAttackAction } from './attacks.js'
 import _ from 'lodash'
 import {
   performCancelAction,
-  performGainHealthAction,
+  performGainHealthAction, performParentEffectAction,
   performRemoveStackAction,
   performTurnTimeAction,
   takeDamage
@@ -95,6 +95,9 @@ export function useEffectAbility(combat, effect, eventName){
  * @returns {object}
  */
 function doAction(combat, effect, actionDef){
+  if(!actionDef){
+    return null // Blank
+  }
   const owner = effect.owner
   const type = _.isString(actionDef) ? actionDef : actionDef.type
   if(type === 'attack'){
@@ -121,6 +124,8 @@ function doAction(combat, effect, actionDef){
     }
   }else if(type === 'turnTime'){
     return performTurnTimeAction(combat, owner, actionDef)
+  }else if(type === 'parentEffectAction'){
+    return performParentEffectAction(combat, effect, actionDef)
   }
   throw 'Undefined action'
 }

@@ -3,7 +3,7 @@ import attackAction from '../../actions/attackAction.js'
 import { geometricProgession } from '../../exponentialValue.js'
 
 const SCALING = 0.35
-const BASE = 20
+const BASE = 30
 
 export default {
   levelFn: level => ({
@@ -20,7 +20,7 @@ export default {
     },
     stats: {
       physPower: geometricProgession(SCALING, level, BASE),
-      speed: -10 - 10 * level
+      speed: -30 - 20 * level
     },
     mods: [physScaling]
   }),
