@@ -13,8 +13,10 @@ export default class Event extends HTMLElement{
     this.classList.add('fill-contents')
   }
 
-  setAdventurer(adventurer){
+  setup(adventurer, timeline){
     this._adventurer = adventurer
+    this._timeline = timeline
+    timeline.on('timechange', () => this._updateTimeBar())
   }
 
   update(dungeonEvent, animate = true){
@@ -37,6 +39,13 @@ export default class Event extends HTMLElement{
     this.innerHTML = ''
     this._currentContents = contents
     this.appendChild(this._currentContents)
+  }
+
+  _updateTimeBar(){
+    if(!this._timeline.currentEntry){
+      return
+    }
+    this._currentContents.setTimeBar?.(this._timeline.timeSinceLastEntry, this._timeline.currentEntry.duration)
   }
 }
 

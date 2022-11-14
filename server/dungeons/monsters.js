@@ -69,14 +69,11 @@ const BONUS_CHEST_CHANCE = 0.45
 const CHEST_DROP_CHANCE = 0.05
 const BOSS_XP_BONUS = 8
 
-const MONSTER_CHANCE = 0.45
-const MONSTER_ROOM_BUFFER = 2
-
 // Monsters of level [currentFloor - FLOOR_RANGE] to [currentFloor] will spawn (both inclusive).
 const FLOOR_RANGE = 4
 
 // How much to skew RNG towards higher levels.
-const FLOOR_SKEW = -0.2
+const FLOOR_SKEW = -0.12
 
 export function foundMonster(dungeonRun){
   return 1
@@ -134,6 +131,9 @@ export function generateFloorChoices(floor, range = 1, skew = 0){
   const choices = []
   for(let i = 0; i < range; i++){
     const val = Math.max(minVal, floor - range + i + 1)
+    if(val % 10 === 0){
+      continue
+    }
     const weight = skew < 0 ? Math.pow(1 + skew, i ) : (1 + skew * i)
     choices.push({ weight: 100 * weight, value: val })
   }
@@ -153,7 +153,7 @@ export function getAllMonsters(){
  * @param floor
  */
 function floorToLevel(floor){
-  return chooseOne(generateFloorChoices(floor, FLOOR_RANGE, FLOOR_SKEW - 1))
+  return chooseOne(generateFloorChoices(floor, FLOOR_RANGE, FLOOR_SKEW))
 }
 
 function getMonsterDefinition(floor, rarity = 1){

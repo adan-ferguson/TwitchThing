@@ -68,10 +68,16 @@ di-dungeon-timeline-controls
 
   .event-time-bar
     height: 1.1em
-    .bar-border
-      border: none
+
     .bar-label
       padding-top: 4px
+
+  &.replay
+    .event-time-bar
+      cursor: pointer
+
+      &:hover .bar-border
+        border-color: #4488FF
 
   .buttons
     justify-content: space-between

@@ -84,7 +84,7 @@ export default class DungeonRunInstance extends EventEmitter{
     }else if(nextEvent){
       this._addEvent(nextEvent)
     }else{
-      await this._nextRoom()
+      await this._nextEvent()
     }
 
     this._resolveEvent(this.currentEvent)
@@ -96,8 +96,8 @@ export default class DungeonRunInstance extends EventEmitter{
     }
   }
 
-  async _nextRoom(){
-    this.doc.room = this.currentEvent?.nextRoom || this.doc.room + 1
+  async _nextEvent(){
+    this.doc.room = this.currentEvent?.nextRoom || this.doc.room
     this.doc.floor = this.currentEvent?.nextFloor || this.doc.floor
     this._addEvent(await generateEvent(this))
   }

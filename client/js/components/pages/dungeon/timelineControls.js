@@ -48,6 +48,15 @@ export default class TimelineControls extends HTMLElement{
       .setOptions({
         showValue: false
       })
+
+    this._eventTimeBarEl.addEventListener('click', e => {
+      if(!this._options.isReplay){
+        return false
+      }
+      const pct = e.offsetX / this._eventTimeBarEl.clientWidth
+      this.jumpTo(this._timeline.duration * pct)
+    })
+
     this._playEl = this.querySelector('button.play')
     this._pauseEl = this.querySelector('button.pause')
     this._playEl.addEventListener('click', () => {
@@ -135,6 +144,7 @@ export default class TimelineControls extends HTMLElement{
     this.querySelectorAll(`.replay-${this._options.isReplay ? 'yes' : 'no'}`).forEach(el => {
       el.classList.remove('displaynone')
     })
+    this.classList.toggle('replay', this._options.isReplay)
     this._ticker.setOptions({
       speed: this.speed,
       live: !this._options.isReplay
@@ -150,7 +160,6 @@ export default class TimelineControls extends HTMLElement{
   }
 
   jumpTo(time, options = {}){
-    console.log('jump to', time)
     this._timeline.setTime(time, true)
     this._updateEvent({
       jumped: true,
@@ -215,11 +224,14 @@ export default class TimelineControls extends HTMLElement{
   }
 
   _update(){
-    this._eventTimeBarEl.setOptions({
-      max: this._ticker.endTime,
-      label: dateformat(this._timeline.time, 'M:ss')
-    })
-    this._eventTimeBarEl.setValue(this._options.isReplay ? this._ticker.currentTime : 0)
+    if(this._options.isReplay){
+      this._eventTimeBarEl.setOptions({
+        max: this._timeline.duration
+      })
+    }
+    this._eventTimeBarEl
+      .setOptions({ label: dateformat(this._timeline.time, 'M:ss') })
+      .setValue(this._options.isReplay ? this._timeline.time : 0)
   }
 
   _nextEvent(){
@@ -233,15 +245,16 @@ export default class TimelineControls extends HTMLElement{
       ...options
     }
 
-    if(!options.jumped && this._currentEvent === this._timeline.currentEntry){
-      return
-    }
+    const eventChanged = this._currentEvent !== this._timeline.currentEntry
 
     this._currentEvent = this._timeline.currentEntry
-    this._prevEvent = this._timeline.currentEntry
     this._ticker.currentTime = this._timeline.timeSinceLastEntry
     this._ticker.endTime = this._timeline.currentEntry.duration
-    this._tick()
+    this._update()
+
+    if(!eventChanged){
+      return
+    }
 
     this.dispatchEvent(new CustomEvent('event_changed', {
       detail: options

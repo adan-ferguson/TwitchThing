@@ -46,6 +46,8 @@ export default class State extends HTMLElement{
     const currentEvent = eventsList.at(-1)
     const results = new DungeonRunResults(eventsList)
 
+    console.log('state current event', currentEvent)
+
     this._floorAndRoomEl.textContent = `Floor ${currentEvent.floor} - ${currentEvent.room ? 'Room ' + currentEvent.room : 'Entrance'}`
 
     this._setXP(results.xp, animate)

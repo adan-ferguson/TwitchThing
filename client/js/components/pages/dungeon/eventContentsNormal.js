@@ -9,6 +9,8 @@ const HTML = `
   <div class="message"></div>
   <div class="rewards"></div>
 </div>
+<span class="loader spin-effect displaynone">DI</span>
+<di-bar class="time-bar"></di-bar>
 `
 
 export default class EventContentsNormal extends HTMLElement{
@@ -28,6 +30,11 @@ export default class EventContentsNormal extends HTMLElement{
     this._description = this.querySelector('.description')
     this._rewards = this.querySelector('.rewards')
     this._message = this.querySelector('.message')
+    this._timeBarEl = this.querySelector('.time-bar')
+      .setOptions({
+        showLabel: false,
+        showValue: false
+      })
     this.update(dungeonEvent)
   }
 
@@ -36,6 +43,11 @@ export default class EventContentsNormal extends HTMLElement{
     this._description.textContent = getDescription(dungeonEvent)
     this._message.textContent = dungeonEvent.message
     this._addRewards(dungeonEvent.rewards)
+    this.querySelector('.loader').classList.toggle('displaynone', dungeonEvent.roomType !== 'entrance')
+  }
+
+  setTimeBar(val, max){
+    this._timeBarEl.setOptions({ max }).setValue(val)
   }
 
   _addRewards(rewards){

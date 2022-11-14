@@ -1,6 +1,5 @@
 import Ticker from '../../../ticker.js'
 import dateformat from 'dateformat'
-import { EventEmitter } from 'events'
 import DIElement from '../../diElement.js'
 
 const HTML = `

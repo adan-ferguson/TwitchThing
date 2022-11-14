@@ -104,7 +104,7 @@ export default class DungeonPage extends Page{
     this._stateEl.setup(dungeonRun)
     this._setupTimeline(dungeonRun)
     this._adventurerPane.setFighter(new AdventurerInstance(this.adventurer, dungeonRun.adventurerState))
-    this._eventEl.setAdventurer(this.adventurer)
+    this._eventEl.setup(this.adventurer, this._timeline)
     this._update({ animate: false })
   }
 
@@ -133,7 +133,6 @@ export default class DungeonPage extends Page{
     this._timelineEl.addEvent(dungeonRun.currentEvent)
     this._timelineEl.play()
     if(dungeonRun.virtualTime){
-      console.log('jump to', dungeonRun.virtualTime)
       this._timelineEl.jumpTo(dungeonRun.virtualTime)
     }
   }
@@ -155,13 +154,7 @@ export default class DungeonPage extends Page{
       setTimeout(() => {
         this._timelineEl.play()
       })
-      // setTimeout(() => {
-      //   this._updateEvent()
-      //   this.play()
-      // }, 0)
     }
-
-    console.log('update')
 
     if(!this.currentEvent){
       this._eventEl.update({
@@ -173,14 +166,14 @@ export default class DungeonPage extends Page{
       this._enactCombat()
     }else{
       this._adventurerPane.setState(this.currentEvent.adventurerState, animate)
-      this._stateEl.update(this._timelineEl.elapsedEvents, animate)
       if(this.dungeonRun.results && this.currentEvent.runFinished){
         this._showResults()
       }else{
-        this._eventEl.update(this.currentEvent, animate)
+        this._eventEl.update(this.currentEvent, this._timeline.time, animate)
       }
     }
 
+    this._stateEl.update(this._timelineEl.elapsedEvents, animate)
     this._updateBackground()
   }
 
