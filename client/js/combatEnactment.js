@@ -34,6 +34,10 @@ export default class CombatEnactment extends EventEmitter{
     return this._timeline
   }
 
+  get combatID(){
+    return this._combat._id
+  }
+
   destroy(){
     this._destroyed = true
     this.emit('destroyed')
@@ -50,7 +54,7 @@ export default class CombatEnactment extends EventEmitter{
         const entries = this._timeline.entries.slice(this._prevEntryIndex + 1, this._timeline.currentEntryIndex + 1)
         this._prevEntryIndex = this._timeline.currentEntryIndex
         this._applyEntries(entries)
-      }else{
+      }else if(after > this._timeline.firstEntry.time){
         this._fighterPane1.advanceTime(after - before)
         this._fighterPane2.advanceTime(after - before)
       }

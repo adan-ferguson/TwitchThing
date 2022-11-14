@@ -7,7 +7,8 @@ import { performCombatTick } from './actionsAndTicks/performCombatTick.js'
 import { toFighterInstance } from '../game/toFighterInstance.js'
 import { triggerEvent } from './actionsAndTicks/common.js'
 
-const START_TIME_DELAY = 1000
+const START_TIME_DELAY = 500
+const END_TIME_PADDING = 1000 // make sure combat event doesn't end too fast, or it looks weird
 const MAX_TIME = 120000
 
 export async function generateCombatEvent(dungeonRun){
@@ -21,7 +22,7 @@ export async function generateCombatEvent(dungeonRun){
   })
 
   return {
-    duration: combat.duration,
+    duration: combat.duration + END_TIME_PADDING,
     stayInRoom: true,
     message: `${adventurerInstance.displayName} is fighting a ${monsterInstance.displayName}.`,
     combatID: combat._id,
@@ -46,7 +47,7 @@ export async function generateCombat(fighterInstance1, fighterInstance2, params 
   const combat = new Combat(fighterInstance1, fighterInstance2)
 
   return await Combats.save({
-    startTime: Date.now() + START_TIME_DELAY,
+    startTime: Date.now(),
     duration: combat.duration,
     fighter1: {
       id: 1,
@@ -71,8 +72,7 @@ export async function finishCombatEvent(dungeonRun, combatEvent){
   const fighter = combat.fighter1.data._id.equals(dungeonRun.adventurer._id) ? combat.fighter1 : combat.fighter2
   const enemy = combat.fighter1.data._id.equals(dungeonRun.adventurer._id) ? combat.fighter2 : combat.fighter1
   const event = {
-    adventurerState: fighter.endState,
-    passTimeOverride: true
+    adventurerState: fighter.endState
   }
   const monsterInstance = new MonsterInstance(enemy.data)
   if(fighter.endState.hpPct === 0){
@@ -105,7 +105,7 @@ class Combat{
     }
     this.fighterInstance1 = fighterInstance1
     this.fighterInstance2 = fighterInstance2
-    this._currentTime = 0
+    this._currentTime = START_TIME_DELAY
     this.timeline = []
     this._addTimelineEntry()
     this._run()
@@ -198,7 +198,7 @@ class Combat{
 
   _addTimelineEntry(options = {}){
     let tickUpdates = []
-    if(!this.time){
+    if(this.time === START_TIME_DELAY){
       tickUpdates = [
         ...triggerEvent(this, this.fighterInstance1, 'startOfCombat'),
         ...triggerEvent(this, this.fighterInstance2, 'startOfCombat')

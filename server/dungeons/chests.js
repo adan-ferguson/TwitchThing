@@ -1,5 +1,5 @@
 import { generateRandomItemDef } from '../items/generator.js'
-import { fillArray, toNumberOfDigits } from '../../game/utilFunctions.js'
+import { toNumberOfDigits } from '../../game/utilFunctions.js'
 import { geometricProgession } from '../../game/exponentialValue.js'
 
 const DEFAULTS = {
@@ -31,10 +31,10 @@ export function generateRandomChest(dungeonRun, options = {}){
   }
 
   for(let i = 0; i < chest.size; i++){
-    if(Math.random < GOLD_CHANCE){
-      chest.gold += addGold(chest.level)
+    if(Math.random() < GOLD_CHANCE){
+      chest.contents.gold += addGold(chest.level)
     }else{
-      chest.items.push(generateRandomItemDef(chest.level))
+      chest.contents.items.push(generateRandomItemDef(chest.level))
     }
   }
 

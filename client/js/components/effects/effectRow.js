@@ -58,7 +58,6 @@ export default class EffectRow extends HTMLElement{
   }
 
   advanceTime(ms){
-    console.log('adv', ms)
     if(this._timedBar){
       this.barEl.setValue(-ms, { relative: true })
     }

@@ -6,10 +6,7 @@ export function foundStairs(dungeonRun){
   const floor = dungeonRun.floor
   const room = dungeonRun.room
   const pace = dungeonRun.pace ?? 'Brisk'
-  if(floor % 10 === 0){
-    // Have to beat boss to advance
-    return false
-  }
+  
   if(room <= 2){
     return false
   }

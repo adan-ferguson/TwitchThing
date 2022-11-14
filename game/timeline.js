@@ -13,6 +13,9 @@ export default class Timeline extends EventEmitter{
   }
 
   get duration(){
+    if(!this._entries.length){
+      return 0
+    }
     return this._entries.at(-1).time + (this._entries.at(-1).duration ?? 0)
   }
 
@@ -54,8 +57,11 @@ export default class Timeline extends EventEmitter{
 
   setTime(val, jumped = false){
     const before = this._time
+    if(before === undefined){
+      jumped = true
+    }
     this._time = Math.max(0, Math.min(this.duration, val))
-    if(this._time !== before){
+    if(this._time !== before || jumped){
       this.emit('timechange', {
         before,
         after: this._time,

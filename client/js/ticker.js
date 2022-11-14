@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events'
-import { mergeOptionsObjects } from '../../game/utilFunctions.js'
+import { mergeOptionsObjects, minMax } from '../../game/utilFunctions.js'
 
 export default class Ticker extends EventEmitter{
 
@@ -31,9 +31,7 @@ export default class Ticker extends EventEmitter{
       return
     }
     this._currentTime = val
-    if(this.running){
-      this._tick()
-    }
+    this._calibrateTicks()
   }
 
   get endTime(){
@@ -45,9 +43,7 @@ export default class Ticker extends EventEmitter{
       return
     }
     this._endTime = val
-    if(this.running){
-      this._tick()
-    }
+    this._calibrateTicks()
   }
 
   get waitFn(){
@@ -56,28 +52,47 @@ export default class Ticker extends EventEmitter{
 
   setOptions(options = {}){
     this._options = mergeOptionsObjects(this._options, options)
-    this._tick()
+    this._calibrateTicks()
   }
 
   start(){
     if(this.reachedEnd || this.running){
       return
     }
-    this.running = true
-    this._tick()
+    this._startTicks()
   }
 
   stop(){
     this.running = false
   }
 
-  _tick(){
+  _startTicks(){
+    this.running = true
+    this._calibrateTicks()
+  }
+
+  _calibrateTicks(){
+
+    // Timestamp when the ticker would have been at 0
+    this._startingTimestamp = Date.now() - this.currentTime
+
+    // Timestamp of the last tick or last calibration
+    this._previousTickTimestamp = Date.now()
+
+    if(this.running){
+      this._doTick()
+    }
+  }
+
+  _doTick(){
 
     if(this._ticking){
       return
     }
 
-    const doTick = () => {
+    this._ticking = true
+
+    const tick = () => {
 
       if(!this.running){
         this._ticking = false
@@ -85,34 +100,29 @@ export default class Ticker extends EventEmitter{
       }
 
       const prevTime = this._currentTime
-
-      let elapsedTime
+      let newCurrentTime
       if(this._options.live){
-        elapsedTime = (Date.now() - this._startingTimestamp) * this._options.speed + this._startingTime
+        newCurrentTime = Date.now() - this._startingTimestamp
       }else{
-        elapsedTime = (Date.now() - this._previousTimestamp) * this._options.speed + prevTime
-        elapsedTime = Math.min(prevTime + this._options.speed * 1000/30, elapsedTime)
+        newCurrentTime = (Date.now() - this._previousTickTimestamp) * this._options.speed + prevTime
+
+        // Prevent skipping if JS was halted or tab was changed or whatever
+        newCurrentTime = Math.min(prevTime + this._options.speed * 1000/30, newCurrentTime)
       }
 
-      this._currentTime = Math.max(0, Math.min(this.endTime, Math.round(elapsedTime)))
-      this._previousTimestamp = Date.now()
-
+      newCurrentTime = Math.round(newCurrentTime)
+      this._currentTime = minMax(0, newCurrentTime, this.endTime)
       this.emit('tick', this._currentTime - prevTime)
+
       if(this.currentTime === this.endTime){
         this._ticking = false
-        this.emit('ended', elapsedTime - this.currentTime)
+        this.emit('ended', newCurrentTime - this.currentTime)
       }else{
-        this.waitFn(() => doTick())
+        this._previousTickTimestamp = Date.now()
+        this.waitFn(tick)
       }
     }
 
-    this._previousTimestamp = Date.now()
-    this._startingTimestamp = Date.now()
-    this._startingTime = this.currentTime
-
-    this._ticking = true
-    this.waitFn(() => {
-      doTick()
-    })
+    this.waitFn(tick)
   }
 }

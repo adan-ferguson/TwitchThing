@@ -6,22 +6,22 @@ import OrbsData from './orbsData.js'
 import { toDisplayName, toNumberOfDigits } from './utilFunctions.js'
 import { bossMod } from './mods/combined.js'
 
-const HP_BASE = 30
-const HP_GROWTH = 8
-const HP_GROWTH_PCT = 0.2
+const HP_BASE = 25
+const HP_GROWTH = 18
+const HP_GROWTH_PCT = 0.25
 
 const POWER_BASE = 10
-const POWER_GROWTH = 2
-const POWER_GROWTH_PCT = 0.18
+const POWER_GROWTH = 4
+const POWER_GROWTH_PCT = 0.25
 
 const XP_BASE = 50
 const XP_GROWTH = 5
 const XP_GROWTH_PCT = 0.25
-const XP_ZONE_BONUS = 2
+const XP_ZONE_BONUS = 3
 
 export function levelToXpReward(lvl){
   const zoneBonuses = Math.floor((lvl - 1) / 10)
-  const val = Math.ceil(geometricProgession(lvl - 1, XP_GROWTH_PCT) * XP_GROWTH * Math.pow(XP_ZONE_BONUS, zoneBonuses))
+  const val = Math.ceil(geometricProgession(XP_GROWTH_PCT, lvl - 1, XP_GROWTH * Math.pow(XP_ZONE_BONUS, zoneBonuses), 3))
   return toNumberOfDigits(
     XP_BASE + val,
     2
@@ -98,7 +98,7 @@ export default class MonsterInstance extends FighterInstance{
   }
 
   get xpReward(){
-    return levelToXpReward(this.level) * XP_BASE
+    return levelToXpReward(this.level)
   }
 
   get isBoss(){

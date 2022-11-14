@@ -51,15 +51,15 @@ export async function start(){
 }
 
 async function advance(){
-  const before = new Date()
+  lastAdvancement = new Date()
   if(Object.keys(activeRuns).length){
-    await advanceRuns()
     emitSocketEvents()
-    await saveAllRuns()
     clearFinishedRuns()
+    await advanceRuns()
+    await saveAllRuns()
   }
 
-  let waitFor = ADVANCEMENT_INTERVAL - (new Date() - before)
+  let waitFor = ADVANCEMENT_INTERVAL - (new Date() - lastAdvancement)
   if(waitFor < 0){
     waitFor = ADVANCEMENT_INTERVAL
     console.log('Dungeon Run advancement took longer than 5 seconds, probably something is wrong.')
@@ -98,10 +98,6 @@ export async function addRun(adventurerID, dungeonOptions){
 
   const instance = new DungeonRunInstance(drDoc, userDoc)
   activeRuns[drDoc._id] = instance
-
-  await new Promise(res => {
-    instance.once('started', res)
-  })
   return drDoc
 }
 
@@ -147,20 +143,10 @@ function validateNew(adventurerDoc, userDoc, { startingFloor }){
 }
 
 async function advanceRuns(){
-  lastAdvancement = new Date()
   for(const id in activeRuns){
     const run = activeRuns[id]
     try {
-      if(!run.started){
-        await run.advance({
-          passTimeOverride: true,
-          duration: ADVANCEMENT_INTERVAL,
-          message: `${run.adventurer.name} enters the dungeon.`,
-          roomType: 'entrance'
-        })
-      }else{
-        await run.advance()
-      }
+      await run.advance()
     }catch(ex){
       console.log('Run suspended due to error', run.doc, ex)
       delete activeRuns[id]
@@ -219,5 +205,5 @@ function truncatedRun(dri){
 }
 
 function virtualTime(dri){
-  return dri.time + (new Date() - lastAdvancement)
+  return dri.time + (new Date() - lastAdvancement) - ADVANCEMENT_INTERVAL
 }

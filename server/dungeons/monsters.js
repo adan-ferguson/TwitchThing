@@ -66,8 +66,8 @@ const monstersByFloor = [
 const BONUS_CHESTS_UNTIL = 10
 const BONUS_CHEST_CHANCE = 0.45
 
-const CHEST_DROP_CHANCE = 0.08
-const BOSS_XP_BONUS = 6
+const CHEST_DROP_CHANCE = 0.05
+const BOSS_XP_BONUS = 8
 
 const MONSTER_CHANCE = 0.45
 const MONSTER_ROOM_BUFFER = 2
@@ -112,7 +112,7 @@ export async function generateMonster(dungeonRun){
     if(dungeonRun.user.accomplishments.firstRunFinished){
       const userChests = dungeonRun.user.accomplishments.chestsFound ?? 0
       const dropChance = userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE : CHEST_DROP_CHANCE
-      if(Math.random() < dropChance * advStats.get('chestFind').value){
+      if(Math.random() < dropChance || monsterInstance.isBoss){
         rewards.chests = generateRandomChest(dungeonRun, {
           size: monsterInstance.isBoss ? 5 : 1
         })

@@ -2,6 +2,7 @@ import AdventurerInstance, { advLevelToXp, advXpToLevel } from '../../../../game
 import { OrbsDisplayStyle } from '../orbRow.js'
 import Modal from '../modal.js'
 import AdventurerInfo from './adventurerInfo.js'
+import { magicAttackMod, magicScalingMod, physScalingMod } from '../../../../game/mods/combined.js'
 
 const HTML = `
 <div class="flex-grow flex-rows top-section">
@@ -37,7 +38,7 @@ export default class AdventurerPane extends HTMLElement{
     this.statsList = this.querySelector('di-stats-list')
       .setOptions({
         maxItems: 10,
-        forced: ['hpMax', 'speed', 'physPower']
+        forced: ['hpMax', 'physPower']
       })
 
     this.querySelector('.top-section').addEventListener('click', e => {
@@ -77,7 +78,9 @@ export default class AdventurerPane extends HTMLElement{
   }
 
   updateStats(showStatChangeEffect){
-    this.statsList.setStats(this.adventurerInstance.stats, this.adventurerInstance, showStatChangeEffect)
+    this.statsList.setOptions({
+      excluded: this._excluded()
+    }).setStats(this.adventurerInstance.stats, this.adventurerInstance, showStatChangeEffect)
   }
 
   async addXp(toAdd, options = { }){
@@ -95,6 +98,20 @@ export default class AdventurerPane extends HTMLElement{
     const modal = new Modal()
     modal.innerPane.appendChild(new AdventurerInfo(new AdventurerInstance(this.adventurer), this.statsList.stats))
     modal.show()
+  }
+
+  _excluded(){
+    const excluded = []
+    const magicAttack = this.adventurerInstance.mods.contains(magicAttackMod)
+    const showPhys = this.adventurerInstance.mods.contains(physScalingMod)
+    const showMagic = this.adventurerInstance.mods.contains(magicScalingMod)
+    if((showPhys || !magicAttack) && showMagic){
+      return [...excluded]
+    }else if(magicAttack && !showPhys){
+      return [...excluded, 'physPower']
+    }else{
+      return [...excluded, 'magicPower']
+    }
   }
 }
 

@@ -63,7 +63,9 @@ export default class TimelineControls extends HTMLElement{
       })
     })
     this.querySelector('button.back').addEventListener('click', () => {
-      this.jumpToIndex(this._timeline.currentEntryIndex - 1, {
+      const backThreshold = 1000 * this.speed
+      const index = this._timeline.currentEntryIndex + (this._timeline.timeSinceLastEntry > backThreshold ? 0 : -1)
+      this.jumpToIndex(index, {
         animate: false
       })
     })
@@ -117,27 +119,25 @@ export default class TimelineControls extends HTMLElement{
   }
 
   setup(timeline, adventurer, options = {}){
-
     this.setOptions(options)
     this._timeline = timeline
+    this._timeline.on('timechange', ({ before, after, jumped }) => {
+      this._update()
+    })
     this._setupEventLog(adventurer)
-
-    setTimeout(() => {
-      this._updateEvent()
-      this.play()
-    }, 0)
   }
 
   setOptions(options = {}){
     this._options = mergeOptionsObjects(this._options, options)
-    this.querySelectorAll(`.replay-${options.isReplay ? 'no' : 'yes'}`).forEach(el => {
+    this.querySelectorAll(`.replay-${this._options.isReplay ? 'no' : 'yes'}`).forEach(el => {
       el.classList.add('displaynone')
     })
-    this.querySelectorAll(`.replay-${options.isReplay ? 'yes' : 'no'}`).forEach(el => {
+    this.querySelectorAll(`.replay-${this._options.isReplay ? 'yes' : 'no'}`).forEach(el => {
       el.classList.remove('displaynone')
     })
     this._ticker.setOptions({
-      speed: this.speed
+      speed: this.speed,
+      live: !this._options.isReplay
     })
   }
 
@@ -150,8 +150,12 @@ export default class TimelineControls extends HTMLElement{
   }
 
   jumpTo(time, options = {}){
+    console.log('jump to', time)
     this._timeline.setTime(time, true)
-    this._updateEvent(options)
+    this._updateEvent({
+      jumped: true,
+      ...options
+    })
   }
 
   jumpToIndex(index, options = {}){
@@ -207,20 +211,29 @@ export default class TimelineControls extends HTMLElement{
 
   _tick(){
     this._timeline.setTime(this._timeline.currentEntry.time + this._ticker.currentTime)
+    this._update()
+  }
+
+  _update(){
     this._eventTimeBarEl.setOptions({
       max: this._ticker.endTime,
       label: dateformat(this._timeline.time, 'M:ss')
     })
-    this._eventTimeBarEl.setValue(this._ticker.currentTime)
+    this._eventTimeBarEl.setValue(this._options.isReplay ? this._ticker.currentTime : 0)
   }
 
   _nextEvent(){
     this._updateEvent()
   }
 
-  _updateEvent(options){
+  _updateEvent(options = {}){
 
-    if(this._currentEvent === this._timeline.currentEntry){
+    options = {
+      jumped: false,
+      ...options
+    }
+
+    if(!options.jumped && this._currentEvent === this._timeline.currentEntry){
       return
     }
 

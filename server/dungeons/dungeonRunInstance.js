@@ -88,10 +88,6 @@ export default class DungeonRunInstance extends EventEmitter{
     }
 
     this._resolveEvent(this.currentEvent)
-
-    if(this.events.length === 1){
-      this.emit('started')
-    }
   }
 
   async _continueEvent(event){
@@ -122,6 +118,8 @@ export default class DungeonRunInstance extends EventEmitter{
     this.doc.room = nextEvent.room
     this.doc.floor = nextEvent.floor
     this.doc.events.push(nextEvent)
+
+    console.log(nextEvent)
   }
 
   async _resolveEvent(event){

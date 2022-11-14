@@ -13,8 +13,8 @@ const HP_GROWTH = 20
 const HP_GROWTH_PCT = 0.08
 
 const POWER_BASE = 10
-const POWER_GROWTH = 5
-const POWER_GROWTH_PCT = 0.07
+const POWER_GROWTH = 4
+const POWER_GROWTH_PCT = 0.08
 
 export function advXpToLevel(xp){
   const lvl = Math.floor(inverseGeometricProgression(XP_MULTIPLIER, xp, LEVEL_2_XP)) + 1

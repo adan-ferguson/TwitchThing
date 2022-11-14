@@ -117,7 +117,7 @@ export default class DungeonPage extends Page{
   }
 
   _socketUpdate = (dungeonRun) => {
-    // Set the virtual time here
+
     if(this.dungeonRun._id !== dungeonRun._id){
       return
     }
@@ -126,12 +126,14 @@ export default class DungeonPage extends Page{
       this._timelineEl.setOptions({
         isReplay: true
       })
+      this._timelineEl.jumpTo(this._timelineEl.duration)
     }
 
     this.dungeonRun = dungeonRun
     this._timelineEl.addEvent(dungeonRun.currentEvent)
     this._timelineEl.play()
     if(dungeonRun.virtualTime){
+      console.log('jump to', dungeonRun.virtualTime)
       this._timelineEl.jumpTo(dungeonRun.virtualTime)
     }
   }
@@ -149,7 +151,25 @@ export default class DungeonPage extends Page{
 
     const animate = options.animate
 
-    if(this.currentEvent.combatID){
+    if(this.currentEvent && !this.isReplay){
+      setTimeout(() => {
+        this._timelineEl.play()
+      })
+      // setTimeout(() => {
+      //   this._updateEvent()
+      //   this.play()
+      // }, 0)
+    }
+
+    console.log('update')
+
+    if(!this.currentEvent){
+      this._eventEl.update({
+        passTimeOverride: true,
+        message: `${this.adventurer.name} enters the dungeon.`,
+        roomType: 'entrance'
+      }, false)
+    }else if(this.currentEvent.combatID){
       this._enactCombat()
     }else{
       this._adventurerPane.setState(this.currentEvent.adventurerState, animate)
@@ -167,6 +187,7 @@ export default class DungeonPage extends Page{
   _showResults(){
     const results = new EventContentsResults(this.dungeonRun)
     this._eventEl.setContents(results, false)
+    this._timelineEl.pause()
     if(!this.watching){
       this._stateEl.showFinalizerButton(async () => {
         showLoader()
@@ -188,7 +209,7 @@ export default class DungeonPage extends Page{
   }
 
   _tick(ms){
-    if(this._ce){
+    if(this._ce && this._ce.combatID === this.currentEvent.combatID){
       this._ce.timeline.setTime(this._timeline.timeSinceLastEntry)
     }
     if(!this.currentEvent.passTimeOverride){
@@ -197,18 +218,20 @@ export default class DungeonPage extends Page{
   }
 
   _updateBackground(){
+    if(!this.currentEvent){
+      return
+    }
     const zone = Zones[floorToZone(this.currentEvent.floor)]
     this.app.setBackground(zone.color, zone.texture)
   }
 
   _setupTimeline(dungeonRun){
     this._timeline = new Timeline(dungeonRun.events)
-    if(!dungeonRun.finalized){
-      this._timeline.setTime(dungeonRun.virtualTime ?? dungeonRun.elapsedTime, true)
-    }
     this._timelineEl.setup(this._timeline, this.adventurer, {
       isReplay: this.isReplay
     })
+    const targetTime = dungeonRun.finalized ? 0 : dungeonRun.virtualTime ?? dungeonRun.elapsedTime
+    this._timeline.setTime(targetTime, true)
   }
 }
 
