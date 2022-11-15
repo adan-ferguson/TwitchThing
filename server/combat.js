@@ -6,9 +6,10 @@ import { takeCombatTurn } from './actionsAndTicks/performAction.js'
 import { performCombatTick } from './actionsAndTicks/performCombatTick.js'
 import { toFighterInstance } from '../game/toFighterInstance.js'
 import { triggerEvent } from './actionsAndTicks/common.js'
+import { ADVANCEMENT_INTERVAL } from './dungeons/dungeonRunner.js'
+import { CombatResult } from '../game/combatResult.js'
 
-const START_TIME_DELAY = 500
-const END_TIME_PADDING = 1000 // make sure combat event doesn't end too fast, or it looks weird
+const START_TIME_DELAY = 200
 const MAX_TIME = 120000
 
 export async function generateCombatEvent(dungeonRun){
@@ -21,15 +22,21 @@ export async function generateCombatEvent(dungeonRun){
     floor: dungeonRun.floor
   })
 
-  return {
-    duration: combat.duration + END_TIME_PADDING,
-    stayInRoom: true,
-    message: `${adventurerInstance.displayName} is fighting a ${monsterInstance.displayName}.`,
+  const event = {
+    duration: combat.duration + ADVANCEMENT_INTERVAL,
     combatID: combat._id,
     passTimeOverride: true,
     roomType: 'combat',
-    monster: monsterDef
+    monster: monsterDef,
+    adventurerState: combat.fighter1.endState,
+    result: combat.result
   }
+
+  if(combat.result === CombatResult.F1_WIN){
+    event.rewards = monsterDef.rewards
+  }
+
+  return event
 }
 
 export async function generateSimulatedCombat(fighterDef1, fighterDef2){
@@ -67,29 +74,6 @@ export async function generateCombat(fighterInstance1, fighterInstance2, params 
   })
 }
 
-export async function finishCombatEvent(dungeonRun, combatEvent){
-  const combat = await Combats.findByID(combatEvent.combatID)
-  const fighter = combat.fighter1.data._id.equals(dungeonRun.adventurer._id) ? combat.fighter1 : combat.fighter2
-  const enemy = combat.fighter1.data._id.equals(dungeonRun.adventurer._id) ? combat.fighter2 : combat.fighter1
-  const event = {
-    adventurerState: fighter.endState
-  }
-  const monsterInstance = new MonsterInstance(enemy.data)
-  if(fighter.endState.hpPct === 0){
-    event.runFinished = true
-    event.roomType = 'dead'
-    event.message = `${fighter.data.name} has defeated by the ${monsterInstance.displayName}.`
-  }else if(enemy.endState.hpPct === 0){
-    event.rewards = enemy.data.rewards
-    event.message = `${fighter.data.name} defeated the ${monsterInstance.displayName}.`
-    event.monster = { ...combatEvent.monster, defeated: true }
-    event.roomType = 'victory'
-  }else{
-    event.message = 'That fight was going nowhere so you both just get bored and leave.'
-  }
-  return event
-}
-
 class Combat{
 
   constructor(fighterInstance1, fighterInstance2){
@@ -123,8 +107,20 @@ class Combat{
   }
 
   get result(){
-    return {}
+    if(!this.fighterInstance1.hpPct){
+      if(!this.fighterInstance2.hpPct){
+        return CombatResult.DOUBLE_KO
+      }
+      return CombatResult.F2_WIN
+    }else if(!this.fighterInstance2.hpPct){
+      return CombatResult.F1_WIN
+    }
+    if(this.time >= MAX_TIME){
+      return CombatResult.TIME_OVER
+    }
+    return CombatResult.ONGOING
   }
+
 
   get finished(){
     return this._currentTime === MAX_TIME || this.fighterInstance1.hp === 0 || this.fighterInstance2.hp === 0

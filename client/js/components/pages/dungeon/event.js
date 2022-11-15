@@ -20,6 +20,9 @@ export default class Event extends HTMLElement{
   }
 
   update(dungeonEvent, animate = true){
+
+    console.log('update event panel', dungeonEvent, animate)
+
     const wasNormal = this._currentContents instanceof EventContentsNormal
     if(wasNormal && sameRoom(this._currentContents.dungeonEvent, dungeonEvent)){
       this._currentContents.update(dungeonEvent, animate)
@@ -45,7 +48,7 @@ export default class Event extends HTMLElement{
     if(!this._timeline.currentEntry){
       return
     }
-    this._currentContents.setTimeBar?.(this._timeline.timeSinceLastEntry, this._timeline.currentEntry.duration)
+    this._currentContents?.setTimeBar?.(this._timeline.timeSinceLastEntry, this._timeline.currentEntry.duration)
   }
 }
 

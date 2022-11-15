@@ -6,6 +6,7 @@ const HTML = `
     <div data-tab-name="Relics"></div>
   </di-tabz>
 </div>
+<button class="finalizer displaynone">Finish</button>
 `
 
 export default class EventContentsResults extends HTMLElement{
@@ -27,6 +28,12 @@ export default class EventContentsResults extends HTMLElement{
     this._setupResultsTab(tabz.getContentEl('Results'))
     this._setupMonstersTab(tabz.getContentEl('Monsters'))
     this._setupRelicsTab(tabz.getContentEl('Relics'))
+  }
+
+  showFinalizerButton(fn){
+    const el = this.querySelector('.finalizer')
+    el.classList.remove('displaynone')
+    el.onclick = fn
   }
 
   _setupResultsTab(el){

@@ -56,7 +56,6 @@ export default class DungeonPage extends Page{
     this._eventEl = this.querySelector('di-dungeon-event')
     this._stateEl = this.querySelector('di-dungeon-state')
     this._timelineEl = this.querySelector('di-dungeon-timeline-controls')
-    this._timelineEl.ticker.on('tick', ms => this._tick(ms))
     this._timelineEl.addEventListener('event_changed', e => {
       this._update(e.detail)
     })
@@ -156,24 +155,27 @@ export default class DungeonPage extends Page{
       })
     }
 
-    if(!this.currentEvent){
+    let updateStates = true
+    if(this.isReplay && this._timeline.finished){
+      this._showResults()
+    }else if(!this.currentEvent){
       this._eventEl.update({
         passTimeOverride: true,
         message: `${this.adventurer.name} enters the dungeon.`,
         roomType: 'entrance'
       }, false)
     }else if(this.currentEvent.combatID){
+      updateStates = false
       this._enactCombat()
     }else{
-      this._adventurerPane.setState(this.currentEvent.adventurerState, animate)
-      if(this.dungeonRun.results && this.currentEvent.runFinished){
-        this._showResults()
-      }else{
-        this._eventEl.update(this.currentEvent, this._timeline.time, animate)
-      }
+      this._eventEl.update(this.currentEvent, animate)
     }
 
-    this._stateEl.update(this._timelineEl.elapsedEvents, animate)
+    if(updateStates){
+      this._adventurerPane.setState(this.currentEvent.adventurerState, animate)
+      this._stateEl.update(this._timelineEl.elapsedEvents, animate)
+    }
+
     this._updateBackground()
   }
 
@@ -182,7 +184,7 @@ export default class DungeonPage extends Page{
     this._eventEl.setContents(results, false)
     this._timelineEl.pause()
     if(!this.watching){
-      this._stateEl.showFinalizerButton(async () => {
+      results.showFinalizerButton(async () => {
         showLoader()
         await fizzetch(`/game/dungeonrun/${this._dungeonRunID}/finalize`)
         this.redirectTo(AdventurerPage.path(this.adventurer._id))
@@ -201,11 +203,12 @@ export default class DungeonPage extends Page{
     this._ce = ce
   }
 
-  _tick(ms){
+  _timeChange({ before, after, jumped }){
+    const ms = after - before
     if(this._ce && this._ce.combatID === this.currentEvent.combatID){
-      this._ce.timeline.setTime(this._timeline.timeSinceLastEntry)
+      this._ce.timeline.setTime(this._timeline.timeSinceLastEntry, jumped)
     }
-    if(!this.currentEvent.passTimeOverride){
+    if(!this.currentEvent.passTimeOverride && !jumped){
       this._adventurerPane.advanceTime(ms)
     }
   }
@@ -220,6 +223,9 @@ export default class DungeonPage extends Page{
 
   _setupTimeline(dungeonRun){
     this._timeline = new Timeline(dungeonRun.events)
+    this._timeline.on('timechange', obj => {
+      this._timeChange(obj)
+    })
     this._timelineEl.setup(this._timeline, this.adventurer, {
       isReplay: this.isReplay
     })

@@ -1,6 +1,5 @@
 import { EventEmitter } from 'events'
 import AdventurerInstance from '../../game/adventurerInstance.js'
-import { finishCombatEvent } from '../combat.js'
 import { generateEvent } from './dungeonEventPlanner.js'
 import { addRewards } from './results.js'
 import { ADVANCEMENT_INTERVAL } from './dungeonRunner.js'
@@ -79,21 +78,13 @@ export default class DungeonRunInstance extends EventEmitter{
     // we would never notice unless the server reloaded.
     this.adventurerInstance = new AdventurerInstance(this.doc.adventurer, this.doc.adventurerState)
 
-    if(this.currentEvent?.stayInRoom){
-      await this._continueEvent(this.currentEvent)
-    }else if(nextEvent){
+    if(nextEvent){
       this._addEvent(nextEvent)
     }else{
       await this._nextEvent()
     }
 
     this._resolveEvent(this.currentEvent)
-  }
-
-  async _continueEvent(event){
-    if(event.combatID){
-      this._addEvent(await finishCombatEvent(this, event))
-    }
   }
 
   async _nextEvent(){
@@ -133,7 +124,8 @@ export default class DungeonRunInstance extends EventEmitter{
     this._updateStateAndPerformTicks(event)
     this.doc.elapsedTime += event.duration
 
-    if(event.runFinished){
+    if(!this.adventurerInstance.hpPct){
+      event.runFinished = true
       this.doc.results = calculateResults(this.events)
       this.doc.finished = true
     }

@@ -83,7 +83,6 @@ export default class CombatEnactment extends EventEmitter{
       return
     }
     const currentEntry = this._timeline.currentEntry
-    // console.log(currentEntry)
     this._fighterPane1.setState(currentEntry.fighterState1, cancelAnimations)
     this._fighterPane2.setState(currentEntry.fighterState2, cancelAnimations)
     this._fighterPane1.advanceTime(this._timeline.timeSinceLastEntry)

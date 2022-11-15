@@ -96,8 +96,7 @@ export async function addRun(adventurerID, dungeonOptions){
   adventurer.dungeonRunID = drDoc._id
   await Adventurers.save(adventurer)
 
-  const instance = new DungeonRunInstance(drDoc, userDoc)
-  activeRuns[drDoc._id] = instance
+  activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, userDoc)
   return drDoc
 }
 

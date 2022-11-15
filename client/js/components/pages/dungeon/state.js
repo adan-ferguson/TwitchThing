@@ -14,7 +14,6 @@ const innerHTML = `
       Chests: <span class="chests">0</span>
   </div>
 </div>
-<button class="finalizer displaynone">Finish</button>
 `
 
 export default class State extends HTMLElement{
@@ -30,11 +29,9 @@ export default class State extends HTMLElement{
     this.innerHTML = innerHTML
     this._floorAndRoomEl = this.querySelector('.floor-and-room')
     this._contentEl = this.querySelector('.content')
-    this._finalizerEl = this.querySelector('.finalizer')
     this.xp = this.querySelector('.xp-reward')
     this.xpVal = null
     this._chests = this.querySelector('.chests')
-    // this._shareLink = this.querySelector('.share-link')
   }
 
   setup(dungeonRun){
@@ -46,21 +43,14 @@ export default class State extends HTMLElement{
     const currentEvent = eventsList.at(-1)
     const results = new DungeonRunResults(eventsList)
 
-    console.log('state current event', currentEvent)
-
-    this._floorAndRoomEl.textContent = `Floor ${currentEvent.floor} - ${currentEvent.room ? 'Room ' + currentEvent.room : 'Entrance'}`
+    if(currentEvent){
+      this._floorAndRoomEl.textContent = `Floor ${currentEvent.floor} - ${currentEvent.room ? 'Room ' + currentEvent.room : 'Entrance'}`
+    }
 
     this._setXP(results.xp, animate)
     this._updateChests(results.chests, animate)
 
     this._contentEl.classList.remove('displaynone')
-    this._finalizerEl.classList.add('displaynone')
-  }
-
-  showFinalizerButton(fn){
-    this._contentEl.classList.add('displaynone')
-    this._finalizerEl.classList.remove('displaynone')
-    this._finalizerEl.onclick = fn
   }
 
   _setXP(xp, animate){
