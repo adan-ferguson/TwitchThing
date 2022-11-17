@@ -15,6 +15,7 @@ const HTML = `
   <div class='content-rows'>
     <div class="content-well fill-contents">
       <di-fighter-instance-pane class="adventurer"></di-fighter-instance-pane>
+      <di-adventurer-pane class="displaynone"></di-adventurer-pane>
     </div>
     <div class="bot-row content-well">
       <di-dungeon-timeline-controls></di-dungeon-timeline-controls>
@@ -50,6 +51,7 @@ export default class DungeonPage extends Page{
     this._dungeonRunID = dungeonRunID
     this.innerHTML = HTML
     this._adventurerPane = this.querySelector('di-fighter-instance-pane.adventurer')
+    this._adventurerResultsPane = this.querySelector('di-adventurer-pane')
     this._eventEl = this.querySelector('di-dungeon-event')
     this._stateEl = this.querySelector('di-dungeon-state')
     this._timelineEl = this.querySelector('di-dungeon-timeline-controls')
@@ -154,38 +156,39 @@ export default class DungeonPage extends Page{
       })
     }
 
-    console.log(this.currentEvent)
+    this._updateBackground()
+    this._stateEl.update(this._timelineEl.elapsedEvents, animate)
 
-    let updateStates = true
+    console.log(this.currentEvent)
     if(this.isReplay && this._timeline.finished){
       this._showResults()
-    }else if(!this.currentEvent){
-      updateStates = false
+      return
+    }
+
+    this._adventurerPane.classList.remove('displaynone')
+    this._adventurerResultsPane.classList.add('displaynone')
+
+    if(!this.currentEvent){
       this._eventEl.update({
         passTimeOverride: true,
         message: `${this.adventurer.name} enters the dungeon.`,
         roomType: 'entrance'
       }, false)
     }else if(this.currentEvent.roomType === 'combat'){
-      updateStates = false
       this._enactCombat()
     }else{
       this._eventEl.update(this.currentEvent, animate)
-    }
-
-    if(updateStates){
       this._adventurerPane.setState(this.currentEvent.adventurerState, animate)
-      this._stateEl.update(this._timelineEl.elapsedEvents, animate)
     }
-
-    this._updateBackground()
   }
 
   _showResults(){
-    // TODO: show xp bar on adventurer
     const results = new EventContentsResults(this.dungeonRun)
     this._eventEl.setContents(results, false)
     this._timelineEl.pause()
+    this._adventurerResultsPane.setAdventurer(this.adventurer)
+    this._adventurerResultsPane.classList.remove('displaynone')
+    this._adventurerPane.classList.add('displaynone')
     if(!this.watching){
       results.showFinalizerButton(async () => {
         showLoader()

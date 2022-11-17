@@ -24,9 +24,6 @@ const HTML = `
   </div>
   <di-loadout></di-loadout>
 </div>
-<div class="absolute-center-both fill-contents defeated-text displaynone">
-  <span>DEFEATED</span>
-</div>
 `
 
 const TEXT_EFFECT_MIN = 0.9
@@ -278,13 +275,13 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   _showOnDefeat(){
-    const defeatedEl = this.querySelector('.defeated-text')
-    defeatedEl.classList.remove('displaynone')
-    defeatedEl.style.opacity = '0'
+    const contents = this.querySelector('.standard-contents')
+    contents.classList.remove('displaynone')
+    contents.style.opacity = '0'
     this._defeatAnim = new CustomAnimation({
       duration: 1200,
       tick: pct => {
-        defeatedEl.style.opacity = pct.toString()
+        contents.style.opacity = (1 - pct).toString()
       }
     })
   }
@@ -292,9 +289,7 @@ export default class FighterInstancePane extends HTMLElement{
   _clearOnDefeat(){
     this._defeatAnim.cancel()
     this._defeated = false
-
-    this.querySelector('.standard-contents').opacity = '1'
-    this.querySelector('.defeated-text').classList.add('displaynone')
+    this.querySelector('.standard-contents').style.opacity = '1'
   }
 }
 
