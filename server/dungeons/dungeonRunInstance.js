@@ -5,6 +5,7 @@ import { addRewards } from './results.js'
 import { ADVANCEMENT_INTERVAL } from './dungeonRunner.js'
 import calculateResults from '../../game/dungeonRunResults.js'
 import { performVenturingTicks } from '../actionsAndTicks/performVenturingTicks.js'
+import { toArray } from '../../game/utilFunctions.js'
 
 export default class DungeonRunInstance extends EventEmitter{
 
@@ -16,6 +17,7 @@ export default class DungeonRunInstance extends EventEmitter{
     }
     this.user = user
     this._time = this.currentEvent?.time ?? 0
+    this._newEventIterator = this.events.length
   }
 
   get time(){
@@ -73,6 +75,8 @@ export default class DungeonRunInstance extends EventEmitter{
       this._time = this.nextEventTime
     }
 
+    console.log('advanced', this._time)
+
     // Reset this each advancement to make sure that everything is synced up.
     // If we just let this roll, then it's possible the doc state is wrong but
     // we would never notice unless the server reloaded.
@@ -83,8 +87,12 @@ export default class DungeonRunInstance extends EventEmitter{
     }else{
       await this._nextEvent()
     }
+  }
 
-    this._resolveEvent(this.currentEvent)
+  getNewEvents(){
+    const slice = this.events.slice(this._newEventIterator)
+    this._newEventIterator = this.events.length
+    return slice
   }
 
   async _nextEvent(){
@@ -93,42 +101,39 @@ export default class DungeonRunInstance extends EventEmitter{
     this._addEvent(await generateEvent(this))
   }
 
-  async _addEvent(event){
-    const nextEvent = {
-      room: this.doc.room,
-      floor: this.doc.floor,
-      time: this.doc.elapsedTime,
-      duration: ADVANCEMENT_INTERVAL,
-      ...event
-    }
-    if(nextEvent.runFinished){
-      nextEvent.duration = 0
-    }
-    // Make it a multiple of the advancement interval
-    nextEvent.duration = Math.ceil(-0.01 + nextEvent.duration / ADVANCEMENT_INTERVAL) * ADVANCEMENT_INTERVAL
-    this.doc.room = nextEvent.room
-    this.doc.floor = nextEvent.floor
-    this.doc.events.push(nextEvent)
+  async _addEvent(events){
 
-    console.log(nextEvent)
-  }
-
-  async _resolveEvent(event){
-    if(event.rewards){
-      if(event.rewards.xp){
-        event.rewards.xp = Math.ceil(event.rewards.xp)
+    let durationSum = 0
+    events = toArray(events)
+    events.forEach(e => {
+      const nextEvent = {
+        room: this.doc.room,
+        floor: this.doc.floor,
+        time: this.doc.elapsedTime + durationSum,
+        duration: ADVANCEMENT_INTERVAL,
+        ...e
       }
-      this.doc.rewards = addRewards(this.doc.rewards, event.rewards)
-    }
-    event.duration = Math.ceil(event.duration / ADVANCEMENT_INTERVAL) * ADVANCEMENT_INTERVAL
-    this._updateStateAndPerformTicks(event)
-    this.doc.elapsedTime += event.duration
+      this.doc.events.push(nextEvent)
+      durationSum += e.duration ?? ADVANCEMENT_INTERVAL
+      if(nextEvent.rewards){
+        if(nextEvent.rewards.xp){
+          nextEvent.rewards.xp = Math.ceil(nextEvent.rewards.xp)
+        }
+        this.doc.rewards = addRewards(this.doc.rewards, nextEvent.rewards)
+      }
+      this._updateStateAndPerformTicks(nextEvent)
+    })
 
-    if(!this.adventurerInstance.hpPct){
-      event.runFinished = true
+    const lastEvent = this.doc.events.at(-1)
+    lastEvent.duration += (ADVANCEMENT_INTERVAL - (durationSum % ADVANCEMENT_INTERVAL)) % ADVANCEMENT_INTERVAL
+    if(lastEvent.runFinished){
       this.doc.results = calculateResults(this.events)
       this.doc.finished = true
+      lastEvent.duration = 0
     }
+    this.doc.room = lastEvent.room
+    this.doc.floor = lastEvent.floor
+    this.doc.elapsedTime = lastEvent.time + lastEvent.duration
   }
 
   /**

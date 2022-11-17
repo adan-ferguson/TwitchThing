@@ -50,9 +50,6 @@ export default class DungeonPage extends Page{
     this._dungeonRunID = dungeonRunID
     this.innerHTML = HTML
     this._adventurerPane = this.querySelector('di-fighter-instance-pane.adventurer')
-      .setOptions({
-        fadeOutOnDefeat: false
-      })
     this._eventEl = this.querySelector('di-dungeon-event')
     this._stateEl = this.querySelector('di-dungeon-state')
     this._timelineEl = this.querySelector('di-dungeon-timeline-controls')
@@ -129,10 +126,12 @@ export default class DungeonPage extends Page{
     }
 
     this.dungeonRun = dungeonRun
-    this._timelineEl.addEvent(dungeonRun.currentEvent)
+    this._timelineEl.addEvents(dungeonRun.newEvents)
     this._timelineEl.play()
+
     if(dungeonRun.virtualTime){
       this._timelineEl.jumpTo(dungeonRun.virtualTime)
+      console.log('jump to', dungeonRun.virtualTime, this.currentEvent)
     }
   }
 
@@ -155,16 +154,19 @@ export default class DungeonPage extends Page{
       })
     }
 
+    console.log(this.currentEvent)
+
     let updateStates = true
     if(this.isReplay && this._timeline.finished){
       this._showResults()
     }else if(!this.currentEvent){
+      updateStates = false
       this._eventEl.update({
         passTimeOverride: true,
         message: `${this.adventurer.name} enters the dungeon.`,
         roomType: 'entrance'
       }, false)
-    }else if(this.currentEvent.combatID){
+    }else if(this.currentEvent.roomType === 'combat'){
       updateStates = false
       this._enactCombat()
     }else{
@@ -180,6 +182,7 @@ export default class DungeonPage extends Page{
   }
 
   _showResults(){
+    // TODO: show xp bar on adventurer
     const results = new EventContentsResults(this.dungeonRun)
     this._eventEl.setContents(results, false)
     this._timelineEl.pause()
@@ -204,12 +207,19 @@ export default class DungeonPage extends Page{
   }
 
   _timeChange({ before, after, jumped }){
+    if(!this.currentEvent){
+      debugger
+      return
+    }
     const ms = after - before
     if(this._ce && this._ce.combatID === this.currentEvent.combatID){
       this._ce.timeline.setTime(this._timeline.timeSinceLastEntry, jumped)
     }
     if(!this.currentEvent.passTimeOverride && !jumped){
       this._adventurerPane.advanceTime(ms)
+    }
+    if(this._timeline.finished && this.isReplay){
+      this._showResults()
     }
   }
 

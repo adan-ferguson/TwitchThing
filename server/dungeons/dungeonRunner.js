@@ -196,7 +196,7 @@ function clearFinishedRuns(){
 function truncatedRun(dri){
   const truncatedDoc = {
     ...dri.doc,
-    currentEvent: dri.currentEvent,
+    newEvents: dri.getNewEvents(),
     virtualTime: virtualTime(dri)
   }
   delete truncatedDoc.events

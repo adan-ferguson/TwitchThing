@@ -6,10 +6,11 @@ import { takeCombatTurn } from './actionsAndTicks/performAction.js'
 import { performCombatTick } from './actionsAndTicks/performCombatTick.js'
 import { toFighterInstance } from '../game/toFighterInstance.js'
 import { triggerEvent } from './actionsAndTicks/common.js'
-import { ADVANCEMENT_INTERVAL } from './dungeons/dungeonRunner.js'
 import { CombatResult } from '../game/combatResult.js'
+import { ADVANCEMENT_INTERVAL } from './dungeons/dungeonRunner.js'
 
 const START_TIME_DELAY = 200
+const COMBAT_END_PADDING = 1000
 const MAX_TIME = 120000
 
 export async function generateCombatEvent(dungeonRun){
@@ -22,21 +23,32 @@ export async function generateCombatEvent(dungeonRun){
     floor: dungeonRun.floor
   })
 
-  const event = {
-    duration: combat.duration + ADVANCEMENT_INTERVAL,
+  const combatEvent = {
+    duration: combat.duration + COMBAT_END_PADDING,
     combatID: combat._id,
     passTimeOverride: true,
     roomType: 'combat',
     monster: monsterDef,
-    adventurerState: combat.fighter1.endState,
-    result: combat.result
+    adventurerState: combat.fighter1.endState
+  }
+
+  const resultEvent = {
+    duration: ADVANCEMENT_INTERVAL,
+    result: combat.result,
+    combatID: combat._id,
+    roomType: 'combatResult'
   }
 
   if(combat.result === CombatResult.F1_WIN){
-    event.rewards = monsterDef.rewards
+    resultEvent.rewards = monsterDef.rewards
+    resultEvent.message = `${adventurerInstance.displayName} has defeated the ${monsterInstance.displayName}.`
+  }else if(combat.result === CombatResult.F2_WIN){
+    resultEvent.runFinished = true
+    resultEvent.duration = 0
+    resultEvent.message = `${adventurerInstance.displayName} has been defeated by the ${monsterInstance.displayName}.`
   }
 
-  return event
+  return [combatEvent, resultEvent]
 }
 
 export async function generateSimulatedCombat(fighterDef1, fighterDef2){

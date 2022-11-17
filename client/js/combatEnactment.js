@@ -58,6 +58,9 @@ export default class CombatEnactment extends EventEmitter{
         this._fighterPane1.advanceTime(after - before)
         this._fighterPane2.advanceTime(after - before)
       }
+      if(this._timeline.finished){
+        this.emit('finished')
+      }
       this._prevEntryIndex = this._timeline.currentEntryIndex
     })
   }

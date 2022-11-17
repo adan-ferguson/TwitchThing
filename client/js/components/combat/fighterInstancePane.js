@@ -14,14 +14,19 @@ import EffectRow from '../effects/effectRow.js'
 
 const HTML = `
 <div class="name"></div>
-<div class="flex-rows top-section flex-grow">
-  <di-hp-bar></di-hp-bar>
-  <di-action-bar></di-action-bar>
-  <di-stats-list></di-stats-list>
-  <di-effects-list></di-effects-list>
-  <di-orb-row class="fighter-orbs"></di-orb-row>
+<div class="absolute-full-size fill-contents standard-contents">
+  <div class="flex-rows top-section flex-grow">
+    <di-hp-bar></di-hp-bar>
+    <di-action-bar></di-action-bar>
+    <di-stats-list></di-stats-list>
+    <di-effects-list></di-effects-list>
+    <di-orb-row class="fighter-orbs"></di-orb-row>
+  </div>
+  <di-loadout></di-loadout>
 </div>
-<di-loadout></di-loadout>
+<div class="absolute-center-both fill-contents defeated-text displaynone">
+  <span>DEFEATED</span>
+</div>
 `
 
 const TEXT_EFFECT_MIN = 0.9
@@ -33,9 +38,6 @@ export default class FighterInstancePane extends HTMLElement{
   _orbRowEl
   _loadoutEl
   _effectsListEl
-  _options = {
-    fadeOutOnDefeat: true,
-  }
 
   hpBarEl
 
@@ -187,11 +189,9 @@ export default class FighterInstancePane extends HTMLElement{
    */
   _update(cancelAnimations = false){
 
-    if(this._finished){
+    if(this._defeated){
       if(this.fighterInstance.hp){
-        this._fadeAnim.cancel()
-        this._finished = false
-        this.style.opacity = '1'
+        this._clearOnDefeat()
       }else{
         return
       }
@@ -221,14 +221,9 @@ export default class FighterInstancePane extends HTMLElement{
     )
     this._loadoutEl.updateAllRows()
 
-    if(!this.fighterInstance.hp && this._options.fadeOutOnDefeat){
-      this._fadeAnim = new CustomAnimation({
-        duration: 1200,
-        tick: pct => {
-          this.style.opacity = (1 - pct).toString()
-        }
-      })
-      this._finished = true
+    if(!this.fighterInstance.hp){
+      this._showOnDefeat()
+      this._defeated = true
     }
   }
 
@@ -280,6 +275,26 @@ export default class FighterInstancePane extends HTMLElement{
         }
       )
     }
+  }
+
+  _showOnDefeat(){
+    const defeatedEl = this.querySelector('.defeated-text')
+    defeatedEl.classList.remove('displaynone')
+    defeatedEl.style.opacity = '0'
+    this._defeatAnim = new CustomAnimation({
+      duration: 1200,
+      tick: pct => {
+        defeatedEl.style.opacity = pct.toString()
+      }
+    })
+  }
+
+  _clearOnDefeat(){
+    this._defeatAnim.cancel()
+    this._defeated = false
+
+    this.querySelector('.standard-contents').opacity = '1'
+    this.querySelector('.defeated-text').classList.add('displaynone')
   }
 }
 

@@ -34,7 +34,7 @@ export async function generateEvent(dungeonRun){
   }
 
   const previousEvent = dungeonRun.events.at(-1)
-  const encounterPossible = (previousEvent?.monster || room <= 1) ? false : true
+  const encounterPossible = (previousEvent?.combatID || room <= 1) ? false : true
 
   if(encounterPossible && foundMonster(dungeonRun)){
     return await generateCombatEvent(dungeonRun)

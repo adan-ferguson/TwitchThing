@@ -151,9 +151,9 @@ export default class TimelineControls extends HTMLElement{
     })
   }
 
-  addEvent(event){
+  addEvents(events){
     const update = this._timeline.finished
-    this._timeline.addEntry(event)
+    events.forEach(event => this._timeline.addEntry(event))
     if(update){
       this._updateEvent()
     }
