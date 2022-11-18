@@ -83,6 +83,9 @@ export default class App extends HTMLElement{
       page.loadstate = 'loaded'
     }catch(ex){
       console.error(ex)
+      if(page.useHistory){
+        addPageToHistory(page, replaceHistoryState)
+      }
       this.setPage('error', { error: ex.error ?? ex })
       return
     }

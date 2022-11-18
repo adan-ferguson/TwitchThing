@@ -19,12 +19,12 @@ export default class Event extends HTMLElement{
     timeline.on('timechange', () => this._updateTimeBar())
   }
 
-  update(dungeonEvent){
+  update(dungeonEvent, animate = false){
     const wasNormal = this._currentContents instanceof EventContentsNormal
     if(wasNormal && sameRoom(this._currentContents.dungeonEvent, dungeonEvent)){
       this._currentContents.update(dungeonEvent)
     }else{
-      this.setContents(new EventContentsNormal(dungeonEvent))
+      this.setContents(new EventContentsNormal(dungeonEvent), animate)
     }
   }
 

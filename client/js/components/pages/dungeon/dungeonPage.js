@@ -99,6 +99,8 @@ export default class DungeonPage extends Page{
       getSocket().on('dungeon run update', this._socketUpdate)
     }
 
+
+
     this._stateEl.setup(dungeonRun)
     this._setupTimeline(dungeonRun)
     this._adventurerPane.setFighter(new AdventurerInstance(this.adventurer, dungeonRun.adventurerState))
@@ -128,12 +130,12 @@ export default class DungeonPage extends Page{
     }
 
     this.dungeonRun = dungeonRun
+    console.log('socket', dungeonRun.newEvents, dungeonRun.virtualTime)
     this._timelineEl.addEvents(dungeonRun.newEvents)
     this._timelineEl.play()
 
     if(dungeonRun.virtualTime){
       this._timelineEl.jumpTo(dungeonRun.virtualTime)
-      console.log('jump to', dungeonRun.virtualTime, this.currentEvent)
     }
   }
 
@@ -159,7 +161,6 @@ export default class DungeonPage extends Page{
     this._updateBackground()
     this._stateEl.update(this._timelineEl.elapsedEvents, animate)
 
-    console.log(this.currentEvent)
     if(this.isReplay && this._timeline.finished){
       this._showResults()
       return
@@ -211,11 +212,10 @@ export default class DungeonPage extends Page{
 
   _timeChange({ before, after, jumped }){
     if(!this.currentEvent){
-      debugger
       return
     }
     const ms = after - before
-    if(this._ce && this._ce.combatID === this.currentEvent.combatID){
+    if(this._ce && this.currentEvent.roomType === 'combat'){
       this._ce.timeline.setTime(this._timeline.timeSinceLastEntry, jumped)
     }
     if(!this.currentEvent.passTimeOverride && !jumped){
@@ -243,6 +243,7 @@ export default class DungeonPage extends Page{
       isReplay: this.isReplay
     })
     const targetTime = dungeonRun.finalized ? 0 : dungeonRun.virtualTime ?? dungeonRun.elapsedTime
+    console.log('start at', dungeonRun.virtualTime, this.dungeonRun.events)
     this._timeline.setTime(targetTime, true)
   }
 }

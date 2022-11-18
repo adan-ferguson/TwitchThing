@@ -9,6 +9,9 @@ import { toArray } from '../../game/utilFunctions.js'
 
 export default class DungeonRunInstance extends EventEmitter{
 
+  shouldEmit = false
+  _lastAdvancement = new Date()
+
   constructor(doc, user){
     super()
     this.doc = doc
@@ -16,12 +19,12 @@ export default class DungeonRunInstance extends EventEmitter{
       throw 'User mismatch in dungeonRun instance'
     }
     this.user = user
-    this._time = this.currentEvent?.time ?? 0
     this._newEventIterator = this.events.length
   }
 
-  get time(){
-    return this._time
+  get virtualTime(){
+    console.log(this.doc.elapsedTime, new Date() - this._lastAdvancement - ADVANCEMENT_INTERVAL)
+    return this.doc.elapsedTime + (new Date() - this._lastAdvancement) - ADVANCEMENT_INTERVAL
   }
 
   get adventurer(){
@@ -47,46 +50,40 @@ export default class DungeonRunInstance extends EventEmitter{
     return this.doc.rewards
   }
 
-  get currentEvent(){
+  get newestEvent(){
     return this.events.at(-1)
   }
 
   get started(){
-    return this.currentEvent ? true : false
+    return this.newestEvent ? true : false
   }
 
-  get nextEventTime(){
-    return this.currentEvent ? this.currentEvent.time + this.currentEvent.duration : 0
+  get nextEventEndTime(){
+    return this.newestEvent ? this.newestEvent.time + this.newestEvent.duration : -Infinity
   }
 
   get pace(){
     return this.doc.dungeonOptions.pace ?? 'Brisk'
   }
 
-  async advance(nextEvent){
+  async advance(){
 
     this.shouldEmit = true
+    this._lastAdvancement = new Date()
+    this.doc.elapsedTime += ADVANCEMENT_INTERVAL
 
-    if(this._time + ADVANCEMENT_INTERVAL < this.nextEventTime){
-      this._time += ADVANCEMENT_INTERVAL
+    console.log('ADVANCE TO', this.doc.elapsedTime)
+
+    if(this.doc.elapsedTime < this.nextEventEndTime){
       this.shouldEmit = false
       return
-    }else{
-      this._time = this.nextEventTime
     }
-
-    console.log('advanced', this._time)
 
     // Reset this each advancement to make sure that everything is synced up.
     // If we just let this roll, then it's possible the doc state is wrong but
     // we would never notice unless the server reloaded.
     this.adventurerInstance = new AdventurerInstance(this.doc.adventurer, this.doc.adventurerState)
-
-    if(nextEvent){
-      this._addEvent(nextEvent)
-    }else{
-      await this._nextEvent()
-    }
+    await this._nextEvent()
   }
 
   getNewEvents(){
@@ -96,8 +93,8 @@ export default class DungeonRunInstance extends EventEmitter{
   }
 
   async _nextEvent(){
-    this.doc.room = this.currentEvent?.nextRoom || this.doc.room
-    this.doc.floor = this.currentEvent?.nextFloor || this.doc.floor
+    this.doc.room = this.newestEvent?.nextRoom || this.doc.room
+    this.doc.floor = this.newestEvent?.nextFloor || this.doc.floor
     this._addEvent(await generateEvent(this))
   }
 
@@ -133,7 +130,6 @@ export default class DungeonRunInstance extends EventEmitter{
     }
     this.doc.room = lastEvent.room
     this.doc.floor = lastEvent.floor
-    this.doc.elapsedTime = lastEvent.time + lastEvent.duration
   }
 
   /**

@@ -5,7 +5,6 @@ import DungeonRunInstance from './dungeonRunInstance.js'
 import { emit } from '../socketServer.js'
 
 let running = false
-let lastAdvancement = new Date()
 let activeRuns = {}
 
 export const ADVANCEMENT_INTERVAL = 5000
@@ -51,7 +50,7 @@ export async function start(){
 }
 
 async function advance(){
-  lastAdvancement = new Date()
+  let lastAdvancement = new Date()
   if(Object.keys(activeRuns).length){
     emitSocketEvents()
     clearFinishedRuns()
@@ -90,13 +89,15 @@ export async function addRun(adventurerID, dungeonOptions){
   const drDoc = await DungeonRuns.save({
     adventurer,
     dungeonOptions,
-    floor: startingFloor
+    floor: startingFloor,
+    elapsedTime: -5000
   })
 
   adventurer.dungeonRunID = drDoc._id
   await Adventurers.save(adventurer)
 
   activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, userDoc)
+  await activeRuns[drDoc._id].advance()
   return drDoc
 }
 
@@ -117,8 +118,11 @@ export function getActiveRunData(dungeonRunID){
   if(!run){
     return null
   }
-  const runDoc = { ...run.doc }
-  runDoc.virtualTime = virtualTime(run)
+  const runDoc = {
+    ...run.doc,
+    virtualTime: run.virtualTime
+  }
+  console.log('getactive virtual time', runDoc.virtualTime)
   return runDoc
 }
 
@@ -197,12 +201,9 @@ function truncatedRun(dri){
   const truncatedDoc = {
     ...dri.doc,
     newEvents: dri.getNewEvents(),
-    virtualTime: virtualTime(dri)
+    virtualTime: dri.virtualTime
   }
+  console.log('emit', truncatedDoc.virtualTime, truncatedDoc.newEvents.length)
   delete truncatedDoc.events
   return truncatedDoc
-}
-
-function virtualTime(dri){
-  return dri.time + (new Date() - lastAdvancement) - ADVANCEMENT_INTERVAL
 }

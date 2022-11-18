@@ -5,13 +5,16 @@ import AdventurerInfo from './adventurerInfo.js'
 import { magicAttackMod, magicScalingMod, physScalingMod } from '../../../../game/mods/combined.js'
 
 const HTML = `
-<div class="flex-grow flex-rows top-section">
-  <div class="name"></div>
-  <di-xp-bar></di-xp-bar>
-  <di-stats-list></di-stats-list>
-  <di-orb-row class="adventurer-orbs"></di-orb-row>
+<div class="name"></div>
+<di-orb-row class="fighter-orbs displaynone"></di-orb-row>
+<div class="absolute-full-size fill-contents standard-contents">
+  <div class="flex-grow flex-rows top-section">
+    <di-xp-bar></di-xp-bar>
+    <di-stats-list></di-stats-list>
+    <di-orb-row class="adventurer-orbs"></di-orb-row>
+  </div>
+  <di-loadout></di-loadout>
 </div>
-<di-loadout></di-loadout>
 `
 
 export default class AdventurerPane extends HTMLElement{
@@ -24,7 +27,7 @@ export default class AdventurerPane extends HTMLElement{
 
   constructor(){
     super()
-    this.classList.add('content-well', 'flex-rows')
+    this.classList.add('flex-rows')
     this.innerHTML = HTML
     this._name = this.querySelector('div.name')
     this.xpBar = this.querySelector('di-xp-bar')

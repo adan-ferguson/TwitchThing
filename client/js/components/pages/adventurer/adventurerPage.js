@@ -14,7 +14,9 @@ import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 const HTML = `
 <div class="content-columns">
   <div class="content-rows">
-    <di-adventurer-pane></di-adventurer-pane>
+    <div class="content-well">
+      <di-adventurer-pane></di-adventurer-pane>
+    </div>
     <button class="edit content-no-grow">Edit Equipment</button>
   </div>
   <div class="content-rows dungeons">

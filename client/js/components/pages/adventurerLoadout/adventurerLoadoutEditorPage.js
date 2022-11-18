@@ -17,8 +17,10 @@ const HTML = `
         <div>--></div>
     </div>
     <div class="content-rows">
+      <div class="content-well">
         <di-adventurer-pane></di-adventurer-pane>
-        <button class="save content-no-grow">Save</button>
+      </div>
+      <button class="save content-no-grow">Save</button>
     </div>
 </div>
 `

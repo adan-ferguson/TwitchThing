@@ -3,7 +3,7 @@ import { toArray } from './utilFunctions.js'
 export default function calculateResults(eventsList){
   eventsList = eventsList.events ?? eventsList
   const results = {
-    xp: eventsList.reduce((prev, e) => prev + (e.rewards?.xp ?? 0), 0),
+    xp: eventsList.reduce((prev, e) => prev + (e.rewards?.xp ?? 0), 0) ?? 0,
     monstersKilled: monstersKilled(eventsList),
     relics: relics(eventsList),
     chests: chests(eventsList)

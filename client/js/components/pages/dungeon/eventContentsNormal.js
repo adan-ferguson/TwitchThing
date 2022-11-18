@@ -69,7 +69,6 @@ export default class EventContentsNormal extends HTMLElement{
 
   _setImage(dungeonEvent){
     let roomType = dungeonEvent.roomType ?? 'wandering'
-    roomType = dungeonEvent.combatID ? 'fighting' : roomType
     this._imageEl.setAttribute('src', `/assets/rooms/${roomType}.png`)
   }
 }

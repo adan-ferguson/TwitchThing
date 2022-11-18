@@ -14,14 +14,14 @@ import EffectRow from '../effects/effectRow.js'
 
 const HTML = `
 <div class="name"></div>
+<di-orb-row class="fighter-orbs displaynone"></di-orb-row>
 <div class="absolute-full-size fill-contents standard-contents">
   <div class="flex-rows top-section flex-grow">
     <di-hp-bar></di-hp-bar>
-    <di-action-bar></di-action-bar>
     <di-stats-list></di-stats-list>
     <di-effects-list></di-effects-list>
-    <di-orb-row class="fighter-orbs"></di-orb-row>
   </div>
+  <di-action-bar></di-action-bar>
   <di-loadout></di-loadout>
 </div>
 `
@@ -62,8 +62,8 @@ export default class FighterInstancePane extends HTMLElement{
     })
   }
 
-  get basicAttackStatEl(){
-    return this.statsList.querySelector(`di-stat-row[stat-key="${this.fighterInstance.basicAttackType}Power"]`)
+  get basicAttackEl(){
+    return this._actionBarEl.querySelector('.bar-badge')
   }
 
   setOptions(options){
@@ -96,7 +96,7 @@ export default class FighterInstancePane extends HTMLElement{
   displayActionPerformed(action){
     if(action.basicAttack){
       const color = DAMAGE_COLORS[this.fighterInstance.basicAttackType]
-      flash(this.basicAttackStatEl, color)
+      flash(this.basicAttackEl, color)
     }else if(action.effect){
       const effectEl = this._getEffectEl(action.effect)
       if(effectEl instanceof LoadoutRow){
@@ -209,13 +209,9 @@ export default class FighterInstancePane extends HTMLElement{
       excluded: this._excluded()
     })
 
-    this._actionBarEl.classList.toggle('displaynone', !this.fighterInstance.inCombat)
     this.statsList.setStats(this.fighterInstance.stats, this.fighterInstance)
     this._effectsListEl.update(cancelAnimations)
-    this._actionBarEl.setTime(
-      this.fighterInstance._state.timeSinceLastAction,
-      this.fighterInstance.timeUntilNextAction
-    )
+    this._updateActionBar()
     this._loadoutEl.updateAllRows()
 
     if(!this.fighterInstance.hp){
@@ -290,6 +286,20 @@ export default class FighterInstancePane extends HTMLElement{
     this._defeatAnim.cancel()
     this._defeated = false
     this.querySelector('.standard-contents').style.opacity = '1'
+  }
+
+  _updateActionBar(){
+    this._actionBarEl.classList.toggle('displaynone', !this.fighterInstance.inCombat)
+    if(this.fighterInstance.inCombat){
+      const type = this.fighterInstance.basicAttackType
+      if(!this._actionBarEl.querySelector('.basic-attack-type-' + type)){
+        this._actionBarEl.setBadge(`<img class="basic-attack-type basic-attack-type-${type}" src="/assets/icons/${type}Power.svg">`)
+      }
+      this._actionBarEl.setTime(
+        this.fighterInstance._state.timeSinceLastAction,
+        this.fighterInstance.timeUntilNextAction
+      )
+    }
   }
 }
 

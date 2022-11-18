@@ -6,6 +6,9 @@ const router = express.Router()
 const verifiedRouter = express.Router()
 
 router.use('/:dungeonRunID', async (req, res, next) => {
+  if(req.method === 'GET'){
+    return next()
+  }
   req.dungeonRun = await getRunData(req.params.dungeonRunID)
   if(!req.dungeonRun){
     throw { code: 400, message: 'Invalid dungeon run ID' }

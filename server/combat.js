@@ -10,7 +10,7 @@ import { CombatResult } from '../game/combatResult.js'
 import { ADVANCEMENT_INTERVAL } from './dungeons/dungeonRunner.js'
 
 const START_TIME_DELAY = 200
-const COMBAT_END_PADDING = 1000
+const COMBAT_END_PADDING = 2500
 const MAX_TIME = 120000
 
 export async function generateCombatEvent(dungeonRun){
