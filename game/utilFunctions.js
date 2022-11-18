@@ -136,3 +136,18 @@ export function toNumberOfDigits(val, digits){
   const divisor = Math.pow(10, val.length - digits)
   return Math.ceil(val / divisor) * divisor
 }
+
+export function toTimerFormat(ms){
+  const seconds = Math.floor(ms / 1000)
+  const minutes = Math.floor(seconds / 60)
+
+  const minuteStr = minutes ? minutes : '0'
+  let secondsStr = seconds % 60
+  if(secondsStr === 0){
+    secondsStr = '00'
+  }else if(secondsStr < 10){
+    secondsStr = '0' + secondsStr
+  }
+
+  return minuteStr + ':' + secondsStr
+}

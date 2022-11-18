@@ -8,7 +8,7 @@ import { toNumberOfDigits } from './utilFunctions.js'
 const LEVEL_2_XP = 100
 const XP_MULTIPLIER = 0.25
 
-const HP_BASE = 400
+const HP_BASE = 40
 const HP_GROWTH = 20
 const HP_GROWTH_PCT = 0.08
 

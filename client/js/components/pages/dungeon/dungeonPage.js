@@ -42,7 +42,6 @@ export default class DungeonPage extends Page{
   _timelineEl
 
   _timeline
-  _ticker
 
   dungeonRun
 
@@ -99,8 +98,6 @@ export default class DungeonPage extends Page{
       getSocket().on('dungeon run update', this._socketUpdate)
     }
 
-
-
     this._stateEl.setup(dungeonRun)
     this._setupTimeline(dungeonRun)
     this._adventurerPane.setFighter(new AdventurerInstance(this.adventurer, dungeonRun.adventurerState))
@@ -126,11 +123,10 @@ export default class DungeonPage extends Page{
       this._timelineEl.setOptions({
         isReplay: true
       })
-      this._timelineEl.jumpTo(this._timelineEl.duration)
+      this._timelineEl.jumpTo(this._timeline.duration)
     }
 
     this.dungeonRun = dungeonRun
-    console.log('socket', dungeonRun.newEvents, dungeonRun.virtualTime)
     this._timelineEl.addEvents(dungeonRun.newEvents)
     this._timelineEl.play()
 
@@ -150,6 +146,7 @@ export default class DungeonPage extends Page{
       this._ce.destroy()
     }
 
+    console.log('upd')
     const animate = options.animate
 
     if(this.currentEvent && !this.isReplay){
@@ -204,6 +201,7 @@ export default class DungeonPage extends Page{
     const enemyPane = new FighterInstancePane()
     this._eventEl.setContents(enemyPane, false)
     const ce = new CombatEnactment(this._adventurerPane, enemyPane, combat)
+    ce.timeline.setTime(this._timeline.timeSinceLastEntry, true)
     ce.on('destroyed', () => {
       this._ce = null
     })
@@ -235,16 +233,14 @@ export default class DungeonPage extends Page{
   }
 
   _setupTimeline(dungeonRun){
-    this._timeline = new Timeline(dungeonRun.events)
+    const targetTime = dungeonRun.finalized ? 0 : dungeonRun.virtualTime ?? dungeonRun.elapsedTime
+    this._timeline = new Timeline(dungeonRun.events, targetTime)
     this._timeline.on('timechange', obj => {
       this._timeChange(obj)
     })
     this._timelineEl.setup(this._timeline, this.adventurer, {
       isReplay: this.isReplay
     })
-    const targetTime = dungeonRun.finalized ? 0 : dungeonRun.virtualTime ?? dungeonRun.elapsedTime
-    console.log('start at', dungeonRun.virtualTime, this.dungeonRun.events)
-    this._timeline.setTime(targetTime, true)
   }
 }
 

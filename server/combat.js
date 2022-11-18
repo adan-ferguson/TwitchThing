@@ -43,9 +43,8 @@ export async function generateCombatEvent(dungeonRun){
     resultEvent.rewards = monsterDef.rewards
     resultEvent.message = `${adventurerInstance.displayName} has defeated the ${monsterInstance.displayName}.`
   }else if(combat.result === CombatResult.F2_WIN){
-    resultEvent.runFinished = true
-    resultEvent.duration = 0
-    resultEvent.message = `${adventurerInstance.displayName} has been defeated by the ${monsterInstance.displayName}.`
+    combatEvent.runFinished = true
+    return combatEvent
   }
 
   return [combatEvent, resultEvent]

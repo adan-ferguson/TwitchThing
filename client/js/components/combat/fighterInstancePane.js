@@ -88,7 +88,9 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   advanceTime(ms){
-    this._actionBarEl.advanceTime(ms)
+    if(this.fighterInstance.inCombat){
+      this._actionBarEl.advanceTime(ms)
+    }
     this._loadoutEl.advanceTime(ms)
     this._effectsListEl.advanceTime(ms)
   }
@@ -289,17 +291,14 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   _updateActionBar(){
-    this._actionBarEl.classList.toggle('displaynone', !this.fighterInstance.inCombat)
-    if(this.fighterInstance.inCombat){
-      const type = this.fighterInstance.basicAttackType
-      if(!this._actionBarEl.querySelector('.basic-attack-type-' + type)){
-        this._actionBarEl.setBadge(`<img class="basic-attack-type basic-attack-type-${type}" src="/assets/icons/${type}Power.svg">`)
-      }
-      this._actionBarEl.setTime(
-        this.fighterInstance._state.timeSinceLastAction,
-        this.fighterInstance.timeUntilNextAction
-      )
+    const type = this.fighterInstance.basicAttackType
+    if(!this._actionBarEl.querySelector('.basic-attack-type-' + type)){
+      this._actionBarEl.setBadge(`<img class="basic-attack-type basic-attack-type-${type}" src="/assets/icons/${type}Power.svg">`)
     }
+    this._actionBarEl.setTime(
+      this.fighterInstance._state.timeSinceLastAction ?? 0,
+      this.fighterInstance.timeUntilNextAction
+    )
   }
 }
 

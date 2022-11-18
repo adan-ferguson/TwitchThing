@@ -3,7 +3,6 @@ const HTML = `
   <di-tabz>
     <div data-tab-name="Results"></div>
     <div data-tab-name="Monsters"></div>
-    <div data-tab-name="Relics"></div>
   </di-tabz>
 </div>
 <button class="finalizer displaynone">Finish</button>
@@ -27,7 +26,6 @@ export default class EventContentsResults extends HTMLElement{
     const tabz = this.querySelector('di-tabz')
     this._setupResultsTab(tabz.getContentEl('Results'))
     this._setupMonstersTab(tabz.getContentEl('Monsters'))
-    this._setupRelicsTab(tabz.getContentEl('Relics'))
   }
 
   showFinalizerButton(fn){
@@ -42,10 +40,6 @@ export default class EventContentsResults extends HTMLElement{
 
   _setupMonstersTab(el){
     el.innerHTML = 'TODO: Monsters tab'
-  }
-
-  _setupRelicsTab(el){
-    el.innerHTML = 'TODO: Relics tab'
   }
 }
 

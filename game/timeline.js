@@ -2,10 +2,10 @@ import { EventEmitter } from 'events'
 
 export default class Timeline extends EventEmitter{
 
-  constructor(timelineEntries){
+  constructor(timelineEntries, startTime = 0){
     super()
     this._entries = timelineEntries
-    this._time = 0
+    this._time = startTime
   }
 
   get entries(){

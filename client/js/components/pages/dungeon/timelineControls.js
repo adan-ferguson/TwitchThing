@@ -1,13 +1,11 @@
 import Ticker from '../../../ticker.js'
-import dateformat from 'dateformat'
 import Modal from '../../modal.js'
 import EventLog from './eventLog.js'
-import { mergeOptionsObjects } from '../../../../../game/utilFunctions.js'
+import { mergeOptionsObjects, toTimerFormat } from '../../../../../game/utilFunctions.js'
 
 const HTML = `
 <di-bar class="event-time-bar"></di-bar>
 <div class="flex-rows">
-  <di-timer></di-timer>
   <div class="flex-columns buttons">
     <button class="log" title="View event log"><i class="fa-solid fa-list"></i></button>
     <select class="speed replay-yes">
@@ -74,7 +72,8 @@ export default class TimelineControls extends HTMLElement{
     this.querySelector('button.back').addEventListener('click', () => {
       const backThreshold = 1000 * this.speed
       const index = this._timeline.currentEntryIndex + (this._timeline.timeSinceLastEntry > backThreshold ? 0 : -1)
-      this.jumpToIndex(index, {
+      const targetTime = Math.max(0, this._timeline.entries[index].time)
+      this.jumpTo(targetTime, {
         animate: false
       })
     })
@@ -134,6 +133,8 @@ export default class TimelineControls extends HTMLElement{
       this._update()
     })
     this._setupEventLog(adventurer)
+    this._ticker.currentTime = this._timeline.timeSinceLastEntry
+    this._update()
   }
 
   setOptions(options = {}){
@@ -187,6 +188,7 @@ export default class TimelineControls extends HTMLElement{
     }
     this._pauseEl.classList.remove('displaynone')
     this._playEl.classList.add('displaynone')
+    this._updateEvent()
     this._ticker.start()
   }
 
@@ -229,8 +231,9 @@ export default class TimelineControls extends HTMLElement{
         max: this._timeline.duration
       })
     }
+
     this._eventTimeBarEl
-      .setOptions({ label: dateformat(this._timeline.time, 'M:ss') })
+      .setOptions({ label: toTimerFormat(Math.max(0, this._timeline.time)) })
       .setValue(this._options.isReplay ? this._timeline.time : 0)
   }
 
@@ -252,7 +255,7 @@ export default class TimelineControls extends HTMLElement{
     this._ticker.endTime = this._timeline.currentEntry.duration
     this._update()
 
-    if(!eventChanged){
+    if(!eventChanged && !options.jumped){
       return
     }
 

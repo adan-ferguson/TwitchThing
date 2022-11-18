@@ -84,6 +84,13 @@ export default class DungeonRunInstance extends EventEmitter{
       return
     }
 
+    if(this.newestEvent.runFinished){
+      this.doc.results = calculateResults(this.events)
+      this.doc.finished = true
+      this.doc.elapsedTime = this.nextEventTime
+      return
+    }
+
     console.log('ADVANCE TO', this.doc.elapsedTime)
 
     // Reset this each advancement to make sure that everything is synced up.
@@ -129,11 +136,8 @@ export default class DungeonRunInstance extends EventEmitter{
     })
 
     const lastEvent = this.doc.events.at(-1)
-    lastEvent.duration += (ADVANCEMENT_INTERVAL - (durationSum % ADVANCEMENT_INTERVAL)) % ADVANCEMENT_INTERVAL
-    if(lastEvent.runFinished){
-      this.doc.results = calculateResults(this.events)
-      this.doc.finished = true
-      lastEvent.duration = 0
+    if(!lastEvent.runFinished){
+      lastEvent.duration += (ADVANCEMENT_INTERVAL - (durationSum % ADVANCEMENT_INTERVAL)) % ADVANCEMENT_INTERVAL
     }
     this.doc.room = lastEvent.room
     this.doc.floor = lastEvent.floor
