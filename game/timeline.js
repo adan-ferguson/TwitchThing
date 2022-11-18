@@ -60,7 +60,7 @@ export default class Timeline extends EventEmitter{
     if(before === undefined){
       jumped = true
     }
-    this._time = Math.max(0, Math.min(this.duration, val))
+    this._time = Math.max(this.firstEntry.time, Math.min(this.duration, val))
     if(this._time !== before || jumped){
       this.emit('timechange', {
         before,

@@ -179,7 +179,7 @@ export default class DungeonPage extends Page{
       this._enactCombat()
     }else{
       this._eventEl.update(this.currentEvent, animate)
-      this._adventurerPane.setState(this.currentEvent.adventurerState, animate)
+      this._adventurerPane.setState(this.currentEvent.adventurerState ?? {}, animate)
     }
   }
 

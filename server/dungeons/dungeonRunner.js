@@ -4,6 +4,7 @@ import Users from '../collections/users.js'
 import DungeonRunInstance from './dungeonRunInstance.js'
 import { emit } from '../socketServer.js'
 
+let lastAdvancement = new Date()
 let running = false
 let activeRuns = {}
 
@@ -50,7 +51,9 @@ export async function start(){
 }
 
 async function advance(){
-  let lastAdvancement = new Date()
+
+  const before = new Date()
+
   if(Object.keys(activeRuns).length){
     emitSocketEvents()
     clearFinishedRuns()
@@ -58,7 +61,8 @@ async function advance(){
     await saveAllRuns()
   }
 
-  let waitFor = ADVANCEMENT_INTERVAL - (new Date() - lastAdvancement)
+  lastAdvancement = before
+  let waitFor = ADVANCEMENT_INTERVAL - (new Date() - before)
   if(waitFor < 0){
     waitFor = ADVANCEMENT_INTERVAL
     console.log('Dungeon Run advancement took longer than 5 seconds, probably something is wrong.')
@@ -89,15 +93,14 @@ export async function addRun(adventurerID, dungeonOptions){
   const drDoc = await DungeonRuns.save({
     adventurer,
     dungeonOptions,
-    floor: startingFloor,
-    elapsedTime: -5000
+    floor: startingFloor
   })
 
   adventurer.dungeonRunID = drDoc._id
   await Adventurers.save(adventurer)
 
   activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, userDoc)
-  await activeRuns[drDoc._id].advance()
+  await activeRuns[drDoc._id].setupInitialEvents()
   return drDoc
 }
 
@@ -120,7 +123,7 @@ export function getActiveRunData(dungeonRunID){
   }
   const runDoc = {
     ...run.doc,
-    virtualTime: run.virtualTime
+    virtualTime: virtualTime(run)
   }
   console.log('getactive virtual time', runDoc.virtualTime)
   return runDoc
@@ -201,9 +204,14 @@ function truncatedRun(dri){
   const truncatedDoc = {
     ...dri.doc,
     newEvents: dri.getNewEvents(),
-    virtualTime: dri.virtualTime
+    virtualTime: virtualTime(dri)
   }
   console.log('emit', truncatedDoc.virtualTime, truncatedDoc.newEvents.length)
   delete truncatedDoc.events
   return truncatedDoc
+}
+
+function virtualTime(dri){
+  console.log(dri.doc.elapsedTime, (new Date() - lastAdvancement) - ADVANCEMENT_INTERVAL)
+  return dri.doc.elapsedTime + (new Date() - lastAdvancement) - ADVANCEMENT_INTERVAL
 }

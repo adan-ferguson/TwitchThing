@@ -22,11 +22,6 @@ export default class DungeonRunInstance extends EventEmitter{
     this._newEventIterator = this.events.length
   }
 
-  get virtualTime(){
-    console.log(this.doc.elapsedTime, new Date() - this._lastAdvancement - ADVANCEMENT_INTERVAL)
-    return this.doc.elapsedTime + (new Date() - this._lastAdvancement) - ADVANCEMENT_INTERVAL
-  }
-
   get adventurer(){
     return this.doc.adventurer
   }
@@ -58,12 +53,25 @@ export default class DungeonRunInstance extends EventEmitter{
     return this.newestEvent ? true : false
   }
 
-  get nextEventEndTime(){
-    return this.newestEvent ? this.newestEvent.time + this.newestEvent.duration : -Infinity
+  get nextEventTime(){
+    return this.newestEvent ? this.newestEvent.time + this.newestEvent.duration : 0
   }
 
   get pace(){
     return this.doc.dungeonOptions.pace ?? 'Brisk'
+  }
+
+  async setupInitialEvents(){
+    this.doc.events = [{
+      passTimeOverride: true,
+      message: `${this.adventurer.name} enters the dungeon.`,
+      roomType: 'entrance',
+      time: -ADVANCEMENT_INTERVAL,
+      duration: ADVANCEMENT_INTERVAL,
+      floor: this.doc.floor
+    }]
+    this.doc.elapsedTime = -ADVANCEMENT_INTERVAL
+    await this.advance()
   }
 
   async advance(){
@@ -71,13 +79,12 @@ export default class DungeonRunInstance extends EventEmitter{
     this.shouldEmit = true
     this._lastAdvancement = new Date()
     this.doc.elapsedTime += ADVANCEMENT_INTERVAL
-
-    console.log('ADVANCE TO', this.doc.elapsedTime)
-
-    if(this.doc.elapsedTime < this.nextEventEndTime){
+    if(this.doc.elapsedTime < this.nextEventTime){
       this.shouldEmit = false
       return
     }
+
+    console.log('ADVANCE TO', this.doc.elapsedTime)
 
     // Reset this each advancement to make sure that everything is synced up.
     // If we just let this roll, then it's possible the doc state is wrong but
