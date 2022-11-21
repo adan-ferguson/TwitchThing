@@ -70,7 +70,7 @@ const CHEST_DROP_CHANCE = 0.05
 const BOSS_XP_BONUS = 8
 
 // Monsters of level [currentFloor - FLOOR_RANGE] to [currentFloor] will spawn (both inclusive).
-const FLOOR_RANGE = 1
+const FLOOR_RANGE = 5
 
 // How much to skew RNG towards higher levels.
 const FLOOR_SKEW = -0.12

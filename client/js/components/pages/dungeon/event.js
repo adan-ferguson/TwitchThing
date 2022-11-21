@@ -3,9 +3,8 @@ import EventContentsNormal from './eventContentsNormal.js'
 
 export default class Event extends HTMLElement{
 
-  _rewards
-  _message
   _adventurer
+  _timeline
   currentContents = null
 
   constructor(){
@@ -13,11 +12,11 @@ export default class Event extends HTMLElement{
     this.classList.add('fill-contents', 'absolute-full-size')
   }
 
-  setup(adventurer, timeline, adventurerPane){
+  setup(adventurer, timeline){
     this._adventurer = adventurer
     this._timeline = timeline
-    
-    timeline.on('timechange', () => this._update())
+
+    timeline.on('timechange', () => this._updateTimeBar())
   }
 
   update(dungeonEvent, animate = false){

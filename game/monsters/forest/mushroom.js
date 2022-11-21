@@ -1,5 +1,5 @@
 import { freezeActionBarMod, silencedMod } from '../../mods/combined.js'
-import { poisonedStatusEffect, starvingStatusEffect } from '../../statusEffects/combined.js'
+import { poisonedStatusEffect } from '../../statusEffects/combined.js'
 import randomAction from '../../actions/randomAction.js'
 import statusEffect from '../../actions/statusEffectAction.js'
 import gainHealthAction from '../../actions/gainHealthAction.js'
@@ -41,9 +41,9 @@ const sleepSpores = statusEffect({
 
 const shrinkingSpores = statusEffect({
   affects: 'enemy',
-  base: starvingStatusEffect,
   effect: {
-    combatOnly: false,
+    lingering: true,
+    duration: 30000,
     description: 'Reduced stats.',
     stats: {
       physPower: '-20%',
@@ -71,7 +71,8 @@ const silenceSpores = statusEffect({
   effect: {
     stacking: 'replace',
     displayName: 'Silence Spores',
-    duration: 20000,
+    duration: 30000,
+    lingering: true,
     mods: [silencedMod]
   }
 })

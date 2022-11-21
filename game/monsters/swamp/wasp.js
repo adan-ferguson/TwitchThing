@@ -20,8 +20,8 @@ export default {
             base: poisonedStatusEffect,
             affects: 'enemy',
             effect: {
-              combatOnly: false,
-              duration: 60000
+              lingering: true,
+              duration: 30000
             }
           })
         ]

@@ -26,7 +26,7 @@ export default {
               affects: 'enemy',
               effect: {
                 displayName: 'Acidified',
-                combatOnly: false,
+                lingering: true,
                 stats: {
                   physDef: '-50%'
                 }

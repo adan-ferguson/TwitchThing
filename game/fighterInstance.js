@@ -193,9 +193,6 @@ export default class FighterInstance{
   }
 
   get timeUntilNextAction(){
-    if(!this.inCombat){
-      return Infinity
-    }
     return Math.ceil(Math.max(0, (this.nextActionTime - this.timeSinceLastAction)))
   }
 

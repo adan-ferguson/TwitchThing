@@ -9,7 +9,7 @@ export default {
           statusEffectAction({
             effect: {
               stacking: 'replace',
-              combatOnly: false,
+              lingering: true,
               stackingId: 'highEnergySnacks',
               duration: 45000 + level * 15000,
               stats: {

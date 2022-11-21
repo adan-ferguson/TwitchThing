@@ -1,6 +1,6 @@
 export default {
   stacking: true,
-  combatOnly: false,
+  lingering: true,
   description: 'Phys power is lowered by 10%.',
   stats: {
     physPower: '-10%'

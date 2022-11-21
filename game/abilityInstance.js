@@ -89,18 +89,8 @@ export default class AbilityInstance{
     return !this.cooldownRemaining && this.enabled
   }
 
-  get combatOnly(){
-    if('combatOnly' in this._abilityDef){
-      return this._abilityDef.combatOnly
-    }
-    return this.parentEffect.combatOnly
-  }
-
   get enabled(){
     if(this.uses && this._state.timesUsed >= this.uses){
-      return false
-    }
-    if(this.combatOnly && !this.fighterInstance.inCombat){
       return false
     }
     return this.fighterInstance.meetsConditions(this.conditions)

@@ -107,7 +107,7 @@ export default class DungeonPage extends Page{
     this._stateEl.setup(dungeonRun)
     this._setupTimeline(dungeonRun)
     this._adventurerPane.setFighter(new AdventurerInstance(this.adventurer, dungeonRun.adventurerState))
-    this._eventEl.setup(this._adventurerPane, this._timeline)
+    this._eventEl.setup(this.adventurer, this._timeline)
     this._update({ animate: false })
   }
 
@@ -173,7 +173,8 @@ export default class DungeonPage extends Page{
     if(this.currentEvent.roomType === 'combat'){
       this._enactCombat()
     }else{
-      this._eventEl.normalContents(animate)
+      this._eventEl.update(this.currentEvent, animate)
+      this._adventurerPane.setState(this.currentEvent.adventurerState ?? {}, animate)
     }
   }
 
@@ -216,17 +217,12 @@ export default class DungeonPage extends Page{
     if(!this.currentEvent){
       return
     }
-    const ms = after - before
     if(this._ce && this.currentEvent.roomType === 'combat'){
       this._ce.timeline.setTime(this._timeline.timeSinceLastEntry, jumped)
-    }
-    if(!this.currentEvent.passTimeOverride && !jumped){
-      this._adventurerPane.advanceTime(ms)
     }
     if(this._timeline.finished && this.isReplay){
       this._showResults()
     }
-
   }
 
   _updateBackground(){

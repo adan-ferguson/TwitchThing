@@ -22,7 +22,7 @@ export default {
             }),
             statusEffectAction({
               affects: 'enemy',
-              combatOnly: false,
+              lingering: true,
               effect: {
                 displayName: 'Cursed',
                 stacking: true,

@@ -19,10 +19,7 @@ export default {
             attackAction(),
             statusEffectAction({
               base: poisonedStatusEffect,
-              affects: 'enemy',
-              effect: {
-                // combatOnly: false
-              }
+              affects: 'enemy'
             })
           ]
         }

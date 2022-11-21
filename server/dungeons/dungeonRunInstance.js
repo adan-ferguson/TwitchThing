@@ -5,7 +5,6 @@ import { addRewards } from './results.js'
 import { ADVANCEMENT_INTERVAL } from './dungeonRunner.js'
 import calculateResults from '../../game/dungeonRunResults.js'
 import { toArray } from '../../game/utilFunctions.js'
-import { performVenturingTicks } from '../actionsAndTicks/ticks.js'
 
 export default class DungeonRunInstance extends EventEmitter{
 
@@ -63,7 +62,6 @@ export default class DungeonRunInstance extends EventEmitter{
 
   async setupInitialEvents(){
     this.doc.events = [{
-      passTimeOverride: true,
       message: `${this.adventurer.name} enters the dungeon.`,
       roomType: 'entrance',
       time: -ADVANCEMENT_INTERVAL,
@@ -137,7 +135,7 @@ export default class DungeonRunInstance extends EventEmitter{
         this.doc.room = nextEvent.room
         this.doc.floor = nextEvent.floor
       }
-      this._updateStateAndPerformTicks(nextEvent)
+      this._updateState(nextEvent)
     })
   }
 
@@ -145,31 +143,13 @@ export default class DungeonRunInstance extends EventEmitter{
    * @private
    * @param event
    */
-  _updateStateAndPerformTicks(event){
-
-    event.adventurerState = this.adventurerInstance.state
+  _updateState(event){
 
     if('hp' in this.adventurerInstance.state && isNaN(this.adventurerInstance.state.hpPct)){
       debugger
     }
 
-    if (!event.passTimeOverride){ // Combats handle their own passage of time.
-      let timeLeft = event.duration
-      event.tickTimeline = []
-      while(timeLeft > 0){
-        const timeToAdvance = Math.min(timeLeft, this.adventurerInstance.timeUntilNextUpdate)
-        this.adventurerInstance.advanceTime(timeToAdvance)
-        event.tickTimeline.push({
-          timeOffset: timeToAdvance,
-          updates: performVenturingTicks(this.adventurerInstance),
-          stateAfterward: this.adventurerInstance.state
-        })
-        timeLeft -= timeToAdvance
-        this.adventurerInstance.cleanupState()
-      }
-    }
-
-    this.adventurerInstance.cleanupState()
+    event.adventurerState = this.adventurerInstance.state
     this.doc.adventurerState = this.adventurerInstance.state
   }
 }

@@ -92,7 +92,7 @@ export class StatusEffectsData{
    */
   cleanupExpired(){
     this._instances = this._instances.filter(effect => {
-      return !effect.expired && (!effect.combatOnly || this._fighterInstance.inCombat)
+      return !effect.expired || (!this._fighterInstance.inCombat && !effect.lingering)
     })
   }
 

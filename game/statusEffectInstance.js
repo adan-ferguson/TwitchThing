@@ -117,8 +117,8 @@ export default class StatusEffectInstance extends EffectInstance{
     return this._state.turnsTaken ?? 0
   }
 
-  get combatOnly(){
-    return this.effectData.combatOnly ?? true
+  get lingering(){
+    return this.effectData.lingering ?? false
   }
 
   refresh(){

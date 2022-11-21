@@ -23,10 +23,11 @@ export async function generateCombatEvent(dungeonRun){
     floor: dungeonRun.floor
   })
 
+  adventurerInstance.cleanupState()
+
   const combatEvent = {
     duration: combat.duration + COMBAT_END_PADDING,
     combatID: combat._id,
-    passTimeOverride: true,
     roomType: 'combat',
     monster: monsterDef
   }
