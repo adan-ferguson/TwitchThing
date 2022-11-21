@@ -52,7 +52,7 @@ export default class AdventurerStatus extends HTMLElement{
       descriptionEl.style.color = '#888'
       descriptionEl.textContent = 'Idle'
       return
-    }else if(dungeonRun.finished || dungeonRun.currentEvent?.runFinished){
+    }else if(dungeonRun.finished){
       statusEl.innerHTML = ''
       descriptionEl.style.color = '#4d8fc4'
       descriptionEl.textContent = 'Finished'
@@ -68,13 +68,14 @@ export default class AdventurerStatus extends HTMLElement{
     descriptionEl.textContent = eventText()
 
     function eventText(){
-      const currentEvent = dungeonRun.currentEvent || dungeonRun.events.at(-1)
-      if(currentEvent?.monster){
-        const monsterInstance = new MonsterInstance(currentEvent.monster)
-        return `Battling a ${monsterInstance.displayName}`
-      }else if(currentEvent?.relic){
-        return 'Investigating a Relic'
-      }
+      // TODO: fix live event text
+      // const currentEvent = dungeonRun.currentEvent || dungeonRun.events.at(-1)
+      // if(currentEvent?.monster){
+      //   const monsterInstance = new MonsterInstance(currentEvent.monster)
+      //   return `Battling a ${monsterInstance.displayName}`
+      // }else if(currentEvent?.relic){
+      //   return 'Investigating a Relic'
+      // }
       return 'Exploring'
     }
   }

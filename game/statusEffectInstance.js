@@ -117,6 +117,10 @@ export default class StatusEffectInstance extends EffectInstance{
     return this._state.turnsTaken ?? 0
   }
 
+  get combatOnly(){
+    return this.effectData.combatOnly ?? true
+  }
+
   refresh(){
     if(this.barrier){
       this._state.barrierDamage = 0

@@ -12,8 +12,10 @@ export default class FighterItemInstance extends EffectInstance{
   }
 
   get slot(){
-    const match = this.effectId.match(/item-(\d)/)
-    return match ? parseInt(match[1]) : -1
+    if(!this.owner){
+      return -1
+    }
+    return this.owner.itemInstances.indexOf(this)
   }
 
   get slotTags(){

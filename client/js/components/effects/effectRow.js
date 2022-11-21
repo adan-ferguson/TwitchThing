@@ -2,6 +2,7 @@ import tippy from 'tippy.js'
 import { effectDisplayInfo } from '../../effectDisplayInfo.js'
 import { flash } from '../../animations/simple.js'
 import { ACTION_COLOR } from '../../colors.js'
+import { parseDescriptionString } from '../../descriptionString.js'
 
 const HTML = `
 <di-bar></di-bar>
@@ -22,9 +23,10 @@ export default class EffectRow extends HTMLElement{
         color: ACTION_COLOR
       })
     if(effect.description){
+      const parsed = parseDescriptionString(effect.description)
       this._tippy = tippy(this, {
         theme: 'light',
-        content: effect.description
+        content: parsed
       })
     }
     this.update(effect, false)
@@ -34,6 +36,8 @@ export default class EffectRow extends HTMLElement{
 
     this.effect = effect
     const info = effectDisplayInfo(effect)
+
+    this.classList.toggle('lingering', !effect.combatOnly)
 
     if(!this.barEl.animating || cancelAnimations){
       this.barEl.setOptions({

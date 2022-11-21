@@ -1,24 +1,19 @@
-const CHESTS = [
-  {
-    displayName: 'Common',
-    color: '#888'
-  },
-  {
-    displayName: 'Rare',
-    color: '#59c916'
-  },
-  {
-    displayName: 'Really Rare',
-    color: '#6898bd'
-  },
-  {
-    displayName: 'Outrageous',
-    color: '#7d56ce'
-  },
-  {
-    displayName: 'Yolo',
-    color: '#ff8100'
-  }
-]
+import { toDisplayName } from '../../game/utilFunctions.js'
 
-export default CHESTS
+const CHESTS = {
+  normal: {
+    color: '#606060'
+  },
+  boss: {
+    color: '#59c916',
+    stars: 1
+  }
+}
+
+export function getChestDisplayInfo(chest){
+  const type = chest.type ?? 'normal'
+  return {
+    displayName: toDisplayName(type),
+    ...CHESTS[type]
+  }
+}

@@ -32,7 +32,7 @@ export default class AdventurerPane extends HTMLElement{
     this._name = this.querySelector('div.name')
     this.xpBar = this.querySelector('di-xp-bar')
     this.xpBar.setLevelFunctions(advXpToLevel, advLevelToXp)
-    this.orbRow = this.querySelector('di-orb-row')
+    this.orbRow = this.querySelector('di-orb-row.adventurer-orbs')
       .setOptions({
         style: OrbsDisplayStyle.SHOW_MAX
       })
@@ -45,7 +45,7 @@ export default class AdventurerPane extends HTMLElement{
       })
 
     this.querySelector('.top-section').addEventListener('click', e => {
-      if(this.adventurer){
+      if(this.adventurerInstance){
         this._showAdventurerInfoModal()
       }
     })
@@ -87,10 +87,11 @@ export default class AdventurerPane extends HTMLElement{
   }
 
   async addXp(toAdd, options = { }){
-    await this.xpBar.setValue(this.adventurer.xp + toAdd, {
+    const advData = this.adventurerInstance.fighterData
+    await this.xpBar.setValue(advData.xp + toAdd, {
       ...options,
       onLevelup: level => {
-        this.adventurer.level = level
+        advData.xp = advLevelToXp(level)
         this.update(true)
         options.onLevelup?.(level)
       }
@@ -99,7 +100,7 @@ export default class AdventurerPane extends HTMLElement{
 
   _showAdventurerInfoModal(){
     const modal = new Modal()
-    modal.innerPane.appendChild(new AdventurerInfo(new AdventurerInstance(this.adventurer), this.statsList.stats))
+    modal.innerPane.appendChild(new AdventurerInfo(this.adventurerInstance, this.statsList.stats))
     modal.show()
   }
 

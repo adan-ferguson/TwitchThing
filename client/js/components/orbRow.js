@@ -74,7 +74,7 @@ class OrbEntry extends HTMLElement{
     this.innerHTML = ORB_ENTRY_HTML(classInfo.orbIcon || defaultOrbImg, text)
     tippy(this, {
       theme: 'light',
-      content: `These orbs allow this adventurer to equip ${classInfo.displayName} items.`
+      content: `${classInfo.displayName} orbs (use these to equip items)`
     })
 
     function n(val){

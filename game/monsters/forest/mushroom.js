@@ -39,12 +39,18 @@ const sleepSpores = statusEffect({
   }
 })
 
-const starvingSpores = statusEffect({
+const shrinkingSpores = statusEffect({
   affects: 'enemy',
   base: starvingStatusEffect,
   effect: {
+    combatOnly: false,
+    description: 'Reduced stats.',
+    stats: {
+      physPower: '-20%',
+      damageTaken: '+20%'
+    },
     stacking: true,
-    displayName: 'Hunger Spores'
+    displayName: 'Shrinking Spores'
   }
 })
 
@@ -106,7 +112,7 @@ export default {
             },{
               weight: 5, value: sleepSpores
             },{
-              weight: 5, value: starvingSpores
+              weight: 5, value: shrinkingSpores
             },{
               weight: 10, value: dizzySpores
             },{

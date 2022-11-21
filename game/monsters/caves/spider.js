@@ -16,6 +16,7 @@ export default {
               effect: {
                 stacking: true,
                 displayName: 'Webbed',
+                description: 'Action timer is slowed.',
                 stats: {
                   slow: 1500
                 }

@@ -47,6 +47,10 @@ di-combat-page
 
 di-fighter-instance-pane
 
+  di-hp-bar
+    margin: 2rem
+    margin-top: 0 !important
+
   > div > .flex-rows
     margin-top: -6rem
     > *
@@ -77,9 +81,12 @@ di-fighter-instance-pane
       margin-right: 5rem
       margin-bottom: 5rem
 
+      &.lingering
+        border: 0.5rem solid currentColor
+
       di-mini-bar.di-bar
         position: absolute
-        bottom: -2rem
+        bottom: 0
         left: 0
         width: 100%
         z-index: 2

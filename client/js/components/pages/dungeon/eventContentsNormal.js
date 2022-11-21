@@ -4,12 +4,14 @@ const HTML = `
 <div class="room-image">
     <img src="">
 </div>
-<div class="description subtitle"></div>
-<div class="room-contents">
-  <div class="message"></div>
-  <div class="rewards"></div>
+<div class="middle-part">
+  <div class="description subtitle"></div>
+  <div class="room-contents">
+    <div class="message"></div>
+    <div class="rewards"></div>
+  </div>
+  <span class="loader spin-effect displaynone">DI</span>
 </div>
-<span class="loader spin-effect displaynone">DI</span>
 <di-bar class="time-bar"></di-bar>
 `
 
@@ -39,6 +41,7 @@ export default class EventContentsNormal extends HTMLElement{
   }
 
   update(dungeonEvent, animate = false){
+    this._timeBarEl.classList.toggle('displaynone', dungeonEvent.time < 0)
     this._setImage(dungeonEvent)
     this._description.textContent = getDescription(dungeonEvent)
     this._message.textContent = dungeonEvent.message

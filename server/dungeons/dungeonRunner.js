@@ -3,6 +3,7 @@ import Adventurers from '../collections/adventurers.js'
 import Users from '../collections/users.js'
 import DungeonRunInstance from './dungeonRunInstance.js'
 import { emit } from '../socketServer.js'
+import { cancelRun } from './results.js'
 
 let lastAdvancement = new Date()
 let running = false
@@ -125,7 +126,6 @@ export function getActiveRunData(dungeonRunID){
     ...run.doc,
     virtualTime: virtualTime(run)
   }
-  console.log('getactive virtual time', runDoc.virtualTime)
   return runDoc
 }
 
@@ -155,6 +155,7 @@ async function advanceRuns(){
       await run.advance()
     }catch(ex){
       console.log('Run suspended due to error', run.doc, ex)
+      cancelRun(run.doc)
       delete activeRuns[id]
     }
   }
@@ -206,12 +207,10 @@ function truncatedRun(dri){
     newEvents: dri.getNewEvents(),
     virtualTime: virtualTime(dri)
   }
-  console.log('emit', truncatedDoc.virtualTime, truncatedDoc.newEvents.length)
   delete truncatedDoc.events
   return truncatedDoc
 }
 
 function virtualTime(dri){
-  console.log(dri.doc.elapsedTime, (new Date() - lastAdvancement) - ADVANCEMENT_INTERVAL)
   return dri.doc.elapsedTime + (new Date() - lastAdvancement) - ADVANCEMENT_INTERVAL
 }

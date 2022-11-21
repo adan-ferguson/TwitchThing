@@ -25,7 +25,7 @@ export function parseDescriptionString(description, stats = null){
         el.appendChild(...toArray(parsed))
       }
     }
-    el.appendChild(makeEl({ text: chunk }))
+    el.append(chunk)
   })
   return el
 
@@ -84,11 +84,21 @@ const FNS = {
     }
     return makeEl({ content: scalingWrap('magic', val) })
   },
+  physFlat: (val) => {
+    return makeEl({ content: scalingWrap('phys', val) })
+  },
+  magicFlat: (val) => {
+    return makeEl({ content: scalingWrap('magic', val) })
+  }
 }
 
 function wrapOrbs(classType, val, stats){
   return new OrbRow()
-    .setOptions({ allowNegatives: true, style: OrbsDisplayStyle.MAX_ONLY })
+    .setOptions({
+      allowNegatives: true,
+      style: OrbsDisplayStyle.MAX_ONLY,
+      showTooltips: false
+    })
     .setData({
       [classType]: val
     })

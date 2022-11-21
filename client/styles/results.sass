@@ -1,45 +1,45 @@
-di-results-page
-  .title
-    text-align: center
-    font-size: 1.5em
-    padding-bottom: 1em
-    flex-grow: 0 !important
-
-  di-tab
-    line-height: 1.6em
-    overflow-y: auto
-    overflow-x: hidden
-    display: flex
-    flex-direction: column
-    align-items: start
-
+di-dungeon-event-contents-results
+  //.title
+  //  text-align: center
+  //  font-size: 1.5em
+  //  padding-bottom: 1em
+  //  flex-grow: 0 !important
+  //
+  //di-tab
+  //  line-height: 1.6em
+  //  overflow-y: auto
+  //  overflow-x: hidden
+  //  display: flex
+  //  flex-direction: column
+  //  align-items: start
+  //
   .open-all
     display: inline-block
     font-size: 0.8em
     border: none
     text-decoration: underline
     padding: 2rem
-
-  .buttons-row
-    flex-grow: 0 !important
-    display: flex
-    flex-direction: row
-    justify-content: space-between
-    align-items: center
-    margin-top: -10rem
-
-    .replay, .view-replay
-      flex-grow: 0
-      margin-left: 10rem
-      border: 0.2rem dashed #CCC
-      padding: 10rem
-
-      i
-        margin-left: 10rem
-
-    .done
-      flex-grow: 1
-
+  //
+  //.buttons-row
+  //  flex-grow: 0 !important
+  //  display: flex
+  //  flex-direction: row
+  //  justify-content: space-between
+  //  align-items: center
+  //  margin-top: -10rem
+  //
+  //  .replay, .view-replay
+  //    flex-grow: 0
+  //    margin-left: 10rem
+  //    border: 0.2rem dashed #CCC
+  //    padding: 10rem
+  //
+  //    i
+  //      margin-left: 10rem
+  //
+  //  .done
+  //    flex-grow: 1
+  //
   .chests
     display: flex
     flex-direction: column
@@ -50,10 +50,13 @@ di-results-page
       position: relative
       border: 1.5rem dashed currentColor
       box-sizing: border-box
-      padding: 0 10rem
+      padding: 5rem 10rem
       margin-top: 10rem
       transition: background-color 0.2s ease
       overflow: visible
+
+      di-loadout-row
+        height: 30rem
 
       $insetPadding: 6rem
 
@@ -72,7 +75,8 @@ di-results-page
       &.opened
         min-width: 200rem
         min-height: 50rem
-        border-style: solid
+        border-style: outset
+        border-width: 2.5rem
 
         .fading-overlay
           opacity: 0
@@ -111,3 +115,19 @@ di-results-page
       &.clickable:hover
         border-style: solid
         background-color: #F8F8F8
+
+  padding: 6rem
+
+  > di-tabz
+    margin-bottom: 8rem
+    padding-bottom: 8rem
+    border-bottom: 0.5rem solid #DDD
+    text-align: left
+    min-height: 0
+    flex-basis: 0
+
+    .tabz-content
+      overflow-y: auto
+
+  > .finalizer
+    flex-grow: 0 !important

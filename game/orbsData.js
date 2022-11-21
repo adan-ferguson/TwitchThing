@@ -47,5 +47,11 @@ function toObj(objOrArray){
       return current
     }, {})
   }
+
+  // Remove negatives, maybe shouldn't always be the case?
+  for(let key in objOrArray){
+    objOrArray[key] = Math.max(0, objOrArray[key])
+  }
+
   return objOrArray || {}
 }

@@ -88,6 +88,10 @@ export default class LoadoutRow extends DIElement{
     this._tippy.setContent(this.tooltip)
   }
 
+  updateItemRow(){
+    this._itemRowEl.setItem(this.loadoutItem)
+  }
+
   update(){
 
     this._cooldownBarEl.style.visibility = this.loadoutItem ? 'visible' : 'hidden'
@@ -97,12 +101,13 @@ export default class LoadoutRow extends DIElement{
       return
     }
 
-    const disabled = this.loadoutItem.itemInstance.disabled || info.state === AbilityState.DISABLED
+    const disabled = this.loadoutItem.itemInstance.disabled  // || info.state === AbilityState.DISABLED
     this.classList.toggle('disabled', disabled)
     this.setAttribute('ability-type', info.type)
     this.setAttribute('ability-state', info.state)
 
-    const color = ITEM_ROW_COLORS[info.state === AbilityState.DISABLED ? 'disabled' : info.type]
+    // info.state === AbilityState.DISABLED ? 'disabled' :
+    const color = ITEM_ROW_COLORS[info.type]
     const borderColor = info.state === 'ready' ? color : ITEM_ROW_COLORS.disabled
 
     this._cooldownBarEl

@@ -11,6 +11,8 @@ di-inventory
 
 .editable
   di-loadout-row
+    .cooldown
+      background-color: transparent
     &:not(.blank-row, .filtered)
       cursor: pointer
       &:hover
@@ -45,6 +47,9 @@ di-loadout-row
 
   di-item-row
     height: 100%
+    position: absolute
+    width: 100%
+    box-sizing: border-box
 
   .new-badge
     position: absolute
@@ -64,7 +69,6 @@ di-loadout-row
     left: 0
     right: 0
     height: 100%
-    z-index: -1
 
     .bar-foreground
       opacity: 0.3

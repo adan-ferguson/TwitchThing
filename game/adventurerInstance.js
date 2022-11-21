@@ -5,25 +5,32 @@ import { geometricProgession, inverseGeometricProgression } from './exponentialV
 import BonusesData from './bonusesData.js'
 import { toNumberOfDigits } from './utilFunctions.js'
 
-const LEVEL_2_XP = 100
-const XP_MULTIPLIER = 0.25
+const XP_BASE = 100
+const XP_GROWTH = 200
+const XP_GROWTH_PCT = 0.3
 
 const HP_BASE = 40
 const HP_GROWTH = 20
-const HP_GROWTH_PCT = 0.08
+const HP_GROWTH_PCT = 0.1
 
 const POWER_BASE = 10
 const POWER_GROWTH = 4
-const POWER_GROWTH_PCT = 0.08
+const POWER_GROWTH_PCT = 0.1
 
 export function advXpToLevel(xp){
-  const lvl = Math.floor(inverseGeometricProgression(XP_MULTIPLIER, xp, LEVEL_2_XP)) + 1
+  if(xp < XP_BASE){
+    return 1
+  }
+  const lvl = Math.floor(inverseGeometricProgression(XP_GROWTH_PCT, xp - XP_BASE, XP_GROWTH)) + 2
   return advLevelToXp(lvl) <= xp ? lvl : lvl - 1
 }
 
 export function advLevelToXp(lvl){
+  if(lvl <= 1){
+    return 0
+  }
   return toNumberOfDigits(
-    Math.ceil(geometricProgession(XP_MULTIPLIER, lvl - 1, LEVEL_2_XP)),
+    Math.ceil(geometricProgession(XP_GROWTH_PCT, lvl - 2, XP_GROWTH)) + XP_BASE,
     3
   )
 }

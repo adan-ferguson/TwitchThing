@@ -6,23 +6,24 @@ export default class Event extends HTMLElement{
   _rewards
   _message
   _adventurer
-  _currentContents = null
+  currentContents = null
 
   constructor(){
     super()
-    this.classList.add('fill-contents')
+    this.classList.add('fill-contents', 'absolute-full-size')
   }
 
-  setup(adventurer, timeline){
+  setup(adventurer, timeline, adventurerPane){
     this._adventurer = adventurer
     this._timeline = timeline
-    timeline.on('timechange', () => this._updateTimeBar())
+    
+    timeline.on('timechange', () => this._update())
   }
 
   update(dungeonEvent, animate = false){
-    const wasNormal = this._currentContents instanceof EventContentsNormal
-    if(wasNormal && sameRoom(this._currentContents.dungeonEvent, dungeonEvent)){
-      this._currentContents.update(dungeonEvent)
+    const wasNormal = this.currentContents instanceof EventContentsNormal
+    if(wasNormal && sameRoom(this.currentContents.dungeonEvent, dungeonEvent)){
+      this.currentContents.update(dungeonEvent)
     }else{
       this.setContents(new EventContentsNormal(dungeonEvent), animate)
     }
@@ -30,22 +31,22 @@ export default class Event extends HTMLElement{
 
   async setContents(contents, animate = true){
 
-    animate = animate && this._currentContents
+    animate = animate && this.currentContents
     if(animate){
       await fadeOut(this)
       fadeIn(this)
     }
 
     this.innerHTML = ''
-    this._currentContents = contents
-    this.appendChild(this._currentContents)
+    this.currentContents = contents
+    this.appendChild(this.currentContents)
   }
 
   _updateTimeBar(){
     if(!this._timeline.currentEntry){
       return
     }
-    this._currentContents?.setTimeBar?.(this._timeline.timeSinceLastEntry,  this._timeline.currentEntry.duration)
+    this.currentContents?.setTimeBar?.(this._timeline.timeSinceLastEntry,  this._timeline.currentEntry.duration)
   }
 }
 

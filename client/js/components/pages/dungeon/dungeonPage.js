@@ -67,9 +67,15 @@ export default class DungeonPage extends Page{
     return [this._dungeonRunID]
   }
 
+  get isMyAdventurer(){
+    if(!this.app.user || !this.adventurer){
+      return false
+    }
+    return this.app.user._id === this.adventurer.userID
+  }
+
   get watching(){
-    // TODO: we're watching if this is either already finalized, or if we don't own the dungeonrun
-    return false //this.dungeonRun?.finalizedData || this.app.publicView
+    return this.dungeonRun.finalized || !this.isMyAdventurer
   }
 
   get titleText(){
@@ -101,7 +107,7 @@ export default class DungeonPage extends Page{
     this._stateEl.setup(dungeonRun)
     this._setupTimeline(dungeonRun)
     this._adventurerPane.setFighter(new AdventurerInstance(this.adventurer, dungeonRun.adventurerState))
-    this._eventEl.setup(this.adventurer, this._timeline)
+    this._eventEl.setup(this._adventurerPane, this._timeline)
     this._update({ animate: false })
   }
 
@@ -119,16 +125,15 @@ export default class DungeonPage extends Page{
       return
     }
 
+    this.dungeonRun = dungeonRun
+    this._timelineEl.addEvents(dungeonRun.newEvents)
+    this._timelineEl.play()
+
     if(dungeonRun.finished){
       this._timelineEl.setOptions({
         isReplay: true
       })
-      this._timelineEl.jumpTo(this._timeline.duration)
     }
-
-    this.dungeonRun = dungeonRun
-    this._timelineEl.addEvents(dungeonRun.newEvents)
-    this._timelineEl.play()
 
     if(dungeonRun.virtualTime){
       this._timelineEl.jumpTo(dungeonRun.virtualTime)
@@ -146,7 +151,6 @@ export default class DungeonPage extends Page{
       this._ce.destroy()
     }
 
-    console.log('upd')
     const animate = options.animate
 
     if(this.currentEvent && !this.isReplay){
@@ -166,34 +170,34 @@ export default class DungeonPage extends Page{
     this._adventurerPane.classList.remove('displaynone')
     this._adventurerResultsPane.classList.add('displaynone')
 
-    if(!this.currentEvent){
-      this._eventEl.update({
-        passTimeOverride: true,
-        message: `${this.adventurer.name} enters the dungeon.`,
-        roomType: 'entrance'
-      }, false)
-    }else if(this.currentEvent.roomType === 'combat'){
+    if(this.currentEvent.roomType === 'combat'){
       this._enactCombat()
     }else{
-      this._eventEl.update(this.currentEvent, animate)
-      this._adventurerPane.setState(this.currentEvent.adventurerState ?? {}, animate)
+      this._eventEl.normalContents(animate)
     }
   }
 
   _showResults(){
-    const results = new EventContentsResults(this.dungeonRun)
+    if(this._eventEl.currentContents instanceof EventContentsResults){
+      return
+    }
+    if(!this.dungeonRun.results){
+      return
+    }
+    const results = new EventContentsResults()
     this._eventEl.setContents(results, false)
     this._timelineEl.pause()
-    this._adventurerResultsPane.setAdventurer(this.adventurer)
     this._adventurerResultsPane.classList.remove('displaynone')
     this._adventurerPane.classList.add('displaynone')
     if(!this.watching){
-      results.showFinalizerButton(async () => {
-        showLoader()
-        await fizzetch(`/game/dungeonrun/${this._dungeonRunID}/finalize`)
+      fizzetch(`/game/dungeonrun/${this._dungeonRunID}/finalize`)
+    }
+    if(this.isMyAdventurer){
+      results.showFinalizerButton(() => {
         this.redirectTo(AdventurerPage.path(this.adventurer._id))
       })
     }
+    results.play(this.dungeonRun, this._adventurerResultsPane, this.watching)
   }
 
   async _enactCombat(){
@@ -222,6 +226,7 @@ export default class DungeonPage extends Page{
     if(this._timeline.finished && this.isReplay){
       this._showResults()
     }
+
   }
 
   _updateBackground(){

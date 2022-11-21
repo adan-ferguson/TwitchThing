@@ -1,6 +1,8 @@
-import CHESTS from '../../../chestDisplayInfo.js'
-import { fillArray, makeEl, wait } from '../../../../../game/utilFunctions.js'
+import { fillArray, makeEl, toDisplayName, wait } from '../../../../../game/utilFunctions.js'
 import LoadoutRow from '../../loadout/loadoutRow.js'
+import FighterItemDisplayInfo from '../../../fighterItemDisplayInfo.js'
+import AdventurerItemInstance from '../../../../../game/adventurerItemInstance.js'
+import { getChestDisplayInfo } from '../../../chestDisplayInfo.js'
 
 const UNOPENED_HTML = `
 <span class="unopened">
@@ -22,16 +24,16 @@ export default class ChestOpenage extends HTMLElement{
   constructor(chest, opened = false){
     super()
     this._chest = chest
-    const chestDisplayInfo = CHESTS[chest.tier]
+    const chestDisplayInfo = getChestDisplayInfo(chest)
     this.style.color = chestDisplayInfo.color
 
     if(!opened){
       this.innerHTML = UNOPENED_HTML
-      const starsHTML = fillArray(() => '<i class="fa-solid fa-star"></i>', chest.tier).join('')
+      const starsHTML = fillArray(() => '<i class="fa-solid fa-star"></i>', chest.stars ?? 0).join('')
       this.querySelectorAll('.stars').forEach(el => {
         el.innerHTML = starsHTML
       })
-      this.classList.add('clickable')
+      this.classList.add('clickable', 'glow')
       this.addEventListener('click', () => this.open())
     }else{
       this.open(false)
@@ -44,7 +46,7 @@ export default class ChestOpenage extends HTMLElement{
       return
     }
 
-    this.classList.remove('clickable')
+    this.classList.remove('clickable', 'glow')
     this.innerHTML = OPENED_HTML
 
     if(animate){
@@ -57,14 +59,21 @@ export default class ChestOpenage extends HTMLElement{
     this.classList.add('opened')
     this.dispatchEvent(new CustomEvent('opened'))
 
-    const displayInfo = CHESTS[this._chest.tier]
+    const displayInfo = getChestDisplayInfo(this._chest)
     this.querySelector('.inset-title').textContent =
       `Lvl. ${this._chest.level} ${displayInfo.displayName} Chest`
 
     const contents = this.querySelector('.contents')
-    this._chest.contents.items?.forEach(item => {
+    if(this._chest.contents.gold){
+      contents.appendChild(makeEl({
+        text: `${this._chest.contents.gold} gold`,
+        class: 'gold-amount'
+      }))
+    }
+    this._chest.contents.items?.forEach(itemDef => {
       const row = new LoadoutRow()
-      row.setItem(adventurerLoadoutItem(item))
+      const info = new FighterItemDisplayInfo(new AdventurerItemInstance(itemDef))
+      row.setItem(info)
       contents.appendChild(row)
     })
   }

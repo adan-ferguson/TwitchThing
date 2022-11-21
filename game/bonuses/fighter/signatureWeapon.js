@@ -8,15 +8,14 @@ export default {
           fighter: reduction
         }
       },
-      description: `Your Signature Weapon costs [Ofighter${reduction}].`,
+      description: `Your 1st item slot becomes your Signature Weapon. It costs [Ofighter${-reduction}] less to equip.`,
     }
   },
   slotBonus: {
     slotIndex: 0, // TODO: not hardcoded
     tags: ['signatureWeapon'],
-    description: 'Your 1st item slot becomes your Signature Weapon.'
     // displayName: 'Signature Weapon',
   },
   rarity: 1,
-  minOrbs: 5
+  minOrbs: 1
 }

@@ -4,8 +4,8 @@ import { generateEvent } from './dungeonEventPlanner.js'
 import { addRewards } from './results.js'
 import { ADVANCEMENT_INTERVAL } from './dungeonRunner.js'
 import calculateResults from '../../game/dungeonRunResults.js'
-import { performVenturingTicks } from '../actionsAndTicks/performVenturingTicks.js'
 import { toArray } from '../../game/utilFunctions.js'
+import { performVenturingTicks } from '../actionsAndTicks/ticks.js'
 
 export default class DungeonRunInstance extends EventEmitter{
 
@@ -91,8 +91,6 @@ export default class DungeonRunInstance extends EventEmitter{
       return
     }
 
-    console.log('ADVANCE TO', this.doc.elapsedTime)
-
     // Reset this each advancement to make sure that everything is synced up.
     // If we just let this roll, then it's possible the doc state is wrong but
     // we would never notice unless the server reloaded.
@@ -116,7 +114,7 @@ export default class DungeonRunInstance extends EventEmitter{
 
     let durationSum = 0
     events = toArray(events)
-    events.forEach(e => {
+    events.forEach((e, i) => {
       const nextEvent = {
         room: this.doc.room,
         floor: this.doc.floor,
@@ -132,15 +130,15 @@ export default class DungeonRunInstance extends EventEmitter{
         }
         this.doc.rewards = addRewards(this.doc.rewards, nextEvent.rewards)
       }
+      if(i === events.length - 1){
+        if(!nextEvent.runFinished){
+          nextEvent.duration += (ADVANCEMENT_INTERVAL - (durationSum % ADVANCEMENT_INTERVAL)) % ADVANCEMENT_INTERVAL
+        }
+        this.doc.room = nextEvent.room
+        this.doc.floor = nextEvent.floor
+      }
       this._updateStateAndPerformTicks(nextEvent)
     })
-
-    const lastEvent = this.doc.events.at(-1)
-    if(!lastEvent.runFinished){
-      lastEvent.duration += (ADVANCEMENT_INTERVAL - (durationSum % ADVANCEMENT_INTERVAL)) % ADVANCEMENT_INTERVAL
-    }
-    this.doc.room = lastEvent.room
-    this.doc.floor = lastEvent.floor
   }
 
   /**
@@ -156,10 +154,22 @@ export default class DungeonRunInstance extends EventEmitter{
     }
 
     if (!event.passTimeOverride){ // Combats handle their own passage of time.
-      this.adventurerInstance.advanceTime(event.duration)
-      event.tickUpdates = performVenturingTicks(this.adventurerInstance, Math.floor(event.duration / 1000))
+      let timeLeft = event.duration
+      event.tickTimeline = []
+      while(timeLeft > 0){
+        const timeToAdvance = Math.min(timeLeft, this.adventurerInstance.timeUntilNextUpdate)
+        this.adventurerInstance.advanceTime(timeToAdvance)
+        event.tickTimeline.push({
+          timeOffset: timeToAdvance,
+          updates: performVenturingTicks(this.adventurerInstance),
+          stateAfterward: this.adventurerInstance.state
+        })
+        timeLeft -= timeToAdvance
+        this.adventurerInstance.cleanupState()
+      }
     }
 
+    this.adventurerInstance.cleanupState()
     this.doc.adventurerState = this.adventurerInstance.state
   }
 }

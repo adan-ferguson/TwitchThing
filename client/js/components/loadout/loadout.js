@@ -115,6 +115,7 @@ export default class Loadout extends HTMLElement{
     this.list.setRows(this._rows)
     this._rows.forEach(loadoutRow => {
       loadoutRow.updateTooltip()
+      loadoutRow.updateItemRow()
     })
   }
 

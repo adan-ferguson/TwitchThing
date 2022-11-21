@@ -2,36 +2,32 @@ import { generateRandomItemDef } from '../items/generator.js'
 import { toNumberOfDigits } from '../../game/utilFunctions.js'
 import { geometricProgession } from '../../game/exponentialValue.js'
 
-const DEFAULTS = {
-  name: 'Chest',
-  level: 1,
-  size: 1,
-  contents: {}
-}
-
 const GOLD_CHANCE = 0.5
 const GOLD_BASE = 10
 const GOLD_GROWTH = 5
 const GOLD_GROWTH_PCT = 0.12
 
-export function generateRandomChest(dungeonRun, options = {}){
+const TYPE_TO_SIZE = {
+  normal: 1,
+  boss: 5
+}
 
-  if(!dungeonRun.user.accomplishments.firstRunFinished){
-    return
-  }
+export function generateRandomChest(options = {}){
 
   const chest = {
-    ...DEFAULTS,
+    name: 'Chest',
+    type: 'normal', // 'normal' | 'boss'
     contents: {
       gold: 0,
       items: []
     },
-    level: options.level || dungeonRun.floor,
+    level: 1,
+    noGold: false,
     ...options
   }
 
-  for(let i = 0; i < chest.size; i++){
-    if(Math.random() < GOLD_CHANCE){
+  for(let i = 0; i < TYPE_TO_SIZE[chest.type]; i++){
+    if(!options.noGold && Math.random() < GOLD_CHANCE){
       chest.contents.gold += addGold(chest.level)
     }else{
       chest.contents.items.push(generateRandomItemDef(chest.level))
@@ -39,14 +35,6 @@ export function generateRandomChest(dungeonRun, options = {}){
   }
 
   return chest
-}
-
-export function generateChest(contents, options = {}){
-  return {
-    ...DEFAULTS,
-    contents,
-    ...options
-  }
 }
 
 function addGold(level){

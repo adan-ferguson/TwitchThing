@@ -64,13 +64,13 @@ const monstersByFloor = [
 ]
 
 const BONUS_CHESTS_UNTIL = 10
-const BONUS_CHEST_CHANCE = 0.45
+const BONUS_CHEST_CHANCE = 0.25
 
 const CHEST_DROP_CHANCE = 0.05
 const BOSS_XP_BONUS = 8
 
 // Monsters of level [currentFloor - FLOOR_RANGE] to [currentFloor] will spawn (both inclusive).
-const FLOOR_RANGE = 4
+const FLOOR_RANGE = 1
 
 // How much to skew RNG towards higher levels.
 const FLOOR_SKEW = -0.12
@@ -110,8 +110,10 @@ export async function generateMonster(dungeonRun){
       const userChests = dungeonRun.user.accomplishments.chestsFound ?? 0
       const dropChance = userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE : CHEST_DROP_CHANCE
       if(Math.random() < dropChance || monsterInstance.isBoss){
-        rewards.chests = generateRandomChest(dungeonRun, {
-          size: monsterInstance.isBoss ? 5 : 1
+        rewards.chests = generateRandomChest({
+          level: dungeonRun.floor,
+          type: monsterInstance.isBoss ? 'boss' : 'normal',
+          noGold: userChests < BONUS_CHESTS_UNTIL
         })
       }
     }

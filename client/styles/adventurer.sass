@@ -37,7 +37,7 @@ di-adventurer-pane, di-fighter-instance-pane
     padding: 3rem 14rem
 
   .standard-contents
-    padding: 8rem
+    padding: 20rem 8rem 8rem
 
   di-action-bar
     flex-grow: 0 !important
@@ -52,7 +52,8 @@ di-adventurer-pane, di-fighter-instance-pane
   .adventurer-orbs
     height: 25rem
     justify-content: space-around
-    margin: 6rem -6rem
+    margin: 6rem 0 0 !important
+    z-index: 1
 
     di-orb-entry
       position: relative
@@ -71,16 +72,20 @@ di-adventurer-pane, di-fighter-instance-pane
         opacity: 0.15
         background-color: currentColor
         pointer-events: none
+        z-index: -1
 
   .top-section
     transition: background-color 0.2s
 
+    cursor: pointer
+    padding: 0
+    margin: 6rem 0
+
+    di-xp-bar
+      margin: 2rem
+
     &:hover
       background-color: #effaf8
-
-    cursor: pointer
-    padding: 6rem 0rem 0
-    margin-bottom: 6rem
 
     > *
       margin-bottom: 6rem

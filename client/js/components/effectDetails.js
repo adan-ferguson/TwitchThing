@@ -39,7 +39,7 @@ export default class EffectDetails extends DIElement{
   _addStats(){
     const statsList = new StatsList()
     statsList.setOptions({
-      showTooltips: false,
+      // showTooltips: false,
       statsDisplayStyle: StatsDisplayStyle.ADDITIONAL
     })
     statsList.setStats(this._effectInstance.stats)
@@ -52,7 +52,9 @@ export default class EffectDetails extends DIElement{
 
   _addDescription(){
     if(this._effectInstance.description){
-      this.appendChild(parseDescriptionString(this._effectInstance.description))
+      const description = parseDescriptionString(this._effectInstance.description)
+      description.classList.add('effect-description')
+      this.appendChild(description)
     }
   }
 

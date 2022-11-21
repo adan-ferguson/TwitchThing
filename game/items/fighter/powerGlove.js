@@ -7,7 +7,7 @@ export default {
   levelFn: level => ({
     stats: {
       physPower: geometricProgession(SCALING, level, BASE),
-      speed: -10 * level
+      speed: -5 * level
     }
   }),
   orbs: 2

@@ -113,3 +113,8 @@ export async function finalize(dungeonRunDoc){
   }
 }
 
+export async function cancelRun(dungeonRunDoc){
+  const adventurerDoc = await Adventurers.findByID(dungeonRunDoc.adventurer._id)
+  adventurerDoc.dungeonRunID = null
+  await Adventurers.save(adventurerDoc)
+}

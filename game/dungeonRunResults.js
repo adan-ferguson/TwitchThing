@@ -1,4 +1,5 @@
 import { toArray } from './utilFunctions.js'
+import { CombatResult } from './combatResult.js'
 
 export default function calculateResults(eventsList){
   eventsList = eventsList.events ?? eventsList
@@ -18,7 +19,7 @@ export default function calculateResults(eventsList){
   results.endingFloor = eventsList.at(-1).floor
 
   if(eventsList.at(-1)?.runFinished){
-    results.killedByMonster = eventsList.at(-2).monster
+    results.killedByMonster = eventsList.at(-1).monster
   }
 
   return results
@@ -27,7 +28,7 @@ export default function calculateResults(eventsList){
 function monstersKilled(eventsList){
   const obj = {}
   eventsList.forEach(event => {
-    if(event.monster?.defeated){
+    if(event.monster && event.result === CombatResult.F1_WIN){
       obj[event.monster.baseType] = (obj[event.monster.baseType] ?? 0) + 1
     }
   })

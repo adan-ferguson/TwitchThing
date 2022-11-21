@@ -7,7 +7,7 @@ import { toDisplayName, toNumberOfDigits } from './utilFunctions.js'
 import { bossMod } from './mods/combined.js'
 
 const HP_BASE = 25
-const HP_GROWTH = 18
+const HP_GROWTH = 20
 const HP_GROWTH_PCT = 0.25
 
 const POWER_BASE = 10
@@ -15,7 +15,7 @@ const POWER_GROWTH = 4
 const POWER_GROWTH_PCT = 0.25
 
 const XP_BASE = 50
-const XP_GROWTH = 5
+const XP_GROWTH = 25
 const XP_GROWTH_PCT = 0.25
 const XP_ZONE_BONUS = 3
 

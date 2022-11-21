@@ -3,15 +3,15 @@ import { randomOrder } from '../game/rando.js'
 import { generateMonster } from './dungeons/monsters.js'
 import MonsterInstance from '../game/monsterInstance.js'
 import { takeCombatTurn } from './actionsAndTicks/performAction.js'
-import { performCombatTick } from './actionsAndTicks/performCombatTick.js'
+import { performCombatTicks } from './actionsAndTicks/ticks.js'
 import { toFighterInstance } from '../game/toFighterInstance.js'
 import { triggerEvent } from './actionsAndTicks/common.js'
 import { CombatResult } from '../game/combatResult.js'
-import { ADVANCEMENT_INTERVAL } from './dungeons/dungeonRunner.js'
 
 const START_TIME_DELAY = 200
 const COMBAT_END_PADDING = 2500
 const MAX_TIME = 120000
+const MIN_RESULT_TIME = 2500
 
 export async function generateCombatEvent(dungeonRun){
 
@@ -28,15 +28,15 @@ export async function generateCombatEvent(dungeonRun){
     combatID: combat._id,
     passTimeOverride: true,
     roomType: 'combat',
-    monster: monsterDef,
-    adventurerState: combat.fighter1.endState
+    monster: monsterDef
   }
 
   const resultEvent = {
-    duration: ADVANCEMENT_INTERVAL,
+    duration: MIN_RESULT_TIME,
     result: combat.result,
     combatID: combat._id,
-    roomType: 'combatResult'
+    roomType: 'combatResult',
+    monster: monsterDef
   }
 
   if(combat.result === CombatResult.F1_WIN){
@@ -62,27 +62,30 @@ export async function generateSimulatedCombat(fighterDef1, fighterDef2){
 
 export async function generateCombat(fighterInstance1, fighterInstance2, params = {}){
 
-  const combat = new Combat(fighterInstance1, fighterInstance2)
-
-  return await Combats.save({
-    startTime: Date.now(),
-    duration: combat.duration,
-    fighter1: {
-      id: 1,
-      data: fighterInstance1.fighterData,
-      startState: combat.fighterStartState1,
-      endState: combat.fighterEndState1
-    },
-    fighter2: {
-      id: 2,
-      data: fighterInstance2.fighterData,
-      startState: combat.fighterStartState2,
-      endState: combat.fighterEndState2
-    },
-    timeline: combat.timeline,
-    result: combat.result,
-    params
-  })
+  try {
+    const combat = new Combat(fighterInstance1, fighterInstance2)
+    return await Combats.save({
+      startTime: Date.now(),
+      duration: combat.duration,
+      fighter1: {
+        id: 1,
+        data: fighterInstance1.fighterData,
+        startState: combat.fighterStartState1,
+        endState: combat.fighterEndState1
+      },
+      fighter2: {
+        id: 2,
+        data: fighterInstance2.fighterData,
+        startState: combat.fighterStartState2,
+        endState: combat.fighterEndState2
+      },
+      timeline: combat.timeline,
+      result: combat.result,
+      params
+    })
+  }catch(ex){
+    console.error('Combat crashed')
+  }
 }
 
 class Combat{
@@ -148,8 +151,8 @@ class Combat{
       const tickUpdates = this._tick()
       const actions = this._doActions()
 
-      this.fighterInstance1.cleanup()
-      this.fighterInstance2.cleanup()
+      this.fighterInstance1.cleanupState()
+      this.fighterInstance2.cleanupState()
 
       if(actions.length || tickUpdates.length){
         this._addTimelineEntry({
@@ -174,7 +177,7 @@ class Combat{
     const tickUpdates = []
 
     const doTick = source => {
-      tickUpdates.push(...performCombatTick(this, source))
+      tickUpdates.push(...performCombatTicks(this, source))
     }
 
     randomOrder(
