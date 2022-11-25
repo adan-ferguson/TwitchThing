@@ -3,6 +3,7 @@ import { freezeActionBarMod, magicAttackMod, silencedMod, sneakAttackMod } from 
 import { StatusEffectsData } from './statusEffectsData.js'
 import ModsCollection from './modsCollection.js'
 import FighterItemInstance from './fighterItemInstance.js'
+import { minMax } from './utilFunctions.js'
 
 // Stupid
 new Stats()
@@ -205,14 +206,14 @@ export default class FighterInstance{
   }
 
   get hp(){
-    return Math.ceil((this._state.hpPct ?? 1) * this.hpMax)
+    return Math.ceil(this.hpPct * this.hpMax)
   }
 
   set hp(val){
     if(isNaN(val)){
       debugger
     }
-    this._state.hpPct = Math.max(0, Math.min(1, val / this.hpMax))
+    this.hpPct = val / this.hpMax
   }
 
   get hpMax(){
@@ -225,6 +226,10 @@ export default class FighterInstance{
 
   get hpPct(){
     return this._state.hpPct ?? 1
+  }
+
+  set hpPct(val){
+    this._state.hpPct = minMax(0, val, 1)
   }
 
   get basicAttackType(){

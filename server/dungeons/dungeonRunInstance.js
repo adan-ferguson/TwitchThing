@@ -60,7 +60,11 @@ export default class DungeonRunInstance extends EventEmitter{
     return this.doc.dungeonOptions.pace ?? 'Brisk'
   }
 
-  async setupInitialEvents(){
+  get restThreshold(){
+    return this.doc.dungeonOptions.restThreshold ?? 0
+  }
+
+  async initialize(){
     this.doc.events = [{
       message: `${this.adventurer.name} enters the dungeon.`,
       roomType: 'entrance',

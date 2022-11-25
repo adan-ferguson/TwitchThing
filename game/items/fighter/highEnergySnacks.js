@@ -1,19 +1,22 @@
 import statusEffectAction from '../../actions/statusEffectAction.js'
-import { geometricProgession } from '../../exponentialValue.js'
 
 export default {
   levelFn: level => ({
+    stats: {
+      startingFood: level
+    },
     abilities: {
       rest: {
         actions: [
           statusEffectAction({
             effect: {
+              isBuff: true,
+              displayName: 'Caffeine Rush',
               stacking: 'replace',
               lingering: true,
-              stackingId: 'highEnergySnacks',
-              duration: 45000 + level * 15000,
+              duration: 15000 + level * 5000,
               stats: {
-                speed: geometricProgession(0.10, level, 25, 5)
+                speed: 10 + 20 * level
               }
             }
           })
@@ -21,5 +24,6 @@ export default {
       }
     }
   }),
+  displayName: 'Coffee Carafe',
   orbs: 3
 }

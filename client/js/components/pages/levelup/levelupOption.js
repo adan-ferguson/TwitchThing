@@ -48,7 +48,7 @@ function populateBonusInfo(target, bonusInstance){
     class: 'bonus-name'
   }))
 
-  const orbRow = new OrbRow().setOptions({ style: OrbsDisplayStyle.MAX_ONLY }).setData(bonusInstance.orbsData)
+  const orbRow = new OrbRow().setOptions({ style: OrbsDisplayStyle.MAX_ADDITIVE }).setData(bonusInstance.orbsData)
   orbRow.classList.add('bonus-orbs')
   target.appendChild(orbRow)
 

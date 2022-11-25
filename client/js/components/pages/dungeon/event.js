@@ -20,6 +20,7 @@ export default class Event extends HTMLElement{
   }
 
   update(dungeonEvent, animate = false){
+    console.log('upd')
     const wasNormal = this.currentContents instanceof EventContentsNormal
     if(wasNormal && sameRoom(this.currentContents.dungeonEvent, dungeonEvent)){
       this.currentContents.update(dungeonEvent)

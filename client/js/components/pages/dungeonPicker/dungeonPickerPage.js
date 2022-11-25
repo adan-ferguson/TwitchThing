@@ -18,6 +18,12 @@ const FORM_HTML = `
     <div class="subtitle">Explore the entire floor before taking the stairs</div>
   </label>
 </div>
+<div class="input-group">
+  <label>
+    Rest when health is below <span class="bolded"><span class="rest-threshold-text">50</span>%</span>
+    <input type="range" min="0" max="100" step="5" value="50" name="restThreshold">
+  </label>
+</div>
 `
 
 const HTML = `
@@ -49,6 +55,12 @@ export default class DungeonPickerPage extends Page{
       extraData: () => ({ startingFloor: this.floorSlider.value })
     })
     this.querySelector('.stuff').appendChild(this._formEl)
+
+    const restSlider = this.querySelector('[name=restThreshold]')
+    const restText = this.querySelector('.rest-threshold-text')
+    restSlider.addEventListener('input', () => {
+      restText.textContent = restSlider.value
+    })
   }
 
   static get pathDef(){

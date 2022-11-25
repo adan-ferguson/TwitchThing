@@ -3,6 +3,8 @@ import { all as Monsters } from '../../game/monsters/combined.js'
 import { uuid } from '../../game/utilFunctions.js'
 import MonsterInstance from '../../game/monsterInstance.js'
 import { generateRandomChest } from './chests.js'
+import { addRewards } from './results.js'
+import calculateResults from '../../game/dungeonRunResults.js'
 
 const monstersByFloor = [
   null,
@@ -89,9 +91,9 @@ export function foundMonster(dungeonRun){
   // }
 }
 
-export async function generateMonster(dungeonRun){
+export async function generateMonster(dungeonRun, boss){
 
-  const level = floorToLevel(dungeonRun.floor)
+  const level = boss ? dungeonRun.floor : floorToLevel(dungeonRun.floor)
   const monsterDefinition = getMonsterDefinition(level)
 
   return {
@@ -109,7 +111,12 @@ export async function generateMonster(dungeonRun){
     if(dungeonRun.user.accomplishments.firstRunFinished){
       const userChests = dungeonRun.user.accomplishments.chestsFound ?? 0
       const dropChance = userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE : CHEST_DROP_CHANCE
-      if(Math.random() < dropChance || monsterInstance.isBoss){
+      const dropChest =
+        Math.random() < dropChance ||
+        monsterInstance.isBoss ||
+        dropPityChest(dungeonRun)
+
+      if(dropChest){
         rewards.chests = generateRandomChest({
           level: dungeonRun.floor,
           type: monsterInstance.isBoss ? 'boss' : 'normal',
@@ -117,7 +124,7 @@ export async function generateMonster(dungeonRun){
         })
       }
     }
-    return rewards
+    return addRewards(rewards, monsterInstance.rewards)
   }
 }
 
@@ -176,4 +183,13 @@ function getBasicMonsterDefinition(floor){
     baseType: monstersByFloor[floor].name,
     level: floor
   }
+}
+
+function dropPityChest(dungeonRun){
+  const expectedChests = dungeonRun.events.length * CHEST_DROP_CHANCE / 2 // eh close enough
+  const chests = dungeonRun.rewards.chests.length
+  if(chests < Math.round(expectedChests)){
+    return true
+  }
+  return false
 }

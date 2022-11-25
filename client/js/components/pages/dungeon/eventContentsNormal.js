@@ -9,6 +9,7 @@ const HTML = `
   <div class="room-contents">
     <div class="message"></div>
     <div class="rewards"></div>
+    <div class="penalty"></div>
   </div>
   <span class="loader spin-effect displaynone">DI</span>
 </div>
@@ -31,6 +32,7 @@ export default class EventContentsNormal extends HTMLElement{
     this._contents = this.querySelector('.room-contents')
     this._description = this.querySelector('.description')
     this._rewards = this.querySelector('.rewards')
+    this._penalty = this.querySelector('.penalty')
     this._message = this.querySelector('.message')
     this._timeBarEl = this.querySelector('.time-bar')
       .setOptions({
@@ -46,6 +48,7 @@ export default class EventContentsNormal extends HTMLElement{
     this._description.textContent = getDescription(dungeonEvent)
     this._message.textContent = dungeonEvent.message
     this._addRewards(dungeonEvent.rewards)
+    this._addPenalty(dungeonEvent.penalty)
     this.querySelector('.loader').classList.toggle('displaynone', dungeonEvent.roomType !== 'entrance')
   }
 
@@ -68,6 +71,19 @@ export default class EventContentsNormal extends HTMLElement{
       }
     }
     this._rewards.innerHTML = html
+  }
+
+  _addPenalty(penalty){
+    if(!penalty){
+      this._penalty.innerHTML = ''
+      return
+    }
+    let html = ''
+    for(let key in penalty){
+      let val = penalty[key]
+      html += `<div>+${val} ${key}</div>`
+    }
+    this._penalty.innerHTML = html
   }
 
   _setImage(dungeonEvent){

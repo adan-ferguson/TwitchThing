@@ -9,6 +9,8 @@ let lastAdvancement = new Date()
 let running = false
 let activeRuns = {}
 
+const STARTING_FOOD = 3
+
 export const ADVANCEMENT_INTERVAL = 5000
 
 export function cancelAllRuns(){
@@ -83,6 +85,7 @@ export async function addRun(adventurerID, dungeonOptions){
   dungeonOptions = {
     startingFloor: 1,
     pace: 'Brisk',
+    restThreshold: null,
     ...dungeonOptions
   }
 
@@ -94,14 +97,14 @@ export async function addRun(adventurerID, dungeonOptions){
   const drDoc = await DungeonRuns.save({
     adventurer,
     dungeonOptions,
-    floor: startingFloor
+    floor: startingFloor,
   })
 
   adventurer.dungeonRunID = drDoc._id
   await Adventurers.save(adventurer)
 
   activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, userDoc)
-  await activeRuns[drDoc._id].setupInitialEvents()
+  await activeRuns[drDoc._id].initialize()
   return drDoc
 }
 

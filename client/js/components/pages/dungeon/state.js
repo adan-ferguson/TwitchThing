@@ -7,11 +7,17 @@ const innerHTML = `
   <div>
     <span class="pace"></span> Pace
   </div>
-  <div>
-      XP: <span class="xp-reward">0</span>
+  <div class="resting-yes">
+    Rest when HP below <span class="rest-threshold"></span>%
+  </div>
+  <div class="resting-yes">
+    Food Left: <span class="food">0</span>
   </div>
   <div>
-      Chests: <span class="chests">0</span>
+    XP: <span class="xp-reward">0</span>
+  </div>
+  <div>
+    Chests: <span class="chests">0</span>
   </div>
 </div>
 `
@@ -32,13 +38,19 @@ export default class State extends HTMLElement{
     this.xp = this.querySelector('.xp-reward')
     this.xpVal = null
     this._chests = this.querySelector('.chests')
+    this._food = this.querySelector('.food')
   }
 
   setup(dungeonRun){
     this.querySelector('.pace').textContent = dungeonRun.dungeonOptions.pace ?? 'Brisk'
+    if(dungeonRun.dungeonOptions.restThreshold > 0){
+      this.querySelector('.rest-threshold').textContent = dungeonRun.dungeonOptions.restThreshold
+    }else{
+      this.querySelectorAll('.resting-yes').forEach(el => el.classList.add('displaynone'))
+    }
   }
 
-  update(eventsList, animate){
+  update(eventsList, adventurerInstance, animate){
 
     const currentEvent = eventsList.at(-1)
     const results = new DungeonRunResults(eventsList)
@@ -49,6 +61,7 @@ export default class State extends HTMLElement{
 
     this._setXP(results.xp, animate)
     this._updateChests(results.chests, animate)
+    this._setFoodRemaining(adventurerInstance.food)
 
     this._contentEl.classList.remove('displaynone')
   }
@@ -89,6 +102,10 @@ export default class State extends HTMLElement{
   _updateChests(chests, animate){
     // TODO: animate
     this._chests.textContent = (chests?.length || 0) + ''
+  }
+
+  _setFoodRemaining(amount){
+    this._food.textContent = (amount ?? 0) + ''
   }
 }
 

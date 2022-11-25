@@ -104,4 +104,8 @@ export default class MonsterInstance extends FighterInstance{
   get isBoss(){
     return this.mods.contains(bossMod)
   }
+
+  get rewards(){
+    return this._fighterData.rewards ?? {}
+  }
 }

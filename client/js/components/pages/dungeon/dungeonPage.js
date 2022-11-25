@@ -90,6 +90,10 @@ export default class DungeonPage extends Page{
     return this.dungeonRun.adventurer
   }
 
+  get adventurerInstance(){
+    return new AdventurerInstance(this.adventurer, this.currentEvent?.adventurerState ?? {})
+  }
+
   get isReplay(){
     return this.dungeonRun.finished ? true : false
   }
@@ -160,7 +164,7 @@ export default class DungeonPage extends Page{
     }
 
     this._updateBackground()
-    this._stateEl.update(this._timelineEl.elapsedEvents, animate)
+    this._stateEl.update(this._timelineEl.elapsedEvents, this.adventurerInstance, animate)
 
     if(this.isReplay && this._timeline.finished){
       this._showResults()

@@ -13,14 +13,15 @@ const COMBAT_END_PADDING = 2500
 const MAX_TIME = 120000
 const MIN_RESULT_TIME = 2500
 
-export async function generateCombatEvent(dungeonRun){
+export async function generateCombatEvent(dungeonRun, boss = false){
 
   const adventurerInstance = dungeonRun.adventurerInstance
-  const monsterDef = await generateMonster(dungeonRun)
+  const monsterDef = await generateMonster(dungeonRun, boss)
   const monsterInstance = new MonsterInstance(monsterDef)
 
   const combat = await generateCombat(adventurerInstance, monsterInstance, {
-    floor: dungeonRun.floor
+    floor: dungeonRun.floor,
+    boss
   })
 
   adventurerInstance.cleanupState()
@@ -29,7 +30,8 @@ export async function generateCombatEvent(dungeonRun){
     duration: combat.duration + COMBAT_END_PADDING,
     combatID: combat._id,
     roomType: 'combat',
-    monster: monsterDef
+    monster: monsterDef,
+    boss
   }
 
   const resultEvent = {
@@ -37,7 +39,8 @@ export async function generateCombatEvent(dungeonRun){
     result: combat.result,
     combatID: combat._id,
     roomType: 'combatResult',
-    monster: monsterDef
+    monster: monsterDef,
+    boss
   }
 
   if(combat.result === CombatResult.F1_WIN){

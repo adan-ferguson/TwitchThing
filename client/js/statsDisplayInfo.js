@@ -80,6 +80,9 @@ const statDefinitionsInfo = {
   [StatDefs.combatXP.name]: {
     text: 'Combat XP Gain',
     description: 'Increases XP gained from combat.',
+  },
+  [StatDefs.startingFood.name]: {
+    text: 'Starting Food'
   }
 }
 

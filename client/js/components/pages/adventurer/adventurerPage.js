@@ -10,6 +10,7 @@ import AdventurerLoadoutEditorPage from '../adventurerLoadout/adventurerLoadoutE
 import LevelupPage from '../levelup/levelupPage.js'
 import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
 import AdventurerInstance from '../../../../../game/adventurerInstance.js'
+import { makeEl } from '../../../../../game/utilFunctions.js'
 
 const HTML = `
 <div class="content-columns">
@@ -118,9 +119,12 @@ export default class AdventurerPage extends Page{
         this.redirectTo(LevelupPage.path(this.adventurerID))
       })
     }else{
-      this._topRightButton.innerHTML = '<div>Enter Dungeon<div/>'
+      const quickDungeon = user.features.dungeonPicker
+      this._topRightButton.innerHTML = makeEl({
+        text: quickDungeon ? 'Enter Dungeon' : 'Prepare to Enter Dungeon'
+      })
       this._topRightButton.addEventListener('click', () => {
-        if(user.features.dungeonPicker){
+        if(quickDungeon){
           this.redirectTo(DungeonPickerPage.path(this.adventurerID))
         }else{
           this._quickEnterDungeon()
