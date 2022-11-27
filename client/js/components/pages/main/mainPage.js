@@ -7,6 +7,7 @@ import '../../list.js'
 import { wrapContent } from '../../../../../game/utilFunctions.js'
 import LiveDungeonMapPage from '../liveDungeonMap/liveDungeonMapPage.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
+import ShopPage from '../shop/shopPage.js'
 
 const HTML = `
 <div class="content-rows">
@@ -15,6 +16,9 @@ const HTML = `
       <di-list class="adventurer-list"></di-list>
     </div>
     <div class="content-rows">
+      <div class="content-well shop clickable">
+        Shop
+      </div>
       <div class="content-well live-dungeon-map clickable">
         View Live Dungeon Map
       </div>
@@ -34,6 +38,10 @@ export default class MainPage extends Page{
     this.querySelector('.live-dungeon-map').addEventListener('click', () => {
       this.redirectTo(LiveDungeonMapPage.path())
     })
+    this._shopEl = this.querySelector('.shop')
+    this._shopEl.addEventListener('click', () => {
+      this.redirectTo(ShopPage.path())
+    })
     this.querySelector('.adventurer-list')
       .setOptions({
         pageSize: 5
@@ -46,6 +54,12 @@ export default class MainPage extends Page{
     history.replaceState(null, null, '')
     joinSocketRoom('user all adventurers ' + this.app.user._id)
     getSocket().on('user dungeon run update', this._dungeonRunUpdates)
+
+    if(this.user.features.shop === 1){
+      this._shopEl.classList.add('glow')
+    }else if(!this.user.features.shop && 0){
+      this._shopEl.classList.add('displaynone')
+    }
   }
 
   async unload(){

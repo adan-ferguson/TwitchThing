@@ -1,16 +1,16 @@
 import Purchases from '../collections/purchases.js'
 
-const CHEST_BASE_PRICE = 200
-const PRICE_GROWTH = 100
-const PRICE_GROWTH_RATE = 0.2
+const CHEST_BASE_PRICE = 250
+// const PRICE_GROWTH = 250
+// const PRICE_GROWTH_RATE = 0.2
 
 export async function chestShopItems(userDoc){
-  const purchases = countPurchases(userDoc._id)
+  const purchases = await countPurchases(userDoc._id)
 
   const chests = []
 
   Object.keys(userDoc.features.advClasses).forEach(className => {
-    chests.push(chestDef(className, purchases[className]))
+    chests.push(chestDef(className, purchases[className] ?? 0))
   })
 
   return chests
@@ -45,14 +45,11 @@ function chestDef(className, purchaseCount){
     },
     data: {
       level: Math.min(50, 10 + purchaseCount * 5),
-      class: className
+      className
     }
   }
 }
 
 function toPrice(purchaseCount){
-  if(!purchaseCount){
-    return CHEST_BASE_PRICE
-  }
-  return CHEST_BASE_PRICE + PRICE_GROWTH * Math.pow(1 + PRICE_GROWTH_RATE, purchaseCount - 1)
+  return CHEST_BASE_PRICE * (purchaseCount + 1)
 }

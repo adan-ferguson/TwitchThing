@@ -35,7 +35,6 @@ export default class Header extends HTMLElement{
       if(!this.user?.features?.shop){
         return
       }
-      debugger
       this.app.setPage('/shop')
     })
 

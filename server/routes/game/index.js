@@ -2,6 +2,7 @@ import express from 'express'
 
 import adventurerRouter from './adventurer.js'
 import dungeonRunRouter from './dungeonrun.js'
+import shopRouter from './shop.js'
 
 import Adventurers from '../../collections/adventurers.js'
 import { getAllActiveRuns, getRunData } from '../../dungeons/dungeonRunner.js'

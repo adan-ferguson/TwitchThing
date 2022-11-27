@@ -1,0 +1,38 @@
+di-shop-page
+  .shop-items
+    display: flex
+    flex-wrap: wrap
+
+    $padding: 20rem
+    padding: $padding 0 0 $padding !important
+
+    > *
+      margin-right: $padding
+      margin-bottom: $padding
+
+    di-shop-item
+      width: 170rem
+      height: 150rem
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: space-evenly
+      border: 2rem dashed currentColor
+      box-sizing: border-box
+      text-align: center
+      padding: 10rem
+      cursor: pointer
+
+      .shop-item-image
+        fill: currentColor
+        > *
+          height: 25rem
+          width: 25rem
+        > .chest-el
+          position: relative
+          img
+            height: 16rem
+
+
+      &:hover
+        border-style: solid

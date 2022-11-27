@@ -2,7 +2,7 @@ import Page from '../page.js'
 import ShopItem from './shopItem.js'
 
 const HTML = `
-<div class='shop-items'></div>
+<div class='shop-items content-well'></div>
 `
 
 export default class ShopPage extends Page{
@@ -24,9 +24,9 @@ export default class ShopPage extends Page{
     shopItems.forEach(shopItemDef => {
       const item = new ShopItem().setItem(shopItemDef)
       item.addEventListener('click', () => {
-        this._showModal(item)
+        this._showModal(shopItemDef)
       })
-      this._shopItemsEl.appendChild()
+      this._shopItemsEl.appendChild(item)
     })
   }
 

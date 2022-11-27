@@ -53,3 +53,9 @@ export function exponentialPercentage(val, iterations, base = 0){
 
   return roundToNearestIntervalOf(100 * (1 - Math.pow(1 - val, iterations) * (1 - base)), 0.1) + '%'
 }
+
+export function oneTwoFive(val){
+  const magnitude = Math.floor(val / 3)
+  const mod = val % 3
+  return Math.pow(10, magnitude) * [1, 2, 5][mod]
+}
