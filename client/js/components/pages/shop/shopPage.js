@@ -34,24 +34,24 @@ export default class ShopPage extends Page{
 
   _showModal(shopitemDef){
     const modal = new Modal()
-    modal.innerPane.append(ShopItemDetails.fromDef(shopitemDef))
+    const canBuy = this.user.inventory.gold >= shopitemDef.price.gold
+    const details = new ShopItemDetails().setItem(shopitemDef, canBuy)
+    details.events.on('purchased', () => {
+      modal.setOptions({
+        closeOnUnderlayClick: false
+      })
+      buy()
+    })
+    modal.innerPane.append(details)
     modal.show()
-
-    // , [{
-    //     content: makeEl({
-    //       content: `<img src="/assets/icons/gold.svg"> ${shopitemDef.price.gold}`,
-    //       class: 'buy-button'
-    //     }),
-    //     fn: () => {
-    //       buy()
-    //       return false
-    //     }
-    //   }]).show()
 
     function buy(){
       // TODO: fizzetch
       // TODO: make modal unclosable
       // TODO: replace contents with chestOpenage
+      // modal.setOptions({
+      //   closeOnUnderlayClick: true
+      // })
     }
   }
 

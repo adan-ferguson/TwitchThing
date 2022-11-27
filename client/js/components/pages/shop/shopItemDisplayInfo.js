@@ -15,7 +15,7 @@ export function shopItemDisplayInfo(shopItemDef){
 
   let description
   if(shopItemDef.type === 'adventurerSlot'){
-    description = 'Unlock a new adventurer slot to send more adventurers into the dungeon.'
+    description = 'Unlock a new adventurer slot.'
   }else if(shopItemDef.type === 'chest'){
     description = `Contains 5 basic ${classInfo.displayName} items. (Nothing else)`
   }

@@ -14,13 +14,16 @@ const HTML = `
 <div class="shop-item-icon"></div>
 <div class="shop-item-name"></div>
 <div class="shop-item-description"></div>
+<button class="buy-button">
+  <span>Buy</span>
+  <div class="gold-span">
+    <img src="/assets/icons/gold.svg">
+    <span class="gold-value"></span>
+  </div>
+</button>
 `
 
 export default class ShopItemDetails extends DIElement{
-
-  static fromDef(shopItemDef){
-    return new ShopItemDetails().setItem(shopItemDef)
-  }
 
   get iconEl(){
     return this.querySelector('.shop-item-icon')
@@ -34,7 +37,15 @@ export default class ShopItemDetails extends DIElement{
     return this.querySelector('.shop-item-description')
   }
 
-  setItem(shopItemDef){
+  get buyButtonEl(){
+    return this.querySelector('.buy-button')
+  }
+
+  get goldValueEl(){
+    return this.querySelector('.gold-value')
+  }
+
+  setItem(shopItemDef, canBuy){
     this.innerHTML = HTML
 
     const info = shopItemDisplayInfo(shopItemDef)
@@ -48,6 +59,18 @@ export default class ShopItemDetails extends DIElement{
 
     if(shopItemDef.type === 'chest'){
       this.descriptionEl.append(this._dropChances(shopItemDef))
+    }
+
+    this.goldValueEl.textContent = shopItemDef.price.gold
+
+    if(canBuy){
+      this.buyButtonEl.addEventListener('click', () => {
+        this.buyButtonEl.innerHTML = '<div class="spin-effect spinner">DI</div>'
+        this.buyButtonEl.setAttribute('disabled', 'disabled')
+        this.events.emit('purchased')
+      })
+    }else{
+      this.buyButtonEl.setAttribute('disabled', 'disabled')
     }
 
     return this
