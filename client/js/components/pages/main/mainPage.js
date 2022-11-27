@@ -36,7 +36,7 @@ export default class MainPage extends Page{
     })
     this.querySelector('.adventurer-list')
       .setOptions({
-        pageSize: 6
+        pageSize: 5
       })
   }
 

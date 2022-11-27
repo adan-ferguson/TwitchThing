@@ -81,7 +81,7 @@ export default class EventContentsNormal extends HTMLElement{
     let html = ''
     for(let key in penalty){
       let val = penalty[key]
-      html += `<div>+${val} ${key}</div>`
+      html += `<div>${val} ${key}</div>`
     }
     this._penalty.innerHTML = html
   }

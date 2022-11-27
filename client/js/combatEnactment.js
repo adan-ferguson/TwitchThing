@@ -20,6 +20,10 @@ export default class CombatEnactment extends EventEmitter{
     this._fighterPane1.setFighter(toFighterInstance(combat.fighter1.data, combat.fighter1.startState))
     this._fighterPane2.setFighter(toFighterInstance(combat.fighter2.data, combat.fighter2.startState))
     this._setupTimeline(combat)
+
+    if(combat.params.boss){
+      debugger
+    }
   }
 
   get fighterInstance1(){

@@ -151,3 +151,8 @@ export function toTimerFormat(ms){
 
   return minuteStr + ':' + secondsStr
 }
+
+export function suffixedNumber(val, digits){
+  // TODO: this
+  return val
+}

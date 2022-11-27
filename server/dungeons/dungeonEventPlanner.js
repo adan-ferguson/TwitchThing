@@ -2,7 +2,6 @@ import { foundMonster } from './monsters.js'
 import { foundStairs } from './stairs.js'
 import { generateCombatEvent } from '../combat.js'
 import { shouldRest, rest } from './resting.js'
-import adventurer from '../routes/game/adventurer.js'
 
 /**
  * @param dungeonRun {DungeonRunInstance}

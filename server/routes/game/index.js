@@ -14,6 +14,7 @@ const router = express.Router()
 router.use('/adventurer', adventurerRouter)
 router.use('/dungeonrun', dungeonRunRouter)
 router.use('/admin', adminRouter)
+router.use('/shop', shopRouter)
 
 router.post('/', async(req, res) => {
   requireRegisteredUser(req)

@@ -187,7 +187,7 @@ function getBasicMonsterDefinition(floor){
 
 function dropPityChest(dungeonRun){
   const expectedChests = dungeonRun.events.length * CHEST_DROP_CHANCE / 2 // eh close enough
-  const chests = dungeonRun.rewards.chests.length
+  const chests = dungeonRun.rewards.chests?.length ?? 0
   if(chests < Math.round(expectedChests)){
     return true
   }
