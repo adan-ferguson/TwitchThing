@@ -54,6 +54,7 @@ export default class SimpleModal extends Modal{
 
       options = {
         text: 'text',
+        content: null,
         style: 'normal',
         value: null,
         fn: () => {}, // Called on click. If it returns false, the modal won't close after clicking.
@@ -62,7 +63,11 @@ export default class SimpleModal extends Modal{
 
       const btn = document.createElement('button')
       btn.classList.add('style-' + options.style)
-      btn.textContent = options.text
+      if(options.content){
+        btn.append(options.content)
+      }else{
+        btn.textContent = options.text
+      }
       btn.addEventListener('click', () => {
         const ret = options.fn()
         if (ret !== false){

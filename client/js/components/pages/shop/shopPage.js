@@ -1,5 +1,7 @@
 import Page from '../page.js'
 import ShopItem from './shopItem.js'
+import ShopItemDetails from './shopItemDetails.js'
+import Modal from '../../modal.js'
 
 const HTML = `
 <div class='shop-items content-well'></div>
@@ -30,8 +32,27 @@ export default class ShopPage extends Page{
     })
   }
 
-  _showModal(item){
+  _showModal(shopitemDef){
+    const modal = new Modal()
+    modal.innerPane.append(ShopItemDetails.fromDef(shopitemDef))
+    modal.show()
 
+    // , [{
+    //     content: makeEl({
+    //       content: `<img src="/assets/icons/gold.svg"> ${shopitemDef.price.gold}`,
+    //       class: 'buy-button'
+    //     }),
+    //     fn: () => {
+    //       buy()
+    //       return false
+    //     }
+    //   }]).show()
+
+    function buy(){
+      // TODO: fizzetch
+      // TODO: make modal unclosable
+      // TODO: replace contents with chestOpenage
+    }
   }
 
 }

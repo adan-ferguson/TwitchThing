@@ -24,15 +24,52 @@ di-shop-page
       cursor: pointer
 
       .shop-item-image
-        fill: currentColor
         > *
           height: 25rem
           width: 25rem
-        > .chest-el
-          position: relative
-          img
-            height: 16rem
-
 
       &:hover
         border-style: solid
+
+di-shop-item-details
+
+  .shop-item-icon
+    display: flex
+    flex-direction: column
+    align-items: center
+
+    height: 25rem
+    margin-bottom: 15rem
+    > *
+      height: 100%
+
+  .chest-details
+    display: flex
+    flex-direction: column
+
+    > *
+      margin-bottom: 6rem
+
+    .chest-image
+      align-self: center
+
+  .scaling-info
+    display: flex
+    flex-wrap: wrap
+    flex-direction: column
+    height: 7em
+    justify-content: space-between
+    padding: 1em 1em 0
+
+    > div
+      img
+        height: 1em
+
+.chest-el
+  position: relative
+  fill: currentColor
+  width: 25rem
+  height: 25rem
+  img
+    height: 50%
+    margin-top: -1rem

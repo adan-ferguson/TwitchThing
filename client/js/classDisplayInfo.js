@@ -26,6 +26,8 @@ export default function(className){
       orbIcon: rangerOrbIcon,
       color: '#55AA33'
     }
+  }else{
+    return null
   }
 
   obj.displayName = toDisplayName(className)

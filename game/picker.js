@@ -11,6 +11,7 @@ export default class Picker{
     this._registry = registry
     this._options = {
       valueFormula: pickable => 1,
+      levelFormula: chestLevel => chestLevel,
       lowerDeviation: 1,
       higherDeviation: 1,
       ...options
@@ -30,17 +31,20 @@ export default class Picker{
     return arr
   }
 
-  pick(average){
+  pick(chestLevel){
     const choices = this.list.map(pickable => {
-      const diff = this._options.valueFormula(pickable) - average
-      const weight = diff > 0 ?
-        Math.pow(this._options.higherDeviation, diff) :
-        Math.pow(this._options.lowerDeviation, -diff)
       return {
         value: pickable,
-        weight
+        weight: this.weight(this._options.valueFormula(pickable), chestLevel)
       }
     })
     return chooseOne(choices)
+  }
+
+  weight(value, chestLevel){
+    const diff = value - this._options.levelFormula(chestLevel)
+    return diff > 0 ?
+      Math.pow(this._options.higherDeviation, diff) :
+      Math.pow(this._options.lowerDeviation, -diff)
   }
 }
