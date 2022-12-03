@@ -31,7 +31,7 @@ export default class Picker{
     return arr
   }
 
-  pick(chestLevel){
+  pick(chestLevel, filterFn = null){
     const choices = this.list.map(pickable => {
       return {
         value: pickable,

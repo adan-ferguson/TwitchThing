@@ -57,9 +57,9 @@ export default class ShopItemDetails extends DIElement{
       this.style.color = info.color
     }
 
-    if(shopItemDef.type === 'chest'){
-      this.descriptionEl.append(this._dropChances(shopItemDef))
-    }
+    // if(shopItemDef.type === 'chest'){
+    //   this.descriptionEl.append(this._dropChances(shopItemDef))
+    // }
 
     this.goldValueEl.textContent = shopItemDef.price.gold
 

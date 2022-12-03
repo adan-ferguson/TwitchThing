@@ -2,6 +2,8 @@ import Page from '../page.js'
 import ShopItem from './shopItem.js'
 import ShopItemDetails from './shopItemDetails.js'
 import Modal from '../../modal.js'
+import fizzetch from '../../../fizzetch.js'
+import ChestOpenage from '../dungeon/chestOpenage.js'
 
 const HTML = `
 <div class='shop-items content-well'></div>
@@ -32,26 +34,38 @@ export default class ShopPage extends Page{
     })
   }
 
-  _showModal(shopitemDef){
+  _showModal(shopItemDef){
     const modal = new Modal()
-    const canBuy = this.user.inventory.gold >= shopitemDef.price.gold
-    const details = new ShopItemDetails().setItem(shopitemDef, canBuy)
+    const canBuy = this.user.inventory.gold >= shopItemDef.price.gold
+    const details = new ShopItemDetails().setItem(shopItemDef, canBuy)
     details.events.on('purchased', () => {
       modal.setOptions({
         closeOnUnderlayClick: false
       })
       buy()
     })
-    modal.innerPane.append(details)
+    modal.innerContent.append(details)
     modal.show()
 
-    function buy(){
-      // TODO: fizzetch
-      // TODO: make modal unclosable
-      // TODO: replace contents with chestOpenage
-      // modal.setOptions({
-      //   closeOnUnderlayClick: true
-      // })
+    async function buy(){
+      const result = await fizzetch('shop/buy', {
+        id: shopItemDef.id
+      })
+      if(result.chest){
+        const openage = new ChestOpenage(result.chest)
+        modal.innerContent.innerHTML = ''
+        modal.appendChild(openage)
+        openage.events.on('opened', () => {
+          modal.setOptions({
+            closeOnUnderlayClick: true
+          })
+        })
+      }else{
+        modal.innerContent.innerHTML = result.message
+        modal.setOptions({
+          closeOnUnderlayClick: true
+        })
+      }
     }
   }
 

@@ -225,9 +225,9 @@ export default class FighterInstancePane extends HTMLElement{
   _showFighterInfoModal(){
     const modal = new Modal()
     if(this.fighterInstance instanceof AdventurerInstance){
-      modal.innerPane.appendChild(new AdventurerInfo(this.fighterInstance))
+      modal.innerContent.appendChild(new AdventurerInfo(this.fighterInstance))
     }else{
-      modal.innerPane.appendChild(new MonsterInfo(this.fighterInstance))
+      modal.innerContent.appendChild(new MonsterInfo(this.fighterInstance))
     }
     modal.show()
   }

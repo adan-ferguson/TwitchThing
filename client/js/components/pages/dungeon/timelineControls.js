@@ -267,7 +267,7 @@ export default class TimelineControls extends HTMLElement{
   _showEventLogModal(){
     const wasRunning = this._ticker.running
     const modal = new Modal()
-    modal.innerPane.appendChild(this._eventLog)
+    modal.innerContent.appendChild(this._eventLog)
     modal.show()
     modal.addEventListener('hide', () => {
       if(wasRunning){

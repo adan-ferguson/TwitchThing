@@ -5,7 +5,7 @@ import Picker from '../../game/picker.js'
 const itemPicker = new Picker(BaseItems, {
   valueFormula: baseItemDef => baseItemDef.orbs,
   levelFormula: level => level / 4,
-  lowerDeviation: 0.9,
+  lowerDeviation: 0.95,
   higherDeviation: 0.45
 })
 
@@ -25,9 +25,11 @@ export function getItemPicker(){
   return itemPicker
 }
 
-export function generateRandomItemDef(chestLevel){
-  const baseType = itemPicker.pick(chestLevel)
-  return generateItemDef(baseType)
+export function chooseRandomBasicItem(chestLevel, specificClass = null){
+  const baseItem = itemPicker.pick(chestLevel, itemDef => {
+    return specificClass ? itemDef.group === specificClass : true
+  })
+  return BaseItems[baseItem.group][baseItem.name]
 }
 
 export function generateTestInventory(itemsObj){

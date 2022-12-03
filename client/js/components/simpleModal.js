@@ -11,7 +11,7 @@ export default class SimpleModal extends Modal{
 
   constructor(content = null, buttons = null){
     super()
-    this.innerPane.innerHTML = SIMPLE_MODAL_HTML
+    this.innerContent.innerHTML = SIMPLE_MODAL_HTML
     if(content){
       this.setContent(content)
     }

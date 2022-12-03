@@ -64,6 +64,7 @@ export async function finalize(dungeonRunDoc){
   async function saveUser(){
     const userDoc = await Users.findByID(dungeonRunDoc.adventurer.userID)
     dungeonRunDoc.rewards.chests?.forEach(chest => {
+
       chest.contents.items?.forEach(item => {
         userDoc.inventory.items[item.id] = item
       })
@@ -73,12 +74,12 @@ export async function finalize(dungeonRunDoc){
       userDoc.features.dungeonPicker = 1
     }
 
-    if(userDoc.inventory.adventurerSlots < floorToZone(dungeonRunDoc.floor) + 1){
-      userDoc.inventory.adventurerSlots = floorToZone(dungeonRunDoc.floor) + 1
-      emit(userDoc._id, 'show popup', {
-        message: 'New adventurer slot unlocked! You can make a new adventurer from the main page.'
-      })
-    }
+    // if(userDoc.inventory.adventurerSlots < floorToZone(dungeonRunDoc.floor) + 1){
+    //   userDoc.inventory.adventurerSlots = floorToZone(dungeonRunDoc.floor) + 1
+    //   emit(userDoc._id, 'show popup', {
+    //     message: 'New adventurer slot unlocked! You can make a new adventurer from the main page.'
+    //   })
+    // }
 
     if(!userDoc.accomplishments.firstRunFinished){
       const sword = generateItemDef({ group: 'fighter', name: 'sword' })

@@ -1,4 +1,5 @@
 import Purchases from '../collections/purchases.js'
+import { applyChestToUser, generateRandomChest } from '../dungeons/chests.js'
 
 const CHEST_BASE_PRICE = 250
 // const PRICE_GROWTH = 250
@@ -14,6 +15,16 @@ export async function chestShopItems(userDoc){
   })
 
   return chests
+}
+
+export async function shopChestPurchased(userDoc, chestData){
+  const chest = generateRandomChest({
+    class: chestData.class,
+    level: chestData.level,
+    type: 'shop'
+  })
+  applyChestToUser(userDoc, chest)
+  return chest
 }
 
 async function countPurchases(userID){

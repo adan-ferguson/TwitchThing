@@ -1,8 +1,9 @@
-import { fillArray, makeEl, toDisplayName, wait } from '../../../../../game/utilFunctions.js'
+import { fillArray, makeEl, wait } from '../../../../../game/utilFunctions.js'
 import LoadoutRow from '../../loadout/loadoutRow.js'
 import FighterItemDisplayInfo from '../../../fighterItemDisplayInfo.js'
 import AdventurerItemInstance from '../../../../../game/adventurerItemInstance.js'
 import { getChestDisplayInfo } from '../../../chestDisplayInfo.js'
+import DIElement from '../../diElement.js'
 
 const UNOPENED_HTML = `
 <span class="unopened">
@@ -19,7 +20,7 @@ const OPENED_HTML = `
 <div class="contents"></div>
 `
 
-export default class ChestOpenage extends HTMLElement{
+export default class ChestOpenage extends DIElement{
 
   constructor(chest, opened = false){
     super()
@@ -76,6 +77,8 @@ export default class ChestOpenage extends HTMLElement{
       row.setItem(info)
       contents.appendChild(row)
     })
+
+    this.events.emit('opened')
   }
 }
 

@@ -18,7 +18,7 @@ const DEFAULTS = {
   features: { // featureName: 0 = locked, 1 = unlocked & brand new, 2 = unlocked
     editLoadout: 0,
     dungeonPicker: 0,
-    shop: 0,
+    shop: 1,
     advClasses: {
       fighter: 2,
       tank: 2,
@@ -27,9 +27,12 @@ const DEFAULTS = {
   },
   inventory: {
     adventurerSlots: 1,
-    gold: 0,
+    gold: 10000,
     scrap: 0,
-    items: {}
+    items: {
+      basic: {},
+      crafted: {}
+    }
   }
 }
 
