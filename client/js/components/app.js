@@ -25,7 +25,11 @@ export default class App extends HTMLElement{
     this.startupParams = startupParams || {}
 
     this._fetchUser().then(() => {
-      getSocket().on('show popup', showPopup)
+      getSocket()
+        .on('show popup', showPopup)
+        .on('user updated', user => {
+          this._setUser(user)
+        })
       this.setPage(window.location.pathname, window.location.search, true)
       window.addEventListener('popstate', e => {
         this.setPage(window.location.pathname, window.location.search, true)
@@ -117,9 +121,13 @@ export default class App extends HTMLElement{
     this.setBackground(null, null)
   }
 
-  async _fetchUser(){
-    this.user = await fizzetch('/user')
+  _setUser(user){
+    this.user = user
     this.header.update()
+  }
+
+  async _fetchUser(){
+    this._setUser(await fizzetch('/user'))
   }
 }
 

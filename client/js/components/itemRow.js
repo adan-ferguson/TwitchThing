@@ -2,9 +2,12 @@ import { OrbsDisplayStyle } from './orbRow.js'
 
 const HTML = `
 <div>
-    <span class="icon"></span> <span class="name"></span>
+  <span class="icon"></span> <span class="name"></span>
 </div>
-<di-orb-row></di-orb-row>
+<div class="flex-columns-center">
+  <div class="count-tab displaynone"></div>
+  <di-orb-row></di-orb-row>
+</div>
 `
 
 export default class ItemRow extends HTMLElement{
@@ -28,6 +31,12 @@ export default class ItemRow extends HTMLElement{
   setItem(loadoutItem = {}){
     this._nameEl.textContent = loadoutItem?.displayName
     this._orbRow.setData(loadoutItem?.orbs)
+  }
+
+  setCount(count){
+    const countEl = this.querySelector('.count-tab')
+    countEl.classList.toggle('displaynone', count > 1 ? false : true)
+    countEl.textContent = 'x' + count
   }
 }
 

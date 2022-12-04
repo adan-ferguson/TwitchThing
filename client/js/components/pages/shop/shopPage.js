@@ -25,13 +25,7 @@ export default class ShopPage extends Page{
 
   async load(){
     const { shopItems } = await this.fetchData()
-    shopItems.forEach(shopItemDef => {
-      const item = new ShopItem().setItem(shopItemDef)
-      item.addEventListener('click', () => {
-        this._showModal(shopItemDef)
-      })
-      this._shopItemsEl.appendChild(item)
-    })
+    this._setupItems(shopItems)
   }
 
   _showModal(shopItemDef){
@@ -47,8 +41,8 @@ export default class ShopPage extends Page{
     modal.innerContent.append(details)
     modal.show()
 
-    async function buy(){
-      const result = await fizzetch('shop/buy', {
+    const buy = async () => {
+      const { result, newShop } = await fizzetch('shop/buy', {
         id: shopItemDef.id
       })
       if(result.chest){
@@ -66,7 +60,19 @@ export default class ShopPage extends Page{
           closeOnUnderlayClick: true
         })
       }
+      this._setupItems(newShop)
     }
+  }
+
+  _setupItems(shopItems){
+    this._shopItemsEl.innerHTML = ''
+    shopItems.forEach(shopItemDef => {
+      const item = new ShopItem().setItem(shopItemDef)
+      item.addEventListener('click', () => {
+        this._showModal(shopItemDef)
+      })
+      this._shopItemsEl.appendChild(item)
+    })
   }
 
 }

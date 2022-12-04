@@ -23,7 +23,10 @@ router.post('/', async (req, res, next) => {
 router.post('/buy', async(req, res, next) => {
   const itemId = validateParam(req.body.id)
   const result = await buyShopItem(req.user, itemId)
-  res.send(result)
+  res.send({
+    result,
+    newShop: await getUserShop(req.user)
+  })
 })
 
 export default router

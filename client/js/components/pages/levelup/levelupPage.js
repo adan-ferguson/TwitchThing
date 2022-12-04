@@ -10,7 +10,11 @@ const HTML = `
 <div class="content-rows">
   <div class="flex-rows flex-no-grow">
     <div class="text">Select a Bonus</div>
-    <button class="reroll">Reroll</button>
+    <button class="reroll">
+      <span>Reroll</span>
+      <span class="gold-value"></span>
+      <img src="/assets/icons/gold.svg">
+    </button>
   </div>
   <div class="options flex-rows"></div>
 </div>
@@ -44,12 +48,13 @@ export default class LevelupPage extends Page{
   }
 
   async load(){
-    const { adventurer } = await this.fetchData()
+    const { adventurer, rerollCost } = await this.fetchData()
     if(!adventurer.nextLevelUp){
       return this.redirectTo(AdventurerPage.path(this.adventurerID))
     }
     this._adventurer = new AdventurerInstance(adventurer)
     this._setupNext(adventurer.nextLevelUp)
+    this._updateRerollCost(rerollCost)
   }
 
   _setupNext(nextLevelUp){
@@ -93,11 +98,17 @@ export default class LevelupPage extends Page{
 
   async _reroll(){
     showLoader()
-    const { nextLevelUp } = await fizzetch(`/game/adventurer/${this.adventurerID}/rerollbonus`)
+    const { nextLevelUp, rerollCost } = await fizzetch(`/game/adventurer/${this.adventurerID}/rerollbonus`)
     await fadeOut(this._options)
     this._setupNext(nextLevelUp)
     hideLoader()
     fadeIn(this._options)
+    this._updateRerollCost(rerollCost)
+  }
+
+  _updateRerollCost(cost){
+    this.querySelector('.reroll .gold-value').textContent = cost ? cost : 'Free'
+    this.querySelector('.reroll').classList.toggle('disabled', cost > this.user.inventory.gold)
   }
 }
 

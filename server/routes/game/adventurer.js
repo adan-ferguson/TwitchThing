@@ -5,7 +5,7 @@ import db  from '../../db.js'
 import Users from '../../collections/users.js'
 import { commitAdventurerLoadout } from '../../loadouts/adventurer.js'
 import { requireRegisteredUser, validateParam } from '../../validations.js'
-import { generateLevelup, rerollBonus, selectBonus } from '../../adventurer/bonuses.js'
+import { generateLevelup, getRerollCost, rerollBonus, selectBonus } from '../../adventurer/bonuses.js'
 import DungeonRuns from '../../collections/dungeonRuns.js'
 import AdventurerInstance from '../../../game/adventurerInstance.js'
 
@@ -97,7 +97,11 @@ verifiedRouter.post('/levelup', async(req, res) => {
       await Adventurers.save(req.adventurer)
     }
   }
-  res.send({ adventurer: req.adventurer, user: req.user })
+  res.send({
+    adventurer: req.adventurer,
+    user: req.user,
+    rerollCost: getRerollCost(req.adventurer)
+  })
 })
 
 verifiedRouter.post('/dismiss', async(req, res, next) => {
@@ -131,8 +135,10 @@ verifiedRouter.post('/selectbonus/:index', async(req, res, next) => {
 
 verifiedRouter.post('/rerollbonus', async(req, res, next) => {
   requireOwnsAdventurer(req)
-  // TODO: money cost
-  res.send({ nextLevelUp: await rerollBonus(req.adventurer) })
+  res.send({
+    nextLevelUp: await rerollBonus(req.user, req.adventurer),
+    rerollCost: getRerollCost(req.adventurer)
+  })
 })
 
 verifiedRouter.post('/previousruns', async(req, res, next) => {

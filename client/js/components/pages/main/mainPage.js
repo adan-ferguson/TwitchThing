@@ -79,19 +79,13 @@ export default class MainPage extends Page{
       rows.push(row)
     })
 
-    for(let i = adventurers.length; i < 3; i++){
-      if(slots > i){
-        const newAdventurerRow = new AdventurerRow()
-        rows.push(newAdventurerRow)
-        newAdventurerRow.classList.add('clickable')
-        newAdventurerRow.addEventListener('click', e => {
-          this._showNewAdventurerModal()
-        })
-      }else{
-        rows.push(wrapContent(`Reach floor ${1 + i * 10} to unlock.`, {
-          class: 'blank-row'
-        }))
-      }
+    for(let i = adventurers.length; i < slots; i++){
+      const newAdventurerRow = new AdventurerRow()
+      rows.push(newAdventurerRow)
+      newAdventurerRow.classList.add('clickable')
+      newAdventurerRow.addEventListener('click', e => {
+        this._showNewAdventurerModal()
+      })
     }
 
     adventurerList.setRows(rows)

@@ -16,11 +16,8 @@ export async function buyShopItem(userDoc, shopItemId){
   if(!shopItem){
     throw { message: 'Invalid shopItemId' }
   }
-  if(shopItem.price.gold > userDoc.inventory.gold){
-    throw { message: 'Can not afford shop item' }
-  }
 
-  userDoc.inventory.gold -= shopItem.price.gold
+  Users.spendGold(userDoc, shopItem.price.gold)
 
   let returnValue = {}
   if(shopItem.type === 'adventurerSlot'){
@@ -35,6 +32,6 @@ export async function buyShopItem(userDoc, shopItemId){
     timestamp: Date.now(),
     shopItem
   })
-  await Users.save(userDoc)
+  await Users.saveAndEmit(userDoc)
   return returnValue
 }

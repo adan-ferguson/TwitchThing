@@ -14,6 +14,7 @@ const DEFAULTS = {
   accomplishments: {
     deepestFloor: 1
   },
+  rerolls: 0,
   nextLevelUp: null
 }
 

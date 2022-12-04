@@ -10,7 +10,6 @@ const HTML = `
 <di-item-row></di-item-row>
 <div class="new-badge hidden">New!</div>
 <div class="hit-area"></div>
-<div class="count-tab displaynone"></div>
 `
 
 export default class LoadoutRow extends DIElement{
@@ -18,10 +17,6 @@ export default class LoadoutRow extends DIElement{
   _newBadge
   _usesCooldown
   _count = 1
-
-  _options = {
-    showCount: false
-  }
 
   loadoutItem
 
@@ -91,12 +86,8 @@ export default class LoadoutRow extends DIElement{
   }
 
   setCount(count){
-    // TODO: fix this
-    this._options.showCount = true
     this._count = count
-    const countEl = this.querySelector('.count-tab')
-    countEl.classList.toggle('displaynone', !this._options.showCount)
-    countEl.textContent = count + 'x'
+    this._itemRowEl.setCount(count)
     return this
   }
 

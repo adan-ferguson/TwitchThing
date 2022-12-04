@@ -82,10 +82,7 @@ export default class AdventurerLoadoutEditorPage extends Page{
   async load(){
     const { adventurer, items } = await this.fetchData()
     this.adventurer = adventurer
-    this.inventory.setup(
-      Object.values(items).map(itemDef => new FighterItemDisplayInfo(new AdventurerItemInstance(itemDef))),
-      adventurer
-    )
+    this.inventory.setup(items, adventurer)
     this.adventurerPane.setAdventurer(adventurer)
 
     setupEditable(this.inventory, this.adventurerPane.loadoutEl, {

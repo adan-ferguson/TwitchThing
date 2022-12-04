@@ -70,10 +70,7 @@ export default class ChestOpenage extends DIElement{
     console.log(basicItems)
     basicItems.forEach(({ itemDef, count }) => {
       const info = new FighterItemDisplayInfo(new AdventurerItemInstance(itemDef))
-      const row = new LoadoutRow().setItem(info)
-      if(count > 1){
-        row.setCount(count)
-      }
+      const row = new LoadoutRow().setItem(info).setCount(count)
       contents.appendChild(row)
     })
 

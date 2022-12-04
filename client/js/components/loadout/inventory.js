@@ -1,6 +1,8 @@
 import LoadoutRow from './loadoutRow.js'
 import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
 import AdventurerInstance from '../../../../game/adventurerInstance.js'
+import FighterItemDisplayInfo from '../../fighterItemDisplayInfo.js'
+import AdventurerItemInstance from '../../../../game/adventurerItemInstance.js'
 
 const HTML = `
 <div class="content-rows">
@@ -45,15 +47,28 @@ export default class Inventory extends HTMLElement{
 
   setup(items, adventurer){
     this.adventurer = adventurer
+
     const loadoutRows = []
-    Object.values(items).forEach(loadoutItem => {
-      if(loadoutItem){
+    Object.keys(items.basic).forEach(group => {
+      Object.keys(items.basic[group]).forEach(name => {
+        const info = new FighterItemDisplayInfo(new AdventurerItemInstance({ group, name }))
         const row = new LoadoutRow()
-        row.setItem(loadoutItem)
-        row.showNewBadge(loadoutItem.isNew)
+          .setItem(info)
+          .setCount(items.basic[group][name])
         loadoutRows.push(row)
-      }
+      })
     })
+
+    // TODO: crafted items
+    // Object.values(items).forEach(loadoutItem => {
+    //   if(loadoutItem){
+    //     const row = new LoadoutRow()
+    //     row.setItem(loadoutItem)
+    //     row.showNewBadge(loadoutItem.isNew)
+    //     loadoutRows.push(row)
+    //   }
+    // })
+
     this._updateSortAndFilter()
     this.list.setRows(loadoutRows)
   }

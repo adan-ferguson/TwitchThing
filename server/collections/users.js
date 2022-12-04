@@ -1,5 +1,7 @@
 import Adventurers from './adventurers.js'
 import Collection from './collection.js'
+import db from '../db.js'
+import { emit } from '../socketServer.js'
 
 const DEFAULTS = {
   _id: null,
@@ -145,6 +147,23 @@ Users.resetAll = async function(){
 Users.clearNewItems = async function(userDoc){
   Object.values(userDoc.inventory.items).forEach(item => item.isNew = false)
   await Users.save(userDoc)
+}
+
+Users.saveAndEmit = async function(doc){
+  const result = await this.save(doc)
+  emit(doc._id.toString(), 'user updated', Users.gameData(doc))
+  return result
+}
+
+/**
+ * Non-saving. Do this before granting the effect, because this will throw
+ * if user doesn't have enough gold.
+ */
+Users.spendGold = function(doc, price){
+  if(price > doc.inventory.gold){
+    throw { message: 'Not enough gold for transaction' }
+  }
+  doc.inventory.gold -= price
 }
 
 export default Users

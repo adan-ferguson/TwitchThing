@@ -7,7 +7,8 @@ const DEFAULTS = {
   result: null,
   fighter1: null,
   fighter2: null,
-  floor: 1
+  floor: 1,
+  params: {}
 }
 
 const Combats = new Collection('combats', DEFAULTS)
