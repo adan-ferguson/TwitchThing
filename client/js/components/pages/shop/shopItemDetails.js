@@ -16,10 +16,8 @@ const HTML = `
 <div class="shop-item-description"></div>
 <button class="buy-button">
   <span>Buy</span>
-  <div class="gold-span">
-    <img src="/assets/icons/gold.svg">
-    <span class="gold-value"></span>
-  </div>
+  <span class="gold-value"></span>
+  <img src="/assets/icons/gold.svg">
 </button>
 `
 

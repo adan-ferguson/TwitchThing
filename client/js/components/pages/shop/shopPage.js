@@ -54,7 +54,7 @@ export default class ShopPage extends Page{
       if(result.chest){
         const openage = new ChestOpenage(result.chest)
         modal.innerContent.innerHTML = ''
-        modal.appendChild(openage)
+        modal.innerContent.appendChild(openage)
         openage.events.on('opened', () => {
           modal.setOptions({
             closeOnUnderlayClick: true

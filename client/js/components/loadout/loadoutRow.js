@@ -2,7 +2,6 @@ import tippy from 'tippy.js'
 import SimpleModal from '../simpleModal.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
 import { ITEM_ROW_COLORS } from '../../colors.js'
-import { AbilityState } from '../../abilityDisplayInfo.js'
 import EffectDetails from '../effectDetails.js'
 import DIElement from '../diElement.js'
 
@@ -11,12 +10,18 @@ const HTML = `
 <di-item-row></di-item-row>
 <div class="new-badge hidden">New!</div>
 <div class="hit-area"></div>
+<div class="count-tab displaynone"></div>
 `
 
 export default class LoadoutRow extends DIElement{
 
   _newBadge
   _usesCooldown
+  _count = 1
+
+  _options = {
+    showCount: false
+  }
 
   loadoutItem
 
@@ -82,6 +87,17 @@ export default class LoadoutRow extends DIElement{
     this._itemRowEl.setItem(loadoutItem)
     this._tippy.enable()
     this.updateTooltip()
+    return this
+  }
+
+  setCount(count){
+    // TODO: fix this
+    this._options.showCount = true
+    this._count = count
+    const countEl = this.querySelector('.count-tab')
+    countEl.classList.toggle('displaynone', !this._options.showCount)
+    countEl.textContent = count + 'x'
+    return this
   }
 
   updateTooltip(){
@@ -132,6 +148,7 @@ export default class LoadoutRow extends DIElement{
     this.loadoutItem = null
     this._itemRowEl.setItem(null)
     this._tippy.disable()
+    return this
   }
 }
 

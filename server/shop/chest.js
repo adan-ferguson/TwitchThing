@@ -19,7 +19,7 @@ export async function chestShopItems(userDoc){
 
 export async function shopChestPurchased(userDoc, chestData){
   const chest = generateRandomChest({
-    class: chestData.class,
+    class: chestData.className,
     level: chestData.level,
     type: 'shop'
   })
@@ -35,7 +35,10 @@ async function countPurchases(userID){
   })
   const byType = {}
   purchases.forEach(purchase => {
-    const type = purchase.purchased.data?.type
+    if(purchase.shopItem.type !== 'chest'){
+      return
+    }
+    const type = purchase.shopItem.data.className
     if(!type){
       return
     }

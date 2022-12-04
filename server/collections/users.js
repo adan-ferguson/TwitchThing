@@ -27,7 +27,7 @@ const DEFAULTS = {
   },
   inventory: {
     adventurerSlots: 1,
-    gold: 10000,
+    gold: 100000,
     scrap: 0,
     items: {
       basic: {},

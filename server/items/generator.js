@@ -26,10 +26,9 @@ export function getItemPicker(){
 }
 
 export function chooseRandomBasicItem(chestLevel, specificClass = null){
-  const baseItem = itemPicker.pick(chestLevel, itemDef => {
+  return itemPicker.pick(chestLevel, itemDef => {
     return specificClass ? itemDef.group === specificClass : true
   })
-  return BaseItems[baseItem.group][baseItem.name]
 }
 
 export function generateTestInventory(itemsObj){

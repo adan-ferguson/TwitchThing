@@ -9,6 +9,7 @@ import { getErrorLogTail, getOutputLogTail } from '../../logging.js'
 import { generateSimulatedCombat } from '../../combat.js'
 import { getAllMonsters } from '../../dungeons/monsters.js'
 import { generateTestInventory } from '../../items/generator.js'
+import Purchases from '../../collections/purchases.js'
 
 const router = express.Router()
 
@@ -50,7 +51,8 @@ router.post('/runcommand', async(req, res) => {
       Users.resetAll(),
       Adventurers.removeAll(),
       DungeonRuns.removeAll(),
-      Combats.removeAll()
+      Combats.removeAll(),
+      Purchases.removeAll()
     ])
     result = 'Everything has been successfully reset.'
   }

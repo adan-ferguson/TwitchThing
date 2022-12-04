@@ -29,13 +29,7 @@ export default class ChestOpenage extends DIElement{
     this.style.color = chestDisplayInfo.color
 
     if(!opened){
-      this.innerHTML = UNOPENED_HTML
-      const starsHTML = fillArray(() => '<i class="fa-solid fa-star"></i>', chest.stars ?? 0).join('')
-      this.querySelectorAll('.stars').forEach(el => {
-        el.innerHTML = starsHTML
-      })
-      this.classList.add('clickable', 'glow')
-      this.addEventListener('click', () => this.open())
+      this._setupUnopened()
     }else{
       this.open(false)
     }
@@ -67,19 +61,48 @@ export default class ChestOpenage extends DIElement{
     const contents = this.querySelector('.contents')
     if(this._chest.contents.gold){
       contents.appendChild(makeEl({
-        text: `${this._chest.contents.gold} gold`,
+        content: `<span class="gold-contents"><img src="/assets/icons/gold.svg"> ${this._chest.contents.gold}</span>`,
         class: 'gold-amount'
       }))
     }
-    this._chest.contents.items?.forEach(itemDef => {
-      const row = new LoadoutRow()
+
+    const basicItems = arrayOfItems(this._chest.contents.items.basic)
+    console.log(basicItems)
+    basicItems.forEach(({ itemDef, count }) => {
       const info = new FighterItemDisplayInfo(new AdventurerItemInstance(itemDef))
-      row.setItem(info)
+      const row = new LoadoutRow().setItem(info)
+      if(count > 1){
+        row.setCount(count)
+      }
       contents.appendChild(row)
     })
 
     this.events.emit('opened')
   }
+
+  _setupUnopened(){
+    const displayInfo = getChestDisplayInfo(this._chest)
+    this.innerHTML = UNOPENED_HTML
+    const starsHTML = fillArray(() => displayInfo.icon, displayInfo.stars ?? 0).join('')
+    this.querySelectorAll('.stars').forEach(el => {
+      el.innerHTML = starsHTML
+    })
+    this.classList.add('clickable', 'glow')
+    this.addEventListener('click', () => this.open())
+  }
 }
 
 customElements.define('di-chest-openage', ChestOpenage )
+
+function arrayOfItems(obj){
+  const arr = []
+  for(let group in obj){
+    for(let name in obj[group]){
+      arr.push({
+        itemDef: { group, name },
+        count: obj[group][name]
+      })
+    }
+  }
+  return arr
+}
