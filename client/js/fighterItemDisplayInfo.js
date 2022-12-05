@@ -30,4 +30,16 @@ export default class FighterItemDisplayInfo{
   makeDetails(){
     return new ItemFullDetails(this.itemInstance)
   }
+
+  equals(fidi){
+    if(this === fidi){
+      return true
+    }
+    if(this.itemInstance.isBasic && fidi.itemInstance.isBasic){
+      if(this.itemInstance.baseItem === fidi.itemInstance.baseItem){
+        return true
+      }
+    }
+    return false
+  }
 }

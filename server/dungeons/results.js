@@ -7,6 +7,7 @@ import { generateItemDef } from '../items/generator.js'
 import DungeonRuns from '../collections/dungeonRuns.js'
 import { floorToZone } from '../../game/zones.js'
 import { advXpToLevel } from '../../game/adventurerInstance.js'
+import { applyChestToUser } from './chests.js'
 
 const REWARDS_TYPES = {
   xp: 'int',
@@ -62,24 +63,15 @@ export async function finalize(dungeonRunDoc){
   }
 
   async function saveUser(){
+
     const userDoc = await Users.findByID(dungeonRunDoc.adventurer.userID)
     dungeonRunDoc.rewards.chests?.forEach(chest => {
-
-      chest.contents.items?.forEach(item => {
-        userDoc.inventory.items[item.id] = item
-      })
+      applyChestToUser(userDoc, chest)
     })
 
     if(!userDoc.features.dungeonPicker && dungeonRunDoc.floor > 1){
       userDoc.features.dungeonPicker = 1
     }
-
-    // if(userDoc.inventory.adventurerSlots < floorToZone(dungeonRunDoc.floor) + 1){
-    //   userDoc.inventory.adventurerSlots = floorToZone(dungeonRunDoc.floor) + 1
-    //   emit(userDoc._id, 'show popup', {
-    //     message: 'New adventurer slot unlocked! You can make a new adventurer from the main page.'
-    //   })
-    // }
 
     if(!userDoc.accomplishments.firstRunFinished){
       const sword = generateItemDef({ group: 'fighter', name: 'sword' })

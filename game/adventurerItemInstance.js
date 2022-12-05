@@ -18,6 +18,10 @@ export default class AdventurerItemInstance extends FighterItemInstance{
     this._itemDef = itemDef
   }
 
+  get baseItem(){
+    return Items[this._itemDef.group][this._itemDef.name] ?? {}
+  }
+
   get id(){
     return this._itemDef.id
   }

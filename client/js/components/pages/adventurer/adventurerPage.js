@@ -88,7 +88,8 @@ export default class AdventurerPage extends Page{
     this._setupTopRightButton(user)
 
     const showButtons = user.accomplishments.deepestFloor <= 1
-    this._prevRuns.classList.toggle('displaynone', showButtons)
+    // TODO: get this working again later
+    this._prevRuns.classList.toggle('displaynone', true) //showButtons)
     this.querySelector('.scary-buttons').classList.toggle('displaynone', showButtons)
   }
 
@@ -120,9 +121,7 @@ export default class AdventurerPage extends Page{
       })
     }else{
       const quickDungeon = user.features.dungeonPicker
-      this._topRightButton.innerHTML = makeEl({
-        text: quickDungeon ? 'Enter Dungeon' : 'Prepare to Enter Dungeon'
-      })
+      this._topRightButton.textContent = 'Enter Dungeon'
       this._topRightButton.addEventListener('click', () => {
         if(quickDungeon){
           this.redirectTo(DungeonPickerPage.path(this.adventurerID))

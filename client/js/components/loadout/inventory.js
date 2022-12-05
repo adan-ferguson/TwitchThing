@@ -76,7 +76,7 @@ export default class Inventory extends HTMLElement{
       return
     }
     if(item.itemInstance.isBasic){
-      const row = this.list.findRow(row => row.loadoutItem === item)
+      const row = this.list.findRow(row => row.loadoutItem.equals(item))
       if(row){
         row.count++
         return
