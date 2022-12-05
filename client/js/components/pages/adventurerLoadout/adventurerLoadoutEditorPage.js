@@ -3,8 +3,6 @@ import AdventurerPage from '../adventurer/adventurerPage.js'
 import fizzetch from '../../../fizzetch.js'
 import setupEditable from '../../loadout/setupEditable.js'
 import SimpleModal from '../../simpleModal.js'
-import FighterItemDisplayInfo from '../../../fighterItemDisplayInfo.js'
-import AdventurerItemInstance from '../../../../../game/adventurerItemInstance.js'
 
 const HTML = `
 <div class="content-columns">
@@ -105,7 +103,7 @@ export default class AdventurerLoadoutEditorPage extends Page{
   async _save(){
     this._saving = true
     this._updateSaveButton()
-    const items = this.adventurerPane.loadoutEl.objs.map(item => item?.id)
+    const items = this.adventurerPane.loadoutEl.objs.map(item => item ? item.id ?? item.itemDef : null)
     const { error, success } = await fizzetch('/game' + this.path + '/save', {
       items
     })

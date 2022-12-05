@@ -10,7 +10,7 @@ const HTML = `
 <div class="content-rows">
   <div class="flex-rows flex-no-grow">
     <div class="text">Select a Bonus</div>
-    <button class="reroll">
+    <button class="reroll buy-button">
       <span>Reroll</span>
       <span class="gold-value"></span>
       <img src="/assets/icons/gold.svg">
@@ -107,8 +107,8 @@ export default class LevelupPage extends Page{
   }
 
   _updateRerollCost(cost){
-    this.querySelector('.reroll .gold-value').textContent = cost ? cost : 'Free'
-    this.querySelector('.reroll').classList.toggle('disabled', cost > this.user.inventory.gold)
+    this.querySelector('.reroll .gold-value').textContent = cost
+    this.querySelector('.reroll').toggleAttribute('disabled', cost > this.user.inventory.gold)
   }
 }
 

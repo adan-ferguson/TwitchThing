@@ -1,6 +1,5 @@
 import LoadoutRow from './loadoutRow.js'
 import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
-import AdventurerInstance from '../../../../game/adventurerInstance.js'
 import FighterItemDisplayInfo from '../../fighterItemDisplayInfo.js'
 import AdventurerItemInstance from '../../../../game/adventurerItemInstance.js'
 
@@ -10,7 +9,6 @@ const HTML = `
         <div class="input-group">
             Sort By:
             <label><input type="radio" name="sortBy" value="class">Class</label>
-            <label><input type="radio" name="sortBy" value="date">Date Acquired</label>
         </div>
         <label><input type="checkbox" name="hideOther"> Hide Unequippable</label>
     </div>
@@ -77,6 +75,13 @@ export default class Inventory extends HTMLElement{
     if(!item){
       return
     }
+    if(item.itemInstance.isBasic){
+      const row = this.list.findRow(row => row.loadoutItem === item)
+      if(row){
+        row.count++
+        return
+      }
+    }
     item.itemInstance.owner = null
     const row = new LoadoutRow()
     row.setItem(item)
@@ -85,7 +90,14 @@ export default class Inventory extends HTMLElement{
 
   removeItem(item){
     const row = this.list.findRow(row => row.loadoutItem === item)
-    this.list.removeRow(row)
+    if(!row){
+      return
+    }
+    if(item.itemInstance.isBasic && row.count > 1){
+      row.count--
+    }else{
+      this.list.removeRow(row)
+    }
   }
 
   _setupFilteringOptions(){
@@ -124,19 +136,21 @@ export default class Inventory extends HTMLElement{
 }
 
 function isCompatible(adventurer, itemInstance){
-  const ai = new AdventurerInstance({
-    ...adventurer,
-    items: [itemInstance.itemDef]
-  })
-  return ai.orbs.isValid
+  const itemClass = itemInstance.itemDef.group
+  return adventurer.bonuses[itemClass] ? true : false
+  // const ai = new AdventurerInstance({
+  //   ...adventurer,
+  //   items: [itemInstance.itemDef]
+  // })
+  // return ai.orbs.isValid
 }
 
 const SORT_FUNCTIONS = {
   date: null, // Default sorting is by date, so unsorted is just as good
   class: (rowA, rowB) => {
 
-    const orbsA = rowA.loadoutItem.orbs
-    const orbsB = rowB.loadoutItem.orbs
+    const orbsA = rowA.loadoutItem.orbs._maxOrbs
+    const orbsB = rowB.loadoutItem.orbs._maxOrbs
 
     const classesA = Object.keys(orbsA)
     const classesB = Object.keys(orbsB)

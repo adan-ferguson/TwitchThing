@@ -7,74 +7,118 @@
  */
 import AdventurerInstance from '../../game/adventurerInstance.js'
 
-export function commitAdventurerLoadout(adventurer, user, itemIDs){
-
-  validateDuplicates(itemIDs)
-
-  const currentLoadout = adventurer.items
-  const currentInventory = user.inventory.items
-  const loadoutInfo = getItems(currentLoadout, itemIDs)
-  const invInfo = getItems(currentInventory, loadoutInfo.missingIDs)
-
-  if(invInfo.missingIDs.length){
-    throw { code: 403, error: `Item(s) not found in user's inventory, User: ${user._id}, Items: ${JSON.stringify(invInfo.missingIDs)}` }
-  }
-
-  updateLoadout(currentLoadout, currentInventory, itemIDs)
-  updateInventory(currentInventory, loadoutInfo.unmatchedItems, invInfo.matchedItems.map(item => item.id))
-
+export function commitAdventurerLoadout(adventurer, user, newItems){
+  const basicItemDiff = calcBasicItemDiff(adventurer.items, newItems)
+  adventurer.items = newItems
+  validateAndUpdateInventoryBasics(user.inventory.items.basic, basicItemDiff)
   validateLoadout(adventurer)
+
+  // TODO: incorporate this with non-basic items
+  // validateDuplicates(items)
+
+  // const currentInventory = user.inventory.items.basic
+  // const loadoutInfo = getItems(currentLoadout, items)
+  // const invInfo = getItems(currentInventory, loadoutInfo.missingIDs)
+
+  // if(invInfo.missingIDs.length){
+  //   throw { code: 403, error: `Item(s) not found in user's inventory, User: ${user._id}, Items: ${JSON.stringify(invInfo.missingIDs)}` }
+  // }
+
+  // updateLoadout(currentLoadout, currentInventory, items)
+  // updateInventory(currentInventory, loadoutInfo.unmatchedItems, invInfo.matchedItems.map(item => item.id))
 }
 
-function getItems(itemArrayOrObj, ids){
-  const itemObj = toObj(itemArrayOrObj)
-  const matchedItems = []
-  const missingIDs = []
-  ids.forEach(id => {
-    if(!id){
-      return
-    }
-    const item = itemObj[id]
-    if(item){
-      matchedItems.push(item)
-      delete itemObj[id]
-    }else{
-      missingIDs.push(id)
-    }
-  })
-
-  return { matchedItems, unmatchedItems: Object.values(itemObj), missingIDs }
-}
-
-function updateInventory(inventory, itemsToAdd, idsToRemove){
-  idsToRemove.forEach(id => delete inventory[id])
-  itemsToAdd.forEach(item => inventory[item.id] = item)
-}
-
-function updateLoadout(loadout, inventory, ids){
-  const loadoutObj = toObj(loadout)
-  for(let i = 0; i < ids.length; i++){
-    const id = ids[i]
-    if(!id){
-      loadout[i] = null
-    }else{
-      loadout[i] = loadoutObj[id] || inventory[id]
-    }
-  }
-}
-
-function validateDuplicates(itemIDs){
-  const obj = {}
-  for(let i = 0; i < itemIDs.length; i++){
-    const id = itemIDs[i]
-    if(id){
-      if(obj[id]){
-        throw { code: 403, error: 'Duplication detected.' }
+function calcBasicItemDiff(oldLoadout, newLoadout){
+  const diff = {}
+  count(oldLoadout)
+  count(newLoadout, -1)
+  function count(items, increment = 1){
+    items.filter(i => i).forEach(({ group, name }) => {
+      if(!diff[group]){
+        diff[group] = {}
       }
-      obj[id] = 1
+      if(!diff[group][name]){
+        diff[group][name] = 0
+      }
+      diff[group][name] += increment
+    })
+  }
+  return diff
+}
+
+function validateAndUpdateInventoryBasics(invBasics, diff){
+  for(let group in diff){
+    for(let name in diff[group]){
+      if(!invBasics[group]){
+        invBasics[group] = {}
+      }
+      if(!invBasics[group][name]){
+        invBasics[group][name] = 0
+      }
+      invBasics[group][name] += diff[group][name]
+      if(invBasics[group][name] < 0){
+        throw `Not enough of basic item: ${group} - ${name}`
+      }
+    }
+  }
+  for(let group in invBasics){
+    for(let name in invBasics[group]){
+      if(invBasics[group][name] === 0){
+        delete invBasics[group][name]
+      }
     }
   }
 }
+
+// function getItems(itemArrayOrObj, ids){
+//   const itemObj = toObj(itemArrayOrObj)
+//   const matchedItems = []
+//   const missingIDs = []
+//   ids.forEach(id => {
+//     if(!id){
+//       return
+//     }
+//     const item = itemObj[id]
+//     if(item){
+//       matchedItems.push(item)
+//       delete itemObj[id]
+//     }else{
+//       missingIDs.push(id)
+//     }
+//   })
+//
+//   return { matchedItems, unmatchedItems: Object.values(itemObj), missingIDs }
+// }
+//
+// function updateInventory(inventory, itemsToAdd, idsToRemove){
+//   idsToRemove.forEach(id => delete inventory[id])
+//   itemsToAdd.forEach(item => inventory[item.id] = item)
+// }
+//
+// function updateLoadout(loadout, inventory, ids){
+//   const loadoutObj = toObj(loadout)
+//   for(let i = 0; i < ids.length; i++){
+//     const id = ids[i]
+//     if(!id){
+//       loadout[i] = null
+//     }else{
+//       loadout[i] = loadoutObj[id] || inventory[id]
+//     }
+//   }
+// }
+//
+// function validateDuplicates(itemIDs){
+//   const obj = {}
+//   for(let i = 0; i < itemIDs.length; i++){
+//     const id = itemIDs[i]
+//     if(id){
+//       if(obj[id]){
+//         throw { code: 403, error: 'Duplication detected.' }
+//       }
+//       obj[id] = 1
+//     }
+//   }
+// }
 
 function validateLoadout(adventurer){
   const orbsData = new AdventurerInstance(adventurer).orbs
@@ -83,11 +127,11 @@ function validateLoadout(adventurer){
   }
 }
 
-function toObj(arrayOrObj, key = 'id'){
-  if(Array.isArray(arrayOrObj)){
-    const itemObj = {}
-    arrayOrObj.filter(o => o).forEach(o => itemObj[o[key]] = o)
-    return itemObj
-  }
-  return { ...arrayOrObj }
-}
+// function toObj(arrayOrObj, key = 'id'){
+//   if(Array.isArray(arrayOrObj)){
+//     const itemObj = {}
+//     arrayOrObj.filter(o => o).forEach(o => itemObj[o[key]] = o)
+//     return itemObj
+//   }
+//   return { ...arrayOrObj }
+// }

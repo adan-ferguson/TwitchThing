@@ -52,7 +52,7 @@ export async function selectBonus(adventurerDoc, index){
 }
 
 export function getRerollCost(adventurerDoc){
-  return adventurerDoc.rerolls > 0 ? oneTwoFive(adventurerDoc.rerolls + 2) * 10: 0
+  return adventurerDoc.rerolls > 0 ? oneTwoFive(adventurerDoc.rerolls + 1) * 10: 0
 }
 
 export async function rerollBonus(userDoc, adventurerDoc){
@@ -65,6 +65,7 @@ export async function rerollBonus(userDoc, adventurerDoc){
   Users.saveAndEmit(userDoc)
 
   adventurerDoc.nextLevelUp = await generateLevelup(adventurerDoc)
+  adventurerDoc.rerolls++
   await Adventurers.save(adventurerDoc)
   return adventurerDoc.nextLevelUp
 }

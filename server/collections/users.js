@@ -130,6 +130,7 @@ Users.resetAll = async function(){
   const users = await Users.find()
   await Promise.all(users.map(async userDoc => {
     await Users.save({
+      ...DEFAULTS,
       _id: userDoc._id,
       magicID: userDoc.magicID,
       iat: userDoc.iat,

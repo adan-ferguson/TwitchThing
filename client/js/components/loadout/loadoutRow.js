@@ -69,6 +69,15 @@ export default class LoadoutRow extends DIElement{
     return tooltip
   }
 
+  get count(){
+    return this._count
+  }
+
+  set count(val){
+    this._count = val
+    this._itemRowEl.setCount(val)
+  }
+
   showNewBadge(show){
     this._newBadge.classList.toggle('hidden', !show)
   }
@@ -86,8 +95,7 @@ export default class LoadoutRow extends DIElement{
   }
 
   setCount(count){
-    this._count = count
-    this._itemRowEl.setCount(count)
+    this.count = count
     return this
   }
 

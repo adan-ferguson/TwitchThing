@@ -1,11 +1,11 @@
 import { OrbsDisplayStyle } from './orbRow.js'
 
 const HTML = `
-<div>
-  <span class="icon"></span> <span class="name"></span>
-</div>
 <div class="flex-columns-center">
   <div class="count-tab displaynone"></div>
+  <span class="name"></span>
+</div>
+<div class="flex-columns-center">
   <di-orb-row></di-orb-row>
 </div>
 `

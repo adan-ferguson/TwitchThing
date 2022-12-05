@@ -43,4 +43,8 @@ export default class AdventurerItemInstance extends FighterItemInstance{
   get slotTags(){
     return this.slotBonus?.tags ?? []
   }
+
+  get isBasic(){
+    return true
+  }
 }

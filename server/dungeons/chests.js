@@ -49,7 +49,6 @@ export function generateRandomChest(options = {}){
       chest.contents.gold += addGold(valueRemaining)
     }
   }
-  console.log(chest.contents.items)
 
   return chest
 }
@@ -80,7 +79,7 @@ function multiplyItem(valueRemaining, itemLevel){
 }
 
 function toValue(count, itemLevel){
-  const baseVal = itemLevel * 4
+  const baseVal = itemLevel * 5
   return baseVal * count + baseVal * count * (count - 1) / 4
 }
 

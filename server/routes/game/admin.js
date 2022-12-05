@@ -56,18 +56,6 @@ router.post('/runcommand', async(req, res) => {
     ])
     result = 'Everything has been successfully reset.'
   }
-  if(cmd === 'itemz'){
-    const userDoc = await Users.findOne({
-      query: {
-        'auth.type': 'google',
-        'auth.email': 'mrdungeorama@gmail.com'
-      }
-    })
-    userDoc.inventory.items = {}
-    generateTestInventory(userDoc.inventory.items)
-    await Users.save(userDoc)
-    result = 'Itemz loaded'
-  }
   res.status(200).send({ result })
 })
 
