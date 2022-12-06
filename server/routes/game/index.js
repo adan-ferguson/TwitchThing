@@ -3,6 +3,7 @@ import express from 'express'
 import adventurerRouter from './adventurer.js'
 import dungeonRunRouter from './dungeonrun.js'
 import shopRouter from './shop.js'
+import workshopRouter from './workshop.js'
 
 import Adventurers from '../../collections/adventurers.js'
 import { getAllActiveRuns, getRunData } from '../../dungeons/dungeonRunner.js'
@@ -16,6 +17,7 @@ router.use('/adventurer', adventurerRouter)
 router.use('/dungeonrun', dungeonRunRouter)
 router.use('/admin', adminRouter)
 router.use('/shop', shopRouter)
+router.use('/workshop', workshopRouter)
 
 router.post('/', async(req, res) => {
   requireRegisteredUser(req)

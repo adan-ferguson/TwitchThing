@@ -11,6 +11,7 @@ import LevelupPage from './pages/levelup/levelupPage.js'
 import AdventurerLoadoutEditorPage from './pages/adventurerLoadout/adventurerLoadoutEditorPage.js'
 import DungeonPickerPage from './pages/dungeonPicker/dungeonPickerPage.js'
 import ShopPage from './pages/shop/shopPage.js'
+import WorkshopPage from './pages/workshop/workshopPage.js'
 
 const pages = [
   AdventurerPage,
@@ -23,7 +24,8 @@ const pages = [
   LevelupPage,
   AdventurerLoadoutEditorPage,
   DungeonPickerPage,
-  ShopPage
+  ShopPage,
+  WorkshopPage
 ]
 
 export function pathToPage(location, queryStringArgs = {}){

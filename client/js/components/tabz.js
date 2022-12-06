@@ -1,9 +1,11 @@
+import DIElement from './diElement.js'
+
 const HTML = prevHTML => `
 <div class="tabz-list"></div>
 <div class="tabz-content">${prevHTML}</div>
 `
 
-export default class Tabz extends HTMLElement{
+export default class Tabz extends DIElement{
 
   constructor(){
     super()
@@ -25,6 +27,10 @@ export default class Tabz extends HTMLElement{
       }
     })
     this._setTab(first)
+  }
+
+  get currentTab(){
+    return this.querySelector('.tabz-content .active')
   }
 
   getContentEl(name){

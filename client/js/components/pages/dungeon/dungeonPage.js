@@ -194,11 +194,9 @@ export default class DungeonPage extends Page{
     this._timelineEl.pause()
     this._adventurerResultsPane.classList.remove('displaynone')
     this._adventurerPane.classList.add('displaynone')
-    if(!this.watching){
-      fizzetch(`/game/dungeonrun/${this._dungeonRunID}/finalize`)
-    }
     if(this.isMyAdventurer){
-      results.showFinalizerButton(() => {
+      results.showFinalizerButton(async () => {
+        await fizzetch(`/game/dungeonrun/${this._dungeonRunID}/finalize`)
         this.redirectTo(AdventurerPage.path(this.adventurer._id))
       })
     }

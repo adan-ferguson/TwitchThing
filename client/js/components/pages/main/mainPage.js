@@ -4,10 +4,10 @@ import DIForm from '../../form.js'
 import FormModal from '../../formModal.js'
 import { getSocket, joinSocketRoom, leaveSocketRoom } from '../../../socketClient.js'
 import '../../list.js'
-import { wrapContent } from '../../../../../game/utilFunctions.js'
 import LiveDungeonMapPage from '../liveDungeonMap/liveDungeonMapPage.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import ShopPage from '../shop/shopPage.js'
+import WorkshopPage from '../workshop/workshopPage.js'
 
 const HTML = `
 <div class="content-rows">
@@ -17,7 +17,10 @@ const HTML = `
     </div>
     <div class="content-rows">
       <div class="content-well shop clickable">
-        Shop
+        Market
+      </div>
+      <div class="content-well workshop clickable">
+        Workshop
       </div>
       <div class="content-well live-dungeon-map clickable">
         View Live Dungeon Map
@@ -38,10 +41,17 @@ export default class MainPage extends Page{
     this.querySelector('.live-dungeon-map').addEventListener('click', () => {
       this.redirectTo(LiveDungeonMapPage.path())
     })
+
     this._shopEl = this.querySelector('.shop')
     this._shopEl.addEventListener('click', () => {
       this.redirectTo(ShopPage.path())
     })
+
+    this._workshopEl = this.querySelector('.workshop')
+    this._workshopEl.addEventListener('click', () => {
+      this.redirectTo(WorkshopPage.path())
+    })
+
     this.querySelector('.adventurer-list')
       .setOptions({
         pageSize: 5
@@ -57,8 +67,14 @@ export default class MainPage extends Page{
 
     if(this.user.features.shop === 1){
       this._shopEl.classList.add('glow')
-    }else if(!this.user.features.shop && 0){
+    }else if(!this.user.features.shop){
       this._shopEl.classList.add('displaynone')
+    }
+
+    if(this.user.features.workshop === 1){
+      this._workshopEl.classList.add('glow')
+    }else if(!this.user.features.workshop && 0){
+      this._workshopEl.classList.add('displaynone')
     }
   }
 
