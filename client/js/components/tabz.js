@@ -48,6 +48,7 @@ export default class Tabz extends DIElement{
       }
       tabContent.classList.toggle('active', match)
     })
+    this.events.emit('changed')
   }
 }
 customElements.define('di-tabz', Tabz)

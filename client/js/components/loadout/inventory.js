@@ -42,7 +42,6 @@ export default class Inventory extends DIElement{
   get defaultOptions(){
     return {
       disabledFn: null,
-      select: null,
       // filterFn: null,
       // sortFn: null,
       // adventurer: null
@@ -67,9 +66,6 @@ export default class Inventory extends DIElement{
         row.setCount(count)
       }
       loadoutRows.push(row)
-      row.addEventListener('click', () => {
-        this._selectRow(row)
-      })
     }
 
     this.adventurer = adventurer
@@ -162,20 +158,6 @@ export default class Inventory extends DIElement{
       filterFn: this.filterFn,
       showFiltered: !this._filterSortOptions.hideOther
     })
-  }
-
-  _selectRow(row){
-    this.list.querySelector('.selected')?.classList.remove('selected')
-    if(!this._options.select){
-      return
-    }
-    if(row.classList.contains('selected')){
-      return
-    }
-    row.classList.add('selected')
-    if(_.isFunction(this._options.select)){
-      this._options.select(row)
-    }
   }
 }
 

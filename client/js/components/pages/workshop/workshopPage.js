@@ -13,10 +13,8 @@ export default class WorkshopPage extends Page{
   constructor(){
     super()
     this.innerHTML = HTML
-    this.tabz.events.on('changing', async newTab => {
-      showLoader()
-      await this._loadTab(newTab)
-      hideLoader()
+    this.tabz.events.on('changed', () => {
+      this._loadTab()
     })
   }
 
@@ -32,13 +30,16 @@ export default class WorkshopPage extends Page{
   }
 
   async load(){
-    await this._loadTab(this.tabz.currentTab)
+    this._loadTab()
   }
 
-  async _loadTab(tab){
+  async _loadTab(){
+    showLoader()
+    const tab = this.tabz.currentTab
     tab.innerHTML = ''
     const { data, firstTime } = await this.fetchData()
     tab.setData(data)
+    hideLoader()
 
     if(firstTime){
       // show something?

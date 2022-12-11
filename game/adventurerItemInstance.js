@@ -65,7 +65,7 @@ export default class AdventurerItemInstance extends FighterItemInstance{
 
     const components = []
     components.push( { type: 'scrap', count: this.baseItem.orbs * this.level })
-    components.push({ type: 'item', itemDef: this.itemDef, count: this.level })
+    components.push({ type: 'item', itemDef: this.itemDef, count: Math.max(2, this.level) })
 
     return { upgradedItemDef, components }
   }

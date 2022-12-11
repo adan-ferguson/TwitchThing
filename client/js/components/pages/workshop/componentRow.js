@@ -33,7 +33,7 @@ export default class ComponentRow extends DIElement{
       const classInfo = classDisplayInfo(component.itemDef.group)
       const invCount = inventory.items.basic[component.itemDef.group]?.[component.itemDef.name] ?? 0
       this.innerHTML = HTML(`<img class="component-icon" src="${classInfo.orbIcon}">`,
-        instance.displayName, invCount, component.count)
+        'Lvl. 1 ' + instance.displayName, invCount, component.count)
     }
     return this
   }

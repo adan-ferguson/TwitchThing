@@ -7,7 +7,12 @@ di-loadout
 di-inventory
   .filtering-options
     margin-bottom: 8rem !important
-    //height: 100rem
+
+    &.selected > di-bar
+      background-color: #dfeaff
+    &:hover
+      > di-bar
+        background-color: #b8ffb8
 
 .editable
   di-loadout-row

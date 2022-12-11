@@ -5,11 +5,7 @@ import ComponentRow from './componentRow.js'
 const HTML = `
 <div class="content-columns">
   <div class="content-well fill-contents">
-    <div class="supertitle flex-no-grow">Choose Item To Upgrade</div>
-    <select class="adventurer-dropdown flex-no-grow">
-      <option value="0">In Inventory</option>
-    </select>
-    <di-inventory class="fill-contents"></di-inventory>
+    <di-workshop-inventory></di-workshop-inventory>
   </div>
   <div class="content-rows">
     <div class="content-no-grow right-column">
@@ -24,58 +20,32 @@ const HTML = `
         <di-item-full-details class="item-after"></di-item-full-details>
       </div>
     </div>
-    <button disabled>Upgrade</button>
+    <button class="upgrade-button" disabled>Upgrade</button>
   </div>
 </div>
 `
 
 export default class Forge extends DIElement{
 
-  get inventoryEl(){
-    return this.querySelector('di-inventory')
+  get workshopInventoryEl(){
+    return this.querySelector('di-workshop-inventory')
   }
 
-  get adventurerDropdownEl(){
-    return this.querySelector('.adventurer-dropdown')
+  get upgradeButton(){
+    return this.querySelector('.upgrade-button')
   }
 
   setData(data){
     this.innerHTML = HTML
-    this._data = data
-    this._setupDropdown(data.adventurers)
-    this._updateList()
-    this.inventoryEl.setOptions({
-      select: row => {
-        this._itemSelected(row.loadoutItem.itemInstance)
-      }
+    this.workshopInventoryEl.setup({
+      title: 'Choose item to upgrade',
+      adventurers: data.adventurers,
+      userInventory: data.inventory
+    }).inventoryEl.list.setOptions({
+      selectableRows: true
+    }).events.on('row_select', row => {
+      this._itemSelected(row.loadoutItem.itemInstance)
     })
-  }
-
-  _setupDropdown(adventurers){
-    const el = this.adventurerDropdownEl
-    adventurers.forEach(adv => {
-      const option = document.createElement('option')
-      option.value = adv._id
-      option.textContent = adv.name + (adv.dungeonRunID ? ' (Busy)' : '')
-      el.appendChild(option)
-    })
-    el.addEventListener('change', () => {
-      this._updateList()
-    })
-  }
-
-  _updateList(){
-    const selectedVal = this.adventurerDropdownEl.value
-    const adv = this._data.adventurers.find(adv => adv._id === selectedVal)
-    if(adv){
-      this.inventoryEl.setup(adv.items).setOptions({
-        disabledFn: () => adv.dungeonRunID ? false : true
-      })
-    }else{
-      this.inventoryEl.setup(this._data.inventory.items).setOptions({
-        disabledFn: null
-      })
-    }
   }
 
   _itemSelected(itemInstance){
@@ -90,6 +60,11 @@ export default class Forge extends DIElement{
     components.map(component => {
       componentsEl.append(new ComponentRow().setData(component, this._data.inventory))
     })
+
+    this.upgradeButton.toggleAttribute(
+      'disabled',
+      componentsEl.querySelector('.not-enough') ? true : false
+    )
   }
 }
 customElements.define('di-workshop-forge', Forge)
