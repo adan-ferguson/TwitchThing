@@ -83,6 +83,10 @@ export default class List extends HTMLElement{
     return mobileMode && this._options.mobilePageSize ? this._options.mobilePageSize : this._options.pageSize
   }
 
+  get allRows(){
+    return this._rowsCache
+  }
+
   setOptions(options){
     for (let key in options){
       this._options[key] = options[key]

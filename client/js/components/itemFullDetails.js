@@ -7,9 +7,7 @@ const HTML = `
 `
 
 export default class ItemFullDetails extends HTMLElement{
-
-  constructor(itemInstance){
-    super()
+  setItem(itemInstance){
     this.innerHTML = HTML
     this.querySelector('.item-name').textContent = itemInstance.displayName
     this.querySelector('di-orb-row')
@@ -22,6 +20,7 @@ export default class ItemFullDetails extends HTMLElement{
         showTooltips: true
       })
       .setEffect(itemInstance)
+    return this
   }
 }
 

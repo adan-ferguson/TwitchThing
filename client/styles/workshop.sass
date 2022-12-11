@@ -2,3 +2,63 @@ di-workshop-page
   .tabz-content
      > * > .content-columns
       height: 100%
+
+  .supertitle
+    margin-bottom: 10rem
+
+  di-inventory
+    margin-top: 10rem
+
+  di-workshop-forge
+
+    .right-column
+      di-item-full-details
+        height: 200rem
+        display: block
+      .symbol
+        text-align: center
+        margin: 10rem 0
+        font-size: 2em
+      .item-components
+        height: 100rem
+        display: block
+        border-top: 0.5rem solid #BBB
+
+    di-inventory
+      di-loadout-row
+
+        cursor: pointer
+
+        &.selected > di-bar
+          background-color: #dfeaff
+
+        &:hover
+          > di-bar
+            background-color: #b8ffb8
+
+di-workshop-component-row
+  display: flex
+  flex-direction: row
+  justify-content: space-between
+  align-items: center
+  padding: 0 5rem
+  margin-top: 6rem
+  font-size: 1.2em
+
+  &.not-enough
+    .count-tab
+      color: red
+
+  img.component-icon
+    margin-bottom: 1rem
+
+  .component-icon
+    height: 1em
+    width: 2em
+    margin-right: 6rem
+    text-align: center
+      
+  .component-row
+    .count-tab
+      border: 0.5rem solid #BBB
+      padding: 2rem 5rem

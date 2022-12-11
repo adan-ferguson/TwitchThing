@@ -2,23 +2,27 @@ import LoadoutRow from './loadoutRow.js'
 import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
 import FighterItemDisplayInfo from '../../fighterItemDisplayInfo.js'
 import AdventurerItemInstance from '../../../../game/adventurerItemInstance.js'
+import DIElement from '../diElement.js'
+import _ from 'lodash'
 
 const HTML = `
 <div class="content-rows">
-    <div class="filtering-options content-no-grow">
-        <div class="input-group">
-            Sort By:
-            <label><input type="radio" name="sortBy" value="class">Class</label>
-        </div>
-        <label><input type="checkbox" name="hideOther"> Hide Unequippable</label>
+  <div class="content-no-grow inventory-options">
+    <div class="input-group">
+      Sort By:
+      <label><input type="radio" name="sortBy" value="class">Class</label>
     </div>
-    <di-list></di-list>
+    <div class="filtering-options require-adventurer">
+      <label><input type="checkbox" name="hideOther"> Hide Unequippable</label>
+    </div>
+  </div>
+  <di-list></di-list>
 </div>
 `
 
 const STORAGE_NAME = 'filterSortOptions'
 
-export default class Inventory extends HTMLElement{
+export default class Inventory extends DIElement{
 
   _filterSortOptions = {
     sortBy: 'class',
@@ -31,8 +35,18 @@ export default class Inventory extends HTMLElement{
     this._setupFilteringOptions()
     this.list = this.querySelector('di-list')
     this.list.setOptions({
-      pageSize: 14
+      pageSize: 15
     })
+  }
+
+  get defaultOptions(){
+    return {
+      disabledFn: null,
+      select: null,
+      // filterFn: null,
+      // sortFn: null,
+      // adventurer: null
+    }
   }
 
   get sortFn(){
@@ -40,35 +54,51 @@ export default class Inventory extends HTMLElement{
   }
 
   filterFn = (el) => {
-    return isCompatible(this.adventurer, el.loadoutItem.itemInstance)
+    return this._options.disabledFn?.(el.loadoutItem.itemInstance) ?? true
+    // return this.adventurer ? isCompatible(this.adventurer, el.loadoutItem.itemInstance) : true
   }
 
   setup(items, adventurer){
+
+    const addRow = (itemDef, count) => {
+      const info = new FighterItemDisplayInfo(new AdventurerItemInstance(itemDef))
+      const row = new LoadoutRow().setItem(info)
+      if(count !== null){
+        row.setCount(count)
+      }
+      loadoutRows.push(row)
+      row.addEventListener('click', () => {
+        this._selectRow(row)
+      })
+    }
+
     this.adventurer = adventurer
 
     const loadoutRows = []
-    Object.keys(items.basic).forEach(group => {
-      Object.keys(items.basic[group]).forEach(name => {
-        const info = new FighterItemDisplayInfo(new AdventurerItemInstance({ group, name }))
-        const row = new LoadoutRow()
-          .setItem(info)
-          .setCount(items.basic[group][name])
-        loadoutRows.push(row)
+
+    if(_.isArray(items)){
+      // It's an adventurer loadout
+      items.forEach(itemDef => {
+        if(itemDef){
+          addRow(itemDef)
+        }
       })
-    })
+    }else{
+      // It's an inventory items object
+      Object.keys(items.basic).forEach(group => {
+        Object.keys(items.basic[group]).forEach(name => {
+          addRow({ group, name }, items.basic[group][name])
+        })
+      })
+      Object.values(items.crafted).forEach(itemDef => {
+        addRow(itemDef)
+      })
+    }
 
-    // TODO: crafted items
-    // Object.values(items).forEach(loadoutItem => {
-    //   if(loadoutItem){
-    //     const row = new LoadoutRow()
-    //     row.setItem(loadoutItem)
-    //     row.showNewBadge(loadoutItem.isNew)
-    //     loadoutRows.push(row)
-    //   }
-    // })
-
+    this.querySelector('.inventory-options').classList.toggle('displaynone', adventurer ? false : true)
     this._updateSortAndFilter()
     this.list.setRows(loadoutRows)
+    return this
   }
 
   addItem(item){
@@ -132,6 +162,20 @@ export default class Inventory extends HTMLElement{
       filterFn: this.filterFn,
       showFiltered: !this._filterSortOptions.hideOther
     })
+  }
+
+  _selectRow(row){
+    this.list.querySelector('.selected')?.classList.remove('selected')
+    if(!this._options.select){
+      return
+    }
+    if(row.classList.contains('selected')){
+      return
+    }
+    row.classList.add('selected')
+    if(_.isFunction(this._options.select)){
+      this._options.select(row)
+    }
   }
 }
 

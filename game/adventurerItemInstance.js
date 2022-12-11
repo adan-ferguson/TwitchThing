@@ -51,4 +51,22 @@ export default class AdventurerItemInstance extends FighterItemInstance{
   get isBasic(){
     return true
   }
+
+  get level(){
+    return this.itemDef.level ?? 1
+  }
+
+  upgradeInfo(){
+
+    const upgradedItemDef = {
+      ...this.itemDef,
+      level: this.level + 1
+    }
+
+    const components = []
+    components.push( { type: 'scrap', count: this.baseItem.orbs * this.level })
+    components.push({ type: 'item', itemDef: this.itemDef, count: this.level })
+
+    return { upgradedItemDef, components }
+  }
 }

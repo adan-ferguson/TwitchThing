@@ -28,7 +28,7 @@ export default class FighterItemDisplayInfo{
   }
 
   makeDetails(){
-    return new ItemFullDetails(this.itemInstance)
+    return new ItemFullDetails().setItem(this.itemInstance)
   }
 
   equals(fidi){
