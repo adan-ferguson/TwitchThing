@@ -36,14 +36,16 @@ export default class Forge extends DIElement{
   }
 
   setData(data){
+    this._data = data
     this.innerHTML = HTML
+
     this.workshopInventoryEl.setup({
       title: 'Choose item to upgrade',
       adventurers: data.adventurers,
       userInventory: data.inventory
-    }).inventoryEl.list.setOptions({
+    }).listEl.setOptions({
       selectableRows: true
-    }).events.on('row_select', row => {
+    }).events.on('selectrow', row => {
       this._itemSelected(row.loadoutItem.itemInstance)
     })
   }

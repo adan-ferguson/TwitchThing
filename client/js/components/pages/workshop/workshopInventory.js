@@ -1,11 +1,14 @@
 import DIElement from '../../diElement.js'
+import { adventurerItemsToRows, inventoryItemsToRows, standardItemSort } from '../../listHelpers.js'
 
 const HTML = `
-<div class="supertitle flex-no-grow"></div>
-<select class="adventurer-dropdown flex-no-grow">
-  <option value="0">In Inventory</option>
-</select>
-<di-inventory class="fill-contents"></di-inventory>
+<div class="flex-rows">
+  <div class="supertitle flex-no-grow"></div>
+  <select class="adventurer-dropdown flex-no-grow">
+    <option value="0">In Inventory</option>
+  </select>
+  <di-list></di-list>
+</div>
 `
 
 export default class WorkshopInventory extends DIElement{
@@ -15,13 +18,19 @@ export default class WorkshopInventory extends DIElement{
   }
 
   /**
-   * @returns {Inventory}
+   * @returns {List}
    */
-  get inventoryEl(){
-    return this.querySelector('di-inventory')
+  get listEl(){
+    return this.querySelector('di-list')
   }
 
   setup({ title, adventurers, userInventory }){
+    this.innerHTML = HTML
+    this.listEl.setOptions({
+      showFiltered: true,
+      pageSize: 15,
+      clickableRows: true
+    })
     this.querySelector('.supertitle').textContent = title
     this._userInventory = userInventory
     this._adventurers = adventurers
@@ -47,13 +56,19 @@ export default class WorkshopInventory extends DIElement{
     const selectedVal = this.adventurerDropdownEl.value
     const adv = this._adventurers.find(adv => adv._id === selectedVal)
     if(adv){
-      this.inventoryEl.setup(adv.items).setOptions({
-        disabledFn: () => adv.dungeonRunID ? false : true
-      })
+      this.listEl
+        .setOptions({
+          filterFn: () => adv.dungeonRunID ? false : true,
+          sortFn: null
+        })
+        .setRows(adventurerItemsToRows(adv.items))
     }else{
-      this.inventoryEl.setup(this._userInventory.items).setOptions({
-        disabledFn: null
-      })
+      this.listEl
+        .setOptions({
+          filterFn: null,
+          sortFn: standardItemSort
+        })
+        .setRows(inventoryItemsToRows(this._userInventory.items))
     }
   }
 }

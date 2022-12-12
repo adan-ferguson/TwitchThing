@@ -69,8 +69,8 @@ export default class List extends DIElement{
 
     this.addEventListener('click', e => {
       const row = e.target.closest('.list-row')
-      if(row){
-        this.events.emit('row_click', row)
+      if(row && this._options.clickableRows){
+        this.events.emit('clickrow', row)
       }
       if(this._options.selectableRows){
         if(row.classList.contains('selected')){
@@ -79,7 +79,7 @@ export default class List extends DIElement{
         row.classList.add('selected')
         this._selectedRow?.classList.remove('selected')
         this._selectedRow = row
-        this.events.emit('row_select', row)
+        this.events.emit('selectrow', row)
       }
     })
   }
@@ -104,13 +104,15 @@ export default class List extends DIElement{
       sortFn: null,
       filterFn: null,
       showFiltered: false,
-      selectableRows: false
+      selectableRows: false,
+      clickableRows: false
     }
   }
 
   setRows(rows){
     this._rowsCache = rows.slice()
     this._fullUpdate()
+    return this
   }
 
   addRow(row){
@@ -158,6 +160,8 @@ export default class List extends DIElement{
     this.querySelector('.page-number').textContent = this._page + ''
     this.querySelector('.page-count').textContent = this.maxPage + ''
 
+    this.classList.toggle('clickable-rows', this._options.clickableRows)
+
     this.rows.innerHTML = ''
     const start = (this._page - 1) * this._pageSize
     const toDisplay = this._sortedRows.slice(start, start + this._pageSize)
@@ -165,7 +169,7 @@ export default class List extends DIElement{
     toDisplay.forEach(el => {
       el.classList.add('list-row')
       el.style.flexBasis = `${100 / this._pageSize}%`
-      if(this._options.showFiltered && !el.classList.contains('blank-row')){
+      if(this._options.showFiltered && this._options.filterFn && !el.classList.contains('blank-row')){
         el.classList.toggle('filtered', !this._options.filterFn(el))
       }
     })

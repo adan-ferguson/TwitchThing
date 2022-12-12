@@ -8,7 +8,7 @@ const HTML = `
   <div class="content-rows">
     <div class="content-no-grow right-column">
       <div class="content-well">
-        <di-inventory class="to-scrap"></di-inventory>
+        <di-list class="to-scrap"></di-list>
       </div>
       <div class="symbol">
         <i class="fa-solid fa-arrow-down"></i>
@@ -28,23 +28,31 @@ export default class Scrapyard extends DIElement{
     return this.querySelector('di-workshop-inventory')
   }
 
-  get inventoryToScrap(){
+  get toScrapEl(){
     return this.querySelector('.to-scrap')
   }
 
   setData(data){
+    this._data = data
     this.innerHTML = HTML
+
     this.workshopInventoryEl.setup({
       title: 'Choose items to scrap',
       adventurers: data.adventurers,
       userInventory: data.inventory
-    }).inventoryEl.events.on('row_click', row => {
+    }).listEl.events.on('clickrow', row => {
       this._addItemToScrapList(row)
+    })
+
+    this.toScrapEl.setOptions({
+      pageSize: 6,
+      clickableRows: true
     })
   }
 
   _addItemToScrapList(row){
 
   }
+
 }
 customElements.define('di-workshop-scrapyard', Scrapyard)
