@@ -2,45 +2,50 @@ import DIElement from '../../diElement.js'
 import AdventurerItemInstance from '../../../../../game/adventurerItemInstance.js'
 import classDisplayInfo from '../../../classDisplayInfo.js'
 
-const HTML = (iconEl, name, have = 0, required = 0) => {
+const HTML = (iconEl, name, have = null, required = null) => {
 
-  have = Math.min(have, required)
+  if(required !== null){
+    have = Math.min(have, required)
+  }
 
-  let html = `
+  return `
 <div class="flex-columns-center">
   ${iconEl}
   <span class="name">${name}</span>
 </div>
-`
-
-  if(required){
-    html += `
 <div class="flex-columns-center">
-  <span class="count-tab">${have}/${required}</span>
+  <span class="count-tab"></span>
 </div>
-    `
-  }
-
-  return html
+`
 }
 
 export default class ComponentRow extends DIElement{
-  setData(component, inventory){
+
+  setData(component, inventory = null){
     if(component.type === 'scrap'){
-      this._update('<i class="fa-solid fa-recycle component-icon"></i>', 'Scrap', inventory.scrap, component.count)
+      const have = inventory ? inventory.scrap : component.count
+      const required = inventory ? component.count : null
+      this.innerHTML = HTML('<i class="fa-solid fa-recycle component-icon"></i>', 'Scrap')
+      this.setValue(have, required)
     }else if(component.type === 'item'){
       const instance = new AdventurerItemInstance(component.itemDef)
       const classInfo = classDisplayInfo(component.itemDef.group)
-      const invCount = inventory.items.basic[component.itemDef.group]?.[component.itemDef.name] ?? 0
-      this.innerHTML = HTML(`<img class="component-icon" src="${classInfo.orbIcon}">`,
-        'Lvl. 1 ' + instance.displayName, invCount, component.count)
+      const have = inventory ? (inventory.items.basic[component.itemDef.group]?.[component.itemDef.name] ?? 0) : component.count
+      const required = inventory ? component.count : null
+      this.innerHTML = HTML(`<img class="component-icon" src="${classInfo.orbIcon}">`, 'Lvl. 1 ' + instance.displayName)
+      this.setValue(have, required)
     }
     return this
   }
 
-  _update(iconHTML, name, have, required){
-    this.innerHTML = HTML(iconHTML, name, have, required)
-    this.classList.toggle('not-enough', have < required)
+  setValue(have, required = null){
+    this.querySelector('.count-tab').textContent = countStr(have, required)
+    this.classList.toggle('not-enough', required && have < required)
   }
+
 }
 customElements.define('di-workshop-component-row', ComponentRow)
+
+function countStr(have, required){
+  return required ? `${have}/${required}` : have
+}

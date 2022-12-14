@@ -1,6 +1,6 @@
 import LoadoutRow from './loadoutRow.js'
 import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
-import FighterItemDisplayInfo from '../../fighterItemDisplayInfo.js'
+import FighterItemLoadoutItem from '../../fighterItemLoadoutItem.js'
 import AdventurerItemInstance from '../../../../game/adventurerItemInstance.js'
 import DIElement from '../diElement.js'
 import _ from 'lodash'
@@ -57,34 +57,34 @@ export default class Inventory extends DIElement{
     return this
   }
 
-  addItem(item){
-    if(!item){
-      return
-    }
-    if(item.itemInstance.isBasic){
-      const row = this.list.findRow(row => row.loadoutItem.equals(item))
-      if(row){
-        row.count++
-        return
-      }
-    }
-    item.itemInstance.owner = null
-    const row = new LoadoutRow()
-    row.setItem(item)
-    this.list.addRow(row)
-  }
-
-  removeItem(item){
-    const row = this.list.findRow(row => row.loadoutItem === item)
-    if(!row){
-      return
-    }
-    if(item.itemInstance.isBasic && row.count > 1){
-      row.count--
-    }else{
-      this.list.removeRow(row)
-    }
-  }
+  // addItem(item){
+  //   if(!item){
+  //     return
+  //   }
+  //   if(item.itemInstance.isBasic){
+  //     const row = this.list.findRow(row => row.loadoutItem.equals(item))
+  //     if(row){
+  //       row.count++
+  //       return
+  //     }
+  //   }
+  //   item.itemInstance.owner = null
+  //   const row = new LoadoutRow()
+  //   row.setItem(item)
+  //   this.list.addRow(row)
+  // }
+  //
+  // removeItem(item){
+  //   const row = this.list.findRow(row => row.loadoutItem === item)
+  //   if(!row){
+  //     return
+  //   }
+  //   if(item.itemInstance.isBasic && row.count > 1){
+  //     row.count--
+  //   }else{
+  //     this.list.removeRow(row)
+  //   }
+  // }
 
   _setupFilteringOptions(){
 

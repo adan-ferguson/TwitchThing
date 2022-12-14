@@ -69,7 +69,10 @@ export default class List extends DIElement{
 
     this.addEventListener('click', e => {
       const row = e.target.closest('.list-row')
-      if(row && this._options.clickableRows){
+      if(!row || row.classList.contains('blank-row')){
+        return
+      }
+      if(this._options.clickableRows){
         this.events.emit('clickrow', row)
       }
       if(this._options.selectableRows){

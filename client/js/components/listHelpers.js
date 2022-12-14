@@ -1,4 +1,4 @@
-import FighterItemDisplayInfo from '../fighterItemDisplayInfo.js'
+import FighterItemLoadoutItem from '../fighterItemLoadoutItem.js'
 import AdventurerItemInstance from '../../../game/adventurerItemInstance.js'
 import LoadoutRow from './loadout/loadoutRow.js'
 
@@ -60,8 +60,34 @@ export function standardItemSort(rowA, rowB){
   return rowA.loadoutItem.displayName - rowB.loadoutItem.displayName
 }
 
+export function addInventoryItem(list, loadoutItem){
+  const existingRow = list.findRow(row => row.loadoutItem.equals(loadoutItem))
+  if(existingRow){
+    if(loadoutItem.isBasic){
+      existingRow.count++
+    }
+    return
+  }
+  loadoutItem.setOwner(null)
+  const row = new LoadoutRow()
+  row.setItem(loadoutItem)
+  list.addRow(row)
+}
+
+export function removeInventoryItem(list, loadoutItem){
+  const existingRow = list.findRow(row => row.loadoutItem === loadoutItem)
+  if(!existingRow){
+    return
+  }
+  if(existingRow.count > 1){
+    existingRow.count--
+  }else{
+    list.removeRow(existingRow)
+  }
+}
+
 function makeRow(itemDef, count = null){
-  const info = new FighterItemDisplayInfo(new AdventurerItemInstance(itemDef))
+  const info = new FighterItemLoadoutItem(new AdventurerItemInstance(itemDef))
   const row = new LoadoutRow().setItem(info)
   if(count !== null){
     row.setCount(count)

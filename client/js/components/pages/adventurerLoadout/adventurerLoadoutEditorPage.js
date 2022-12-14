@@ -9,7 +9,7 @@ const HTML = `
     <div class="content-well user-inventory fill-contents">
         <di-inventory class="fill-contents"></di-inventory>
     </div>
-    <div class="edit-hinter">
+    <div class="hinter edit-hinter">
         <div><--</div>
         <div>Click or drag items to swap</div>
         <div>--></div>

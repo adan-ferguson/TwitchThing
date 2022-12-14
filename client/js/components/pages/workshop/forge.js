@@ -7,6 +7,11 @@ const HTML = `
   <div class="content-well fill-contents">
     <di-workshop-inventory></di-workshop-inventory>
   </div>
+  <div class="hinter">
+      <div><--</div>
+      <div>Click items to swap</div>
+      <div>--></div>
+  </div>
   <div class="content-rows">
     <div class="content-no-grow right-column">
       <div class="content-well">

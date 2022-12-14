@@ -1,6 +1,6 @@
 import { fillArray, makeEl, wait } from '../../../../../game/utilFunctions.js'
 import LoadoutRow from '../../loadout/loadoutRow.js'
-import FighterItemDisplayInfo from '../../../fighterItemDisplayInfo.js'
+import FighterItemLoadoutItem from '../../../fighterItemLoadoutItem.js'
 import AdventurerItemInstance from '../../../../../game/adventurerItemInstance.js'
 import { getChestDisplayInfo } from '../../../chestDisplayInfo.js'
 import DIElement from '../../diElement.js'
@@ -69,7 +69,7 @@ export default class ChestOpenage extends DIElement{
     const basicItems = arrayOfItems(this._chest.contents.items.basic)
     console.log(basicItems)
     basicItems.forEach(({ itemDef, count }) => {
-      const info = new FighterItemDisplayInfo(new AdventurerItemInstance(itemDef))
+      const info = new FighterItemLoadoutItem(new AdventurerItemInstance(itemDef))
       const row = new LoadoutRow().setItem(info).setCount(count)
       contents.appendChild(row)
     })

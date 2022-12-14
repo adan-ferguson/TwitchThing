@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 export default class OrbsData{
 
   constructor(maxOrbs = {}, usedOrbs = {}){
@@ -22,6 +24,10 @@ export default class OrbsData{
 
   get list(){
     return this.classes.map(className => this.get(className))
+  }
+
+  get total(){
+    return _.sum(Object.values(this._maxOrbs))
   }
 
   get(className){

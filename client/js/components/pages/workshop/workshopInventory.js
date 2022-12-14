@@ -24,6 +24,14 @@ export default class WorkshopInventory extends DIElement{
     return this.querySelector('di-list')
   }
 
+  get selectedAdventurer(){
+    if(!this._adventurers){
+      return null
+    }
+    const selectedVal = this.adventurerDropdownEl.value
+    return this._adventurers.find(adv => adv._id === selectedVal)
+  }
+
   setup({ title, adventurers, userInventory }){
     this.innerHTML = HTML
     this.listEl.setOptions({
@@ -33,8 +41,11 @@ export default class WorkshopInventory extends DIElement{
     })
     this.querySelector('.supertitle').textContent = title
     this._userInventory = userInventory
-    this._adventurers = adventurers
-    this._setupDropdown(adventurers)
+    if(adventurers){
+      this._adventurers = adventurers
+      this._setupDropdown(adventurers)
+    }
+    this.adventurerDropdownEl.classList.toggle('displaynone', this._adventurers ? false : true)
     this._updateList()
     return this
   }
@@ -53,8 +64,7 @@ export default class WorkshopInventory extends DIElement{
   }
   
   _updateList(){
-    const selectedVal = this.adventurerDropdownEl.value
-    const adv = this._adventurers.find(adv => adv._id === selectedVal)
+    const adv = this.selectedAdventurer
     if(adv){
       this.listEl
         .setOptions({

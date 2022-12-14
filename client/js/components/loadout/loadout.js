@@ -1,6 +1,6 @@
 import LoadoutRow from './loadoutRow.js'
 import OrbsData from '../../../../game/orbsData.js'
-import FighterItemDisplayInfo from '../../fighterItemDisplayInfo.js'
+import FighterItemLoadoutItem from '../../fighterItemLoadoutItem.js'
 import ConsoleTimer from '../../../../game/consoleTimer.js'
 
 const HTML = `
@@ -79,7 +79,7 @@ export default class Loadout extends HTMLElement{
 
   setFighterInstance(fighterInstance){
     this._fighterInstance = fighterInstance
-    this.setContents(fighterInstance.itemInstances.map(ii => ii ? new FighterItemDisplayInfo(ii) : null))
+    this.setContents(fighterInstance.itemInstances.map(ii => ii ? new FighterItemLoadoutItem(ii) : null))
   }
 
   addItem(item){

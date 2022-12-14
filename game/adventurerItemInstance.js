@@ -56,6 +56,10 @@ export default class AdventurerItemInstance extends FighterItemInstance{
     return this.itemDef.level ?? 1
   }
 
+  get scrapValue(){
+    return this.orbs.total * this.level
+  }
+
   upgradeInfo(){
 
     const upgradedItemDef = {

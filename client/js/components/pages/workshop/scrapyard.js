@@ -1,23 +1,27 @@
 import DIElement from '../../diElement.js'
+import { addInventoryItem, removeInventoryItem } from '../../listHelpers.js'
 
 const HTML = `
 <div class="content-columns">
   <div class="content-well fill-contents">
     <di-workshop-inventory></di-workshop-inventory>
   </div>
+  <div class="hinter">
+      <div><--</div>
+      <div>Click items to swap</div>
+      <div>--></div>
+  </div>
   <div class="content-rows">
     <div class="content-no-grow right-column">
       <div class="content-well">
+        <div class="supertitle">Scrapped</div>
         <di-list class="to-scrap"></di-list>
       </div>
-      <div class="symbol">
-        <i class="fa-solid fa-arrow-down"></i>
-      </div>
-      <div class="content-well">
-        <di-workshop-component-row class="scrap"></di-workshop-component-row>
-      </div>
     </div>
-    <button class="upgrade-button" disabled>Scrap</button>
+    <button class="scrap-button" disabled>
+      <span>+<span class="scrap-count">0</span></span>
+      <i class="fa-solid fa-recycle"></i>
+    </button>
   </div>
 </div>
 `
@@ -32,26 +36,53 @@ export default class Scrapyard extends DIElement{
     return this.querySelector('.to-scrap')
   }
 
+  get scrapEl(){
+    return this.querySelector('.scrap-count')
+  }
+
+  get scrapButton(){
+    return this.querySelector('.scrap-button')
+  }
+
   setData(data){
     this._data = data
     this.innerHTML = HTML
 
     this.workshopInventoryEl.setup({
       title: 'Choose items to scrap',
-      adventurers: data.adventurers,
       userInventory: data.inventory
     }).listEl.events.on('clickrow', row => {
-      this._addItemToScrapList(row)
+      this._addItemToScrapList(row.loadoutItem)
     })
 
     this.toScrapEl.setOptions({
-      pageSize: 6,
+      pageSize: 12,
+      paginate: false,
       clickableRows: true
+    }).events.on('clickrow', row => {
+      this._removeItemFromScrapList(row.loadoutItem)
     })
   }
 
-  _addItemToScrapList(row){
+  _addItemToScrapList(loadoutItem){
+    removeInventoryItem(this.workshopInventoryEl.listEl, loadoutItem)
+    addInventoryItem(this.toScrapEl, loadoutItem)
+    this._updateScrapCount()
+  }
 
+  _removeItemFromScrapList(loadoutItem){
+    removeInventoryItem(this.toScrapEl, loadoutItem)
+    addInventoryItem(this.workshopInventoryEl.listEl, loadoutItem)
+    this._updateScrapCount()
+  }
+
+  _updateScrapCount(){
+    let scrap = 0
+    this.toScrapEl.allRows.forEach(row => {
+      scrap += row.loadoutItem.scrapValue * (row.count ?? 1)
+    })
+    this.scrapEl.textContent = scrap
+    this.scrapButton.toggleAttribute('disabled', !scrap)
   }
 
 }

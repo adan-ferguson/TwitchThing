@@ -1,7 +1,7 @@
 import ItemFullDetails from './components/itemFullDetails.js'
 import abilityDisplayInfo from './abilityDisplayInfo.js'
 
-export default class FighterItemDisplayInfo{
+export default class FighterItemLoadoutItem{
 
   constructor(itemInstance){
     this.itemInstance = itemInstance
@@ -25,6 +25,18 @@ export default class FighterItemDisplayInfo{
 
   get abilityDisplayInfo(){
     return abilityDisplayInfo(this.itemInstance)
+  }
+
+  get isBasic(){
+    return this.itemInstance.isBasic
+  }
+
+  get scrapValue(){
+    return this.itemInstance.scrapValue
+  }
+
+  setOwner(owner){
+    this.itemInstance.owner = owner
   }
 
   makeDetails(){
