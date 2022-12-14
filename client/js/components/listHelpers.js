@@ -25,6 +25,32 @@ export function inventoryItemsToRows(items){
   return rows
 }
 
+export function rowsToInventoryItems(rows){
+
+  const basic = {}
+  const crafted = []
+
+  rows.forEach(row => {
+    if(!(row.loadoutItem instanceof FighterItemLoadoutItem)){
+      return
+    }
+    const itemDef = row.loadoutItem.itemInstance.itemDef
+    if(row.loadoutItem.isBasic){
+      if(!basic[itemDef.group]){
+        basic[itemDef.group] = {}
+      }
+      basic[itemDef.group][itemDef.name] = row.count ?? 1
+    }else{
+      crafted.push(itemDef.id)
+    }
+  })
+
+  return {
+    basic,
+    crafted
+  }
+}
+
 export function standardItemSort(rowA, rowB){
 
   const orbsA = rowA.loadoutItem.orbs._maxOrbs

@@ -1,16 +1,17 @@
+import AdventurerInstance from '../../game/adventurerInstance.js'
+import { adjustInventoryBasics } from './inventory.js'
+
 /**
  * Throw an http exception if this loadout transaction is invalid. The parameters are all
  * assumed to have been processed, i.e. they are a non-null adventurer, user, and item id array.
  * @param adventurer [AdventurerDoc]
  * @param user [UserDoc]
- * @param itemIDs [string]
+ * @param newItems [string]
  */
-import AdventurerInstance from '../../game/adventurerInstance.js'
-
 export function commitAdventurerLoadout(adventurer, user, newItems){
   const basicItemDiff = calcBasicItemDiff(adventurer.items, newItems)
   adventurer.items = newItems
-  validateAndUpdateInventoryBasics(user.inventory.items.basic, basicItemDiff)
+  adjustInventoryBasics(user.inventory.items.basic, basicItemDiff)
   validateLoadout(adventurer)
 
   // TODO: incorporate this with non-basic items
@@ -44,30 +45,6 @@ function calcBasicItemDiff(oldLoadout, newLoadout){
     })
   }
   return diff
-}
-
-function validateAndUpdateInventoryBasics(invBasics, diff){
-  for(let group in diff){
-    for(let name in diff[group]){
-      if(!invBasics[group]){
-        invBasics[group] = {}
-      }
-      if(!invBasics[group][name]){
-        invBasics[group][name] = 0
-      }
-      invBasics[group][name] += diff[group][name]
-      if(invBasics[group][name] < 0){
-        throw `Not enough of basic item: ${group} - ${name}`
-      }
-    }
-  }
-  for(let group in invBasics){
-    for(let name in invBasics[group]){
-      if(invBasics[group][name] === 0){
-        delete invBasics[group][name]
-      }
-    }
-  }
 }
 
 // function getItems(itemArrayOrObj, ids){

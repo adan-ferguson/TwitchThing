@@ -1,5 +1,7 @@
 import DIElement from '../../diElement.js'
-import { addInventoryItem, removeInventoryItem } from '../../listHelpers.js'
+import { addInventoryItem, removeInventoryItem, rowsToInventoryItems } from '../../listHelpers.js'
+import fizzetch from '../../../fizzetch.js'
+import { hideLoader, showLoader } from '../../../loader.js'
 
 const HTML = `
 <div class="content-columns">
@@ -32,6 +34,9 @@ export default class Scrapyard extends DIElement{
     return this.querySelector('di-workshop-inventory')
   }
 
+  /**
+   * @returns {List}
+   */
   get toScrapEl(){
     return this.querySelector('.to-scrap')
   }
@@ -61,6 +66,16 @@ export default class Scrapyard extends DIElement{
       clickableRows: true
     }).events.on('clickrow', row => {
       this._removeItemFromScrapList(row.loadoutItem)
+    })
+
+    this.scrapButton.addEventListener('click', async () => {
+      debugger
+      showLoader()
+      await fizzetch('/game/workshop/scrap', {
+        scrappedItems: rowsToInventoryItems(this.toScrapEl.allRows)
+      })
+      this.parentPage.load()
+      hideLoader()
     })
   }
 

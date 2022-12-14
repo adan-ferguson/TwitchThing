@@ -1,6 +1,7 @@
 import express from 'express'
 import Users from '../../collections/users.js'
-import { getUserWorkshop } from '../../workshop/workshop.js'
+import { getUserWorkshop, scrapItems } from '../../workshop/workshop.js'
+import { validateParam } from '../../validations.js'
 
 const router = express.Router()
 
@@ -17,6 +18,13 @@ router.post('/', async (req, res, next) => {
     req.user.features.workshop = 2
     Users.save(req.user)
   }
+})
+
+router.post('/scrap', async(req, res, next) => {
+  await scrapItems(req.user, validateParam(req.body.scrappedItems))
+  res.send({
+    success: 1
+  })
 })
 
 export default router

@@ -14,6 +14,10 @@ export default class DIElement extends HTMLElement{
     return {}
   }
 
+  get parentPage(){
+    return this.closest('.page')
+  }
+
   setOptions(options = {}){
     const newOptions = mergeOptionsObjects(this._options, options)
     if(_.isEqual(newOptions, this._options)){
