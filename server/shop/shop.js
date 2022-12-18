@@ -2,6 +2,7 @@ import { adventurerSlotShopItem } from './adventurerSlot.js'
 import { chestShopItems, shopChestPurchased } from './chest.js'
 import Users from '../collections/users.js'
 import Purchases from '../collections/purchases.js'
+import { spendGold } from '../loadouts/inventory.js'
 
 export async function getUserShop(userDoc){
   const items = []
@@ -17,7 +18,7 @@ export async function buyShopItem(userDoc, shopItemId){
     throw { message: 'Invalid shopItemId' }
   }
 
-  Users.spendGold(userDoc, shopItem.price.gold)
+  spendGold(userDoc, shopItem.price.gold)
 
   let returnValue = {}
   if(shopItem.type === 'adventurerSlot'){

@@ -3,10 +3,10 @@ import { chooseOne } from '../../game/rando.js'
 import Bonuses from '../../game/bonuses/combined.js'
 import Adventurers from '../collections/adventurers.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
-import BonusesData from '../../game/bonusesData.js'
 import { toArray } from '../../game/utilFunctions.js'
 import BonusInstance from '../../game/bonusInstance.js'
 import { oneTwoFive } from '../../game/exponentialValue.js'
+import { spendGold } from '../loadouts/inventory.js'
 
 const FIRST_LEVEL_BONUSES = {
   fighter: 'strength',
@@ -61,7 +61,7 @@ export async function rerollBonus(userDoc, adventurerDoc){
     throw { message: 'Adventurer does not have a pending levelup, can not reroll bonus.' }
   }
 
-  Users.spendGold(userDoc, getRerollCost(adventurerDoc))
+  spendGold(userDoc, getRerollCost(adventurerDoc))
   Users.saveAndEmit(userDoc)
 
   adventurerDoc.nextLevelUp = await generateLevelup(adventurerDoc)

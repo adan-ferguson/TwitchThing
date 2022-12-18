@@ -157,15 +157,4 @@ Users.saveAndEmit = async function(doc){
   return result
 }
 
-/**
- * Non-saving. Do this before granting the effect, because this will throw
- * if user doesn't have enough gold.
- */
-Users.spendGold = function(doc, price){
-  if(price > doc.inventory.gold){
-    throw { message: 'Not enough gold for transaction' }
-  }
-  doc.inventory.gold -= price
-}
-
 export default Users

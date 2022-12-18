@@ -1,6 +1,7 @@
 import Items from './items/combined.js'
 import FighterItemInstance from './fighterItemInstance.js'
 import OrbsData from './orbsData.js'
+import { uniqueID } from './utilFunctions.js'
 
 export default class AdventurerItemInstance extends FighterItemInstance{
 
@@ -63,13 +64,14 @@ export default class AdventurerItemInstance extends FighterItemInstance{
   upgradeInfo(){
 
     const upgradedItemDef = {
+      id: uniqueID(),
       ...this.itemDef,
       level: this.level + 1
     }
 
     const components = []
-    components.push( { type: 'scrap', count: this.baseItem.orbs * this.level })
-    components.push({ type: 'item', itemDef: this.itemDef, count: Math.max(2, this.level) })
+    components.push({ type: 'scrap', count: this.baseItem.orbs * this.level })
+    components.push({ type: 'item', itemDef: this.itemDef, count: this.level })
 
     return { upgradedItemDef, components }
   }

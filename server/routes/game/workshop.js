@@ -1,6 +1,11 @@
 import express from 'express'
 import Users from '../../collections/users.js'
-import { getUserWorkshop, scrapItems } from '../../workshop/workshop.js'
+import {
+  getUserWorkshop,
+  scrapItems,
+  upgradeAdventurerItem,
+  upgradeInventoryItem
+} from '../../workshop/workshop.js'
 import { validateParam } from '../../validations.js'
 
 const router = express.Router()
@@ -22,6 +27,22 @@ router.post('/', async (req, res, next) => {
 
 router.post('/scrap', async(req, res, next) => {
   await scrapItems(req.user, validateParam(req.body.scrappedItems))
+  res.send({
+    success: 1
+  })
+})
+
+router.post('/forge', async(req, res, next) => {
+  const def = validateParam(req.body.itemDef, { required: false })
+  if(def){
+    await upgradeInventoryItem(req.user, def)
+  }else{
+    await upgradeAdventurerItem(
+      req.user,
+      validateParam(req.body.itemSlot),
+      validateParam(req.body.adventurerID, { required: false })
+    )
+  }
   res.send({
     success: 1
   })

@@ -1,6 +1,6 @@
 import { chooseOne } from '../../game/rando.js'
 import { all as Monsters } from '../../game/monsters/combined.js'
-import { uuid } from '../../game/utilFunctions.js'
+import { uniqueID } from '../../game/utilFunctions.js'
 import MonsterInstance from '../../game/monsterInstance.js'
 import { generateRandomChest } from './chests.js'
 import { addRewards } from './results.js'
@@ -179,7 +179,7 @@ function getBasicMonsterDefinition(floor){
     throw `Could not find monster for floor ${floor}`
   }
   return {
-    _id: 'basic-' + uuid(),
+    _id: 'basic-' + uniqueID(),
     baseType: monstersByFloor[floor].name,
     level: floor
   }

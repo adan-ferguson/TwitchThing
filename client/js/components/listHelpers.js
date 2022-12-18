@@ -4,9 +4,11 @@ import LoadoutRow from './loadout/loadoutRow.js'
 
 export function adventurerItemsToRows(items){
   const rows = []
-  items.forEach(itemDef => {
+  items.forEach((itemDef, i) => {
     if(itemDef){
-      rows.push(makeRow(itemDef))
+      const row = makeRow(itemDef)
+      row.__slotIndex = i
+      rows.push(row)
     }
   })
   return rows

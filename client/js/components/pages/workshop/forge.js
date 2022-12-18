@@ -1,6 +1,8 @@
 import DIElement from '../../diElement.js'
 import AdventurerItemInstance from '../../../../../game/adventurerItemInstance.js'
 import ComponentRow from './componentRow.js'
+import { hideLoader, showLoader } from '../../../loader.js'
+import fizzetch from '../../../fizzetch.js'
 
 const HTML = `
 <div class="content-columns">
@@ -53,10 +55,26 @@ export default class Forge extends DIElement{
     }).events.on('selectrow', row => {
       this._itemSelected(row.loadoutItem.itemInstance)
     })
+
+    this.upgradeButton.addEventListener('click', async () => {
+      showLoader()
+      const data = {}
+      debugger
+      if(this.workshopInventoryEl.selectedAdventurer){
+        const row = this.workshopInventoryEl.listEl.selectedRow
+        data.itemSlot = row.__slotIndex
+        data.adventurerID = this.workshopInventoryEl.selectedAdventurer?._id
+      }else{
+        data.itemDef = this._selectedItem.itemDef
+      }
+      await fizzetch('/game/workshop/forge', data)
+      this.parentPage.load()
+      hideLoader()
+    })
   }
 
   _itemSelected(itemInstance){
-    this._selectedItemDef = itemInstance.itemDef
+    this._selectedItem = itemInstance
     const { upgradedItemDef, components } = itemInstance.upgradeInfo()
 
     this.querySelector('.item-before').setItem(itemInstance)
@@ -64,7 +82,7 @@ export default class Forge extends DIElement{
 
     const componentsEl = this.querySelector('.item-components')
     componentsEl.innerHTML = ''
-    components.map(component => {
+    components.items(component => {
       componentsEl.append(new ComponentRow().setData(component, this._data.inventory))
     })
 

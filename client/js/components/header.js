@@ -6,6 +6,10 @@ import { suffixedNumber } from '../../../game/utilFunctions.js'
 const HTML = `
 <div class="autocrawl clickable">AUTOCRAWL</div>
 <div class="right-side">
+  <div class="scrap-button">
+    <i class="fa-solid fa-recycle"></i>
+    <span class="val"></span>
+  </div>
   <div class="gold-button">
     <img src="/assets/icons/gold.svg">
     <span class="val"></span>
@@ -31,11 +35,26 @@ export default class Header extends HTMLElement{
 
     this._userInfo = this.querySelector('.user-info')
 
-    this.querySelector('.gold-button').addEventListener('click', () => {
+    const goldButton = this.querySelector('.gold-button')
+    tippy(goldButton, {
+      theme: 'light'
+    })
+    goldButton.addEventListener('click', () => {
       if(!this.user?.features?.shop){
         return
       }
       this.app.setPage('/shop')
+    })
+
+    const scrapButton = this.querySelector('.scrap-button')
+    tippy(scrapButton, {
+      theme: 'light'
+    })
+    scrapButton.addEventListener('click', () => {
+      if(!this.user?.features?.workshop){
+        return
+      }
+      this.app.setPage('/workshop')
     })
 
     Dropdown.create(this._userInfo, () => {
@@ -67,16 +86,36 @@ export default class Header extends HTMLElement{
       this.querySelector('.right-side').classList.add('hidden')
     }else{
       this.querySelector('.displayname').textContent = this.user.displayname
-      const goldButtonEl = this.querySelector('.gold-button')
-      goldButtonEl.querySelector('.val').textContent = suffixedNumber(this.user.inventory.gold ?? 0, 5)
-      if(!this.user.features?.shop){
-        goldButtonEl.classList.add('locked')
-        tippy(goldButtonEl, {
-          theme: 'light',
-          content: 'Clear floor 10 to unlock the shop'
-        })
-      }
+      this._updateGold()
+      this._updateScrap()
     }
+  }
+
+  _updateGold(){
+    let tip = 'Gold'
+    const goldButtonEl = this.querySelector('.gold-button')
+    goldButtonEl.querySelector('.val').textContent = suffixedNumber(this.user.inventory.gold ?? 0, 5)
+    if(!this.user.features?.shop){
+      goldButtonEl.classList.add('locked')
+      tip = 'Clear floor 10 to unlock the shop'
+    }
+    goldButtonEl._tippy.setContent(tip)
+  }
+
+  _updateScrap(){
+    let tip = 'Scrap'
+    const scrapEl = this.querySelector('.scrap-button')
+    scrapEl.querySelector('.val').textContent = suffixedNumber(this.user.inventory.scrap ?? 0, 5)
+    if(!this.user.features.workshop){
+      if(!this.user.features.shop){
+        scrapEl.classList.add('displaynone')
+        return
+      }
+      scrapEl.classList.remove('displaynone')
+      scrapEl.classList.add('locked')
+      tip = 'Clear floor 20 to unlock the workshop'
+    }
+    scrapEl._tippy.setContent(tip)
   }
 }
 

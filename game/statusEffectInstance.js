@@ -1,6 +1,6 @@
 import { all as Effects } from './statusEffects/combined.js'
 import Stats from './stats/stats.js'
-import { roundToFixed, uuid } from './utilFunctions.js'
+import { roundToFixed, uniqueID } from './utilFunctions.js'
 import EffectInstance from './effectInstance.js'
 
 export default class StatusEffectInstance extends EffectInstance{
@@ -8,7 +8,7 @@ export default class StatusEffectInstance extends EffectInstance{
   constructor(data, owner, state = {}, ){
     super(owner, state)
     this._data = data
-    this.effectId = state.effectId ?? 'statusEffect-' + uuid()
+    this.effectId = state.effectId ?? 'statusEffect-' + uniqueID()
   }
 
   get phantom(){

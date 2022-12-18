@@ -11,7 +11,7 @@ import { adjustInventoryBasics } from './inventory.js'
 export function commitAdventurerLoadout(adventurer, user, newItems){
   const basicItemDiff = calcBasicItemDiff(adventurer.items, newItems)
   adventurer.items = newItems
-  adjustInventoryBasics(user.inventory.items.basic, basicItemDiff)
+  adjustInventoryBasics(user, basicItemDiff)
   validateLoadout(adventurer)
 
   // TODO: incorporate this with non-basic items

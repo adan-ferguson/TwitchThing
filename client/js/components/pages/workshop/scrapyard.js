@@ -69,7 +69,6 @@ export default class Scrapyard extends DIElement{
     })
 
     this.scrapButton.addEventListener('click', async () => {
-      debugger
       showLoader()
       await fizzetch('/game/workshop/scrap', {
         scrappedItems: rowsToInventoryItems(this.toScrapEl.allRows)
