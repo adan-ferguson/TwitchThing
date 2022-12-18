@@ -35,7 +35,7 @@ export async function upgradeInventoryItem(userDoc, itemDef){
     // Basic
     spendInventoryBasics(userDoc, itemDef.group, itemDef.name, 1)
   }
-  const upgradedItemDef = upgradeItem(userDoc, itemDef)
+  const upgradedItemDef = await upgradeItem(userDoc, itemDef)
   userDoc.inventory.items.crafted[upgradedItemDef.id] = upgradedItemDef
   await Users.saveAndEmit(userDoc)
 }
@@ -60,11 +60,12 @@ async function upgradeItem(userDoc, itemDef){
 
   upgradeInfo.components.forEach(component => {
     if(component.type === 'scrap'){
-      spendScrap(component.count)
+      spendScrap(userDoc, component.count)
     }else if(component.type === 'item'){
-      spendInventoryBasics(userDoc, component.group, component.name, component.count)
+      spendInventoryBasics(userDoc, component.itemDef.group, component.itemDef.name, component.count)
     }
   })
 
+  upgradeInfo.upgradedItemDef.createdTimestamp = Date.now()
   return upgradeInfo.upgradedItemDef
 }

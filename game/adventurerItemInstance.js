@@ -3,6 +3,8 @@ import FighterItemInstance from './fighterItemInstance.js'
 import OrbsData from './orbsData.js'
 import { uniqueID } from './utilFunctions.js'
 
+const BASE_UPGRADE_SCRAP = 5
+
 export default class AdventurerItemInstance extends FighterItemInstance{
 
   constructor(itemDef, state = null, owner = null){
@@ -12,7 +14,7 @@ export default class AdventurerItemInstance extends FighterItemInstance{
     const itemData = {
       ...baseItem,
       ...baseItem.levelFn(level),
-      orbs: baseItem.orbs * level
+      orbs: baseItem.orbs
     }
 
     super(itemData, state, owner)
@@ -29,6 +31,13 @@ export default class AdventurerItemInstance extends FighterItemInstance{
 
   get itemDef(){
     return this._itemDef
+  }
+
+  get displayName(){
+    if(this.level > 1){
+      return `Lv.${this.level} ${super.displayName}`
+    }
+    return super.displayName
   }
 
   /**
@@ -50,7 +59,7 @@ export default class AdventurerItemInstance extends FighterItemInstance{
   }
 
   get isBasic(){
-    return true
+    return this.id ? false : true
   }
 
   get level(){
@@ -70,7 +79,7 @@ export default class AdventurerItemInstance extends FighterItemInstance{
     }
 
     const components = []
-    components.push({ type: 'scrap', count: this.baseItem.orbs * this.level })
+    components.push({ type: 'scrap', count: BASE_UPGRADE_SCRAP * this.level })
     components.push({ type: 'item', itemDef: this.itemDef, count: this.level })
 
     return { upgradedItemDef, components }

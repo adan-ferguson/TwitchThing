@@ -1,5 +1,3 @@
-import Users from '../collections/users.js'
-
 export function adjustInventoryBasics(userDoc, diff, inverted = false){
   const invBasics = userDoc.inventory.items.basic
   const invInt = inverted ? -1 : 1

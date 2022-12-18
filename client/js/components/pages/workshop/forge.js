@@ -59,7 +59,6 @@ export default class Forge extends DIElement{
     this.upgradeButton.addEventListener('click', async () => {
       showLoader()
       const data = {}
-      debugger
       if(this.workshopInventoryEl.selectedAdventurer){
         const row = this.workshopInventoryEl.listEl.selectedRow
         data.itemSlot = row.__slotIndex
@@ -82,7 +81,7 @@ export default class Forge extends DIElement{
 
     const componentsEl = this.querySelector('.item-components')
     componentsEl.innerHTML = ''
-    components.items(component => {
+    components.map(component => {
       componentsEl.append(new ComponentRow().setData(component, this._data.inventory))
     })
 

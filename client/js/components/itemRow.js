@@ -29,13 +29,20 @@ export default class ItemRow extends HTMLElement{
   }
 
   setItem(loadoutItem = {}){
-    this._nameEl.textContent = loadoutItem?.displayName
-    this._orbRow.setData(loadoutItem?.orbs)
+    if(!loadoutItem){
+      return
+    }
+    this._nameEl.textContent = loadoutItem.displayName
+    this._orbRow.setData(loadoutItem.orbs)
+    if(!loadoutItem.isBasic){
+      const texture = 'swamp'
+      this.style.backgroundImage = `url('/assets/textures/${texture}.png')`
+    }
   }
 
   setCount(count){
     const countEl = this.querySelector('.count-tab')
-    countEl.classList.toggle('displaynone', count > 1 ? false : true)
+    countEl.classList.toggle('displaynone', count >= 1 ? false : true)
     countEl.textContent = 'x' + count
   }
 }

@@ -55,6 +55,12 @@ export function rowsToInventoryItems(rows){
 
 export function standardItemSort(rowA, rowB){
 
+  if(rowA.loadoutItem.isBasic && !rowB.loadoutItem.isBasic){
+    return 1
+  }else if(!rowA.loadoutItem.isBasic && rowB.loadoutItem.isBasic){
+    return -1
+  }
+
   const orbsA = rowA.loadoutItem.orbs._maxOrbs
   const orbsB = rowB.loadoutItem.orbs._maxOrbs
 
