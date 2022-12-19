@@ -1,12 +1,11 @@
 import defaultOrbImg from '/client/assets/icons/orbs/default.svg'
 import classDisplayInfo from '../classDisplayInfo.js'
 import tippy from 'tippy.js'
-import { mergeOptionsObjects } from '../../../game/utilFunctions.js'
 import OrbsData from '../../../game/orbsData.js'
 import DIElement from './diElement.js'
 
 const ORB_ENTRY_HTML = (src, text) => `
-  <img src="${src}"> <span>${text}</span>
+  <span>${text}</span> <img src="${src}">
 `
 
 export const OrbsDisplayStyle = {

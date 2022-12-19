@@ -1,6 +1,7 @@
 import { mergeOptionsObjects } from '../../../game/utilFunctions.js'
 import _ from 'lodash'
 import { EventEmitter } from 'events'
+import tippy from 'tippy.js'
 
 export default class DIElement extends HTMLElement{
 
@@ -26,6 +27,20 @@ export default class DIElement extends HTMLElement{
     this._options = newOptions
     this._update()
     return this
+  }
+
+  setTooltip(content = null){
+    if(!this._tippy){
+      tippy(this, {
+        theme: 'light'
+      })
+    }
+    if(content){
+      this._tippy.enable()
+      this._tippy.setContent(content)
+    }else{
+      this._tippy.disable()
+    }
   }
 
   _update(){

@@ -67,7 +67,7 @@ export default class AdventurerItemInstance extends FighterItemInstance{
   }
 
   get scrapValue(){
-    return this.orbs.total * this.level
+    return this.orbs.total * this.level + BASE_UPGRADE_SCRAP * (this.level - 1)
   }
 
   upgradeInfo(){
@@ -78,9 +78,14 @@ export default class AdventurerItemInstance extends FighterItemInstance{
       level: this.level + 1
     }
 
+    const upgradedItem = new AdventurerItemInstance(upgradedItemDef)
+
     const components = []
-    components.push({ type: 'scrap', count: BASE_UPGRADE_SCRAP * this.level })
-    components.push({ type: 'item', itemDef: this.itemDef, count: this.level })
+    components.push({ type: 'scrap', count: upgradedItem.scrapValue - this.scrapValue })
+
+    if(this.level > 1){
+      components.push({ type: 'item', group: this.itemDef.group, name: this.itemDef.name, count: this.level - 1 })
+    }
 
     return { upgradedItemDef, components }
   }

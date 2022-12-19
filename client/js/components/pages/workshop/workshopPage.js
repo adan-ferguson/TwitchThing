@@ -37,13 +37,12 @@ export default class WorkshopPage extends Page{
     showLoader()
     const tab = this.tabz.currentTab
     tab.innerHTML = ''
-    const { data, firstTime } = await this.fetchData()
-    tab.setData(data)
+    await tab.load()
     hideLoader()
 
-    if(firstTime){
-      // show something?
-    }
+    // if(firstTime){
+    //   // show something?
+    // }
   }
 }
 customElements.define('di-workshop-page', WorkshopPage)

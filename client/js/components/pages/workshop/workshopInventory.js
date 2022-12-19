@@ -50,6 +50,27 @@ export default class WorkshopInventory extends DIElement{
     return this
   }
 
+  update({ adventurers, userInventory }){
+    if(adventurers){
+      this._adventurers = adventurers
+    }
+    this._userInventory = userInventory
+    this._updateList()
+    return this
+  }
+
+  select(itemDef){
+    if(!itemDef.id){
+      return
+    }
+    const row = this.listEl.allRows.find(row => {
+      return row.loadoutItem?.itemInstance?.id === itemDef.id
+    })
+    if(row){
+      row.click()
+    }
+  }
+
   _setupDropdown(adventurers){
     const el = this.adventurerDropdownEl
     adventurers.forEach(adv => {

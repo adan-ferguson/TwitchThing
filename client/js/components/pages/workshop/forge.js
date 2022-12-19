@@ -18,6 +18,7 @@ const HTML = `
     <div class="content-no-grow right-column">
       <div class="content-well">
         <di-item-full-details class="item-before"></di-item-full-details>
+        <span class="subtitle">Extra Components</span>
         <div class="item-components"></div>
       </div>
       <div class="symbol">
@@ -34,6 +35,9 @@ const HTML = `
 
 export default class Forge extends DIElement{
 
+  _adventurers
+  _inventory
+
   get workshopInventoryEl(){
     return this.querySelector('di-workshop-inventory')
   }
@@ -42,18 +46,23 @@ export default class Forge extends DIElement{
     return this.querySelector('.upgrade-button')
   }
 
-  setData(data){
-    this._data = data
-    this.innerHTML = HTML
+  async load(){
 
+    await this._fetchData()
+
+    this.innerHTML = HTML
     this.workshopInventoryEl.setup({
       title: 'Choose item to upgrade',
-      adventurers: data.adventurers,
-      userInventory: data.inventory
+      adventurers: this._adventurers,
+      userInventory: this._inventory
     }).listEl.setOptions({
       selectableRows: true
     }).events.on('selectrow', row => {
       this._itemSelected(row.loadoutItem.itemInstance)
+    })
+
+    this.workshopInventoryEl.adventurerDropdownEl.addEventListener('change', () => {
+      this._deselectItem()
     })
 
     this.upgradeButton.addEventListener('click', async () => {
@@ -66,13 +75,41 @@ export default class Forge extends DIElement{
       }else{
         data.itemDef = this._selectedItem.itemDef
       }
-      await fizzetch('/game/workshop/forge', data)
-      this.parentPage.load()
+      const { upgradedItemDef } = await fizzetch('/game/workshop/forge/upgrade', data)
+      if(!upgradedItemDef){
+        // TODO: error?
+      }
+      this._reloadAfterUpgrade(upgradedItemDef)
       hideLoader()
     })
   }
 
+  async _fetchData(){
+    const { data } = await fizzetch('/game/workshop/forge')
+    this._adventurers = data.adventurers
+    this._inventory = data.inventory
+  }
+
+  async _reloadAfterUpgrade(upgradedItemDef){
+    await this._fetchData()
+    this.workshopInventoryEl.update({
+      adventurers: this._adventurers,
+      userInventory: this._inventory
+    }).select(upgradedItemDef)
+  }
+
+  _deselectItem(){
+    this._selectedItem = null
+    this.querySelector('.item-before').setItem(null)
+    this.querySelector('.item-after').setItem(null)
+    this.querySelector('.item-components').innerHTML = ''
+    this.upgradeButton.toggleAttribute('disabled', true)
+  }
+
   _itemSelected(itemInstance){
+    if(!itemInstance){
+      return this._deselectItem()
+    }
     this._selectedItem = itemInstance
     const { upgradedItemDef, components } = itemInstance.upgradeInfo()
 
@@ -82,7 +119,7 @@ export default class Forge extends DIElement{
     const componentsEl = this.querySelector('.item-components')
     componentsEl.innerHTML = ''
     components.map(component => {
-      componentsEl.append(new ComponentRow().setData(component, this._data.inventory))
+      componentsEl.append(new ComponentRow().setData(component, this._inventory))
     })
 
     this.upgradeButton.toggleAttribute(

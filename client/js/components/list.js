@@ -116,6 +116,10 @@ export default class List extends DIElement{
     return this._selectedRow
   }
 
+  clear(){
+    return this.setRows([])
+  }
+
   setRows(rows){
     this._rowsCache = rows.slice()
     this._fullUpdate()

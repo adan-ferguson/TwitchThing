@@ -16,7 +16,7 @@ export async function scrapItems(userDoc, { basic, crafted }){
     if(!userDoc.inventory.items.crafted[id]){
       throw 'Item not found: ' + id
     }
-    userDoc.inventory.scrap += new AdventurerItemInstance(userDoc.inventory.items.crafted[id])
+    userDoc.inventory.scrap += new AdventurerItemInstance(userDoc.inventory.items.crafted[id]).scrapValue
     delete userDoc.inventory.items.crafted[id]
   })
   Object.keys(basic).forEach(group => {
@@ -38,6 +38,7 @@ export async function upgradeInventoryItem(userDoc, itemDef){
   const upgradedItemDef = await upgradeItem(userDoc, itemDef)
   userDoc.inventory.items.crafted[upgradedItemDef.id] = upgradedItemDef
   await Users.saveAndEmit(userDoc)
+  return upgradedItemDef
 }
 
 export async function upgradeAdventurerItem(userDoc, slotIndex, adventurerID){
@@ -49,9 +50,11 @@ export async function upgradeAdventurerItem(userDoc, slotIndex, adventurerID){
   if(!itemDef){
     throw 'Could not find item.'
   }
-  advDoc.items[slotIndex] = upgradeItem(userDoc, itemDef)
+  const upgradedItemDef = upgradeItem(userDoc, itemDef)
+  advDoc.items[slotIndex] = upgradedItemDef
   await Adventurers.save(advDoc)
   await Users.saveAndEmit(userDoc)
+  return upgradedItemDef
 }
 
 async function upgradeItem(userDoc, itemDef){
@@ -62,7 +65,7 @@ async function upgradeItem(userDoc, itemDef){
     if(component.type === 'scrap'){
       spendScrap(userDoc, component.count)
     }else if(component.type === 'item'){
-      spendInventoryBasics(userDoc, component.itemDef.group, component.itemDef.name, component.count)
+      spendInventoryBasics(userDoc, component.group, component.name, component.count)
     }
   })
 

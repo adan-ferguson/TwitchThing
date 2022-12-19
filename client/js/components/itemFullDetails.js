@@ -9,6 +9,9 @@ const HTML = `
 export default class ItemFullDetails extends HTMLElement{
   setItem(itemInstance){
     this.innerHTML = HTML
+    if(!itemInstance){
+      return
+    }
     this.querySelector('.item-name').textContent = itemInstance.displayName
     this.querySelector('di-orb-row')
       .setOptions({

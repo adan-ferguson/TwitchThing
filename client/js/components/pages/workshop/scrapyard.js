@@ -49,13 +49,14 @@ export default class Scrapyard extends DIElement{
     return this.querySelector('.scrap-button')
   }
 
-  setData(data){
-    this._data = data
+  async load(){
+    const { data } = await fizzetch('/game/workshop/scrapyard')
+    this._inventory = data.inventory
     this.innerHTML = HTML
 
     this.workshopInventoryEl.setup({
       title: 'Choose items to scrap',
-      userInventory: data.inventory
+      userInventory: this._inventory
     }).listEl.events.on('clickrow', row => {
       this._addItemToScrapList(row.loadoutItem)
     })
@@ -70,10 +71,11 @@ export default class Scrapyard extends DIElement{
 
     this.scrapButton.addEventListener('click', async () => {
       showLoader()
-      await fizzetch('/game/workshop/scrap', {
+      await fizzetch('/game/workshop/scrapyard/scrap', {
         scrappedItems: rowsToInventoryItems(this.toScrapEl.allRows)
       })
-      this.parentPage.load()
+      this.toScrapEl.clear()
+      this._updateScrapCount()
       hideLoader()
     })
   }
