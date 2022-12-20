@@ -1,4 +1,4 @@
-import AbilityDetails from './abilityDetails.js'
+import AbilityDescription from './abilityDescription.js'
 import StatsList from './stats/statsList.js'
 import { StatsDisplayStyle } from '../statsDisplayInfo.js'
 import DIElement from './diElement.js'
@@ -24,14 +24,14 @@ export default class EffectDetails extends DIElement{
       return
     }
     this._addAbilityDescription()
-    this._addStats()
     this._addDescription()
+    this._addStats()
   }
 
   _addAbilityDescription(){
     if(this._effectInstance.hasAbilities){
       this.appendChild(
-        new AbilityDetails().setItem(this._effectInstance, this._options.showTooltips)
+        new AbilityDescription().setItem(this._effectInstance, this._options.showTooltips)
       )
     }
   }

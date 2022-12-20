@@ -39,6 +39,7 @@ di-app .page
     position: relative
     border: 1rem solid #BBB
     padding: 6rem
+    $insetPadding: 6rem
 
     &.scrollable
       overflow-y: auto
@@ -49,6 +50,18 @@ di-app .page
     &.clickable:hover
       background-color: #F8F8F8
       color: #6f46b0
+
+    .inset-title, .inset-title-right
+      position: absolute
+      top: -$insetPadding
+      left: $insetPadding
+      background-color: white
+      padding: 0 $insetPadding
+      border: 1rem solid #BBB
+
+    .inset-title-right
+      left: initial
+      right: $insetPadding
 
   .content-no-grow
     flex-grow: 0

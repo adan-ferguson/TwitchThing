@@ -16,16 +16,25 @@ const HTML = `
   </div>
   <div class="content-rows">
     <div class="content-no-grow right-column">
+      <div class="content-well item-before">
+        <span class="inset-title item-name"></span>
+        <span class="inset-title-right item-orbs"></span>
+        <di-item-full-details></di-item-full-details>
+      </div>
+      <div class="symbol">
+        <i class="fa-solid fa-plus"></i>
+      </div>
       <div class="content-well">
-        <di-item-full-details class="item-before"></di-item-full-details>
-        <span class="subtitle">Extra Components</span>
+        <span class="inset-title">Extra Components</span>
         <div class="item-components"></div>
       </div>
       <div class="symbol">
         <i class="fa-solid fa-arrow-down"></i>
       </div>
-      <div class="content-well">
-        <di-item-full-details class="item-after"></di-item-full-details>
+      <div class="content-well item-after">
+        <span class="inset-title item-name"></span>
+        <span class="inset-title-right item-orbs"></span>
+        <di-item-full-details></di-item-full-details>
       </div>
     </div>
     <button class="upgrade-button" disabled>Upgrade</button>
@@ -100,8 +109,8 @@ export default class Forge extends DIElement{
 
   _deselectItem(){
     this._selectedItem = null
-    this.querySelector('.item-before').setItem(null)
-    this.querySelector('.item-after').setItem(null)
+    setItem(this.querySelector('.item-before'), null)
+    setItem(this.querySelector('.item-after'), null)
     this.querySelector('.item-components').innerHTML = ''
     this.upgradeButton.toggleAttribute('disabled', true)
   }
@@ -113,8 +122,8 @@ export default class Forge extends DIElement{
     this._selectedItem = itemInstance
     const { upgradedItemDef, components } = itemInstance.upgradeInfo()
 
-    this.querySelector('.item-before').setItem(itemInstance)
-    this.querySelector('.item-after').setItem(new AdventurerItemInstance(upgradedItemDef))
+    setItem(this.querySelector('.item-before'), itemInstance)
+    setItem(this.querySelector('.item-after'), new AdventurerItemInstance(upgradedItemDef))
 
     const componentsEl = this.querySelector('.item-components')
     componentsEl.innerHTML = ''
@@ -129,3 +138,13 @@ export default class Forge extends DIElement{
   }
 }
 customElements.define('di-workshop-forge', Forge)
+
+function setItem(el, item){
+  el.querySelector('.item-name').textContent = item.displayName
+
+  const orbs = el.querySelector('.item-orbs')
+  orbs.innerHTML = 'orbz'
+  // orbs.appendChild(new OrbsRow())
+
+  el.querySelector('di-item-full-details').setItem(item)
+}

@@ -24,6 +24,16 @@ export function adjustInventoryBasics(userDoc, diff, inverted = false){
   }
 }
 
+export function adjustInventoryCrafted(userDoc, added, removed){
+  const obj = userDoc.inventory.items.crafted
+  added.forEach(itemDef => {
+    obj[itemDef.id] = itemDef
+  })
+  removed.forEach(itemDef => {
+    delete obj[itemDef.id]
+  })
+}
+
 export function spendInventoryBasics(userDoc, group, name, count){
   adjustInventoryBasics(userDoc, {
     [group]: {

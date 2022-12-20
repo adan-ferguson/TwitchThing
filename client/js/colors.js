@@ -14,6 +14,11 @@ export const ITEM_ROW_COLORS = {
   disabled: '#bbbbbb'
 }
 
+export const ABILITY_DESCRIPTION_COLORS = {
+  active: '#e9ffff',
+  triggered: '#ffecdb'
+}
+
 export const STATUSEFFECT_COLORS = {
   buff: {
     bar: '#ddffba',

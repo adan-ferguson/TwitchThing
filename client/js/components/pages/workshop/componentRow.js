@@ -9,11 +9,11 @@ const HTML = (iconEl, name, have = null, required = null) => {
   }
 
   return `
-<div class="flex-columns-center">
+<div class="flex-columns flex-centered">
   ${iconEl}
   <span class="name">${name}</span>
 </div>
-<div class="flex-columns-center">
+<div class="flex-columns flex-centered">
   <span class="count-tab"></span>
 </div>
 `

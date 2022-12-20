@@ -110,12 +110,20 @@ di-adventurer-loadout-editor-page
 
 di-ability-description
   white-space: initial
-  display: flex
-  flex-direction: column
+  display: block
   position: relative
   border: 0.5rem solid
-  padding: 3rem 7rem 3rem
-  margin-bottom: 6rem
+  padding: 3rem 6rem
+  margin-top: 3rem
+  text-align: left
+
+  .parsed-description
+    padding-top: 5rem
+    padding-bottom: 7rem
+    text-align: left
+
+    img
+      height: 1em
 
   //&[ability-type=active]
   //  border-color: $activeAbilityColor
@@ -126,28 +134,28 @@ di-ability-description
   //  background-color: $triggeredAbilityColorBg
 
   .description
-    font-size: 0.94em
     .action-description
       display: flex
       align-items: center
 
+
+
   .bot-row
-    display: flex
-    flex-direction: row
-    justify-content: end
-    align-items: center
-    margin-top: 4rem
+    margin-top: 6rem
+    padding-top: 6rem
+    border-top: 0.5rem solid #BBBBBB
 
     span
       font-size: 12rem
       margin-left: 12rem
 
-      i
-        font-size: 0.9em
-        margin-right: 3rem
+    i
+      font-size: 0.9em
+      margin-right: 3rem
 
     img
-      height: 1em
+      height: 1.1em
+      vertical-align: middle
       margin-right: 3rem
 
   .name

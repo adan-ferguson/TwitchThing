@@ -1,18 +1,15 @@
-import LoadoutRow from './loadoutRow.js'
 import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
-import FighterItemLoadoutItem from '../../fighterItemLoadoutItem.js'
-import AdventurerItemInstance from '../../../../game/adventurerItemInstance.js'
 import DIElement from '../diElement.js'
-import _ from 'lodash'
-import { inventoryItemsToRows } from '../listHelpers.js'
+import { inventoryItemsToRows, standardItemSort } from '../listHelpers.js'
+import LoadoutRow from './loadoutRow.js'
 
 const HTML = `
 <div class="content-rows">
   <div class="content-no-grow inventory-options">
-    <div class="input-group">
-      Sort By:
-      <label><input type="radio" name="sortBy" value="class">Class</label>
-    </div>
+<!--    <div class="input-group">-->
+<!--      Sort By:-->
+<!--      <label><input type="radio" name="sortBy" value="class">Class</label>-->
+<!--    </div>-->
     <div class="filtering-options require-adventurer">
       <label><input type="checkbox" name="hideOther"> Hide Unequippable</label>
     </div>
@@ -40,14 +37,16 @@ export default class Inventory extends DIElement{
     })
   }
 
-  get sortFn(){
-    return SORT_FUNCTIONS[this._filterSortOptions.sortBy]
+  /**
+   * @returns {List}
+   */
+  get listEl(){
+    return this.querySelector('di-list')
   }
 
-  // filterFn = (el) => {
-  //   return this._options.disabledFn?.(el.loadoutItem.itemInstance) ?? true
-  //   // return this.adventurer ? isCompatible(this.adventurer, el.loadoutItem.itemInstance) : true
-  // }
+  filterFn = row => {
+    return isCompatible(this.adventurer, row.loadoutItem.itemInstance)
+  }
 
   setup(items, adventurer){
     this.adventurer = adventurer
@@ -57,34 +56,34 @@ export default class Inventory extends DIElement{
     return this
   }
 
-  // addItem(item){
-  //   if(!item){
-  //     return
-  //   }
-  //   if(item.itemInstance.isBasic){
-  //     const row = this.list.findRow(row => row.loadoutItem.equals(item))
-  //     if(row){
-  //       row.count++
-  //       return
-  //     }
-  //   }
-  //   item.itemInstance.owner = null
-  //   const row = new LoadoutRow()
-  //   row.setItem(item)
-  //   this.list.addRow(row)
-  // }
-  //
-  // removeItem(item){
-  //   const row = this.list.findRow(row => row.loadoutItem === item)
-  //   if(!row){
-  //     return
-  //   }
-  //   if(item.itemInstance.isBasic && row.count > 1){
-  //     row.count--
-  //   }else{
-  //     this.list.removeRow(row)
-  //   }
-  // }
+  addItem(item){
+    if(!item){
+      return
+    }
+    if(item.itemInstance.isBasic){
+      const row = this.list.findRow(row => row.loadoutItem.equals(item))
+      if(row){
+        row.count++
+        return
+      }
+    }
+    item.itemInstance.owner = null
+    const row = new LoadoutRow()
+    row.setItem(item)
+    this.list.addRow(row)
+  }
+
+  removeItem(item){
+    const row = this.list.findRow(row => row.loadoutItem === item)
+    if(!row){
+      return
+    }
+    if(item.itemInstance.isBasic && row.count > 1){
+      row.count--
+    }else{
+      this.list.removeRow(row)
+    }
+  }
 
   _setupFilteringOptions(){
 
@@ -114,7 +113,7 @@ export default class Inventory extends DIElement{
   _updateSortAndFilter(){
     localStorage.setItem(STORAGE_NAME, JSON.stringify(this._filterSortOptions))
     this.list.setOptions({
-      sortFn: this.sortFn,
+      sortFn: standardItemSort,
       filterFn: this.filterFn,
       showFiltered: !this._filterSortOptions.hideOther
     })
@@ -124,11 +123,6 @@ export default class Inventory extends DIElement{
 function isCompatible(adventurer, itemInstance){
   const itemClass = itemInstance.itemDef.group
   return adventurer.bonuses[itemClass] ? true : false
-  // const ai = new AdventurerInstance({
-  //   ...adventurer,
-  //   items: [itemInstance.itemDef]
-  // })
-  // return ai.orbs.isValid
 }
 
 customElements.define('di-inventory', Inventory)

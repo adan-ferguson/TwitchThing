@@ -1,8 +1,10 @@
 import { OrbsDisplayStyle } from './orbRow.js'
 
 const HTML = `
-<div class="item-name"></div>
-<di-orb-row class="item-orbs"></di-orb-row>
+<div class="flex-columns flex-spaced flex-centered displaynone">
+  <div class="item-name"></div>
+  <di-orb-row class="item-orbs"></di-orb-row>
+</div>
 <di-effect-details></di-effect-details>
 `
 

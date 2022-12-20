@@ -17,6 +17,7 @@ const ICONS = {
 export function parseDescriptionString(description, stats = null){
 
   const el = document.createElement('div')
+  el.classList.add('parsed-description')
   const { chunks, props } = chunk(description)
   chunks.forEach((chunk, i) => {
     if(i !== 0){
@@ -43,12 +44,11 @@ export function parseDescriptionString(description, stats = null){
 
 const scalingWrap = (damageType, amount) => {
   const valStr = _.isNumber(amount) ? Math.ceil(amount) : amount
-  return `
-<span class="scaling-type scaling-type-${damageType}">
-  <img src="${ICONS[damageType]}">
-  ${valStr}
-</span>
-`
+  return makeEl({
+    class: ['scaling-type', 'scaling-type-' + damageType],
+    content: `<img src="${ICONS[damageType]}">${valStr}`,
+    elementType: 'span'
+  })
 }
 
 const FNS = {
@@ -58,7 +58,7 @@ const FNS = {
     }else{
       val = toPct(val)
     }
-    return makeEl({ content: scalingWrap('phys', val) })
+    return scalingWrap('phys', val)
   },
   magicScaling: (val, stats) => {
     if(stats){
@@ -66,7 +66,7 @@ const FNS = {
     }else{
       val = toPct(val)
     }
-    return makeEl({ content: scalingWrap('magic', val) })
+    return scalingWrap('magic', val)
   },
   physAttack: (val, stats) => {
     if(stats){
@@ -74,7 +74,7 @@ const FNS = {
     }else{
       val = toPct(val)
     }
-    return makeEl({ content: scalingWrap('phys', val) })
+    return scalingWrap('phys', val)
   },
   magicAttack: (val, stats) => {
     if(stats){
@@ -82,13 +82,13 @@ const FNS = {
     }else{
       val = toPct(val)
     }
-    return makeEl({ content: scalingWrap('magic', val) })
+    return scalingWrap('magic', val)
   },
   physFlat: (val) => {
-    return makeEl({ content: scalingWrap('phys', val) })
+    return scalingWrap('phys', val)
   },
   magicFlat: (val) => {
-    return makeEl({ content: scalingWrap('magic', val) })
+    return scalingWrap('magic', val)
   }
 }
 
