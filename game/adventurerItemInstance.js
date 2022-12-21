@@ -35,7 +35,7 @@ export default class AdventurerItemInstance extends FighterItemInstance{
 
   get displayName(){
     if(this.level > 1){
-      return `Lv.${this.level} ${super.displayName}`
+      return `L${this.level} ${super.displayName}`
     }
     return super.displayName
   }

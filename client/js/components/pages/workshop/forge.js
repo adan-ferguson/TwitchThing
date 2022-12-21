@@ -3,6 +3,7 @@ import AdventurerItemInstance from '../../../../../game/adventurerItemInstance.j
 import ComponentRow from './componentRow.js'
 import { hideLoader, showLoader } from '../../../loader.js'
 import fizzetch from '../../../fizzetch.js'
+import OrbRow, { OrbsDisplayStyle } from '../../orbRow.js'
 
 const HTML = `
 <div class="content-columns">
@@ -17,8 +18,8 @@ const HTML = `
   <div class="content-rows">
     <div class="content-no-grow right-column">
       <div class="content-well item-before">
-        <span class="inset-title item-name"></span>
-        <span class="inset-title-right item-orbs"></span>
+        <span class="inset-title item-name displaynone"></span>
+        <span class="inset-title-right item-orbs displaynone"></span>
         <di-item-full-details></di-item-full-details>
       </div>
       <div class="symbol">
@@ -32,8 +33,8 @@ const HTML = `
         <i class="fa-solid fa-arrow-down"></i>
       </div>
       <div class="content-well item-after">
-        <span class="inset-title item-name"></span>
-        <span class="inset-title-right item-orbs"></span>
+        <span class="inset-title item-name displaynone"></span>
+        <span class="inset-title-right item-orbs displaynone"></span>
         <di-item-full-details></di-item-full-details>
       </div>
     </div>
@@ -140,11 +141,17 @@ export default class Forge extends DIElement{
 customElements.define('di-workshop-forge', Forge)
 
 function setItem(el, item){
-  el.querySelector('.item-name').textContent = item.displayName
+  const name = el.querySelector('.item-name')
+  name.textContent = item?.displayName
+  name.classList.toggle('displaynone', item ? false : true)
 
+  debugger
   const orbs = el.querySelector('.item-orbs')
-  orbs.innerHTML = 'orbz'
-  // orbs.appendChild(new OrbsRow())
+  orbs.innerHTML = ''
+  if(item){
+    orbs.appendChild(new OrbRow().setOptions({ style: OrbsDisplayStyle.MAX_ONLY }).setData(item.orbs))
+  }
+  orbs.classList.toggle('displaynone', item ? false : true)
 
   el.querySelector('di-item-full-details').setItem(item)
 }
