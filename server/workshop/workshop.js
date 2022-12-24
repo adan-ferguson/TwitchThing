@@ -42,15 +42,18 @@ export async function upgradeInventoryItem(userDoc, itemDef){
 }
 
 export async function upgradeAdventurerItem(userDoc, slotIndex, adventurerID){
-  const advDoc = Adventurers.findByID(adventurerID)
+  const advDoc = await Adventurers.findByID(adventurerID)
   if(!advDoc.userID.equals(userDoc._id)){
     throw 'User does not own the item.'
+  }
+  if(advDoc.dungeonRunID){
+    throw 'Adventurer is in a dungeon run.'
   }
   const itemDef = advDoc.items[slotIndex]
   if(!itemDef){
     throw 'Could not find item.'
   }
-  const upgradedItemDef = upgradeItem(userDoc, itemDef)
+  const upgradedItemDef = await upgradeItem(userDoc, itemDef)
   advDoc.items[slotIndex] = upgradedItemDef
   await Adventurers.save(advDoc)
   await Users.saveAndEmit(userDoc)

@@ -77,6 +77,7 @@ export default class WorkshopInventory extends DIElement{
       const option = document.createElement('option')
       option.value = adv._id
       option.textContent = adv.name + (adv.dungeonRunID ? ' (Busy)' : '')
+      option.toggleAttribute('disabled', adv.dungeonRunID ? true : false)
       el.appendChild(option)
     })
     el.addEventListener('change', () => {

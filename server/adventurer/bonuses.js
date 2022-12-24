@@ -72,63 +72,72 @@ export async function rerollBonus(userDoc, adventurerDoc){
 
 export async function generateBonusOptions(userDoc, adventurerDoc){
 
-  const ai = new AdventurerInstance(adventurerDoc)
-  const orbsData = ai.orbs
-  const classOptions = orbsData.classes.slice(0,3)
-
-  for(let i = classOptions.length; i < 3; i++){
-    classOptions[i] = 'fighter' //randomClass()
-  }
-
-  return classOptions.map(className => {
-    return chooseBonus(className)
-  })
-
-  function randomClass(){
-    const exclude = classOptions
-    const choices = []
-    Object.keys(userDoc.features.advClasses)
-      .filter(className => userDoc.features.advClasses[className] > 0)
-      .forEach(className => {
-        if(exclude.indexOf(className) > -1){
-          return
-        }
-        choices.push(className)
-      })
-    return chooseOne(choices)
-  }
-
-  function chooseBonus(className){
-    const choices = Object.values(Bonuses[className]).map(bonus => {
-      return { weight: calcBonusWeight(bonus), value: bonus }
-    })
-    const chosen = chooseOne(choices)
-    const existing = adventurerDoc.bonuses[className]?.[chosen.name]
+  return ['fighter', 'mage', 'paladin'].map(className => {
+    const existing = adventurerDoc.bonuses[className]?.[className + 'orb'] ?? 0
     return {
       group: className,
-      name: chosen.name,
-      level: existing ? existing + 1 : 1
+      name: className + 'orb',
+      level: existing + 1
     }
-  }
+  })
 
-  function calcBonusWeight(bonus){
-    const orbCount = orbsData.get(bonus.group).max
-    if(bonus.minOrbs > orbCount){
-      return 0
-    }
-    if(!new BonusInstance(bonus).upgradable){
-      if(ai.bonusesData.get(bonus)){
-        return 0
-      }
-    }
-    if(bonus.requires){
-      const arr = toArray(bonus.requires)
-      if(!arr.every(requirement => {
-        return ai.bonusesData.get({ group: bonus.group, name: requirement }) ? true : false
-      })){
-        return 0
-      }
-    }
-    return RARITY_TO_WEIGHT[bonus.rarity ?? 0]
-  }
+  // const ai = new AdventurerInstance(adventurerDoc)
+  // const orbsData = ai.orbs
+  // const classOptions = orbsData.classes.slice(0,3)
+  //
+  // for(let i = classOptions.length; i < 3; i++){
+  //   classOptions[i] = 'fighter' //randomClass()
+  // }
+  //
+  // return classOptions.map(className => {
+  //   return chooseBonus(className)
+  // })
+
+  // function randomClass(){
+  //   const exclude = classOptions
+  //   const choices = []
+  //   Object.keys(userDoc.features.advClasses)
+  //     .filter(className => userDoc.features.advClasses[className] > 0)
+  //     .forEach(className => {
+  //       if(exclude.indexOf(className) > -1){
+  //         return
+  //       }
+  //       choices.push(className)
+  //     })
+  //   return chooseOne(choices)
+  // }
+  //
+  // function chooseBonus(className){
+  //   const choices = Object.values(Bonuses[className]).map(bonus => {
+  //     return { weight: calcBonusWeight(bonus), value: bonus }
+  //   })
+  //   const chosen = chooseOne(choices)
+  //   const existing = adventurerDoc.bonuses[className]?.[chosen.name]
+  //   return {
+  //     group: className,
+  //     name: chosen.name,
+  //     level: existing ? existing + 1 : 1
+  //   }
+  // }
+  //
+  // function calcBonusWeight(bonus){
+  //   const orbCount = orbsData.get(bonus.group).max
+  //   if(bonus.minOrbs > orbCount){
+  //     return 0
+  //   }
+  //   if(!new BonusInstance(bonus).upgradable){
+  //     if(ai.bonusesData.get(bonus)){
+  //       return 0
+  //     }
+  //   }
+  //   if(bonus.requires){
+  //     const arr = toArray(bonus.requires)
+  //     if(!arr.every(requirement => {
+  //       return ai.bonusesData.get({ group: bonus.group, name: requirement }) ? true : false
+  //     })){
+  //       return 0
+  //     }
+  //   }
+  //   return RARITY_TO_WEIGHT[bonus.rarity ?? 0]
+  // }
 }

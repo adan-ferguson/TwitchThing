@@ -145,7 +145,6 @@ function setItem(el, item){
   name.textContent = item?.displayName
   name.classList.toggle('displaynone', item ? false : true)
 
-  debugger
   const orbs = el.querySelector('.item-orbs')
   orbs.innerHTML = ''
   if(item){

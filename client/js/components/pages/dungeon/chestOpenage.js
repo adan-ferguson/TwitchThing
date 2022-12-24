@@ -45,10 +45,14 @@ export default class ChestOpenage extends DIElement{
     this.innerHTML = OPENED_HTML
 
     if(animate){
-      this.appendChild(makeEl({
+      const fo = makeEl({
         class: 'fading-overlay'
-      }))
+      })
+      this.appendChild(fo)
       await wait()
+      setTimeout(() => {
+        fo.remove()
+      }, 1000)
     }
 
     this.classList.add('opened')

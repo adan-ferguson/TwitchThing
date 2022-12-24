@@ -27,7 +27,7 @@ export default class ComponentRow extends DIElement{
       const required = inventory ? component.count : null
       this.innerHTML = HTML('<i class="fa-solid fa-recycle component-icon"></i>', 'Scrap')
       this.setValue(have, required)
-      this.setTooltip('Acquire scrap by scraping items in the scrapyard tab (scrap btw)')
+      this.setTooltip('Acquire scrap by scrapping items in the scrapyard tab (scrap btw)')
     }else if(component.type === 'item'){
       const instance = new AdventurerItemInstance({ group: component.group, name: component.name })
       const classInfo = classDisplayInfo(component.group)
