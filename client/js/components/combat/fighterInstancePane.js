@@ -215,6 +215,7 @@ export default class FighterInstancePane extends HTMLElement{
     this._effectsListEl.update(cancelAnimations)
     this._updateActionBar()
     this._loadoutEl.updateAllRows()
+    this.classList.toggle('boss', this.fighterInstance.isBoss ? true : false)
 
     if(!this.fighterInstance.hp){
       this._showOnDefeat()

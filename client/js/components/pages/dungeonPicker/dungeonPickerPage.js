@@ -77,10 +77,7 @@ export default class DungeonPickerPage extends Page{
 
   async load(){
 
-    const { adventurer, error } = await this.fetchData()
-    if(error){
-      return error
-    }
+    const { adventurer } = await this.fetchData()
 
     this.adventurer = adventurer
     this.floorSlider.setOptions({

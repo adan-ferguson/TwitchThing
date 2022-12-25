@@ -3,7 +3,7 @@ import { hideLoader, showLoader } from '../../../loader.js'
 
 const HTML = `
 <di-tabz>
-  <di-workshop-forge data-tab-name="Forge"></di-workshop-forge>
+  <di-workshop-forge data-tab-name="Upgrader"></di-workshop-forge>
   <di-workshop-scrapyard data-tab-name="Scrapyard"></di-workshop-scrapyard>
 </di-tabz>
 `

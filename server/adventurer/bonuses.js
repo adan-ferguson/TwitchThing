@@ -9,9 +9,9 @@ import { oneTwoFive } from '../../game/exponentialValue.js'
 import { spendGold } from '../loadouts/inventory.js'
 
 const FIRST_LEVEL_BONUSES = {
-  fighter: 'strength',
-  tank: 'toughness',
-  ranger: 'fleetFoot'
+  fighter: 'fighterorb',
+  mage: 'mageorb',
+  palandin: 'paladinorb'
 }
 
 const RARITY_TO_WEIGHT = [

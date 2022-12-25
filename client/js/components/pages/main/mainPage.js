@@ -73,7 +73,7 @@ export default class MainPage extends Page{
 
     if(this.user.features.workshop === 1){
       this._workshopEl.classList.add('glow')
-    }else if(!this.user.features.workshop && 0){
+    }else if(!this.user.features.workshop){
       this._workshopEl.classList.add('displaynone')
     }
   }
@@ -133,11 +133,11 @@ export default class MainPage extends Page{
           value: 'fighter',
           name: 'Fighter'
         },{
-          value: 'tank',
-          name: 'Tank'
+          value: 'mage',
+          name: 'Mage'
         },{
-          value: 'ranger',
-          name: 'Ranger'
+          value: 'paladin',
+          name: 'Paladin'
         }]
       })
     }

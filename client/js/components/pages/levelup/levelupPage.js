@@ -10,7 +10,7 @@ const HTML = `
 <div class="content-rows">
   <div class="flex-rows flex-no-grow">
     <div class="text">Select a Bonus</div>
-    <button class="reroll buy-button">
+    <button class="reroll buy-button displaynone">
       <span>Reroll</span>
       <span class="gold-value"></span>
       <img src="/assets/icons/gold.svg">
@@ -63,13 +63,13 @@ export default class LevelupPage extends Page{
 
     nextLevelUp.options.forEach((bonus, index) => {
       const levelupOption = new LevelupOption()
-      if(bonus.level > 1){
-        const current = {
-          ...bonus,
-          level: bonus.level - 1
-        }
-        levelupOption.setCurrent(current)
-      }
+      // if(bonus.level > 1){
+      //   const current = {
+      //     ...bonus,
+      //     level: bonus.level - 1
+      //   }
+      //   levelupOption.setCurrent(current)
+      // }
       levelupOption.setNext(bonus)
       levelupOption.addEventListener('click', () => {
         if(!this._selected){

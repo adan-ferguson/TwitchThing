@@ -24,13 +24,13 @@ const DEFAULTS = {
     workshop: 0,
     advClasses: {
       fighter: 2,
-      tank: 2,
-      ranger: 2
+      mage: 2,
+      paladin: 2
     }
   },
   inventory: {
     adventurerSlots: 1,
-    gold: 100000,
+    gold: 0,
     scrap: 0,
     items: {
       basic: {},

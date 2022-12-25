@@ -4,13 +4,16 @@ import tippy from 'tippy.js'
 import { suffixedNumber } from '../../../game/utilFunctions.js'
 
 const HTML = `
-<div class="autocrawl clickable">AUTOCRAWL</div>
+<div class="left-side">
+  <button class="back-button"><i class="fa-solid fa-arrow-left"></i></button>
+  <div class="autocrawl clickable">AUTOCRAWL</div>
+</div>
 <div class="right-side">
-  <div class="scrap-button">
+  <div class="scrap-button displaynone">
     <i class="fa-solid fa-recycle"></i>
     <span class="val"></span>
   </div>
-  <div class="gold-button">
+  <div class="gold-button displaynone">
     <img src="/assets/icons/gold.svg">
     <span class="val"></span>
   </div>
@@ -31,6 +34,10 @@ export default class Header extends HTMLElement{
 
     this.querySelector('.autocrawl').addEventListener('click', () => {
       this.app.setPage('')
+    })
+
+    this.querySelector('.back-button').addEventListener('click', () => {
+      window.history.back()
     })
 
     this._userInfo = this.querySelector('.user-info')
@@ -96,6 +103,10 @@ export default class Header extends HTMLElement{
     const goldButtonEl = this.querySelector('.gold-button')
     goldButtonEl.querySelector('.val').textContent = suffixedNumber(this.user.inventory.gold ?? 0, 5)
     if(!this.user.features?.shop){
+      if(!this.user.inventory.gold){
+        return
+      }
+      goldButtonEl.classList.remove('displaynone')
       goldButtonEl.classList.add('locked')
       tip = 'Clear floor 10 to unlock the shop'
     }
@@ -108,7 +119,6 @@ export default class Header extends HTMLElement{
     scrapEl.querySelector('.val').textContent = suffixedNumber(this.user.inventory.scrap ?? 0, 5)
     if(!this.user.features.workshop){
       if(!this.user.features.shop){
-        scrapEl.classList.add('displaynone')
         return
       }
       scrapEl.classList.remove('displaynone')

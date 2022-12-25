@@ -70,7 +70,7 @@ export default class TimelineControls extends HTMLElement{
       })
     })
     this.querySelector('button.back').addEventListener('click', () => {
-      const backThreshold = 1000 * this.speed
+      const backThreshold = 2000 * this.speed
       const index = this._timeline.currentEntryIndex + (this._timeline.timeSinceLastEntry > backThreshold ? 0 : -1)
       const targetTime = Math.max(0, this._timeline.entries[index].time)
       this.jumpTo(targetTime, {

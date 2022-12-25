@@ -31,10 +31,7 @@ export default class AdminPage extends Page{
   }
 
   async load(){
-    const { error } = await this.fetchData()
-    if(error){
-      return error
-    }
+    await this.fetchData()
   }
 }
 

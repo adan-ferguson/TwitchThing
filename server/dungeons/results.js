@@ -74,8 +74,7 @@ export async function finalize(dungeonRunDoc){
     }
 
     if(!userDoc.accomplishments.firstRunFinished){
-      const sword = generateItemDef({ group: 'fighter', name: 'sword' })
-      userDoc.inventory.items[sword.id] = sword
+      userDoc.inventory.items.basic = { fighter : { sword : 1 } }
       userDoc.accomplishments.firstRunFinished = 1
       userDoc.features.editLoadout = 1
       emit(userDoc._id, 'show popup', {
@@ -92,6 +91,24 @@ export async function finalize(dungeonRunDoc){
         message: `Monsters have been complaining that SOMEONE has been stealing their treasure chests!
         
         They're going to start hiding them a bit better.`
+      })
+    }
+
+    if(!userDoc.features.shop && dungeonRunDoc.floor >= 11){
+      userDoc.features.shop = 1
+      emit(userDoc._id, 'show popup', {
+        message: `You've unlocked the shop, where you can buy various things.
+        
+        Visit it from the main page, or via the gold counter in the header.`
+      })
+    }
+
+    if(!userDoc.features.workshop && dungeonRunDoc.floor >= 21){
+      userDoc.features.workshop = 1
+      emit(userDoc._id, 'show popup', {
+        message: `You've unlocked the forge, where you can craft and upgrade items.
+        
+        Visit it from the main page, or via the scrap counter in the header.`
       })
     }
 

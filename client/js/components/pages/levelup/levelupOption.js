@@ -52,5 +52,7 @@ function populateBonusInfo(target, bonusInstance){
   orbRow.classList.add('bonus-orbs')
   target.appendChild(orbRow)
 
-  target.appendChild(new EffectDetails().setEffect(bonusInstance))
+  target.append('Generic bonus placeholder, choose this to gain an orb for this class.')
+
+  //target.appendChild(new EffectDetails().setEffect(bonusInstance))
 }

@@ -3,17 +3,21 @@ const Zones = [{
   color: '#ebdad4',
   texture: 'caves.png',
 },{
+  name: 'Woods',
+  color: '#def5ce',
+  texture: 'crypt.png',
+},{
   name: 'Crypt',
   color: '#eeecec',
   texture: 'crypt.png',
 },{
   name: 'Swamp',
-  color: '#f5ffdf',
+  color: '#dce5d8',
   texture: 'swamp.png',
 },{
-  name: 'Something Else',
-  color: '#effaf8',
-  texture: 'caves.png'
+  name: 'Water World',
+  color: '#d2e8fd',
+  texture: 'crypt.png',
 }]
 
 // Final floor gets this bonus size

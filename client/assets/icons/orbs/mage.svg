@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
     <ellipse
-            fill="#57B"
+            fill="#8cb3ff"
             stroke-width="1"
             stroke="white"
             cx="25"
@@ -8,8 +8,16 @@
             rx="23"
             ry="23"
     />
-    <path
+    <polygon
+            stroke="white"
+            stroke-width="3"
+            fill="none"
+            points="12,16 16,12 25,21 21,25"
+    />
+    <polygon
+            stroke="white"
+            stroke-width="3"
             fill="white"
-            d="M15,15 l20,0 l0,20 l-20,0 Z"
+            points="38,34 34,38 21,25 25,21"
     />
 </svg>

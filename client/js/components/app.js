@@ -86,7 +86,10 @@ export default class App extends HTMLElement{
       await page.load()
       page.loadstate = 'loaded'
     }catch(ex){
-      console.error(ex)
+      if(ex.error?.targetPage){
+        this.setPage(ex.error.targetPage)
+        return
+      }
       if(page.useHistory){
         addPageToHistory(page, replaceHistoryState)
       }

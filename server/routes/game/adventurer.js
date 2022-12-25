@@ -158,7 +158,8 @@ async function validateIdle(req, res, next){
   if(req.adventurer.dungeonRunID){
     throw {
       status: 400,
-      message: 'Adventurer is in a dungeon run and can not perform this action.'
+      message: 'Adventurer is in a dungeon run and can not perform this action.',
+      targetPage: '/game/dungeonrun/' + req.adventurer.dungeonRunID
     }
   }
   next()

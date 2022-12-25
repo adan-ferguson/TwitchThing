@@ -66,7 +66,7 @@ export function applyChestToUser(userDoc, chest){
 
 function addGold(valueRemaining){
   valueRemaining = Math.ceil(Math.random() * valueRemaining)
-  const gold = GOLD_BASE + Math.ceil(geometricProgession(valueRemaining, GOLD_GROWTH_PCT, GOLD_GROWTH))
+  const gold = GOLD_BASE + Math.ceil(geometricProgession(GOLD_GROWTH_PCT, valueRemaining, GOLD_GROWTH))
   return toNumberOfDigits(gold,2)
 }
 
