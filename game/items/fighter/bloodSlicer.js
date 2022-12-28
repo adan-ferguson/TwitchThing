@@ -1,8 +1,6 @@
 import physScaling from '../../mods/generic/physScaling.js'
 import attackAction from '../../actions/attackAction.js'
-import { geometricProgession } from '../../exponentialValue.js'
-import { critChanceStat, critDamageStat } from '../../stats/combined.js'
-import { roundToNearestIntervalOf } from '../../utilFunctions.js'
+import { critChanceStat } from '../../stats/combined.js'
 import statusEffectAction from '../../actions/statusEffectAction.js'
 import damageSelfAction from '../../actions/damageSelfAction.js'
 
@@ -51,8 +49,7 @@ export default {
         }
       },
       stats: {
-        [critChanceStat.name]: 0.15 + level * 0.05,
-        [critDamageStat.name]: roundToNearestIntervalOf(geometricProgession(0.3, level, 20), 5) + '%'
+        [critChanceStat.name]: 0.15 + level * 0.05
       },
       mods: [physScaling]
     }

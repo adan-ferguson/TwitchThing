@@ -1,25 +1,21 @@
 import physScaling from '../../mods/generic/physScaling.js'
 import attackAction from '../../actions/attackAction.js'
-import { geometricProgession } from '../../exponentialValue.js'
-
-const SCALING = 0.4
-const BASE = 40
 
 export default {
   levelFn: level => ({
     abilities: {
       active: {
-        initialCooldown: 15000 + 5000 * level,
+        initialCooldown: 20000,
         actions: [
           attackAction({
-            damageMulti: 2 + level * 0.25
+            damageMulti: 2
           })
         ]
       }
     },
     stats: {
-      physPower: geometricProgession(SCALING, level, BASE),
-      speed: -10 - 20 * level
+      physPower: `+${20 + 30 * level}%`,
+      speed: -10 - 15 * level
     },
     mods: [physScaling]
   }),

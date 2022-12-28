@@ -4,9 +4,9 @@ import { dodgeChanceStat, speedStat } from '../../stats/combined.js'
 export default {
   levelFn: level => ({
     stats: {
-      [speedStat.name]: 30 * level,
-      [dodgeChanceStat.name]: exponentialPercentage(0.15, level)
+      [speedStat.name]: 20 + 10 * level,
+      [dodgeChanceStat.name]: exponentialPercentage(0.1, level - 1, 0.2)
     }
   }),
-  orbs: 6
+  orbs: 5
 }

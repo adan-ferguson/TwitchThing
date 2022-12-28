@@ -1,13 +1,9 @@
-import { geometricProgession } from '../../exponentialValue.js'
-
-const SCALING = 0.3
-const BASE = 12
+import { physPowerStat } from '../../stats/combined.js'
 
 export default {
   levelFn: level => ({
     stats: {
-      physPower: geometricProgession(SCALING, level, BASE),
-      speed: -5 * level
+      [physPowerStat.name]: `+${10 + level * 10}%`
     }
   }),
   orbs: 2

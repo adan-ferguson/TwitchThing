@@ -40,7 +40,6 @@ export function generateRandomChest(options = {}){
     let valueRemaining = chest.level
     if(chest.noGold || Math.random() > GOLD_ONLY_CHANCE){
       const baseType = chooseRandomBasicItem(chest.level, chest.class)
-      console.log(baseType.name, baseType.group, baseType)
       const count = chest.singlesOnly ? 1 : multiplyItem(valueRemaining, baseType.orbs)
       valueRemaining -= toValue(count, baseType.orbs)
       addItem(chest.contents.items.basic, baseType.group, baseType.name, count)
@@ -55,6 +54,9 @@ export function generateRandomChest(options = {}){
 
 export function applyChestToUser(userDoc, chest){
   mergeBasicItems(chest.contents.items.basic, userDoc.inventory.items.basic)
+  if(chest.contents.gold){
+    userDoc.inventory.gold += chest.contents.gold
+  }
   function mergeBasicItems(source, target){
     for(let group in source){
       for(let name in source[group]){
@@ -75,7 +77,7 @@ function multiplyItem(valueRemaining, itemLevel){
   while(toValue(maxCount + 1, itemLevel) < valueRemaining){
     maxCount++
   }
-  return Math.max(1, Math.floor(Math.random() * maxCount))
+  return Math.max(1, Math.round(Math.random() * maxCount))
 }
 
 function toValue(count, itemLevel){

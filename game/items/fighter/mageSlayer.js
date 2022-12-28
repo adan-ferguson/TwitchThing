@@ -6,7 +6,7 @@ import { exponentialPercentage } from '../../exponentialValue.js'
 
 export default {
   levelFn: level => {
-    const minDmg = 1.5 + level * 0.5
+    const minDmg = 1.7 + level * 0.3
     const maxDmg = minDmg * 2
     return {
       abilities: {
@@ -25,7 +25,7 @@ export default {
         }
       },
       stats: {
-        [magicDefStat.name]: exponentialPercentage(0.2, level - 1, 0.4)
+        [magicDefStat.name]: exponentialPercentage(0.2, level - 1, 0.3)
       },
       mods: [physScaling]
     }

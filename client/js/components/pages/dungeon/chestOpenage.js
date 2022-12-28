@@ -65,13 +65,12 @@ export default class ChestOpenage extends DIElement{
     const contents = this.querySelector('.contents')
     if(this._chest.contents.gold){
       contents.appendChild(makeEl({
-        content: `<span class="gold-contents"><img src="/assets/icons/gold.svg"> ${this._chest.contents.gold}</span>`,
-        class: 'gold-amount'
+        content: `<img src="/assets/icons/gold.svg"><span> +${this._chest.contents.gold}</span>`,
+        class: 'gold-contents'
       }))
     }
 
     const basicItems = arrayOfItems(this._chest.contents.items.basic)
-    console.log(basicItems)
     basicItems.forEach(({ itemDef, count }) => {
       const info = new FighterItemLoadoutItem(new AdventurerItemInstance(itemDef))
       const row = new LoadoutRow().setItem(info).setCount(count)

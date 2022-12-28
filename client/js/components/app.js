@@ -90,6 +90,7 @@ export default class App extends HTMLElement{
         this.setPage(ex.error.targetPage)
         return
       }
+      console.error(ex)
       if(page.useHistory){
         addPageToHistory(page, replaceHistoryState)
       }

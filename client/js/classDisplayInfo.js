@@ -24,7 +24,7 @@ export default function(className){
     obj = {
       description: 'Some description',
       orbIcon: paladinOrbIcon,
-      color: '#e6b300'
+      color: '#d2a200'
     }
   }else{
     return null

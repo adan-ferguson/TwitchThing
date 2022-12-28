@@ -79,7 +79,7 @@ export default class DungeonPage extends Page{
   }
 
   get titleText(){
-    return 'Exploring' + (this.dungeonRun ? ' ' + floorToZoneName(this.dungeonRun.floor) : '')
+    return 'Exploring' + (this.dungeonRun ? ' ' + floorToZoneName(this.currentEvent?.floor) : '')
   }
 
   get currentEvent(){
@@ -233,6 +233,7 @@ export default class DungeonPage extends Page{
     }
     const zone = Zones[floorToZone(this.currentEvent.floor)]
     this.app.setBackground(zone.color, zone.texture)
+    this.app.updateTitle()
   }
 
   _setupTimeline(dungeonRun){

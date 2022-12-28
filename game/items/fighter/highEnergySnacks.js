@@ -14,9 +14,9 @@ export default {
               displayName: 'Caffeine Rush',
               stacking: 'replace',
               lingering: true,
-              duration: 15000 + level * 5000,
+              duration: 15000,
               stats: {
-                speed: 10 + 20 * level
+                speed: 25 + level * 5
               }
             }
           })
