@@ -47,7 +47,7 @@ export function takeCombatTurn(combat, actor){
   return abilities
 }
 
-export function useEffectAbility(combat, effect, eventName){
+export function useEffectAbility(combat, effect, eventName, triggerData = null){
   const ability = effect.getAbility(eventName)
   if(!ability){
     throw 'Can not use ability, does not exist'
@@ -63,7 +63,7 @@ export function useEffectAbility(combat, effect, eventName){
   for(let i = 0; i < ability.actions.length; i++){
     let actionDef = ability.actions[i]
     if(_.isFunction(actionDef)){
-      actionDef = actionDef(combat, effect.owner, results)
+      actionDef = actionDef({ combat, owner: effect.owner, results, triggerData })
     }
     const actionResult = doAction(combat, effect, actionDef) ?? {
       type: 'blank',

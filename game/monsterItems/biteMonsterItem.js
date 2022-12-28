@@ -12,8 +12,8 @@ export default function(def){
           attackAction({
             damagePct: 1.5
           }),
-          (combat, owner, prevResults) => {
-            const data = prevResults[0].data
+          ({ results }) => {
+            const data = results[0].data
             if (data){
               return gainHealthAction({
                 flat: data.damageDistribution.hp * 0.5

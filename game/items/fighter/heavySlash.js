@@ -5,17 +5,13 @@ export default {
   levelFn: level => ({
     abilities: {
       active: {
-        initialCooldown: 20000,
+        initialCooldown: 15000 + level * 5000,
         actions: [
           attackAction({
-            damageMulti: 2
+            damageMulti: 1.5 + level * 0.5
           })
         ]
       }
-    },
-    stats: {
-      physPower: `+${20 + 30 * level}%`,
-      speed: -10 - 15 * level
     },
     mods: [physScaling]
   }),

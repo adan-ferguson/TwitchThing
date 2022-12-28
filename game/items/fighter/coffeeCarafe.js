@@ -24,6 +24,5 @@ export default {
       }
     }
   }),
-  displayName: 'Coffee Carafe',
   orbs: 3
 }

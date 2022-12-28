@@ -7,5 +7,5 @@ export default {
       [critChanceStat.name]: Math.max(0.2 + level * 0.1, 1),
     }
   }),
-  orbs: 7
+  orbs: 6
 }

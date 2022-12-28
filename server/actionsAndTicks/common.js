@@ -60,11 +60,11 @@ export function takeDamage(combat, subject, damageInfo){
   })
 }
 
-export function triggerEvent(combat, owner, eventName){
+export function triggerEvent(combat, owner, eventName, triggerData = {}){
   const effects = owner.triggeredEffects(eventName)
   const results = []
   for(let effect of effects){
-    results.push(useEffectAbility(combat, effect, eventName))
+    results.push(useEffectAbility(combat, effect, eventName, triggerData))
     if(results.at(-1)?.cancelled){
       return results
     }

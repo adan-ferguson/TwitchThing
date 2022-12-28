@@ -1,35 +1,25 @@
 import physScaling from '../../mods/generic/physScaling.js'
-import attackAction from '../../actions/attackAction.js'
 import { critChanceStat } from '../../stats/combined.js'
 import statusEffectAction from '../../actions/statusEffectAction.js'
 import damageSelfAction from '../../actions/damageSelfAction.js'
+import { exponentialPercentage } from '../../exponentialValue.js'
 
 export default {
   levelFn: level => {
-    const damageMulti = 1.5 + level * 0.5
+    const duration = Math.floor(30 * (1 - exponentialPercentage(0.2, level - 1)))
     return {
       abilities: {
-        active: {
-          cooldown: 20000,
-          description: '{A0} If it crits, the target bleeds for the same amount over 10 seconds.',
-          actions: [
-            attackAction({
-              damageMulti
-            }),
-            (combat, owner, results) => {
-              const data = results[0].data
-              if(!data.crit){
-                return null
-              }
-              const damage = data.totalDamage / 10
-              if(!damage){
-                return null
-              }
-              return statusEffectAction({
+        crit: {
+          description: 'Whenever you crit, the target bleeds for that much as physical damage over 30 seconds.',
+          actions: ({ triggerData }) => {
+            const damageJustDealt = triggerData.damageInfo.something
+            const damage = Math.ceil(damageJustDealt / duration)
+            return [
+              statusEffectAction({
                 affects: 'enemy',
                 effect: {
                   displayName: 'Bleeding',
-                  duration: 10000,
+                  duration: duration * 1000,
                   abilities: {
                     tick: {
                       initialCooldown: 1000,
@@ -44,12 +34,12 @@ export default {
                   }
                 }
               })
-            }
-          ]
+            ]
+          }
         }
       },
       stats: {
-        [critChanceStat.name]: 0.15 + level * 0.05
+        [critChanceStat.name]: 0.2 + level * 0.1
       },
       mods: [physScaling]
     }

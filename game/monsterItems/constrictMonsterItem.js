@@ -13,7 +13,7 @@ export default function({
         uses: 1,
         description: 'Wrap the opponent up and deal physical damage over time. Length is longer vs opponents with lower phys power.',
         actions: [
-          (combat, owner, prevResults) => {
+          ({ combat, owner }) => {
             const duration = 4000 * owner.physPower / combat.getEnemyOf(owner).physPower
             owner.nextTurnOffset = -duration
             return statusEffectAction({

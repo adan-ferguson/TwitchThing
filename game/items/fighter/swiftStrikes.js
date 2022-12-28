@@ -18,5 +18,5 @@ export default {
       mods: [physScaling]
     }
   },
-  orbs: 6
+  orbs: 7
 }
