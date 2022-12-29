@@ -1,7 +1,7 @@
 import healthIcon from '../assets/icons/health.svg'
 import physPower from '../assets/icons/physPower.svg'
 import magicPower from '../assets/icons/magicPower.svg'
-import { getStatDisplayInfo } from './statsDisplayInfo.js'
+import { getStatDisplayInfo, StatsDisplayStyle } from './statsDisplayInfo.js'
 import OrbRow, { OrbsDisplayStyle } from './components/orbRow.js'
 import Stats from '../../game/stats/stats.js'
 import { makeEl, toArray } from '../../game/utilFunctions.js'
@@ -15,6 +15,8 @@ const ICONS = {
 }
 
 export function parseDescriptionString(description, stats = null){
+
+  stats = null // TODO: think about this
 
   const el = document.createElement('div')
   el.classList.add('parsed-description')
@@ -46,7 +48,7 @@ const scalingWrap = (damageType, amount) => {
   const valStr = _.isNumber(amount) ? Math.ceil(amount) : amount
   return makeEl({
     class: ['scaling-type', 'scaling-type-' + damageType],
-    content: `<img src="${ICONS[damageType]}">${valStr}`,
+    content: `${valStr}<img src="${ICONS[damageType]}">`,
     elementType: 'span'
   })
 }
@@ -106,12 +108,16 @@ function wrapOrbs(classType, val, stats){
 
 function wrapStat(statType, val){
   const stats = new Stats({ [statType]: val })
-  const info = getStatDisplayInfo(stats.get(statType))
+  const info = getStatDisplayInfo(stats.get(statType), {
+    style: StatsDisplayStyle.ADDITIONAL
+  })
+  let content = info.displayedValue
   if(info.icon){
-    return makeEl({ content: `<img src="${info.icon}">${val}`, class: 'stat-wrap' })
+    content += `<img src="${info.icon}">`
   }else{
-    return makeEl({ content: val, class: 'stat-wrap' })
+    content += ' ' + info.text
   }
+  return makeEl({ content, class: 'stat-wrap' })
 }
 
 function toPct(val){
@@ -120,7 +126,7 @@ function toPct(val){
 
 function chunk(descriptionString){
   const props = []
-  const chunks = descriptionString.replace(/\[([A-Z]?)([A-Za-z]*)([\d.-]+)]/g, (_, type, subtype, val) => {
+  const chunks = descriptionString.replace(/\[([A-Z]?)([A-Za-z]*)([+-]?[\d.]+[%x]?)]/g, (_, type, subtype, val) => {
     props.push({
       type,
       subtype,

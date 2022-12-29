@@ -5,8 +5,8 @@ import { stunnedStatusEffect } from '../../statusEffects/combined.js'
 
 export default {
   baseStats: {
-    hpMax: '-40%',
-    magicPower: '-20%'
+    hpMax: '+100%',
+    magicPower: '+200%'
   },
   items: [
     {

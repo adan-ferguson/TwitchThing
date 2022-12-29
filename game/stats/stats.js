@@ -86,9 +86,9 @@ export default class Stats{
     const allStats = {}
     Object.keys(all).forEach(type => {
       const stat = this.get(type)
-      if(stat.defaultValue === stat.value && forced.indexOf(type) === -1){
-        return
-      }
+      // if(stat.defaultValue === stat.value && forced.indexOf(type) === -1){
+      //   return
+      // }
       allStats[type] = stat
     })
     return allStats

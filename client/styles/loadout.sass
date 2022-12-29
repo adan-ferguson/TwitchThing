@@ -113,17 +113,24 @@ di-ability-description
   display: block
   position: relative
   border: 0.5rem solid
-  padding: 3rem 6rem
   margin-top: 3rem
   text-align: left
+  line-height: 1.4em
 
   .parsed-description
-    padding-top: 5rem
-    padding-bottom: 7rem
+    padding: 7rem
     text-align: left
+
+    > *
+      display: inline-block
 
     img
       height: 1em
+      margin-left: 0.5em
+      vertical-align: text-top
+
+    .stat-wrap, .scaling-type
+      font-weight: bold
 
   //&[ability-type=active]
   //  border-color: $activeAbilityColor
@@ -138,12 +145,9 @@ di-ability-description
       display: flex
       align-items: center
 
-
-
   .bot-row
     margin-top: 6rem
-    padding-top: 6rem
-    border-top: 0.5rem solid #BBBBBB
+    padding: 0 6rem 2rem
 
     span
       font-size: 12rem
@@ -175,6 +179,7 @@ di-ability-description
     .scaling-type
       display: inline-flex
       flex-direction: row
+      font-weight: bold
       align-items: center
 
       img

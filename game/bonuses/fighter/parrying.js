@@ -1,13 +1,14 @@
 import turnTimeAction from '../../actions/turnTimeAction.js'
+import { dodgeChanceStat } from '../../stats/combined.js'
 
 export default {
   effect: {
     stats: {
-      dodgeChance: '10%'
+      [dodgeChanceStat.name]: '10%'
     },
     abilities: {
       dodge: {
-        description: 'Whenever you dodge something, refresh your turn timer.',
+        description: 'Whenever you dodge something, refresh your action bar.',
         actions: [turnTimeAction({
           setRemaining: 100
         })]

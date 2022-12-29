@@ -7,6 +7,7 @@ import physDefIcon from '../assets/icons/physDef.svg'
 import magicPowerIcon from '../assets/icons/magicPower.svg'
 import magicDefIcon from '../assets/icons/magicDef.svg'
 import { StatType } from '../../game/stats/statType.js'
+import statValueFns from '../../game/stats/statValueFns.js'
 
 export const StatsDisplayStyle = {
   CUMULATIVE: 0, // Eg. "50%", i.e. our total of this stat is 50%
@@ -107,7 +108,7 @@ export function getStatDisplayInfo(stat, options = {}){
     delete info.displayedValueFn
   }
   if(info.displayedValue === undefined){
-    info.displayedValue = toText(stat.type, stat.value, options.style)
+    info.displayedValue = toText(stat, options.style)
   }
   if(info.descriptionFn){
     info.description = info.descriptionFn(stat.value, options)
@@ -122,13 +123,18 @@ export function getStatDisplayInfo(stat, options = {}){
   }
 }
 
-function toText(statType, value, style){
+function toText(stat, style){
+  const value = stat.value
+  const statType = stat.type
+  if(!value && statType === StatType.COMPOSITE){
+    return toCompositeText(stat.mods, style)
+  }
   if(statType === StatType.MULTIPLIER){
     return `${value > 1 ? '+' : ''}${Math.round((value - 1) * 100)}%`
   }else if(statType === StatType.PERCENTAGE){
-    return `${style === StatsDisplayStyle.ADDITIONAL ? '+' : ''}${roundToFixed(value * 100, 1)}%`
+    return `${plusSign(style, value)}${roundToFixed(value * 100, 1)}%`
   }
-  return `${value > 0 && style === StatsDisplayStyle.ADDITIONAL ? '+' : ''}${value}`
+  return `${plusSign(style, value)}${value}`
 }
 
 function flatValuePercentageDisplay(value, { style }){
@@ -137,4 +143,24 @@ function flatValuePercentageDisplay(value, { style }){
     str += '+'
   }
   return str + `${Math.round(value * 100)}%`
+}
+
+function toCompositeText(mods, style){
+  // TODO: support multipliers
+  if(!mods.all.pct.length){
+    return '0'
+  }
+  const multiValue = statValueFns[StatType.MULTIPLIER](mods.all.pct.map(v => v + '%'))
+  multiValue.type = StatType.MULTIPLIER
+  return toText(multiValue, style)
+}
+
+function plusSign(style, value){
+  if(style !== StatsDisplayStyle.ADDITIONAL){
+    return ''
+  }
+  if(value < 0){
+    return ''
+  }
+  return '+'
 }

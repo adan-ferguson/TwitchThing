@@ -4,7 +4,7 @@ export default {
   levelFn: level => ({
     stats: {
       [critDamageStat.name]: `+${20 + 10 * level}%`,
-      [critChanceStat.name]: Math.max(0.2 + level * 0.1, 1),
+      [critChanceStat.name]: Math.min(0.15 + level * 0.05, 1),
     }
   }),
   orbs: 6

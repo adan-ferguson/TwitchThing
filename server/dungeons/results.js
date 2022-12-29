@@ -74,13 +74,13 @@ export async function finalize(dungeonRunDoc){
     }
 
     if(!userDoc.accomplishments.firstRunFinished){
-      userDoc.inventory.items.basic = { fighter : { sword : 1 } }
+      userDoc.inventory.items.basic = { fighter : { slash : 1 } }
       userDoc.accomplishments.firstRunFinished = 1
       userDoc.features.editLoadout = 1
       emit(userDoc._id, 'show popup', {
         message: `You got crushed! What were you thinking? You didn't even have a weapon!
         
-        I just hooked you up with a sword. Go to your adventurer's inventory to equip it.`
+        I just hooked you up with an item. Go to your adventurer's inventory to equip it.`
       })
     }
 

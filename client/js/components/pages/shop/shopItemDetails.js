@@ -63,7 +63,6 @@ export default class ShopItemDetails extends DIElement{
 
     if(canBuy){
       this.buyButtonEl.addEventListener('click', () => {
-        this.buyButtonEl.innerHTML = '<div class="spin-effect spinner">DI</div>'
         this.buyButtonEl.setAttribute('disabled', 'disabled')
         this.events.emit('purchased')
       })

@@ -8,7 +8,7 @@ export default {
       abilities: {
         active: {
           cooldown: 9000 + 3000 * level,
-          description: `Attack ${3 + level} times for [physAttack0.6] damage.`,
+          description: `Attack ${3 + level} times for [physAttack0.5] damage.`,
           actions:
             fillArray(() => attackAction({
               damageMulti: 0.5

@@ -45,7 +45,7 @@ export default class StatRow extends HTMLElement{
 
   _update(){
 
-    if(this._options.showTooltips){
+    if(this._options.showTooltips && this.statsDisplayInfo.description){
       this._tippy.enable()
       this._tippy.setContent(this.statsDisplayInfo.description)
     }else{

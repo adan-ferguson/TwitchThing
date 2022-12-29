@@ -17,6 +17,7 @@ export default class StatsList extends HTMLElement{
     showTooltips: true,
     truncate: true,
     maxItems: 999,
+    hideIfDefaultValue: false,
     forced: [],
     excluded: []
   }
@@ -26,6 +27,10 @@ export default class StatsList extends HTMLElement{
 
   get stats(){
     return this._stats
+  }
+
+  get empty(){
+    return this.querySelector('di-stat-row') ? false : true
   }
 
   setOptions(options){
@@ -61,7 +66,10 @@ export default class StatsList extends HTMLElement{
       if(this._options.excluded.indexOf(key) > -1){
         continue
       }
-      this._updateStat(statsToShow[key], this._owner, showStatChangeEffect)
+      if(this._options.hideIfDefaultValue && stat.value === stat.defaultValue){
+        continue
+      }
+      this._updateStat(stat, this._owner, showStatChangeEffect)
       delete unusedStats[key]
     }
 

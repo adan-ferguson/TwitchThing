@@ -1,4 +1,4 @@
-import ItemFullDetails from './components/itemFullDetails.js'
+import ItemCard from './components/itemCard.js'
 import abilityDisplayInfo from './abilityDisplayInfo.js'
 
 export default class FighterItemLoadoutItem{
@@ -40,7 +40,7 @@ export default class FighterItemLoadoutItem{
   }
 
   makeDetails(){
-    return new ItemFullDetails().setItem(this.itemInstance)
+    return new ItemCard().setItem(this.itemInstance)
   }
 
   equals(fidi){

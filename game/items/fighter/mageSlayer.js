@@ -6,7 +6,7 @@ export default {
   levelFn: level => {
     const maxDmg = 0.8 + level * 0.2
     return {
-      description: `Against enemies with high magic power, deal up to +${maxDmg * 100}% extra damage.`,
+      description: `Attacks deal extra damage to enemies with high magic power, up to +${Math.round(maxDmg * 100)}%.`,
       damageDealtModifier: enemy => {
         return 1 + maxDmg * minMax(0, enemy.magicPower / enemy.basePower - 1, 1)
       },

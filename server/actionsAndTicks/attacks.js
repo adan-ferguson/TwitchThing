@@ -64,9 +64,10 @@ export function performAttackAction(combat, attacker, effect = null, actionDef =
   damage += actionDef.targetHpPct * enemy.hp
   damage += actionDef.targetMaxHpPct * enemy.hpMax
   damage *= attacker.statsForEffect(effect).get(attackDamageStat).value
-  attacker.effects.forEach(effect => {
-    if(effect.damageDealtModifier){
-      damage *= effect.damageDealtModifier(enemy)
+  attacker.effectInstances.forEach(effect => {
+    // TODO: too hardcoded
+    if(effect.effectData.damageDealtModifier){
+      damage *= effect.effectData.damageDealtModifier(enemy)
     }
   })
 
@@ -89,7 +90,9 @@ export function performAttackAction(combat, attacker, effect = null, actionDef =
 
   if(damageInfo.crit){
     resultObj.data.crit = true
-    resultObj.triggeredEvents.push(...triggerEvent(combat, attacker, 'crit', { damageInfo }))
+    resultObj.triggeredEvents.push(...triggerEvent(combat, attacker, 'crit', {
+      damageResultData: damageResult.data
+    }))
   }
 
   return makeActionResult(resultObj)

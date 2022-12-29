@@ -3,7 +3,6 @@ import AdventurerItemInstance from '../../../../../game/adventurerItemInstance.j
 import ComponentRow from './componentRow.js'
 import { hideLoader, showLoader } from '../../../loader.js'
 import fizzetch from '../../../fizzetch.js'
-import OrbRow, { OrbsDisplayStyle } from '../../orbRow.js'
 
 const HTML = `
 <div class="content-columns">
@@ -11,17 +10,11 @@ const HTML = `
     <di-workshop-inventory></di-workshop-inventory>
   </div>
   <div class="hinter">
-      <div><--</div>
-      <div>Click items to swap</div>
-      <div>--></div>
+      <div>Choose an item to upgrade</div>
   </div>
   <div class="content-rows">
-    <div class="content-no-grow right-column">
-      <div class="content-well item-before">
-        <span class="inset-title item-name displaynone"></span>
-        <span class="inset-title-right item-orbs displaynone"></span>
-        <di-item-full-details></di-item-full-details>
-      </div>
+    <div class="right-column flex-rows hidden">
+      <di-item-card class="item-before"></di-item-card>
       <div class="symbol">
         <i class="fa-solid fa-plus"></i>
       </div>
@@ -32,13 +25,9 @@ const HTML = `
       <div class="symbol">
         <i class="fa-solid fa-arrow-down"></i>
       </div>
-      <div class="content-well item-after">
-        <span class="inset-title item-name displaynone"></span>
-        <span class="inset-title-right item-orbs displaynone"></span>
-        <di-item-full-details></di-item-full-details>
-      </div>
+      <di-item-card class="item-after"></di-item-card>
     </div>
-    <button class="upgrade-button" disabled>Upgrade</button>
+    <button class="upgrade-button flex-no-grow" disabled>Upgrade</button>
   </div>
 </div>
 `
@@ -62,7 +51,6 @@ export default class Forge extends DIElement{
 
     this.innerHTML = HTML
     this.workshopInventoryEl.setup({
-      title: 'Choose item to upgrade',
       adventurers: this._adventurers,
       userInventory: this._inventory
     }).listEl.setOptions({
@@ -110,9 +98,10 @@ export default class Forge extends DIElement{
 
   _deselectItem(){
     this._selectedItem = null
-    setItem(this.querySelector('.item-before'), null)
-    setItem(this.querySelector('.item-after'), null)
+    this.querySelector('.item-before').setItem(null)
+    this.querySelector('.item-after').setItem(null)
     this.querySelector('.item-components').innerHTML = ''
+    this.querySelector('.right-column').classList.add('hidden')
     this.upgradeButton.toggleAttribute('disabled', true)
   }
 
@@ -123,8 +112,9 @@ export default class Forge extends DIElement{
     this._selectedItem = itemInstance
     const { upgradedItemDef, components } = itemInstance.upgradeInfo()
 
-    setItem(this.querySelector('.item-before'), itemInstance)
-    setItem(this.querySelector('.item-after'), new AdventurerItemInstance(upgradedItemDef))
+    this.querySelector('.item-before').setItem(itemInstance)
+    this.querySelector('.item-after').setItem(new AdventurerItemInstance(upgradedItemDef))
+    this.querySelector('.right-column').classList.remove('hidden')
 
     const componentsEl = this.querySelector('.item-components')
     componentsEl.innerHTML = ''
@@ -139,18 +129,3 @@ export default class Forge extends DIElement{
   }
 }
 customElements.define('di-workshop-forge', Forge)
-
-function setItem(el, item){
-  const name = el.querySelector('.item-name')
-  name.textContent = item?.displayName
-  name.classList.toggle('displaynone', item ? false : true)
-
-  const orbs = el.querySelector('.item-orbs')
-  orbs.innerHTML = ''
-  if(item){
-    orbs.appendChild(new OrbRow().setOptions({ style: OrbsDisplayStyle.MAX_ONLY }).setData(item.orbs))
-  }
-  orbs.classList.toggle('displaynone', item ? false : true)
-
-  el.querySelector('di-item-full-details').setItem(item)
-}

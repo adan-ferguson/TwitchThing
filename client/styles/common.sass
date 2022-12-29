@@ -218,3 +218,17 @@ input
   flex: 0 0 70rem !important
   text-align: center
   justify-content: center
+
+$insetPadding: 6rem
+.inset-title, .inset-title-right
+  position: absolute
+  top: 0
+  left: $insetPadding
+  transform: translateY(-50%)
+  background-color: white
+  padding: 1rem $insetPadding 0
+  border: 1rem solid #BBB
+
+.inset-title-right
+  left: initial
+  right: $insetPadding

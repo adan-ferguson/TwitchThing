@@ -94,7 +94,7 @@ function percentageValue(values, defaultValue){
  * @param values
  * @param defaultValue
  */
-function multiplierValue(values, defaultValue){
+function multiplierValue(values, defaultValue = 1){
 
   const mods = organizeMods(values)
 

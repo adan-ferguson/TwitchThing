@@ -1,17 +1,16 @@
 import turnTimeAction from '../../actions/turnTimeAction.js'
-import { speedStat } from '../../stats/combined.js'
-import dodgeStat from 'chai/chai.js'
+import { dodgeChanceStat, speedStat } from '../../stats/combined.js'
 import { exponentialPercentage } from '../../exponentialValue.js'
 
 export default {
   levelFn: level => ({
     stats: {
       [speedStat.name]: 5 + 5 * level,
-      [dodgeStat.name]: exponentialPercentage(0.1, level - 1, 0.2)
+      [dodgeChanceStat.name]: exponentialPercentage(0.1, level - 1, 0.2)
     },
     abilities: {
       dodge: {
-        description: 'Whenever you dodge something, refresh your turn timer.',
+        description: 'Whenever you dodge an ability, refresh your turn timer.',
         actions: [turnTimeAction({
           setRemaining: 100
         })]

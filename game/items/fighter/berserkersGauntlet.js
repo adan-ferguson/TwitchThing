@@ -2,11 +2,11 @@ import { physPowerStat, speedStat } from '../../stats/combined.js'
 
 export default {
   levelFn: level => {
-    const pct = `+${9 + level * 3}%`
+    const pct = `+${8 + level * 2}%`
     return {
       abilities: {
         attackHit: {
-          description: `After landing an attack, gain [SphysPower${pct}] until end of combat. (Stacks)`,
+          description: `After attacking, gain [SphysPower${pct}] until end of combat. (Stacks)`,
           actions: [{
             type: 'statusEffect',
             affects: 'self',
@@ -25,5 +25,6 @@ export default {
       }
     }
   },
+  displayName: 'Berserker\'s Gauntlet',
   orbs: 5
 }
