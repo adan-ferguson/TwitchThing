@@ -1,6 +1,6 @@
 import { chooseRandomBasicItem } from '../items/generator.js'
 import { toNumberOfDigits } from '../../game/utilFunctions.js'
-import { geometricProgession } from '../../game/exponentialValue.js'
+import { geometricProgession } from '../../game/growthFunctions.js'
 
 const GOLD_ONLY_CHANCE = 0.3
 const GOLD_BASE = 10

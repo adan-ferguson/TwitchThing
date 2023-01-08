@@ -1,7 +1,7 @@
 import FighterInstance from './fighterInstance.js'
 import AdventurerItemInstance from './adventurerItemInstance.js'
 import OrbsData from './orbsData.js'
-import { geometricProgession, inverseGeometricProgression } from './exponentialValue.js'
+import { geometricProgession, inverseGeometricProgression } from './growthFunctions.js'
 import BonusesData from './bonusesData.js'
 import { toNumberOfDigits } from './utilFunctions.js'
 import { startingFoodStat } from './stats/combined.js'

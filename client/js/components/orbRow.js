@@ -15,6 +15,12 @@ export const OrbsDisplayStyle = {
   MAX_ONLY: 3
 }
 
+export const OrbsTooltip = {
+  NONE: 0,
+  NORMAL: 1,
+  ITEM: 2
+}
+
 export default class OrbRow extends DIElement{
 
   _orbsData = null
@@ -22,7 +28,7 @@ export default class OrbRow extends DIElement{
   get defaultOptions(){
     return {
       style: OrbsDisplayStyle.USED_ONLY,
-      showTooltips: true,
+      tooltip: OrbsTooltip.NORMAL,
       allowNegatives: false
     }
   }
@@ -38,7 +44,7 @@ export default class OrbRow extends DIElement{
   }
 
   _update(){
-    this.classList.toggle('no-tooltips', !this._options.showTooltips)
+    this.classList.toggle('no-tooltips', this._options.tooltip === OrbsTooltip.NONE)
     this.innerHTML = ''
     if(!this._orbsData){
       return
@@ -51,7 +57,7 @@ export default class OrbRow extends DIElement{
 customElements.define('di-orb-row', OrbRow)
 
 class OrbEntry extends HTMLElement{
-  constructor(orbDatum, { style, allowNegatives }){
+  constructor(orbDatum, { style, allowNegatives, tooltip }){
     super()
 
     let text
@@ -71,9 +77,14 @@ class OrbEntry extends HTMLElement{
     const classInfo = classDisplayInfo(orbDatum.className)
     this.style.color = classInfo.color
     this.innerHTML = ORB_ENTRY_HTML(classInfo.orbIcon || defaultOrbImg, text)
+
+    const tooltipText = tooltip === OrbsTooltip.ITEM ?
+      'Spend this many orbs to equip this item.' :
+      `${classInfo.displayName} orbs`
+
     tippy(this, {
       theme: 'light',
-      content: `${classInfo.displayName} orbs (use these to equip items)`
+      content: tooltipText
     })
 
     function n(val){

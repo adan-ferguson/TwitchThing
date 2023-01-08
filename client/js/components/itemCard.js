@@ -1,4 +1,4 @@
-import { OrbsDisplayStyle } from './orbRow.js'
+import { OrbsDisplayStyle, OrbsTooltip } from './orbRow.js'
 
 const HTML = `
 <div class="card-border">
@@ -30,7 +30,8 @@ export default class ItemCard extends HTMLElement{
     this.nameEl.textContent = itemInstance.displayName
     this.orbEl
       .setOptions({
-        style: OrbsDisplayStyle.MAX_ONLY
+        style: OrbsDisplayStyle.MAX_ONLY,
+        tooltip: OrbsTooltip.ITEM
       })
       .setData(itemInstance.orbs)
     this.effectDetails

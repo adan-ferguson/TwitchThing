@@ -1,4 +1,4 @@
-import { geometricProgession } from '../../exponentialValue.js'
+import { geometricProgession } from '../../growthFunctions.js'
 
 const SCALING = 0.2
 const BASE = 5

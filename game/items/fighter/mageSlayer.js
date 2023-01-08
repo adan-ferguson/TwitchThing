@@ -1,6 +1,6 @@
 import { magicDefStat } from '../../stats/combined.js'
 import { minMax } from '../../utilFunctions.js'
-import { exponentialPercentage } from '../../exponentialValue.js'
+import { exponentialPercentage } from '../../growthFunctions.js'
 
 export default {
   levelFn: level => {

@@ -1,4 +1,4 @@
-import { exponentialPercentage } from '../../exponentialValue.js'
+import { exponentialPercentage } from '../../growthFunctions.js'
 import { cooldownReductionStat } from '../../stats/combined.js'
 
 export default {

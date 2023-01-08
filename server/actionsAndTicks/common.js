@@ -121,3 +121,9 @@ export function performParentEffectAction(combat, effect, actionDef){
     subject: effect.owner.uniqueID
   })
 }
+
+export function performRefreshCooldownsAction(combat, owner, actionDef){
+  owner.itemInstances.forEach(ii => {
+    ii.refreshCooldown(actionDef)
+  })
+}

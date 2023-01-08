@@ -1,7 +1,7 @@
 import FighterInstance  from './fighterInstance.js'
 import * as Monsters from './monsters/combined.js'
 import MonsterItemInstance from './monsterItemInstance.js'
-import { geometricProgession } from './exponentialValue.js'
+import { geometricProgession } from './growthFunctions.js'
 import OrbsData from './orbsData.js'
 import { toDisplayName, toNumberOfDigits } from './utilFunctions.js'
 import { bossMod } from './mods/combined.js'
@@ -14,7 +14,7 @@ const POWER_BASE = 10
 const POWER_GROWTH = 4
 const POWER_GROWTH_PCT = 0.2 //0.25
 
-const XP_BASE = 50000
+const XP_BASE = 50
 const XP_GROWTH = 25
 const XP_GROWTH_PCT = 0.25
 const XP_ZONE_BONUS = 3

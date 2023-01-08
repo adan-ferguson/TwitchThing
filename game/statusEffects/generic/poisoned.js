@@ -11,7 +11,7 @@ export default {
     const damage = stateParams.dps * stacks
     return {
       stacking: true,
-      description: `Taking [magicFlat${damage}] damage every 5 seconds`,
+      description: `Taking [magicFlat${damage}] damage every second.`,
       abilities: {
         tick: {
           initialCooldown: 1000,

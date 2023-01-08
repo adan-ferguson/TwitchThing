@@ -1,7 +1,7 @@
 import { roundToNearestIntervalOf } from './utilFunctions.js'
 import _ from 'lodash'
 
-export function exponentialValue(growthPct, iterations, base = 1){
+export function growthFunctions(growthPct, iterations, base = 1){
   return Math.pow(growthPct + 1, iterations) * base
 }
 
@@ -58,4 +58,8 @@ export function oneTwoFive(val){
   const magnitude = Math.floor(val / 3)
   const mod = val % 3
   return Math.pow(10, magnitude) * [1, 2, 5][mod]
+}
+
+export function leveledPercentageString(base, perLevel, level){
+  return `+${base + level * perLevel}%`
 }

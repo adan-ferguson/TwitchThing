@@ -1,6 +1,6 @@
 import turnTimeAction from '../../actions/turnTimeAction.js'
 import { dodgeChanceStat, speedStat } from '../../stats/combined.js'
-import { exponentialPercentage } from '../../exponentialValue.js'
+import { exponentialPercentage } from '../../growthFunctions.js'
 
 export default {
   levelFn: level => ({

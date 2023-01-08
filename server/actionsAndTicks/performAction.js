@@ -2,7 +2,7 @@ import { performAttackAction } from './attacks.js'
 import _ from 'lodash'
 import {
   performCancelAction,
-  performGainHealthAction, performParentEffectAction,
+  performGainHealthAction, performParentEffectAction, performRefreshCooldownsAction,
   performRemoveStackAction,
   performTurnTimeAction,
   takeDamage
@@ -126,6 +126,8 @@ function doAction(combat, effect, actionDef){
     return performTurnTimeAction(combat, owner, actionDef)
   }else if(type === 'parentEffectAction'){
     return performParentEffectAction(combat, effect, actionDef)
+  }else if(type === 'refreshCooldownsAction'){
+    return performRefreshCooldownsAction(combat, owner, actionDef)
   }
   throw 'Undefined action'
 }

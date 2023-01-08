@@ -4,6 +4,8 @@ import { wrapContent } from '../../../../game/utilFunctions.js'
 import { ITEM_ROW_COLORS } from '../../colors.js'
 import EffectDetails from '../effectDetails.js'
 import DIElement from '../diElement.js'
+import ItemCard from '../itemCard.js'
+import ItemDetails from '../itemDetails.js'
 
 const HTML = `
 <di-bar class="cooldown"></di-bar>
@@ -38,9 +40,12 @@ export default class LoadoutRow extends DIElement{
     this.index = index
     this.setItem(null)
     this.addEventListener('contextmenu', e => {
-      if(this.loadoutItem?.makeDetails){
+      if(this.loadoutItem){
         e.preventDefault()
-        const modal = new SimpleModal(this.loadoutItem.makeDetails())
+        const details = new ItemDetails().setItem(this.loadoutItem.obj).setOptions({
+          showUpgradeButton: true
+        })
+        const modal = new SimpleModal(details)
         modal.show()
       }
     })

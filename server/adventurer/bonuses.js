@@ -5,7 +5,7 @@ import Adventurers from '../collections/adventurers.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 import { toArray } from '../../game/utilFunctions.js'
 import BonusInstance from '../../game/bonusInstance.js'
-import { oneTwoFive } from '../../game/exponentialValue.js'
+import { oneTwoFive } from '../../game/growthFunctions.js'
 import { spendGold } from '../loadouts/inventory.js'
 
 const FIRST_LEVEL_BONUSES = {

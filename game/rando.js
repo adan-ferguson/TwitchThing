@@ -86,3 +86,7 @@ function normalize(choicesObj){
     return { weight: 1, value: choice }
   })
 }
+
+export function randomBetween(min, max){
+  return min + (max - min) * Math.random()
+}

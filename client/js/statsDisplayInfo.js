@@ -79,8 +79,7 @@ const statDefinitionsInfo = {
     description: 'Gain health when dealing physical damage.',
   },
   [StatDefs.combatXP.name]: {
-    text: 'Combat XP Gain',
-    description: 'Increases XP gained from combat.',
+    text: 'XP Gain'
   },
   [StatDefs.startingFood.name]: {
     text: 'Starting Food'

@@ -1,4 +1,4 @@
-import { oneTwoFive } from '../../game/exponentialValue.js'
+import { oneTwoFive } from '../../game/growthFunctions.js'
 
 const FIRST_PRICE = 100
 const BASE_PRICE = 1000

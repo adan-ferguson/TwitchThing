@@ -2,15 +2,11 @@ import { takeDamage, triggerEvent } from './common.js'
 import { makeActionResult } from '../../game/actionResult.js'
 import attackAction from '../../game/actions/attackAction.js'
 import { attackDamageStat } from '../../game/stats/combined.js'
+import { randomBetween } from '../../game/rando.js'
 
 export function performAttackAction(combat, attacker, effect = null, actionDef = {}){
 
-  actionDef = attackAction({
-    damageMulti: 1,
-    damageType: 'auto',
-    damageScaling: 'auto',
-    ...actionDef
-  })
+  actionDef = attackAction(actionDef)
 
   const enemy = combat.getEnemyOf(attacker)
   const resultObj = {
@@ -61,6 +57,9 @@ export function performAttackAction(combat, attacker, effect = null, actionDef =
 
   let damage = attacker[actionDef.damageScaling + 'Power']
   damage *= actionDef.damageMulti
+  if(actionDef.damageRange){
+    damage *= randomBetween(actionDef.damageRange.min, actionDef.damageRange.max)
+  }
   damage += actionDef.targetHpPct * enemy.hp
   damage += actionDef.targetMaxHpPct * enemy.hpMax
   damage *= attacker.statsForEffect(effect).get(attackDamageStat).value

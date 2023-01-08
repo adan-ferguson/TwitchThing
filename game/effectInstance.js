@@ -129,9 +129,9 @@ export default class EffectInstance{
     this._state.abilities = ad.stateVal
   }
 
-  refreshCooldown(){
+  refreshCooldown(def = null){
     const ad = this.generateAbilitiesData()
-    ad.refreshCooldowns()
+    ad.refreshCooldowns(def)
     this._state.abilities = ad.stateVal
   }
 

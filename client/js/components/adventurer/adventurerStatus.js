@@ -1,4 +1,4 @@
-import { OrbsDisplayStyle } from '../orbRow.js'
+import { OrbsDisplayStyle, OrbsTooltip } from '../orbRow.js'
 import dateFormat from 'dateformat'
 import MonsterInstance from '../../../../game/monsterInstance.js'
 import AdventurerInstance from '../../../../game/adventurerInstance.js'
@@ -35,7 +35,7 @@ export default class AdventurerStatus extends HTMLElement{
     this.querySelector('di-orb-row')
       .setOptions({
         style: OrbsDisplayStyle.MAX_ONLY,
-        showTooltips: false
+        tooltip: OrbsTooltip.NONE
       })
       .setData(new AdventurerInstance(adventurer).orbs)
 

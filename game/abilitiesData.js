@@ -34,9 +34,12 @@ export default class AbilitiesData{
     return this
   }
 
-  refreshCooldowns(){
+  refreshCooldowns(def = null){
+    const pct = def ? def.amountPct : 1
+    const flat = def ? def.amountFlat : 0
     for(let key in this.instances){
-      this.instances[key].cooldownRemaining = 0
+      this.instances[key].cooldownRemaining -= flat
+      this.instances[key].cooldownRemaining *= (1 - pct)
     }
   }
 }

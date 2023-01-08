@@ -39,10 +39,6 @@ export default class FighterItemLoadoutItem{
     this.itemInstance.owner = owner
   }
 
-  makeDetails(){
-    return new ItemCard().setItem(this.itemInstance)
-  }
-
   equals(fidi){
     if(this === fidi){
       return true

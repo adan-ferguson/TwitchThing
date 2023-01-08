@@ -1,4 +1,4 @@
-import { OrbsDisplayStyle } from './orbRow.js'
+import { OrbsDisplayStyle, OrbsTooltip } from './orbRow.js'
 
 const HTML = `
 <div class="flex-columns flex-centered">
@@ -24,7 +24,7 @@ export default class ItemRow extends HTMLElement{
     this._orbRow = this.querySelector('di-orb-row')
     this._orbRow.setOptions({
       style: OrbsDisplayStyle.MAX_ONLY,
-      showTooltips: false
+      tooltip: OrbsTooltip.NONE
     })
   }
 
