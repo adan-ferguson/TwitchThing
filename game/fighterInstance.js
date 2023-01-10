@@ -4,6 +4,7 @@ import { StatusEffectsData } from './statusEffectsData.js'
 import ModsCollection from './modsCollection.js'
 import FighterItemInstance from './fighterItemInstance.js'
 import { minMax } from './utilFunctions.js'
+import freezeCooldownsMod from './mods/generic/freezeCooldowns.js'
 
 // Stupid
 new Stats()
@@ -281,15 +282,17 @@ export default class FighterInstance{
     if(!this.mods.contains(freezeActionBarMod) && this.inCombat){
       this._state.timeSinceLastAction += ms
     }
-    this.itemInstances.forEach(itemInstance => {
-      if(itemInstance){
-        itemInstance.advanceTime(ms)
-      }
-    })
+    if(!this.mods.contains(freezeCooldownsMod)){
+      this.itemInstances.forEach(itemInstance => {
+        if(itemInstance){
+          itemInstance.advanceTime(ms)
+        }
+      })
+    }
+    this.statusEffectsData.advanceTime(ms)
     if(this.inCombat){
       this._state.combatTime += ms
     }
-    this.statusEffectsData.advanceTime(ms)
   }
 
   nextActiveItemIndex(){
@@ -338,8 +341,11 @@ export default class FighterInstance{
     })
   }
 
+  /**
+   * @returns {boolean} Did something expire?
+   */
   cleanupState(){
-    this.statusEffectsData.cleanupExpired()
+    return this.statusEffectsData.cleanupExpired()
   }
 
   startCombat(){

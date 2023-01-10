@@ -18,7 +18,7 @@ export default function(className){
     obj = {
       description: 'Some description',
       orbIcon: mageOrbIcon,
-      color: '#8cb3ff'
+      color: '#4779da'
     }
   }else if(className === 'paladin'){
     obj = {

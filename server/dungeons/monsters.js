@@ -59,7 +59,7 @@ const monstersByFloor = [
   Monsters.ancientTortoise,
   Monsters.siren,
   Monsters.twoHeadedShark,
-  Monsters.mermaidSorceress,
+  Monsters.stormMermaid,
   Monsters.seaSerpent,
   Monsters.waterElemental,
   Monsters.kraken

@@ -16,7 +16,7 @@ const ICONS = {
 
 export function parseDescriptionString(description, stats = null){
 
-  stats = null // TODO: think about this
+  // stats = null // TODO: think about this
 
   const el = document.createElement('div')
   el.classList.add('parsed-description')
@@ -48,7 +48,7 @@ const scalingWrap = (damageType, amount) => {
   const valStr = _.isNumber(amount) ? Math.ceil(amount) : amount
   return makeEl({
     class: ['scaling-type', 'scaling-type-' + damageType],
-    content: `${valStr}<img src="${ICONS[damageType]}">`,
+    content: `<img src="${ICONS[damageType]}">${valStr}`,
     elementType: 'span'
   })
 }
@@ -121,7 +121,7 @@ function wrapStat(statType, val){
 }
 
 function toPct(val){
-  return val * 100 + '%'
+  return Math.round(val * 100) + '%'
 }
 
 function chunk(descriptionString){

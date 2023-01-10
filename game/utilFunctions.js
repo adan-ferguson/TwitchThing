@@ -156,3 +156,22 @@ export function suffixedNumber(val, digits){
   // TODO: this
   return val
 }
+
+/**
+ * Cleanup common issues with objects.
+ * 1) Numbers are rounded to nearest 0.01 (fix floating point nonsense)
+ * @param obj
+ */
+export function cleanupObject(obj){
+  const newObj = {}
+  for(let key in obj){
+    if(_.isNumber(obj[key])){
+      newObj[key] = roundToFixed(obj[key], 2)
+    }else if(_.isObject(obj[key])){
+      newObj[key] = cleanupObject(obj[key])
+    }else{
+      newObj[key] = obj[key]
+    }
+  }
+  return newObj
+}

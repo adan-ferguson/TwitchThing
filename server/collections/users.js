@@ -18,10 +18,10 @@ const DEFAULTS = {
     chestsFound: 0
   },
   features: { // featureName: 0 = locked, 1 = unlocked & brand new, 2 = unlocked
-    editLoadout: 0,
+    editLoadout: 1,
     dungeonPicker: 0,
-    shop: 0,
-    workshop: 0,
+    shop: 1,
+    workshop: 1,
     advClasses: {
       fighter: 2,
       mage: 2,
@@ -30,7 +30,7 @@ const DEFAULTS = {
   },
   inventory: {
     adventurerSlots: 1,
-    gold: 0,
+    gold: 100000,
     scrap: 0,
     items: {
       basic: {},

@@ -3,23 +3,28 @@ import statusEffectAction from '../../actions/statusEffectAction.js'
 import { barrierStatusEffect } from '../../statusEffects/combined.js'
 
 export default {
-  levelFn: level => ({
-    abilities: {
-      active: {
-        cooldown: 20000,
-        actions: [
-          statusEffectAction({
-            base: barrierStatusEffect,
-            effect: {
-              params: {
-                power: 1.6 + 0.3 * level
+  levelFn: level => {
+    const power = 1.6 + 0.3 * level
+    return {
+      abilities: {
+        active: {
+          cooldown: 20000,
+          description: `Gain a lingering barrier which absorbs [magicScaling${power}] damage.`,
+          actions: [
+            statusEffectAction({
+              base: barrierStatusEffect,
+              effect: {
+                lingering: true,
+                params: {
+                  physPower: power
+                }
               }
-            }
-          })
-        ]
-      }
-    },
-    mods: [magicScalingMod]
-  }),
+            })
+          ]
+        }
+      },
+      mods: [magicScalingMod]
+    }
+  },
   orbs: 4
 }

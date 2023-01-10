@@ -1,5 +1,7 @@
+import { cleanupObject } from '../utilFunctions.js'
+
 export default function(def){
-  return {
+  return cleanupObject({
     damageType: 'phys',
     damageMulti: 1,
     damageRange: null,
@@ -9,5 +11,5 @@ export default function(def){
     extraCritChance: 0,
     ...def,
     type: 'attack'
-  }
+  })
 }

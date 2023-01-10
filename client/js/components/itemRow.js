@@ -35,7 +35,7 @@ export default class ItemRow extends HTMLElement{
     }
     this._nameEl.textContent = loadoutItem.displayName
     this._orbRow.setData(loadoutItem.orbs)
-    this._setTexture(loadoutItem.isBasic ? null : 'swamp')
+    this._setTexture(loadoutItem.isBasic ? null : 'crypt')
   }
 
   setCount(count){

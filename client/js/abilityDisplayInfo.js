@@ -97,6 +97,12 @@ function deriveActionString(action){
 
 function toAttackString(action){
   const scaling = action.damageScaling === 'auto' ? action.damageType : action.damageScaling
-  return `Attack for [${scaling}Attack${action.damageMulti}] ${action.damageType} damage.`
+  let valStr
+  if(action.damageRange){
+    valStr = `[${scaling}Attack${action.damageRange.min}] to [${scaling}Attack${action.damageRange.max}]`
+  }else{
+    valStr = `[${scaling}Attack${action.damageMulti}]`
+  }
+  return `Attack for ${valStr} ${action.damageType} damage.`
 }
 

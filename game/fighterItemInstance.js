@@ -22,6 +22,10 @@ export default class FighterItemInstance extends EffectInstance{
     return []
   }
 
+  get isBasic(){
+    return true
+  }
+
   get activeAbility(){
     return this.getAbility('active')
   }

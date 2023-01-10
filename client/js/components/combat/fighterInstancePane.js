@@ -6,7 +6,13 @@ import MonsterInfo from '../monsterInfo.js'
 import FlyingTextEffect from '../visualEffects/flyingTextEffect.js'
 import CustomAnimation from '../../animations/customAnimation.js'
 import { mergeOptionsObjects, roundToFixed, toDisplayName } from '../../../../game/utilFunctions.js'
-import { magicAttackMod, magicScalingMod, physScalingMod } from '../../../../game/mods/combined.js'
+import {
+  freezeActionBarMod,
+  freezeCooldownsMod,
+  magicAttackMod,
+  magicScalingMod,
+  physScalingMod
+} from '../../../../game/mods/combined.js'
 import { DAMAGE_COLORS, FLASH_COLORS } from '../../colors.js'
 import { flash } from '../../animations/simple.js'
 import LoadoutRow from '../loadout/loadoutRow.js'
@@ -88,10 +94,12 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   advanceTime(ms){
-    if(this.fighterInstance.inCombat){
+    if(this.fighterInstance.inCombat && !this.fighterInstance.mods.contains(freezeActionBarMod)){
       this._actionBarEl.advanceTime(ms)
     }
-    this._loadoutEl.advanceTime(ms)
+    if(!this.fighterInstance.mods.contains(freezeCooldownsMod)){
+      this._loadoutEl.advanceTime(ms)
+    }
     this._effectsListEl.advanceTime(ms)
   }
 

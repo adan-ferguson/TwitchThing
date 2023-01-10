@@ -1,13 +1,12 @@
-import { freezeActionBarMod, magicScalingMod } from '../../mods/combined.js'
+import { freezeActionBarMod, freezeCooldownsMod, magicScalingMod } from '../../mods/combined.js'
 import statusEffectAction from '../../actions/statusEffectAction.js'
 
 export default {
   levelFn: level => ({
-    slotRestriction: 7,
-    description: 'Can only be equipped in slot 8.',
     abilities: {
       active: {
         cooldown: 60000,
+        description: `Stop time for the opponent for ${8 + level * 2}s.`,
         actions: [
           statusEffectAction({
             affects: 'enemy',

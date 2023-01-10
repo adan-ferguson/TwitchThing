@@ -83,6 +83,9 @@ const statDefinitionsInfo = {
   },
   [StatDefs.startingFood.name]: {
     text: 'Starting Food'
+  },
+  [StatDefs.cooldownReduction.name]: {
+    text: 'Cooldown Reduction'
   }
 }
 

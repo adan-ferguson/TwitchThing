@@ -9,7 +9,7 @@ export default {
         actions: [
           attackAction({
             damageRange: { min: 0.45 + level * 0.05, max: 1.8 + level * 0.2 },
-            damageScaling: 'magic'
+            damageType: 'magic'
           })
         ]
       }

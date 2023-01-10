@@ -32,7 +32,7 @@ export default class Picker{
   }
 
   pick(chestLevel, filterFn = null){
-    const choices = this.list.map(pickable => {
+    const choices = this.list.filter(filterFn).map(pickable => {
       return {
         value: pickable,
         weight: this.weight(this._options.valueFormula(pickable), chestLevel)

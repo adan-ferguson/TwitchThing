@@ -149,16 +149,15 @@ class Combat{
   }
 
   _run(){
+
     while(!this.finished){
       this._advanceTime()
 
       const tickUpdates = this._tick()
       const actions = this._doActions()
+      const forceEntry = this.fighterInstance1.cleanupState() || this.fighterInstance2.cleanupState()
 
-      this.fighterInstance1.cleanupState()
-      this.fighterInstance2.cleanupState()
-
-      if(actions.length || tickUpdates.length){
+      if(actions.length || tickUpdates.length || forceEntry){
         this._addTimelineEntry({
           actions,
           tickUpdates

@@ -4,7 +4,7 @@ import { roundToNearestIntervalOf } from '../../utilFunctions.js'
 export default {
   levelFn: level => ({
     abilities: {
-      active: {
+      attacked: {
         cooldown: roundToNearestIntervalOf(15000 * Math.pow(0.9, level - 1), 100),
         description: 'Automatically dodge an attack.',
         actions: [

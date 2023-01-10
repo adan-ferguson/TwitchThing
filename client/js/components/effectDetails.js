@@ -3,6 +3,8 @@ import StatsList from './stats/statsList.js'
 import { StatsDisplayStyle } from '../statsDisplayInfo.js'
 import DIElement from './diElement.js'
 import { parseDescriptionString } from '../descriptionString.js'
+import { magicAttackMod } from '../../../game/mods/combined.js'
+import { wrapContent } from '../../../game/utilFunctions.js'
 
 export default class EffectDetails extends DIElement{
 
@@ -51,9 +53,12 @@ export default class EffectDetails extends DIElement{
   }
 
   _addDescription(){
-    if(this._effectInstance.description){
-      const description = parseDescriptionString(this._effectInstance.description)
-      description.classList.add('effect-description')
+    const description = parseDescriptionString(this._effectInstance.description ?? '')
+    description.classList.add('effect-description')
+    if(this._effectInstance.mods.contains(magicAttackMod)){
+      description.append(wrapContent('Use magic power for basic attacks.'))
+    }
+    if(description.innerHTML.length){
       this.appendChild(description)
     }
   }
