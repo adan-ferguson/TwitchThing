@@ -161,18 +161,20 @@ export default class FighterInstance{
     return { ...baseState }
   }
 
-  get nextActionTime(){
-    const slow = this.stats.get('slow').value
+  get turnTime(){
     const speed = this.stats.get('speed').value
-
     let turnTime
     if(speed >= 0){
       turnTime = COMBAT_BASE_TURN_TIME * (100 / (speed + 100))
     }else{
       turnTime = COMBAT_BASE_TURN_TIME * (1 + speed / -100)
     }
+    return turnTime
+  }
 
-    return slow + turnTime
+  get nextActionTime(){
+    const slow = this.stats.get('slow').value
+    return slow + this.turnTime
   }
 
   get timeUntilNextUpdate(){
@@ -181,6 +183,9 @@ export default class FighterInstance{
       const tickAbility = ei.getAbility('tick')
       if(tickAbility){
         nextTick = Math.min(nextTick, tickAbility.cooldownRemaining)
+      }
+      if(ei.durationRemaining){
+        nextTick = Math.min(nextTick, ei.durationRemaining)
       }
     })
     return Math.min(this.timeUntilNextAction, nextTick)
@@ -341,11 +346,8 @@ export default class FighterInstance{
     })
   }
 
-  /**
-   * @returns {boolean} Did something expire?
-   */
   cleanupState(){
-    return this.statusEffectsData.cleanupExpired()
+    this.statusEffectsData.cleanupExpired()
   }
 
   startCombat(){

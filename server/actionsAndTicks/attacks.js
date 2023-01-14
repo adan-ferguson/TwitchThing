@@ -45,6 +45,17 @@ export function performAttackAction(combat, attacker, effect = null, actionDef =
     })
   }
 
+  if(blockAttack(enemy)){
+    resultObj.triggeredEvents.push(...triggerEvent(combat, enemy, 'block'))
+    return makeActionResult({
+      ...resultObj,
+      data: {
+        cancelReason: 'Blocked'
+      },
+      cancelled: true
+    })
+  }
+
   if(missAttack(attacker)){
     return makeActionResult({
       ...resultObj,
@@ -106,6 +117,10 @@ function attemptCrit(actor, target, bonusCritChance){
 
 function dodgeAttack(actor){
   return Math.random() + actor.stats.get('dodgeChance').value > 1
+}
+
+function blockAttack(actor){
+  return Math.random() + actor.stats.get('blockChance').value > 1
 }
 
 function missAttack(actor){

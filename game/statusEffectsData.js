@@ -87,19 +87,13 @@ export class StatusEffectsData{
     return distribution
   }
 
-  /**
-   * Remove expired effects
-   * @return {boolean} Did something expire?
-   */
   cleanupExpired(){
-    const lengthBefore = this._instances.length
     this._instances = this._instances.filter(effect => {
       if(!this._fighterInstance.inCombat && !effect.lingering){
         return false
       }
       return !effect.expired
     })
-    return lengthBefore !== this._instances.length
   }
 
   /**

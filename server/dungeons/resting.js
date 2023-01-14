@@ -9,7 +9,7 @@ export function rest(dungeonRun){
   const ai = dungeonRun.adventurerInstance
   const results = []
   ai.food--
-  results.push(performGainHealthAction(null, ai, { scaling: { hpMax: 0.5 } }))
+  results.push(performGainHealthAction(null, ai, { scaling: { hpMax: 0.35 } }))
   results.push(...triggerEvent(null, ai, 'rest'))
 
   return {

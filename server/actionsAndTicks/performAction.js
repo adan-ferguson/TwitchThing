@@ -19,13 +19,21 @@ export function takeCombatTurn(combat, actor){
   const index = actor.nextActiveItemIndex()
   const abilities = []
   if(index > -1){
-    abilities.push(useEffectAbility(combat, actor.itemInstances[index], 'active'))
-    // TODO: don't hardcode, this can be some sort of triggered ability
-    if(actor.mods.contains(doubleStrikeMod) && index === 0){
-      if(actor.itemInstances[1]?.getAbility('active')?.ready){
-        abilities.push(useEffectAbility(combat, actor.itemInstances[1], 'active'))
+    const item = actor.itemInstances[index]
+    abilities.push(useEffectAbility(combat, item, 'active'))
+    if(item.nextTurnOffset){
+      let chance = 0
+      if(item.nextTurnOffset.pct){
+        chance += actor.turnTime * item.nextTurnOffset.pct
       }
+      actor.nextTurnOffset += chance
     }
+    // TODO: don't hardcode, this can be some sort of triggered ability
+    // if(actor.mods.contains(doubleStrikeMod) && index === 0){
+    //   if(actor.itemInstances[1]?.getAbility('active')?.ready){
+    //     abilities.push(useEffectAbility(combat, actor.itemInstances[1], 'active'))
+    //   }
+    // }
   }else if(actor.mods.contains(noBasicAttackMod)){
     abilities.push({
       basicAttack: true,
@@ -126,7 +134,7 @@ function doAction(combat, effect, actionDef){
     return performTurnTimeAction(combat, owner, actionDef)
   }else if(type === 'parentEffectAction'){
     return performParentEffectAction(combat, effect, actionDef)
-  }else if(type === 'refreshCooldownsAction'){
+  }else if(type === 'refreshCooldowns'){
     return performRefreshCooldownsAction(combat, owner, actionDef)
   }
   throw 'Undefined action'

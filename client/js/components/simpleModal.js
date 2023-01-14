@@ -37,7 +37,7 @@ export default class SimpleModal extends Modal{
       if(content instanceof HTMLElement){
         contentEl.appendChild(content)
       }else{
-        contentEl.textContent = content
+        contentEl.innerHTML = content
       }
     }
   }

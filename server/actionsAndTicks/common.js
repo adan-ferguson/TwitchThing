@@ -124,6 +124,6 @@ export function performParentEffectAction(combat, effect, actionDef){
 
 export function performRefreshCooldownsAction(combat, owner, actionDef){
   owner.itemInstances.forEach(ii => {
-    ii.refreshCooldown(actionDef)
+    ii?.refreshCooldown(actionDef)
   })
 }

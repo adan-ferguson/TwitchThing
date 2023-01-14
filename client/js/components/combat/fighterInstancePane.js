@@ -165,7 +165,7 @@ export default class FighterInstancePane extends HTMLElement{
       }
       let dmgStr = roundToFixed(data.damageDistribution[key], 2)
       let html = `<span class="${classes.join(' ')}">-${dmgStr}${data.crit ? '!!' : ''}</span>`
-      let barEl = key === 'hp' ? this.hpBarEl : this._getEffectEl(key).barEl
+      let barEl = key === 'hp' ? this.hpBarEl : this._getEffectEl(key)?.barEl
       if(!barEl){
         continue
       }
