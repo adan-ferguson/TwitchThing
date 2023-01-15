@@ -6,13 +6,14 @@ export default {
     mods: [magicScalingMod],
     abilities: {
       active: {
-        initialCooldown: 15000,
+        initialCooldown: 20000,
+        description: '{A0} Your next turn is 50% faster.',
         nextTurnOffset: {
           pct: 0.5
         },
         actions: [
           gainHealthAction({
-            magicScaling: 0.85 + level * 0.15
+            magicPower: 0.6 + level * 0.1
           })
         ]
       }

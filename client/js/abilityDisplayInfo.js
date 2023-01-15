@@ -91,6 +91,8 @@ function deriveActionString(action){
     return action.description
   }else if(action.type === 'attack'){
     return toAttackString(action)
+  }else if(action.type === 'gainHealth'){
+    return toGainHealthString(action)
   }
   return ''
 }
@@ -106,3 +108,9 @@ function toAttackString(action){
   return `Attack for ${valStr} ${action.damageType} damage.`
 }
 
+function toGainHealthString(action){
+  if(action.scaling.magicPower){
+    return `Recover [magicScaling${action.scaling.magicPower}] health.`
+  }
+  return 'Recover <BUGGED AMOUNT LOL> health.'
+}

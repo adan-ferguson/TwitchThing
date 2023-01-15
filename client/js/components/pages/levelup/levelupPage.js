@@ -9,7 +9,7 @@ import LevelupOption from './levelupOption.js'
 const HTML = `
 <div class="content-rows">
   <div class="flex-rows flex-no-grow">
-    <div class="text">Select a Bonus</div>
+    <div class="text">Select a Bonus (UNDER CONSTRUCTION UNTIL NEXT UPDATE)</div>
     <button class="reroll buy-button displaynone">
       <span>Reroll</span>
       <span class="gold-value"></span>

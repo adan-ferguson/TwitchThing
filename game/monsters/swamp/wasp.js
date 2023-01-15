@@ -14,13 +14,13 @@ export default {
     abilities: {
       attackHit: {
         chance: 0.2,
-        description: 'Attacks have a chance to inflict a lingering poison.',
+        description: 'Attacks have a chance to inflict a persisting poison.',
         actions: [
           statusEffectAction({
             base: poisonedStatusEffect,
             affects: 'enemy',
             effect: {
-              lingering: true,
+              persisting: true,
               duration: 30000
             }
           })

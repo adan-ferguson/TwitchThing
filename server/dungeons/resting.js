@@ -7,6 +7,7 @@ export function shouldRest(dungeonRun){
 export function rest(dungeonRun){
 
   const ai = dungeonRun.adventurerInstance
+  const hpBefore = ai.hp
   const results = []
   ai.food--
   results.push(performGainHealthAction(null, ai, { scaling: { hpMax: 0.35 } }))
@@ -17,6 +18,9 @@ export function rest(dungeonRun){
     roomType: 'rest',
     penalty: {
       food: -1
+    },
+    rewards: {
+      health: ai.hp - hpBefore
     },
     message: `${dungeonRun.adventurerInstance.displayName} takes a break.`
   }

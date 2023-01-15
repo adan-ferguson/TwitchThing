@@ -10,7 +10,7 @@ import {
 import { performRemoveStatusEffectAction, performStatusEffectAction } from './statusEffects.js'
 import { blankActionResult, validateActionResult } from '../../game/actionResult.js'
 import { chooseOne } from '../../game/rando.js'
-import { doubleStrikeMod, noBasicAttackMod } from '../../game/mods/combined.js'
+import { noBasicAttackMod } from '../../game/mods/combined.js'
 
 export function takeCombatTurn(combat, actor){
   if(!actor.inCombat){
@@ -21,13 +21,6 @@ export function takeCombatTurn(combat, actor){
   if(index > -1){
     const item = actor.itemInstances[index]
     abilities.push(useEffectAbility(combat, item, 'active'))
-    if(item.nextTurnOffset){
-      let chance = 0
-      if(item.nextTurnOffset.pct){
-        chance += actor.turnTime * item.nextTurnOffset.pct
-      }
-      actor.nextTurnOffset += chance
-    }
     // TODO: don't hardcode, this can be some sort of triggered ability
     // if(actor.mods.contains(doubleStrikeMod) && index === 0){
     //   if(actor.itemInstances[1]?.getAbility('active')?.ready){

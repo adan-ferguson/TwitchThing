@@ -88,6 +88,7 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   setState(newState, cancelAnimations = false){
+    console.log('setState')
     this.fighterInstance.setState(newState)
     this._update(cancelAnimations)
     return this
@@ -147,6 +148,7 @@ export default class FighterInstancePane extends HTMLElement{
   _displayDamageResult = (damageResult) => {
 
     if(damageResult.cancelled){
+      this._displayCancellation(damageResult)
       return
     }
 
@@ -244,8 +246,11 @@ export default class FighterInstancePane extends HTMLElement{
   _excluded(){
     const excluded = ['hpMax','speed']
     const magicAttack = this.fighterInstance.mods.contains(magicAttackMod)
-    const showPhys = this.fighterInstance.mods.contains(physScalingMod)
-    const showMagic = this.fighterInstance.mods.contains(magicScalingMod)
+    const showPhys = this.fighterInstance.mods.contains(physScalingMod) ||
+      this.fighterInstance.physPower !== this.fighterInstance.basePower
+    const showMagic = this.fighterInstance.mods.contains(magicScalingMod) ||
+      this.fighterInstance.magicPower !== this.fighterInstance.basePower
+
     if((showPhys || !magicAttack) && showMagic){
       return [...excluded]
     }else if(magicAttack && !showPhys){
@@ -256,6 +261,9 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   _getEffectEl(effectId, eventName){
+    if(!effectId){
+      return null
+    }
     const loadoutRow = this._loadoutEl._rows.find(el => {
       // TODO: eventName should have to be the main event for the effect
       return el.loadoutItem?.obj.effectId === effectId
@@ -270,7 +278,7 @@ export default class FighterInstancePane extends HTMLElement{
 
   _displayCancellation(result, effect){
     if(result.data?.cancelReason){
-      const targetEl = this._getEffectEl(effect) ?? this._actionBarEl
+      const targetEl = this._getEffectEl(effect) ?? this.hpBarEl
       new FlyingTextEffect(
         targetEl,
         toDisplayName(result.data.cancelReason),

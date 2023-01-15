@@ -12,22 +12,22 @@ export default {
       abilities: {
         active: {
           cooldown: 8000,
-          description: 'Deal [physScaling1.2] phys damage. 1/3 chance to inflict curse.',
+          description: 'Deal [physScaling1.2] phys damage. 1/3 chance to inflict a curse, making it more likely like the target will be crit.',
           actions: [
             attackAction({
               damageMulti: 1.2
             }),
             maybeAction({
-              chance: 1/3
+              chance: 1 //1/3
             }),
             statusEffectAction({
               affects: 'enemy',
-              lingering: true,
               effect: {
                 displayName: 'Cursed',
                 stacking: true,
+                persisting: true,
                 stats: {
-                  enemyCritChance: '+10%'
+                  enemyCritChance: '+20%'
                 }
               }
             })

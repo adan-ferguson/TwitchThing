@@ -108,8 +108,17 @@ export default class EffectInstance{
 
   useAbility(eventName){
     const ad = this.generateAbilitiesData()
-    ad.instances[eventName].use()
+    const inst = ad.instances[eventName]
+    inst.use()
     this._state.abilities = ad.stateVal
+
+    if(inst.nextTurnOffset){
+      let offset = 0
+      if(inst.nextTurnOffset.pct){
+        offset += this.owner.turnTime * inst.nextTurnOffset.pct
+      }
+      this.owner.nextTurnOffset += offset
+    }
   }
 
   shouldTrigger(triggerName){

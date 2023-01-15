@@ -3,6 +3,6 @@ export default {
   baseStats: {
     physPower: '-20%',
     physDef: '+20%',
-    speed: 15
+    speed: 20
   }
 }

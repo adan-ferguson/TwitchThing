@@ -113,7 +113,7 @@ function wrapStat(statType, val){
   })
   let content = info.displayedValue
   if(info.icon){
-    content += `<img src="${info.icon}">`
+    content = `<img src="${info.icon}">` + content
   }else{
     content += ' ' + info.text
   }

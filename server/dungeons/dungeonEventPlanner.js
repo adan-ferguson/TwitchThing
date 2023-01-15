@@ -50,7 +50,7 @@ export async function generateEvent(dungeonRun){
     return rest(dungeonRun)
   }
 
-  const encounterPossible = (previousEvent?.combatID || room <= 1) ? false : true
+  const encounterPossible = previousEvent.wandering ? true : false //(previousEvent?.combatID || room <= 1) ? false : true
 
   if(encounterPossible && foundMonster(dungeonRun)){
     return await generateCombatEvent(dungeonRun)
@@ -60,6 +60,7 @@ export async function generateEvent(dungeonRun){
 
   return {
     message,
+    wandering: true,
     nextRoom: room + 1
   }
 }

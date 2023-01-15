@@ -1,6 +1,6 @@
 import { all as Effects } from './statusEffects/combined.js'
 import Stats from './stats/stats.js'
-import { roundToFixed, uniqueID } from './utilFunctions.js'
+import { roundToFixed, toDisplayName, uniqueID } from './utilFunctions.js'
 import EffectInstance from './effectInstance.js'
 
 export default class StatusEffectInstance extends EffectInstance{
@@ -12,7 +12,7 @@ export default class StatusEffectInstance extends EffectInstance{
   }
 
   get phantom(){
-    return this.data.name ? false : true
+    return this.effectData.displayName ? false : true
   }
 
   get data(){
@@ -20,7 +20,7 @@ export default class StatusEffectInstance extends EffectInstance{
   }
 
   get effectData(){
-    if(this.phantom){
+    if(!this._data.name){
       return this.data
     }
     let effectData
@@ -29,6 +29,7 @@ export default class StatusEffectInstance extends EffectInstance{
       effectData = {
         name: baseDef.name,
         group: baseDef.group,
+        displayName: toDisplayName(baseDef.name),
         ...baseDef.defFn(this._data.params, this._state)
       }
     }else{
@@ -60,7 +61,7 @@ export default class StatusEffectInstance extends EffectInstance{
   }
 
   get duration(){
-    return this.effectData.duration
+    return this.effectData.duration + (this._state.extendedDuration ?? 0)
   }
 
   get durationRemaining(){
@@ -117,8 +118,15 @@ export default class StatusEffectInstance extends EffectInstance{
     return this._state.turnsTaken ?? 0
   }
 
-  get lingering(){
-    return this.effectData.lingering ?? false
+  get persisting(){
+    return this.effectData.persisting ?? false
+  }
+
+  extend(time){
+    if(this.duration){
+      this._state.extendedDuration = (this._state.extendedDuration ?? 0) + time
+    }
+    return this
   }
 
   refresh(){

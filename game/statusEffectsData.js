@@ -89,7 +89,7 @@ export class StatusEffectsData{
 
   cleanupExpired(){
     this._instances = this._instances.filter(effect => {
-      if(!this._fighterInstance.inCombat && !effect.lingering){
+      if(!this._fighterInstance.inCombat && !effect.persisting){
         return false
       }
       return !effect.expired
@@ -107,6 +107,8 @@ export class StatusEffectsData{
         const instance = new StatusEffectInstance(statusEffectData, this._fighterInstance)
         this._instances[index] = instance
         return instance
+      }else if(existing.stacking === 'extend'){
+        return existing.extend(new StatusEffectInstance(statusEffectData, this._fighterInstance).duration)
       }else if(existing.stacking === true){
         return existing.addStack().refresh()
       }

@@ -11,7 +11,7 @@ const innerHTML = `
     Rest when HP below <span class="rest-threshold"></span>%
   </div>
   <div class="resting-yes">
-    Food Left: <span class="food">0</span>
+    Food: <span class="food">0</span>/<span class="max-food"></span>
   </div>
   <div>
     XP: <span class="xp-reward">0</span>
@@ -41,6 +41,10 @@ export default class State extends HTMLElement{
     this._food = this.querySelector('.food')
   }
 
+  get maxFoodEl(){
+    return this.querySelector('.max-food')
+  }
+
   setup(dungeonRun){
     this.querySelector('.pace').textContent = dungeonRun.dungeonOptions.pace ?? 'Brisk'
     if(dungeonRun.dungeonOptions.restThreshold > 0){
@@ -61,7 +65,7 @@ export default class State extends HTMLElement{
 
     this._setXP(results.xp, animate)
     this._updateChests(results.chests, animate)
-    this._setFoodRemaining(adventurerInstance.food)
+    this._setFoodRemaining(adventurerInstance.food, adventurerInstance.maxFood)
 
     this._contentEl.classList.remove('displaynone')
   }
@@ -104,8 +108,9 @@ export default class State extends HTMLElement{
     this._chests.textContent = (chests?.length || 0) + ''
   }
 
-  _setFoodRemaining(amount){
-    this._food.textContent = (amount ?? 0) + ''
+  _setFoodRemaining(food, max){
+    this._food.textContent = food
+    this.maxFoodEl.textContent = max
   }
 }
 

@@ -73,6 +73,10 @@ const statDefinitionsInfo = {
     text: 'Dodge Chance',
     description: 'Chance to dodge attacks.',
   },
+  [StatDefs.blockChance.name]: {
+    text: 'Block Chance',
+    description: 'Chance to block attacks.',
+  },
   [StatDefs.lifesteal.name]: {
     text: 'Lifesteal',
     displayedValueFn: value => `${Math.round(value * 100)}%`,

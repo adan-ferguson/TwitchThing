@@ -9,12 +9,12 @@ export default {
       abilities: {
         active: {
           cooldown: 20000,
-          description: `Gain a lingering barrier which absorbs [magicScaling${power}] damage.`,
+          description: `Gain a persisting barrier which absorbs [magicScaling${power}] damage.`,
           actions: [
             statusEffectAction({
               base: barrierStatusEffect,
               effect: {
-                lingering: true,
+                persisting: true,
                 params: {
                   physPower: power
                 }

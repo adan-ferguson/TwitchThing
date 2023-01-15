@@ -1,23 +1,26 @@
-import { blockChanceStat, magicPowerStat } from '../../stats/combined.js'
 import attackAction from '../../actions/attackAction.js'
 import { leveledPercentageString } from '../../growthFunctions.js'
 
 export default {
-  levelFn: level => ({
-    stats: {
-      [blockChanceStat.name]: 0.3,
-      [magicPowerStat.name]: leveledPercentageString(10, 10, level)
-    },
-    abilities: {
-      block: {
-        actions: [
-          attackAction({
-            damageTyppe: 'magic',
-            damageMulti: 0.7 + 0.1 * level
-          })
-        ]
+  levelFn: level => {
+    const dmg = 0.5 + 0.15 * level
+    return {
+      stats: {
+        blockChance: '100%',
+        magicPower: leveledPercentageString(10, 10, level)
+      },
+      abilities: {
+        block: {
+          description: `When you block an attack, the attacker takes [magicScaling${dmg}] magic damage.`,
+          actions: [
+            attackAction({
+              damageType: 'magic',
+              damageMulti: dmg
+            })
+          ]
+        }
       }
     }
-  }),
+  },
   orbs: 6
 }

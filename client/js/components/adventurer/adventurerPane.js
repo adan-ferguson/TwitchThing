@@ -107,8 +107,11 @@ export default class AdventurerPane extends HTMLElement{
   _excluded(){
     const excluded = []
     const magicAttack = this.adventurerInstance.mods.contains(magicAttackMod)
-    const showPhys = this.adventurerInstance.mods.contains(physScalingMod)
-    const showMagic = this.adventurerInstance.mods.contains(magicScalingMod)
+    const showPhys = this.adventurerInstance.mods.contains(physScalingMod) ||
+      this.adventurerInstance.physPower !== this.adventurerInstance.basePower
+    const showMagic = this.adventurerInstance.mods.contains(magicScalingMod) ||
+      this.adventurerInstance.magicPower !== this.adventurerInstance.basePower
+
     if((showPhys || !magicAttack) && showMagic){
       return [...excluded]
     }else if(magicAttack && !showPhys){

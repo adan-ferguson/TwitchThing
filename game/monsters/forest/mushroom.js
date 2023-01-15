@@ -42,7 +42,7 @@ const sleepSpores = statusEffect({
 const shrinkingSpores = statusEffect({
   affects: 'enemy',
   effect: {
-    lingering: true,
+    persisting: true,
     duration: 30000,
     description: 'Reduced stats.',
     stats: {
@@ -72,7 +72,7 @@ const silenceSpores = statusEffect({
     stacking: 'replace',
     displayName: 'Silence Spores',
     duration: 30000,
-    lingering: true,
+    persisting: true,
     mods: [silencedMod]
   }
 })

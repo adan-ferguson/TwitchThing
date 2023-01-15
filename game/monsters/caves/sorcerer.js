@@ -1,35 +1,21 @@
-import { magicAttackMod } from '../../mods/combined.js'
 import attackAction from '../../actions/attackAction.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
-import { stunnedStatusEffect } from '../../statusEffects/combined.js'
 
 export default {
   baseStats: {
-    hpMax: '+100%',
-    magicPower: '+200%'
+    hpMax: '-20%',
+    magicPower: '+110%',
+    physPower: '-40%'
   },
   items: [
-    {
-      name: 'Magic Attack',
-      mods: [magicAttackMod]
-    },
     {
       name: 'Lightning Bolt',
       abilities: {
         active: {
-          cooldown: 10000,
-          initialCooldown: 10000,
+          initialCooldown: 5000,
           actions: [
             attackAction({
-              damageMulti: 3,
+              damageRange: { min: 0, max: 2 },
               damageType: 'magic'
-            }),
-            statusEffectAction({
-              affects: 'enemy',
-              base: stunnedStatusEffect,
-              effect: {
-                duration: 1000
-              }
             })
           ]
         }

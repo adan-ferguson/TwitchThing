@@ -258,6 +258,10 @@ export default class FighterInstance{
     this._state.inCombat = val
   }
 
+  get nextTurnOffset(){
+    return this._state.nextTurnOffset ?? 0
+  }
+
   set nextTurnOffset(val){
     this._state.nextTurnOffset = val
   }

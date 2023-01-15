@@ -4,7 +4,6 @@ import { uniqueID } from '../../game/utilFunctions.js'
 import MonsterInstance from '../../game/monsterInstance.js'
 import { generateRandomChest } from './chests.js'
 import { addRewards } from './results.js'
-import calculateResults from '../../game/dungeonRunResults.js'
 
 const monstersByFloor = [
   null,

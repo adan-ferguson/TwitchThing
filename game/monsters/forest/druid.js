@@ -42,7 +42,7 @@ export default {
           initialCooldown: 6000,
           actions: [
             gainHealthAction({
-              magicScaling: 1
+              magicPower: 1
             })
           ]
         }

@@ -3,7 +3,7 @@ import FighterItemInstance from './fighterItemInstance.js'
 import OrbsData from './orbsData.js'
 import { uniqueID } from './utilFunctions.js'
 
-const BASE_UPGRADE_SCRAP = 5
+const BASE_UPGRADE_SCRAP = 3
 
 export default class AdventurerItemInstance extends FighterItemInstance{
 
@@ -67,7 +67,7 @@ export default class AdventurerItemInstance extends FighterItemInstance{
   }
 
   get scrapValue(){
-    return this.orbs.total * this.level + BASE_UPGRADE_SCRAP * (this.level - 1)
+    return this.orbs.total + (this.orbs.total + BASE_UPGRADE_SCRAP) * (this.level * (this.level - 1)) / 2
   }
 
   upgradeInfo(){

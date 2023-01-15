@@ -57,8 +57,8 @@ export default class EffectsList extends HTMLElement{
 customElements.define('di-effects-list', EffectsList)
 
 function shouldShow(effect){
-  if(!effect.displayName || effect.duration === 0){
-    return false // Phantom effect
+  if(effect.phantom){
+    return false
   }
   if(effect.expired){
     return false

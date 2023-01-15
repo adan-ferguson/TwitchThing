@@ -37,7 +37,7 @@ export default class EffectRow extends HTMLElement{
     this.effect = effect
     const info = effectDisplayInfo(effect)
 
-    this.classList.toggle('lingering', effect.lingering)
+    this.classList.toggle('persisting', effect.persisting)
 
     if(!this.barEl.animating || cancelAnimations){
       this.barEl.setOptions({

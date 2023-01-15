@@ -2,7 +2,8 @@ import statusEffect from '../../actions/statusEffectAction.js'
 
 export default {
   baseStats: {
-    hpMax: '+10%'
+    physPower: '-10%',
+    speed: -10
   },
   items: [
     {

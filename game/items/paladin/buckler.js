@@ -1,11 +1,10 @@
-import { physDefStat, blockChanceStat } from '../../stats/combined.js'
-import { exponentialPercentage } from '../../growthFunctions.js'
+import { exponentialPercentage, leveledPercentageString } from '../../growthFunctions.js'
 
 export default {
   levelFn: level => ({
     stats: {
-      [physDefStat.name]: exponentialPercentage(0.05, level - 1, 0.1),
-      [blockChanceStat.name]: exponentialPercentage(0.05, level - 1, 0.1)
+      hpMax: leveledPercentageString(10, 5, level - 1),
+      blockChance: exponentialPercentage(0.04, level - 1, 0.1)
     }
   }),
   orbs: 1

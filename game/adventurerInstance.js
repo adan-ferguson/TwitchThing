@@ -3,7 +3,7 @@ import AdventurerItemInstance from './adventurerItemInstance.js'
 import OrbsData from './orbsData.js'
 import { geometricProgession, inverseGeometricProgression } from './growthFunctions.js'
 import BonusesData from './bonusesData.js'
-import { toNumberOfDigits } from './utilFunctions.js'
+import { minMax, toNumberOfDigits } from './utilFunctions.js'
 import { startingFoodStat } from './stats/combined.js'
 
 const XP_BASE = 100
@@ -108,12 +108,16 @@ export default class AdventurerInstance extends FighterInstance{
     return this.bonusesData.levelTotal < this.level
   }
 
+  get maxFood(){
+    return this.stats.get(startingFoodStat).value
+  }
+
   get food(){
-    return this._state.food ?? this.stats.get(startingFoodStat).value
+    return this._state.food ?? this.maxFood
   }
 
   set food(val){
-    this._state.food = Math.max(0, val)
+    this._state.food = minMax(0, val, this.maxFood)
   }
 
   getEquippedSlotBonus(slotIndex){
