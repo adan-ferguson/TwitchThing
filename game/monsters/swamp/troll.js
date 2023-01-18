@@ -16,7 +16,7 @@ export default {
           description: 'Regenerate 15% of missing health.',
           actions: [
             gainHealthAction({
-              pctMissing: 0.15
+              scaling: { hpMissingPct: 0.15 }
             })
           ]
         }

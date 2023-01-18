@@ -2,10 +2,10 @@ import { chooseRandomBasicItem } from '../items/generator.js'
 import { toNumberOfDigits } from '../../game/utilFunctions.js'
 import { geometricProgession } from '../../game/growthFunctions.js'
 
-const GOLD_ONLY_CHANCE = 0.3
-const GOLD_BASE = 10
+const GOLD_ONLY_CHANCE = 0.33
+const GOLD_BASE = 20
 const GOLD_GROWTH = 5
-const GOLD_GROWTH_PCT = 0.12
+const GOLD_GROWTH_PCT = 0.15
 
 const CHEST_SIZE = {
   normal: 1,
@@ -34,6 +34,11 @@ export function generateRandomChest(options = {}){
   if(chest.type === 'shop'){
     chest.noGold = true
     chest.singlesOnly = true
+  }
+
+  if(chest.type === 'boss'){
+    // Guarantee 100 from boss chests so they can buy adv slot
+    chest.contents.gold += 100
   }
 
   for(let i = 0; i < CHEST_SIZE[chest.type]; i++){

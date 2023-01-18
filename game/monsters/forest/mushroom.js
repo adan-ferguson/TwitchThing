@@ -94,7 +94,7 @@ export default {
           initialCooldown: 5000,
           actions: [
             gainHealthAction({
-              pct: 0.04
+              scaling: { hpMax: 0.04 }
             })
           ]
         }

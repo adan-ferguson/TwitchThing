@@ -20,8 +20,8 @@ const monstersByFloor = [
   Monsters.minotaur,
   // Forest
   Monsters.woodElf,
-  Monsters.boar,
   Monsters.sprite,
+  Monsters.boar,
   Monsters.badger,
   Monsters.mushroom,
   Monsters.werewolf,
@@ -64,14 +64,14 @@ const monstersByFloor = [
   Monsters.kraken
 ]
 
-const BONUS_CHESTS_UNTIL = 10
+const BONUS_CHESTS_UNTIL = 12
 const BONUS_CHEST_CHANCE = 0.25
 
-const CHEST_DROP_CHANCE = 0.05
-const BOSS_XP_BONUS = 8
+const CHEST_DROP_CHANCE = 0.06
+const BOSS_XP_BONUS = 10
 
 // Monsters of level [currentFloor - FLOOR_RANGE] to [currentFloor] will spawn (both inclusive).
-const FLOOR_RANGE = 5
+const FLOOR_RANGE = 4
 
 // How much to skew RNG towards higher levels.
 const FLOOR_SKEW = -0.12

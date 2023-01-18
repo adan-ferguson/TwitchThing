@@ -33,7 +33,7 @@ export default {
                   cooldown: 1000,
                   actions: [
                     gainHealthAction({
-                      magicPower: 1
+                      scaling: { magicPower: 1 }
                     })
                   ]
                 }

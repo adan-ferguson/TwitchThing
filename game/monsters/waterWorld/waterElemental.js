@@ -51,7 +51,7 @@ export default {
               damageType: 'magic'
             }),
             gainHealthAction({
-              magicPower: 1
+              scaling: { magicPower: 1 }
             })
           ]
         }

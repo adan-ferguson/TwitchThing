@@ -4,9 +4,9 @@ import Picker from '../../game/picker.js'
 
 const itemPicker = new Picker(BaseItems, {
   valueFormula: baseItemDef => baseItemDef.orbs,
-  levelFormula: level => level / 5,
+  levelFormula: level => level / 3,
   lowerDeviation: 0.95,
-  higherDeviation: 0.4
+  higherDeviation: 0.45
 })
 
 export function generateItemDef({ group, name }){

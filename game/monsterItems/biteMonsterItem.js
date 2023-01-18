@@ -16,7 +16,7 @@ export default function(def){
             const data = results[0].data
             if (data){
               return gainHealthAction({
-                flat: data.damageDistribution.hp * 0.5
+                scaling: { flat: data.damageDistribution.hp * 0.5 }
               })
             }
           }

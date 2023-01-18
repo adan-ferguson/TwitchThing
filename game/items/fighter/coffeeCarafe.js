@@ -16,8 +16,8 @@ export default {
               effect: {
                 isBuff: true,
                 displayName: 'Caffeine Rush',
-                stacking: 'replace',
                 persisting: true,
+                stacking: 'extend',
                 duration: 15000,
                 stats: {
                   [speedStat.name]: speed

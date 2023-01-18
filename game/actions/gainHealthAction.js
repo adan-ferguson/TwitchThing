@@ -1,6 +1,8 @@
-export default function(scaling){
+export default function(def){
   return {
-    scaling,
+    scaling: {},
+    affects: 'self',
+    ...def,
     type: 'gainHealth'
   }
 }

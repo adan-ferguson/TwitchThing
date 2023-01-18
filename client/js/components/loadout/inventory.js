@@ -10,7 +10,7 @@ const HTML = `
 <!--      Sort By:-->
 <!--      <label><input type="radio" name="sortBy" value="class">Class</label>-->
 <!--    </div>-->
-    <div class="filtering-options require-adventurer">
+    <div class="filtering-options require-adventurer displaynone">
       <label><input type="checkbox" name="hideOther"> Hide Unequippable</label>
     </div>
   </div>

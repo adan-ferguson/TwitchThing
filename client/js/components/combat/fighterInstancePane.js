@@ -88,7 +88,6 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   setState(newState, cancelAnimations = false){
-    console.log('setState')
     this.fighterInstance.setState(newState)
     this._update(cancelAnimations)
     return this
@@ -212,8 +211,6 @@ export default class FighterInstancePane extends HTMLElement{
       if(cancelAnimations || !this.hpBarEl.animating){
         this._hpChangeQueue.clear()
         this.hpBarEl.setValue(this.fighterInstance.hp)
-      }else{
-        console.log('Prevented bar set because it was animating.')
       }
     }
 

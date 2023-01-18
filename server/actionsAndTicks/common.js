@@ -1,19 +1,22 @@
 import { useEffectAbility } from './performAction.js'
 import { makeActionResult } from '../../game/actionResult.js'
 import scaledNumber from '../../game/scaledNumber.js'
+import gainHealthAction from '../../game/actions/gainHealthAction.js'
 
 export function performGainHealthAction(combat, actor, gainHealthDef){
-  const gain = Math.ceil(scaledNumber(actor, gainHealthDef.scaling))
+  gainHealthDef = gainHealthAction(gainHealthDef)
+  const subject = gainHealthDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
+  const gain = Math.ceil(scaledNumber(subject, gainHealthDef.scaling))
   if(gain <= 0){
     return
   }
-  const hpBefore = actor.hp
-  actor.hp += gain
+  const hpBefore = subject.hp
+  subject.hp += gain
   return {
-    subject: actor.uniqueID,
+    subject: subject.uniqueID,
     type: 'gainHealth',
     data: {
-      amount: actor.hp - hpBefore
+      amount: subject.hp - hpBefore
     }
   }
 }
@@ -122,8 +125,11 @@ export function performParentEffectAction(combat, effect, actionDef){
   })
 }
 
-export function performRefreshCooldownsAction(combat, owner, actionDef){
+export function performRefreshCooldownsAction(combat, owner, effect, actionDef){
   owner.itemInstances.forEach(ii => {
+    if(actionDef.excludeSelf && ii === effect){
+      return
+    }
     ii?.refreshCooldown(actionDef)
   })
 }

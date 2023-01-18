@@ -7,11 +7,11 @@ export default {
     mods: [magicScalingMod],
     abilities: {
       active: {
-        initialCooldown: 4000,
+        initialCooldown: 40000,
         description: '{A0} Cleanse all debuffs.',
         actions: [
           gainHealthAction({
-            magicPower: 2.5 + level * 0.5
+            scaling: { magicPower: 2.5 + level * 0.5 }
           }),
           removeStatusEffectAction({
             count: 'all'

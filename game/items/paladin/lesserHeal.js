@@ -13,7 +13,9 @@ export default {
         },
         actions: [
           gainHealthAction({
-            magicPower: 0.6 + level * 0.1
+            scaling: {
+              magicPower: 0.6 + level * 0.1
+            }
           })
         ]
       }

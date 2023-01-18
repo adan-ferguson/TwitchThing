@@ -139,7 +139,6 @@ class Combat{
     return CombatResult.ONGOING
   }
 
-
   get finished(){
     return this._currentTime === MAX_TIME || this.fighterInstance1.hp === 0 || this.fighterInstance2.hp === 0
   }
@@ -157,6 +156,13 @@ class Combat{
       const actions = this._doActions()
       this.fighterInstance1.cleanupState()
       this.fighterInstance2.cleanupState()
+
+      if(!this.fighterInstance1.hp){
+        tickUpdates.push(...triggerEvent(this, this.fighterInstance1, 'defeated'))
+      }
+      if(!this.fighterInstance2.hp){
+        tickUpdates.push(...triggerEvent(this, this.fighterInstance2, 'defeated'))
+      }
 
       this._addTimelineEntry({
         actions,

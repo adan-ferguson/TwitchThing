@@ -2,22 +2,21 @@ import refreshCooldownsAction from '../../actions/refreshCooldownsAction.js'
 
 export default {
   levelFn: level => {
-    const amount = 5000 + level * 5000
+    const amount = 10000 + level * 5000
     return {
-      stats: {
-        startingFood: level
-      },
       abilities: {
-        rest: {
-          description: `After resting, refresh your cooldowns by ${Math.round(amount / 1000)}s.`,
+        active: {
+          description: `Refresh your other cooldowns by ${Math.round(amount / 1000)}s.`,
+          initialCooldown: 30000,
           actions: [
             refreshCooldownsAction({
-              amountFlat: amount
+              amountFlat: amount,
+              excludeSelf: true
             })
           ]
         }
       }
     }
   },
-  orbs: 6
+  orbs: 5
 }

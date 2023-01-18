@@ -106,12 +106,12 @@ export default class Header extends HTMLElement{
       if(!this.user.inventory.gold){
         return
       }
-      goldButtonEl.classList.remove('displaynone')
       goldButtonEl.classList.add('locked')
       tip = 'Clear floor 10 to unlock the shop'
     }else{
-      goldButtonEl.classList.remove('displaynone')
+      goldButtonEl.classList.remove('locked')
     }
+    goldButtonEl.classList.remove('displaynone')
     goldButtonEl._tippy.setContent(tip)
   }
 
@@ -123,12 +123,12 @@ export default class Header extends HTMLElement{
       if(!this.user.features.shop){
         return
       }
-      scrapEl.classList.remove('displaynone')
       scrapEl.classList.add('locked')
       tip = 'Clear floor 20 to unlock the workshop'
     }else{
-      scrapEl.classList.remove('displaynone')
+      scrapEl.classList.remove('locked')
     }
+    scrapEl.classList.remove('displaynone')
     scrapEl._tippy.setContent(tip)
   }
 }

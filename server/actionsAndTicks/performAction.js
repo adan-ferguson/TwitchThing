@@ -40,7 +40,9 @@ export function takeCombatTurn(combat, actor){
       abilities.push({
         basicAttack: true,
         owner: actor.uniqueID,
-        results: [performAttackAction(combat, actor)]
+        results: [performAttackAction(combat, actor, null, {
+          damageType: 'auto'
+        })]
       })
     }
   }
@@ -128,7 +130,7 @@ function doAction(combat, effect, actionDef){
   }else if(type === 'parentEffectAction'){
     return performParentEffectAction(combat, effect, actionDef)
   }else if(type === 'refreshCooldowns'){
-    return performRefreshCooldownsAction(combat, owner, actionDef)
+    return performRefreshCooldownsAction(combat, owner, effect, actionDef)
   }
   throw 'Undefined action'
 }

@@ -21,7 +21,7 @@ const Zones = [{
 }]
 
 // Final floor gets this bonus size
-const FINAL_FLOOR_BONUS = 1.5
+const FINAL_FLOOR_BONUS = 2.5
 const SIZE_BASE = 6
 const SIZE_PER_ZONE = 2
 const SIZE_PER_FLOOR = 1

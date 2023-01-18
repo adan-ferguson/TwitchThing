@@ -8,15 +8,15 @@ import { startingFoodStat } from './stats/combined.js'
 
 const XP_BASE = 100
 const XP_GROWTH = 200
-const XP_GROWTH_PCT = 0.3
+const XP_GROWTH_PCT = 0.25
 
 const HP_BASE = 40
 const HP_GROWTH = 20
-const HP_GROWTH_PCT = 0.1
+const HP_GROWTH_PCT = 0.12
 
 const POWER_BASE = 10
 const POWER_GROWTH = 4
-const POWER_GROWTH_PCT = 0.1
+const POWER_GROWTH_PCT = 0.12
 
 export function advXpToLevel(xp){
   if(xp < XP_BASE){
@@ -82,7 +82,7 @@ export default class AdventurerInstance extends FighterInstance{
   get baseStats(){
     return [
       {
-        [startingFoodStat.name]: 3
+        [startingFoodStat.name]: 5
       },
       ...this.bonuses.map(bonusInstance => bonusInstance.stats)
     ]

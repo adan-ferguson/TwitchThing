@@ -1,6 +1,6 @@
 import { floorSize } from '../../game/zones.js'
 
-const MIN_FLOOR_TRAVERSAL_PCT = 0.20
+const MIN_FLOOR_TRAVERSAL_PCT = 0.40
 const DEEPEST_FLOOR_SIZE = 50
 
 export function foundStairs(dungeonRun){

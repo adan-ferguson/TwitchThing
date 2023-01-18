@@ -6,7 +6,7 @@ import { roundToFixed } from '../../utilFunctions.js'
 export default {
   levelFn: level => {
     const damageMulti = 0.9 + level * 0.1
-    const slow = 1300 + 200 * level
+    const slow = 1800 + 200 * level
     return {
       abilities: {
         active: {
@@ -33,5 +33,5 @@ export default {
       mods: [magicScalingMod]
     }
   },
-  orbs: 5
+  orbs: 6
 }

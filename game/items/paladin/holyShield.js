@@ -6,7 +6,7 @@ export default {
     const dmg = 0.5 + 0.15 * level
     return {
       stats: {
-        blockChance: '100%',
+        blockChance: '25%',
         magicPower: leveledPercentageString(10, 10, level)
       },
       abilities: {
