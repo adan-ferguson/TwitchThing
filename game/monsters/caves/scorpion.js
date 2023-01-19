@@ -3,25 +3,34 @@ import statusEffectAction from '../../actions/statusEffectAction.js'
 import attackAction from '../../actions/attackAction.js'
 import { magicScalingMod } from '../../mods/combined.js'
 
+const damage = 0.1
+
 export default {
   baseStats: {
     hpMax: '+30%',
     speed: -30,
-    physPower: '-10%',
-    magicPower: '-30%'
+    physPower: '-10%'
   },
   items: [
     {
       name: 'Tail Sting',
-      mods: [magicScalingMod],
       abilities: {
         active: {
           cooldown: 12000,
+          description: `{A0} Poison the opponent for [physScaling${damage}] phys damage per second. Lasts 10s.`,
           actions: [
             attackAction(),
             statusEffectAction({
               base: poisonedStatusEffect,
-              affects: 'enemy'
+              affects: 'enemy',
+              effect: {
+                duration: 10000,
+                persisting: true,
+                params: {
+                  damage,
+                  damageType: 'phys'
+                }
+              }
             })
           ]
         }

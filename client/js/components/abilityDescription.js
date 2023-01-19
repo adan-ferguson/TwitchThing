@@ -1,4 +1,4 @@
-import { makeEl, roundToFixed, toDisplayName } from '../../../game/utilFunctions.js'
+import { makeEl, roundToFixed } from '../../../game/utilFunctions.js'
 import tippy from 'tippy.js'
 import abilityDisplayInfo from '../abilityDisplayInfo.js'
 import { ABILITY_DESCRIPTION_COLORS, ITEM_ROW_COLORS } from '../colors.js'
@@ -52,7 +52,7 @@ function makeBotRow(adi){
   if(adi.ability.cooldown){
     let str = ''
     if(adi.ability.initialCooldown){
-      str += d2(adi.ability.initialCooldown) + '/'
+      str += d2(adi.ability.cooldown - adi.ability.initialCooldown) + '/'
     }
     str += d2(adi.ability.cooldown)
     row.appendChild(makeEl({

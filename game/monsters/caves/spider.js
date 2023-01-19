@@ -10,7 +10,8 @@ export default {
       name: 'Web Shot',
       abilities: {
         active: {
-          cooldown: 8000,
+          cooldown: 9000,
+          description: 'Apply a 1 second/turn slow. Lasts 15s.',
           actions: [
             statusEffect({
               affects: 'enemy',
@@ -18,8 +19,10 @@ export default {
                 stacking: true,
                 displayName: 'Webbed',
                 description: 'Action timer is slowed.',
+                duration: 15000,
+                persisting: true,
                 stats: {
-                  slow: 1500
+                  slow: 1000
                 }
               }
             })

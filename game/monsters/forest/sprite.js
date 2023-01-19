@@ -7,7 +7,8 @@ export default {
   baseStats: {
     speed: 50,
     hpMax: '-50%',
-    physPower: '-40%'
+    physPower: '-40%',
+    magicPower: '+40%'
   },
   items: [
     {
@@ -31,7 +32,7 @@ export default {
       name: 'Magic Blast',
       abilities: {
         active: {
-          cooldown: 10000,
+          initialCooldown: 7500,
           actions: [
             attackAction({
               damageType: 'magic'

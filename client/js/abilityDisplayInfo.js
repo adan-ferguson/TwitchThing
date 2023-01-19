@@ -24,7 +24,8 @@ export default function(effectInstance){
     idle,
     state: idle ? AbilityState.IDLE : state(ability),
     barValue: idle ? 0 : barValue(ability),
-    barMax: idle ? 1 : barMax(ability)
+    barMax: idle ? 1 : barMax(ability),
+    cooldownRefreshing: ability.cooldownRefreshing
   }
 }
 

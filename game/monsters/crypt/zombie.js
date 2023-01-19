@@ -4,11 +4,12 @@ import { diseasedStatusEffect } from '../../statusEffects/combined.js'
 export default {
   baseStats: {
     hpMax: '+60%',
-    speed: -60
+    speed: -60,
+    physPower: '-30%'
   },
   items: [
     {
-      name: 'Diseased',
+      name: 'Disease',
       abilities: {
         attackHit: {
           chance: 0.2,

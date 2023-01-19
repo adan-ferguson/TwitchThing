@@ -2,7 +2,6 @@ import physScaling from '../../mods/generic/physScaling.js'
 import { critChanceStat } from '../../stats/combined.js'
 import statusEffectAction from '../../actions/statusEffectAction.js'
 import damageSelfAction from '../../actions/damageSelfAction.js'
-import { exponentialPercentage } from '../../growthFunctions.js'
 import { roundToNearestIntervalOf } from '../../utilFunctions.js'
 
 export default {

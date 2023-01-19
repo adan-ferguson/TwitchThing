@@ -11,7 +11,8 @@ export default {
       name: 'Lightning Bolt',
       abilities: {
         active: {
-          initialCooldown: 5000,
+          initialCooldown: 4000,
+          cooldown: 8000,
           actions: [
             attackAction({
               damageRange: { min: 0, max: 2 },

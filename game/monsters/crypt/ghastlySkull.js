@@ -4,25 +4,26 @@ import { magicScalingMod } from '../../mods/combined.js'
 
 export default {
   baseStats: {
-    speed: -200,
+    speed: -233,
     physPower: '-50%',
+    magicPower: '-99.99999%',
     hpMax: '-50%'
   },
   items: [
     {
-      name: 'Explode',
+      name: 'Explode!',
       mods: [magicScalingMod],
       scaledStats: {
         scaling: {
           property: 'hpPct'
         },
         stats: {
-          magicPower: '+400%'
+          magicPower: '+500%'
         }
       },
       abilities: {
         active: {
-          description: 'Explodes, dealing heavy magic damage, increased by amount of health remaining.',
+          description: 'Self-destruct and deal HEAVY magic damage, increased by amount of health remaining.',
           actions: [
             attackAction({
               damageType: 'magic',

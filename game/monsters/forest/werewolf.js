@@ -2,8 +2,8 @@ import statusEffectAction from '../../actions/statusEffectAction.js'
 
 export default {
   baseStats: {
-    hpMax: '-10%',
-    physPower: '-38%'
+    hpMax: '+20%',
+    physPower: '-40%'
   },
   items: [
     {
@@ -19,7 +19,7 @@ export default {
                 description: 'Increased phys power and attack speed.',
                 stats: {
                   physPower: '+10%',
-                  speed: 20
+                  speed: 25
                 }
               }
             })

@@ -4,8 +4,9 @@ import gainHealthAction from '../../actions/gainHealthAction.js'
 
 export default {
   baseStats: {
-    hpMax: '-20%',
+    hpMax: '-15%',
     physPower: '-50%',
+    magicPower: '+20%',
     speed: 50
   },
   items: [
@@ -24,9 +25,9 @@ export default {
                 displayName: 'Bear Form',
                 description: 'Modified stats, can only basic attack.',
                 stats: {
-                  hpMax: '+250%',
-                  physPower: '+250%',
-                  speed: '-50%',
+                  hpMax: '+220%',
+                  physPower: '+220%',
+                  speed: -100,
                 }
               }
             })

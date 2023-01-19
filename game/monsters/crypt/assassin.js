@@ -5,17 +5,17 @@ export default {
   baseStats: {
     hpMax: '-30%',
     physPower: '-30%',
-    speed: 15
+    speed: -10
   },
   items: [
     {
       name: 'Disarm',
       stats: {
-        critChance: '+10%'
+        critChance: 0.2
       },
       abilities: {
         crit: {
-          description: 'After critting, disarm the opponent\'s slot 1 item for 10 seconds.',
+          description: 'After crit, disarm the opponent\'s slot 1 item for 10 seconds.',
           actions: [
             statusEffectAction({
               base: disarmedStatusEffect,

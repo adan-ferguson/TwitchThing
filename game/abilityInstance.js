@@ -104,6 +104,10 @@ export default class AbilityInstance{
     return this._abilityDef.nextTurnOffset
   }
 
+  get cooldownRefreshing(){
+    return this.cooldown && (!this.uses || this.timesUsed < this.uses)
+  }
+
   shouldTrigger(){
     if (this.cooldownRemaining || !this.enabled){
       return false
@@ -115,7 +119,7 @@ export default class AbilityInstance{
   }
 
   advanceTime(ms){
-    if(this.cooldown){
+    if(this.cooldownRefreshing){
       this.cooldownRemaining = Math.max(0, this.cooldownRemaining - ms)
     }
   }

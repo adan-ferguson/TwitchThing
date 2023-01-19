@@ -2,15 +2,16 @@ import { freezeActionBarMod, silencedMod } from '../../mods/combined.js'
 import { poisonedStatusEffect } from '../../statusEffects/combined.js'
 import randomAction from '../../actions/randomAction.js'
 import statusEffect from '../../actions/statusEffectAction.js'
-import gainHealthAction from '../../actions/gainHealthAction.js'
 
 const burningSpores = statusEffect({
   base: poisonedStatusEffect,
   affects: 'enemy',
   effect: {
     displayName: 'Burning Spores',
+    duration: 15000,
+    persisting: true,
     params: {
-      damage: 0.03
+      damage: 0.05
     }
   }
 })
@@ -21,6 +22,7 @@ const slowingSpores = statusEffect({
     stacking: true,
     displayName: 'Slowing Spores',
     description: 'Slowed',
+    persisting: true,
     duration: 15000,
     stats: {
       slow: 1000
@@ -43,11 +45,11 @@ const shrinkingSpores = statusEffect({
   affects: 'enemy',
   effect: {
     persisting: true,
-    duration: 30000,
-    description: 'Reduced stats.',
+    duration: 15000,
+    description: 'Reduced phys power & max health.',
     stats: {
       physPower: '-20%',
-      damageTaken: '+20%'
+      hpMax: '-20%'
     },
     stacking: true,
     displayName: 'Shrinking Spores'
@@ -59,9 +61,11 @@ const dizzySpores = statusEffect({
   effect: {
     stacking: 'replace',
     displayName: 'Dizzy Spores',
-    duration: 10000,
+    duration: 15000,
+    persisting: true,
+    description: '33% chance to miss attacks.',
     stats: {
-      missChance: '50%'
+      missChance: '33%'
     }
   }
 })
@@ -71,45 +75,48 @@ const silenceSpores = statusEffect({
   effect: {
     stacking: 'replace',
     displayName: 'Silence Spores',
-    duration: 30000,
+    duration: 15000,
     persisting: true,
+    description: 'Can only do basic attacks.',
     mods: [silencedMod]
   }
 })
 
 export default {
   baseStats: {
-    hpMax: '+60%'
+    hpMax: '+100%',
+    physPower: '-50%',
+    magicPower: '+50%'
   },
   items: [
     {
       name: 'Passive',
-      description: 'Can not perform any actions.',
+      description: 'Action bar does not fill.',
       mods: [freezeActionBarMod]
     },
+    // {
+    //   name: 'Regeneration',
+    //   abilities: {
+    //     tick: {
+    //       cooldown: 5000,
+    //       actions: [
+    //         gainHealthAction({
+    //           scaling: { magicPower: 0.2 }
+    //         })
+    //       ]
+    //     }
+    //   }
+    // },
     {
-      name: 'Regeneration',
-      abilities: {
-        tick: {
-          initialCooldown: 5000,
-          actions: [
-            gainHealthAction({
-              scaling: { hpMax: 0.04 }
-            })
-          ]
-        }
-      }
-    },
-    {
-      name: 'Weird Spores',
+      name: 'Spores',
       abilities: {
         hitByAttack: {
           description: 'When attacked, release spores which give the attacker a random debuff.',
           actions: [
             randomAction([{
-              weight: 30, value: burningSpores
+              weight: 25, value: burningSpores
             },{
-              weight: 20, value: slowingSpores
+              weight: 10, value: slowingSpores
             },{
               weight: 5, value: sleepSpores
             },{

@@ -84,11 +84,15 @@ export default class EffectInstance{
     return Object.keys(this.effectData.abilities ?? {}).length > 0
   }
 
+  get abilitiesInfo(){
+    return this.generateAbilitiesData().instances
+  }
+
   get abilities(){
     if(this.disabled){
       return {}
     }
-    return this.generateAbilitiesData().instances
+    return this.abilitiesInfo
   }
 
   get slotEffect(){

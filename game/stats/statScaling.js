@@ -9,7 +9,7 @@ export function scaleStats(statAffector, scalingDef, owner){
   const scaled = {}
   Object.entries(statAffector).forEach(([key, val]) => {
     const { suffix, value } = parseStatVal(val)
-    scaled[key] = value * factor + suffix
+    scaled[key] = suffix ? value * factor + suffix : parseFloat(value * factor)
   })
   return scaled
 }

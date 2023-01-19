@@ -6,6 +6,7 @@ import EffectDetails from '../effectDetails.js'
 import DIElement from '../diElement.js'
 import ItemCard from '../itemCard.js'
 import ItemDetails from '../itemDetails.js'
+import { AbilityState } from '../../abilityDisplayInfo.js'
 
 const HTML = `
 <di-bar class="cooldown"></di-bar>
@@ -128,7 +129,7 @@ export default class LoadoutRow extends DIElement{
 
     // info.state === AbilityState.DISABLED ? 'disabled' :
     const color = ITEM_ROW_COLORS[info.type]
-    const borderColor = info.state === 'ready' ? color : ITEM_ROW_COLORS.disabled
+    const borderColor = color // info.state === 'ready' ? color : ITEM_ROW_COLORS.disabled
 
     this._cooldownBarEl
       .setOptions({
@@ -138,12 +139,17 @@ export default class LoadoutRow extends DIElement{
       })
       .setValue(info.barValue)
 
-    this._usesCooldown = info.ability.cooldown ? true : false
+    this._abilityInfo = info
   }
 
   advanceTime(ms){
-    if(this._usesCooldown){
+    if(this._abilityInfo?.cooldownRefreshing){
       this._cooldownBarEl.setValue(ms, { relative: true })
+      if(this._cooldownBarEl.pct === 1){
+        if(this._abilityInfo.state === AbilityState.RECHARGING){
+          this.setAttribute('ability-state', AbilityState.READY)
+        }
+      }
     }
   }
 

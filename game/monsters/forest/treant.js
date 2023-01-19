@@ -4,15 +4,16 @@ import removeStackAction from '../../actions/removeStackAction.js'
 
 export default {
   baseStats: {
-    speed: -80,
-    hpMax: '+100%',
-    physPower: '+50%'
+    speed: -120,
+    hpMax: '+140%',
+    physPower: '+60%'
   },
   items: [{
     name: 'Sprout Saplings',
     abilities: {
       startOfCombat: {
         mods: [magicScalingMod],
+        uses: 1,
         description: 'At the start of combat, summon 3 saplings which each block an ability.',
         actions: Array(3).fill(
           statusEffectAction({

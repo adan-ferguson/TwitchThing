@@ -1,7 +1,8 @@
 export default {
   baseStats: {
-    physDef: '+25%',
-    speed: -25
+    physDef: '+30%',
+    speed: -30,
+    physPower: '-30%'
   },
   description: 'You\'re boned'
 }

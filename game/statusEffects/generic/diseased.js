@@ -1,8 +1,10 @@
 export default {
   stacking: true,
   persisting: true,
-  description: 'Phys power is lowered by 10%.',
+  description: 'Reduced phys & magic power.',
+  displayName: 'Diseased',
   stats: {
-    physPower: '-10%'
+    physPower: '0.85x',
+    magicPower: '0.85x'
   }
 }

@@ -44,9 +44,9 @@ export default class EffectDetails extends DIElement{
       // showTooltips: false,
       statsDisplayStyle: StatsDisplayStyle.ADDITIONAL
     })
-    statsList.setStats(this._effectInstance.stats)
-    // TODO: what was this for, I remember it being important
-    // statsList.setStats(new Stats(this._effectInstance.itemData.stats))
+    if(!this._effectInstance.effectData.scaledStats){
+      statsList.setStats(this._effectInstance.stats)
+    }
     if(!statsList.empty){
       this.appendChild(statsList)
     }
@@ -55,9 +55,11 @@ export default class EffectDetails extends DIElement{
   _addDescription(){
     const description = parseDescriptionString(this._effectInstance.description ?? '')
     description.classList.add('effect-description')
-    if(this._effectInstance.mods.contains(magicAttackMod)){
-      description.append(wrapContent('Use magic power for basic attacks.'))
-    }
+    this._effectInstance.mods.list.forEach(mod => {
+      if(mod.description){
+        description.append(wrapContent(mod.description))
+      }
+    })
     if(description.innerHTML.length){
       this.appendChild(description)
     }
