@@ -4,8 +4,8 @@ import statusEffectAction from '../../actions/statusEffectAction.js'
 export default {
   baseStats: {
     physPower: '+90%',
-    physDef: '+30%',
-    speed: -25,
+    physDef: '+35%',
+    speed: -40,
     hpMax: '+70%'
   },
   items: [
@@ -22,7 +22,8 @@ export default {
             statusEffectAction({
               affects: 'enemy',
               effect: {
-                duration: 10000,
+                duration: 15000,
+                description: 'Can\'t basic attack',
                 mods: [noBasicAttackMod],
                 displayName: 'Terror'
               }

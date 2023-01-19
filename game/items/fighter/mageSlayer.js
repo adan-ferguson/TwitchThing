@@ -8,7 +8,8 @@ export default {
     return {
       description: `Attacks deal extra damage to enemies with high magic power, up to +${Math.round(maxDmg * 100)}%.`,
       damageDealtModifier: enemy => {
-        return 1 + maxDmg * minMax(0, enemy.magicPower / enemy.basePower - 1, 1)
+        const factor = 2 * (enemy.magicPower / enemy.basePower - 1)
+        return 1 + maxDmg * minMax(0, factor, 1)
       },
       stats: {
         [magicDefStat.name]: exponentialPercentage(0.2, level - 1, 0.3)

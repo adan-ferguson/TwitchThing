@@ -6,6 +6,7 @@ const EXTRA_HEAD = statusEffectAction({
   base: barrierStatusEffect,
   effect: {
     displayName: 'Extra Head',
+    description: 'Grants an extra attack',
     stacking: false,
     params: {
       hpMax: 1
@@ -18,10 +19,9 @@ const EXTRA_HEAD = statusEffectAction({
 
 export default {
   baseStats: {
-    magicDef: '+30%',
-    hpMax: '-70%',
-    physPower: '-70%',
-    speed: -125
+    hpMax: '-66%',
+    physPower: '-66%',
+    speed: -90
   },
   items: [
     bossMonsterItem,
@@ -29,6 +29,7 @@ export default {
       name: 'Multi-Headed',
       abilities: {
         startOfCombat: {
+          uses: 1,
           description: 'Start combat with six Extra Heads.',
           actions: new Array(6).fill(EXTRA_HEAD)
         }

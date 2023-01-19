@@ -79,8 +79,12 @@ const statDefinitionsInfo = {
   },
   [StatDefs.lifesteal.name]: {
     text: 'Lifesteal',
-    displayedValueFn: value => `${Math.round(value * 100)}%`,
-    description: 'Gain health when dealing physical damage.',
+    displayedValueFn: (value, { style }) => {
+      if(style === StatsDisplayStyle.CUMULATIVE){
+        return `${Math.round(value * 100)}%`
+      }
+      return `+${Math.round(value * 100)}%`
+    }
   },
   [StatDefs.combatXP.name]: {
     text: 'XP Gain'

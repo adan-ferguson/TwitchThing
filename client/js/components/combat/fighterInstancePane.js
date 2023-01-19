@@ -118,6 +118,7 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   displayResult(result, effect){
+
     if(result.type === 'attack'){
       this._queueHpChange(() => this._displayDamageResult(result))
     }else if(result.type === 'damage'){
@@ -208,7 +209,7 @@ export default class FighterInstancePane extends HTMLElement{
     this.hpBarEl.setOptions({ max: this.fighterInstance.hpMax })
 
     if(this.fighterInstance.hp !== this.hpBarEl.value){
-      if(cancelAnimations || !this.hpBarEl.animating){
+      if(cancelAnimations || (!this.hpBarEl.animating && this._hpChangeQueue.isEmpty)){
         this._hpChangeQueue.clear()
         this.hpBarEl.setValue(this.fighterInstance.hp)
       }
@@ -324,6 +325,10 @@ class ResultQueue{
     this._queue = []
   }
 
+  get isEmpty(){
+    return this._queue.length ? false : true
+  }
+
   add(fn){
     this._queue.push(fn)
     if(this._queue.length === 1){
@@ -343,6 +348,7 @@ class ResultQueue{
     this._queue[0]()
     this._timeout = setTimeout(() => {
       this._queue = this._queue.slice(1)
+      console.log('dequeue', this._queue)
       this._next()
     }, STAGGER_TIME)
   }

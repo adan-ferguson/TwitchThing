@@ -1,4 +1,4 @@
-import { takeDamage, triggerEvent } from './common.js'
+import { performGainHealthAction, takeDamage, triggerEvent } from './common.js'
 import { makeActionResult } from '../../game/actionResult.js'
 import attackAction from '../../game/actions/attackAction.js'
 import { attackDamageStat } from '../../game/stats/combined.js'
@@ -137,8 +137,15 @@ function dealDamage(combat, actor, enemy, damageInfo){
   )
 
   if(lifesteal){
-    actor.hp += lifesteal
-    damageResult.data.lifesteal = lifesteal
+    damageResult.triggeredEvents.push({
+      eventName: 'lifesteal',
+      owner: actor.uniqueID,
+      results: [
+        performGainHealthAction(combat, actor, {
+          scaling: { flat: lifesteal }
+        })
+      ]
+    })
   }
 
   return damageResult

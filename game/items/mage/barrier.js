@@ -16,7 +16,7 @@ export default {
               effect: {
                 persisting: true,
                 params: {
-                  physPower: power
+                  magicPower: power
                 }
               }
             })

@@ -6,8 +6,10 @@ import statusEffectAction from '../../actions/statusEffectAction.js'
 export default {
   baseStats: {
     magicDef: '+30%',
-    speed: 10,
-    magicPower: '+50%'
+    speed: 20,
+    physPower: '+10%',
+    magicPower: '+10%',
+    hpMax: '+10%'
   },
   items: [
     flutteringMonsterItem,
@@ -17,7 +19,7 @@ export default {
       abilities: {
         active: {
           initialCooldown: 15000,
-          uses: 1,
+          description: '{A0} Destroys 50% of target\'s armor.',
           actions: [
             attackAction({
               damageType: 'magic'
@@ -27,8 +29,12 @@ export default {
               effect: {
                 displayName: 'Acidified',
                 persisting: true,
+                stacking: true,
+                description: 'Magic and phys defense reduced by half.',
+                duration: 60000,
                 stats: {
-                  physDef: '-50%'
+                  physDef: '-50%',
+                  magicDef: '-50%'
                 }
               }
             })

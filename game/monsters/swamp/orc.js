@@ -1,6 +1,7 @@
 export default {
-  physPower: {
-    physPower: '+20%',
-    speed: -5
+  stats: {
+    physPower: '+30%',
+    physDef: '+20%',
+    speed: -30,
   }
 }

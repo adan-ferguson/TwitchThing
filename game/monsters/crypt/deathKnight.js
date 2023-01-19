@@ -1,10 +1,12 @@
 import attackAction from '../../actions/attackAction.js'
 import statusEffectAction from '../../actions/statusEffectAction.js'
-import maybeAction from '../../actions/maybeAction.js'
 
 export default {
   baseStats: {
     physPower: '-10%',
+    physDef: '+30%',
+    speed: -20,
+    hpMax: '+30%'
   },
   items: [
     {
@@ -12,13 +14,10 @@ export default {
       abilities: {
         active: {
           cooldown: 8000,
-          description: 'Deal [physScaling1.2] phys damage. 1/3 chance to inflict a curse, making it more likely like the target will be crit.',
+          description: 'Deal [physScaling1.2] phys damage. Inflicts a curse (more chance to be crit).',
           actions: [
             attackAction({
               damageMulti: 1.2
-            }),
-            maybeAction({
-              chance: 1 //1/3
             }),
             statusEffectAction({
               affects: 'enemy',
@@ -26,8 +25,9 @@ export default {
                 displayName: 'Cursed',
                 stacking: true,
                 persisting: true,
+                duration: 30000,
                 stats: {
-                  enemyCritChance: '+20%'
+                  enemyCritChance: 0.1
                 }
               }
             })

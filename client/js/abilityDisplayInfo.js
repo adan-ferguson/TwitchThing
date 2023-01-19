@@ -34,11 +34,12 @@ function getMainAbility(abilities){
   if(active){
     return { trigger: 'active', ability: active }
   }
-  const trigger = Object.keys(abilities)[0]
-  if(!trigger){
-    return {}
+  for(let trigger in abilities){
+    if(abilities[trigger]){ // TODO: actually choose
+      return { trigger, ability: abilities[trigger] }
+    }
   }
-  return { trigger, ability: abilities[trigger] }
+  return {}
 }
 
 function descriptionEl(ability, useStats = null){

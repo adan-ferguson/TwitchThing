@@ -46,8 +46,12 @@ function makeBotRow(adi){
     class: ['bot-row', 'flex-centered', 'flex-columns', 'flex-spaced']
   })
 
-  const triggerText = adi.type === 'active' ? 'Active' : ''
-  row.appendChild(makeEl({ text: triggerText }))
+  let botLeftText = adi.type === 'active' ? 'Active' : ''
+  if(adi.ability.uses){
+    botLeftText += (botLeftText.length ? ', ' : '')
+    botLeftText += `${adi.ability.uses} use${adi.ability.uses > 1 ? 's' : ''}`
+  }
+  row.appendChild(makeEl({ text: botLeftText }))
 
   if(adi.ability.cooldown){
     let str = ''
@@ -59,7 +63,7 @@ function makeBotRow(adi){
       class: adi.ability.initialCooldown ? 'initial-cooldown' : 'cooldown',
       content: '<i class="fa-solid fa-hourglass"></i>' + str
     }))
-  }else if(!triggerText){
+  }else if(!botLeftText){
     row.classList.add('displaynone')
   }
 

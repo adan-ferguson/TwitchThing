@@ -1,31 +1,33 @@
 import attackAction from '../../actions/attackAction.js'
 import statusEffectAction from '../../actions/statusEffectAction.js'
 import { barrierStatusEffect } from '../../statusEffects/combined.js'
+import { magicAttackMod } from '../../mods/combined.js'
 
 export default {
   baseStats: {
-    magicDef: '30%',
-    physPower: '-70%',
-    magicPower: '+20%',
-    hpMax: '-20%'
+    magicDef: '40%',
+    physPower: '-50%',
+    magicPower: '+80%',
+    hpMax: '-30%',
+    speed: -80
   },
   items: [
     {
-      name: 'Spell Caster',
-      description: 'Deals magic damage.',
-      mods: ['magicAttack']
+      name: 'Magic Attack',
+      mods: [magicAttackMod]
     },
     {
       name: 'EVIL Barrier',
       abilities: {
         active: {
           cooldown: 12000,
+          description: `Gain a barrier which absorbs [magicScaling${1.5}] damage.`,
           actions: [
             statusEffectAction({
               base: barrierStatusEffect,
               effect: {
                 params: {
-                  power: 1.8
+                  magicPower: 1.5
                 }
               }
             })
@@ -37,11 +39,11 @@ export default {
       name: 'Death Kill Beam',
       abilities: {
         active: {
-          initialCooldown: 30000,
+          initialCooldown: 20000,
           actions: [
             attackAction({
               damageType: 'magic',
-              damageMulti: 2.8
+              damageMulti: 3.5
             })
           ]
         }

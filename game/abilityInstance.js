@@ -108,6 +108,10 @@ export default class AbilityInstance{
     return this.cooldown && (!this.uses || this.timesUsed < this.uses)
   }
 
+  get phantom(){
+    return this._abilityDef.phantom ?? false
+  }
+
   shouldTrigger(){
     if (this.cooldownRemaining || !this.enabled){
       return false

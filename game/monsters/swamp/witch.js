@@ -4,18 +4,19 @@ import statusEffectAction from '../../actions/statusEffectAction.js'
 import { dodgingStatusEffect } from '../../statusEffects/combined.js'
 
 const hex = {
-  duration: 60000,
+  duration: 30000,
   stackingId: 'hex',
-  stacking: 'replace'
+  stacking: 'replace',
+  persisting: true
 }
+
 const frogged = statusEffectAction({
   affects: 'enemy',
   effect: {
     ...hex,
     displayName: 'Hex: Frog',
     stats: {
-      hpMax: '-30%',
-      physPower: '-30%'
+      physPower: '-40%'
     }
   }
 })
@@ -26,9 +27,9 @@ const catted = statusEffectAction({
     ...hex,
     displayName: 'Hex: Cat',
     stats: {
-      hpMax: '-30%',
-      physPower: '-30%',
-      speed: '+30%'
+      hpMax: '-40%',
+      physPower: '-40%',
+      speed: 50
     }
   }
 })
@@ -39,8 +40,8 @@ const crowed = statusEffectAction({
     ...hex,
     displayName: 'Hex: Crow',
     stats: {
-      physPower: '-30%',
-      hpMax: '-30%'
+      physPower: '-40%',
+      hpMax: '-40%'
     },
     abilities: {
       targeted: {
@@ -65,18 +66,18 @@ const turtled = statusEffectAction({
     ...hex,
     displayName: 'Hex: Turtle',
     stats: {
-      physDef: '+30%',
-      speed: '-30%'
+      physDef: '+40%',
+      speed: -80
     },
   }
 })
 
 export default {
   baseStats: {
-    hpMax: '-50%',
-    speed: -15,
-    magicPower: '+30%',
-    magicDef: '+60%'
+    hpMax: '-30%',
+    speed: -30,
+    magicPower: '+40%',
+    magicDef: '+50%'
   },
   items: [
     {
@@ -87,8 +88,8 @@ export default {
       name: 'Hex',
       abilities: {
         active: {
-          description: 'Transform the enemy into a random critter for 60 seconds.',
-          initialCooldown: 10000,
+          description: 'Transform the enemy into a random critter for 30 seconds.',
+          initialCooldown: 6000,
           uses: 1,
           actions: [
             randomAction([

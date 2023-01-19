@@ -2,11 +2,13 @@ import { magicScalingMod } from '../../mods/combined.js'
 import statusEffectAction from '../../actions/statusEffectAction.js'
 import { poisonedStatusEffect } from '../../statusEffects/combined.js'
 
+const damage = 0.05
+
 export default {
   baseStats: {
-    hpMax: '-40%',
-    physPower: '-40%',
-    speed: 70
+    hpMax: '-50%',
+    physPower: '-50%',
+    speed: 150
   },
   items: [{
     name: 'Toxic Sting',
@@ -14,14 +16,18 @@ export default {
     abilities: {
       attackHit: {
         chance: 0.2,
-        description: 'Attacks have a chance to inflict a persisting poison.',
+        description: `Attacks have a 20% chance to inflict poison. [physScaling${damage}] phys damage per second. Lasts 30s.`,
         actions: [
           statusEffectAction({
             base: poisonedStatusEffect,
             affects: 'enemy',
             effect: {
               persisting: true,
-              duration: 30000
+              duration: 30000,
+              params: {
+                damage,
+                damageType: 'phys'
+              }
             }
           })
         ]

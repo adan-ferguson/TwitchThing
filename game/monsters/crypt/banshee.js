@@ -1,11 +1,10 @@
-import { magicAttackMod } from '../../mods/combined.js'
 import attackAction from '../../actions/attackAction.js'
 
 export default {
   baseStats: {
-    physPower: '-80%',
-    magicPower: '-30%',
-    hpMax: '-40%'
+    physPower: '-70%',
+    magicPower: '+30%',
+    hpMax: '-50%'
   },
   items: [
     {
@@ -26,18 +25,8 @@ export default {
     },
     {
       name: 'Incorporeal',
-      mods: [magicAttackMod],
-      description: 'Physical attacks have 1/3 chance to miss this.',
-      abilities: {
-        physAttacked: {
-          chance: 1/3,
-          actions: [
-            {
-              type: 'cancel',
-              cancelReason: 'Missed'
-            }
-          ]
-        }
+      stats: {
+        dodgeChance: '33%'
       }
     }
   ]

@@ -3,8 +3,9 @@ import attackAction from '../../actions/attackAction.js'
 
 export default {
   baseStats: {
-    hpMax: '-10%',
-    speed: 5
+    hpMax: '+20%',
+    physPower: '-10%',
+    speed: -10
   },
   items: [
     {
@@ -18,7 +19,9 @@ export default {
               chance: 0.1
             }),
             attackAction({
-              targetMaxHpPct: 1
+              targetMaxHpPct: 1,
+              damageType: 'magic',
+              damageMulti: 0
             })
           ]
         }

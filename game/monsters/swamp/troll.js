@@ -2,9 +2,8 @@ import gainHealthAction from '../../actions/gainHealthAction.js'
 
 export default {
   baseStats: {
-    hpMax: '+20%',
-    physPower: '+10%',
-    physDef: '+30%',
+    hpMax: '+60%',
+    physPower: '+40%',
     speed: -80
   },
   items: [

@@ -2,6 +2,9 @@ import Bar from './bar.js'
 import { ACTION_COLOR } from '../../colors.js'
 
 export default class ActionBar extends Bar{
+
+  _actualValue = 0
+
   constructor(){
     super()
     this.setOptions({
@@ -17,14 +20,19 @@ export default class ActionBar extends Bar{
   }
 
   setTime(elapsed, remaining){
-    this.setValue(elapsed)
     this.setOptions({
       max: elapsed + remaining
     })
+    this._setTime(elapsed)
   }
 
   advanceTime(ms){
-    this.setValue(ms, { relative: true })
+    this._setTime(this._actualValue + ms)
+  }
+
+  _setTime(actualValue){
+    this._actualValue = actualValue
+    this.setValue(actualValue)
   }
 }
 

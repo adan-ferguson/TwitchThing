@@ -15,7 +15,7 @@ const HP_GROWTH = 20
 const HP_GROWTH_PCT = 0.12
 
 const POWER_BASE = 10
-const POWER_GROWTH = 4
+const POWER_GROWTH = 2.5
 const POWER_GROWTH_PCT = 0.12
 
 export function advXpToLevel(xp){

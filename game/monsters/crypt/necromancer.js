@@ -5,9 +5,9 @@ import attackAction from '../../actions/attackAction.js'
 export default {
   baseStats: {
     hpMax: '+10%',
-    speed: -40,
+    speed: -65, // keep this desynced
     physPower: '-50%',
-    magicPower: '-10%'
+    magicPower: '+10%'
   },
   items: [
     {
@@ -34,7 +34,7 @@ export default {
                       attackAction({
                         damageType: 'phys',
                         damageScaling: 'magic',
-                        damageMulti: 0.5
+                        damageMulti: 0.4
                       })
                     ]
                   }

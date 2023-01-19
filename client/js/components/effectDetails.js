@@ -32,9 +32,10 @@ export default class EffectDetails extends DIElement{
 
   _addAbilityDescription(){
     if(this._effectInstance.hasAbilities){
-      this.appendChild(
-        new AbilityDescription().setItem(this._effectInstance, this._options.showTooltips)
-      )
+      const desc = new AbilityDescription().setItem(this._effectInstance, this._options.showTooltips)
+      if(desc){
+        this.appendChild(desc)
+      }
     }
   }
 
