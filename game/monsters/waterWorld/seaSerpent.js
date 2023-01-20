@@ -14,7 +14,7 @@ export default {
       abilities: {
         active: {
           cooldown: 20000,
-          description: 'Deal [magicScaling2] magic damage and slow the target for 20s.',
+          description: 'Deal [magicScaling2] magic damage and reduce speed by 50 for 20s.',
           actions: [
             attackAction({
               damageType: 'magic',
@@ -28,7 +28,7 @@ export default {
                 duration: 20000,
                 persisting: true,
                 stats: {
-                  slow: 2000
+                  speed: -50
                 }
               }
             })

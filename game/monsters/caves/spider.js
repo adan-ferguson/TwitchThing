@@ -11,18 +11,18 @@ export default {
       abilities: {
         active: {
           cooldown: 9000,
-          description: 'Apply a 1 second/turn slow. Lasts 15s.',
+          description: 'Reduce target\'s speed by 25. Lasts 10s.',
           actions: [
             statusEffect({
               affects: 'enemy',
               effect: {
                 stacking: true,
                 displayName: 'Webbed',
-                description: 'Action timer is slowed.',
-                duration: 15000,
+                description: 'Speed reduced.',
+                duration: 10000,
                 persisting: true,
                 stats: {
-                  slow: 1000
+                  speed: -25
                 }
               }
             })

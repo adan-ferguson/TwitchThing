@@ -2,7 +2,7 @@ import refreshCooldownsAction from '../../actions/refreshCooldownsAction.js'
 
 export default {
   levelFn: level => {
-    const amount = 10000 + level * 5000
+    const amount = 8000 + level * 2000
     return {
       abilities: {
         active: {

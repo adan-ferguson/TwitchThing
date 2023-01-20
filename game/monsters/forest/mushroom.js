@@ -26,7 +26,7 @@ const slowingSpores = statusEffect({
     persisting: true,
     duration: 10000,
     stats: {
-      slow: 1000
+      speed: -25
     }
   }
 })
