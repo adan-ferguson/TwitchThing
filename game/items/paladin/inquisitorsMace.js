@@ -1,13 +1,14 @@
 import { stunnedStatusEffect } from '../../statusEffects/combined.js'
 import statusEffectAction from '../../actions/statusEffectAction.js'
+import { leveledPercentageString } from '../../growthFunctions.js'
 
 export default {
   levelFn: level => {
-    const chance = 17 + level * 3
+    const chance = 20
     return {
       displayName: 'Inquisitor\'s Mace',
       stats: {
-        physPower: `+${30 + level * 10}%`
+        physPower: leveledPercentageString(25, 15, level)
       },
       abilities: {
         attackHit: {

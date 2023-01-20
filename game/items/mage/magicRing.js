@@ -4,9 +4,9 @@ import { exponentialPercentage, leveledPercentageString } from '../../growthFunc
 export default {
   levelFn: level => ({
     stats: {
-      [magicPowerStat.name]: leveledPercentageString(40, 10, level),
-      [cooldownReductionStat.name]: exponentialPercentage(0.1, level - 1, 0.25)
+      [magicPowerStat.name]: leveledPercentageString(45, 15, level),
+      [cooldownReductionStat.name]: exponentialPercentage(0.1, level - 1, 0.15)
     }
   }),
-  orbs: 7
+  orbs: 8
 }

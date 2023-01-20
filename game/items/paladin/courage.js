@@ -2,7 +2,7 @@ import statusEffectAction from '../../actions/statusEffectAction.js'
 
 export default {
   levelFn: level => {
-    const amount = Math.round(12 + level * 3)
+    const amount = Math.round(20 + level * 5)
     return {
       abilities: {
         attacked: {
@@ -24,5 +24,5 @@ export default {
       }
     }
   },
-  orbs: 7
+  orbs: 6
 }

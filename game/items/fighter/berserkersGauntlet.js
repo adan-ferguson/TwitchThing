@@ -13,6 +13,7 @@ export default {
             effect: {
               displayName: 'Berserk',
               stacking: true,
+              isBuff: true,
               stats: {
                 [physPowerStat.name]: pct
               }

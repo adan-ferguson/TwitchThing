@@ -3,7 +3,7 @@ import { leveledPercentageString } from '../../growthFunctions.js'
 
 export default {
   levelFn: level => {
-    const dmg = 0.5 + 0.15 * level
+    const dmg = 0.6 + 0.1 * level
     return {
       stats: {
         blockChance: '25%',
@@ -22,5 +22,5 @@ export default {
       }
     }
   },
-  orbs: 6
+  orbs: 7
 }

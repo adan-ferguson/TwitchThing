@@ -5,7 +5,7 @@ export default {
   levelFn: level => ({
     abilities: {
       attacked: {
-        cooldown: roundToNearestIntervalOf(15000 * Math.pow(0.9, level - 1), 100),
+        cooldown: roundToNearestIntervalOf(25000 * Math.pow(0.9, level - 1), 100),
         description: 'Automatically dodge an attack.',
         actions: [
           cancelAction({
@@ -15,5 +15,5 @@ export default {
       }
     }
   }),
-  orbs: 8
+  orbs: 7
 }

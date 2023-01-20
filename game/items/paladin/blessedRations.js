@@ -18,5 +18,5 @@ export default {
       }
     }
   },
-  orbs: 4
+  orbs: 3
 }

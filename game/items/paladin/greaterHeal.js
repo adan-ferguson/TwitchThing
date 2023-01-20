@@ -8,7 +8,10 @@ export default {
     abilities: {
       active: {
         initialCooldown: 40000,
-        description: '{A0} Cleanse all debuffs.',
+        description: '{A0} Cleanse all debuffs. Only use this when health is below 50%.',
+        conditions: {
+          hpPctBelow: 0.5
+        },
         actions: [
           gainHealthAction({
             scaling: { magicPower: 2.5 + level * 0.5 }

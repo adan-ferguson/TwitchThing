@@ -3,7 +3,7 @@ import { magicScalingMod } from '../../mods/combined.js'
 
 export default {
   levelFn: level => {
-    const damageMulti = 0.64 + 0.06 * level
+    const damageMulti = 0.63 + 0.07 * level
     return {
       abilities: {
         active: {
