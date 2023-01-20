@@ -23,7 +23,7 @@ const Zones = [{
 // Final floor gets this bonus size
 const FINAL_FLOOR_BONUS = 2.5
 const SIZE_BASE = 6
-const SIZE_PER_ZONE = 2
+const SIZE_AFTER_ZONE_0 = 4
 const SIZE_PER_FLOOR = 1
 
 export default Zones
@@ -40,5 +40,6 @@ export function floorSize(floor){
   const zone = Math.floor((floor - 1) / 10)
   const zoneFloor = floor - zone * 10
   const bonus = zoneFloor === 10 ? FINAL_FLOOR_BONUS : 1
-  return Math.floor(bonus * (SIZE_BASE + zoneFloor * SIZE_PER_FLOOR + SIZE_PER_ZONE * zone))
+  const base = SIZE_BASE + zone > 0 ? SIZE_AFTER_ZONE_0 : 0
+  return Math.floor(bonus * (base + zoneFloor * SIZE_PER_FLOOR))
 }

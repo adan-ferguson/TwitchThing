@@ -2,7 +2,7 @@ import statusEffectAction from '../../actions/statusEffectAction.js'
 
 export default {
   levelFn: level => {
-    const duration = 12000 + level * 3000
+    const duration = 8000 + level * 2000
     return {
       abilities: {
         startOfCombat: {

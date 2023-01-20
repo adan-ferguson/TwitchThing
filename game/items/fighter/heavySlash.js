@@ -5,7 +5,7 @@ export default {
   levelFn: level => ({
     abilities: {
       active: {
-        initialCooldown: 30000,
+        initialCooldown: 15000 + 5000 * level,
         actions: [
           attackAction({
             damageMulti: 2.5 + level * 0.5

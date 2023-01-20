@@ -3,10 +3,10 @@ import statusEffectAction from '../../actions/statusEffectAction.js'
 
 export default {
   baseStats: {
-    physPower: '+90%',
-    physDef: '+35%',
-    speed: -40,
-    hpMax: '+70%'
+    physPower: '+120%',
+    physDef: '+30%',
+    speed: -30,
+    hpMax: '+110%'
   },
   items: [
     {
@@ -18,6 +18,7 @@ export default {
       abilities: {
         active: {
           cooldown: 30000,
+          description: 'Fears the enemy, stopping them from basic attacking for 15 seconds.',
           actions: [
             statusEffectAction({
               affects: 'enemy',

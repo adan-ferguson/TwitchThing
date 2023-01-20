@@ -68,6 +68,7 @@ export function performRemoveStatusEffectAction(combat, actor, actionDef){
  */
 export function addStatusEffect(combat, sourceEffect, subject, def){
   const data = expandStatusEffectsDef(sourceEffect, def)
+  data.sourceEffectId = sourceEffect.effectId
   subject.statusEffectsData.add(data)
   return data
 }

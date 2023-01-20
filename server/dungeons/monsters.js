@@ -67,7 +67,9 @@ const monstersByFloor = [
 const BONUS_CHESTS_UNTIL = 12
 const BONUS_CHEST_CHANCE = 0.25
 
-const CHEST_DROP_CHANCE = 0.06
+const CHEST_DROP_CHANCE = 0.04
+const CHEST_DROP_CHANCE_HARD_ENEMY = 0.12 // It's an enemy of level >= adventurer's deepest floor
+
 const BOSS_XP_BONUS = 10
 
 // Monsters of level [currentFloor - FLOOR_RANGE] to [currentFloor] will spawn (both inclusive).
@@ -109,17 +111,23 @@ export async function generateMonster(dungeonRun, boss){
     }
     if(dungeonRun.user.accomplishments.firstRunFinished){
       const userChests = dungeonRun.user.accomplishments.chestsFound ?? 0
-      const dropChance = userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE : CHEST_DROP_CHANCE
+      const hardEnemy = level >= dungeonRun.adventurerInstance.accomplishments.deepestFloor
+      const dropChance = userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE :
+        hardEnemy ? CHEST_DROP_CHANCE_HARD_ENEMY :
+          CHEST_DROP_CHANCE
       const dropChest =
         Math.random() < dropChance ||
         monsterInstance.isBoss ||
         dropPityChest(dungeonRun)
 
       if(dropChest){
+        let type = monsterInstance.isBoss ? 'boss' :
+          userChests < BONUS_CHESTS_UNTIL ? 'tutorial' :
+            'normal'
+
         rewards.chests = generateRandomChest({
           level: dungeonRun.floor,
-          type: monsterInstance.isBoss ? 'boss' : 'normal',
-          noGold: userChests < BONUS_CHESTS_UNTIL
+          type
         })
       }
     }
@@ -185,7 +193,7 @@ function getBasicMonsterDefinition(floor){
 }
 
 function dropPityChest(dungeonRun){
-  const expectedChests = dungeonRun.events.length * CHEST_DROP_CHANCE / 2 // eh close enough
+  const expectedChests = dungeonRun.events.length * CHEST_DROP_CHANCE / 2
   const chests = dungeonRun.rewards.chests?.length ?? 0
   if(chests < Math.round(expectedChests)){
     return true

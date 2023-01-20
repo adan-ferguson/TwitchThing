@@ -17,7 +17,7 @@ const lightningStorm = {
           }),
           attackAction({
             damageType: 'magic',
-            damageMulti: 0.5
+            damageMulti: 0.7
           }),
           statusEffectAction({
             affects: 'enemy',
@@ -34,9 +34,9 @@ const lightningStorm = {
 
 export default {
   baseStats: {
-    magicPower: '+10%',
-    speed: 30,
-    hpMax: '-30%'
+    magicPower: '+40%',
+    speed: -10,
+    hpMax: '-20%'
   },
   items: [
     {
@@ -48,6 +48,7 @@ export default {
       abilities: {
         active: {
           cooldown: 20000,
+          description: 'Shoot a bunch of lightning I don\'t feel like explaining.',
           actions: [
             statusEffectAction(lightningStorm)
           ]

@@ -2,9 +2,9 @@ import biteMonsterItem from '../../monsterItems/biteMonsterItem.js'
 
 export default {
   baseStats: {
-    hpMax: '+10%',
-    physPower: '+20%',
-    speed: -25
+    hpMax: '+30%',
+    physPower: '+30%',
+    speed: -30
   },
   displayName: 'Two-Headed Shark',
   items: [

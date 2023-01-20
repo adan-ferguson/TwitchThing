@@ -7,8 +7,8 @@ import gainHealthAction from '../../actions/gainHealthAction.js'
 export default {
   baseStats: {
     magicPower: '-30%',
-    hpMax: '-40%',
-    speed: 40
+    hpMax: '-20%',
+    speed: 20
   },
   items: [
     {
@@ -27,6 +27,7 @@ export default {
               base: barrierStatusEffect,
               effect: {
                 displayName: 'Water Shield',
+                stacking: 'replace',
                 stats: {
                   magicPower: '2x'
                 },
@@ -43,12 +44,13 @@ export default {
       name: 'Tidal Wave',
       abilities: {
         active: {
-          description: 'Deal [magicScaling1] damage, and restore [magicScaling1] health.',
+          description: 'Deal [magicScaling2] damage, and restore [magicScaling1] health.',
           initialCooldown: 12000,
           cooldown: 20000,
           actions: [
             attackAction({
-              damageType: 'magic'
+              damageType: 'magic',
+              damageMulti: 2
             }),
             gainHealthAction({
               scaling: { magicPower: 1 }

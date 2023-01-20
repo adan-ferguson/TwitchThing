@@ -155,7 +155,7 @@ export class StatusEffectsData{
       if(effectData.stackingId && effectData.stackingId === statusEffectInstance.effectData.stackingId){
         return true
       }
-      return _.isEqual(effectData, statusEffectInstance.data)
+      return _.isEqual(effectData, statusEffectInstance.data) && effectData.sourceEffectId === statusEffectInstance.data.sourceEffectId
     })
     return {
       index,

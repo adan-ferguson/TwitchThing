@@ -13,10 +13,14 @@ const CHESTS = {
 
 export function getChestDisplayInfo(chest){
 
-  const type = chest.type ?? 'normal'
+  let type = chest.type ?? 'normal'
 
   if(type === 'shop'){
     return shopChest()
+  }
+
+  if(!CHESTS[type]){
+    type = 'normal'
   }
 
   return {

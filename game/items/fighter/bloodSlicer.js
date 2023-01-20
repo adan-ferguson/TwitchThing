@@ -1,45 +1,30 @@
 import physScaling from '../../mods/generic/physScaling.js'
 import { critChanceStat } from '../../stats/combined.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
-import damageSelfAction from '../../actions/damageSelfAction.js'
-import { roundToNearestIntervalOf } from '../../utilFunctions.js'
+import gainHealthAction from '../../actions/gainHealthAction.js'
+import { leveledPercentageString } from '../../growthFunctions.js'
 
 export default {
   levelFn: level => {
-    const duration = roundToNearestIntervalOf(30 * (Math.pow(0.8, level - 1)), 0.1)
+    const pct = 0.5
     return {
       abilities: {
         crit: {
-          description: `Whenever you crit, the target bleeds for that much as physical damage over ${duration} seconds.`,
+          description: `${pct * 100}% lifesteal on crits.`,
           actions: [
             ({ triggerData }) => {
               const damageJustDealt = triggerData.damageResultData.totalDamage
-              const damage = Math.ceil(damageJustDealt / duration)
-              return statusEffectAction({
-                affects: 'enemy',
-                effect: {
-                  displayName: 'Bleeding',
-                  duration: duration * 1000,
-                  abilities: {
-                    tick: {
-                      initialCooldown: 1000,
-                      actions: [
-                        damageSelfAction({
-                          damageType: 'phys',
-                          damage,
-                          ignoreDefense: true
-                        })
-                      ]
-                    }
-                  }
-                }
-              })
+              if(damageJustDealt > 0){
+                return gainHealthAction({
+                  scaling: { flat: damageJustDealt * pct }
+                })
+              }
             }
           ]
         }
       },
       stats: {
-        [critChanceStat.name]: 0.2 + level * 0.1
+        [critChanceStat.name]: 0.25 + level * 0.05,
+        hpMax: leveledPercentageString(35, 15, level)
       },
       mods: [physScaling]
     }

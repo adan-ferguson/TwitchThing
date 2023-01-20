@@ -7,6 +7,9 @@ export default {
     physPower: '+20%'
   },
   items: [
-    constrictMonsterItem()
+    constrictMonsterItem({
+      uses: 1,
+      initialCooldown: 5000
+    })
   ]
 }

@@ -1,4 +1,4 @@
-import gainHealthAction from '../../actions/gainHealthAction.js'
+import tastyMonsterItem from '../../monsterItems/tastyMonsterItem.js'
 
 export default {
   baseStats: {
@@ -7,21 +7,6 @@ export default {
     speed: -10
   },
   items: [
-    {
-      name: 'Tasty',
-      description: 'Whoever defeats this regains 20% health.',
-      abilities: {
-        defeated: {
-          actions: [
-            gainHealthAction({
-              scaling: {
-                hpMax: 0.2
-              },
-              affects: 'enemy'
-            })
-          ]
-        }
-      }
-    }
+    tastyMonsterItem
   ]
 }

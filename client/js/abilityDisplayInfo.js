@@ -35,7 +35,7 @@ function getMainAbility(abilities){
     return { trigger: 'active', ability: active }
   }
   for(let trigger in abilities){
-    if(abilities[trigger]){ // TODO: actually choose
+    if(!abilities[trigger].phantom){ // TODO: actually choose
       return { trigger, ability: abilities[trigger] }
     }
   }

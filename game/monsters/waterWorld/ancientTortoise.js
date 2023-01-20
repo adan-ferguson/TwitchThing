@@ -7,7 +7,7 @@ export default {
     hpMax: '+120%',
     physPower: '+50%',
     magicPower: '-20%',
-    speed: -80
+    speed: -100
   },
   items: [{
     name: 'Withdraw',
@@ -15,6 +15,7 @@ export default {
     abilities: {
       active: {
         uses: 1,
+        description: 'Usable only when below 50% health. Hide in shell for 10 seconds to regain health.',
         conditions: {
           hpPctBelow: 0.5
         },
@@ -25,15 +26,15 @@ export default {
               duration: 10000,
               mods: [freezeActionBarMod],
               stats: {
-                physDef: '80%',
-                magicDef: '80%'
+                physDef: '90%',
+                magicDef: '90%'
               },
               abilities: {
                 tick: {
                   cooldown: 1000,
                   actions: [
                     gainHealthAction({
-                      scaling: { magicPower: 1 }
+                      scaling: { magicPower: 0.5 }
                     })
                   ]
                 }

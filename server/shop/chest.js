@@ -1,7 +1,7 @@
 import Purchases from '../collections/purchases.js'
 import { applyChestToUser, generateRandomChest } from '../dungeons/chests.js'
 
-const CHEST_BASE_PRICE = 250
+const CHEST_BASE_PRICE = 100
 // const PRICE_GROWTH = 250
 // const PRICE_GROWTH_RATE = 0.2
 

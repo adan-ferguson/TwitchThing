@@ -4,7 +4,7 @@ import gainHealthAction from '../../actions/gainHealthAction.js'
 
 export default {
   baseStats: {
-    hpMax: '-15%',
+    hpMax: '-10%',
     physPower: '-50%',
     magicPower: '+20%',
     speed: 50
@@ -14,7 +14,7 @@ export default {
       name: 'Bear Form',
       abilities: {
         active: {
-          initialCooldown: 15000,
+          initialCooldown: 10000,
           description: 'Switch to Bear Form.',
           uses: 1,
           actions: [
@@ -40,7 +40,7 @@ export default {
       mods: [magicScalingMod],
       abilities: {
         active: {
-          initialCooldown: 6000,
+          initialCooldown: 3500,
           actions: [
             gainHealthAction({
               scaling: { magicPower: 1 }

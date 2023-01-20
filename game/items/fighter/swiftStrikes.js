@@ -7,16 +7,16 @@ export default {
     return {
       abilities: {
         active: {
-          cooldown: 9000 + 3000 * level,
-          description: `Attack ${3 + level} times for [physAttack0.5] damage.`,
+          cooldown: 8000 + 2000 * level,
+          description: `Attack ${2 + level} times for [physAttack0.5] damage.`,
           actions:
             fillArray(() => attackAction({
               damageMulti: 0.5
-            }), 3 + level)
+            }), 2 + level)
         }
       },
       mods: [physScaling]
     }
   },
-  orbs: 7
+  orbs: 6
 }

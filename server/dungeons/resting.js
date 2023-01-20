@@ -10,7 +10,7 @@ export function rest(dungeonRun){
   const hpBefore = ai.hp
   const results = []
   ai.food--
-  results.push(performGainHealthAction(null, ai, { scaling: { hpMax: 0.35 } }))
+  results.push(performGainHealthAction(null, ai, { scaling: { hpMissingPct: 1 } }))
   results.push(...triggerEvent(null, ai, 'rest'))
 
   return {

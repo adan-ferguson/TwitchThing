@@ -2,13 +2,14 @@ import { freezeActionBarMod, silencedMod } from '../../mods/combined.js'
 import { poisonedStatusEffect } from '../../statusEffects/combined.js'
 import randomAction from '../../actions/randomAction.js'
 import statusEffect from '../../actions/statusEffectAction.js'
+import gainHealthAction from '../../actions/gainHealthAction.js'
 
 const burningSpores = statusEffect({
   base: poisonedStatusEffect,
   affects: 'enemy',
   effect: {
     displayName: 'Burning Spores',
-    duration: 15000,
+    duration: 10000,
     persisting: true,
     params: {
       damage: 0.05
@@ -23,7 +24,7 @@ const slowingSpores = statusEffect({
     displayName: 'Slowing Spores',
     description: 'Slowed',
     persisting: true,
-    duration: 15000,
+    duration: 10000,
     stats: {
       slow: 1000
     }
@@ -45,7 +46,7 @@ const shrinkingSpores = statusEffect({
   affects: 'enemy',
   effect: {
     persisting: true,
-    duration: 15000,
+    duration: 10000,
     description: 'Reduced phys power & max health.',
     stats: {
       physPower: '-20%',
@@ -61,7 +62,7 @@ const dizzySpores = statusEffect({
   effect: {
     stacking: 'replace',
     displayName: 'Dizzy Spores',
-    duration: 15000,
+    duration: 10000,
     persisting: true,
     description: '33% chance to miss attacks.',
     stats: {
@@ -75,7 +76,7 @@ const silenceSpores = statusEffect({
   effect: {
     stacking: 'replace',
     displayName: 'Silence Spores',
-    duration: 15000,
+    duration: 10000,
     persisting: true,
     description: 'Can only do basic attacks.',
     mods: [silencedMod]
@@ -84,9 +85,9 @@ const silenceSpores = statusEffect({
 
 export default {
   baseStats: {
-    hpMax: '+100%',
+    hpMax: '+80%',
     physPower: '-50%',
-    magicPower: '+50%'
+    magicPower: '+20%'
   },
   items: [
     {
@@ -94,19 +95,19 @@ export default {
       description: 'Action bar does not fill.',
       mods: [freezeActionBarMod]
     },
-    // {
-    //   name: 'Regeneration',
-    //   abilities: {
-    //     tick: {
-    //       cooldown: 5000,
-    //       actions: [
-    //         gainHealthAction({
-    //           scaling: { magicPower: 0.2 }
-    //         })
-    //       ]
-    //     }
-    //   }
-    // },
+    {
+      name: 'Regeneration',
+      abilities: {
+        tick: {
+          cooldown: 5000,
+          actions: [
+            gainHealthAction({
+              scaling: { magicPower: 0.2 }
+            })
+          ]
+        }
+      }
+    },
     {
       name: 'Spores',
       abilities: {

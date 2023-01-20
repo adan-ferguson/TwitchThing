@@ -140,7 +140,7 @@ class Combat{
   }
 
   get finished(){
-    return this._currentTime === MAX_TIME || this.fighterInstance1.hp === 0 || this.fighterInstance2.hp === 0
+    return this._currentTime >= MAX_TIME || this.fighterInstance1.hp === 0 || this.fighterInstance2.hp === 0
   }
 
   getEnemyOf(fighterInstance){
@@ -172,7 +172,12 @@ class Combat{
   }
 
   _advanceTime(){
-    const timeToAdvance = Math.ceil(Math.min(this.fighterInstance1.timeUntilNextUpdate, this.fighterInstance2.timeUntilNextUpdate))
+    const timeToAdvance = Math.ceil(
+      Math.min(
+        this.fighterInstance1.timeUntilNextUpdate,
+        this.fighterInstance2.timeUntilNextUpdate,
+        MAX_TIME - this._currentTime
+      ))
     this._currentTime += timeToAdvance
     if(timeToAdvance){
       this.fighterInstance1.advanceTime(timeToAdvance)

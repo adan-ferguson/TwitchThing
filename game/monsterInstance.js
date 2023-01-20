@@ -7,20 +7,20 @@ import { toDisplayName, toNumberOfDigits } from './utilFunctions.js'
 import { bossMod } from './mods/combined.js'
 import { floorToZone } from './zones.js'
 
-const ADJUSTED_DIFFICULTY_PER_ZONE = 1.5
+const ADJUSTED_DIFFICULTY_PER_ZONE = 1.75
 
 const HP_BASE = 25
-const HP_GROWTH = 20
-const HP_GROWTH_PCT = 0.2 //0.25
+const HP_GROWTH = 18
+const HP_GROWTH_PCT = 0.1 //0.25
 
 const POWER_BASE = 10
-const POWER_GROWTH = 2.5
-const POWER_GROWTH_PCT = 0.2 //0.25
+const POWER_GROWTH = 3
+const POWER_GROWTH_PCT = 0.1 //0.25
 
 const XP_BASE = 50
 const XP_GROWTH = 20
 const XP_GROWTH_PCT = 0.2
-const XP_ZONE_BONUS = 2
+const XP_ZONE_BONUS = 1.75
 
 export function levelToXpReward(lvl){
   const zoneBonuses = Math.floor((lvl - 1) / 10)

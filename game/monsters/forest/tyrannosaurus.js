@@ -3,9 +3,9 @@ import biteMonsterItem from '../../monsterItems/biteMonsterItem.js'
 
 export default {
   baseStats: {
-    physPower: '+10%',
-    speed: -60,
-    hpMax: '+80%'
+    physPower: '+20%',
+    speed: -50,
+    hpMax: '+120%'
   },
   items: [
     {
@@ -22,8 +22,8 @@ export default {
         },
         stats: {
           speed: 100,
-          physPower: '50%',
-          physDef: '50%'
+          physPower: '75%',
+          physDef: '75%'
         }
       }
     },

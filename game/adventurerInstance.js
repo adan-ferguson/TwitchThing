@@ -11,12 +11,12 @@ const XP_GROWTH = 200
 const XP_GROWTH_PCT = 0.25
 
 const HP_BASE = 40
-const HP_GROWTH = 20
-const HP_GROWTH_PCT = 0.12
+const HP_GROWTH = 18
+const HP_GROWTH_PCT = 0.05
 
 const POWER_BASE = 10
-const POWER_GROWTH = 2.5
-const POWER_GROWTH_PCT = 0.12
+const POWER_GROWTH = 3
+const POWER_GROWTH_PCT = 0.05
 
 export function advXpToLevel(xp){
   if(xp < XP_BASE){
@@ -51,6 +51,10 @@ export default class AdventurerInstance extends FighterInstance{
     this.bonusesData = new BonusesData(adventurerDef.bonuses, this)
   }
 
+  get accomplishments(){
+    return this.fighterData.accomplishments
+  }
+
   get level(){
     return advXpToLevel(this._fighterData.xp)
   }
@@ -82,7 +86,7 @@ export default class AdventurerInstance extends FighterInstance{
   get baseStats(){
     return [
       {
-        [startingFoodStat.name]: 5
+        [startingFoodStat.name]: 3
       },
       ...this.bonuses.map(bonusInstance => bonusInstance.stats)
     ]

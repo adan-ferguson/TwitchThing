@@ -73,7 +73,7 @@ function validateLoadout(adventurer){
 function convertFromAjaxData(adventurer, user, newItems){
   return newItems.map(val => {
     if(_.isString(val)){
-      return user.inventory.items.crafted[val] ?? null
+      return adventurer.items.find(item => item?.id === val) ?? user.inventory.items.crafted[val] ?? null
     }
     return val
   })

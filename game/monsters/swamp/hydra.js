@@ -19,9 +19,9 @@ const EXTRA_HEAD = statusEffectAction({
 
 export default {
   baseStats: {
-    hpMax: '-66%',
-    physPower: '-66%',
-    speed: -90
+    hpMax: '-72%',
+    physPower: '-65%',
+    speed: -100
   },
   items: [
     bossMonsterItem,
@@ -32,6 +32,16 @@ export default {
           uses: 1,
           description: 'Start combat with six Extra Heads.',
           actions: new Array(6).fill(EXTRA_HEAD)
+        }
+      }
+    },
+    {
+      name: 'Regenerate Head',
+      abilities: {
+        tick: {
+          initialCooldown: 10000,
+          description: 'Sprout a new Extra Head.',
+          actions: [EXTRA_HEAD]
         }
       }
     }

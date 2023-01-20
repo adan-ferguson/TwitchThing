@@ -3,7 +3,7 @@ import { speedStat } from '../../stats/combined.js'
 
 export default {
   levelFn: level => {
-    const speed = 25 + level * 5
+    const speed = 15 + level * 5
     return {
       stats: {
         startingFood: level

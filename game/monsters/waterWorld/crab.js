@@ -1,14 +1,11 @@
+import tastyMonsterItem from '../../monsterItems/tastyMonsterItem.js'
+
 export default {
   baseStats: {
-    physDef: '35%',
+    physDef: '40%',
     speed: -20
   },
   items: [
-    {
-      name: 'Tasty',
-      rewards: {
-        food: 1
-      }
-    }
+    tastyMonsterItem
   ]
 }

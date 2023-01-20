@@ -5,10 +5,11 @@ import { geometricProgession } from '../../game/growthFunctions.js'
 const GOLD_ONLY_CHANCE = 0.33
 const GOLD_BASE = 20
 const GOLD_GROWTH = 5
-const GOLD_GROWTH_PCT = 0.15
+const GOLD_GROWTH_PCT = 0.04
 
 const CHEST_SIZE = {
   normal: 1,
+  tutorial: 1,
   boss: 5,
   shop: 5
 }
@@ -36,6 +37,10 @@ export function generateRandomChest(options = {}){
     chest.singlesOnly = true
   }
 
+  if(chest.type === 'tutorial'){
+    chest.noGold = true
+  }
+
   if(chest.type === 'boss'){
     // Guarantee 100 from boss chests so they can buy adv slot
     chest.contents.gold += 100
@@ -44,7 +49,9 @@ export function generateRandomChest(options = {}){
   for(let i = 0; i < CHEST_SIZE[chest.type]; i++){
     let valueRemaining = chest.level
     if(chest.noGold || Math.random() > GOLD_ONLY_CHANCE){
-      const baseType = chooseRandomBasicItem(chest.level, chest.class)
+      // tutorial chests drop more fighter items
+      const chestClass = chest.class ?? (chest.type === 'tutorial' && Math.random() > 0.75 ? 'fighter' : null)
+      const baseType = chooseRandomBasicItem(chest.level, chestClass)
       const count = chest.singlesOnly ? 1 : multiplyItem(valueRemaining, baseType.orbs)
       valueRemaining -= toValue(count, baseType.orbs)
       addItem(chest.contents.items.basic, baseType.group, baseType.name, count)
