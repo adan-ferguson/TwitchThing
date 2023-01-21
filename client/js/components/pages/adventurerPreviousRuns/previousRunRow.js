@@ -1,4 +1,5 @@
 import dateformat from 'dateformat'
+import { betterDateFormat } from '../../timer.js'
 
 const HTML = (_id, {
   time,
@@ -11,7 +12,7 @@ const HTML = (_id, {
 }) => `
 <div class="flex-rows">
     <div class="floors">Floor ${startingFloor} to ${endingFloor}</div>
-    <div class="time">${dateformat(time, 'M:ss')}</div>
+    <div class="time">${betterDateFormat(time)}</div>
     <div class="xp">+${xp} xp</div>
 </div>
 <div class="flex-rows">

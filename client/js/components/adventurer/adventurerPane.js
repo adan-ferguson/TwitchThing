@@ -53,6 +53,7 @@ export default class AdventurerPane extends HTMLElement{
 
   setAdventurer(adventurer){
     this.adventurerInstance = new AdventurerInstance(adventurer)
+    this.adventurerInstance.idle = true
     this._name.textContent = adventurer.name
     this.xpBar.setValue(adventurer.xp)
     this.loadoutEl.setFighterInstance(this.adventurerInstance)

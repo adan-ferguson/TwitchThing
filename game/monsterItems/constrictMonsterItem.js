@@ -8,7 +8,7 @@ export default function(def){
     abilities: {
       active: {
         ...def,
-        description: 'Wrap the opponent up and deal [physScaling0.16] physical damage/s over 5 seconds.',
+        description: 'Wrap the opponent up and deal [physScaling1.6] physical damage over 5 seconds.',
         actions: [
           ({ combat, owner }) => {
             const duration = 5000

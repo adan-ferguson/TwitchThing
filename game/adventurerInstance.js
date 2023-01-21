@@ -8,7 +8,7 @@ import { startingFoodStat } from './stats/combined.js'
 
 const XP_BASE = 100
 const XP_GROWTH = 200
-const XP_GROWTH_PCT = 0.25
+const XP_GROWTH_PCT = 0.3
 
 const HP_BASE = 40
 const HP_GROWTH = 18

@@ -2,7 +2,7 @@ import { magicScalingMod } from '../../mods/combined.js'
 import statusEffectAction from '../../actions/statusEffectAction.js'
 import { poisonedStatusEffect } from '../../statusEffects/combined.js'
 
-const damage = 0.05
+const damage = 0.02
 
 export default {
   baseStats: {

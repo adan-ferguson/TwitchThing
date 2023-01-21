@@ -97,6 +97,7 @@ export default class LoadoutRow extends DIElement{
     this._itemRowEl.setItem(loadoutItem)
     this._tippy.enable()
     this.updateTooltip()
+    this.update()
     return this
   }
 
@@ -118,7 +119,7 @@ export default class LoadoutRow extends DIElement{
     this._cooldownBarEl.style.visibility = this.loadoutItem ? 'visible' : 'hidden'
 
     const info = this.loadoutItem?.abilityDisplayInfo
-    if(!info || info.idle){
+    if(!info){
       return
     }
 

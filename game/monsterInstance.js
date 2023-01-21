@@ -20,7 +20,7 @@ const POWER_GROWTH_PCT = 0.1 //0.25
 const XP_BASE = 50
 const XP_GROWTH = 20
 const XP_GROWTH_PCT = 0.2
-const XP_ZONE_BONUS = 1.75
+const XP_ZONE_BONUS = 2
 
 export function levelToXpReward(lvl){
   const zoneBonuses = Math.floor((lvl - 1) / 10)

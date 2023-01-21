@@ -4,12 +4,12 @@ export const DAMAGE_COLORS = {
 }
 export const FLASH_COLORS = {
   attack: '#9fff9f',
-  active: '#71e1e5',
+  active: '#74d5d9',
   triggered: '#ffa227'
 }
 
 export const ITEM_ROW_COLORS = {
-  active: '#71e1e5',
+  active: '#74d5d9',
   triggered: '#ffa227',
   disabled: '#bbbbbb'
 }

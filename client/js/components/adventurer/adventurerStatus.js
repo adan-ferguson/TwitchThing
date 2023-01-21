@@ -1,7 +1,6 @@
 import { OrbsDisplayStyle, OrbsTooltip } from '../orbRow.js'
-import dateFormat from 'dateformat'
-import MonsterInstance from '../../../../game/monsterInstance.js'
 import AdventurerInstance from '../../../../game/adventurerInstance.js'
+import { betterDateFormat } from '../timer.js'
 
 const HTML = `
 <span style="text-align:center">
@@ -61,7 +60,7 @@ export default class AdventurerStatus extends HTMLElement{
 
     statusEl.innerHTML = DUNGEON_HTML({
       floor: dungeonRun.floor,
-      time: dateFormat(dungeonRun.virtualTime, 'M:ss'),
+      time: betterDateFormat(dungeonRun.virtualTime),
       room: dungeonRun.room
     })
     descriptionEl.style.color = '#000'

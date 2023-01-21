@@ -3,7 +3,6 @@ import StatsList from './stats/statsList.js'
 import { StatsDisplayStyle } from '../statsDisplayInfo.js'
 import DIElement from './diElement.js'
 import { parseDescriptionString } from '../descriptionString.js'
-import { magicAttackMod } from '../../../game/mods/combined.js'
 import { wrapContent } from '../../../game/utilFunctions.js'
 
 export default class EffectDetails extends DIElement{

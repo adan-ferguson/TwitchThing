@@ -49,6 +49,9 @@ export async function generateCombatEvent(dungeonRun, boss = false){
   }else if(combat.result === CombatResult.F2_WIN){
     combatEvent.runFinished = true
     return combatEvent
+  }else if(combat.result === CombatResult.TIME_OVER){
+    resultEvent.message = 'The combat took too long and everyone got bored and left.'
+    resultEvent.roomType = 'timeover'
   }
 
   return [combatEvent, resultEvent]

@@ -69,12 +69,11 @@ export default class AbilityInstance{
   }
 
   get cooldown(){
-    return (1 - this._parentEffect.exclusiveStats.get(cooldownReductionStat).value) *
-      (this._abilityDef.cooldown ?? this.initialCooldown)
+    return (1 - this._parentEffect.exclusiveStats.get('cooldownReduction').value) * this._abilityDef.cooldown || this.initialCooldown
   }
 
   get initialCooldown(){
-    return this._abilityDef.initialCooldown ?? 0
+    return (this._abilityDef.initialCooldown ?? 0) * (1 - this._parentEffect.exclusiveStats.get('cooldownReduction').value)
   }
 
   get uses(){

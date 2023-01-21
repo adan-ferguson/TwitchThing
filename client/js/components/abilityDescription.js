@@ -17,7 +17,7 @@ export default class AbilityDescription extends HTMLElement{
     const displayInfo = abilityDisplayInfo(itemInstance)
     this.innerHTML = ''
 
-    if(!displayInfo){
+    if(!displayInfo || displayInfo.phantom){
       this.classList.add('displaynone')
       return
     }

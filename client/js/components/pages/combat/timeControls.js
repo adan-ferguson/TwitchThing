@@ -1,6 +1,7 @@
 import Ticker from '../../../ticker.js'
 import dateformat from 'dateformat'
 import DIElement from '../../diElement.js'
+import { betterDateFormat } from '../../timer.js'
 
 const HTML = `
 <di-bar class="event-time-bar"></di-bar>
@@ -117,7 +118,7 @@ export default class TimeControls extends DIElement{
   _update(jumped = false){
     this._eventTimeBarEl.setOptions({
       max: this._ticker.endTime,
-      label: dateformat(this._ticker.currentTime, 'M:ss.L')
+      label: betterDateFormat(this._ticker.currentTime, { milliseconds: true })
     })
     this._eventTimeBarEl.setValue(this._ticker.currentTime)
     this.events.emit('timechange', { jumped })

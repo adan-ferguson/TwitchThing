@@ -25,7 +25,8 @@ export default function(effectInstance){
     state: idle ? AbilityState.IDLE : state(ability),
     barValue: idle ? 0 : barValue(ability),
     barMax: idle ? 1 : barMax(ability),
-    cooldownRefreshing: ability.cooldownRefreshing
+    cooldownRefreshing: ability.cooldownRefreshing,
+    phantom: ability.phantom ? true : false
   }
 }
 
@@ -35,7 +36,8 @@ function getMainAbility(abilities){
     return { trigger: 'active', ability: active }
   }
   for(let trigger in abilities){
-    if(!abilities[trigger].phantom){ // TODO: actually choose
+    // TODO: actually choose
+    if(abilities[trigger]){
       return { trigger, ability: abilities[trigger] }
     }
   }
@@ -85,7 +87,7 @@ function barMax(ability){
   if(ability?.uses){
     return ability.uses
   }
-  return 0
+  return 1
 }
 
 function deriveActionString(action){

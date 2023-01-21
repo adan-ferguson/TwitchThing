@@ -2,10 +2,9 @@ import gainHealthAction from '../actions/gainHealthAction.js'
 
 export default {
   name: 'Tasty',
-  description: 'Whoever defeats this regains 20% health.',
   abilities: {
     defeated: {
-      phantom: true,
+      description: 'Whoever defeats this regains 20% health.',
       actions: [
         gainHealthAction({
           scaling: {
