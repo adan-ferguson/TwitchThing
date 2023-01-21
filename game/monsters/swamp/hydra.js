@@ -1,23 +1,49 @@
+import bossMonsterItem from '../../monsterItems/bossMonsterItem.js'
+import statusEffectAction from '../../actions/statusEffectAction.js'
+import { barrierStatusEffect } from '../../statusEffects/combined.js'
+
+const EXTRA_HEAD = statusEffectAction({
+  base: barrierStatusEffect,
+  effect: {
+    displayName: 'Extra Head',
+    description: 'Grants an extra attack',
+    stacking: false,
+    params: {
+      hpMax: 1
+    },
+    stats: {
+      attacks: 1
+    }
+  }
+})
+
 export default {
   baseStats: {
-    physPower: '+20%',
-    physDef: '+20%',
-    hpMax: '+120%',
-    speed: '-10%'
+    hpMax: '-72%',
+    physPower: '-65%',
+    speed: -100
   },
-  description: 'Head\'s up!',
-  abilities: [
+  items: [
+    bossMonsterItem,
     {
-      name: 'Boss Monster',
-      description: 'Hardest monster type in the zone, stronger and gives extra rewards.',
-      stats: {
-        rewards: '+100%'
+      name: 'Multi-Headed',
+      abilities: {
+        startOfCombat: {
+          uses: 1,
+          description: 'Start combat with six Extra Heads.',
+          actions: new Array(6).fill(EXTRA_HEAD)
+        }
       }
-    },{
-      name: 'Head Regrowth',
-      description: 'Just kidding, it\'s regeneration again!',
-      stats: {
-        regen: '5%'
+    },
+    {
+      name: 'Regenerate Head',
+      abilities: {
+        tick: {
+          initialCooldown: 10000,
+          description: 'Sprout a new Extra Head.',
+          actions: [EXTRA_HEAD]
+        }
       }
-    }]
+    }
+  ]
 }

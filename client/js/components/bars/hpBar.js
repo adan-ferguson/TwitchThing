@@ -10,7 +10,8 @@ export default class HpBar extends Bar{
     this.setOptions({
       color: HP,
       increaserColor: INCREASER,
-      decreaserColor: DECREASER
+      decreaserColor: DECREASER,
+      rounding: true
     })
   }
 }

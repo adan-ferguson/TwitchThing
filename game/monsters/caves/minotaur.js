@@ -1,16 +1,27 @@
+import { bossMod } from '../../mods/combined.js'
+import attackAction from '../../actions/attackAction.js'
+
 export default {
   baseStats: {
-    physPower: '+30%',
-    speed: '-20%',
-    hpMax: '+100%'
+    physPower: '+40%',
+    speed: -30,
+    hpMax: '+300%'
   },
-  description: 'Hard hitting, back breaking.',
-  abilities: [
+  items: [
     {
-      name: 'Boss Monster',
-      description: 'Hardest monster type in the zone, stronger and gives extra rewards.',
-      stats: {
-        rewards: '+100%'
+      name: 'Boss',
+      mods: [bossMod]
+    },{
+      name: 'Execute',
+      abilities: {
+        active: {
+          initialCooldown: 30000,
+          actions: [
+            attackAction({
+              damageMulti: 5
+            })
+          ]
+        }
       }
     }
   ]

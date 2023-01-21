@@ -1,12 +1,13 @@
-import { StatType } from '../../game/stats/statDefinitions.js'
-import { COMBAT_BASE_TURN_TIME } from '../../game/combat/fighterInstance.js'
-import { roundToFixed } from '../../game/utilFunctions.js'
+import { all as StatDefs } from '../../game/stats/combined.js'
+import { roundToFixed, toDisplayName } from '../../game/utilFunctions.js'
 import healthIcon from '../assets/icons/health.svg'
 import actionIcon from '../assets/icons/action.svg'
 import physPowerIcon from '../assets/icons/physPower.svg'
 import physDefIcon from '../assets/icons/physDef.svg'
 import magicPowerIcon from '../assets/icons/magicPower.svg'
 import magicDefIcon from '../assets/icons/magicDef.svg'
+import { StatType } from '../../game/stats/statType.js'
+import statValueFns from '../../game/stats/statValueFns.js'
 
 export const StatsDisplayStyle = {
   CUMULATIVE: 0, // Eg. "50%", i.e. our total of this stat is 50%
@@ -14,68 +15,51 @@ export const StatsDisplayStyle = {
 }
 
 const statDefinitionsInfo = {
-  hpMax: {
+  [StatDefs.hpMax.name]: {
     text: 'Max Health',
     icon: healthIcon,
-    displayedValueFn: (value, { style, owner }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
-        return Math.round(value * owner.baseHp)
-      }
-    },
-    descriptionFn: (value, { style, owner }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE && owner?.baseHp){
-        return `Max Health (${owner.baseHp} + ${Math.round(value * 100 - 100)}%)`
-      }
-      return 'Max Health'
-    },
+    description: 'Max Health (good description)'
   },
-  physPower: {
+  [StatDefs.physPower.name]: {
     text: 'Phys Power',
     icon: physPowerIcon,
-    displayedValueFn: (value, { style, owner }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE && owner?.basePower){
-        return Math.ceil(value * owner.basePower)
-      }
-    },
-    description: 'Phys power (basic attack damage)',
+    description: 'Phys power (basic attack damage)'
   },
-  magicPower: {
+  [StatDefs.magicPower.name]: {
     text: 'Magic Power',
     icon: magicPowerIcon,
-    displayedValueFn: (value, { style, owner }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE && owner?.basePower){
-        return Math.ceil(value * owner.basePower)
-      }
-    },
-    description: 'Magic power',
+    description: 'Magic power'
   },
-  physDef: {
+  [StatDefs.physDef.name]: {
     text: 'Phys Defense',
     icon: physDefIcon,
     description: 'Blocks physical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
   },
-  magicDef: {
+  [StatDefs.magicDef.name]: {
     text: 'Magic Defense',
     icon: magicDefIcon,
     description: 'Blocks magical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
   },
-  speed: {
+  [StatDefs.missChance.name]: {},
+  [StatDefs.speed.name]: {
     text: 'Speed',
     displayInverted: true,
     icon: actionIcon,
-    displayedValueFn: (value, { style }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE){
-        return roundToFixed(COMBAT_BASE_TURN_TIME / (1000 * value), 2) + 's'
-      }
-    },
-    description: 'Speed (combat turn time)',
+    description: 'Speed. Each extra 100 speed is about +1 turn per 3 seconds.',
   },
-  critChance: {
+  [StatDefs.damageDealt.name]: {},
+  [StatDefs.damageTaken.name]: {},
+  [StatDefs.critChance.name]: {
     text: 'Crit Chance',
     description: 'Chance to deal bonus damage.',
-    displayedValueFn: value => `${Math.round(value * 100)}%`,
+    displayedValueFn: flatValuePercentageDisplay
   },
-  critDamage: {
+  [StatDefs.enemyCritChance.name]: {
+    text: 'Enemy Crit Chance',
+    description: 'Increases enemy\'s crit chance.',
+    displayedValueFn: flatValuePercentageDisplay
+  },
+  [StatDefs.critDamage.name]: {
     text: 'Crit Damage',
     description: 'Increases damage deal by crits.',
     displayedValueFn: (value, { style }) => {
@@ -85,53 +69,31 @@ const statDefinitionsInfo = {
       return `+${Math.round((value - 1) * 100)}%`
     }
   },
-  dodgeChance: {
+  [StatDefs.dodgeChance.name]: {
     text: 'Dodge Chance',
     description: 'Chance to dodge attacks.',
   },
-  lifesteal: {
+  [StatDefs.blockChance.name]: {
+    text: 'Block Chance',
+    description: 'Chance to block attacks.',
+  },
+  [StatDefs.lifesteal.name]: {
     text: 'Lifesteal',
-    displayedValueFn: value => `${Math.round(value * 100)}%`,
-    description: 'Gain health when dealing physical damage.',
-  },
-  combatHarderChance: {
-    text: 'Stronger Monster Chance',
-    description: 'Increases chance to fight stronger (higher level) monsters.',
-  },
-  combatXP: {
-    text: 'Combat XP Gain',
-    description: 'Increases XP gained from combat.',
-  },
-  relicSolveChance: {
-    text: 'Relic Solve Chance',
-    description: 'Increased chance to solve relic puzzles. Rarer relics are harder to solve.',
-  },
-  relicRareChance: {
-    text: 'Rare Relic Chance',
-    description: 'Chance to find high quality relics.'
-  },
-  regen: {
-    text: 'Health Regeneration',
-    displayedValueFn: (value, { style, owner }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE && owner?.hpMax){
-        return `${roundToFixed(value * owner.hpMax, 1)}`
+    displayedValueFn: (value, { style }) => {
+      if(style === StatsDisplayStyle.CUMULATIVE){
+        return `${Math.round(value * 100)}%`
       }
-      return `${roundToFixed(value * 100, 1)}%`
-    },
-    descriptionFn: (value, { style, owner }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE && owner?.hpMax){
-        return `Recover ${roundToFixed(value * owner.hpMax, 1)} health every 5 seconds, both in and out of combat (scales with level).`
-      }
-      return `Recover (${roundToFixed(value * 100, 1)}% x max health) health every 5 seconds, both in and out of combat.`
-    },
+      return `+${Math.round(value * 100)}%`
+    }
   },
-  chestFind: {
-    text: 'Chest Find',
-    description: 'Increased chance to find treasure chests from combat rewards or from treasure relics.',
+  [StatDefs.combatXP.name]: {
+    text: 'XP Gain'
   },
-  rewards: {
-    text: 'Rewards',
-    description: 'More xp for killing, better chests.'
+  [StatDefs.startingFood.name]: {
+    text: 'Starting Food'
+  },
+  [StatDefs.cooldownReduction.name]: {
+    text: 'Cooldown Reduction'
   }
 }
 
@@ -147,34 +109,68 @@ export function getStatDisplayInfo(stat, options = {}){
     owner: null,
     ...options
   }
-  const info = { ...statDefinitionsInfo[stat.name] }
-  if(!info){
+  if(!statDefinitionsInfo[stat.name]){
     return null
   }
+  const info = { ...statDefinitionsInfo[stat.name] }
   if(info.displayedValueFn){
     info.displayedValue = info.displayedValueFn(stat.value, options)
+    delete info.displayedValueFn
   }
   if(info.displayedValue === undefined){
-    info.displayedValue = toText(stat.type, stat.value, options.style)
+    info.displayedValue = toText(stat, options.style)
   }
   if(info.descriptionFn){
     info.description = info.descriptionFn(stat.value, options)
+    delete info.descriptionFn
   }
-  delete info.descriptionFn
-  delete info.displayedValueFn
   return {
     ...DEFAULTS,
+    text: toDisplayName(stat.name),
     ...info,
     stat,
     order: Object.keys(statDefinitionsInfo).indexOf(stat.name)
   }
 }
 
-function toText(statType, value, style){
+function toText(stat, style){
+  const value = stat.value
+  const statType = stat.type
+  if(!value && statType === StatType.COMPOSITE){
+    return toCompositeText(stat.mods, style)
+  }
   if(statType === StatType.MULTIPLIER){
     return `${value > 1 ? '+' : ''}${Math.round((value - 1) * 100)}%`
   }else if(statType === StatType.PERCENTAGE){
-    return `${style === StatsDisplayStyle.ADDITIONAL ? '+' : ''}${roundToFixed(value * 100, 1)}%`
+    return `${plusSign(style, value)}${roundToFixed(value * 100, 1)}%`
   }
-  return `${value > 0 && style === StatsDisplayStyle.ADDITIONAL ? '+' : ''}${value}`
+  return `${plusSign(style, value)}${value}`
+}
+
+function flatValuePercentageDisplay(value, { style }){
+  let str = ''
+  if(style === StatsDisplayStyle.ADDITIONAL && value > 0){
+    str += '+'
+  }
+  return str + `${Math.round(value * 100)}%`
+}
+
+function toCompositeText(mods, style){
+  // TODO: support multipliers
+  if(!mods.all.pct.length){
+    return '0'
+  }
+  const multiValue = statValueFns[StatType.MULTIPLIER](mods.all.pct.map(v => v + '%'))
+  multiValue.type = StatType.MULTIPLIER
+  return toText(multiValue, style)
+}
+
+function plusSign(style, value){
+  if(style !== StatsDisplayStyle.ADDITIONAL){
+    return ''
+  }
+  if(value < 0){
+    return ''
+  }
+  return '+'
 }

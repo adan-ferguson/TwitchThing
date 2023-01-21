@@ -15,4 +15,9 @@ describe('toDisplayName function', () => {
     expect(toDisplayName('abcDefGhi')).to.equal('Abc Def Ghi')
   })
 
+  it('Should not add a space before symbols', () => {
+    expect(toDisplayName('multi-headed')).to.equal('Multi-Headed')
+    expect(toDisplayName('multi.headed')).to.equal('Multi.Headed')
+  })
+
 })

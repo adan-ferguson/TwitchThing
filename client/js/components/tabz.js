@@ -1,9 +1,11 @@
+import DIElement from './diElement.js'
+
 const HTML = prevHTML => `
 <div class="tabz-list"></div>
 <div class="tabz-content">${prevHTML}</div>
 `
 
-export default class Tabz extends HTMLElement{
+export default class Tabz extends DIElement{
 
   constructor(){
     super()
@@ -27,6 +29,14 @@ export default class Tabz extends HTMLElement{
     this._setTab(first)
   }
 
+  get currentTab(){
+    return this.querySelector('.tabz-content .active')
+  }
+
+  getContentEl(name){
+    return this.querySelector(`.tabz-content [data-tab-name=${name}]`)
+  }
+
   _setTab(name){
     this.querySelectorAll('.tabz-list .tab').forEach(tab => {
       tab.classList.toggle('active', tab.getAttribute('data-tab-name') === name)
@@ -38,6 +48,7 @@ export default class Tabz extends HTMLElement{
       }
       tabContent.classList.toggle('active', match)
     })
+    this.events.emit('changed')
   }
 }
 customElements.define('di-tabz', Tabz)

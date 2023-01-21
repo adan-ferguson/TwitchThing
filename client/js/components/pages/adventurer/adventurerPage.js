@@ -1,22 +1,23 @@
 import Page from '../page.js'
-import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
-
-import AdventurerLoadoutEditorPage from '../adventurerLoadout/adventurerLoadoutEditorPage.js'
-
-import '../../adventurerPane.js'
-import LevelupPage from '../levelup/levelupPage.js'
-import DungeonPage from '../dungeon/dungeonPage.js'
+import '../../adventurer/adventurerPane.js'
 import fizzetch from '../../../fizzetch.js'
-import AdventurerPreviousRunsPage from '../adventurerPreviousRuns/adventurerPreviousRunsPage.js'
-import tippyCallout from '../../effects/tippyCallout.js'
+import tippyCallout from '../../visualEffects/tippyCallout.js'
 import { showLoader } from '../../../loader.js'
 import SimpleModal from '../../simpleModal.js'
-import MainPage from '../main/mainPage.js'
+import AdventurerPreviousRunsPage from '../adventurerPreviousRuns/adventurerPreviousRunsPage.js'
+import DungeonPage from '../dungeon/dungeonPage.js'
+import AdventurerLoadoutEditorPage from '../adventurerLoadout/adventurerLoadoutEditorPage.js'
+import LevelupPage from '../levelup/levelupPage.js'
+import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
+import AdventurerInstance from '../../../../../game/adventurerInstance.js'
+import { makeEl } from '../../../../../game/utilFunctions.js'
 
 const HTML = `
 <div class="content-columns">
   <div class="content-rows">
-    <di-adventurer-pane></di-adventurer-pane>
+    <div class="content-well">
+      <di-adventurer-pane></di-adventurer-pane>
+    </div>
     <button class="edit content-no-grow">Edit Equipment</button>
   </div>
   <div class="content-rows dungeons">
@@ -42,7 +43,7 @@ export default class AdventurerPage extends Page{
     this._topRightButton = this.querySelector('.top-right')
     this._prevRuns = this.querySelector('.previous-runs')
     this._prevRuns.addEventListener('click', () => {
-      this.redirectTo(new AdventurerPreviousRunsPage(this.adventurerID))
+      this.redirectTo(AdventurerPreviousRunsPage.path(this.adventurerID))
     })
     this.querySelector('.dismiss').addEventListener('click', () => {
       new SimpleModal(`Are you sure you want to dismiss ${this.adventurer.name}? Just to clarify I mean DELETE!\n\nEquipped items will be returned to your inventory.`, [{
@@ -52,7 +53,7 @@ export default class AdventurerPage extends Page{
           showLoader()
           fizzetch(`/game/adventurer/${this.adventurerID}/dismiss`)
             .then(() => {
-              this.redirectTo(new MainPage())
+              this.redirectToMain()
             })
         }
       },{
@@ -65,11 +66,20 @@ export default class AdventurerPage extends Page{
     return this.adventurer?.name
   }
 
-  async load(previousPage){
-    const { adventurer, user } = await this.fetchData(`/game/adventurer/${this.adventurerID}`)
+  static get pathDef(){
+    return ['adventurer', 0]
+  }
+
+  get pathArgs(){
+    return [this.adventurerID]
+  }
+
+  async load(){
+
+    const { adventurer, user } = await this.fetchData()
 
     if(adventurer.dungeonRunID){
-      return this.redirectTo(new DungeonPage(adventurer.dungeonRunID))
+      return this.redirectTo(DungeonPage.path(adventurer.dungeonRunID))
     }
 
     this.adventurer = adventurer
@@ -96,22 +106,24 @@ export default class AdventurerPage extends Page{
     }
 
     btn.addEventListener('click', () => {
-      this.redirectTo(new AdventurerLoadoutEditorPage(this.adventurerID))
+      this.redirectTo(AdventurerLoadoutEditorPage.path(this.adventurerID))
     })
   }
 
   _setupTopRightButton(user){
-    if(this.adventurer.nextLevelUp){
+    const advInstance = new AdventurerInstance(this.adventurer)
+    if(advInstance.shouldLevelUp){
       this._topRightButton.classList.add('highlight')
       this._topRightButton.innerHTML = '<div>Level Up!<div/>'
       this._topRightButton.addEventListener('click', () => {
-        this.redirectTo(new LevelupPage(this.adventurerID))
+        this.redirectTo(LevelupPage.path(this.adventurerID))
       })
     }else{
-      this._topRightButton.innerHTML = '<div>Enter Dungeon<div/>'
+      const quickDungeon = user.features.dungeonPicker
+      this._topRightButton.textContent = 'Enter Dungeon'
       this._topRightButton.addEventListener('click', () => {
-        if(user.features.dungeonPicker){
-          this.redirectTo(new DungeonPickerPage(this.adventurerID))
+        if(quickDungeon){
+          this.redirectTo(DungeonPickerPage.path(this.adventurerID))
         }else{
           this._quickEnterDungeon()
         }
@@ -122,7 +134,7 @@ export default class AdventurerPage extends Page{
   async _quickEnterDungeon(){
     showLoader('Entering Dungeon...')
     const { dungeonRun } = await fizzetch(`/game/adventurer/${this.adventurerID}/enterdungeon`)
-    this.redirectTo(new DungeonPage(dungeonRun._id))
+    this.redirectTo(DungeonPage.path(dungeonRun._id))
   }
 }
 

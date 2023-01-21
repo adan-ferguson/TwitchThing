@@ -1,14 +1,10 @@
-import fizzetch from '../fizzetch.js'
-import { getSocket } from '../socketClient.js'
 import Zones, { floorSize } from '../../../game/zones.js'
-import { makeEl, wrap } from '../../../game/utilFunctions.js'
+import { makeEl, wrapContent } from '../../../game/utilFunctions.js'
 import tippy from 'tippy.js'
-import AdventurerStatus from './adventurerStatus.js'
+import AdventurerStatus from './adventurer/adventurerStatus.js'
 
 const HTML = `
-<div class="runs">
-  <di-loader class="show"></di-loader>
-</div>
+<div class="runs"></div>
 `
 
 const ZONE_HTML = ({ name }) => `
@@ -23,15 +19,9 @@ export default class LiveDungeonMap extends HTMLElement{
   constructor(){
     super()
     this.innerHTML = HTML
-  }
-
-  async load(){
-    const { activeRuns } = await fizzetch('/watch/livedungeonmap')
     const runsEl = this.querySelector('.runs')
-    runsEl.innerHTML = ''
-
     Zones.forEach((zone, zoneIndex) => {
-      const zoneEl = wrap(ZONE_HTML(zone), {
+      const zoneEl = wrapContent(ZONE_HTML(zone), {
         class: 'zone',
         allowHTML: true
       })
@@ -46,17 +36,14 @@ export default class LiveDungeonMap extends HTMLElement{
       runsEl.appendChild(zoneEl)
     })
     this._showZones(0)
-
-    activeRuns.forEach(this._updateRun)
-    getSocket().on('live dungeon map update', this._updateRun)
   }
 
-  unload(){
-    getSocket().off('live dungeon map update', this._updateRun)
-  }
-
-  _updateRun = dungeonRun => {
-    if(dungeonRun.currentEvent.runFinished){
+  updateRun(dungeonRun){
+    const currentEvent = dungeonRun.currentEvent ?? dungeonRun.newEvents?.at(-1)
+    if(!currentEvent){
+      return
+    }
+    if(currentEvent.runFinished){
       return this._runFinished(dungeonRun._id)
     }
     if(!this._dungeonRunEls[dungeonRun._id]){
@@ -64,13 +51,14 @@ export default class LiveDungeonMap extends HTMLElement{
     }
     const el = this._dungeonRunEls[dungeonRun._id]
     el._tippyContent.setDungeonRun(dungeonRun)
-    el.classList.toggle('in-combat', dungeonRun.currentEvent.combatID ? true : false)
+    el.classList.toggle('in-combat', currentEvent.combatID ? true : false)
     if(el.floor !== dungeonRun.floor){
       el.floor = dungeonRun.floor
       this._floorEls[dungeonRun.floor - 1].appendChild(el)
       this._showZones(Math.floor((el.floor - 1) / 10))
     }
-    const pct = 95 * Math.min(1, dungeonRun.room / floorSize(dungeonRun.floor))
+    const fs = dungeonRun.room / floorSize(dungeonRun.floor)
+    const pct = 95 * Math.min(1, fs)
     el.style.left = `${pct}%`
   }
 
@@ -86,7 +74,7 @@ export default class LiveDungeonMap extends HTMLElement{
   _makeDungeonRunEl({ _id, adventurer }){
     const el = makeEl({ class: ['dungeon-run-dot', 'clickable'] })
     const status = new AdventurerStatus(adventurer)
-    status.appendChild(wrap('Click to watch', {
+    status.appendChild(wrapContent('Click to watch', {
       class: 'subtitle',
       elementType: 'span'
     }))
@@ -97,7 +85,7 @@ export default class LiveDungeonMap extends HTMLElement{
       content: status
     })
     el.addEventListener('click', () => {
-      window.open(`/watch/dungeonrun/${_id}`, '_blank')
+      window.open(`/dungeonrun/${_id}`, '_blank')
     })
     this._dungeonRunEls[_id] = el
   }

@@ -22,15 +22,16 @@ export default class AdminPage extends Page{
     this.innerHTML = HTML
   }
 
+  static get pathDef(){
+    return ['admin']
+  }
+
   get titleText(){
     return 'Admin Control Panel'
   }
 
-  async load(_){
-    const { error } = await fizzetch('/admin')
-    if(error){
-      return error
-    }
+  async load(){
+    await this.fetchData()
   }
 }
 

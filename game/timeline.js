@@ -2,10 +2,10 @@ import { EventEmitter } from 'events'
 
 export default class Timeline extends EventEmitter{
 
-  constructor(timelineEntries){
+  constructor(timelineEntries, startTime = 0){
     super()
     this._entries = timelineEntries
-    this._time = 0
+    this._time = startTime
   }
 
   get entries(){
@@ -13,15 +13,14 @@ export default class Timeline extends EventEmitter{
   }
 
   get duration(){
+    if(!this._entries.length){
+      return 0
+    }
     return this._entries.at(-1).time + (this._entries.at(-1).duration ?? 0)
   }
 
   get time(){
     return this._time
-  }
-
-  set time(val){
-    this._time = Math.max(0, Math.min(this.duration, val))
   }
 
   get finished(){
@@ -54,6 +53,21 @@ export default class Timeline extends EventEmitter{
       }
     }
     return entryIndex
+  }
+
+  setTime(val, jumped = false){
+    const before = this._time
+    if(before === undefined){
+      jumped = true
+    }
+    this._time = Math.max(this.firstEntry.time, Math.min(this.duration, val))
+    if(this._time !== before || jumped){
+      this.emit('timechange', {
+        before,
+        after: this._time,
+        jumped
+      })
+    }
   }
 
   addEntry(entry){

@@ -1,10 +1,13 @@
-import { OrbsDisplayStyle } from './orbRow.js'
+import { OrbsDisplayStyle, OrbsTooltip } from './orbRow.js'
 
 const HTML = `
-<div>
-    <span class="icon"></span> <span class="name"></span>
+<div class="flex-columns flex-centered">
+  <div class="count-tab displaynone"></div>
+  <span class="name"></span>
 </div>
-<di-orb-row></di-orb-row>
+<div class="flex-columns flex-centered">
+  <di-orb-row></di-orb-row>
+</div>
 `
 
 export default class ItemRow extends HTMLElement{
@@ -21,13 +24,38 @@ export default class ItemRow extends HTMLElement{
     this._orbRow = this.querySelector('di-orb-row')
     this._orbRow.setOptions({
       style: OrbsDisplayStyle.MAX_ONLY,
-      showTooltips: false
+      tooltip: OrbsTooltip.NONE
     })
   }
 
   setItem(loadoutItem = {}){
-    this._nameEl.textContent = loadoutItem?.name
-    this._orbRow.setData(loadoutItem?.orbs)
+    if(!loadoutItem){
+      this._blank()
+      return
+    }
+    this._nameEl.textContent = loadoutItem.displayName
+    this._orbRow.setData(loadoutItem.orbs)
+    this._setTexture(loadoutItem.isBasic ? null : 'crypt')
+  }
+
+  setCount(count){
+    const countEl = this.querySelector('.count-tab')
+    countEl.classList.toggle('displaynone', count >= 1 ? false : true)
+    countEl.textContent = 'x' + count
+  }
+
+  _blank(){
+    this._nameEl.textContent = ''
+    this._orbRow.setData([])
+    this._setTexture(null)
+  }
+
+  _setTexture(name){
+    if(!name){
+      this.style.backgroundImage = null
+    }else{
+      this.style.backgroundImage = `url('/assets/textures/${name}.png')`
+    }
   }
 }
 

@@ -1,6 +1,9 @@
 const HTML = `
 <div class='underlay'></div>
-<div class='inner-pane'></div>
+<div class='inner-pane'>
+  <div class="close-button"><i class="fa-solid fa-xmark"></i></div>
+  <div class="inner-content"></div>
+</div>
 `
 
 export default class Modal extends HTMLElement{
@@ -20,7 +23,11 @@ export default class Modal extends HTMLElement{
       }
       this.hide()
     })
-    this.innerPane = this.querySelector('.inner-pane')
+    this._closeButton = this.querySelector('.close-button')
+    this._closeButton.addEventListener('click', () => {
+      this.hide()
+    })
+    this.innerContent = this.querySelector('.inner-content')
   }
 
   setOptions(options = {}){
@@ -29,15 +36,21 @@ export default class Modal extends HTMLElement{
         this._options[key] = options[key]
       }
     }
+    this._closeButton.classList.toggle('displaynone', !this._options.closeOnUnderlayClick)
   }
 
   show = () => {
     document.body.appendChild(this)
+    return this
   }
 
-  hide = () => {
+  hide = (result = null) => {
     this.remove()
-    this.dispatchEvent(new CustomEvent('hide'))
+    this.dispatchEvent(new CustomEvent('hide', {
+      detail: {
+        result
+      }
+    }))
   }
 }
 customElements.define('di-modal', Modal)

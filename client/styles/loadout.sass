@@ -7,10 +7,11 @@ di-loadout
 di-inventory
   .filtering-options
     margin-bottom: 8rem !important
-    height: 100rem
 
 .editable
   di-loadout-row
+    .cooldown
+      background-color: transparent
     &:not(.blank-row, .filtered)
       cursor: pointer
       &:hover
@@ -28,12 +29,26 @@ di-inventory
   position: absolute
 
 di-loadout-row
-  border: 0.5rem solid #CCC
+  //border: 0.5rem solid #CCC
   position: relative
   margin-bottom: 5rem
+  box-sizing: border-box
+
+  .hit-area
+    position: absolute
+    top: -4rem
+    bottom: -4rem
+    left: 0
+    right: 0
+
+  &.disabled
+    opacity: 0.5
 
   di-item-row
     height: 100%
+    position: absolute
+    width: 100%
+    box-sizing: border-box
 
   .new-badge
     position: absolute
@@ -47,15 +62,33 @@ di-loadout-row
     background-color: red
     font-family: Arial, serif
 
+  .cooldown
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    height: 100%
+
+    .bar-foreground
+      opacity: 0.22
+
+    //.bar-border
+    //  border: none !important
+
+  &[ability-state=ready]
+    .bar-border
+      border-width: 2rem
+
+  &[ability-state=disabled]
+    .bar-border
+      opacity: 0.5
+
+    //.cooldown .bar-foreground
+    //  opacity: 1
+
 di-adventurer-loadout-editor-page
   .content-columns > *
     margin-right: 10rem !important
-  .edit-hinter
-    display: flex
-    flex-direction: column
-    flex: 0 0 70rem !important
-    text-align: center
-    justify-content: center
 
 .loadout-row-tooltip
 
@@ -78,3 +111,91 @@ di-adventurer-loadout-editor-page
     font-size: 0.9em
     margin-top: 10rem
     font-style: italic
+
+di-ability-description
+  white-space: initial
+  display: block
+  position: relative
+  border: 0.5rem solid
+  margin-top: 3rem
+  text-align: left
+  line-height: 1.4em
+
+  .parsed-description
+    padding: 7rem
+    text-align: left
+
+    > *
+      display: inline-block
+
+    img
+      height: 1em
+      margin-right: 0.2em
+      vertical-align: text-top
+
+    .stat-wrap, .scaling-type
+      font-weight: bold
+
+  //&[ability-type=active]
+  //  border-color: $activeAbilityColor
+  //  background-color: $activeAbilityColorBg
+  //
+  //&[ability-type=triggered]
+  //  border-color: $triggeredAbilityColor
+  //  background-color: $triggeredAbilityColorBg
+
+  .description
+    .action-description
+      display: flex
+      align-items: center
+
+  .bot-row
+    margin-top: 6rem
+    padding: 0 6rem 2rem
+
+    span
+      font-size: 12rem
+      margin-left: 12rem
+
+    i
+      font-size: 0.9em
+      margin-right: 3rem
+
+    img
+      height: 1.1em
+      vertical-align: middle
+      margin-right: 3rem
+
+  .name
+    font-weight: bold
+
+  .description
+    margin-top: 5rem
+
+    > *
+      vertical-align: middle
+
+    .action-row
+      display: flex
+      flex-direction: row
+      align-items: center
+
+    .scaling-type
+      display: inline-flex
+      flex-direction: row
+      font-weight: bold
+      align-items: center
+
+      img
+        height: 1em
+        margin-bottom: 4rem
+        margin-right: 2rem
+
+    .scaling-type-magic
+      color: #4488FF
+
+    .scaling-type-phys
+      color: #DD5533
+
+    .scaling-type-hp
+      color: #8be369

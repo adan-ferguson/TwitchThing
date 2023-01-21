@@ -1,5 +1,7 @@
 import LoadoutRow from './loadoutRow.js'
 import OrbsData from '../../../../game/orbsData.js'
+import FighterItemLoadoutItem from '../../fighterItemLoadoutItem.js'
+import ConsoleTimer from '../../../../game/consoleTimer.js'
 
 const HTML = `
 <di-list></di-list>
@@ -8,10 +10,10 @@ const HTML = `
 export default class Loadout extends HTMLElement{
 
   _options = {
-    editable: false
+    editable: false,
   }
 
-  _contents
+  _fighterInstance
 
   constructor(){
     super()
@@ -30,13 +32,6 @@ export default class Loadout extends HTMLElement{
     }
 
     this.update()
-  }
-
-  get orbsData(){
-    if(this._contents){
-      return this._contents.getOrbsData(this.loadoutItems)
-    }
-    return new OrbsData()
   }
 
   get loadoutItems(){
@@ -62,6 +57,10 @@ export default class Loadout extends HTMLElement{
     return this.loadoutItems.map(loadoutItem => loadoutItem?.obj)
   }
 
+  getRow(i){
+    return this._rows[i]
+  }
+
   setOptions(options = {}){
     for (let key in options){
       this._options[key] = options[key]
@@ -71,18 +70,22 @@ export default class Loadout extends HTMLElement{
   }
 
   setContents(loadoutContents){
-    this._contents = loadoutContents
-    this._originalItems = [...loadoutContents.loadoutItems]
+    this._originalItems = [...loadoutContents]
     for(let i = 0; i < 8; i++){
       this._rows[i].setItem(this._originalItems[i])
     }
     this.update()
   }
 
+  setFighterInstance(fighterInstance){
+    this._fighterInstance = fighterInstance
+    this.setContents(fighterInstance.itemInstances.map(ii => ii ? new FighterItemLoadoutItem(ii) : null))
+  }
+
   addItem(item){
     for(let i = 0; i < 8; i++){
       if(!this.loadoutItems[i]){
-        this._rows[i].setItem(item)
+        this.setItem(i, item)
         this.update()
         return true
       }
@@ -91,6 +94,11 @@ export default class Loadout extends HTMLElement{
   }
 
   setItem(index, item){
+    if(this._fighterInstance){
+      if(item){
+        item.itemInstance.owner = this._fighterInstance
+      }
+    }
     this._rows[index].setItem(item)
     this.update()
   }
@@ -105,6 +113,22 @@ export default class Loadout extends HTMLElement{
   update(){
     this.classList.toggle('editable', this._options.editable)
     this.list.setRows(this._rows)
+    this._rows.forEach(loadoutRow => {
+      loadoutRow.updateTooltip()
+      loadoutRow.updateItemRow()
+    })
+  }
+
+  updateAllRows(){
+    this._rows.forEach(loadoutRow => {
+      loadoutRow.update()
+    })
+  }
+
+  advanceTime(ms){
+    this._rows.forEach(loadoutRow => {
+      loadoutRow.advanceTime(ms)
+    })
   }
 }
 

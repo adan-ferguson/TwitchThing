@@ -1,9 +1,9 @@
 import Modal from './modal.js'
 
-export default class FormModal extends Modal {
+export default class FormModal extends Modal{
   constructor(form){
     super()
-    this.innerPane.appendChild(form)
+    this.innerContent.appendChild(form)
     form.addEventListener('success', () => this.hide())
   }
 }

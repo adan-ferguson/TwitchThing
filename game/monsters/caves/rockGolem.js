@@ -1,7 +1,8 @@
 export default {
   baseStats: {
-    physPower: '+50%',
-    speed: '-50%',
+    hpMax: '+30%',
+    physPower: '+30%',
+    speed: -100,
     physDef: '50%'
   },
   description: 'Big and slow and is made of rock.'

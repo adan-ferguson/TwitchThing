@@ -1,13 +1,44 @@
+import attackAction from '../../actions/attackAction.js'
+import statusEffectAction from '../../actions/statusEffectAction.js'
+
 export default {
   baseStats: {
-    speed: '-25%'
+    physPower: '-10%',
+    physDef: '+30%',
+    speed: -20,
+    hpMax: '+30%'
   },
-  abilities: [
+  items: [
     {
-      name: 'Deadly Weapon',
+      name: 'Cursed Strike',
+      abilities: {
+        active: {
+          cooldown: 8000,
+          description: 'Deal [physScaling1.2] phys damage. Inflicts a curse (more chance to be crit).',
+          actions: [
+            attackAction({
+              damageMulti: 1.2
+            }),
+            statusEffectAction({
+              affects: 'enemy',
+              effect: {
+                displayName: 'Cursed',
+                stacking: true,
+                persisting: true,
+                duration: 30000,
+                stats: {
+                  enemyCritChance: 0.1
+                }
+              }
+            })
+          ]
+        }
+      }
+    },
+    {
+      name: 'Deadly Blade',
       stats: {
-        critChance: '30%',
-        critDamage: '+50%'
+        critDamage: '+100%'
       }
     }
   ]

@@ -161,7 +161,9 @@ function dist(pointA, pointB){
 }
 
 function contains(rect, point){
-  if(rect.left > point.x || rect.right < point.x || rect.top > point.y || rect.bottom < point.y){
+  const vhSize = window.innerHeight / 100
+  const padding = vhSize / 2
+  if(rect.left > point.x || rect.right < point.x || rect.top - padding > point.y || rect.bottom + padding < point.y){
     return false
   }
   return true

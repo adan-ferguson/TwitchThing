@@ -1,17 +1,4 @@
-di-results-page
-  .title
-    text-align: center
-    font-size: 1.5em
-    padding-bottom: 1em
-    flex-grow: 0 !important
-
-  di-tab
-    line-height: 1.6em
-    overflow-y: auto
-    overflow-x: hidden
-    display: flex
-    flex-direction: column
-    align-items: start
+di-dungeon-event-contents-results
 
   .open-all
     display: inline-block
@@ -20,26 +7,6 @@ di-results-page
     text-decoration: underline
     padding: 2rem
 
-  .buttons-row
-    flex-grow: 0 !important
-    display: flex
-    flex-direction: row
-    justify-content: space-between
-    align-items: center
-    margin-top: -10rem
-
-    .replay, .view-replay
-      flex-grow: 0
-      margin-left: 10rem
-      border: 0.2rem dashed #CCC
-      padding: 10rem
-
-      i
-        margin-left: 10rem
-
-    .done
-      flex-grow: 1
-
   .chests
     display: flex
     flex-direction: column
@@ -47,67 +14,103 @@ di-results-page
     margin-bottom: 15rem
 
     di-chest-openage
-      position: relative
-      border: 1.5rem dashed currentColor
-      box-sizing: border-box
-      padding: 0 10rem
-      margin-top: 10rem
-      transition: background-color 0.2s ease
-      overflow: visible
+      margin-top: 12rem
 
-      $insetPadding: 6rem
+  padding: 6rem
 
-      .fading-overlay
-        position: absolute
-        top: -5rem
-        left: -5rem
-        right: -5rem
-        bottom: -5rem
-        background-color: currentColor
-        opacity: 1
-        transition: opacity 1s linear
-        z-index: 2
-        pointer-events: none
+  > di-tabz
+    margin-bottom: 8rem
+    padding-bottom: 8rem
+    border-bottom: 0.5rem solid #DDD
+    text-align: left
+    min-height: 0
+    flex-basis: 0
 
-      &.opened
-        min-width: 200rem
-        min-height: 50rem
-        border-style: solid
+    .tabz-content
+      overflow-y: auto
 
-        .fading-overlay
-          opacity: 0
+  > .finalizer
+    flex-grow: 0 !important
 
-        .inset-title
-          opacity: 1
-          top: -$insetPadding
+di-chest-openage
+  display: flex
+  position: relative
+  border: 1.5rem dashed currentColor
+  box-sizing: border-box
+  padding: 5rem 10rem
+  //margin-top: 10rem
+  transition: background-color 0.2s ease
+  overflow: visible
 
-      .inset-title
-        position: absolute
-        top: 0
-        left: $insetPadding
-        background-color: white
-        padding: 0 $insetPadding
-        white-space: nowrap
-        opacity: 0
-        transition: opacity 1s linear, top 1s linear
+  di-loadout-row
+    height: 30rem
 
-      .contents
-        display: flex
-        flex-direction: column
-        padding: 15rem 0 5rem
+  $insetPadding: 6rem
 
-        di-loadout-row
-          width: 200rem
+  .gold-contents
+    img
+      height: 2em
+      vertical-align: bottom
+    color: black
+    margin-bottom: 5rem
 
-        .unopened
-          height: 28rem
-          flex-direction: row
-          justify-content: space-between
-          align-items: center
-          display: flex
-          .open-me
-            padding: 0 6rem
+  .fading-overlay
+    position: absolute
+    top: -5rem
+    left: -5rem
+    right: -5rem
+    bottom: -5rem
+    background-color: currentColor
+    opacity: 1
+    transition: opacity 1s linear
+    z-index: 2
 
-      &.clickable:hover
-        border-style: solid
-        background-color: #F8F8F8
+  &.opened
+    min-width: 200rem
+    min-height: 50rem
+    border-style: outset
+    border-width: 2.5rem
+
+    .fading-overlay
+      opacity: 0
+
+    .inset-title
+      opacity: 1
+      top: 0
+
+  .inset-title
+    position: absolute
+    top: $insetPadding
+    left: $insetPadding
+    background-color: white
+    padding: 0 $insetPadding
+    white-space: nowrap
+    opacity: 0
+    transition: opacity 1s linear, top 1s linear
+
+  .contents
+    display: inline-flex
+    flex-direction: column
+    padding: 15rem 0 5rem
+
+    di-loadout-row
+      width: 200rem
+
+  .unopened
+    height: 28rem
+    flex-direction: row
+    justify-content: space-between
+    align-items: center
+    display: flex
+    .stars
+      img
+        height: 1.25em
+        display: inline-block
+        margin: 0 2rem
+        vertical-align: middle
+    .open-me
+      padding: 0 6rem
+
+  &.clickable:hover
+    border-style: solid
+    background-color: #F8F8F8

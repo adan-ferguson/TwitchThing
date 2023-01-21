@@ -10,21 +10,25 @@ const DEFAULTS = {
   userID: null,
   items: [null, null, null, null, null, null, null, null],
   dungeonRunID: null,
-  bonuses: [],
+  bonuses: {},
   accomplishments: {
     deepestFloor: 1
   },
+  rerolls: 0,
   nextLevelUp: null
 }
 
 const Adventurers = new Collection('adventurers', DEFAULTS)
 
 Adventurers.createNew = async function(userID, name, startingClass){
-  return await Adventurers.save({ name, userID, bonuses: [firstLevelBonus(startingClass)] })
-}
-
-Adventurers.sortByLevel = async function(){
-  return Adventurers.collection.find({}).sort({ level: -1 }).toArray()
+  return await Adventurers.save(
+    {
+      name, userID, bonuses: {
+        [startingClass]: {
+          [firstLevelBonus(startingClass)]: 1
+        }
+      }
+    })
 }
 
 export default Adventurers

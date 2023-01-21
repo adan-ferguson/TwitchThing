@@ -4,15 +4,29 @@ import Page from './page.js'
 const HTML = errorMessage => `
 <div>
   <p>An error occurred, oh no.</p>
-  <p>Details:</p>
-  <textarea readonly="readonly">${JSON.stringify(errorMessage)}</textarea>
+  <div>${JSON.stringify(errorMessage)}</div>
 </div>
 `
 
 export default class ErrorPage extends Page{
-  constructor(error = {}){
+  constructor({ error }){
     super()
-    this.innerHTML = HTML(error.message ?? error ?? 'Unknown Error')
+    this._error = error
+    this.innerHTML = HTML(this._error)
+  }
+
+  static get pathDef(){
+    return ['error']
+  }
+
+  async load(){
+    if(!this._error){
+      this.redirectToMain()
+    }
+  }
+
+  get useHistory(){
+    return false
   }
 }
 customElements.define('di-error-page', ErrorPage)

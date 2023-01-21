@@ -5,8 +5,21 @@ di-item-row
   align-items: center
   padding: 0 5rem
 
+  .count-tab
+    border: 0.5rem solid #BBB
+    padding: 2rem 5rem
+    margin-right: 6rem
+    color: black
+
   .name
     color: black
 
   > di-orb-row
     font-size: 0.9em
+
+di-list.clickable-rows di-loadout-row
+  cursor: pointer
+  &:hover di-bar
+    background-color: #b8ffb8
+  &.selected di-bar
+    background-color: #dfeaff

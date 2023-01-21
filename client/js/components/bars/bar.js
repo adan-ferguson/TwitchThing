@@ -1,6 +1,7 @@
-import CustomAnimation from '../../customAnimation.js'
-import FlyingTextEffect from '../effects/flyingTextEffect.js'
+import CustomAnimation from '../../animations/customAnimation.js'
+import FlyingTextEffect from '../visualEffects/flyingTextEffect.js'
 import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
+import _ from 'lodash'
 
 const innerHTML = `
 <div class="bar-badge displaynone">
@@ -18,7 +19,9 @@ export default class Bar extends HTMLElement{
 
   _options = {
     label: '',
-    color: '#DDD',
+    lineBreakLabel: false,
+    color: null,
+    borderColor: null,
     showLabel: true,
     showValue: true,
     showMax: true,
@@ -26,12 +29,12 @@ export default class Bar extends HTMLElement{
     decreaserColor: null,
     min: 0,
     max: 100,
-    rounding: true
+    rounding: false
   }
 
   _barLabel
-  _barBackground
-  _barForeground
+  backgroundEl
+  foregroundEl
 
   _val = 0
 
@@ -40,9 +43,14 @@ export default class Bar extends HTMLElement{
     this.classList.add('di-bar')
     this.innerHTML = innerHTML
     this._barLabel = this.querySelector('.bar-label')
-    this._barBackground = this.querySelector('.bar-background')
-    this._barForeground = this.querySelector('.bar-foreground')
+    this.backgroundEl = this.querySelector('.bar-background')
+    this.foregroundEl = this.querySelector('.bar-foreground')
+    this._barBorder = this.querySelector('.bar-border')
     this.setValue(0)
+  }
+
+  get animating(){
+    return this.animation ? true : false
   }
 
   get animSpeed(){
@@ -53,9 +61,21 @@ export default class Bar extends HTMLElement{
     return this._val
   }
 
+  get pct(){
+    return this._pct(this.value)
+  }
+
   setOptions(options){
-    this._options = mergeOptionsObjects(this._options, options)
-    this._update()
+
+    const newOptions = mergeOptionsObjects(this._options, options)
+    if(_.isEqual(newOptions, this._options)){
+      return this
+    }
+
+    this._options = newOptions
+    this._barLabel.classList.toggle('hidden', !this._options.showLabel)
+    this._updateLabel()
+    this._updateColors()
     return this
   }
 
@@ -76,18 +96,26 @@ export default class Bar extends HTMLElement{
     }
 
     if(this.animation){
+      if(options.animate && this.animation.targetVal === val){
+        return
+      }
       this.animation.cancel()
     }
 
     options = {
       animate: false,
       flyingText: false,
+      relative: false,
       ...options
     }
 
     if(document.hidden){
       options.animate = false
       options.flyingText = false
+    }
+
+    if(options.relative){
+      val = this._val + val
     }
 
     val = this._options.rounding ? Math.round(val) : val
@@ -100,10 +128,10 @@ export default class Bar extends HTMLElement{
     if(!options.animate){
       this._val = val
       this._updateLabel()
-      this._barBackground.classList.add('hidden')
-      this._barBackground.style.width = `${this._pct(val) * 100}%`
-      this._barForeground.style.width = `${this._pct(val) * 100}%`
-      this._barForeground.style.backgroundColor = this._options.color
+      this.backgroundEl.classList.add('hidden')
+      this.backgroundEl.style.width = `${this._pct(val) * 100}%`
+      this.foregroundEl.style.width = `${this._pct(val) * 100}%`
+      this._updateColors()
     }else {
       await this._animateToValue(val)
     }
@@ -128,14 +156,14 @@ export default class Bar extends HTMLElement{
       let animatingBar
       let snappingBar
       if(secondaryColor){
-        animatingBar = growing ? this._barForeground : this._barBackground
-        snappingBar = !growing ? this._barForeground : this._barBackground
-        this._barBackground.classList.remove('hidden')
-        this._barBackground.style.backgroundColor = secondaryColor
+        animatingBar = growing ? this.foregroundEl : this.backgroundEl
+        snappingBar = !growing ? this.foregroundEl : this.backgroundEl
+        this.backgroundEl.classList.remove('hidden')
+        this.backgroundEl.style.backgroundColor = secondaryColor
       }else{
-        animatingBar = this._barForeground
+        animatingBar = this.foregroundEl
         snappingBar = null
-        this._barBackground.classList.add('hidden')
+        this.backgroundEl.classList.add('hidden')
       }
 
       // Figure out our target width
@@ -168,10 +196,15 @@ export default class Bar extends HTMLElement{
           this._updateLabel(this._pctToVal(currentWidth))
         }
       })
+
+      this.animation.targetVal = val
     })
   }
 
   _pct(val){
+    if(this._options.max - this._options.min <= 0){
+      return 1
+    }
     const pct = (val - this._options.min) / (this._options.max - this._options.min)
     return Math.min(1, Math.max(0, pct))
   }
@@ -193,25 +226,31 @@ export default class Bar extends HTMLElement{
     new FlyingTextEffect(this, text, options)
   }
 
-  _update(){
-    this._barLabel.classList.toggle('hidden', !this._options.showLabel)
-    this._updateLabel()
+  _updateColors(){
+    this._barBorder.style.borderColor = this._options.borderColor ?? this._options.color ?? ''
+    this.foregroundEl.style.backgroundColor = this._options.color ?? ''
   }
 
   _updateLabel(valOverride){
     const val = valOverride ?? this._val
     let html = ''
     if(this._options.showValue){
-      html += spwrap(val)
+      let valHtml = spwrap(val)
       if(this._options.showMax){
-        html += spwrap('/')
-        html += spwrap(this._options.max)
+        valHtml += spwrap('/')
+        valHtml += spwrap(this._options.max)
       }
+      html += spwrap(valHtml)
     }
     if(this._options.showLabel){
-      html += spwrap(this._options.label)
+      if(_.isFunction(this._options.label)){
+        html += spwrap(this._options.label(val))
+      }else{
+        html += spwrap(this._options.label)
+      }
     }
     this._barLabel.innerHTML = html
+    this._barLabel.classList.toggle('linebreak', this._options.lineBreakLabel)
   }
 }
 

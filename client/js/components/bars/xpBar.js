@@ -6,6 +6,7 @@ export default class XpBar extends Bar{
     super()
     this._options.label = 'xp'
     this._options.showLabel = true
+    this._options.rounding = true
   }
 
   get animSpeed(){

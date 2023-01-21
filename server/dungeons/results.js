@@ -1,13 +1,10 @@
 import Adventurers from '../collections/adventurers.js'
 import Users from '../collections/users.js'
-import { xpToLevel as advXpToLevel } from '../../game/adventurer.js'
 import { toArray } from '../../game/utilFunctions.js'
-import { generateLevelup } from '../adventurer/bonuses.js'
 import { emit } from '../socketServer.js'
-import { generateItemDef } from '../items/generator.js'
 import DungeonRuns from '../collections/dungeonRuns.js'
-import calculateResults from '../../game/dungeonRunResults.js'
-import { floorToZone } from '../../game/zones.js'
+import { advXpToLevel } from '../../game/adventurerInstance.js'
+import { applyChestToUser } from './chests.js'
 
 const REWARDS_TYPES = {
   xp: 'int',
@@ -39,7 +36,7 @@ export function addRewards(rewards, toAdd){
 
 export async function finalize(dungeonRunDoc){
 
-  if(dungeonRunDoc.finalizedData){
+  if(dungeonRunDoc.finalized){
     throw { error: 'Dungeon run has already been finalized' }
   }
 
@@ -52,45 +49,35 @@ export async function finalize(dungeonRunDoc){
   await saveDungeonRun()
 
   async function saveAdventurer(){
-    const adventurerDoc = await Adventurers.findOne(dungeonRunDoc.adventurer._id)
+    const adventurerDoc = await Adventurers.findByID(dungeonRunDoc.adventurer._id)
     const xpAfter = adventurerDoc.xp + (dungeonRunDoc.rewards.xp || 0)
     adventurerDoc.dungeonRunID = null
     adventurerDoc.xp = xpAfter
     adventurerDoc.level = advXpToLevel(xpAfter)
     adventurerDoc.accomplishments.deepestFloor =
       Math.max(dungeonRunDoc.floor, adventurerDoc.accomplishments.deepestFloor)
-    adventurerDoc.nextLevelUp = await generateLevelup(adventurerDoc)
     await Adventurers.save(adventurerDoc)
   }
 
   async function saveUser(){
-    const userDoc = await Users.findOne(dungeonRunDoc.adventurer.userID)
+
+    const userDoc = await Users.findByID(dungeonRunDoc.adventurer.userID)
     dungeonRunDoc.rewards.chests?.forEach(chest => {
-      chest.contents.items?.forEach(item => {
-        userDoc.inventory.items[item.id] = item
-      })
+      applyChestToUser(userDoc, chest)
     })
 
     if(!userDoc.features.dungeonPicker && dungeonRunDoc.floor > 1){
       userDoc.features.dungeonPicker = 1
     }
 
-    if(userDoc.inventory.adventurerSlots < floorToZone(dungeonRunDoc.floor) + 1){
-      userDoc.inventory.adventurerSlots = floorToZone(dungeonRunDoc.floor) + 1
-      emit(userDoc._id, 'show popup', {
-        message: 'New adventurer slot unlocked! You can make a new adventurer from the main page.'
-      })
-    }
-
     if(!userDoc.accomplishments.firstRunFinished){
-      const sword = generateItemDef({ group: 'fighter', name: 'sword' })
-      userDoc.inventory.items[sword.id] = sword
+      userDoc.inventory.items.basic = { fighter : { slash : 1 } }
       userDoc.accomplishments.firstRunFinished = 1
       userDoc.features.editLoadout = 1
       emit(userDoc._id, 'show popup', {
         message: `You got crushed! What were you thinking? You didn't even have a weapon!
         
-        I just hooked you up with a sword. Go to your adventurer's inventory to equip it.`
+        I just hooked you up with an item. Go to your adventurer's inventory to equip it.`
       })
     }
 
@@ -104,14 +91,37 @@ export async function finalize(dungeonRunDoc){
       })
     }
 
+    if(!userDoc.features.shop && dungeonRunDoc.floor >= 11){
+      userDoc.features.shop = 1
+      emit(userDoc._id, 'show popup', {
+        message: `You've unlocked the shop, where you can buy various things.
+        
+        Visit it from the main page, or via the gold counter in the header.`
+      })
+    }
+
+    if(!userDoc.features.workshop && dungeonRunDoc.floor >= 21){
+      userDoc.features.workshop = 1
+      emit(userDoc._id, 'show popup', {
+        message: `You've unlocked the forge, where you can craft and upgrade items.
+        
+        Visit it from the main page, or via the scrap counter in the header.`
+      })
+    }
+
     userDoc.accomplishments.deepestFloor = Math.max(userDoc.accomplishments.deepestFloor, dungeonRunDoc.floor)
 
     await Users.save(userDoc)
   }
 
   async function saveDungeonRun(){
-    dungeonRunDoc.finalizedData = calculateResults(dungeonRunDoc)
+    dungeonRunDoc.finalized = true
     await DungeonRuns.save(dungeonRunDoc)
   }
 }
 
+export async function cancelRun(dungeonRunDoc){
+  const adventurerDoc = await Adventurers.findByID(dungeonRunDoc.adventurer._id)
+  adventurerDoc.dungeonRunID = null
+  await Adventurers.save(adventurerDoc)
+}

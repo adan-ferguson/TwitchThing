@@ -1,73 +1,100 @@
-import { generateRandomChest } from './chests.js'
 import { chooseOne } from '../../game/rando.js'
 import { all as Monsters } from '../../game/monsters/combined.js'
-import { getMonsterStats, levelToXpReward } from '../../game/monster.js'
+import { uniqueID } from '../../game/utilFunctions.js'
+import MonsterInstance from '../../game/monsterInstance.js'
+import { generateRandomChest } from './chests.js'
+import { addRewards } from './results.js'
 
-const monstersByFloor = {
+const monstersByFloor = [
+  null,
   // Caves
-  1: Monsters.rat,
-  2: Monsters.troglodyte,
-  3: Monsters.bat,
-  4: Monsters.kobold,
-  5: Monsters.ooze,
-  6: Monsters.spider,
-  7: Monsters.scorpion,
-  8: Monsters.rockGolem,
-  9: Monsters.sorcerer,
-  10: Monsters.minotaur,
+  Monsters.rat,
+  Monsters.bat,
+  Monsters.bandit,
+  Monsters.spider,
+  Monsters.kobold,
+  Monsters.ooze,
+  Monsters.scorpion,
+  Monsters.sorcerer,
+  Monsters.rockGolem,
+  Monsters.minotaur,
+  // Forest
+  Monsters.woodElf,
+  Monsters.sprite,
+  Monsters.boar,
+  Monsters.badger,
+  Monsters.mushroom,
+  Monsters.werewolf,
+  Monsters.centaur,
+  Monsters.druid,
+  Monsters.treant,
+  Monsters.tyrannosaurus,
   // Crypt
-  11: Monsters.skeleton,
-  12: Monsters.zombie,
-  13: Monsters.shade,
-  14: Monsters.banshee,
-  15: Monsters.necromancer,
-  16: Monsters.vampire,
-  17: Monsters.deathKnight,
-  18: Monsters.lich,
-  19: Monsters.abomination,
-  20: Monsters.boneDragon,
+  Monsters.skeleton,
+  Monsters.zombie,
+  Monsters.ghastlySkull,
+  Monsters.assassin,
+  Monsters.banshee,
+  Monsters.necromancer,
+  Monsters.deathKnight,
+  Monsters.vampire,
+  Monsters.lich,
+  Monsters.boneDragon,
   // Swamp
-  21: Monsters.lizardPerson,
-  23: Monsters.gator,
-  22: Monsters.toad,
-  24: Monsters.naga,
-  26: Monsters.biteyPlant,
-  25: Monsters.troll,
-  27: Monsters.witch,
-  28: Monsters.basilisk,
-  29: Monsters.thing,
-  30: Monsters.hydra,
-}
+  Monsters.lizardPerson,
+  Monsters.wasp,
+  Monsters.orc,
+  Monsters.biteyPlant,
+  Monsters.anaconda,
+  Monsters.troll,
+  Monsters.basilisk,
+  Monsters.witch,
+  Monsters.wyvern,
+  Monsters.hydra,
+  // Water World
+  Monsters.legallyDistinctMurloc,
+  Monsters.crab,
+  Monsters.pirate,
+  Monsters.ancientTortoise,
+  Monsters.siren,
+  Monsters.twoHeadedShark,
+  Monsters.stormMermaid,
+  Monsters.seaSerpent,
+  Monsters.waterElemental,
+  Monsters.kraken
+]
 
-const BONUS_CHESTS_UNTIL = 10
-const BONUS_CHEST_CHANCE = 0.45
+const BONUS_CHESTS_UNTIL = 12
+const BONUS_CHEST_CHANCE = 0.25
 
-const CHEST_DROP_CHANCE = 0.08
-const MONSTER_CHANCE = 0.45
-const MONSTER_ROOM_BUFFER = 2
+const CHEST_DROP_CHANCE = 0.04
+const CHEST_DROP_CHANCE_HARD_ENEMY = 0.12 // It's an enemy of level >= adventurer's deepest floor
+
+const BOSS_XP_BONUS = 10
 
 // Monsters of level [currentFloor - FLOOR_RANGE] to [currentFloor] will spawn (both inclusive).
 const FLOOR_RANGE = 4
 
 // How much to skew RNG towards higher levels.
-const FLOOR_SKEW = -0.2
+const FLOOR_SKEW = -0.12
 
 export function foundMonster(dungeonRun){
-  return roomsSinceMonster() > MONSTER_ROOM_BUFFER && Math.random() < MONSTER_CHANCE
-  function roomsSinceMonster(){
-    let i
-    for(i = 1; i <= dungeonRun.events.length; i++){
-      if(dungeonRun.events.at(-i)?.monster){
-        break
-      }
-    }
-    return i - 1
-  }
+  return 1
+  // return roomsSinceMonster() > MONSTER_ROOM_BUFFER && Math.random() < MONSTER_CHANCE
+  // function roomsSinceMonster(){
+  //   let i
+  //   for(i = 1; i <= dungeonRun.events.length; i++){
+  //     if(dungeonRun.events.at(-i)?.monster){
+  //       break
+  //     }
+  //   }
+  //   return i - 1
+  // }
 }
 
-export async function generateMonster(dungeonRun){
+export async function generateMonster(dungeonRun, boss){
 
-  const level = floorToLevel(dungeonRun.floor, dungeonRun.adventurerInstance.stats.get('combatHarderChance').value)
+  const level = boss ? dungeonRun.floor : floorToLevel(dungeonRun.floor)
   const monsterDefinition = getMonsterDefinition(level)
 
   return {
@@ -77,34 +104,35 @@ export async function generateMonster(dungeonRun){
   }
 
   function generateRewards(){
+    const monsterInstance = new MonsterInstance(monsterDefinition)
     const advStats = dungeonRun.adventurerInstance.stats
-    const monsterStats = getMonsterStats(monsterDefinition)
-    const rewardBonus = monsterStats.get('rewards').value
     const rewards = {
-      xp: levelToXpReward(level) * advStats.get('combatXP').value * rewardBonus
+      xp: monsterInstance.xpReward * advStats.get('combatXP').value * (monsterInstance.isBoss ? BOSS_XP_BONUS : 1)
     }
     if(dungeonRun.user.accomplishments.firstRunFinished){
-      // TODO: chest rarity
       const userChests = dungeonRun.user.accomplishments.chestsFound ?? 0
-      const dropChance = userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE : CHEST_DROP_CHANCE
-      if(Math.random() < dropChance * advStats.get('chestFind').value){
-        rewards.chests = generateRandomChest(dungeonRun, {
-          tier: rewardBonus > 1 ? 1 : 0
+      const hardEnemy = level >= dungeonRun.adventurerInstance.accomplishments.deepestFloor
+      const dropChance = userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE :
+        hardEnemy ? CHEST_DROP_CHANCE_HARD_ENEMY :
+          CHEST_DROP_CHANCE
+      const dropChest =
+        Math.random() < dropChance ||
+        monsterInstance.isBoss ||
+        dropPityChest(dungeonRun)
+
+      if(dropChest){
+        let type = monsterInstance.isBoss ? 'boss' :
+          userChests < BONUS_CHESTS_UNTIL ? 'tutorial' :
+            'normal'
+
+        rewards.chests = generateRandomChest({
+          level: dungeonRun.floor,
+          type
         })
       }
     }
-    return rewards
+    return addRewards(rewards, monsterInstance.rewards)
   }
-}
-
-/**
- * Given a floor, return a random level equal to this floor or less, but it has to be
- * the same zone (aka the tens digit must remain the same).
- * @param floor
- * @param harderMonsterChance
- */
-function floorToLevel(floor, harderMonsterChance = 1){
-  return chooseOne(generateFloorChoices(floor, FLOOR_RANGE, FLOOR_SKEW + harderMonsterChance - 1))
 }
 
 /**
@@ -119,10 +147,29 @@ export function generateFloorChoices(floor, range = 1, skew = 0){
   const choices = []
   for(let i = 0; i < range; i++){
     const val = Math.max(minVal, floor - range + i + 1)
+    if(val % 10 === 0){
+      continue
+    }
     const weight = skew < 0 ? Math.pow(1 + skew, i ) : (1 + skew * i)
     choices.push({ weight: 100 * weight, value: val })
   }
   return choices
+}
+
+/**
+ * @return {[object]}
+ */
+export function getAllMonsters(){
+  return monstersByFloor.slice(1).map((_, floor) => getBasicMonsterDefinition(floor + 1))
+}
+
+/**
+ * Given a floor, return a random level equal to this floor or less, but it has to be
+ * the same zone (aka the tens digit must remain the same).
+ * @param floor
+ */
+function floorToLevel(floor){
+  return chooseOne(generateFloorChoices(floor, FLOOR_RANGE, FLOOR_SKEW))
 }
 
 function getMonsterDefinition(floor, rarity = 1){
@@ -139,8 +186,17 @@ function getBasicMonsterDefinition(floor){
     throw `Could not find monster for floor ${floor}`
   }
   return {
-    baseStats: {},
-    abilities: [],
-    ...monstersByFloor[floor]
+    _id: 'basic-' + uniqueID(),
+    baseType: monstersByFloor[floor].name,
+    level: floor
   }
+}
+
+function dropPityChest(dungeonRun){
+  const expectedChests = dungeonRun.events.length * CHEST_DROP_CHANCE / 2
+  const chests = dungeonRun.rewards.chests?.length ?? 0
+  if(chests < Math.round(expectedChests)){
+    return true
+  }
+  return false
 }

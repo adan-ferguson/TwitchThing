@@ -18,6 +18,12 @@ const FORM_HTML = `
     <div class="subtitle">Explore the entire floor before taking the stairs</div>
   </label>
 </div>
+<div class="input-group">
+  <label>
+    Rest when health is below <span class="bolded"><span class="rest-threshold-text">50</span>%</span>
+    <input type="range" min="0" max="100" step="5" value="50" name="restThreshold">
+  </label>
+</div>
 `
 
 const HTML = `
@@ -45,26 +51,33 @@ export default class DungeonPickerPage extends Page{
       action: `/game/adventurer/${this.adventurerID}/enterdungeon`,
       submitText: 'Go!',
       html: FORM_HTML,
-      success: ({ dungeonRun }) => this.redirectTo(new DungeonPage(dungeonRun._id)),
+      success: ({ dungeonRun }) => this.redirectTo(DungeonPage.path(dungeonRun._id)),
       extraData: () => ({ startingFloor: this.floorSlider.value })
     })
     this.querySelector('.stuff').appendChild(this._formEl)
+
+    const restSlider = this.querySelector('[name=restThreshold]')
+    const restText = this.querySelector('.rest-threshold-text')
+    restSlider.addEventListener('input', () => {
+      restText.textContent = restSlider.value
+    })
+  }
+
+  static get pathDef(){
+    return ['adventurer', 0, 'dungeonpicker']
+  }
+
+  get pathArgs(){
+    return [this.adventurerID]
   }
 
   get titleText(){
     return this.adventurer.name + ' - Entering Dungeon'
   }
 
-  get backPage(){
-    return () => new AdventurerPage(this.adventurerID)
-  }
+  async load(){
 
-  async load(_){
-
-    const { adventurer, error } = await fizzetch(`/game/adventurer/${this.adventurerID}/dungeonpicker`)
-    if(error){
-      return error
-    }
+    const { adventurer } = await this.fetchData()
 
     this.adventurer = adventurer
     this.floorSlider.setOptions({

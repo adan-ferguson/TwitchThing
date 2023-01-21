@@ -1,5 +1,7 @@
 import Adventurers from './adventurers.js'
 import Collection from './collection.js'
+import db from '../db.js'
+import { emit } from '../socketServer.js'
 
 const DEFAULTS = {
   _id: null,
@@ -18,15 +20,22 @@ const DEFAULTS = {
   features: { // featureName: 0 = locked, 1 = unlocked & brand new, 2 = unlocked
     editLoadout: 0,
     dungeonPicker: 0,
+    shop: 0,
+    workshop: 0,
     advClasses: {
       fighter: 2,
-      tank: 2,
-      ranger: 2
+      mage: 2,
+      paladin: 2
     }
   },
   inventory: {
     adventurerSlots: 1,
-    items: {}
+    gold: 0,
+    scrap: 0,
+    items: {
+      basic: {},
+      crafted: {}
+    }
   }
 }
 
@@ -39,9 +48,12 @@ Users.validateSave = function(userDoc){
 }
 
 Users.loadFromMagicID = async function(magicID){
-  return await Users.findOne({
-    magicID
+  const results = await Users.find({
+    query: {
+      magicID
+    }
   })
+  return results[0]
 }
 
 Users.create = async function(magicID, iat, email, provider){
@@ -68,7 +80,7 @@ Users.setDisplayname = async function(userDoc, displayname){
   if(displayname.length > 15){
     return 'Display name must be between 2 and 15 letters.'
   }
-  const user = await Users.findOne({ displayname })
+  const user = await Users.findByID(displayname)
   if(user){
     return `Display name '${displayname}' is taken.`
   }
@@ -81,7 +93,6 @@ Users.newAdventurer = async function(userDoc, adventurername, startingClass){
   if(availableSlots <= 0){
     throw { message: 'No slots available.', code: 403 }
   }
-  // TODO: flexible starting bonuses
   // TODO: prevent duplicates?
   const adventurerDoc = await Adventurers.createNew(userDoc._id, adventurername, startingClass)
   userDoc.adventurers.push(adventurerDoc._id)
@@ -117,9 +128,10 @@ Users.isAdmin = function(userDoc){
 }
 
 Users.resetAll = async function(){
-  const users = await Users.find({})
+  const users = await Users.find()
   await Promise.all(users.map(async userDoc => {
     await Users.save({
+      ...DEFAULTS,
       _id: userDoc._id,
       magicID: userDoc.magicID,
       iat: userDoc.iat,
@@ -137,6 +149,12 @@ Users.resetAll = async function(){
 Users.clearNewItems = async function(userDoc){
   Object.values(userDoc.inventory.items).forEach(item => item.isNew = false)
   await Users.save(userDoc)
+}
+
+Users.saveAndEmit = async function(doc){
+  const result = await this.save(doc)
+  emit(doc._id.toString(), 'user updated', Users.gameData(doc))
+  return result
 }
 
 export default Users

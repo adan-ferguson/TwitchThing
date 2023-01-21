@@ -1,9 +1,13 @@
 export default {
-  abilities: [
+  baseStats: {
+    speed: 20,
+    physPower: '-20%'
+  },
+  items: [
     {
       name: 'Lifesteal',
       stats: {
-        lifesteal: '30%'
+        lifesteal: 0.5
       }
     }
   ]

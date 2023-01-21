@@ -1,6 +1,6 @@
 import fighterOrbIcon from '/client/assets/icons/orbs/fighter.svg'
 import mageOrbIcon from '/client/assets/icons/orbs/mage.svg'
-import rangerOrbIcon from '/client/assets/icons/orbs/ranger.svg'
+import paladinOrbIcon from '/client/assets/icons/orbs/paladin.svg'
 import { toDisplayName } from '../../game/utilFunctions.js'
 
 export default function(className){
@@ -14,18 +14,20 @@ export default function(className){
       orbIcon: fighterOrbIcon,
       color: '#BB3300'
     }
-  }else if(className === 'tank'){
+  }else if(className === 'mage'){
     obj = {
       description: 'Some description',
       orbIcon: mageOrbIcon,
-      color: '#5577BB'
+      color: '#4779da'
     }
-  }else if(className === 'ranger'){
+  }else if(className === 'paladin'){
     obj = {
       description: 'Some description',
-      orbIcon: rangerOrbIcon,
-      color: '#55AA33'
+      orbIcon: paladinOrbIcon,
+      color: '#d2a200'
     }
+  }else{
+    return null
   }
 
   obj.displayName = toDisplayName(className)

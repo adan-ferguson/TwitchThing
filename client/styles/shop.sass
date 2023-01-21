@@ -1,0 +1,95 @@
+di-shop-page
+  .shop-items
+    display: flex
+    flex-wrap: wrap
+
+    $padding: 20rem
+    padding: $padding 0 0 $padding !important
+
+    > *
+      margin-right: $padding
+      margin-bottom: $padding
+
+    di-shop-item
+      width: 170rem
+      height: 150rem
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: space-evenly
+      border: 2rem dashed currentColor
+      box-sizing: border-box
+      text-align: center
+      padding: 10rem
+      cursor: pointer
+
+      .shop-item-image
+        > *
+          height: 25rem
+          width: 25rem
+
+      &:hover
+        border-style: solid
+
+di-shop-item-details
+
+  .shop-item-icon
+    display: flex
+    flex-direction: column
+    align-items: center
+
+    height: 25rem
+    margin-bottom: 15rem
+    > *
+      height: 100%
+
+  .shop-item-name
+    font-weight: bold
+    text-align: center
+    margin-bottom: 9rem
+
+  .shop-item-description
+    display: flex
+    flex-direction: column
+    align-items: center
+
+  .drop-chance
+    margin-top: 15rem
+
+    > *
+      margin-bottom: 6rem
+      display: flex
+
+      img
+        height: 1em
+        margin-right: 4rem
+
+.chest-el
+  position: relative
+  fill: currentColor
+  width: 25rem
+  height: 25rem
+  img
+    height: 50%
+    margin-top: -1rem
+
+.buy-button
+  align-self: center
+  margin: 12rem auto 0
+  padding-top: 3rem
+  padding-bottom: 3rem
+  font-weight: bold
+
+  display: flex
+  align-items: center
+
+  img
+    height: 1.5em
+    padding-bottom: 6rem
+    margin-left: 4rem
+
+  > *
+    font-size: 1.25em
+
+  .gold-value
+    margin-left: 16rem

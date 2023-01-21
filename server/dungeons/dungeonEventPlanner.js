@@ -1,7 +1,7 @@
 import { foundMonster } from './monsters.js'
-import { foundRelic, generateRelicEvent } from './relics.js'
 import { foundStairs } from './stairs.js'
-import { generateCombatEvent } from '../combat/combat.js'
+import { generateCombatEvent } from '../combat.js'
+import { shouldRest, rest } from './resting.js'
 
 /**
  * @param dungeonRun {DungeonRunInstance}
@@ -12,18 +12,32 @@ export async function generateEvent(dungeonRun){
   const floor = dungeonRun.floor
   const room = dungeonRun.room
   const adventurerInstance = dungeonRun.adventurerInstance
+  const bossFloor = floor % 10 === 0
+  const previousEvent = dungeonRun.events.at(-1)
 
-  if(floor === 30 && room >= 200){
+  if(previousEvent.boss){
+    if(floor === 50){
+      return {
+        runFinished: true,
+        roomType: 'outoforder',
+        message: `${adventurerInstance.display} finds that the stairs to the next zone are out of order, what a rip off!`
+      }
+    }
     return {
-      message: `${adventurerInstance.name} gets bored and leaves.`,
-      runFinished: true
+      nextRoom: 1,
+      nextFloor: floor + 1,
+      roomType: 'nextzone',
+      message : `${adventurerInstance.displayName} advances to the next zone.`
     }
   }
 
-  if(dungeonRun.user.accomplishments.firstRunFinished && foundStairs(floor, room, dungeonRun.pace)){
+  if(dungeonRun.user.accomplishments.firstRunFinished && foundStairs(dungeonRun)){
+    if(bossFloor){
+      return await generateCombatEvent(dungeonRun, true)
+    }
     const message = dungeonRun.pace === 'Brisk' ?
-      `${adventurerInstance.name} found the stairs and goes deeper.` :
-      `${adventurerInstance.name} feels like they've finished exploring this floor.`
+      `${adventurerInstance.displayName} found the stairs and goes deeper.` :
+      `${adventurerInstance.displayName} feels like they've finished exploring this floor.`
     return {
       nextRoom: 1,
       nextFloor: floor + 1,
@@ -32,18 +46,21 @@ export async function generateEvent(dungeonRun){
     }
   }
 
-  const previousEvent = dungeonRun.events.at(-1)
-  const encounterPossible = previousEvent?.monster || previousEvent?.relic ? false : true
+  if(shouldRest(dungeonRun)){
+    return rest(dungeonRun)
+  }
+
+  const encounterPossible = previousEvent.wandering ? true : false //(previousEvent?.combatID || room <= 1) ? false : true
 
   if(encounterPossible && foundMonster(dungeonRun)){
     return await generateCombatEvent(dungeonRun)
   }
 
-  if(encounterPossible && foundRelic(dungeonRun)){
-    return generateRelicEvent(dungeonRun)
-  }
+  const message = `${adventurerInstance.displayName} is wandering around.`
 
   return {
-    message: `${adventurerInstance.name} is wandering around.`
+    message,
+    wandering: true,
+    nextRoom: room + 1
   }
 }

@@ -1,24 +1,26 @@
-import LoadoutRow from './loadoutRow.js'
-import { getAdventurerOrbsData } from '../../../../game/adventurer.js'
 import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
+import DIElement from '../diElement.js'
+import { inventoryItemsToRows, standardItemSort } from '../listHelpers.js'
+import LoadoutRow from './loadoutRow.js'
 
 const HTML = `
 <div class="content-rows">
-    <div class="filtering-options content-no-grow">
-        <div class="input-group">
-            Sort By:
-            <label><input type="radio" name="sortBy" value="class">Class</label>
-            <label><input type="radio" name="sortBy" value="date">Date Acquired</label>
-        </div>
-        <label><input type="checkbox" name="hideOther"> Hide Unequippable</label>
+  <div class="content-no-grow inventory-options">
+<!--    <div class="input-group">-->
+<!--      Sort By:-->
+<!--      <label><input type="radio" name="sortBy" value="class">Class</label>-->
+<!--    </div>-->
+    <div class="filtering-options require-adventurer displaynone">
+      <label><input type="checkbox" name="hideOther"> Hide Unequippable</label>
     </div>
-    <di-list></di-list>
+  </div>
+  <di-list></di-list>
 </div>
 `
 
 const STORAGE_NAME = 'filterSortOptions'
 
-export default class Inventory extends HTMLElement{
+export default class Inventory extends DIElement{
 
   _filterSortOptions = {
     sortBy: 'class',
@@ -35,33 +37,37 @@ export default class Inventory extends HTMLElement{
     })
   }
 
-  get sortFn(){
-    return SORT_FUNCTIONS[this._filterSortOptions.sortBy]
+  /**
+   * @returns {List}
+   */
+  get listEl(){
+    return this.querySelector('di-list')
   }
 
-  filterFn = (el) => {
-    return isCompatible(this.adventurer, el.loadoutItem.obj)
+  filterFn = row => {
+    return isCompatible(this.adventurer, row.loadoutItem.itemInstance)
   }
 
   setup(items, adventurer){
     this.adventurer = adventurer
-    const loadoutRows = []
-    Object.values(items).forEach(loadoutItem => {
-      if(loadoutItem){
-        const row = new LoadoutRow()
-        row.setItem(loadoutItem)
-        row.showNewBadge(loadoutItem.isNew)
-        loadoutRows.push(row)
-      }
-    })
+    this.querySelector('.inventory-options').classList.toggle('displaynone', adventurer ? false : true)
     this._updateSortAndFilter()
-    this.list.setRows(loadoutRows)
+    this.list.setRows(inventoryItemsToRows(items))
+    return this
   }
 
   addItem(item){
     if(!item){
       return
     }
+    if(item.itemInstance.isBasic){
+      const row = this.list.findRow(row => row.loadoutItem.equals(item))
+      if(row){
+        row.count++
+        return
+      }
+    }
+    item.itemInstance.owner = null
     const row = new LoadoutRow()
     row.setItem(item)
     this.list.addRow(row)
@@ -69,7 +75,14 @@ export default class Inventory extends HTMLElement{
 
   removeItem(item){
     const row = this.list.findRow(row => row.loadoutItem === item)
-    this.list.removeRow(row)
+    if(!row){
+      return
+    }
+    if(item.itemInstance.isBasic && row.count > 1){
+      row.count--
+    }else{
+      this.list.removeRow(row)
+    }
   }
 
   _setupFilteringOptions(){
@@ -100,7 +113,7 @@ export default class Inventory extends HTMLElement{
   _updateSortAndFilter(){
     localStorage.setItem(STORAGE_NAME, JSON.stringify(this._filterSortOptions))
     this.list.setOptions({
-      sortFn: this.sortFn,
+      sortFn: standardItemSort,
       filterFn: this.filterFn,
       showFiltered: !this._filterSortOptions.hideOther
     })
@@ -108,45 +121,8 @@ export default class Inventory extends HTMLElement{
 }
 
 function isCompatible(adventurer, itemInstance){
-  return getAdventurerOrbsData(adventurer, [itemInstance]).isValid
-}
-
-const SORT_FUNCTIONS = {
-  date: null, // Default sorting is by date, so unsorted is just as good
-  class: (rowA, rowB) => {
-
-    const orbsA = rowA.loadoutItem.obj.orbs
-    const orbsB = rowB.loadoutItem.obj.orbs
-
-    const classesA = Object.keys(orbsA)
-    const classesB = Object.keys(orbsB)
-
-    if(classesA.length < classesB.length){
-      return 1
-    }else if(classesB.length < classesA.length){
-      return -1
-    }
-
-    const strA = classesA.join('')
-    const strB = classesB.join('')
-
-    if(strA > strB){
-      return 1
-    }else if(strB > strA){
-      return -1
-    }
-
-    const totalA = Object.values(orbsA).reduce((prev, val) => prev + val)
-    const totalB = Object.values(orbsB).reduce((prev, val) => prev + val)
-
-    if(totalA > totalB){
-      return 1
-    }else if(totalB > totalA){
-      return -1
-    }
-
-    return rowA.loadoutItem.obj.displayName - rowB.loadoutItem.obj.displayName
-  }
+  const itemClass = itemInstance.itemDef.group
+  return adventurer.bonuses[itemClass] ? true : false
 }
 
 customElements.define('di-inventory', Inventory)

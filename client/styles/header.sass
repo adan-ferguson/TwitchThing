@@ -23,9 +23,49 @@ di-header
     border: 1px solid #CCC
     font-size: 12rem
     padding: 8rem 12rem
+    align-self: center
 
-  .back-button.hidden
-    visibility: hidden
+  .left-side
+    display: flex
+
+    .back-button
+      font-size: 2em
+      padding: 0 5rem
+      border: none
+      margin-right: 10rem
+
+  .right-side
+    display: flex
+    flex-direction: row
+
+    > *
+      margin-left: 8rem
+
+    .gold-button, .scrap-button
+      min-width: 50rem
+      cursor: pointer
+
+      display: flex
+      flex-direction: column
+      align-items: center
+      justify-content: center
+      font-size: 1.2em
+      font-weight: bold
+
+      img, i
+        display: inline-block
+        font-size: 2em
+        height: 35rem
+        line-height: 1.3em
+
+      &.locked
+        cursor: default
+        opacity: 0.5
+        border: none
+
+      &:hover
+        background-color: #EEE
+
 
 @media (max-aspect-ratio: 1/1)
   di-header

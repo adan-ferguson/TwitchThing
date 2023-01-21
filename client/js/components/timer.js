@@ -1,10 +1,7 @@
-import dateformat from 'dateformat'
-
 const DISCONNECT_TIMEOUT = 5000
 
 /**
  * Timer that ticks up in seconds.
- * TODO: more options at we required more timer functionality
  */
 export default class Timer extends HTMLElement{
 
@@ -17,8 +14,8 @@ export default class Timer extends HTMLElement{
   }
 
   set time(ms){
-    this._time = Math.max(0, ms || 0)
-    this.textContent = dateformat(this._time, this.format)
+    this._time = ms || 0
+    this.textContent = textContent
   }
 
   get time(){
@@ -61,3 +58,32 @@ export default class Timer extends HTMLElement{
 }
 
 customElements.define('di-timer', Timer)
+
+export function betterDateFormat(ms, options = {}){
+
+  options = {
+    milliseconds: false,
+    ...options
+  }
+
+  const negative = ms > 0 ? false : true
+  ms = Math.abs(ms)
+
+  const minutes = clean((ms / 60000))
+  const seconds = clean((ms / 1000) % 60)
+  const milliseconds = clean(ms % 1000)
+
+  let textContent = negative ? '-' : ''
+  textContent += minutes ? minutes : '0'
+  textContent += ':' + seconds.toString().padStart(2, '0')
+
+  if(options.milliseconds){
+    textContent += ':' + milliseconds.toString().padStart(2, '0')
+  }
+
+  return textContent
+
+  function clean(num){
+    return Math.floor(Math.round(num))
+  }
+}

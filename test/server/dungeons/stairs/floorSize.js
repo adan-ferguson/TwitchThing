@@ -1,6 +1,6 @@
 import { expect } from 'chai'
 import { floorSize } from '../../../../server/dungeons/stairs.js'
-import scaledValue from '../../../../game/scaledValue.js'
+import { growthFunctions } from '../../../../game/growthFunctions.js'
 
 describe('floorSize function', () => {
 
@@ -28,7 +28,7 @@ describe('floorSize function', () => {
   })
 
   it('Should do all', () => {
-    const expected = Math.floor(2 * 2 * scaledValue(0.1, 9, 10))
+    const expected = Math.floor(2 * 2 * growthFunctions(0.1, 9, 10))
     expect(floorSize(20, 10, 0.1, 1, 2)).to.equal(expected)
   })
 

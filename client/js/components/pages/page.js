@@ -1,14 +1,34 @@
-import MainPage from './main/mainPage.js'
 import fizzetch from '../../fizzetch.js'
+import { generatePath } from '../pathRouter.js'
 
 export default class Page extends HTMLElement{
 
   app
-  unloaded = false
+  loadstate = 'none'
 
   constructor(){
     super()
     this.classList.add('page')
+  }
+
+  static path(){
+    return generatePath(this.pathDef, arguments)
+  }
+
+  get path(){
+    return this.constructor.path(...this.pathArgs)
+  }
+
+  static get pathDef(){
+    return []
+  }
+
+  get pathArgs(){
+    return []
+  }
+
+  get useHistory(){
+    return true
   }
 
   /**
@@ -26,15 +46,22 @@ export default class Page extends HTMLElement{
     return false
   }
 
-  redirectTo(page){
-    if(this.unloaded){
-      return
-    }
-    this.app.setPage(page)
+  redirectToMain(){
+    this.redirectTo('')
   }
 
-  async fetchData(url, args = {}){
-    const results = await fizzetch(url, args)
+  redirectTo(path){
+    if(this.loadstate === 'unloaded'){
+      return
+    }
+    this.app.setPage(path)
+  }
+
+  async fetchData(args = {}){
+    if(this.path === null){
+      throw 'Could not fetch data with null path.'
+    }
+    const results = await fizzetch('/game' + this.path, args)
     if(results.error){
       throw results
     }
@@ -42,20 +69,11 @@ export default class Page extends HTMLElement{
   }
 
   /**
-   * Page to go to if back button gets clicked. If null/false, back button will not be visible.
-   * @returns {null|function(): Page}
-   */
-  get backPage(){
-    return () => new MainPage()
-  }
-
-  /**
    * Load page content here. Return false to prevent the page from loading (for example,
    * if an error occurred).
-   * @param previousPage {Page|undefined}
    * @returns {Promise<string|void>}
    */
-  async load(previousPage){
+  async load(){
 
   }
 

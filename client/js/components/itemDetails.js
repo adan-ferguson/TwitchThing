@@ -1,42 +1,35 @@
-import { OrbsDisplayStyle } from './orbRow.js'
-import { StatsDisplayStyle } from '../statsDisplayInfo.js'
+import DIElement from './diElement.js'
 
 const HTML = `
-<div class="inset-title"></div>
-<div class="top-part">
-  <div class="type-line"></div>
-  <div class="description subtitle"></div>
-</div>
-<di-stats-list></di-stats-list>
-<di-orb-row></di-orb-row>
-<!--<di-stats-list></di-stats-list>-->
-<!--<div class='item-abilities'>&#45;&#45; TODO: add other abilities here &#45;&#45;</div>-->
+<di-item-card></di-item-card>
+<button class="upgrade-button">Upgrade in Workshop</button>
 `
 
-export default class ItemDetails extends HTMLElement{
+export default class ItemDetails extends DIElement{
 
-  _loadoutRow
-  _statsText
-  _statsList
-  _abilitiesList
+  get defaultOptions(){
+    return {
+      showUpgradeButton: false
+    }
+  }
 
-  constructor(itemInstance, options = {}){
-    super()
+  get itemCard(){
+    return this.querySelector('di-item-card')
+  }
+
+  get upgradeButton(){
+    return this.querySelector('.upgrade-button')
+  }
+
+  setItem(itemInstance){
     this.innerHTML = HTML
-    this.querySelector('.inset-title').textContent = itemInstance.displayName
-    this.querySelector('.type-line').textContent = 'Standard Item'
-    this.querySelector('di-orb-row')
-      .setOptions({
-        style: OrbsDisplayStyle.MAX_ONLY
-      })
-      .setData(itemInstance.orbs)
-    this.querySelector('di-stats-list')
-      .setOptions({
-        statsDisplayStyle: StatsDisplayStyle.ADDITIONAL
-      })
-      .setStats(itemInstance.stats)
-    this.querySelector('.description').textContent = itemInstance.description
+    this.itemCard.setItem(itemInstance)
+    this._update()
+    return this
+  }
+
+  _update(){
+    this.upgradeButton.classList.toggle('displaynone', true) //this._options.showUpgradeButton ? false : true)
   }
 }
-
-customElements.define('di-item-details', ItemDetails )
+customElements.define('di-item-details', ItemDetails)

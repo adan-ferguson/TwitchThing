@@ -4,19 +4,26 @@ import { addRun } from '../../dungeons/dungeonRunner.js'
 import db  from '../../db.js'
 import Users from '../../collections/users.js'
 import { commitAdventurerLoadout } from '../../loadouts/adventurer.js'
-import { validateParam } from '../../validations.js'
-import { selectBonus } from '../../adventurer/bonuses.js'
+import { requireRegisteredUser, validateParam } from '../../validations.js'
+import { generateLevelup, getRerollCost, rerollBonus, selectBonus } from '../../adventurer/bonuses.js'
 import DungeonRuns from '../../collections/dungeonRuns.js'
+import AdventurerInstance from '../../../game/adventurerInstance.js'
 
 const router = express.Router()
 const verifiedRouter = express.Router()
 
+router.post('/new', async(req, res) => {
+  const startingClass = validateParam(req.body.class, {
+    required: false
+  }) ?? 'fighter'
+  const name = validateParam(req.body.name)
+  const adventurer = await Users.newAdventurer(req.user, name, startingClass)
+  res.send({ adventurerID: adventurer._id })
+})
+
 router.use('/:adventurerID', async (req, res, next) => {
   const adventurerID = db.id(req.params.adventurerID)
-  if(!req.user.adventurers.find(adv => adv.equals(adventurerID))){
-    throw { code: 400, message: 'Invalid adventurer ID' }
-  }
-  req.adventurer = await Adventurers.findOne(adventurerID)
+  req.adventurer = await Adventurers.findByID(adventurerID)
   if(!req.adventurer){
     throw { code: 400, message: 'Invalid adventurer ID' }
   }
@@ -30,11 +37,14 @@ verifiedRouter.post('/dungeonpicker', validateIdle, async(req, res) => {
 })
 
 verifiedRouter.post('/enterdungeon', validateIdle, async(req, res) => {
+  requireOwnsAdventurer(req)
   const startingFloor = validateParam(req.body.startingFloor, { type: 'integer', required: false }) || 1
   const pace = validateParam(req.body.pace, { type: 'string', required: false })
+  const restThreshold = validateParam(req.body.restThreshold, { type: 'integer', required: false })
   const dungeonRun = await addRun(req.adventurer._id, {
     startingFloor,
-    pace
+    pace,
+    restThreshold
   })
   res.send({ dungeonRun })
   if(req.user.features.dungeonPicker === 1){
@@ -68,6 +78,7 @@ verifiedRouter.post('/editloadout', validateIdle, async (req, res) => {
 })
 
 verifiedRouter.post('/editloadout/save', validateIdle, async (req, res) => {
+  requireOwnsAdventurer(req)
   const items = validateParam(req.body.items, { type: 'array' })
   await commitAdventurerLoadout(req.adventurer, req.user, items)
   await Adventurers.save(req.adventurer)
@@ -77,6 +88,20 @@ verifiedRouter.post('/editloadout/save', validateIdle, async (req, res) => {
 
 verifiedRouter.post('', async(req, res, next) => {
   res.send({ adventurer: req.adventurer, user: req.user })
+})
+
+verifiedRouter.post('/levelup', async(req, res) => {
+  if(!req.adventurer.nextLevelUp){
+    req.adventurer.nextLevelUp = await generateLevelup(req.adventurer)
+    if(req.adventurer.nextLevelUp){
+      await Adventurers.save(req.adventurer)
+    }
+  }
+  res.send({
+    adventurer: req.adventurer,
+    user: req.user,
+    rerollCost: getRerollCost(req.adventurer)
+  })
 })
 
 verifiedRouter.post('/dismiss', async(req, res, next) => {
@@ -100,6 +125,7 @@ verifiedRouter.post('/status', async(req, res, next) => {
 })
 
 verifiedRouter.post('/selectbonus/:index', async(req, res, next) => {
+  requireOwnsAdventurer(req)
   const index = validateParam(req.params.index, {
     type: 'integer',
     validationFn: val => val >= 0 && val <= 2
@@ -107,12 +133,23 @@ verifiedRouter.post('/selectbonus/:index', async(req, res, next) => {
   res.send({ nextLevelUp: await selectBonus(req.adventurer, index) })
 })
 
+verifiedRouter.post('/rerollbonus', async(req, res, next) => {
+  requireOwnsAdventurer(req)
+  res.send({
+    nextLevelUp: await rerollBonus(req.user, req.adventurer),
+    rerollCost: getRerollCost(req.adventurer)
+  })
+})
+
 verifiedRouter.post('/previousruns', async(req, res, next) => {
   const runs = await DungeonRuns.find({
-    'adventurer._id': req.adventurer._id,
-    finalizedData: { $ne: null }
-  }, {
-    events: 0
+    query: {
+      'adventurer._id': req.adventurer._id,
+      finalized: { $ne: null }
+    },
+    projection: {
+      events: 0
+    }
   })
   res.send({ adventurer: req.adventurer, runs: runs.reverse()  })
 })
@@ -121,10 +158,18 @@ async function validateIdle(req, res, next){
   if(req.adventurer.dungeonRunID){
     throw {
       status: 400,
-      message: 'Adventurer is in a dungeon run and can not perform this action.'
+      message: 'Adventurer is in a dungeon run and can not perform this action.',
+      targetPage: '/game/dungeonrun/' + req.adventurer.dungeonRunID
     }
   }
   next()
+}
+
+export function requireOwnsAdventurer(req){
+  requireRegisteredUser(req)
+  if(!req.user.adventurers.find(adv => adv.equals(req.adventurer._id))){
+    throw { code: 400, message: 'Invalid adventurer ID' }
+  }
 }
 
 export default router

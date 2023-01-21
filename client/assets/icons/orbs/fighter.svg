@@ -1,6 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
     <ellipse
             fill="#B30"
+            stroke-width="2"
+            stroke="white"
             cx="25"
             cy="25"
             rx="23"
@@ -9,17 +11,18 @@
     <line
         stroke="white"
         stroke-width="6"
-        x1="25"
+        x1="10"
         x2="25"
-        y1="10"
+        y1="25"
         y2="40"
         />
     <line
             stroke="white"
             stroke-width="6"
             x1="10"
-            x2="40"
-            y1="25"
-            y2="25"
+            x2="35"
+            y1="40"
+            y2="15"
     />
+    <polygon fill="white" points="40,10 33,13 37,17"/>
 </svg>

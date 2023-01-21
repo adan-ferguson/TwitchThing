@@ -1,15 +1,25 @@
+import { v4 } from 'uuid'
+import _ from 'lodash'
+
 export function toArray(arrayOrVal){
   return Array.isArray(arrayOrVal) ? arrayOrVal : [arrayOrVal]
 }
 
 export function toDisplayName(str){
+  if(!str){
+    return ''
+  }
   let displayName = ''
   let prevLowerCase = false
+  let forceNextUpper = false
   for(let i = 0; i < str.length; i++){
     let nextChar = str[i]
-    let forceUpper = i === 0 ? true : false
+    let forceUpper = i === 0 ? true : forceNextUpper
+    forceNextUpper = false
     if(nextChar === nextChar.toUpperCase()){
-      if(prevLowerCase){
+      if(nextChar.toUpperCase() === nextChar.toLowerCase()){
+        forceNextUpper = true
+      }else if(prevLowerCase){
         displayName += ' '
         forceUpper = true
       }
@@ -29,6 +39,11 @@ export function roundToFixed(val, digits){
   return val / multi
 }
 
+export function roundToNearestIntervalOf(val, interval){
+  const newVal = interval * Math.round(val / interval)
+  return interval < 1 ? roundToFixed(newVal, Math.ceil(-Math.log10(interval))) : newVal
+}
+
 export function isObject(val){
   if (val === null){ return false}
   return ( (typeof val === 'function') || (typeof val === 'object') )
@@ -44,7 +59,7 @@ export function mergeOptionsObjects(currentOptions, newOptions){
   return options
 }
 
-export function wrap(content, options = {}){
+export function wrapContent(content, options = {}){
   if(options.allowHTML){
     return makeEl({
       content: content,
@@ -79,7 +94,8 @@ export function makeEl(options = {}){
   }
 
   if (options.class){
-    el.classList.add(...toArray(options.class))
+    const classArray = Array.isArray(options.class) ? options.class : options.class.split(' ')
+    el.classList.add(...classArray)
   }
 
   return el
@@ -101,4 +117,61 @@ export function wait(ms = 0){
 
 export function isString(val){
   return typeof val === 'string' || val instanceof String
+}
+
+export function uniqueID(){
+  return v4()
+}
+
+export function minMax(min, val, max){
+  return Math.max(min, Math.min(max, val))
+}
+
+export function toNumberOfDigits(val, digits){
+  val = Math.ceil(val)
+  if(val < Math.pow(10, digits)){
+    return val
+  }
+  val = val + ''
+  const divisor = Math.pow(10, val.length - digits)
+  return Math.ceil(val / divisor) * divisor
+}
+
+export function toTimerFormat(ms){
+  const seconds = Math.floor(ms / 1000)
+  const minutes = Math.floor(seconds / 60)
+
+  const minuteStr = minutes ? minutes : '0'
+  let secondsStr = seconds % 60
+  if(secondsStr === 0){
+    secondsStr = '00'
+  }else if(secondsStr < 10){
+    secondsStr = '0' + secondsStr
+  }
+
+  return minuteStr + ':' + secondsStr
+}
+
+export function suffixedNumber(val, digits){
+  // TODO: this
+  return val
+}
+
+/**
+ * Cleanup common issues with objects.
+ * 1) Numbers are rounded to nearest 0.01 (fix floating point nonsense)
+ * @param obj
+ */
+export function cleanupObject(obj){
+  const newObj = {}
+  for(let key in obj){
+    if(_.isNumber(obj[key])){
+      newObj[key] = roundToFixed(obj[key], 2)
+    }else if(_.isObject(obj[key])){
+      newObj[key] = cleanupObject(obj[key])
+    }else{
+      newObj[key] = obj[key]
+    }
+  }
+  return newObj
 }

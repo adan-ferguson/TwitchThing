@@ -1,16 +1,11 @@
+import flutteringMonsterItem from '../../monsterItems/flutteringMonsterItem.js'
+
 export default {
   baseStats: {
-    speed: '+5%',
-    hpMax: '-30%'
+    speed: 30,
+    hpMax: '-40%',
+    physPower: '-30%'
   },
-  description: 'It\'s a giant bat. Look, just assume that all of the animals are giant, okay?',
-  abilities: [
-    {
-      name: 'Fluttering',
-      description: 'It\'s juking and/or jiving!',
-      stats: {
-        dodgeChance: '25%'
-      }
-    }
-  ]
+  description: 'A giant bat. Look, just assume everything is giant okay or else it gets ridiculous.',
+  items: [flutteringMonsterItem]
 }

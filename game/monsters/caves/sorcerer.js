@@ -1,13 +1,26 @@
+import attackAction from '../../actions/attackAction.js'
+
 export default {
   baseStats: {
-    magicPower: '+50%',
-    hpMax: '-40%'
+    hpMax: '-20%',
+    magicPower: '+110%',
+    physPower: '-40%'
   },
-  abilities: [
+  items: [
     {
-      name: 'Spell Caster',
-      description: 'Deals magic damage.',
-      mods: ['magicAttack']
+      name: 'Lightning Bolt',
+      abilities: {
+        active: {
+          initialCooldown: 4000,
+          cooldown: 8000,
+          actions: [
+            attackAction({
+              damageRange: { min: 0, max: 2 },
+              damageType: 'magic'
+            })
+          ]
+        }
+      }
     }
   ]
 }

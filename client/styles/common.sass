@@ -84,6 +84,15 @@ button, .buttonish
     border-color: currentColor
     cursor: default
 
+  &.appealing
+    $appealing: #57c757
+    background-color: $appealing
+    border-color: $appealing
+    color: white
+
+    &:hover
+      background-color: #4285F4
+
 input
   padding: 9rem 18rem
   border: 1rem solid #AAA
@@ -102,7 +111,7 @@ input
 
   display: flex
   flex-direction: column
-  align-items: start
+  align-items: stretch
 
   button
     padding: 12rem 12rem
@@ -151,6 +160,13 @@ input
   left: 50%
   transform: translate(-50%, -50%)
 
+.absolute-full-size
+  position: absolute
+  top: 0
+  left: 0
+  right: 0
+  bottom: 0
+
 .flex-columns
   display: flex
   flex-direction: row
@@ -160,6 +176,12 @@ input
   display: flex
   flex-direction: column
   align-items: stretch
+
+.flex-spaced
+  justify-content: space-between
+
+.flex-centered
+  align-items: center
 
 .flex-grow
   flex-grow: 1 !important
@@ -186,6 +208,28 @@ input
     background-color: #d8f6d8
 
 .autocrawl
-  font-size: 5em
+  font-size: 3em
   font-family: serif
-  color: #e0ebff
+  color: #c7d8ff
+  text-decoration: none
+
+.hinter
+  display: flex
+  flex-direction: column
+  flex: 0 0 70rem !important
+  text-align: center
+  justify-content: center
+
+$insetPadding: 6rem
+.inset-title, .inset-title-right
+  position: absolute
+  top: 0
+  left: $insetPadding
+  transform: translateY(-50%)
+  background-color: white
+  padding: 3rem $insetPadding 2rem
+  border: 1rem solid #BBB
+
+.inset-title-right
+  left: initial
+  right: $insetPadding

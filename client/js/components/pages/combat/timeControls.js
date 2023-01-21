@@ -1,5 +1,7 @@
 import Ticker from '../../../ticker.js'
 import dateformat from 'dateformat'
+import DIElement from '../../diElement.js'
+import { betterDateFormat } from '../../timer.js'
 
 const HTML = `
 <di-bar class="event-time-bar"></di-bar>
@@ -19,12 +21,12 @@ const HTML = `
       <button class="play" title="Play"><i class="fa-solid fa-play"></i></button>
       <button class="finish" title="Finish"><i class="fa-solid fa-forward-fast"></i></button> 
     </div>
-    <button class="permalink" title="Share"><i class="fa-solid fa-clipboard"></i></button>
+    <button class="permalink" title="Event Log"><i class="fa-solid fa-clipboard"></i></button>
   </div>
 </div>
 `
 
-export default class TimeControls extends HTMLElement{
+export default class TimeControls extends DIElement{
 
   _eventTimeBarEl
   _playEl
@@ -32,9 +34,6 @@ export default class TimeControls extends HTMLElement{
   _speedEl
 
   _ticker
-  _options = {
-    isReplay: false
-  }
 
   constructor(){
     super()
@@ -44,6 +43,11 @@ export default class TimeControls extends HTMLElement{
       .setOptions({
         showValue: false
       })
+
+    this._eventTimeBarEl.addEventListener('click', e => {
+      const pct = e.offsetX / this._eventTimeBarEl.clientWidth
+      this.jumpTo(this._ticker.endTime * pct)
+    })
 
     this._setupPlayPause()
     this._setupSpeed()
@@ -56,28 +60,28 @@ export default class TimeControls extends HTMLElement{
       this.jumpTo(this._ticker.endTime)
     })
 
-    this._ticker = new Ticker().on('tick', () => {
+    this._ticker = new Ticker({
+      live: false
+    }).on('tick', () => {
       this._update()
-      this.dispatchEvent(new CustomEvent('tick'))
     })
   }
 
   get speed(){
-    return this._options.isReplay ? this._speedEl.value / 100 : 1
+    return this._speedEl.value / 100
   }
 
   get time(){
     return this._ticker.currentTime
   }
 
-  setup(startTime, endTime, options = {}){
+  get ticker(){
+    return this._ticker
+  }
 
-    this._options = {
-      isReplay: false,
-      ...options
-    }
+  setup(startTime, endTime){
 
-    this.querySelectorAll(`.replay-${options.isReplay ? 'no' : 'yes'}`).forEach(el => {
+    this.querySelectorAll('.replay-no').forEach(el => {
       el.classList.add('displaynone')
     })
 
@@ -91,8 +95,7 @@ export default class TimeControls extends HTMLElement{
 
   jumpTo(time, options = {}){
     this._ticker.currentTime = time
-    this._update()
-    this.dispatchEvent(new CustomEvent('jumped'))
+    this._update(true)
   }
 
   destroy(){
@@ -112,14 +115,13 @@ export default class TimeControls extends HTMLElement{
     this._ticker.stop()
   }
 
-  _update(){
+  _update(jumped = false){
     this._eventTimeBarEl.setOptions({
       max: this._ticker.endTime,
-      label: dateformat(this._ticker.currentTime, 'M:ss.L')
+      label: betterDateFormat(this._ticker.currentTime, { milliseconds: true })
     })
-    if(this._options.isReplay){
-      this._eventTimeBarEl.setValue(this._ticker.currentTime)
-    }
+    this._eventTimeBarEl.setValue(this._ticker.currentTime)
+    this.events.emit('timechange', { jumped })
   }
 
   _setupPlayPause(){

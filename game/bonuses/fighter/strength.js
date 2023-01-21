@@ -1,6 +1,12 @@
+import { geometricProgession } from '../../growthFunctions.js'
+
+const SCALING = 0.2
+const BASE = 5
+
 export default {
-  stats: {
-    physPower: '+10%'
-  },
-  rarity: 1
+  effect: level => ({
+    stats: {
+      physPower: Math.ceil(geometricProgession(SCALING, level, BASE))
+    }
+  })
 }

@@ -1,8 +1,9 @@
 import StatRow from './statRow.js'
 import { getStatDisplayInfo, StatsDisplayStyle } from '../../statsDisplayInfo.js'
 import Stats from '../../../../game/stats/stats.js'
-import { wait } from '../../../../game/utilFunctions.js'
-import { flash } from '../../animationHelper.js'
+import { mergeOptionsObjects, wait } from '../../../../game/utilFunctions.js'
+import { flash } from '../../animations/simple.js'
+import _ from 'lodash'
 
 const STAT_INCREASE_COLOR = '#c0ffc0'
 const STAT_DECREASE_COLOR = '#fabcbc'
@@ -16,6 +17,7 @@ export default class StatsList extends HTMLElement{
     showTooltips: true,
     truncate: true,
     maxItems: 999,
+    hideIfDefaultValue: false,
     forced: [],
     excluded: []
   }
@@ -23,20 +25,20 @@ export default class StatsList extends HTMLElement{
   _stats = new Stats()
   _owner = null
 
-  constructor(){
-    super()
-  }
-
   get stats(){
     return this._stats
   }
 
+  get empty(){
+    return this.querySelector('di-stat-row') ? false : true
+  }
+
   setOptions(options){
-    for (let key in options){
-      if(key in this._options){
-        this._options[key] = options[key]
-      }
+    const newOptions = mergeOptionsObjects(this._options, options)
+    if(_.isEqual(newOptions, this._options)){
+      return this
     }
+    this._options = newOptions
     this._update()
     return this
   }
@@ -60,10 +62,14 @@ export default class StatsList extends HTMLElement{
     const statsToShow = this._stats.getAll(this._options.forced)
 
     for(let key in statsToShow){
+      const stat = statsToShow[key]
       if(this._options.excluded.indexOf(key) > -1){
         continue
       }
-      this._updateStat(statsToShow[key], this._owner, showStatChangeEffect)
+      if(this._options.hideIfDefaultValue && stat.value === stat.defaultValue){
+        continue
+      }
+      this._updateStat(stat, this._owner, showStatChangeEffect)
       delete unusedStats[key]
     }
 
@@ -83,7 +89,7 @@ export default class StatsList extends HTMLElement{
       owner,
       style: this._options.statsDisplayStyle
     })
-    if(this._options.iconsOnly && !statDisplayInfo.icon){
+    if(!statDisplayInfo || (this._options.iconsOnly && !statDisplayInfo.icon)){
       return
     }
     const row = this.querySelector(`di-stat-row[stat-key="${stat.name}"]`)
@@ -109,7 +115,7 @@ export default class StatsList extends HTMLElement{
     }
     if(showStatChangeEffect){
       rows.forEach(r => flash(r, STAT_DECREASE_COLOR, STAT_EFFECT_TIME))
-      await wait(STAT_EFFECT_TIME)
+      await wait(STAT_EFFECT_TIME / 2)
     }
     rows.forEach(r => r.remove())
   }

@@ -1,93 +1,80 @@
-import { getAdventurerOrbsData } from '../../game/adventurer.js'
+import AdventurerInstance from '../../game/adventurerInstance.js'
+import _ from 'lodash'
+import { adjustInventoryBasics, adjustInventoryCrafted } from './inventory.js'
 
 /**
  * Throw an http exception if this loadout transaction is invalid. The parameters are all
  * assumed to have been processed, i.e. they are a non-null adventurer, user, and item id array.
  * @param adventurer [AdventurerDoc]
  * @param user [UserDoc]
- * @param itemIDs [string]
+ * @param newItems [string]
  */
-export function commitAdventurerLoadout(adventurer, user, itemIDs){
+export function commitAdventurerLoadout(adventurer, user, newItems){
 
-  validateDuplicates(itemIDs)
+  newItems = convertFromAjaxData(adventurer, user, newItems)
 
-  const currentLoadout = adventurer.items
-  const currentInventory = user.inventory.items
-  const loadoutInfo = getItems(currentLoadout, itemIDs)
-  const invInfo = getItems(currentInventory, loadoutInfo.missingIDs)
+  const basicItemDiff = calcBasicItemDiff(adventurer.items, newItems)
+  adjustInventoryBasics(user, basicItemDiff)
 
-  if(invInfo.missingIDs.length){
-    throw { code: 403, error: `Item(s) not found in user's inventory, User: ${user._id}, Items: ${JSON.stringify(invInfo.missingIDs)}` }
-  }
+  const { added, removed } = calcCraftedItemDiff(adventurer.items, newItems)
+  adjustInventoryCrafted(user, added, removed)
 
-  updateLoadout(currentLoadout, currentInventory, itemIDs)
-  updateInventory(currentInventory, loadoutInfo.unmatchedItems, invInfo.matchedItems.map(item => item.id))
-
+  adventurer.items = newItems
   validateLoadout(adventurer)
 }
 
-function getItems(itemArrayOrObj, ids){
-  const itemObj = toObj(itemArrayOrObj)
-  const matchedItems = []
-  const missingIDs = []
-  ids.forEach(id => {
-    if(!id){
-      return
-    }
-    const item = itemObj[id]
-    if(item){
-      matchedItems.push(item)
-      delete itemObj[id]
-    }else{
-      missingIDs.push(id)
-    }
-  })
-
-  return { matchedItems, unmatchedItems: Object.values(itemObj), missingIDs }
-}
-
-function updateInventory(inventory, itemsToAdd, idsToRemove){
-  idsToRemove.forEach(id => delete inventory[id])
-  itemsToAdd.forEach(item => inventory[item.id] = item)
-}
-
-function updateLoadout(loadout, inventory, ids){
-  const loadoutObj = toObj(loadout)
-  for(let i = 0; i < ids.length; i++){
-    const id = ids[i]
-    if(!id){
-      loadout[i] = null
-    }else{
-      loadout[i] = loadoutObj[id] || inventory[id]
-    }
-  }
-}
-
-function validateDuplicates(itemIDs){
-  const obj = {}
-  for(let i = 0; i < itemIDs.length; i++){
-    const id = itemIDs[i]
-    if(id){
-      if(obj[id]){
-        throw { code: 403, error: 'Duplication detected.' }
+function calcBasicItemDiff(oldLoadout, newLoadout){
+  const diff = {}
+  count(oldLoadout)
+  count(newLoadout, -1)
+  function count(items, increment = 1){
+    items.filter(i => i && !i.id).forEach(({ group, name }) => {
+      if(!diff[group]){
+        diff[group] = {}
       }
-      obj[id] = 1
-    }
+      if(!diff[group][name]){
+        diff[group][name] = 0
+      }
+      diff[group][name] += increment
+    })
+  }
+  return diff
+}
+
+function calcCraftedItemDiff(oldLoadout, newLoadout){
+
+  return {
+    added: diff(oldLoadout, newLoadout),
+    removed: diff(newLoadout, oldLoadout)
+  }
+
+  function diff(defs1, defs2){
+    return defs1.filter(i => {
+      if(!i || !i.id){
+        return false
+      }
+      return defs2.find(i2 => i.id === i2?.id) ? false : true
+    })
   }
 }
 
 function validateLoadout(adventurer){
-  const orbsData = getAdventurerOrbsData(adventurer)
+  const orbsData = new AdventurerInstance(adventurer).orbs
   if(!orbsData.isValid){
     throw { code: 403, error: 'Loadout orbs are invalid.' }
   }
 }
 
-function toObj(arrayOrObj, key = 'id'){
-  if(Array.isArray(arrayOrObj)){
-    const itemObj = {}
-    arrayOrObj.filter(o => o).forEach(o => itemObj[o[key]] = o)
-    return itemObj
-  }
-  return { ...arrayOrObj }
+/**
+ * @param adventurer
+ * @param user
+ * @param newItems {[itemDef|string]} Potential dangerous value, prevent duping!
+ */
+function convertFromAjaxData(adventurer, user, newItems){
+  return newItems.map(val => {
+    if(_.isString(val)){
+      return adventurer.items.find(item => item?.id === val) ?? user.inventory.items.crafted[val] ?? null
+    }
+    return val
+  })
 }

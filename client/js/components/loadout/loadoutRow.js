@@ -1,16 +1,25 @@
 import tippy from 'tippy.js'
 import SimpleModal from '../simpleModal.js'
-import { wrap } from '../../../../game/utilFunctions.js'
+import { wrapContent } from '../../../../game/utilFunctions.js'
+import { ITEM_ROW_COLORS } from '../../colors.js'
+import EffectDetails from '../effectDetails.js'
+import DIElement from '../diElement.js'
+import ItemCard from '../itemCard.js'
+import ItemDetails from '../itemDetails.js'
+import { AbilityState } from '../../abilityDisplayInfo.js'
 
 const HTML = `
+<di-bar class="cooldown"></di-bar>
 <di-item-row></di-item-row>
 <div class="new-badge hidden">New!</div>
+<div class="hit-area"></div>
 `
 
-export default class LoadoutRow extends HTMLElement{
+export default class LoadoutRow extends DIElement{
 
   _newBadge
-  _options
+  _usesCooldown
+  _count = 1
 
   loadoutItem
 
@@ -19,20 +28,25 @@ export default class LoadoutRow extends HTMLElement{
     this.innerHTML = HTML
     this._newBadge = this.querySelector('.new-badge')
     this._itemRowEl = this.querySelector('di-item-row')
+    this._cooldownBarEl = this.querySelector('di-bar.cooldown')
+      .setOptions({
+        showLabel: false,
+        showValue: false
+      })
     this._tippy = tippy(this, {
       theme: 'light',
       allowHTML: true
     })
-    this._options = {
-      showNewBadge: false
-    }
     this._tippy.disable()
     this.index = index
     this.setItem(null)
     this.addEventListener('contextmenu', e => {
-      if(this.loadoutItem?.makeDetails){
+      if(this.loadoutItem){
         e.preventDefault()
-        const modal = new SimpleModal(this.loadoutItem.makeDetails())
+        const details = new ItemDetails().setItem(this.loadoutItem.obj).setOptions({
+          showUpgradeButton: true
+        })
+        const modal = new SimpleModal(details)
         modal.show()
       }
     })
@@ -44,25 +58,30 @@ export default class LoadoutRow extends HTMLElement{
 
   get tooltip(){
 
-    if(!this.loadoutItem?.makeTooltip){
-      return ''
+    const tooltip = document.createElement('div')
+
+    if(!this.loadoutItem?.obj){
+      return tooltip
     }
 
-    const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
-
-    tooltip.appendChild(wrap(this.loadoutItem.makeTooltip(true), {
-      class: 'tooltip-content',
-      allowHTML: true
+    tooltip.appendChild(
+      new EffectDetails().setEffect(this.loadoutItem.obj)
+    )
+    tooltip.appendChild(wrapContent('Right-click for more info', {
+      class: 'right-click subtitle'
     }))
 
-    if(this.loadoutItem.makeDetails){
-      tooltip.appendChild(wrap('Right-click for more info (not)', {
-        class: 'right-click'
-      }))
-    }
-
     return tooltip
+  }
+
+  get count(){
+    return this._count
+  }
+
+  set count(val){
+    this._count = val
+    this._itemRowEl.setCount(val)
   }
 
   showNewBadge(show){
@@ -77,7 +96,62 @@ export default class LoadoutRow extends HTMLElement{
     this.loadoutItem = loadoutItem
     this._itemRowEl.setItem(loadoutItem)
     this._tippy.enable()
+    this.updateTooltip()
+    this.update()
+    return this
+  }
+
+  setCount(count){
+    this.count = count
+    return this
+  }
+
+  updateTooltip(){
     this._tippy.setContent(this.tooltip)
+  }
+
+  updateItemRow(){
+    this._itemRowEl.setItem(this.loadoutItem)
+  }
+
+  update(){
+
+    this._cooldownBarEl.style.visibility = this.loadoutItem ? 'visible' : 'hidden'
+
+    const info = this.loadoutItem?.abilityDisplayInfo
+    if(!info){
+      return
+    }
+
+    const disabled = this.loadoutItem.itemInstance.disabled  // || info.state === AbilityState.DISABLED
+    this.classList.toggle('disabled', disabled)
+    this.setAttribute('ability-type', info.type)
+    this.setAttribute('ability-state', info.state)
+
+    // info.state === AbilityState.DISABLED ? 'disabled' :
+    const color = ITEM_ROW_COLORS[info.type]
+    const borderColor = color // info.state === 'ready' ? color : ITEM_ROW_COLORS.disabled
+
+    this._cooldownBarEl
+      .setOptions({
+        color,
+        borderColor,
+        max: info.barMax
+      })
+      .setValue(info.barValue)
+
+    this._abilityInfo = info
+  }
+
+  advanceTime(ms){
+    if(this._abilityInfo?.cooldownRefreshing){
+      this._cooldownBarEl.setValue(ms, { relative: true })
+      if(this._cooldownBarEl.pct === 1){
+        if(this._abilityInfo.state === AbilityState.RECHARGING){
+          this.setAttribute('ability-state', AbilityState.READY)
+        }
+      }
+    }
   }
 
   _setupBlank(){
@@ -85,6 +159,7 @@ export default class LoadoutRow extends HTMLElement{
     this.loadoutItem = null
     this._itemRowEl.setItem(null)
     this._tippy.disable()
+    return this
   }
 }
 

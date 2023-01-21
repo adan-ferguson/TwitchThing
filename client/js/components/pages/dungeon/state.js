@@ -1,21 +1,23 @@
-import CustomAnimation from '../../../customAnimation.js'
-import { floorToZoneName } from '../../../../../game/zones.js'
+import CustomAnimation from '../../../animations/customAnimation.js'
 import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
 
 const innerHTML = `
-<div>
-  <div>
-      <span class="zone-name"></span>
-  </div>
+<div class="content">
   <div class="floor-and-room"></div>
   <div>
     <span class="pace"></span> Pace
   </div>
-  <div>
-      XP: <span class="xp-reward">0</span>
+  <div class="resting-yes">
+    Rest when HP below <span class="rest-threshold"></span>%
+  </div>
+  <div class="resting-yes">
+    Food: <span class="food">0</span>/<span class="max-food"></span>
   </div>
   <div>
-      Chests: <span class="chests">0</span>
+    XP: <span class="xp-reward">0</span>
+  </div>
+  <div>
+    Chests: <span class="chests">0</span>
   </div>
 </div>
 `
@@ -25,38 +27,47 @@ export default class State extends HTMLElement{
   _chests
   _shareLink
 
-  _zoneNameEl
   _floorEl
   _roomEl
 
   constructor(){
     super()
     this.innerHTML = innerHTML
-    this._zoneNameEl = this.querySelector('.zone-name')
     this._floorAndRoomEl = this.querySelector('.floor-and-room')
+    this._contentEl = this.querySelector('.content')
     this.xp = this.querySelector('.xp-reward')
     this.xpVal = null
     this._chests = this.querySelector('.chests')
-    // this._shareLink = this.querySelector('.share-link')
+    this._food = this.querySelector('.food')
+  }
+
+  get maxFoodEl(){
+    return this.querySelector('.max-food')
   }
 
   setup(dungeonRun){
     this.querySelector('.pace').textContent = dungeonRun.dungeonOptions.pace ?? 'Brisk'
+    if(dungeonRun.dungeonOptions.restThreshold > 0){
+      this.querySelector('.rest-threshold').textContent = dungeonRun.dungeonOptions.restThreshold
+    }else{
+      this.querySelectorAll('.resting-yes').forEach(el => el.classList.add('displaynone'))
+    }
   }
 
-  update(eventsList, animate){
+  update(eventsList, adventurerInstance, animate){
 
     const currentEvent = eventsList.at(-1)
     const results = new DungeonRunResults(eventsList)
 
-    this._zoneNameEl.textContent = floorToZoneName(currentEvent.floor)
-
-    this._floorAndRoomEl.textContent = `Floor ${currentEvent.floor} - ${currentEvent.room ? 'Room ' + currentEvent.room : 'Entrance'}`
+    if(currentEvent){
+      this._floorAndRoomEl.textContent = `Floor ${currentEvent.floor} - ${currentEvent.room ? 'Room ' + currentEvent.room : 'Entrance'}`
+    }
 
     this._setXP(results.xp, animate)
     this._updateChests(results.chests, animate)
+    this._setFoodRemaining(adventurerInstance.food, adventurerInstance.maxFood)
 
-    // this._shareLink.setAttribute('href', '/watch/dungeonrun/' + dungeonRun._id)
+    this._contentEl.classList.remove('displaynone')
   }
 
   _setXP(xp, animate){
@@ -95,6 +106,11 @@ export default class State extends HTMLElement{
   _updateChests(chests, animate){
     // TODO: animate
     this._chests.textContent = (chests?.length || 0) + ''
+  }
+
+  _setFoodRemaining(food, max){
+    this._food.textContent = food
+    this.maxFoodEl.textContent = max
   }
 }
 

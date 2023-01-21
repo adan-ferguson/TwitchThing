@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 export default class OrbsData{
 
   constructor(maxOrbs = {}, usedOrbs = {}){
@@ -24,6 +26,10 @@ export default class OrbsData{
     return this.classes.map(className => this.get(className))
   }
 
+  get total(){
+    return _.sum(Object.values(this._maxOrbs))
+  }
+
   get(className){
     const orbDatum = {
       className,
@@ -47,5 +53,11 @@ function toObj(objOrArray){
       return current
     }, {})
   }
+
+  // Remove negatives, maybe shouldn't always be the case?
+  for(let key in objOrArray){
+    objOrArray[key] = Math.max(0, objOrArray[key])
+  }
+
   return objOrArray || {}
 }

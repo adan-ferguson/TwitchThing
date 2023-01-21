@@ -1,6 +1,5 @@
-import RELICS from '../../../relicDisplayInfo.js'
-import { toDisplayName } from '../../../../../game/utilFunctions.js'
 import AdventurerInstance from '../../../../../game/adventurerInstance.js'
+import MonsterInstance from '../../../../../game/monsterInstance.js'
 
 const ROW_HTML = (floor, room, description) => `
 <span class="floor">${floor}-${room}</span>
@@ -21,9 +20,9 @@ export default class EventLog extends HTMLElement{
 
     const addEvent = (event, i) => {
       if(!event){
-        debugger
+        return
       }
-      if(shouldSkip(event, timeline.entries[i - 1])){
+      if(shouldSkip(event)){
         return
       }
       const row = new EventLogRow(event, adventurer)
@@ -86,7 +85,7 @@ class EventLogRow extends HTMLElement{
     const desc = (DESCRIPTION_FNS[event.roomType] ?? DESCRIPTION_FNS.unknown)(event)
     this.innerHTML = ROW_HTML(
       event.floor,
-      event.room,
+      event.room ?? 0,
       desc
     )
 
@@ -102,8 +101,8 @@ class EventLogRow extends HTMLElement{
   }
 }
 
-function shouldSkip(event, prevEvent){
-  if(event.floor === prevEvent?.floor && event.room === prevEvent?.room){
+function shouldSkip(event){
+  if(event.wandering || event.roomType === 'combatResult'){
     return true
   }
   return false
@@ -111,10 +110,10 @@ function shouldSkip(event, prevEvent){
 
 const DESCRIPTION_FNS = {
   unknown: () => '',
-  relic: event => `Relic (${RELICS[event.relic.tier].displayName} ${event.relic.type})`,
   stairs: event => 'Stairs',
   entrance: event => 'Entrance',
-  combat: event => `Combat vs. ${toDisplayName(event.monster.name)}`
+  rest: evemt => 'Rest',
+  combat: event => `vs. ${new MonsterInstance(event.monster).displayName}`
 }
 
 customElements.define('di-event-log', EventLog)

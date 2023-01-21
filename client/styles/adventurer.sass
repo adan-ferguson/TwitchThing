@@ -22,12 +22,39 @@ di-adventurer-page
         color: white !important
         background-color: red !important
 
-di-adventurer-pane, di-dungeon-adventurer-pane, di-combat-fighter-pane
+di-adventurer-pane
+  .top-section
+    di-stats-list
+      flex-grow: 1 !important
+
+di-adventurer-pane, di-fighter-instance-pane
+
+  > .name
+    position: absolute
+    left: 10rem
+    top: -13rem
+    background-color: white
+    border: 0.5rem solid #bb5454
+    padding: 3rem 14rem
+
+  .standard-contents
+    padding: 20rem 8rem 8rem
+
+  di-action-bar
+    flex-grow: 0 !important
+    margin-bottom: 6rem
+
+  .defeated-text span
+    transform: rotate(-1rad)
+    font-size: 70rem
+    transform-origin: center center
+    color: red
 
   .adventurer-orbs
     height: 25rem
     justify-content: space-around
-    margin: 6rem -6rem
+    margin: 6rem 0 0 !important
+    z-index: 1
 
     di-orb-entry
       position: relative
@@ -46,20 +73,24 @@ di-adventurer-pane, di-dungeon-adventurer-pane, di-combat-fighter-pane
         opacity: 0.15
         background-color: currentColor
         pointer-events: none
+        z-index: -1
 
   .top-section
-
-    di-stats-list
-      flex-grow: 1 !important
-
     transition: background-color 0.2s
+
+    cursor: pointer
+    padding: 0
+    margin-bottom: 6rem // If this needs top padding, dungeon page has difference ahhh
+
+    di-xp-bar
+      margin: 2rem
 
     &:hover
       background-color: #effaf8
 
-    cursor: pointer
-    padding: 6rem 12rem 0
-    margin-bottom: 6rem
-
     > *
       margin-bottom: 6rem
+
+  &.boss
+    margin-left: -2rem
+    border: 2rem solid red

@@ -6,6 +6,7 @@ $padding: 20rem
   left: 0
   right: 0
   bottom: 0
+  z-index: 20000
 
   .underlay
     position: absolute
@@ -25,9 +26,25 @@ $padding: 20rem
     padding: $padding
     font-size: 12rem
     max-height: 90%
-    overflow: hidden
+    //overflow: hidden
 
-  .content
+    .close-button
+      position: absolute
+      right: 0
+      top: 0
+      width: 1.5em
+      height: 1.5em
+      background-color: white
+      cursor: pointer
+      display: flex
+      align-items: center
+      justify-content: center
+
+
+      &:hover
+        color: red
+
+  > .content
     white-space: pre-line
 
   .buttons
@@ -40,8 +57,21 @@ $padding: 20rem
     button
       padding: 4rem 16rem
       margin-left: 2rem
+      transition: background-color 0.3s ease, color 0.3s ease
 
       &.style-scary
-        background-color: red
+        border-color: #d25050
+        background-color: #d25050
         color: white
+        &:hover
+          color: #d25050
+          background-color: white
+
+      &.style-good
+        border-color: #8eb48e
+        background-color: #8eb48e
+        color: white
+        &:hover
+          color: #8eb48e
+          background-color: white
 

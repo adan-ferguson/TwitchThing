@@ -13,12 +13,14 @@
   opacity: 1
   transform: translate(-50%, -50%)
   will-change: transform
+  font-size: 15rem
+  font-weight: bold
+  z-index: 10
 
   span
-    font-size: 14rem
-    -webkit-text-stroke-color: white
-    -webkit-text-stroke-width: 0.01rem
-    -webkit-text-fill-color: currentColor
+    //-webkit-text-stroke-color: black
+    //-webkit-text-stroke-width: 0.005rem
+    //-webkit-text-fill-color: currentColor
 
     span
       margin-right: 4rem
@@ -30,7 +32,10 @@
       color: cornflowerblue
 
     .blocked
-      color: #AAA
+      color: #222
 
-    .crit
-      font-size: 1.1em
+.flash-rectangle
+  position: absolute
+  top: 0
+  left: 0
+  z-index: 10000

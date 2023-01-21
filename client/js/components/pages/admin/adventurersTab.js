@@ -1,4 +1,4 @@
-import AdventurerRow from '../../adventurerRow.js'
+import AdventurerRow from '../../adventurer/adventurerRow.js'
 import fizzetch from '../../../fizzetch.js'
 import { hideLoader, showLoader } from '../../../loader.js'
 

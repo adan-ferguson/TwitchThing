@@ -1,3 +1,12 @@
+import biteMonsterItem from '../../monsterItems/biteMonsterItem.js'
+
 export default {
-  description: 'It bites alright.'
+  baseStats: {
+    physPower: '-10%',
+    speed: -40,
+    hpMax: '+50%'
+  },
+  items: [
+    biteMonsterItem()
+  ]
 }

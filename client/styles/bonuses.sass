@@ -1,5 +1,9 @@
 di-levelup-page
 
+  .reroll
+    margin-top: 10rem
+    align-self: center
+
   .content-rows .text
     margin-top: 20rem
     flex-grow: 0 !important
@@ -12,14 +16,48 @@ di-levelup-page
     align-items: center
     justify-content: space-evenly
 
-  di-bonus-details
-    cursor: pointer
-    width: 250rem
-    border: 2rem dotted currentColor
+    di-levelup-option
+      display: flex
+      flex-direction: row
+      cursor: pointer
+      align-items: center
+      font-size: 1.2em
 
-    &:hover
-      border-style: solid
+      .bonus-name, .bonus-orbs
+        border: 2rem dotted currentColor
+        position: absolute
+        top: 0
+        transform: translateY(-50%)
+        background-color: white
+        padding: 3rem 6rem
 
+      .bonus-name
+        left: 4rem
+
+      .bonus-orbs
+        font-size: 0.9em
+        padding: 0
+        right: 4rem
+
+      .bonus-description
+        border: 2rem dotted currentColor
+        padding: 12rem 6rem 6rem
+        min-width: 200rem
+        max-width: 240rem
+        min-height: 80rem
+        position: relative
+        font-size: 0.9em
+
+        display: flex
+        align-items: center
+        justify-content: center
+
+      .bonus-arrow
+        margin: 0 20rem
+
+      &:hover
+        .bonus-name, .bonus-description, .bonus-orbs
+          border-style: solid
 
 di-bonus-details
   position: relative

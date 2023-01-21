@@ -1,6 +1,6 @@
 import Modal from './modal.js'
-import { convertNewlinesToBreaks, toArray } from '../../../game/utilFunctions.js'
-import { fadeIn, fadeOut } from '../animationHelper.js'
+import { toArray } from '../../../game/utilFunctions.js'
+import { fadeIn, fadeOut } from '../animations/simple.js'
 
 const SIMPLE_MODAL_HTML = `
   <div class='content'></div>
@@ -11,7 +11,7 @@ export default class SimpleModal extends Modal{
 
   constructor(content = null, buttons = null){
     super()
-    this.innerPane.innerHTML = SIMPLE_MODAL_HTML
+    this.innerContent.innerHTML = SIMPLE_MODAL_HTML
     if(content){
       this.setContent(content)
     }
@@ -37,7 +37,7 @@ export default class SimpleModal extends Modal{
       if(content instanceof HTMLElement){
         contentEl.appendChild(content)
       }else{
-        contentEl.textContent = content
+        contentEl.innerHTML = content
       }
     }
   }
@@ -54,22 +54,39 @@ export default class SimpleModal extends Modal{
 
       options = {
         text: 'text',
+        content: null,
         style: 'normal',
-        fn: () => {
-        }, // Called on click. If it returns false, the modal won't close after clicking.
+        value: null,
+        fn: () => {}, // Called on click. If it returns false, the modal won't close after clicking.
         ...options
       }
 
       const btn = document.createElement('button')
       btn.classList.add('style-' + options.style)
-      btn.textContent = options.text
+      if(options.content){
+        btn.append(options.content)
+      }else{
+        btn.textContent = options.text
+      }
       btn.addEventListener('click', () => {
         const ret = options.fn()
         if (ret !== false){
-          this.hide()
+          this.hide(options.value)
+          this._result = options.value
         }
       })
       buttonsEl.appendChild(btn)
+    })
+  }
+
+  awaitResult(){
+    return new Promise(res => {
+      if(this._result){
+        return res(this._result)
+      }
+      this.addEventListener('hide', e => {
+        res(e.detail.result)
+      })
     })
   }
 }

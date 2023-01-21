@@ -1,9 +1,12 @@
-import { StatDefinitions, StatType } from './statDefinitions.js'
 import statValueFns from './statValueFns.js'
 import { calcStatDiff } from './statDiff.js'
 import { roundToFixed } from '../utilFunctions.js'
+import { makeStatObject } from './statObject.js'
+import _ from 'lodash'
 
 export default class Stats{
+
+  _scaleFn
 
   baseAffectors = []
   additionalAffectors = []
@@ -21,7 +24,20 @@ export default class Stats{
     return this.baseAffectors.concat(this.additionalAffectors)
   }
 
-  get(name){
+  get scale(){
+    if(this._scaleFn){
+      return this._scaleFn()
+    }
+    return 1
+  }
+
+  set scaleFn(val){
+    this._scaleFn = val
+  }
+
+  get(nameOrStat){
+
+    const name = nameOrStat.name ?? nameOrStat
     const statObj = makeStatObject(name)
 
     const fn = statValueFns[statObj.type]
@@ -30,11 +46,13 @@ export default class Stats{
       throw 'Missing value function for stat type: ' + statObj.type
     }
 
-    statObj.baseValue = shine(fn(extractValues(this.baseAffectors, name), statObj.defaultValue))
-    statObj.value = shine(fn(extractValues(this.affectors, name), statObj.defaultValue))
+    const base = fn(extractValues(this.baseAffectors, name), statObj.defaultValue)
+    statObj.baseValue = shine(base.value)
+    statObj.baseMods = base.mods
 
-    statObj.baseValue = shine(statObj.baseValue)
-    statObj.value = shine(statObj.value)
+    const current = fn(extractValues(this.affectors, name), statObj.defaultValue)
+    statObj.value = shine(current.value * this.scale)
+    statObj.mods = current.mods
 
     statObj.diff = calcStatDiff(statObj)
 
@@ -47,10 +65,10 @@ export default class Stats{
     }
 
     function shine(val){
-      if(statObj.minValue !== null){
+      if(_.isNumber(statObj.minValue)){
         val = Math.max(statObj.minValue, val)
       }
-      if(statObj.maxValue !== null){
+      if(_.isNumber(statObj.maxValue)){
         val = Math.min(statObj.maxValue, val)
       }
       return roundToFixed(val, statObj.roundingDecimals)
@@ -66,7 +84,13 @@ export default class Stats{
       })
     })
     const allStats = {}
-    Object.keys(all).forEach(type => allStats[type] = this.get(type))
+    Object.keys(all).forEach(type => {
+      const stat = this.get(type)
+      // if(stat.defaultValue === stat.value && forced.indexOf(type) === -1){
+      //   return
+      // }
+      allStats[type] = stat
+    })
     return allStats
   }
 
@@ -76,18 +100,6 @@ export default class Stats{
       serialized[statName] = statDef.value
     })
     return serialized
-  }
-}
-
-export function makeStatObject(name){
-  const stat = StatDefinitions[name]
-  if(!stat){
-    throw 'Unknown stat name: ' + name
-  }
-  return {
-    ...stat,
-    name,
-    defaultValue: defaultValue(stat)
   }
 }
 
@@ -123,14 +135,4 @@ function toAffectorsArray(val){
     }
   })
   return affectors
-}
-
-function defaultValue(stat){
-  if(stat.defaultValue !== null){
-    return stat.defaultValue
-  }
-  if(stat.type === StatType.MULTIPLIER){
-    return 1
-  }
-  return 0
 }

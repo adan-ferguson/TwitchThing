@@ -1,26 +1,18 @@
 import * as Loader from '../loader.js'
-import MainPage from './pages/main/mainPage.js'
 import fizzetch from '../fizzetch.js'
 import { hideAll as hideAllTippys } from 'tippy.js'
 import SimpleModal from './simpleModal.js'
-import AdventurerPage from './pages/adventurer/adventurerPage.js'
-import DungeonPage from './pages/dungeon/dungeonPage.js'
 import { getSocket } from '../socketClient.js'
 import { showPopup } from './popup.js'
-import CombatPage from './pages/combat/combatPage.js'
-import ErrorPage from './pages/errorPage.js'
-import { fadeIn, fadeOut } from '../animationHelper.js'
-import SimPage from './pages/sim/simPage.js'
+import { fadeIn } from '../animations/simple.js'
+import { addPageToHistory } from '../history.js'
+import { pathToPage } from './pathRouter.js'
+import { cancelAllFlyingText } from './visualEffects/flyingTextEffect.js'
 
 const HTML = `
 <di-header></di-header>
 <div class="content"></div>
 `
-
-const PAGES = {
-  adventurer: AdventurerPage,
-  dungeon: DungeonPage
-}
 
 export default class App extends HTMLElement{
 
@@ -32,16 +24,22 @@ export default class App extends HTMLElement{
     this.currentPage = null
     this.header = this.querySelector('di-header')
     this.startupParams = startupParams || {}
-    getSocket().on('show popup', showPopup)
-    this._setInitialPage()
+
+    this._fetchUser().then(() => {
+      getSocket()
+        .on('show popup', showPopup)
+        .on('user updated', user => {
+          this._setUser(user)
+        })
+      this.setPage(window.location.pathname, window.location.search, true)
+      window.addEventListener('popstate', e => {
+        this.setPage(window.location.pathname, window.location.search, true)
+      })
+    })
   }
 
-  get showBackButton(){
-    return this.currentPage?.backPage ? true : false
-  }
-
-  get watchView(){
-    return document.location.pathname.search(/^\/watch/) > -1 ? true : false
+  get publicView(){
+    return document.location.pathname.search(/^\/game/) > -1 ? false : true
   }
 
   updateTitle(){
@@ -49,52 +47,61 @@ export default class App extends HTMLElement{
   }
 
   async reloadPage(){
-    this.setPage(this.currentPage)
+    this.setPage(this.currentPage.path, {}, true)
   }
 
-  async setPage(page, redirectToIndexOnError = false){
+  async setPage(path, queryArgs = {}, replaceHistoryState = false){
 
-    if(!page){
-      throw 'Attempted to set null page'
+    if(typeof(queryArgs) === 'string'){
+      queryArgs = Object.fromEntries(new URLSearchParams(queryArgs))
     }
 
-    Loader.showLoader()
-    hideAllTippys()
-    closeAllModals()
+    const page = pathToPage(path, queryArgs)
 
     // Update the user whenever we change pages
     this._fetchUser()
 
     const previousPage = this.currentPage
     if(previousPage){
-      const preventUnload = await previousPage.unload()
-      if(preventUnload){
-        return
+      if(previousPage.loadstate === 'loaded'){
+        const preventUnload = await previousPage.unload()
+        if(preventUnload){
+          return
+        }
       }
-      // await fadeOut(previousPage, 100)
-      previousPage.unloaded = true
+      previousPage.loadstate = 'unloaded'
       previousPage.remove()
     }
 
+    Loader.showLoader()
+    hideAllTippys()
+    cancelAllFlyingText()
+    closeAllModals()
+
     this.currentPage = page
     page.app = this
-    page.unloaded = false
 
     this._resetBackground()
 
     try {
-      await page.load(previousPage)
+      page.loadstate = 'loading'
+      await page.load()
+      page.loadstate = 'loaded'
     }catch(ex){
-      if(redirectToIndexOnError){
-        return window.location = '/'
+      if(ex.error?.redirect){
+        window.location = ex.error.redirect
+        return
       }
-      const { error, targetPage } = ex
+      if(ex.error?.targetPage){
+        this.setPage(ex.error.targetPage)
+        return
+      }
       console.error(ex)
-      if(targetPage){
-        this.setPage(pageFromString(targetPage.name, targetPage.args))
-      }else{
-        this.setPage(new ErrorPage(error))
+      if(page.useHistory){
+        addPageToHistory(page, replaceHistoryState)
       }
+      this.setPage('error', { error: ex.error ?? ex })
+      return
     }
 
     if(this.currentPage !== page){
@@ -102,6 +109,12 @@ export default class App extends HTMLElement{
       return
     }
 
+    document.title = 'AutoCrawl - ' + page.constructor.name
+
+    if(page.useHistory){
+      addPageToHistory(page, replaceHistoryState)
+    }
+    
     this.querySelector(':scope > .content').appendChild(page)
     fadeIn(page)
     this.dispatchEvent(new Event('pagechange'))
@@ -109,89 +122,26 @@ export default class App extends HTMLElement{
     Loader.hideLoader()
   }
 
-  async back(){
-    if(this.currentPage.confirmLeavePageMessage){
-      const confirmed = await this._confirmLeavePage(this.currentPage.confirmLeavePageMessage)
-      if(!confirmed){
-        return
-      }
-    }
-    this.setPage(this.currentPage.backPage() || new MainPage())
-  }
-
   setBackground(color, texture){
     this.style.backgroundColor = color
     this.style.backgroundImage = texture ? `url("/assets/textures/${texture}")` : null
-  }
-
-  async _setInitialPage(){
-    const [pageStr, arg] = window.location.hash.substring(1).split('=')
-    if(pageStr === 'adventurer' && arg){
-      if(await this._setAdventurerPage(arg)){
-        return
-      }
-    }
-    if(this.startupParams?.page === 'dungeonrun'){
-      return this.setPage(new DungeonPage(this.startupParams.id), true)
-    }else if(this.startupParams?.page === 'combat'){
-      return this.setPage(new CombatPage(this.startupParams.id, {
-        isReplay: true
-      }), true)
-    }else if(this.startupParams?.page === 'sim'){
-      return this.setPage(new SimPage())
-    }
-    this.setPage(new MainPage())
   }
 
   _resetBackground(){
     this.setBackground(null, null)
   }
 
-  async _fetchUser(){
-    this.user = await fizzetch('/user')
+  _setUser(user){
+    this.user = user
     this.header.update()
   }
 
-  _confirmLeavePage(message){
-    return new Promise(res => {
-      new SimpleModal(message, [{
-        text: 'Leave Page',
-        style: 'scary',
-        fn: () => {
-          res(true)
-        }
-      },{
-        text: 'Never Mind',
-        fn: () => {
-          res(false)
-        }
-      }]).show()
-    })
-  }
-
-  async _setAdventurerPage(adventurerID){
-    const { error, status } = await fizzetch(`/game/adventurer/${adventurerID}/status`)
-    if(error){
-      return false
-    }
-    if(status === 'idle'){
-      this.setPage(new AdventurerPage(adventurerID))
-    }else{
-      this.setPage(new DungeonPage(adventurerID))
-    }
-    return true
+  async _fetchUser(){
+    this._setUser(await fizzetch('/user'))
   }
 }
 
 customElements.define('di-app', App)
-
-export function pageFromString(name, args){
-  const page = PAGES[name?.toLowerCase()]
-  if(page){
-    return new page(...args)
-  }
-  return null
-}
 
 function closeAllModals(){
   document.querySelectorAll('di-modal').forEach(modal => {

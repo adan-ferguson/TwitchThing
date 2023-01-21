@@ -1,6 +1,10 @@
+const BASE = 25
+
 export default {
-  stats: {
-    combatXP: '+20%'
-  },
-  rarity: 2
+  effect: level => ({
+    stats: {
+      combatXP: BASE * level + '%'
+    }
+  }),
+  minOrbs: 10
 }

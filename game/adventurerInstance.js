@@ -1,60 +1,133 @@
-import { getAdventurerStats, adventurerLevelToHp, adventurerLevelToPower } from './adventurer.js'
-import { COMBAT_BASE_TURN_TIME } from './combat/fighterInstance.js'
-import { randomRound } from './rando.js'
+import FighterInstance from './fighterInstance.js'
+import AdventurerItemInstance from './adventurerItemInstance.js'
+import OrbsData from './orbsData.js'
+import { geometricProgession, inverseGeometricProgression } from './growthFunctions.js'
+import BonusesData from './bonusesData.js'
+import { minMax, toNumberOfDigits } from './utilFunctions.js'
+import { startingFoodStat } from './stats/combined.js'
 
-export default class AdventurerInstance{
+const XP_BASE = 100
+const XP_GROWTH = 200
+const XP_GROWTH_PCT = 0.3
 
-  static initialState(adventurer){
-    const ai = new AdventurerInstance(adventurer)
-    return ai.adventurerState
+const HP_BASE = 40
+const HP_GROWTH = 18
+const HP_GROWTH_PCT = 0.05
+
+const POWER_BASE = 10
+const POWER_GROWTH = 3
+const POWER_GROWTH_PCT = 0.05
+
+export function advXpToLevel(xp){
+  if(xp < XP_BASE){
+    return 1
+  }
+  const lvl = Math.floor(inverseGeometricProgression(XP_GROWTH_PCT, xp - XP_BASE, XP_GROWTH)) + 2
+  return advLevelToXp(lvl) <= xp ? lvl : lvl - 1
+}
+
+export function advLevelToXp(lvl){
+  if(lvl <= 1){
+    return 0
+  }
+  return toNumberOfDigits(
+    Math.round(geometricProgession(XP_GROWTH_PCT, lvl - 2, XP_GROWTH)) + XP_BASE,
+    3
+  )
+}
+
+export function adventurerLevelToHp(lvl){
+  return HP_BASE + Math.ceil(geometricProgession(HP_GROWTH_PCT, lvl - 1, HP_GROWTH))
+}
+
+export function adventurerLevelToPower(lvl){
+  return POWER_BASE + Math.ceil(geometricProgession(POWER_GROWTH_PCT, lvl - 1, POWER_GROWTH))
+}
+
+export default class AdventurerInstance extends FighterInstance{
+
+  constructor(adventurerDef, initialState = {}){
+    super(adventurerDef, initialState)
+    this.bonusesData = new BonusesData(adventurerDef.bonuses, this)
   }
 
-  constructor(adventurer, adventurerState = {}){
-    this.adventurer = adventurer
-    this.adventurerState = { ...adventurerState }
-    if(!('hp' in adventurerState)){
-      this.adventurerState.hp = this.hpMax
-    }
+  get accomplishments(){
+    return this.fighterData.accomplishments
+  }
+
+  get level(){
+    return advXpToLevel(this._fighterData.xp)
+  }
+
+  get bonuses(){
+    return this.bonusesData.instances
+  }
+
+  get displayName(){
+    return this.fighterData.name
+  }
+
+  get uniqueID(){
+    return this.fighterData._id.toString()
+  }
+
+  get ItemClass(){
+    return AdventurerItemInstance
   }
 
   get baseHp(){
-    return adventurerLevelToHp(this.adventurer.level)
+    return adventurerLevelToHp(this.level)
   }
 
   get basePower(){
-    return adventurerLevelToPower(this.adventurer.level)
+    return adventurerLevelToPower(this.level)
   }
 
-  get name(){
-    return this.adventurer.name
+  get baseStats(){
+    return [
+      {
+        [startingFoodStat.name]: 3
+      },
+      ...this.bonuses.map(bonusInstance => bonusInstance.stats)
+    ]
   }
 
-  get stats(){
-    return getAdventurerStats(this.adventurer, this.adventurerState)
+  get baseMods(){
+    return this.bonuses.map(bonusInstance => bonusInstance.mods)
   }
 
-  get hp(){
-    return this.adventurerState.hp
+  get orbs(){
+    const max = this.bonuses.map(bonusInstance => {
+      return bonusInstance.orbsData.maxOrbs
+    })
+    const used = this.itemInstances.map(ii => ii?.orbs.maxOrbs || {})
+    return new OrbsData(max, used)
   }
 
-  get hpPct(){
-    return this.hp / this.hpMax
+  get effectInstances(){
+    return [...this.bonuses, ...super.effectInstances]
   }
 
-  get hpMax(){
-    return Math.ceil(adventurerLevelToHp(this.adventurer.level) * this.stats.get('hpMax').value)
+  get shouldLevelUp(){
+    return this.bonusesData.levelTotal < this.level
   }
 
-  get actionTime(){
-    return COMBAT_BASE_TURN_TIME / this.stats.get('speed').value
+  get maxFood(){
+    return this.stats.get(startingFoodStat).value
   }
 
-  passTime(time){
-    const turns = time / 5000
-    const regen = this.stats.get('regen').value
-    if(regen){
-      const amount = randomRound(turns * this.hpMax * regen)
-      this.adventurerState.hp = Math.min(this.hpMax, this.hp + amount)
-    }
+  get food(){
+    return this._state.food ?? this.maxFood
+  }
+
+  set food(val){
+    this._state.food = minMax(0, val, this.maxFood)
+  }
+
+  getEquippedSlotBonus(slotIndex){
+    // TODO: equipping of slot bonuses, for now the slot bonuses are just hardcoded
+    return this.bonusesData.instances.find(bonusInstance => {
+      return bonusInstance.slotBonus?.slotIndex === slotIndex
+    })?.slotBonus
   }
 }
