@@ -117,7 +117,7 @@ export async function getRunDataMulti(dungeonRunIDs){
 }
 
 export function getAllActiveRuns(truncated = false){
-  return Object.values(activeRuns).map(activeRun => truncated ? truncatedRun(activeRun) : activeRun)
+  return Object.values(activeRuns).map(activeRun => truncated ? truncatedRun(activeRun.doc) : activeRun.doc)
 }
 
 export function getActiveRunData(dungeonRunID){
@@ -125,15 +125,18 @@ export function getActiveRunData(dungeonRunID){
   if(!run){
     return null
   }
-  const runDoc = {
+  return {
     ...run.doc,
-    virtualTime: virtualTime(run)
+    virtualTime: virtualTime(run.doc)
   }
-  return runDoc
 }
 
-export async function getRunData(dungeonRunID){
-  return getActiveRunData(dungeonRunID) || await DungeonRuns.findByID(dungeonRunID)
+export async function getRunData(dungeonRunID, truncated = false){
+  const data = getActiveRunData(dungeonRunID) || await DungeonRuns.findByID(dungeonRunID)
+  if(truncated){
+    return truncatedRun(data)
+  }
+  return data
 }
 
 function validateNew(adventurerDoc, userDoc, { startingFloor }){
@@ -172,13 +175,19 @@ function emitSocketEvents(){
     if(!dri.shouldEmit){
       return
     }
-    const truncated = truncatedRun(dri)
-    emit(truncated._id, 'dungeon run update', truncated)
-    if(!perUser[truncated.adventurer.userID]){
-      perUser[truncated.adventurer.userID] = []
+    const clipped = {
+      ...dri.doc,
+      newEvents: dri.getNewEvents(),
+      virtualTime: virtualTime(dri.doc)
     }
-    perUser[truncated.adventurer.userID].push(truncated)
-    liveMap.push(truncated)
+    delete clipped.events
+
+    emit(clipped._id, 'dungeon run update', clipped)
+    if(!perUser[clipped.adventurer.userID]){
+      perUser[clipped.adventurer.userID] = []
+    }
+    perUser[clipped.adventurer.userID].push(clipped)
+    liveMap.push(clipped)
   })
 
   Object.keys(perUser).forEach(userID => {
@@ -201,19 +210,19 @@ function clearFinishedRuns(){
 }
 
 /**
- * @param dri {DungeonRunInstance}
+ * @param doc {object}
  * @returns {object}
  */
-function truncatedRun(dri){
+function truncatedRun(doc){
   const truncatedDoc = {
-    ...dri.doc,
-    newEvents: dri.getNewEvents(),
-    virtualTime: virtualTime(dri)
+    ...doc,
+    currentEvent: doc.events.at(-1),
+    virtualTime: virtualTime(doc)
   }
   delete truncatedDoc.events
   return truncatedDoc
 }
 
-function virtualTime(dri){
-  return dri.doc.elapsedTime + (new Date() - lastAdvancement) - ADVANCEMENT_INTERVAL
+function virtualTime(doc){
+  return doc.elapsedTime + (new Date() - lastAdvancement) - ADVANCEMENT_INTERVAL
 }

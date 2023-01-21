@@ -44,6 +44,10 @@ export default class FlyingTextEffect extends EventEmitter{
     this.el.style.top = startingPosition.y + 'px'
     this.el.style.fontSize = this.options.fontSize + 'em'
 
+    if(!startingPosition.x){
+      return
+    }
+
     document.querySelector('body').appendChild(this.el)
 
     if(this.options.autoStart){
@@ -68,6 +72,12 @@ export default class FlyingTextEffect extends EventEmitter{
       }, this.options.duration)
     })
   }
+}
+
+export function cancelAllFlyingText(){
+  document.querySelectorAll('.flying-text-effect').forEach(el => {
+    el.remove()
+  })
 }
 
 function getStartingPosition(origin, direction){

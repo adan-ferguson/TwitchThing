@@ -348,7 +348,6 @@ class ResultQueue{
     this._queue[0]()
     this._timeout = setTimeout(() => {
       this._queue = this._queue.slice(1)
-      console.log('dequeue', this._queue)
       this._next()
     }, STAGGER_TIME)
   }

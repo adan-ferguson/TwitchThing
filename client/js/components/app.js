@@ -7,6 +7,7 @@ import { showPopup } from './popup.js'
 import { fadeIn } from '../animations/simple.js'
 import { addPageToHistory } from '../history.js'
 import { pathToPage } from './pathRouter.js'
+import { cancelAllFlyingText } from './visualEffects/flyingTextEffect.js'
 
 const HTML = `
 <di-header></di-header>
@@ -74,6 +75,7 @@ export default class App extends HTMLElement{
 
     Loader.showLoader()
     hideAllTippys()
+    cancelAllFlyingText()
     closeAllModals()
 
     this.currentPage = page
@@ -86,6 +88,10 @@ export default class App extends HTMLElement{
       await page.load()
       page.loadstate = 'loaded'
     }catch(ex){
+      if(ex.error?.redirect){
+        window.location = ex.error.redirect
+        return
+      }
       if(ex.error?.targetPage){
         this.setPage(ex.error.targetPage)
         return

@@ -39,7 +39,11 @@ export default class LiveDungeonMap extends HTMLElement{
   }
 
   updateRun(dungeonRun){
-    if(dungeonRun.currentEvent.runFinished){
+    const currentEvent = dungeonRun.currentEvent ?? dungeonRun.newEvents?.at(-1)
+    if(!currentEvent){
+      return
+    }
+    if(currentEvent.runFinished){
       return this._runFinished(dungeonRun._id)
     }
     if(!this._dungeonRunEls[dungeonRun._id]){
@@ -47,13 +51,14 @@ export default class LiveDungeonMap extends HTMLElement{
     }
     const el = this._dungeonRunEls[dungeonRun._id]
     el._tippyContent.setDungeonRun(dungeonRun)
-    el.classList.toggle('in-combat', dungeonRun.currentEvent.combatID ? true : false)
+    el.classList.toggle('in-combat', currentEvent.combatID ? true : false)
     if(el.floor !== dungeonRun.floor){
       el.floor = dungeonRun.floor
       this._floorEls[dungeonRun.floor - 1].appendChild(el)
       this._showZones(Math.floor((el.floor - 1) / 10))
     }
-    const pct = 95 * Math.min(1, dungeonRun.room / floorSize(dungeonRun.floor))
+    const fs = dungeonRun.room / floorSize(dungeonRun.floor)
+    const pct = 95 * Math.min(1, fs)
     el.style.left = `${pct}%`
   }
 
