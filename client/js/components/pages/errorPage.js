@@ -11,16 +11,12 @@ const HTML = errorMessage => `
 export default class ErrorPage extends Page{
   constructor({ error }){
     super()
-    this._error = error?.toString()
+    this._error = error
     this.innerHTML = HTML(this._error)
   }
 
   static get pathDef(){
     return ['error']
-  }
-
-  get pathArgs(){
-    return [{ error: this._error }]
   }
 
   async load(){

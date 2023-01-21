@@ -6,7 +6,7 @@ import { suffixedNumber } from '../../../game/utilFunctions.js'
 const HTML = `
 <div class="left-side">
   <button class="back-button"><i class="fa-solid fa-arrow-left"></i></button>
-  <div class="autocrawl clickable">AUTOCRAWL</div>
+  <a class="autocrawl clickable" href="/game">AUTOCRAWL</a>
 </div>
 <div class="right-side">
   <div class="scrap-button displaynone">
@@ -31,10 +31,6 @@ export default class Header extends HTMLElement{
   constructor(){
     super()
     this.innerHTML = HTML
-
-    this.querySelector('.autocrawl').addEventListener('click', () => {
-      this.app.setPage('')
-    })
 
     this.querySelector('.back-button').addEventListener('click', () => {
       window.history.back()

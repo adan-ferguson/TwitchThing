@@ -12,6 +12,7 @@ import AdventurerLoadoutEditorPage from './pages/adventurerLoadout/adventurerLoa
 import DungeonPickerPage from './pages/dungeonPicker/dungeonPickerPage.js'
 import ShopPage from './pages/shop/shopPage.js'
 import WorkshopPage from './pages/workshop/workshopPage.js'
+import AdventurerPreviousRunsPage from './pages/adventurerPreviousRuns/adventurerPreviousRunsPage.js'
 
 const pages = [
   AdventurerPage,
@@ -25,7 +26,8 @@ const pages = [
   AdventurerLoadoutEditorPage,
   DungeonPickerPage,
   ShopPage,
-  WorkshopPage
+  WorkshopPage,
+  AdventurerPreviousRunsPage
 ]
 
 export function pathToPage(location, queryStringArgs = {}){

@@ -1,5 +1,4 @@
 import Page from '../page.js'
-import AdventurerPage from '../adventurer/adventurerPage.js'
 import PreviousRunRow from './previousRunRow.js'
 
 const HTML = `
@@ -16,12 +15,20 @@ export default class AdventurerPreviousRunsPage extends Page{
     this.innerHTML = HTML
   }
 
+  static get pathDef(){
+    return ['adventurer', 0, 'previousruns']
+  }
+
+  get pathArgs(){
+    return [this.adventurerID]
+  }
+
   get titleText(){
     return this.adventurer ? (this.adventurer.name + ' - Previous Runs') : 'Huh'
   }
 
-  async load(_){
-    const { adventurer, runs } = await this.fetchData(`/game/adventurer/${this.adventurerID}/previousruns`)
+  async load(){
+    const { adventurer, runs } = await this.fetchData()
     this.adventurer = adventurer
 
     const list = this.querySelector('.previous-runs-list')

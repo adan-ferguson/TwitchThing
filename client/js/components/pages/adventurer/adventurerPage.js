@@ -88,8 +88,7 @@ export default class AdventurerPage extends Page{
     this._setupTopRightButton(user)
 
     const showButtons = user.accomplishments.deepestFloor <= 1
-    // TODO: get this working again later
-    this._prevRuns.classList.toggle('displaynone', true) //showButtons)
+    this._prevRuns.classList.toggle('displaynone', showButtons)
     this.querySelector('.scary-buttons').classList.toggle('displaynone', showButtons)
   }
 
