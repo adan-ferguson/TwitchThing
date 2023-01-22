@@ -25,7 +25,7 @@ const HTML = `
       <div class="content-well live-dungeon-map clickable">
         View Live Dungeon Map
       </div>
-      <a href="https://discord.gg/Y3UDA9SX" target="_blank" class="flex-no-grow discord buttonish">
+      <a href="https://discord.gg/CNe7EMmzam" target="_blank" class="flex-no-grow discord buttonish">
         <i class="fab fa-discord"></i> Join the Discord server for updates and news
       </a>
     </div>
