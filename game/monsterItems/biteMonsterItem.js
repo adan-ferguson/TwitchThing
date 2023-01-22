@@ -6,7 +6,7 @@ export default function(def){
     name: 'Bite',
     abilities: {
       active: {
-        initialCooldown: 10000,
+        initialCooldown: 8000,
         description: 'Attack for [physScaling1.5] damage. Heal for 50% of the damage dealt.',
         actions: [
           attackAction({
