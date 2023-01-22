@@ -29,4 +29,10 @@ router.get('/', (req, res) => {
   }
 })
 
+/**************************************/
+
+router.get('/dungeonrun/:dungeonRunID', async (req, res) => {
+  res.redirect('/game/dungeonrun/' + req.params.dungeonRunID)
+})
+
 export default router
