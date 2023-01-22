@@ -61,7 +61,7 @@ router.get('/logout', async (req, res) => {
 
 router.get('/newuser', async (req, res) => {
 
-  console.log('newuser', req.query)
+  console.log('newuser, displayname', req.query.displayname)
 
   if(!req.user){
     return res.redirect('/login')

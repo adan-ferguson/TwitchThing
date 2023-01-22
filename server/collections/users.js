@@ -80,7 +80,11 @@ Users.setDisplayname = async function(userDoc, displayname){
   if(displayname.length > 15){
     return 'Display name must be between 2 and 15 letters.'
   }
-  const user = await Users.findByID(displayname)
+  const user = await Users.findOne({
+    query: {
+      displayname
+    }
+  })
   if(user){
     return `Display name '${displayname}' is taken.`
   }
