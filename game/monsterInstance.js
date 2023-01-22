@@ -7,7 +7,7 @@ import { toDisplayName, toNumberOfDigits } from './utilFunctions.js'
 import { bossMod } from './mods/combined.js'
 import { floorToZone } from './zones.js'
 
-const ADJUSTED_DIFFICULTY_PER_ZONE = 1.75
+const ADJUSTED_DIFFICULTY_PER_ZONE = 2.25
 
 const HP_BASE = 25
 const HP_GROWTH = 18
@@ -20,7 +20,7 @@ const POWER_GROWTH_PCT = 0.1 //0.25
 const XP_BASE = 50
 const XP_GROWTH = 20
 const XP_GROWTH_PCT = 0.2
-const XP_ZONE_BONUS = 2
+const XP_ZONE_BONUS = 1.8
 
 export function levelToXpReward(lvl){
   const zoneBonuses = Math.floor((lvl - 1) / 10)
@@ -50,7 +50,7 @@ export function monsterLevelToPower(lvl){
 
 function adjustedDifficultyLevel(lvl){
   const zone = floorToZone(lvl)
-  return lvl + zone * ADJUSTED_DIFFICULTY_PER_ZONE
+  return lvl + Math.max(0, zone - 1) * ADJUSTED_DIFFICULTY_PER_ZONE
 }
 
 export default class MonsterInstance extends FighterInstance{
