@@ -5,7 +5,7 @@ import { leveledPercentageString } from '../../growthFunctions.js'
 
 export default {
   levelFn: level => {
-    const pct = 0.5
+    const pct = 0.3
     return {
       abilities: {
         crit: {
@@ -23,8 +23,8 @@ export default {
         }
       },
       stats: {
-        [critChanceStat.name]: 0.25 + level * 0.05,
-        hpMax: leveledPercentageString(35, 15, level)
+        [critChanceStat.name]: 0.22 + level * 0.03,
+        hpMax: leveledPercentageString(20, 10, level)
       },
       mods: [physScaling]
     }

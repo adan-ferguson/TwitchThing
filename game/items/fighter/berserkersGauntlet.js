@@ -2,7 +2,7 @@ import { physPowerStat, speedStat } from '../../stats/combined.js'
 
 export default {
   levelFn: level => {
-    const pct = `+${17 + level * 3}%`
+    const pct = `+${14 + level * 1}%`
     return {
       abilities: {
         attackHit: {

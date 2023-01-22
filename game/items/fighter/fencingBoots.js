@@ -5,8 +5,8 @@ import { exponentialPercentage } from '../../growthFunctions.js'
 export default {
   levelFn: level => ({
     stats: {
-      [speedStat.name]: 25 + 5 * level,
-      [dodgeChanceStat.name]: exponentialPercentage(0.1, level - 1, 0.25)
+      [speedStat.name]: 17 + 3 * level,
+      [dodgeChanceStat.name]: exponentialPercentage(0.05, level - 1, 0.3)
     },
     abilities: {
       dodge: {

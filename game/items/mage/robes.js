@@ -4,8 +4,8 @@ import { leveledPercentageString } from '../../growthFunctions.js'
 export default {
   levelFn: level => ({
     stats: {
-      [magicPowerStat.name]: leveledPercentageString(15, 5, level),
-      [combatXPStat.name]: leveledPercentageString(15, 5, level),
+      [magicPowerStat.name]: leveledPercentageString(20, 5, level),
+      [combatXPStat.name]: leveledPercentageString(20, 5, level),
     }
   }),
   orbs: 3

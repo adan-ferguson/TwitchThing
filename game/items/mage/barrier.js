@@ -4,7 +4,7 @@ import { barrierStatusEffect } from '../../statusEffects/combined.js'
 
 export default {
   levelFn: level => {
-    const power = 1.6 + 0.2 * level
+    const power = 1.6 + 0.1 * level
     return {
       abilities: {
         active: {
