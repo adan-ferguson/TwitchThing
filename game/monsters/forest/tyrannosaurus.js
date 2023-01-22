@@ -21,9 +21,9 @@ export default {
           inverted: true
         },
         stats: {
-          speed: 100,
-          physPower: '75%',
-          physDef: '75%'
+          speed: 60,
+          physPower: '50%',
+          physDef: '50%'
         }
       }
     },
