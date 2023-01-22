@@ -22,19 +22,26 @@
       margin-top: 5rem
       display: flex
       flex-direction: row
+      justify-content: center
 
       button
         margin-right: 10rem
-        width: 110rem
+        width: 40rem
+        height: 36rem
+        border: none
+        font-size: 1.5em
 
         &:hover
           background-color: inherit
           opacity: 0.8
 
         &[provider="google"]
-          border-color: #4285F4
-          justify-content: left
+          border: 1px solid #4285F4
           padding: 0
+          box-sizing: border-box
+
+          &:hover
+            border-width: 3px
 
           img
             width: 18rem
@@ -51,14 +58,19 @@
             justify-content: center
             align-items: center
 
+        &[provider="discord"]
+          background-color: #7289da
+          color: white
+
+          //i
+          //  padding-right: 12rem
 
         &[provider="twitch"]
           background-color: #6441a5
           color: white
-          opacity: 0.5
 
-          i
-            padding-right: 12rem
+          //i
+          //  padding-right: 12rem
 
 .login-page
   .dungeon-map
