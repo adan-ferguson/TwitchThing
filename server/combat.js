@@ -10,7 +10,8 @@ import { CombatResult } from '../game/combatResult.js'
 
 const START_TIME_DELAY = 200
 const COMBAT_END_PADDING = 2500
-const MAX_TIME = 120000
+const MAX_TIME = 1000 * 120
+const BOSS_MAX_TIME = 1000 * 300
 const MIN_RESULT_TIME = 2500
 
 export async function generateCombatEvent(dungeonRun, boss = false){
@@ -63,14 +64,15 @@ export async function generateSimulatedCombat(fighterDef1, fighterDef2){
   const i1 = toFighterInstance(fighterDef1)
   const i2 = toFighterInstance(fighterDef2)
   return await generateCombat(i1, i2, {
-    sim: true
+    sim: true,
+    boss: true
   })
 }
 
 export async function generateCombat(fighterInstance1, fighterInstance2, params = {}){
 
   try {
-    const combat = new Combat(fighterInstance1, fighterInstance2)
+    const combat = new Combat(fighterInstance1, fighterInstance2, params)
     return await Combats.save({
       startTime: Date.now(),
       duration: combat.duration,
@@ -97,7 +99,8 @@ export async function generateCombat(fighterInstance1, fighterInstance2, params 
 
 class Combat{
 
-  constructor(fighterInstance1, fighterInstance2){
+  constructor(fighterInstance1, fighterInstance2, params){
+    this.params = params
     fighterInstance1.inCombat = true
     fighterInstance2.inCombat = true
     fighterInstance1.startCombat(this)
@@ -136,14 +139,22 @@ class Combat{
     }else if(!this.fighterInstance2.hpPct){
       return CombatResult.F1_WIN
     }
-    if(this.time >= MAX_TIME){
+    if(this.time >= this.maxTime){
       return CombatResult.TIME_OVER
     }
     return CombatResult.ONGOING
   }
 
   get finished(){
-    return this._currentTime >= MAX_TIME || this.fighterInstance1.hp === 0 || this.fighterInstance2.hp === 0
+    return this._currentTime >= this.maxTime || this.fighterInstance1.hp === 0 || this.fighterInstance2.hp === 0
+  }
+
+  get maxTime(){
+    return this.bossFight ? BOSS_MAX_TIME : MAX_TIME
+  }
+
+  get bossFight(){
+    return this.params.boss ?? false
   }
 
   getEnemyOf(fighterInstance){
