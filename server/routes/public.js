@@ -29,16 +29,4 @@ router.get('/', (req, res) => {
   }
 })
 
-/**************************************/
-
-router.post('/dungeonrun/:dungeonRunID', async (req, res) => {
-  const dungeonRun = await getRunData(db.id(req.params.dungeonRunID))
-  if(!dungeonRun){
-    return res.status(400).send({ error: 'Dungeon Run not found' })
-  }
-  res.send({
-    dungeonRun
-  })
-})
-
 export default router

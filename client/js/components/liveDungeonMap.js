@@ -85,7 +85,7 @@ export default class LiveDungeonMap extends HTMLElement{
       content: status
     })
     el.addEventListener('click', () => {
-      window.open(`/dungeonrun/${_id}`, '_blank')
+      window.open(`/game/dungeonrun/${_id}`, '_blank')
     })
     this._dungeonRunEls[_id] = el
   }
