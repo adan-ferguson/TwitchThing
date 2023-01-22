@@ -2,6 +2,7 @@ import statusEffectAction from '../../actions/statusEffectAction.js'
 import { dodgingStatusEffect } from '../../statusEffects/combined.js'
 import attackAction from '../../actions/attackAction.js'
 import { magicScalingMod } from '../../mods/combined.js'
+import flutteringMonsterItem from '../../monsterItems/flutteringMonsterItem.js'
 
 export default {
   baseStats: {
@@ -11,23 +12,7 @@ export default {
     magicPower: '+40%'
   },
   items: [
-    {
-      name: 'Fluttering',
-      abilities: {
-        targeted: {
-          cooldown: 10000,
-          name: 'dodgeOne',
-          actions: [
-            statusEffectAction({
-              base: dodgingStatusEffect,
-              effect: {
-                duration: 0
-              }
-            })
-          ]
-        }
-      }
-    },
+    flutteringMonsterItem,
     {
       name: 'Magic Blast',
       abilities: {
