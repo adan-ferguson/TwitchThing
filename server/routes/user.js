@@ -39,6 +39,7 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
   const user = await Users.loadFromMagicID(id)
+  console.log('deserialize', id, user)
   done(null, user)
 })
 
