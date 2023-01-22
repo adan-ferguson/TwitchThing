@@ -8,6 +8,7 @@
   },
   "type": "module",
   "scripts": {
+    "renewcerts": "certbot renew",
     "fullbuild": "git pull && npm install && npx gulp && npx webpack --mode=production && npx pm2 stop twitchthing; npx pm2 start ./server/index.js --name twitchthing",
     "watch": "webpack --watch",
     "gulpwatch": "gulp watch",

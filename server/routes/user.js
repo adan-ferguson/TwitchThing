@@ -14,15 +14,19 @@ const magic = new Magic(config.magic.secretKey, {
 
 const strategy = new Strategy(async function(magicUser, done){
   try {
+    console.log('trying strategy', magicUser.issuer)
     let user = await Users.loadFromMagicID(magicUser.issuer)
+    console.log('user: ', user)
     if(!user){
       const userMetadata = await magic.users.getMetadataByIssuer(magicUser.issuer)
       user = await Users.create(magicUser.issuer, magicUser.claim.iat, userMetadata.email, userMetadata.oauthProvider || 'magiclink')
     }else{
       Users.login(user)
     }
+    console.log('success')
     return done(null, user)
   }catch(err){
+    console.log('err', err)
     return done(err)
   }
 })
