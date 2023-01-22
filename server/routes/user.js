@@ -14,19 +14,15 @@ const magic = new Magic(config.magic.secretKey, {
 
 const strategy = new Strategy(async function(magicUser, done){
   try {
-    console.log('trying strategy', magicUser.issuer)
     let user = await Users.loadFromMagicID(magicUser.issuer)
-    console.log('user: ', user)
     if(!user){
       const userMetadata = await magic.users.getMetadataByIssuer(magicUser.issuer)
       user = await Users.create(magicUser.issuer, magicUser.claim.iat, userMetadata.email, userMetadata.oauthProvider || 'magiclink')
     }else{
       Users.login(user)
     }
-    console.log('success')
     return done(null, user)
   }catch(err){
-    console.log('err', err)
     return done(err)
   }
 })
@@ -39,7 +35,6 @@ passport.serializeUser((user, done) => {
 
 passport.deserializeUser(async (id, done) => {
   const user = await Users.loadFromMagicID(id)
-  console.log('deserialize', id, user)
   done(null, user)
 })
 
@@ -61,8 +56,6 @@ router.get('/logout', async (req, res) => {
 
 router.get('/newuser', async (req, res) => {
 
-  console.log('newuser, displayname', req.query.displayname)
-
   if(!req.user){
     return res.redirect('/login')
   }
@@ -75,7 +68,6 @@ router.get('/newuser', async (req, res) => {
   if(req.query && req.query.displayname){
     err = await Users.setDisplayname(req.user, req.query.displayname)
     if(!err){
-      console.log('New User', req.query.displayname)
       return res.redirect('/game')
     }
   }
