@@ -16,14 +16,20 @@ const MIN_RESULT_TIME = 2500
 
 export async function generateCombatEvent(dungeonRun, boss = false){
 
+  console.log('generating a combat')
+
   const adventurerInstance = dungeonRun.adventurerInstance
   const monsterDef = await generateMonster(dungeonRun, boss)
   const monsterInstance = new MonsterInstance(monsterDef)
+
+  console.log(`${adventurerInstance.displayName} vs ${monsterInstance.displayName}`)
 
   const combat = await generateCombat(adventurerInstance, monsterInstance, {
     floor: dungeonRun.floor,
     boss
   })
+
+  console.log('Result!', combat)
 
   adventurerInstance.cleanupState()
 
