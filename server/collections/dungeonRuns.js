@@ -12,6 +12,8 @@ const DEFAULTS = {
   rewards: {},
   events: [],
   elapsedTime: 0,
+  startTime: 0,
+  purged: false,
   adventurerState: {}
 }
 

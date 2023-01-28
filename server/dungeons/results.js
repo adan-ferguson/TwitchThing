@@ -5,6 +5,7 @@ import { emit } from '../socketServer.js'
 import DungeonRuns from '../collections/dungeonRuns.js'
 import { advXpToLevel } from '../../game/adventurerInstance.js'
 import { applyChestToUser } from './chests.js'
+import Combats from '../collections/combats.js'
 
 const REWARDS_TYPES = {
   xp: 'int',
@@ -47,6 +48,7 @@ export async function finalize(dungeonRunDoc){
   await saveAdventurer()
   await saveUser()
   await saveDungeonRun()
+  await purgeOldRuns(dungeonRunDoc.adventurer._id)
 
   async function saveAdventurer(){
     const adventurerDoc = await Adventurers.findByID(dungeonRunDoc.adventurer._id)
@@ -124,4 +126,48 @@ export async function cancelRun(dungeonRunDoc){
   const adventurerDoc = await Adventurers.findByID(dungeonRunDoc.adventurer._id)
   adventurerDoc.dungeonRunID = null
   await Adventurers.save(adventurerDoc)
+}
+
+export async function purgeAllOldRuns(){
+  const runs = await DungeonRuns.find({
+    query: {
+      finalized: true
+    }
+  })
+
+  let count = 0
+  for(let i = 0; i < runs.length; i++){
+    count += await purgeReplay(runs[i])
+  }
+  return count
+}
+
+export async function purgeOldRuns(adventurerID){
+  const runs = await DungeonRuns.find({
+    query: {
+      finalized: true,
+      'adventurer._id': adventurerID,
+      purged: { $ne: true }
+    },
+    sort: {
+      startTime: 1
+    }
+  })
+  runs.slice(5).forEach(dungeonRunDoc => purgeReplay(dungeonRunDoc))
+}
+
+async function purgeReplay(dungeonRunDoc){
+  const combatIDs = []
+  dungeonRunDoc.events.forEach(ev => {
+    if(ev.combatID && ev.roomType === 'combat'){
+      combatIDs.push(ev.combatID)
+    }
+  })
+  const result = await Combats.collection.deleteMany({
+    _id: { $in: combatIDs }
+  })
+  dungeonRunDoc.events = []
+  dungeonRunDoc.purged = true
+  await DungeonRuns.save(dungeonRunDoc)
+  return result.deletedCount
 }

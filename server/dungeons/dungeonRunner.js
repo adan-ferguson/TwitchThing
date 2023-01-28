@@ -9,8 +9,6 @@ let lastAdvancement = new Date()
 let running = false
 let activeRuns = {}
 
-const STARTING_FOOD = 3
-
 export const ADVANCEMENT_INTERVAL = 5000
 
 export function cancelAllRuns(){
@@ -98,6 +96,7 @@ export async function addRun(adventurerID, dungeonOptions){
     adventurer,
     dungeonOptions,
     floor: startingFloor,
+    startTime: Date.now()
   })
 
   adventurer.dungeonRunID = drDoc._id

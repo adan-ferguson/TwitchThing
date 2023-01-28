@@ -10,6 +10,7 @@ import { generateSimulatedCombat } from '../../combat.js'
 import { getAllMonsters } from '../../dungeons/monsters.js'
 import { generateTestInventory } from '../../items/generator.js'
 import Purchases from '../../collections/purchases.js'
+import { purgeAllOldRuns } from '../../dungeons/results.js'
 
 const router = express.Router()
 
@@ -55,6 +56,9 @@ router.post('/runcommand', async(req, res) => {
       Purchases.removeAll()
     ])
     result = 'Everything has been successfully reset.'
+  }else if(cmd === 'purge'){
+    const removed = await purgeAllOldRuns()
+    result = `Old runs purged. ${removed} combats removed.`
   }
   res.status(200).send({ result })
 })

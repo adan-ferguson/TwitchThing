@@ -3,6 +3,7 @@ import PreviousRunRow from './previousRunRow.js'
 
 const HTML = `
 <div class="content-well fill-contents">
+Note: This page has problems
     <di-list class="previous-runs-list"></di-list>
 </div>
 `
@@ -33,7 +34,7 @@ export default class AdventurerPreviousRunsPage extends Page{
 
     const list = this.querySelector('.previous-runs-list')
       .setOptions({
-        pageSize: 8
+        pageSize: 5
       })
 
     const rows = []
