@@ -60,10 +60,15 @@ async function advance(){
   const before = new Date()
 
   if(Object.keys(activeRuns).length){
+    console.log(1)
     emitSocketEvents()
+    console.log(2)
     clearFinishedRuns()
+    console.log(3)
     await advanceRuns()
+    console.log(4)
     await saveAllRuns()
+    console.log(5)
   }
 
   lastAdvancement = before
