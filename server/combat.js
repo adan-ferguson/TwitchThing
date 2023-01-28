@@ -247,6 +247,14 @@ class Combat{
         ...triggerEvent(this, this.fighterInstance2, 'startOfCombat')
       ]
     }
+    console.log('timeline entry', {
+      time: this._currentTime,
+      actions: [],
+      tickUpdates,
+      fighterState1: this.fighterInstance1.state,
+      fighterState2: this.fighterInstance2.state,
+      ...options
+    })
     this.timeline.push({
       time: this._currentTime,
       actions: [],
