@@ -145,13 +145,11 @@ export async function purgeAllOldRuns(){
 
   console.log(`found ${ids.length} old runs`)
 
-  const INTERVAL = 10
+  const INTERVAL = 100
   let count = 0
   for(let i = 0; i < runs.length; i += INTERVAL){
     console.log(`${i} to ${i + INTERVAL - 1}`)
-    const runs = await DungeonRuns.find({
-      _id: { $in: ids.slice(i, i + INTERVAL) }
-    })
+    const runs = await DungeonRuns.findByIDs(ids.slice(i, i + INTERVAL))
     console.log('purging runs...')
     count += await purgeReplays(runs)
     console.log(`${count} combats deleted.`)
