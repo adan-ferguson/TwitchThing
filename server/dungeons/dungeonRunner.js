@@ -22,16 +22,19 @@ export async function start(){
   }
 
   running = true
+  console.log('starting dungeon runner')
   const dungeonRuns = await DungeonRuns.find({
     query: {
       finished: false
     }
   })
+  console.log(`found ${dungeonRuns.length} runs`)
   const adventurers = await Adventurers.findByIDs(dungeonRuns.map(dr => dr.adventurer._id))
   const users = await Users.findByIDs(adventurers.map(adv => adv.userID))
 
   dungeonRuns.forEach(dr => {
     const adventurer = adventurers.find(adv => adv._id.equals(dr.adventurer._id))
+    console.log(`starting ${adventurer.name}'s run`)
     if(!adventurer || !adventurer.dungeonRunID?.equals(dr._id)){
       dr.finished = true
       DungeonRuns.save(dr)
@@ -48,6 +51,7 @@ export async function start(){
     activeRuns[dr._id] = new DungeonRunInstance(dr, user)
   })
 
+  console.log('go!')
   advance()
 }
 
