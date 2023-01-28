@@ -133,7 +133,7 @@ export async function purgeAllOldRuns(){
   console.log('purging...')
   const runs = await DungeonRuns.find({
     query: {
-      finalized: true
+      finalized: { $eq: true }
     }
   })
 
