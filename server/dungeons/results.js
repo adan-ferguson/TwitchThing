@@ -145,7 +145,7 @@ export async function purgeAllOldRuns(){
 
   console.log(`found ${ids.length} old runs`)
 
-  const INTERVAL = 50
+  const INTERVAL = 10
   let count = 0
   for(let i = 0; i < runs.length; i += INTERVAL){
     console.log(`${i} to ${i + INTERVAL - 1}`)
