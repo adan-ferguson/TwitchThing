@@ -60,15 +60,10 @@ async function advance(){
   const before = new Date()
 
   if(Object.keys(activeRuns).length){
-    console.log(1)
     emitSocketEvents()
-    console.log(2)
     clearFinishedRuns()
-    console.log(3)
     await advanceRuns()
-    console.log(4)
     await saveAllRuns()
-    console.log(5)
   }
 
   lastAdvancement = before
@@ -166,6 +161,7 @@ async function advanceRuns(){
   for(const id in activeRuns){
     const run = activeRuns[id]
     try {
+      console.log(`advancing ${run.adventurer.name}'s run`)
       await run.advance()
     }catch(ex){
       console.log('Run suspended due to error', run.doc, ex)
