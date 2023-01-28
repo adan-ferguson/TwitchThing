@@ -16,20 +16,14 @@ const MIN_RESULT_TIME = 2500
 
 export async function generateCombatEvent(dungeonRun, boss = false){
 
-  console.log('generating a combat')
-
   const adventurerInstance = dungeonRun.adventurerInstance
   const monsterDef = await generateMonster(dungeonRun, boss)
   const monsterInstance = new MonsterInstance(monsterDef)
-
-  console.log(`${adventurerInstance.displayName} vs ${monsterInstance.displayName}`)
 
   const combat = await generateCombat(adventurerInstance, monsterInstance, {
     floor: dungeonRun.floor,
     boss
   })
-
-  console.log('Result!', combat)
 
   adventurerInstance.cleanupState()
 
@@ -196,7 +190,7 @@ class Combat{
       Math.min(
         this.fighterInstance1.timeUntilNextUpdate,
         this.fighterInstance2.timeUntilNextUpdate,
-        MAX_TIME - this._currentTime
+        this.maxTime - this._currentTime
       ))
     this._currentTime += timeToAdvance
     if(timeToAdvance){
@@ -247,14 +241,6 @@ class Combat{
         ...triggerEvent(this, this.fighterInstance2, 'startOfCombat')
       ]
     }
-    console.log('timeline entry', {
-      time: this._currentTime,
-      actions: [],
-      tickUpdates,
-      fighterState1: this.fighterInstance1.state,
-      fighterState2: this.fighterInstance2.state,
-      ...options
-    })
     this.timeline.push({
       time: this._currentTime,
       actions: [],

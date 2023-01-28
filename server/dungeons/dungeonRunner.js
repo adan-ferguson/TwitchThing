@@ -161,7 +161,6 @@ async function advanceRuns(){
   for(const id in activeRuns){
     const run = activeRuns[id]
     try {
-      console.log(`advancing ${run.adventurer.name}'s run`)
       await run.advance()
     }catch(ex){
       console.log('Run suspended due to error', run.doc, ex)
