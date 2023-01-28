@@ -129,14 +129,18 @@ export async function cancelRun(dungeonRunDoc){
 }
 
 export async function purgeAllOldRuns(){
+
+  console.log('purging...')
   const runs = await DungeonRuns.find({
     query: {
       finalized: true
     }
   })
 
+  console.log(`found ${runs.length} old runs`)
+
   let count = 0
-  for(let i = 0; i < runs.length; i++){
+  for(let i = 0; i < Math.min(100, runs.length); i++){
     count += await purgeReplay(runs[i])
   }
   return count

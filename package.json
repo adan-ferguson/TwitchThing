@@ -9,11 +9,11 @@
   "type": "module",
   "scripts": {
     "renewcerts": "certbot renew",
-    "fullbuild": "git pull && npm install && npx gulp && npx webpack && npx pm2 stop twitchthing; npx pm2 start ./server/index.js --name twitchthing",
-    "watch": "webpack --watch",
-    "gulpwatch": "gulp watch",
+    "prod-restart":  "npx pm2 stop twitchthing; npx pm2 start ./server/index.js --name twitchthing",
+    "prod-build": "git pull && npm install && npx gulp && npx pm2 stop twitchthing; npx pm2 start ./server/index.js --name twitchthing",
+    "dev-webpack-watch": "webpack --watch",
+    "dev-gulp-watch": "gulp watch",
     "startdb": "mongod --dbpath db/data",
-    "ngrok": "ngrok start --all",
     "test": "mocha --recursive --reporter spec"
   },
   "author": "Me LOL",

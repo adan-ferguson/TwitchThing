@@ -21,8 +21,9 @@ export default class AdminLogsTab extends HTMLElement{
   }
 
   async show(){
+    debugger
     showLoader('Loading logs...')
-    const { errorlog, outputlog } = await fizzetch('/admin/logs')
+    const { errorlog, outputlog } = await fizzetch('/game/admin/logs')
     hideLoader()
     this.querySelector('textarea.output').textContent = outputlog
     this.querySelector('textarea.error').textContent = errorlog
