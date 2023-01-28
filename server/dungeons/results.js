@@ -133,15 +133,27 @@ export async function purgeAllOldRuns(){
   console.log('purging...')
   const runs = await DungeonRuns.find({
     query: {
-      finalized: { $eq: true }
+      finalized: { $eq: true },
+      purged: { $ne: true }
+    },
+    projection: {
+      finalized: 1,
+      _id: 1
     }
   })
+  const ids = runs.map(run => run._id)
 
-  console.log(`found ${runs.length} old runs`)
+  console.log(`found ${ids.length} old runs`)
 
+  const INTERVAL = 100
   let count = 0
-  for(let i = 0; i < Math.min(100, runs.length); i++){
-    count += await purgeReplay(runs[i])
+  for(let i = 0; i < runs.length; i += INTERVAL){
+    console.log(`${i} to ${i + INTERVAL - 1}`)
+    const runs = await DungeonRuns.find({
+      _id: { $in: ids.slice(i, i + INTERVAL) }
+    })
+    count += await purgeReplays(runs)
+    console.log(`${count} combats deleted.`)
   }
   return count
 }
@@ -157,21 +169,24 @@ export async function purgeOldRuns(adventurerID){
       startTime: 1
     }
   })
-  runs.slice(5).forEach(dungeonRunDoc => purgeReplay(dungeonRunDoc))
+  purgeReplays(runs.slice(5))
 }
 
-async function purgeReplay(dungeonRunDoc){
+async function purgeReplays(drDocs){
   const combatIDs = []
-  dungeonRunDoc.events.forEach(ev => {
-    if(ev.combatID && ev.roomType === 'combat'){
-      combatIDs.push(ev.combatID)
-    }
-  })
+  for(let doc of drDocs){
+    doc.events.forEach(ev => {
+      if (ev.combatID && ev.roomType === 'combat'){
+        combatIDs.push(ev.combatID)
+      }
+    })
+    doc.events = []
+    doc.purged = true
+    await DungeonRuns.save(doc)
+  }
+  console.log('Deleting combats')
   const result = await Combats.collection.deleteMany({
     _id: { $in: combatIDs }
   })
-  dungeonRunDoc.events = []
-  dungeonRunDoc.purged = true
-  await DungeonRuns.save(dungeonRunDoc)
   return result.deletedCount
 }

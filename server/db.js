@@ -97,6 +97,6 @@ export default {
   },
   find: async (collection, { id = null, query = {}, projection = {}, defaults = {}, sort = {} }) => {
     const docs = await connection.collection(collection).find(qoid(id ?? query), { projection }).sort(sort).toArray()
-    return docs.map(doc => fix(doc, defaults))
+    return docs.map(doc => fix(doc, defaults, projection))
   }
 }
