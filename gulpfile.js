@@ -127,6 +127,14 @@ function makeComponentImporter(targetPath){
   }
 }
 
+function copyFromDeploy(){
+  return gulp.src('./deploy/scripts/**/*').pipe(gulp.dest('./client_dist/scripts'))
+}
+
+function copyToDeploy(){
+  return gulp.src('./client_dist/scripts/**/*').pipe(gulp.dest('./deploy/scripts'))
+}
+
 export const watch = () => {
   gulp.watch('./client/js/components/**/*.js', { ignoreInitial: false }, importComponents)
   gulp.watch('./client/styles/**/*.sass', { ignoreInitial: false }, buildStyles)
@@ -134,6 +142,8 @@ export const watch = () => {
   gulp.watch(['./game/*/**/*.js', '!./game/**/combined.js'], { ignoreInitial: false }, generateRegistries)
 }
 
+export const prod = gulp.series(importComponents, buildStyles, copyAssets, generateRegistries, copyFromDeploy)
+export const deploy = gulp.series(importComponents, buildStyles, copyAssets, generateRegistries, copyToDeploy)
 export default gulp.series(importComponents, buildStyles, copyAssets, generateRegistries)
 
 function toClassName(filename){

@@ -109,7 +109,7 @@ export default class App extends HTMLElement{
       return
     }
 
-    document.title = 'AutoCrawl - ' + page.constructor.name
+    document.title = 'AutoCrawl'
 
     if(page.useHistory){
       addPageToHistory(page, replaceHistoryState)
