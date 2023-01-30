@@ -14,6 +14,8 @@ const MAX_TIME = 1000 * 120
 const BOSS_MAX_TIME = 1000 * 300
 const MIN_RESULT_TIME = 2500
 
+const MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS = 16
+
 export async function generateCombatEvent(dungeonRun, boss = false){
 
   const adventurerInstance = dungeonRun.adventurerInstance
@@ -187,11 +189,19 @@ class Combat{
 
   _advanceTime(){
     const timeToAdvance = Math.ceil(
-      Math.min(
+      Math.max(0, Math.min(
         this.fighterInstance1.timeUntilNextUpdate,
         this.fighterInstance2.timeUntilNextUpdate,
         this.maxTime - this._currentTime
-      ))
+      )))
+    if(!timeToAdvance){
+      this._consecutiveZeroTimeAdvancements++
+      if(this._consecutiveZeroTimeAdvancements >= MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS){
+        throw 'Combat was no longer advancing time, probably infinite loop.'
+      }
+    }else{
+      this._consecutiveZeroTimeAdvancements = 0
+    }
     this._currentTime += timeToAdvance
     if(timeToAdvance){
       this.fighterInstance1.advanceTime(timeToAdvance)
