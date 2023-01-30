@@ -27,9 +27,9 @@ export default {
           cooldown: 30000,
           description: 'Attack 5 times for [physAttack0.4] damage.',
           actions:
-            fillArray(() => attackAction({
+            fillArray(() => [attackAction({
               damageMulti: 0.5
-            }), 5)
+            })], 5)
         }
       }
     },

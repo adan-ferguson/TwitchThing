@@ -15,6 +15,7 @@ const BOSS_MAX_TIME = 1000 * 300
 const MIN_RESULT_TIME = 2500
 
 const MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS = 16
+const MAX_TRIGGER_COUNTER = 500
 
 export async function generateCombatEvent(dungeonRun, boss = false){
 
@@ -72,34 +73,32 @@ export async function generateSimulatedCombat(fighterDef1, fighterDef2){
 }
 
 export async function generateCombat(fighterInstance1, fighterInstance2, params = {}){
-
-  try {
-    const combat = new Combat(fighterInstance1, fighterInstance2, params)
-    return await Combats.save({
-      startTime: Date.now(),
-      duration: combat.duration,
-      fighter1: {
-        id: 1,
-        data: fighterInstance1.fighterData,
-        startState: combat.fighterStartState1,
-        endState: combat.fighterEndState1
-      },
-      fighter2: {
-        id: 2,
-        data: fighterInstance2.fighterData,
-        startState: combat.fighterStartState2,
-        endState: combat.fighterEndState2
-      },
-      timeline: combat.timeline,
-      result: combat.result,
-      params
-    })
-  }catch(ex){
-    console.error('Combat crashed')
-  }
+  const combat = new Combat(fighterInstance1, fighterInstance2, params)
+  return await Combats.save({
+    startTime: Date.now(),
+    duration: combat.duration,
+    fighter1: {
+      id: 1,
+      data: fighterInstance1.fighterData,
+      startState: combat.fighterStartState1,
+      endState: combat.fighterEndState1
+    },
+    fighter2: {
+      id: 2,
+      data: fighterInstance2.fighterData,
+      startState: combat.fighterStartState2,
+      endState: combat.fighterEndState2
+    },
+    timeline: combat.timeline,
+    result: combat.result,
+    params
+  })
 }
 
 class Combat{
+
+  _triggerCounter = 0
+  _consecutiveZeroTimeAdvancements = 0
 
   constructor(fighterInstance1, fighterInstance2, params){
     this.params = params
@@ -159,6 +158,13 @@ class Combat{
     return this.params.boss ?? false
   }
 
+  incrementTriggerCounter(){
+    this._triggerCounter++
+    if(this._triggerCounter > MAX_TRIGGER_COUNTER){
+      throw 'Trigger counter excessively high, probably infinite loop.'
+    }
+  }
+
   getEnemyOf(fighterInstance){
     return this.fighterInstance1 === fighterInstance ? this.fighterInstance2 : this.fighterInstance1
   }
@@ -184,6 +190,8 @@ class Combat{
         actions,
         tickUpdates
       })
+
+      this._triggerCounter = 0
     }
   }
 

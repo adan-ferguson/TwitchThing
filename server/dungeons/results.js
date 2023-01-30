@@ -126,6 +126,7 @@ export async function cancelRun(dungeonRunDoc){
   const adventurerDoc = await Adventurers.findByID(dungeonRunDoc.adventurer._id)
   adventurerDoc.dungeonRunID = null
   await Adventurers.save(adventurerDoc)
+  await DungeonRuns.delete(dungeonRunDoc)
 }
 
 export async function purgeAllOldRuns(){

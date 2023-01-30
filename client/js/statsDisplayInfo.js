@@ -86,6 +86,15 @@ const statDefinitionsInfo = {
       return `+${Math.round(value * 100)}%`
     }
   },
+  [StatDefs.critLifesteal.name]: {
+    text: 'Crit Lifesteal',
+    displayedValueFn: (value, { style }) => {
+      if(style === StatsDisplayStyle.CUMULATIVE){
+        return `${Math.round(value * 100)}%`
+      }
+      return `+${Math.round(value * 100)}%`
+    }
+  },
   [StatDefs.combatXP.name]: {
     text: 'XP Gain'
   },

@@ -64,6 +64,7 @@ export function takeDamage(combat, subject, damageInfo){
 }
 
 export function triggerEvent(combat, owner, eventName, triggerData = {}){
+  combat.incrementTriggerCounter()
   const effects = owner.triggeredEffects(eventName)
   const results = []
   for(let effect of effects){

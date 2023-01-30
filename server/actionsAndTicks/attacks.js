@@ -131,18 +131,22 @@ function dealDamage(combat, actor, enemy, damageInfo){
 
   const damageResult = takeDamage(combat, enemy, damageInfo)
 
-  const lifesteal = Math.min(
-    actor.hpMax - actor.hp,
-    Math.ceil(actor.stats.get('lifesteal').value * damageResult.data.totalDamage)
+  let lifesteal = actor.stats.get('lifesteal').value
+  if(damageInfo.crit){
+    lifesteal += actor.stats.get('critLifesteal').value
+  }
+
+  const hpToGain = Math.ceil(
+    Math.min(actor.hpMax - actor.hp, lifesteal * damageResult.data.totalDamage)
   )
 
-  if(lifesteal){
+  if(hpToGain){
     damageResult.triggeredEvents.push({
       eventName: 'lifesteal',
       owner: actor.uniqueID,
       results: [
         performGainHealthAction(combat, actor, {
-          scaling: { flat: lifesteal }
+          scaling: { flat: hpToGain }
         })
       ]
     })

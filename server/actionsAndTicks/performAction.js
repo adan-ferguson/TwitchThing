@@ -63,22 +63,7 @@ export function useEffectAbility(combat, effect, eventName, triggerData = null){
   }
   const results = []
   let cancelled = false
-  for(let i = 0; i < ability.actions.length; i++){
-    let actionDef = ability.actions[i]
-    if(_.isFunction(actionDef)){
-      actionDef = actionDef({ combat, owner: effect.owner, results, triggerData })
-    }
-    const actionResult = doAction(combat, effect, actionDef) ?? {
-      type: 'blank',
-      subject: effect.owner.uniqueID
-    }
-    validateActionResult(actionResult)
-    results.push(actionResult)
-    if(actionResult.cancelled && !actionDef.continueIfCancelled){
-      cancelled = true
-      break
-    }
-  }
+  iterateActions(ability.actions)
 
   effect.useAbility(eventName)
 
@@ -88,6 +73,34 @@ export function useEffectAbility(combat, effect, eventName, triggerData = null){
     cancelled,
     owner: effect.owner.uniqueID,
     results: results.filter(r => r)
+  }
+
+  function iterateActions(actions){
+    for(let i = 0; i < actions.length; i++){
+      let actionDef = actions[i]
+      if(_.isFunction(actionDef)){
+        actionDef = actionDef({ combat, owner: effect.owner, results, triggerData })
+      }else if(_.isArray(actionDef)){
+        // Decoupled action array, use this to define actions where if one fails, the
+        // subsequent ones should still be performed.
+        //
+        // eg.
+        // actions: [[attackDef],[attackDef],[attackDef]] would do all 3 if 1st dodged
+        // actions: [attackDef, attackDef, attackDef] would not
+        iterateActions(actionDef)
+      }else{
+        const actionResult = doAction(combat, effect, actionDef) ?? {
+          type: 'blank',
+          subject: effect.owner.uniqueID
+        }
+        validateActionResult(actionResult)
+        results.push(actionResult)
+        if(actionResult.cancelled && !actionDef.continueIfCancelled){
+          cancelled = true
+          return
+        }
+      }
+    }
   }
 }
 

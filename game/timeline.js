@@ -28,7 +28,7 @@ export default class Timeline extends EventEmitter{
   }
 
   get timeSinceLastEntry(){
-    return Math.max(0, this.time - this.currentEntry.time)
+    return Math.max(0, this.time - this.currentEntry?.time ?? 0)
   }
 
   get firstEntry(){

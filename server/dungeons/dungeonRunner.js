@@ -163,7 +163,10 @@ async function advanceRuns(){
     try {
       await run.advance()
     }catch(ex){
-      console.log('Run suspended due to error', run.doc, ex)
+      emit(run.doc._id, 'dungeon run update', {
+        error: ex,
+        _id: run.doc._id
+      })
       cancelRun(run.doc)
       delete activeRuns[id]
     }

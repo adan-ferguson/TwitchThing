@@ -1,13 +1,13 @@
 import * as Loader from '../loader.js'
 import fizzetch from '../fizzetch.js'
 import { hideAll as hideAllTippys } from 'tippy.js'
-import SimpleModal from './simpleModal.js'
 import { getSocket } from '../socketClient.js'
 import { showPopup } from './popup.js'
 import { fadeIn } from '../animations/simple.js'
 import { addPageToHistory } from '../history.js'
 import { pathToPage } from './pathRouter.js'
 import { cancelAllFlyingText } from './visualEffects/flyingTextEffect.js'
+import _ from 'lodash'
 
 const HTML = `
 <di-header></di-header>
@@ -100,7 +100,7 @@ export default class App extends HTMLElement{
       if(page.useHistory){
         addPageToHistory(page, replaceHistoryState)
       }
-      this.setPage('error', { error: ex.error ?? ex })
+      this.showError(ex.error ?? ex)
       return
     }
 
@@ -125,6 +125,11 @@ export default class App extends HTMLElement{
   setBackground(color, texture){
     this.style.backgroundColor = color
     this.style.backgroundImage = texture ? `url("/assets/textures/${texture}")` : null
+  }
+
+  showError(error){
+    this.setPage('')
+    alert(_.isObject(error) ? JSON.stringify(error) : error)
   }
 
   _resetBackground(){

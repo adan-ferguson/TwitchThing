@@ -9,14 +9,14 @@ export default {
         active: {
           cooldown: 7000 + 1000 * level,
           actions: [
-            attackAction({
+            [attackAction({
               damageType: 'phys',
               damageMulti
-            }),
-            attackAction({
+            })],
+            [attackAction({
               damageType: 'magic',
               damageMulti
-            })
+            })]
           ]
         }
       },

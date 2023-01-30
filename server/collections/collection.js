@@ -69,7 +69,11 @@ export default class Collection{
     await this.collection.updateOne({ _id }, { $set })
   }
 
+  async delete({ _id }){
+    await this.collection.deleteOne({ _id })
+  }
+
   async removeAll(){
-    await db.conn().collection(this.collectionName).deleteMany({})
+    await this.collection.deleteMany({})
   }
 }

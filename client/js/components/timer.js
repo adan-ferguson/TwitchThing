@@ -78,7 +78,7 @@ export function betterDateFormat(ms, options = {}){
   textContent += ':' + seconds.toString().padStart(2, '0')
 
   if(options.milliseconds){
-    textContent += ':' + milliseconds.toString().padStart(2, '0')
+    textContent += '.' + milliseconds.toString().padStart(2, '0')
   }
 
   return textContent
