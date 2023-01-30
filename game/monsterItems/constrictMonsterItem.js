@@ -1,6 +1,7 @@
 import statusEffectAction from '../actions/statusEffectAction.js'
 import { freezeActionBarMod } from '../mods/combined.js'
-import damageSelfAction from '../actions/damageSelfAction.js'
+import damageAction from '../actions/dealDamageAction.js'
+import takeDamageAction from '../actions/takeDamageAction.js'
 
 export default function(def){
   return {
@@ -23,8 +24,10 @@ export default function(def){
                   tick: {
                     cooldown: 1000,
                     actions: [
-                      damageSelfAction({
-                        damage: owner.physPower * 0.16
+                      takeDamageAction({
+                        scaling: {
+                          flat: owner.physPower * 0.16
+                        }
                       })
                     ]
                   }

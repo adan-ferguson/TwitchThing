@@ -1,11 +1,10 @@
-import { performAttackAction } from './attacks.js'
+import { performAttackAction, performDealDamageAction, performTakeDamageAction } from './attacks.js'
 import _ from 'lodash'
 import {
   performCancelAction,
   performGainHealthAction, performParentEffectAction, performRefreshCooldownsAction,
   performRemoveStackAction,
-  performTurnTimeAction,
-  takeDamage
+  performTurnTimeAction
 } from './common.js'
 import { performRemoveStatusEffectAction, performStatusEffectAction } from './statusEffects.js'
 import { blankActionResult, validateActionResult } from '../../game/actionResult.js'
@@ -95,7 +94,7 @@ export function useEffectAbility(combat, effect, eventName, triggerData = null){
         }
         validateActionResult(actionResult)
         results.push(actionResult)
-        if(actionResult.cancelled && !actionDef.continueIfCancelled){
+        if(actionResult.cancelled){
           cancelled = true
           return
         }
@@ -118,8 +117,10 @@ function doAction(combat, effect, actionDef){
   const type = _.isString(actionDef) ? actionDef : actionDef.type
   if(type === 'attack'){
     return performAttackAction(combat, owner, effect, actionDef)
+  }else if(type === 'dealDamage'){
+    return performDealDamageAction(combat, owner, actionDef)
   }else if(type === 'takeDamage'){
-    return takeDamage(combat, owner, actionDef)
+    return performTakeDamageAction(combat, owner, actionDef)
   }else if(type === 'statusEffect'){
     return performStatusEffectAction(combat, effect, actionDef)
   }else if(type === 'removeStatusEffect'){

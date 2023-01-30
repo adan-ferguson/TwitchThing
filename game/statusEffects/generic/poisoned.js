@@ -1,5 +1,5 @@
 import { roundToFixed } from '../../utilFunctions.js'
-import takeDamage from '../../actions/damageSelfAction.js'
+import takeDamageAction from '../../actions/takeDamageAction.js'
 
 export default {
   stateParamsFn: ({ sourceEffect, params = {} }) => {
@@ -19,9 +19,11 @@ export default {
         tick: {
           initialCooldown: 1000,
           actions: [
-            takeDamage({
-              damageType: stateParams.damageType,
-              damage
+            takeDamageAction({
+              scaling: {
+                flat: damage
+              },
+              damageType: stateParams.damageType
             })
           ]
         }

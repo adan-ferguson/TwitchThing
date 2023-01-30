@@ -1,8 +1,11 @@
-import { performGainHealthAction, takeDamage, triggerEvent } from './common.js'
+import { performGainHealthAction, triggerEvent } from './common.js'
 import { makeActionResult } from '../../game/actionResult.js'
 import attackAction from '../../game/actions/attackAction.js'
 import { attackDamageStat } from '../../game/stats/combined.js'
 import { randomBetween } from '../../game/rando.js'
+import scaledNumber from '../../game/scaledNumber.js'
+import dealDamageAction from '../../game/actions/dealDamageAction.js'
+import takeDamageAction from '../../game/actions/takeDamageAction.js'
 
 export function performAttackAction(combat, attacker, effect = null, actionDef = {}){
 
@@ -127,9 +130,9 @@ function missAttack(actor){
   return Math.random() + actor.stats.get('missChance').value > 1
 }
 
-function dealDamage(combat, actor, enemy, damageInfo){
+export function dealDamage(combat, actor, enemy, damageInfo){
 
-  const damageResult = takeDamage(combat, enemy, damageInfo)
+  const damageActionResult = takeDamage(combat, enemy, damageInfo)
 
   let lifesteal = actor.stats.get('lifesteal').value
   if(damageInfo.crit){
@@ -137,11 +140,11 @@ function dealDamage(combat, actor, enemy, damageInfo){
   }
 
   const hpToGain = Math.ceil(
-    Math.min(actor.hpMax - actor.hp, lifesteal * damageResult.data.totalDamage)
+    Math.min(actor.hpMax - actor.hp, lifesteal * damageActionResult.data.totalDamage)
   )
 
   if(hpToGain){
-    damageResult.triggeredEvents.push({
+    damageActionResult.triggeredEvents.push({
       eventName: 'lifesteal',
       owner: actor.uniqueID,
       results: [
@@ -152,5 +155,71 @@ function dealDamage(combat, actor, enemy, damageInfo){
     })
   }
 
-  return damageResult
+  return damageActionResult
+}
+
+export function takeDamage(combat, subject, damageInfo){
+
+  damageInfo = {
+    damage: 0,
+    damageType: 'phys',
+    ignoreDefense: false,
+    ...damageInfo
+  }
+
+  const result = {
+    baseDamage: subject.stats.get('damageTaken').value * damageInfo.damage,
+    blocked: 0,
+    damageType: damageInfo.damageType
+  }
+  const triggeredEvents = []
+  let damage = result.baseDamage
+
+  if(!damageInfo.ignoreDefense){
+    const blocked = Math.floor(result.baseDamage * subject.stats.get(damageInfo.damageType + 'Def').value)
+    damage = result.baseDamage - blocked
+    result.blocked = blocked
+  }
+
+  damage = Math.ceil(damage)
+
+  result.damageDistribution = subject.statusEffectsData.ownerTakingDamage(damage)
+  subject.hp -= result.damageDistribution.hp
+  result.totalDamage = Object.values(result.damageDistribution).reduce((prev, val) => prev + val)
+
+  if(damage > 0){
+    triggeredEvents.push(...triggerEvent(combat, subject, 'takeDamage'))
+  }
+
+  return makeActionResult({
+    data: result,
+    type: 'damage',
+    subject: subject.uniqueID,
+    triggeredEvents
+  })
+}
+
+export function performDealDamageAction(combat, actor, damageDef){
+  damageDef = dealDamageAction(damageDef)
+  const subject = damageDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
+  const damage = Math.ceil(scaledNumber(actor, damageDef.scaling))
+  if(damage <= 0){
+    return
+  }
+  return dealDamage(combat, actor, subject, {
+    ...damageDef,
+    damage
+  })
+}
+
+export function performTakeDamageAction(combat, actor, damageDef){
+  damageDef = takeDamageAction(damageDef)
+  const damage = Math.ceil(scaledNumber(actor, damageDef.scaling))
+  if(damage <= 0){
+    return
+  }
+  return takeDamage(combat, actor, {
+    ...damageDef,
+    damage
+  })
 }

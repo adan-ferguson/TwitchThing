@@ -1,6 +1,6 @@
-import damageSelfAction from '../../actions/damageSelfAction.js'
 import attackAction from '../../actions/attackAction.js'
 import { magicScalingMod } from '../../mods/combined.js'
+import takeDamageAction from '../../actions/takeDamageAction.js'
 
 export default {
   baseStats: {
@@ -25,14 +25,16 @@ export default {
         active: {
           description: 'Self-destruct and deal HEAVY magic damage, increased by amount of health remaining.',
           actions: [
-            attackAction({
-              damageType: 'magic',
-              continueIfCancelled: true
-            }),
-            damageSelfAction({
-              damagePct: 1,
-              ignoreDefense: true
-            })
+            [attackAction({ damageType: 'magic' })],
+            [
+              takeDamageAction({
+                scaling: {
+                  hp: 1
+                },
+                damageType: 'magic',
+                ignoreDefense: true
+              })
+            ]
           ]
         }
       }
