@@ -5,9 +5,15 @@ import Purchases from '../collections/purchases.js'
 import { spendGold } from '../loadouts/inventory.js'
 
 export async function getUserShop(userDoc){
+  const purchases = await Purchases.find({
+    query: {
+      userID: userDoc._id
+    }
+  })
   const items = []
   items.push(adventurerSlotShopItem(userDoc.inventory.adventurerSlots))
-  items.push(...await chestShopItems(userDoc))
+  items.push(await scrapShopItem(userDoc, purchases))
+  items.push(...await chestShopItems(userDoc, purchases))
   return items
 }
 
@@ -26,6 +32,9 @@ export async function buyShopItem(userDoc, shopItemId){
     returnValue.message = 'Adventurer Slot purchased successfully.'
   }else if(shopItem.type === 'chest'){
     returnValue.chest = await shopChestPurchased(userDoc, shopItem.data)
+  }else if(shopItem.type === 'scrap'){
+    userDoc.inventory.scrap += shopItem.data.scrap
+    returnValue.message = 'Scrap purchased successfully.'
   }
 
   await Purchases.save({

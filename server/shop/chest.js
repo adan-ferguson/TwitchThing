@@ -1,17 +1,16 @@
-import Purchases from '../collections/purchases.js'
 import { applyChestToUser, generateRandomChest } from '../dungeons/chests.js'
 
 const CHEST_BASE_PRICE = 100
 // const PRICE_GROWTH = 250
 // const PRICE_GROWTH_RATE = 0.2
 
-export async function chestShopItems(userDoc){
-  const purchases = await countPurchases(userDoc._id)
+export async function chestShopItems(userDoc, purchases){
+  const purchasesByClass = await countPurchases(purchases)
 
   const chests = []
 
   Object.keys(userDoc.features.advClasses).forEach(className => {
-    chests.push(chestDef(className, purchases[className] ?? 0))
+    chests.push(chestDef(className, purchasesByClass[className] ?? 0))
   })
 
   return chests
@@ -27,12 +26,7 @@ export async function shopChestPurchased(userDoc, chestData){
   return chest
 }
 
-async function countPurchases(userID){
-  const purchases = await Purchases.find({
-    query: {
-      userID
-    }
-  })
+async function countPurchases(purchases){
   const byType = {}
   purchases.forEach(purchase => {
     if(purchase.shopItem.type !== 'chest'){

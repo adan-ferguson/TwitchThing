@@ -2,8 +2,7 @@ import Items from './items/combined.js'
 import FighterItemInstance from './fighterItemInstance.js'
 import OrbsData from './orbsData.js'
 import { uniqueID } from './utilFunctions.js'
-
-const BASE_UPGRADE_SCRAP = 3
+import { ITEM_RARITIES } from '../server/items/generator.js'
 
 export default class AdventurerItemInstance extends FighterItemInstance{
 
@@ -66,8 +65,13 @@ export default class AdventurerItemInstance extends FighterItemInstance{
     return this.itemDef.level ?? 1
   }
 
+  get rarityInfo(){
+    return ITEM_RARITIES[this.itemDef.rarity ?? 0]
+  }
+
   get scrapValue(){
-    return this.orbs.total + (this.orbs.total + BASE_UPGRADE_SCRAP) * (this.level * (this.level - 1)) / 2
+    const scrapVal = this.rarityInfo.scrapValue
+    return scrapVal * (1 + this.level * (this.level - 1))
   }
 
   upgradeInfo(){

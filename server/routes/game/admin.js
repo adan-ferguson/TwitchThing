@@ -8,7 +8,6 @@ import { validateParam } from '../../validations.js'
 import { getErrorLogTail, getOutputLogTail } from '../../logging.js'
 import { generateSimulatedCombat } from '../../combat.js'
 import { getAllMonsters } from '../../dungeons/monsters.js'
-import { generateTestInventory } from '../../items/generator.js'
 import Purchases from '../../collections/purchases.js'
 import { purgeAllOldRuns } from '../../dungeons/results.js'
 

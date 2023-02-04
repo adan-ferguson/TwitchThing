@@ -27,6 +27,8 @@ export function shopItemDisplayInfo(shopItemDef){
         return makeImg('/assets/icons/adventurerSlot.svg')
       }else if(shopItemDef.type === 'chest'){
         return chestImage(shopItemDef.data.className)
+      }else if(shopItemDef.type === 'scrap'){
+        return '<i class="fa-solid fa-recycle"></i>'
       }
     },
     description,

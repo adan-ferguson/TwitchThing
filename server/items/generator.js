@@ -2,12 +2,27 @@ import BaseItems from '../../game/items/combined.js'
 import { v4 } from 'uuid'
 import Picker from '../../game/picker.js'
 
-const itemPicker = new Picker(BaseItems, {
-  valueFormula: baseItemDef => baseItemDef.orbs,
-  levelFormula: level => level / 3,
-  lowerDeviation: 0.95,
-  higherDeviation: 0.45
-})
+export const ITEM_RARITIES = [
+  {
+    name: 'common',
+    weight: 90,
+    value: 3
+  },
+  {
+    name: 'uncommon',
+    weight: 30,
+    value: 8
+  },
+  {
+    name: 'rare',
+    weight: 10,
+    value: 15
+  }
+]
+
+export function getItemRarity(val = 0){
+  return ITEM_RARITIES[val ?? 0]
+}
 
 export function generateItemDef({ group, name }){
   if(!BaseItems[group][name]){
@@ -21,19 +36,21 @@ export function generateItemDef({ group, name }){
   }
 }
 
-export function getItemPicker(){
-  return itemPicker
+export function getItemPicker(value, specificClass = false){
+  return new Picker(BaseItems, {
+    weightFormula: baseItemDef => {
+      const rarity = ITEM_RARITIES[baseItemDef.rarity ?? 0]
+      if(rarity.name !== 'common' && value < rarity.value){
+        return 0
+      }
+      if(specificClass && baseItemDef.group !== specificClass){
+        return 0
+      }
+      return rarity.weight
+    }
+  })
 }
 
 export function chooseRandomBasicItem(chestLevel, specificClass = null){
-  return itemPicker.pick(chestLevel, itemDef => {
-    return specificClass ? itemDef.group === specificClass : true
-  })
-}
-
-export function generateTestInventory(itemsObj){
-  Object.values(BaseItems.fighter).forEach(i => {
-    const itemDef = generateItemDef(BaseItems.fighter[i])
-    itemsObj[itemDef.id] = itemDef
-  })
+  return getItemPicker(chestLevel, specificClass).pickOne()
 }

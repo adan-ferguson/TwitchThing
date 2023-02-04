@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 50 50">
+    <ellipse
+            fill="#7a7a7a"
+            stroke-width="2"
+            stroke="white"
+            cx="25"
+            cy="25"
+            rx="23"
+            ry="23"
+    />
+    <line stroke-width="2" stroke="white" x1="25" y1="35" x2="35" y2="25"/>
+    />
+    <line stroke-width="3" stroke="white" x1="32" y1="32" x2="36" y2="36"/>
+    />
+    <polygon
+            fill="white"
+            points="10,10 26,30 30,26"
+    />
+</svg>

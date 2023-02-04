@@ -6,6 +6,8 @@ import DungeonRuns from '../collections/dungeonRuns.js'
 import { advXpToLevel } from '../../game/adventurerInstance.js'
 import { applyChestToUser } from './chests.js'
 import Combats from '../collections/combats.js'
+import { adjustInventoryBasics } from '../loadouts/inventory.js'
+import { checkForUnlocks } from '../user/unlocks.js'
 
 const REWARDS_TYPES = {
   xp: 'int',
@@ -45,6 +47,9 @@ export async function finalize(dungeonRunDoc){
     throw { error: 'Dungeon run is not finished yet.' }
   }
 
+  const lastEvent = dungeonRunDoc.events.at(-1)
+  const deepestFloor = dungeonRunDoc.floor + (lastEvent.roomType === 'cleared' ? 1 : 0)
+
   await saveAdventurer()
   await saveUser()
   await saveDungeonRun()
@@ -56,8 +61,7 @@ export async function finalize(dungeonRunDoc){
     adventurerDoc.dungeonRunID = null
     adventurerDoc.xp = xpAfter
     adventurerDoc.level = advXpToLevel(xpAfter)
-    adventurerDoc.accomplishments.deepestFloor =
-      Math.max(dungeonRunDoc.floor, adventurerDoc.accomplishments.deepestFloor)
+    adventurerDoc.accomplishments.deepestFloor = Math.max(deepestFloor, adventurerDoc.accomplishments.deepestFloor)
     await Adventurers.save(adventurerDoc)
   }
 
@@ -68,15 +72,16 @@ export async function finalize(dungeonRunDoc){
       applyChestToUser(userDoc, chest)
     })
 
-    if(!userDoc.features.dungeonPicker && dungeonRunDoc.floor > 1){
+    if(!userDoc.features.dungeonPicker && deepestFloor > 1){
       userDoc.features.dungeonPicker = 1
     }
 
     if(!userDoc.accomplishments.firstRunFinished){
-      userDoc.inventory.items.basic = { fighter : { slash : 1 } }
+      adjustInventoryBasics(userDoc, { fighter : { slash : 1 } })
       userDoc.accomplishments.firstRunFinished = 1
       userDoc.features.editLoadout = 1
       emit(userDoc._id, 'show popup', {
+        title: 'You fool!',
         message: `You got crushed! What were you thinking? You didn't even have a weapon!
         
         I just hooked you up with an item. Go to your adventurer's inventory to equip it.`
@@ -87,32 +92,14 @@ export async function finalize(dungeonRunDoc){
     userDoc.accomplishments.chestsFound = cfBefore + (dungeonRunDoc.rewards.chests?.length ?? 0)
     if(cfBefore < 10 && userDoc.accomplishments.chestsFound >= 10){
       emit(userDoc._id, 'show popup', {
+        title: 'Hey!',
         message: `Monsters have been complaining that SOMEONE has been stealing their treasure chests!
         
         They're going to start hiding them a bit better.`
       })
     }
 
-    if(!userDoc.features.shop && dungeonRunDoc.floor >= 11){
-      userDoc.features.shop = 1
-      emit(userDoc._id, 'show popup', {
-        message: `You've unlocked the shop, where you can buy various things.
-        
-        Visit it from the main page, or via the gold counter in the header.`
-      })
-    }
-
-    if(!userDoc.features.workshop && dungeonRunDoc.floor >= 21){
-      userDoc.features.workshop = 1
-      emit(userDoc._id, 'show popup', {
-        message: `You've unlocked the forge, where you can craft and upgrade items.
-        
-        Visit it from the main page, or via the scrap counter in the header.`
-      })
-    }
-
-    userDoc.accomplishments.deepestFloor = Math.max(userDoc.accomplishments.deepestFloor, dungeonRunDoc.floor)
-
+    userDoc.accomplishments.deepestFloor = Math.max(userDoc.accomplishments.deepestFloor, deepestFloor)
     await Users.save(userDoc)
   }
 

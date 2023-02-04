@@ -142,7 +142,9 @@ export default class App extends HTMLElement{
   }
 
   async _fetchUser(){
-    this._setUser(await fizzetch('/user'))
+    const { user, popups } = await fizzetch('/user/appfetch')
+    this._setUser(user)
+    showPopup(popups)
   }
 }
 

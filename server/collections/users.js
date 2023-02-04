@@ -25,7 +25,8 @@ const DEFAULTS = {
     advClasses: {
       fighter: 2,
       mage: 2,
-      paladin: 2
+      paladin: 2,
+      rogue: 0
     }
   },
   inventory: {
