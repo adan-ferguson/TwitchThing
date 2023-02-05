@@ -11,17 +11,17 @@ const CHEST_SVG = `
 </svg>
 `
 
-const CHEST = orbSrc => `
+const CHEST = orbSvg => `
 <div class="chest-el">
   ${CHEST_SVG}
-  <img class="absolute-center-both" src="${orbSrc}">
+  <div class="absolute-center-both">${orbSvg}</div>
 </div>
 `
 
 export default function(className){
   const classInfo = classDisplayInfo(className)
   const el = makeEl({
-    content: CHEST(classInfo.orbIcon),
+    content: CHEST(classInfo.icon),
     class: 'chest-image'
   })
   el.style.color = classInfo.color

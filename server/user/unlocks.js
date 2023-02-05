@@ -39,6 +39,7 @@ export function checkForUnlocks(userDoc){
     userDoc.inventory.scrap += 100
     userDoc.inventory.gold += 1000
     popups.push(zoneCleared(3, {
+      message: 'Here, have some stuff',
       items: { scrap: 100, gold: 1000 }
     }))
   }

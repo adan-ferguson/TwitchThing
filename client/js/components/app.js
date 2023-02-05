@@ -129,7 +129,7 @@ export default class App extends HTMLElement{
 
   showError(error){
     this.setPage('')
-    alert(_.isObject(error) ? JSON.stringify(error) : error)
+    console.log(_.isObject(error) ? JSON.stringify(error) : error)
   }
 
   _resetBackground(){

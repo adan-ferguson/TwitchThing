@@ -1,26 +1,30 @@
 import SimpleModal from './simpleModal.js'
 import { toArray } from 'lodash'
-import { wrapContent } from '../../../game/utilFunctions.js'
+import classDisplayInfo from '../classDisplayInfo.js'
+import { ICON_SVGS } from '../ICON_SVGS.js'
 
 const popupQueue = []
 
+let running = false
+
 export function showPopup(data){
   popupQueue.push(...toArray(data))
-  if(popupQueue.length === 1){
+  if(!running){
+    running = true
     showNext()
   }
 }
 
-function showNext(){
+async function showNext(){
   const data = popupQueue[0]
-  new SimpleModal(makeContent(data), { text: 'Okay' }, data.title)
-    .show()
-    .on('hide', () => {
-      popupQueue.splice(0, 1)
-      if(popupQueue.length){
-        showNext()
-      }
-    })
+  const modal = new SimpleModal(makeContent(data), { text: 'Okay' }, data.title).show()
+  await modal.awaitResult()
+  popupQueue.splice(0, 1)
+  if(popupQueue.length){
+    showNext()
+  }else{
+    running = false
+  }
 }
 
 function makeContent(data){
@@ -34,11 +38,17 @@ function makeContent(data){
     })
     content += `<ul>${listItems.join('')}</ul>`
   }
-  return content
+  return `<div class="popup-content">${content}</div>`
 }
 
 function itemHtml(key, val){
   if(key === 'class'){
-    return `Class Unlocked: Rogue ${}`
+    const classInfo = classDisplayInfo(val)
+    return `Class Unlocked: ${classInfo.icon} ${classInfo.displayName}`
+  }else if(key === 'gold'){
+    return `${ICON_SVGS.gold}<span> +${val}</span>`
+  }else if(key === 'scrap'){
+    return `<i class="fa-solid fa-recycle"></i><span> +${val}</span>`
   }
+  return '??? ERROR ERROR ???'
 }

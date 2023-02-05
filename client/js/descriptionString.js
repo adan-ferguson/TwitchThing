@@ -48,7 +48,7 @@ const scalingWrap = (damageType, amount) => {
   const valStr = _.isNumber(amount) ? Math.ceil(amount) : amount
   return makeEl({
     class: ['scaling-type', 'scaling-type-' + damageType],
-    content: `<img src="${ICONS[damageType]}">${valStr}`,
+    content: `${ICONS[damageType]}${valStr}`,
     elementType: 'span'
   })
 }
@@ -113,7 +113,7 @@ function wrapStat(statType, val){
   })
   let content = info.displayedValue
   if(info.icon){
-    content = `<img src="${info.icon}">` + content
+    content = `${info.icon}` + content
   }else{
     content += ' ' + info.text
   }

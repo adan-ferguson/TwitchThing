@@ -33,7 +33,7 @@ export function getChestDisplayInfo(chest){
     const info = classDisplayInfo(chest.class)
     return {
       displayName: info.displayName,
-      icon: `<img src="${info.orbIcon}">`,
+      icon: info.icon,
       color: info.color,
       stars: 1
     }

@@ -10,7 +10,9 @@ export async function chestShopItems(userDoc, purchases){
   const chests = []
 
   Object.keys(userDoc.features.advClasses).forEach(className => {
-    chests.push(chestDef(className, purchasesByClass[className] ?? 0))
+    if(userDoc.features.advClasses[className]){
+      chests.push(chestDef(className, purchasesByClass[className] ?? 0))
+    }
   })
 
   return chests

@@ -7,27 +7,41 @@ import { toDisplayName } from '../../game/utilFunctions.js'
 const ADV_CLASSES = {
   fighter: {
     description: 'Some description',
-    orbIcon: fighterOrbIcon,
+    icon: fighterOrbIcon,
     color: '#BB3300'
   },
   mage: {
     description: 'Some description',
-    orbIcon: mageOrbIcon,
+    icon: mageOrbIcon,
     color: '#4779da'
   },
   paladin: {
     description: 'Some description',
-    orbIcon: paladinOrbIcon,
+    icon: paladinOrbIcon,
     color: '#d2a200'
   },
   rogue: {
     description: 'Some description',
-    orbIcon: rogueOrbIcon,
+    icon: rogueOrbIcon,
     color: '#7a7a7a'
   }
 }
+
+for(let className in ADV_CLASSES){
+  const cls = ADV_CLASSES[className]
+  cls.displayName = toDisplayName(className)
+  cls.icon = adjustSvg(cls.icon, cls.color)
+}
+
 export default function(className){
-  const obj = { ...ADV_CLASSES[className] }
-  obj.displayName = toDisplayName(className)
-  return obj
+  return { ...ADV_CLASSES[className] }
+}
+
+function adjustSvg(svgString, color){
+  const el = document.createElement('div')
+  el.innerHTML = svgString
+  const svg = el.querySelector('svg')
+  svg.setAttribute('fill', color)
+  svg.classList.add('orb-icon')
+  return svg.outerHTML
 }

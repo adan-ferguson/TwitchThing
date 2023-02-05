@@ -2,6 +2,7 @@ import * as Dropdown  from './dropdown.js'
 import SimpleModal from './simpleModal.js'
 import tippy from 'tippy.js'
 import { suffixedNumber } from '../../../game/utilFunctions.js'
+import goldIcon from '../../assets/icons/gold.svg'
 
 const HTML = `
 <div class="left-side">
@@ -14,7 +15,8 @@ const HTML = `
     <span class="val"></span>
   </div>
   <div class="gold-button displaynone">
-    <img src="/assets/icons/gold.svg">
+    ${goldIcon}
+    <span class="val"></span>
     <span class="val"></span>
   </div>
   <div class="user-info clickable">

@@ -7,7 +7,7 @@ import _ from 'lodash'
 import { shopItemDisplayInfo } from './shopItemDisplayInfo.js'
 
 const DROP_CHANCE_HTML = (orbIcon, level, chance) => `
-<img src="${orbIcon}">${level} - ${chance}%
+${orbIcon}${level} - ${chance}%
 `
 
 const HTML = `
@@ -79,7 +79,7 @@ export default class ShopItemDetails extends DIElement{
     const dropChancesEl = makeEl({ class: 'drop-chance' })
     for(let i = 1; i <= 10; i++){
       dropChancesEl.appendChild(makeEl({
-        content: DROP_CHANCE_HTML(classInfo.orbIcon, i, chances[i])
+        content: DROP_CHANCE_HTML(classInfo.icon, i, chances[i])
       }))
     }
     return dropChancesEl
