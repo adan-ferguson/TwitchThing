@@ -18,8 +18,8 @@ export function generateRandomChest(options = {}){
       }
     },
     level: 1,
+    value: 1,
     noGold: false,
-    multipleItems: false,
     class: null,
     itemLimit: 1,
     ...options
@@ -48,13 +48,10 @@ export function generateRandomChest(options = {}){
     const baseType = chooseRandomBasicItem(valueRemaining, chestClass)
     addItem(chest.contents.items.basic, baseType.group, baseType.name)
     valueRemaining -= getItemRarity(baseType.rarity).value
-    if(!chest.multipleItems){
-      break
-    }
     items++
   }
 
-  if(valueRemaining){
+  if(valueRemaining && !chest.noGold){
     chest.contents.gold += addGold(valueRemaining)
   }
 

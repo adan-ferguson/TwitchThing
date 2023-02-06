@@ -5,6 +5,7 @@ import chestImage from '../../chestImage.js'
 import { getItemPicker } from '../../../../../server/items/generator.js'
 import _ from 'lodash'
 import { shopItemDisplayInfo } from './shopItemDisplayInfo.js'
+import { ICON_SVGS } from '../../../assetLoader.js'
 
 const DROP_CHANCE_HTML = (orbIcon, level, chance) => `
 ${orbIcon}${level} - ${chance}%
@@ -17,7 +18,7 @@ const HTML = `
 <button class="buy-button">
   <span>Buy</span>
   <span class="gold-value"></span>
-  <img src="/assets/icons/gold.svg">
+  ${ICON_SVGS.gold}
 </button>
 `
 
@@ -47,17 +48,13 @@ export default class ShopItemDetails extends DIElement{
     this.innerHTML = HTML
 
     const info = shopItemDisplayInfo(shopItemDef)
-    this.iconEl.append(info.makeImage())
+    this.iconEl.innerHTML = info.imageHtml
     this.nameEl.textContent = info.name
     this.descriptionEl.append(info.description)
 
     if(info.color){
       this.style.color = info.color
     }
-
-    // if(shopItemDef.type === 'chest'){
-    //   this.descriptionEl.append(this._dropChances(shopItemDef))
-    // }
 
     this.goldValueEl.textContent = shopItemDef.price.gold
 

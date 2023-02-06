@@ -24,7 +24,7 @@ export async function generateEvent(dungeonRun){
     return {
       nextRoom: 1,
       nextFloor: floor + 1,
-      roomType: 'nextzone',
+      roomType: 'nextZone',
       message : `${adventurerInstance.displayName} advances to the next zone.`
     }
   }

@@ -1,7 +1,7 @@
 import SimpleModal from './simpleModal.js'
 import { toArray } from 'lodash'
 import classDisplayInfo from '../classDisplayInfo.js'
-import { ICON_SVGS } from '../ICON_SVGS.js'
+import { ICON_SVGS } from '../assetLoader.js'
 
 const popupQueue = []
 
@@ -9,6 +9,9 @@ let running = false
 
 export function showPopup(data){
   popupQueue.push(...toArray(data))
+  if(!popupQueue.length){
+    return
+  }
   if(!running){
     running = true
     showNext()

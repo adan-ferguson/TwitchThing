@@ -54,7 +54,7 @@ function chestDef(className, purchaseCount){
       gold: toPrice(purchaseCount)
     },
     data: {
-      level: Math.min(50, 10 + purchaseCount * 5),
+      level: 5 + purchaseCount * 5,
       className
     }
   }

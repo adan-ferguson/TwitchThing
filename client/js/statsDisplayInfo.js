@@ -1,13 +1,8 @@
 import { all as StatDefs } from '../../game/stats/combined.js'
 import { roundToFixed, toDisplayName } from '../../game/utilFunctions.js'
-import healthIcon from '../assets/icons/health.svg'
-import actionIcon from '../assets/icons/action.svg'
-import physPowerIcon from '../assets/icons/physPower.svg'
-import physDefIcon from '../assets/icons/physDef.svg'
-import magicPowerIcon from '../assets/icons/magicPower.svg'
-import magicDefIcon from '../assets/icons/magicDef.svg'
 import { StatType } from '../../game/stats/statType.js'
 import statValueFns from '../../game/stats/statValueFns.js'
+import { ICON_SVGS } from './assetLoader.js'
 
 export const StatsDisplayStyle = {
   CUMULATIVE: 0, // Eg. "50%", i.e. our total of this stat is 50%
@@ -17,34 +12,34 @@ export const StatsDisplayStyle = {
 const statDefinitionsInfo = {
   [StatDefs.hpMax.name]: {
     text: 'Max Health',
-    icon: healthIcon,
+    icon: ICON_SVGS.health,
     description: 'Max Health (good description)'
   },
   [StatDefs.physPower.name]: {
     text: 'Phys Power',
-    icon: physPowerIcon,
+    icon: ICON_SVGS.physPower,
     description: 'Phys power (basic attack damage)'
   },
   [StatDefs.magicPower.name]: {
     text: 'Magic Power',
-    icon: magicPowerIcon,
+    icon: ICON_SVGS.magicPower,
     description: 'Magic power'
   },
   [StatDefs.physDef.name]: {
     text: 'Phys Defense',
-    icon: physDefIcon,
+    icon: ICON_SVGS.physDef,
     description: 'Blocks physical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
   },
   [StatDefs.magicDef.name]: {
     text: 'Magic Defense',
-    icon: magicDefIcon,
+    icon: ICON_SVGS.magicDef,
     description: 'Blocks magical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
   },
   [StatDefs.missChance.name]: {},
   [StatDefs.speed.name]: {
     text: 'Speed',
     displayInverted: true,
-    icon: actionIcon,
+    icon: ICON_SVGS.action,
     description: 'Speed. Each extra 100 speed is about +1 turn per 3 seconds.',
   },
   [StatDefs.damageDealt.name]: {},

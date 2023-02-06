@@ -5,6 +5,7 @@ import AdventurerPage from '../adventurer/adventurerPage.js'
 import fizzetch from '../../../fizzetch.js'
 import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 import LevelupOption from './levelupOption.js'
+import { ICON_SVGS } from '../../../assetLoader.js'
 
 const HTML = `
 <div class="content-rows">
@@ -13,7 +14,7 @@ const HTML = `
     <button class="reroll buy-button displaynone">
       <span>Reroll</span>
       <span class="gold-value"></span>
-      <img src="/assets/icons/gold.svg">
+      ${ICON_SVGS.gold}
     </button>
   </div>
   <div class="options flex-rows"></div>

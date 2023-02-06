@@ -16,7 +16,7 @@ export function runEnd(dungeonRun){
   // if(floor === 50){
   //   return {
   //     runFinished: true,
-  //     roomType: 'outoforder',
+  //     roomType: 'outOfOrder',
   //     floor: floor + 1,
   //     room: 0,
   //     message: `${dungeonRun.adventurerInstance.displayname} finds that the stairs to the next zone are out of order, what a rip off!`
