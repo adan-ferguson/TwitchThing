@@ -35,7 +35,7 @@ export function inverseGeometricProgression(growthPct, val, base = 1){
  * Common thing
  * 20%, 1 => 20%
  * 20%, 2 => 36%
- * @param val {number|string} 0 to 100
+ * @param val {number|string} 0 to 1
  * @param iterations {number} natural number
  * @param base
  * @return {string} Whole percentage

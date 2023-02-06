@@ -9,6 +9,7 @@ export default function(def){
     targetHpPct: 0,
     targetMaxHpPct: 0,
     extraCritChance: 0,
+    extraCritDamage: 0,
     ...def,
     type: 'attack'
   })

@@ -90,7 +90,7 @@ export function performAttackAction(combat, attacker, effect = null, actionDef =
   }
 
   if(attemptCrit(attacker, enemy, actionDef.extraCritChance)){
-    damageInfo.damage *= (1 + attacker.stats.get('critDamage').value)
+    damageInfo.damage *= (1 + attacker.stats.get('critDamage').value + actionDef.extraCritChance)
     damageInfo.crit = true
   }
 
