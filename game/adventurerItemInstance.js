@@ -70,7 +70,7 @@ export default class AdventurerItemInstance extends FighterItemInstance{
   }
 
   get scrapValue(){
-    const scrapVal = this.rarityInfo.scrapValue
+    const scrapVal = this.rarityInfo.value
     return scrapVal * (1 + this.level * (this.level - 1))
   }
 
