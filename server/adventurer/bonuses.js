@@ -73,7 +73,15 @@ export async function rerollBonus(userDoc, adventurerDoc){
 
 export async function generateBonusOptions(userDoc, adventurerDoc){
 
-  return ['fighter', 'mage', 'paladin'].map(className => {
+  const ai = new AdventurerInstance(adventurerDoc)
+  const orbsData = ai.orbs
+  const classOptions = orbsData.classes.slice(0,3)
+
+  for(let i = classOptions.length; i < 3; i++){
+    classOptions[i] = randomClass()
+  }
+
+  return classOptions.map(className => {
     const existing = adventurerDoc.bonuses[className]?.[className + 'orb'] ?? 0
     return {
       group: className,
@@ -82,31 +90,19 @@ export async function generateBonusOptions(userDoc, adventurerDoc){
     }
   })
 
-  // const ai = new AdventurerInstance(adventurerDoc)
-  // const orbsData = ai.orbs
-  // const classOptions = orbsData.classes.slice(0,3)
-  //
-  // for(let i = classOptions.length; i < 3; i++){
-  //   classOptions[i] = 'fighter' //randomClass()
-  // }
-  //
-  // return classOptions.map(className => {
-  //   return chooseBonus(className)
-  // })
-
-  // function randomClass(){
-  //   const exclude = classOptions
-  //   const choices = []
-  //   Object.keys(userDoc.features.advClasses)
-  //     .filter(className => userDoc.features.advClasses[className] > 0)
-  //     .forEach(className => {
-  //       if(exclude.indexOf(className) > -1){
-  //         return
-  //       }
-  //       choices.push(className)
-  //     })
-  //   return chooseOne(choices)
-  // }
+  function randomClass(){
+    const exclude = classOptions
+    const choices = []
+    Object.keys(userDoc.features.advClasses)
+      .filter(className => userDoc.features.advClasses[className] > 0)
+      .forEach(className => {
+        if(exclude.indexOf(className) > -1){
+          return
+        }
+        choices.push(className)
+      })
+    return chooseOne(choices)
+  }
   //
   // function chooseBonus(className){
   //   const choices = Object.values(Bonuses[className]).map(bonus => {

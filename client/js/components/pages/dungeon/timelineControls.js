@@ -27,6 +27,8 @@ const HTML = `
 </div>
 `
 
+const JUMP_MINIMUM_DIFF = 30 // If a jump is small, ignore it
+
 export default class TimelineControls extends HTMLElement{
 
   _options = {
@@ -161,6 +163,10 @@ export default class TimelineControls extends HTMLElement{
   }
 
   jumpTo(time, options = {}){
+    const diff = time - this._timeline.time
+    if(Math.abs(diff) < JUMP_MINIMUM_DIFF){
+      return
+    }
     this._timeline.setTime(time, true)
     this._updateEvent({
       jumped: true,

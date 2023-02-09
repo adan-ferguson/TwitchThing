@@ -8,7 +8,6 @@ import FighterInstancePane from '../../combat/fighterInstancePane.js'
 import CombatEnactment from '../../../combatEnactment.js'
 import EventContentsResults from './eventContentsResults.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
-import { showLoader } from '../../../loader.js'
 
 const HTML = `
 <div class='content-columns'>

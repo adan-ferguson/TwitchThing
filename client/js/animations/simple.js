@@ -11,10 +11,8 @@ export function fadeOut(el, speed = 350){
     ], {
       duration: speed,
       easing: 'ease-out'
-    }).onfinish = () => {
-      el.style.opacity = 0
-      res()
-    }
+    })
+    setTimeout(res, speed)
   })
 }
 
@@ -29,10 +27,8 @@ export function fadeIn(el){
     ], {
       duration: 250,
       easing: 'ease-out'
-    }).onfinish = () => {
-      el.style.opacity = 1
-      res()
-    }
+    })
+    setTimeout(res, 250)
   })
 }
 
@@ -50,9 +46,7 @@ export function flash(el, color = '#bbffcf', duration = 250){
   flashEl.style.width = computed.width
   flashEl.style.height = computed.height
   el.appendChild(flashEl)
-  console.log('flash')
   fadeOut(flashEl).then(() => {
-    console.log('remove?')
     flashEl.remove()
   })
 }
