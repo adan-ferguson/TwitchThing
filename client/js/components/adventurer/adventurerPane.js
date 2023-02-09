@@ -92,17 +92,17 @@ export default class AdventurerPane extends HTMLElement{
     this._xpAnimation = true
     await this.xpBar.setValue(advData.xp + toAdd, {
       ...options,
-      onLevelup: (level, cancelled = false) => {
-        if(!cancelled){
+      animate: true,
+      skipToEndOfAnimation: options.skipAnimation ? true : false,
+      onLevelup: (level, animate = true) => {
+        if(animate){
           this.update(true)
         }
         advData.xp = advLevelToXp(level)
         options.onLevelup?.(level)
       }
     })
-    if(!options.animate){
-      this.update()
-    }
+    this.update(true)
   }
 
   skipToEndOfXpAnimation(){

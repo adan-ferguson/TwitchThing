@@ -21,12 +21,7 @@ export default class EventContentsResults extends HTMLElement{
     super()
     this.classList.add('flex-rows', 'fill-contents')
     this.innerHTML = HTML
-    this.addEventListener('click', () => {
-      this._skipAnimations = true
-      if(this._linkedAdventurerPane){
-        this._linkedAdventurerPane.skipToEndOfXpAnimation()
-      }
-    })
+    window.addEventListener('click', this._skipAnims)
   }
 
   showFinalizerButton(fn){
@@ -79,11 +74,8 @@ export default class EventContentsResults extends HTMLElement{
       onLevelup: level => {
         this._addText(el, `${advName} has reached level ${level}`)
       },
-      animate: true
+      skipAnimation: this._skipAnimations
     })
-    if(this._skipAnimations){
-      adventurerPane.skipToEndOfXpAnimation()
-    }
   }
 
   _setupMonstersTab(el, monstersKilled){
@@ -152,6 +144,14 @@ export default class EventContentsResults extends HTMLElement{
       this.querySelectorAll('di-chest-openage').forEach(el => el.open())
     })
     checkOpenAllButton()
+  }
+
+  _skipAnims = () => {
+    this._skipAnimations = true
+    if(this._linkedAdventurerPane){
+      this._linkedAdventurerPane.skipToEndOfXpAnimation()
+    }
+    window.removeEventListener('click', this._skipAnims)
   }
 }
 

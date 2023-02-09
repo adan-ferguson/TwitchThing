@@ -1,34 +1,40 @@
 import { makeEl } from '../../../game/utilFunctions.js'
 
-export function fadeOut(el, speed = 350){
+export function fadeOut(el, duration = 350){
   return new Promise(res => {
     if(document.hidden){
       el.style.opacity = 0
       return res()
     }
-    el.animate([
+    const anim = el.animate([
       { opacity: 0 }
     ], {
-      duration: speed,
+      duration,
       easing: 'ease-out'
     })
-    setTimeout(res, speed)
+    anim.onfinish = () => {
+      res()
+      el.style.opacity = 0
+    }
   })
 }
 
-export function fadeIn(el){
+export function fadeIn(el, duration = 300){
   return new Promise(res => {
     if(document.hidden){
       el.style.opacity = 1
       return res()
     }
-    el.animate([
+    const anim = el.animate([
       { opacity: 1 }
     ], {
-      duration: 250,
+      duration,
       easing: 'ease-out'
     })
-    setTimeout(res, 250)
+    anim.onfinish = () => {
+      res()
+      el.style.opacity = 1
+    }
   })
 }
 

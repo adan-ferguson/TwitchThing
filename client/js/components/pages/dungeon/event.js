@@ -20,21 +20,27 @@ export default class Event extends HTMLElement{
   }
 
   update(dungeonEvent, animate = false){
-    console.log(dungeonEvent, animate)
-    const wasNormal = this.currentContents instanceof EventContentsNormal
-    if(wasNormal && sameRoom(this.currentContents.dungeonEvent, dungeonEvent)){
-      this.currentContents.update(dungeonEvent)
-    }else{
-      this.setContents(new EventContentsNormal(dungeonEvent), animate)
-    }
+    // const wasNormal = this.currentContents instanceof EventContentsNormal
+    // if(wasNormal && sameRoom(this.currentContents.dungeonEvent, dungeonEvent)){
+    //   console.log('update')
+    //   this.currentContents.update(dungeonEvent)
+    // }else{
+    // }
+    this.setContents(new EventContentsNormal(dungeonEvent), animate)
   }
 
   async setContents(contents, animate = true){
 
+    console.log('content change', animate)
+
     animate = animate && this.currentContents
     if(animate){
+      console.log('fadeout')
       await fadeOut(this)
+      console.log('fadein')
       fadeIn(this)
+    }else{
+      console.log('nofade')
     }
 
     this.innerHTML = ''

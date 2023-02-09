@@ -24,12 +24,13 @@ export default class XpBar extends Bar{
   }
 
   skipToEndOfAnimation(){
-    this._xpAnimation.cancelled = true
-
-    for(let i = this._xpAnimation.currentLevel + 1; i <= this._xpToLevel(this._xpAnimation.targetXp); i++){
-      this._xpAnimation.onLevelup(i, true)
+    if(!this._xpAnimation){
+      return
     }
-
+    this._xpAnimation.skipped = true
+    for(let i = this._xpAnimation.currentLevel + 1; i <= this._xpToLevel(this._xpAnimation.targetXp); i++){
+      this._xpAnimation.onLevelup(i, false)
+    }
     this.setValue(this._xpAnimation.targetXp)
     this._xpAnimation = null
   }
@@ -44,6 +45,7 @@ export default class XpBar extends Bar{
 
     options = {
       animate: false,
+      skipToEndOfAnimation: false,
       onLevelup: null,
       ...options
     }
@@ -54,29 +56,35 @@ export default class XpBar extends Bar{
       super.setBadge(level)
       super.setValue(val)
     }else{
-      this._startAnimation(options.onLevelup, val)
+      await this._startAnimation({
+        onLevelup: options.onLevelup,
+        targetXp: val,
+        skipToEnd: options.skipToEndOfAnimation
+      })
     }
   }
 
-  async _startAnimation(onLevelup, targetXp){
+  async _startAnimation({ onLevelup, targetXp, skipToEnd = false }){
     const xpAnimation = {
-      cancelled: false,
-      currentLevel: -1,
+      skipped: false,
+      currentLevel: this._xpToLevel(this._val),
       targetXp,
       onLevelup
     }
     this._xpAnimation = xpAnimation
     let xpToAdd = targetXp - this._val
     this._flyingText(`+${xpToAdd} xp`)
+    if(skipToEnd){
+      this.skipToEndOfAnimation()
+    }
     while(xpToAdd > 0){
-      xpAnimation.currentLevel = this._xpToLevel(this._val)
       let toNextLevel = this._options.max - this._val
-      if(xpAnimation.cancelled){
+      if(xpAnimation.skipped){
         return
       }
       if (xpToAdd >= toNextLevel){
         await super.setValue(this._options.max, { animate: true })
-        if(xpAnimation.cancelled){
+        if(xpAnimation.skipped){
           return
         }
         this._flyingText('Level Up!')

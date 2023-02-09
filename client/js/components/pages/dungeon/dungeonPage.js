@@ -178,7 +178,7 @@ export default class DungeonPage extends Page{
     this._adventurerResultsPane.classList.add('displaynone')
 
     if(this.currentEvent.roomType === 'combat'){
-      this._enactCombat()
+      this._enactCombat(animate)
     }else{
       this._eventEl.update(this.currentEvent, animate)
       this._adventurerPane.setState(this.currentEvent.adventurerState ?? {}, animate)
@@ -193,7 +193,7 @@ export default class DungeonPage extends Page{
       return
     }
     const results = new EventContentsResults()
-    this._eventEl.setContents(results, false)
+    this._eventEl.setContents(results, true)
     this._timelineEl.pause()
     this._adventurerResultsPane.classList.remove('displaynone')
     this._adventurerPane.classList.add('displaynone')
@@ -206,10 +206,10 @@ export default class DungeonPage extends Page{
     results.play(this.dungeonRun, this._adventurerResultsPane, this.watching)
   }
 
-  async _enactCombat(){
+  async _enactCombat(animate){
     const { combat } = await fizzetch(`/game/combat/${this.currentEvent.combatID}`)
     const enemyPane = new FighterInstancePane()
-    this._eventEl.setContents(enemyPane, false)
+    this._eventEl.setContents(enemyPane, animate)
     const ce = new CombatEnactment(this._adventurerPane, enemyPane, combat)
     ce.timeline.setTime(this._timeline.timeSinceLastEntry, true)
     ce.on('destroyed', () => {
