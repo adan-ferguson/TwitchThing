@@ -8,6 +8,7 @@ import LiveDungeonMapPage from '../liveDungeonMap/liveDungeonMapPage.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import ShopPage from '../shop/shopPage.js'
 import WorkshopPage from '../workshop/workshopPage.js'
+import { ADVENTURER_CLASS_LIST } from '../../../classDisplayInfo.js'
 
 const HTML = `
 <div class="content-rows">
@@ -126,19 +127,17 @@ export default class MainPage extends Page{
     })
 
     if(this.user.accomplishments.firstRunFinished){
+      const optionsList = []
+      ADVENTURER_CLASS_LIST.forEach(advClass => {
+        if(!this.user.features.advClasses[advClass.className]){
+          return
+        }
+        optionsList.push({ value: advClass.className, name: advClass.displayName })
+      })
       form.addSelect({
         label: 'Starting Class',
         name: 'class',
-        optionsList: [{
-          value: 'fighter',
-          name: 'Fighter'
-        },{
-          value: 'mage',
-          name: 'Mage'
-        },{
-          value: 'paladin',
-          name: 'Paladin'
-        }]
+        optionsList
       })
     }
 

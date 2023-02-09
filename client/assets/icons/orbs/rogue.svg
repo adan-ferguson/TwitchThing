@@ -7,9 +7,9 @@
             rx="23"
             ry="23"
     />
-    <line stroke-width="2" stroke="white" x1="23" y1="37" x2="37" y2="23"/>
+    <line stroke-width="4" stroke="white" x1="23" y1="37" x2="37" y2="23"/>
     />
-    <line stroke-width="3" stroke="white" x1="32" y1="32" x2="36" y2="36"/>
+    <line stroke-width="4" stroke="white" x1="32" y1="32" x2="36" y2="36"/>
     />
     <polygon
             fill="white"

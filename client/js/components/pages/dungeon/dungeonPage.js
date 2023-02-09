@@ -130,7 +130,7 @@ export default class DungeonPage extends Page{
     }
 
     if(dungeonRun.error){
-      this.app.showError(dungeonRun.error)
+      return this.app.showError(dungeonRun.error)
     }
 
     this.dungeonRun = dungeonRun

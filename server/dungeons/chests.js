@@ -3,8 +3,8 @@ import { toNumberOfDigits } from '../../game/utilFunctions.js'
 import { geometricProgession } from '../../game/growthFunctions.js'
 
 const GOLD_BASE = 20
-const GOLD_GROWTH = 4
-const GOLD_GROWTH_PCT = 0.03
+const GOLD_GROWTH = 10
+const GOLD_GROWTH_PCT = 0.01
 
 export function generateRandomChest(options = {}){
 
@@ -40,19 +40,29 @@ export function generateRandomChest(options = {}){
     chest.contents.gold = addGold(chest.level)
   }
 
-  let valueRemaining = chest.level * chest.value
-  let items = 0
-  while(valueRemaining > 0 && items < chest.itemLimit){
+  const totalValue = chest.level * chest.value
+  let valueRemaining = totalValue
+  let items = []
+  while(valueRemaining > 0){
     // tutorial chests drop more fighter items
     const chestClass = chest.class ?? (chest.type === 'tutorial' && Math.random() > 0.75 ? 'fighter' : null)
     const baseType = chooseRandomBasicItem(valueRemaining, chestClass)
-    addItem(chest.contents.items.basic, baseType.group, baseType.name)
+    items.push(baseType)
     valueRemaining -= getItemRarity(baseType.rarity).value
-    items++
   }
 
-  if(valueRemaining && !chest.noGold){
-    chest.contents.gold += addGold(valueRemaining)
+  if(items.length > chest.itemLimit){
+    items = items.sort((a, b) => (b.rarity ?? 0) - (a.rarity ?? 0)).slice(0, chest.itemLimit)
+  }
+
+  let leftoverValue = totalValue
+  items.forEach(item => {
+    addItem(chest.contents.items.basic, item.group, item.name)
+    leftoverValue -= getItemRarity(item.rarity).value
+  })
+
+  if(leftoverValue > 0 && !chest.noGold){
+    chest.contents.gold += addGold(leftoverValue)
   }
 
   return chest

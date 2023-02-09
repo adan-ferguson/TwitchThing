@@ -7,8 +7,8 @@ export default {
     return {
       abilities: {
         active: {
-          description: `{A0} This attack benefits from [ScritDamage${extraDamage}].`,
-          cooldown: 12000,
+          description: `{A0} This attack benefits from [ScritDamage+${extraDamage * 100}%].`,
+          cooldown: 10000 + level * 2000,
           actions: [
             attackAction({
               damageMulti: 1.3,

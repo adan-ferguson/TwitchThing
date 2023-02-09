@@ -23,48 +23,72 @@ export default class XpBar extends Bar{
     return this
   }
 
+  skipToEndOfAnimation(){
+    this._xpAnimation.cancelled = true
+
+    for(let i = this._xpAnimation.currentLevel + 1; i <= this._xpToLevel(this._xpAnimation.targetXp); i++){
+      this._xpAnimation.onLevelup(i, true)
+    }
+
+    this.setValue(this._xpAnimation.targetXp)
+    this._xpAnimation = null
+  }
+
   async setValue(val, options = {}){
 
     if(isNaN(parseFloat(val)) || !this._xpToLevel || !this._levelToXp){
       return
     }
 
+    this.animation?.cancel()
+
     options = {
       animate: false,
-      triggerEventsEvenIfNoAnimate: false,
+      onLevelup: null,
       ...options
     }
 
     if(!options.animate){
       const level = this._xpToLevel(val)
-      const currentLevel = this._xpToLevel(this._val)
-      if(options.triggerEventsEvenIfNoAnimate){
-        for(let i = currentLevel + 1; i <= level; i++){
-          await options.onLevelup?.(i)
-        }
-      }
       this._setLevel(level)
       super.setBadge(level)
       super.setValue(val)
     }else{
-      let xpToAdd = val - this._val
-      this._flyingText(`+${xpToAdd} xp`)
-      while(xpToAdd > 0){
-        let currentLevel = this._xpToLevel(this._val)
-        let toNextLevel = this._options.max - this._val
-        if (xpToAdd >= toNextLevel){
-          await super.setValue(this._options.max, { animate: true })
-          this._flyingText('Level Up!')
-          currentLevel++
-          if(options.onLevelup){
-            await options.onLevelup(currentLevel)
-          }
-          this._setLevel(currentLevel)
-          xpToAdd -= toNextLevel
-        }else{
-          await super.setValue(val, { animate: true })
+      this._startAnimation(options.onLevelup, val)
+    }
+  }
+
+  async _startAnimation(onLevelup, targetXp){
+    const xpAnimation = {
+      cancelled: false,
+      currentLevel: -1,
+      targetXp,
+      onLevelup
+    }
+    this._xpAnimation = xpAnimation
+    let xpToAdd = targetXp - this._val
+    this._flyingText(`+${xpToAdd} xp`)
+    while(xpToAdd > 0){
+      xpAnimation.currentLevel = this._xpToLevel(this._val)
+      let toNextLevel = this._options.max - this._val
+      if(xpAnimation.cancelled){
+        return
+      }
+      if (xpToAdd >= toNextLevel){
+        await super.setValue(this._options.max, { animate: true })
+        if(xpAnimation.cancelled){
           return
         }
+        this._flyingText('Level Up!')
+        xpAnimation.currentLevel++
+        if(onLevelup){
+          await onLevelup(xpAnimation.currentLevel)
+        }
+        this._setLevel(xpAnimation.currentLevel)
+        xpToAdd -= toNextLevel
+      }else{
+        await super.setValue(targetXp, { animate: true })
+        return
       }
     }
   }

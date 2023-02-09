@@ -89,14 +89,28 @@ export default class AdventurerPane extends HTMLElement{
 
   async addXp(toAdd, options = { }){
     const advData = this.adventurerInstance.fighterData
+    this._xpAnimation = true
     await this.xpBar.setValue(advData.xp + toAdd, {
       ...options,
-      onLevelup: level => {
+      onLevelup: (level, cancelled = false) => {
+        if(!cancelled){
+          this.update(true)
+        }
         advData.xp = advLevelToXp(level)
-        this.update(true)
         options.onLevelup?.(level)
       }
     })
+    if(!options.animate){
+      this.update()
+    }
+  }
+
+  skipToEndOfXpAnimation(){
+    if(this._xpAnimation){
+      this._xpAnimation = false
+      this.xpBar.skipToEndOfAnimation()
+      this.update()
+    }
   }
 
   _showAdventurerInfoModal(){

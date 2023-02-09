@@ -98,6 +98,10 @@ const statDefinitionsInfo = {
   },
   [StatDefs.cooldownReduction.name]: {
     text: 'Cooldown Reduction'
+  },
+  chestLevel: {
+    text: 'Increased Chest Level',
+    description: 'Chests you find are higher level.'
   }
 }
 

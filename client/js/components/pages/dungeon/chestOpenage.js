@@ -108,5 +108,5 @@ function arrayOfItems(obj){
       })
     }
   }
-  return arr
+  return arr.sort((a, b) => a.orbs - b.orbs)
 }

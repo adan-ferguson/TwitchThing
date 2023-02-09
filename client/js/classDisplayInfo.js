@@ -33,3 +33,5 @@ for(let className in ADV_CLASSES){
 export default function(className){
   return { ...ADV_CLASSES[className] }
 }
+
+export const ADVENTURER_CLASS_LIST = Object.values(ADV_CLASSES)

@@ -16,7 +16,7 @@ export const ITEM_RARITIES = [
   {
     name: 'rare',
     weight: 10,
-    value: 15
+    value: 19
   }
 ]
 

@@ -309,7 +309,7 @@ export default class FighterInstancePane extends HTMLElement{
   _updateActionBar(){
     const type = this.fighterInstance.basicAttackType
     if(!this._actionBarEl.querySelector('.basic-attack-type-' + type)){
-      this._actionBarEl.setBadge(`<span class="basic-attack-type basic-attack-type-${type}">${ICON_SVGS[type + 'Power']}</span>`)
+      this._actionBarEl.setBadge(`${ICON_SVGS[type + 'Power']}`)
     }
     this._actionBarEl.setTime(
       this.fighterInstance._state.timeSinceLastAction ?? 0,

@@ -3,14 +3,14 @@ import takeDamageAction from '../../actions/takeDamageAction.js'
 
 export default {
   levelFn: level => {
-    const damagePct = 2 + level * 4
+    const damagePct = 3 + level * 4
     return {
       stats: {
-        chestValue: leveledPercentageString(50, 50, level)
+        chestLevel: leveledPercentageString(50, 50, level)
       },
       abilities: {
         tick: {
-          initialCooldown: 5000,
+          cooldown: 5000,
           description: `Periodically take ${damagePct}% of remaining health as magic damage.`,
           actions: [
             takeDamageAction({

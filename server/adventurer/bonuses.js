@@ -11,7 +11,8 @@ import { spendGold } from '../loadouts/inventory.js'
 const FIRST_LEVEL_BONUSES = {
   fighter: 'fighterorb',
   mage: 'mageorb',
-  paladin: 'paladinorb'
+  paladin: 'paladinorb',
+  rogueorb: 'rogueorb'
 }
 
 const RARITY_TO_WEIGHT = [

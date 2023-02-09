@@ -15,6 +15,7 @@ const HTML = `
 export default class EventContentsResults extends HTMLElement{
 
   _skipAnimations = false
+  _linkedAdventurerPane
 
   constructor(){
     super()
@@ -22,6 +23,9 @@ export default class EventContentsResults extends HTMLElement{
     this.innerHTML = HTML
     this.addEventListener('click', () => {
       this._skipAnimations = true
+      if(this._linkedAdventurerPane){
+        this._linkedAdventurerPane.skipToEndOfXpAnimation()
+      }
     })
   }
 
@@ -32,6 +36,8 @@ export default class EventContentsResults extends HTMLElement{
   }
 
   play(dungeonRun, adventurerPane, watching){
+
+    this._linkedAdventurerPane = adventurerPane
 
     const tabz = this.querySelector('di-tabz')
     adventurerPane.setAdventurer(JSON.parse(JSON.stringify(dungeonRun.adventurer)))
@@ -73,9 +79,11 @@ export default class EventContentsResults extends HTMLElement{
       onLevelup: level => {
         this._addText(el, `${advName} has reached level ${level}`)
       },
-      animate: !this._skipAnimations,
-      triggerEventsEvenIfNoAnimate: true
+      animate: true
     })
+    if(this._skipAnimations){
+      adventurerPane.skipToEndOfXpAnimation()
+    }
   }
 
   _setupMonstersTab(el, monstersKilled){

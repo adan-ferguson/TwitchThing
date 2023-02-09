@@ -126,7 +126,7 @@ export async function generateMonster(dungeonRun, boss){
             'normal'
 
         rewards.chests = generateRandomChest({
-          level: dungeonRun.floor,
+          level: Math.floor(dungeonRun.floor * advStats.get('chestLevel').value),
           type
         })
       }

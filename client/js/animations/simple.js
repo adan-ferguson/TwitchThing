@@ -50,7 +50,9 @@ export function flash(el, color = '#bbffcf', duration = 250){
   flashEl.style.width = computed.width
   flashEl.style.height = computed.height
   el.appendChild(flashEl)
+  console.log('flash')
   fadeOut(flashEl).then(() => {
+    console.log('remove?')
     flashEl.remove()
   })
 }
