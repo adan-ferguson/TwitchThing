@@ -5,6 +5,14 @@ export function toArray(arrayOrVal){
   return Array.isArray(arrayOrVal) ? arrayOrVal : [arrayOrVal]
 }
 
+export function arrayToObject(array, key){
+  const obj = {}
+  array.forEach(i => {
+    obj[i[key]] = i
+  })
+  return obj
+}
+
 export function toDisplayName(str){
   if(!str){
     return ''
@@ -152,9 +160,12 @@ export function toTimerFormat(ms){
   return minuteStr + ':' + secondsStr
 }
 
-export function suffixedNumber(val, digits){
-  // TODO: this
-  return val
+export function suffixedNumber(val, digits = 5){
+  // TODO: make this for real
+  if(val > 10000000){
+    return Math.round(val / 1000000) + 'M'
+  }
+  return val + ''
 }
 
 /**

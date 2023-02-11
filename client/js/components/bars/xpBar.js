@@ -1,10 +1,13 @@
 import Bar from './bar.js'
+import { suffixedNumber } from '../../../../game/utilFunctions.js'
 
 export default class XpBar extends Bar{
 
   constructor(){
     super()
-    this._options.label = 'xp'
+    this._options.labelOverride = (val, max) => {
+      return suffixedNumber(val) + '/' + suffixedNumber(max) + ' xp'
+    }
     this._options.showLabel = true
     this._options.rounding = true
   }
@@ -73,7 +76,7 @@ export default class XpBar extends Bar{
     }
     this._xpAnimation = xpAnimation
     let xpToAdd = targetXp - this._val
-    this._flyingText(`+${xpToAdd} xp`)
+    this._flyingText(`+${suffixedNumber(xpToAdd)} xp`)
     if(skipToEnd){
       this.skipToEndOfAnimation()
     }

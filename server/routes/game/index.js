@@ -39,9 +39,6 @@ router.post('/livedungeonmap', async(req, res) => {
 
 router.post('/combat/:combatID', async(req, res) => {
   const combat = await Combats.findByID(req.params.combatID)
-  if(!combat){
-    return res.status(404).send('Combat not found.')
-  }
   res.send({ combat })
 })
 

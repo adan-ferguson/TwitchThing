@@ -1,4 +1,4 @@
-import { makeEl, toDisplayName, wait } from '../../../../../game/utilFunctions.js'
+import { makeEl, suffixedNumber, toDisplayName, wait } from '../../../../../game/utilFunctions.js'
 import ChestOpenage from './chestOpenage.js'
 import MonsterInstance from '../../../../../game/monsterInstance.js'
 
@@ -69,7 +69,7 @@ export default class EventContentsResults extends HTMLElement{
       return
     }
     const advName = adventurerPane.adventurerInstance.displayName
-    this._addText(el, `${advName} gained +${dungeonRunResults.xp} xp`)
+    this._addText(el, `${advName} gained ${suffixedNumber(dungeonRunResults.xp)} xp`)
     await adventurerPane.addXp(dungeonRunResults.xp, {
       onLevelup: level => {
         this._addText(el, `${advName} has reached level ${level}`)

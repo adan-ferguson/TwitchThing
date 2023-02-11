@@ -1,4 +1,5 @@
 import RELICS from '../../../relicDisplayInfo.js'
+import { suffixedNumber } from '../../../../../game/utilFunctions.js'
 
 const HTML = `
 <div class="room-image">
@@ -67,7 +68,7 @@ export default class EventContentsNormal extends HTMLElement{
       if(key === 'chests'){
         html += '<div>Found a treasure chest</div>'
       }else{
-        html += `<div>+${val} ${key}</div>`
+        html += `<div>+${suffixedNumber(val)} ${key}</div>`
       }
     }
     this._rewards.innerHTML = html

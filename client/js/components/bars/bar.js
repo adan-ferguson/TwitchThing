@@ -20,6 +20,7 @@ export default class Bar extends HTMLElement{
   _options = {
     label: '',
     lineBreakLabel: false,
+    labelOverride: null,
     color: null,
     borderColor: null,
     showLabel: true,
@@ -234,18 +235,18 @@ export default class Bar extends HTMLElement{
   _updateLabel(valOverride){
     const val = valOverride ?? this._val
     let html = ''
-    if(this._options.showValue){
-      let valHtml = spwrap(val)
-      if(this._options.showMax){
-        valHtml += spwrap('/')
-        valHtml += spwrap(this._options.max)
+    if(this._options.labelOverride){
+      html += spwrap(this._options.labelOverride(val, this._options.max))
+    }else{
+      if(this._options.showValue){
+        let valHtml = spwrap(val)
+        if(this._options.showMax){
+          valHtml += spwrap('/')
+          valHtml += spwrap(this._options.max)
+        }
+        html += spwrap(valHtml)
       }
-      html += spwrap(valHtml)
-    }
-    if(this._options.showLabel){
-      if(_.isFunction(this._options.label)){
-        html += spwrap(this._options.label(val))
-      }else{
+      if(this._options.showLabel){
         html += spwrap(this._options.label)
       }
     }

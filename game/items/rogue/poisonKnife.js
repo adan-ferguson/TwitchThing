@@ -1,12 +1,12 @@
-import { poisonedStatusEffect, stunnedStatusEffect } from '../../statusEffects/combined.js'
+import { poisonedStatusEffect } from '../../statusEffects/combined.js'
 import statusEffectAction from '../../actions/statusEffectAction.js'
 
 export default {
   levelFn: level => {
-    const damage = 0.08 + 0.02
+    const damage = 0.17 + 0.03
     return {
       stats: {
-        critChance: 0.08 + 0.02
+        critChance: 0.17 + 0.03
       },
       abilities: {
         crit: {

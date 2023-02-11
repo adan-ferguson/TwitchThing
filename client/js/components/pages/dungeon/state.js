@@ -1,5 +1,6 @@
 import CustomAnimation from '../../../animations/customAnimation.js'
 import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
+import { suffixedNumber } from '../../../../../game/utilFunctions.js'
 
 const innerHTML = `
 <div class="content">
@@ -73,14 +74,13 @@ export default class State extends HTMLElement{
   _setXP(xp, animate){
 
     if(!animate){
-      this.xp.textContent = xp + ''
+      this.xp.textContent = suffixedNumber(xp)
       this._xpAnimation?.cancel()
+      this._prevXpVal = xp
       return
     }
 
     this._xpAnimation?.cancel()
-
-    const prevVal = parseInt(this.xp.textContent)
 
     // TODO: make a text animation helper
     this._xpAnimation = new CustomAnimation({
@@ -91,9 +91,10 @@ export default class State extends HTMLElement{
       },
       finish: () => {
         this._xpAnimation = null
+        this._prevXpVal = xp
       },
       tick: pct => {
-        this.xp.textContent = '' + Math.round(prevVal * (1 - pct) + xp * pct)
+        this.xp.textContent = suffixedNumber(Math.round(this._prevXpVal * (1 - pct) + xp * pct))
       }
     })
   }

@@ -92,20 +92,26 @@ export default class StatsList extends HTMLElement{
     if(!statDisplayInfo || (this._options.iconsOnly && !statDisplayInfo.icon)){
       return
     }
-    const row = this.querySelector(`di-stat-row[stat-key="${stat.name}"]`)
+    let row = this.querySelector(`di-stat-row[stat-key="${stat.name}"]`)
+    let shouldFlash = showStatChangeEffect
+    let flashColor = STAT_INCREASE_COLOR
     if(!row){
-      this.appendChild(new StatRow(statDisplayInfo, {
+      row = new StatRow(statDisplayInfo, {
         showTooltips: this._options.showTooltips,
         iconsOnly: this._options.iconsOnly
-      }))
+      })
+      this.appendChild(row)
     }else{
       const diff = parseFloat(statDisplayInfo.displayedValue) - parseFloat(row.statsDisplayInfo.displayedValue)
-      if(showStatChangeEffect && diff){
-        const flip = (statDisplayInfo.displayInverted || statDisplayInfo.stat.inverted) ? -1 : 1
-        const color = flip * diff > 0 ? STAT_INCREASE_COLOR : STAT_DECREASE_COLOR
-        flash(row, color, STAT_EFFECT_TIME)
-      }
+      const flip = (statDisplayInfo.displayInverted || statDisplayInfo.stat.inverted) ? -1 : 1
       row.setStatsDisplayInfo(statDisplayInfo)
+      shouldFlash = shouldFlash && diff
+      if(flip * diff < 0){
+        flashColor = STAT_DECREASE_COLOR
+      }
+    }
+    if(shouldFlash){
+      flash(row, flashColor, STAT_EFFECT_TIME)
     }
   }
 

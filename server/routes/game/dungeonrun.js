@@ -1,6 +1,8 @@
 import { getRunData } from '../../dungeons/dungeonRunner.js'
 import { finalize } from '../../dungeons/results.js'
 import express from 'express'
+import Combats from '../../collections/combats.js'
+import { arrayToObject } from '../../../game/utilFunctions.js'
 
 const router = express.Router()
 const verifiedRouter = express.Router()
@@ -19,7 +21,12 @@ router.use('/:dungeonRunID', async (req, res, next) => {
 router.use('/:dungeonRunID', verifiedRouter)
 
 verifiedRouter.post('/', async (req, res, next) => {
-  res.send({ dungeonRun: req.dungeonRun })
+  const ret = { dungeonRun: req.dungeonRun }
+  if(req.dungeonRun.finished){
+    const combatIds = req.dungeonRun.events.filter(e => e.roomType === 'combat').map(e => e.combatID)
+    ret.combats = arrayToObject(await Combats.findByIDs(combatIds), '_id')
+  }
+  res.send(ret)
 })
 
 verifiedRouter.post('/finalize', async (req, res, next) => {
