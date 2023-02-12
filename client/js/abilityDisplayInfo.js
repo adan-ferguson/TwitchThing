@@ -1,5 +1,6 @@
 import { parseDescriptionString } from './descriptionString.js'
 import { silencedMod } from '../../game/mods/combined.js'
+import { isArray } from 'lodash'
 
 export const AbilityState = {
   NONE: 'none',
@@ -45,14 +46,14 @@ function getMainAbility(abilities){
 }
 
 function descriptionEl(ability, useStats = null){
-  const derivedActionStrings = ability.actions.map(deriveActionString)
+  const derived = deriveActionStrings(ability.actions)
   let str
   if(ability.description){
     str = ability.description.replace(/{A(\d+)}/g, (a, b, c) => {
-      return derivedActionStrings[b]
+      return derived[b]
     })
   }else{
-    str = derivedActionStrings.filter(s => s).join(' ')
+    str = derived.filter(s => s).join(' ')
   }
   return parseDescriptionString(str, useStats)
 }
@@ -90,15 +91,26 @@ function barMax(ability){
   return 1
 }
 
-function deriveActionString(action){
-  if(action.description){
-    return action.description
-  }else if(action.type === 'attack'){
-    return toAttackString(action)
-  }else if(action.type === 'gainHealth'){
-    return toGainHealthString(action)
+function deriveActionStrings(actions){
+  const strs = []
+  derive(actions)
+  function derive(actions){
+    actions.forEach(action => {
+      if(isArray(action)){
+        return derive(action)
+      }
+      if(action.description){
+        strs.push(action.description)
+      }else if(action.type === 'attack'){
+        strs.push(toAttackString(action))
+      }else if(action.type === 'gainHealth'){
+        strs.push(toGainHealthString(action))
+      }else{
+        strs.push('')
+      }
+    })
   }
-  return ''
+  return strs
 }
 
 function toAttackString(action){

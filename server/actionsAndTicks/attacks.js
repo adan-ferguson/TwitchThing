@@ -175,6 +175,10 @@ export function takeDamage(combat, subject, damageInfo){
   const triggeredEvents = []
   let damage = result.baseDamage
 
+  if(subject){
+
+  }
+
   if(!damageInfo.ignoreDefense){
     const blocked = Math.floor(result.baseDamage * subject.stats.get(damageInfo.damageType + 'Def').value)
     damage = result.baseDamage - blocked
