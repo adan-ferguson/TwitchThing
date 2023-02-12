@@ -5,12 +5,12 @@ import { poisonedStatusEffect } from '../../statusEffects/combined.js'
 
 export default {
   levelFn: level => {
-    const damageMulti = 1.2 + 0.2 * level
-    const burn = 0.18 + 0.04 * level
+    const damageMulti = 1 + 0.2 * level
+    const burn = damageMulti / 5
     return {
       abilities: {
         active: {
-          cooldown: 15000 + level * 5000,
+          cooldown: 20000,
           description: `{A0} Burn the opponent for [magicScaling${burn}] magic damage per second.`,
           actions: [
             attackAction({
@@ -33,5 +33,6 @@ export default {
       mods: [magicScalingMod]
     }
   },
-  orbs: 9
+  orbs: 7,
+  rarity: 1
 }

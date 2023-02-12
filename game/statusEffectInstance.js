@@ -78,7 +78,7 @@ export default class StatusEffectInstance extends EffectInstance{
     if(this.stacks === 0){
       return true
     }
-    if(this.turns && this.turnsTaken > this.turns){
+    if(this.turns && this.turnsTaken >= this.turns){
       return true
     }
     return false

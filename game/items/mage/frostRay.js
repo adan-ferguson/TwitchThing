@@ -4,12 +4,12 @@ import statusEffectAction from '../../actions/statusEffectAction.js'
 
 export default {
   levelFn: level => {
-    const damageMulti = 1 + level * 0.2
+    const damageMulti = 0.9 + level * 0.1
     const slow = 40 + 10 * level
     return {
       abilities: {
         active: {
-          cooldown: 12000 + level * 3000,
+          cooldown: 15000,
           description: `Deal [magicAttack${damageMulti}] magic damage and reduce the opponent's speed by ${slow}.`,
           actions: [
             attackAction({
@@ -32,5 +32,6 @@ export default {
       mods: [magicScalingMod]
     }
   },
-  orbs: 6
+  orbs: 5,
+  rarity: 1
 }

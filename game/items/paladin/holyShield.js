@@ -1,13 +1,13 @@
-import { leveledPercentageString } from '../../growthFunctions.js'
 import dealDamageAction from '../../actions/dealDamageAction.js'
+import { exponentialPercentage, leveledPctString } from '../../growthFunctions.js'
 
 export default {
   levelFn: level => {
-    const dmg = 0.45 + 0.05 * level
+    const dmg = 0.6 + 0.1 * level
     return {
       stats: {
-        blockChance: '20%',
-        magicPower: leveledPercentageString(20, 10, level)
+        blockChance: exponentialPercentage(0.08, level - 1, 0.2),
+        magicPower: leveledPctString(15, 5, level)
       },
       abilities: {
         block: {
@@ -24,5 +24,6 @@ export default {
       }
     }
   },
-  orbs: 7
+  orbs: 10,
+  rarity: 2
 }

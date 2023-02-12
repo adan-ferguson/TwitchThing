@@ -7,7 +7,7 @@ export default {
       abilities: {
         active: {
           description: `Refresh your other cooldowns by ${Math.round(amount / 1000)}s.`,
-          initialCooldown: 30000,
+          initialCooldown: 25000,
           actions: [
             refreshCooldownsAction({
               amountFlat: amount,
@@ -18,5 +18,6 @@ export default {
       }
     }
   },
-  orbs: 5
+  orbs: 4,
+  rarity: 1
 }

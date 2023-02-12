@@ -1,5 +1,5 @@
 import { sneakAttackMod } from '../../mods/combined.js'
-import { leveledPercentageString } from '../../growthFunctions.js'
+import { leveledPctString } from '../../growthFunctions.js'
 
 export default {
   levelFn: level => {
@@ -7,7 +7,7 @@ export default {
       mods: [sneakAttackMod]
     }
     if(level > 1){
-      obj.stats = { physPower: leveledPercentageString( 0, 10, level ) }
+      obj.stats = { physPower: leveledPctString( 0, 10, level ) }
     }
     return obj
   },

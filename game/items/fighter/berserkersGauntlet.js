@@ -1,8 +1,8 @@
-import { physPowerStat, speedStat } from '../../stats/combined.js'
+import { physPowerStat } from '../../stats/combined.js'
 
 export default {
   levelFn: level => {
-    const pct = `+${14 + level * 1}%`
+    const pct = `+${18 + level * 2}%`
     return {
       abilities: {
         attackHit: {
@@ -20,12 +20,10 @@ export default {
             }
           }]
         }
-      },
-      stats: {
-        [speedStat.name]: 20 + 5 * level
       }
     }
   },
   displayName: 'Berserker\'s Gauntlet',
-  orbs: 5
+  orbs: 5,
+  rarity: 1
 }

@@ -60,6 +60,6 @@ export function oneTwoFive(val){
   return Math.pow(10, magnitude) * [1, 2, 5][mod]
 }
 
-export function leveledPercentageString(base, perLevel, level){
+export function leveledPctString(base, perLevel, level){
   return `+${base + level * perLevel}%`
 }

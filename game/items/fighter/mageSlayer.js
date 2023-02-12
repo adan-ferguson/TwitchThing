@@ -1,10 +1,9 @@
-import { magicDefStat } from '../../stats/combined.js'
 import { minMax } from '../../utilFunctions.js'
-import { exponentialPercentage } from '../../growthFunctions.js'
+import { exponentialPercentage, leveledPctString } from '../../growthFunctions.js'
 
 export default {
   levelFn: level => {
-    const maxDmg = 1.25 + level * 0.25
+    const maxDmg = 0.75 + level * 0.25
     return {
       description: `Attacks deal extra damage to enemies with high magic power, up to +${Math.round(maxDmg * 100)}%.`,
       damageDealtModifier: enemy => {
@@ -12,9 +11,11 @@ export default {
         return 1 + minMax(0, factor, maxDmg)
       },
       stats: {
-        [magicDefStat.name]: exponentialPercentage(0.1, level - 1, 0.5)
+        magicDef: exponentialPercentage(0.1, level - 1, 0.5),
+        physPower: leveledPctString(40, 10, level)
       }
     }
   },
-  orbs: 9
+  orbs: 10,
+  rarity: 2
 }

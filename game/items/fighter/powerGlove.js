@@ -1,12 +1,12 @@
-import { physPowerStat, speedStat } from '../../stats/combined.js'
-import { leveledPercentageString } from '../../growthFunctions.js'
+import { exponentialPercentage } from '../../growthFunctions.js'
 
 export default {
   levelFn: level => ({
     stats: {
-      [physPowerStat.name]: leveledPercentageString(20, 15, level),
-      [speedStat.name]: -5 - level * 5
+      physDef: exponentialPercentage(0.05, level - 1, 0.1),
+      speed: 18 + level * 2
     }
   }),
-  orbs: 2
+  displayName: 'Lightweight Armor',
+  orbs: 3
 }

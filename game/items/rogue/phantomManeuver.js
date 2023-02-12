@@ -1,25 +1,31 @@
+import attackAction from '../../actions/attackAction.js'
 import statusEffectAction from '../../actions/statusEffectAction.js'
-import { leveledPercentageString } from '../../growthFunctions.js'
+import { stunnedStatusEffect } from '../../statusEffects/combined.js'
 
 export default {
   levelFn: level => {
-    const critDamage = leveledPercentageString(25, 25, level)
+    const scaling = 1.1 + level * 0.2
+    const stun = 1.7 + level * 0.3
     return {
       abilities: {
-        crit: {
-          description: `After dodging, gain [ScritChance1] and [ScritDamage${critDamage}] next turn.`,
+        dodge: {
+          description: `After dodging, retaliate for [physAttack${scaling}]. If it crits, stun for ${stun}s.`,
           actions: [
-            statusEffectAction({
-              effect: {
-                isBuff: true,
-                displayName: 'Phantom Attack',
-                turns: 1,
-                stats: {
-                  critChance: 1,
-                  critDamage
-                }
+            attackAction({
+              damageMulti: scaling
+            }),
+            ({ results }) => {
+              const crit = results[0]?.data?.crit
+              if(crit){
+                return statusEffectAction({
+                  affects: 'enemy',
+                  base: stunnedStatusEffect,
+                  effect: {
+                    duration: stun * 1000
+                  }
+                })
               }
-            })
+            }
           ]
         }
       }
