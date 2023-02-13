@@ -1,5 +1,6 @@
 import RELICS from '../../../relicDisplayInfo.js'
 import { suffixedNumber } from '../../../../../game/utilFunctions.js'
+import { ROOM_IMAGES } from '../../../assetLoader.js'
 
 const HTML = `
 <div class="room-image">
@@ -88,8 +89,8 @@ export default class EventContentsNormal extends HTMLElement{
   }
 
   _setImage(dungeonEvent){
-    let roomType = dungeonEvent.roomType ?? 'wandering'
-    this._imageEl.setAttribute('src', `/assets/rooms/${roomType}.png`)
+    const roomType = dungeonEvent.roomType ?? 'wandering'
+    this._imageEl.setAttribute('src', ROOM_IMAGES[roomType])
   }
 }
 

@@ -1,6 +1,8 @@
 import BaseItems from '../../game/items/combined.js'
 import { v4 } from 'uuid'
 import Picker from '../../game/picker.js'
+import AdventurerItemInstance from '../../game/adventurerItemInstance.js'
+import { includesAll } from '../../game/utilFunctions.js'
 
 export const ITEM_RARITIES = [
   {
@@ -36,14 +38,15 @@ export function generateItemDef({ group, name }){
   }
 }
 
-export function getItemPicker(value, specificClass = false){
+export function getItemPicker(value, validClasses){
   return new Picker(BaseItems, {
     weightFormula: baseItemDef => {
-      const rarity = ITEM_RARITIES[baseItemDef.rarity ?? 0]
+      const item = new AdventurerItemInstance(baseItemDef)
+      const rarity = ITEM_RARITIES[item.rarity]
       if(rarity.name !== 'common' && value < rarity.value){
         return 0
       }
-      if(specificClass && baseItemDef.group !== specificClass){
+      if(item.orbs.classes.find(cls => !validClasses.contains(cls))){
         return 0
       }
       return rarity.weight

@@ -71,9 +71,6 @@ export function performAttackAction(combat, attacker, effect = null, actionDef =
 
   let damage = attacker[actionDef.damageScaling + 'Power']
   damage *= actionDef.damageMulti
-  if(actionDef.damageRange){
-    damage *= randomBetween(actionDef.damageRange.min, actionDef.damageRange.max)
-  }
   damage += actionDef.targetHpPct * enemy.hp
   damage += actionDef.targetMaxHpPct * enemy.hpMax
   damage *= attacker.statsForEffect(effect).get(attackDamageStat).value
@@ -86,7 +83,8 @@ export function performAttackAction(combat, attacker, effect = null, actionDef =
 
   const damageInfo = {
     damageType: actionDef.damageType,
-    damage: damage * attacker.stats.get('damageDealt').value
+    damage: damage * attacker.stats.get('damageDealt').value,
+    range: actionDef.range
   }
 
   if(attemptCrit(attacker, enemy, actionDef.extraCritChance)){
@@ -164,6 +162,7 @@ export function takeDamage(combat, subject, damageInfo){
     damage: 0,
     damageType: 'phys',
     ignoreDefense: false,
+    range: null,
     ...damageInfo
   }
 
@@ -175,8 +174,8 @@ export function takeDamage(combat, subject, damageInfo){
   const triggeredEvents = []
   let damage = result.baseDamage
 
-  if(subject){
-
+  if(damageInfo.range){
+    damage *= randomBetween(...damageInfo.range)
   }
 
   if(!damageInfo.ignoreDefense){
@@ -206,7 +205,7 @@ export function takeDamage(combat, subject, damageInfo){
 export function performDealDamageAction(combat, actor, damageDef){
   damageDef = dealDamageAction(damageDef)
   const subject = damageDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
-  const damage = Math.ceil(scaledNumber(actor, damageDef.scaling))
+  let damage = Math.ceil(scaledNumber(actor, damageDef.scaling))
   if(damage <= 0){
     return
   }
@@ -218,7 +217,7 @@ export function performDealDamageAction(combat, actor, damageDef){
 
 export function performTakeDamageAction(combat, actor, damageDef){
   damageDef = takeDamageAction(damageDef)
-  const damage = Math.ceil(scaledNumber(actor, damageDef.scaling))
+  let damage = Math.ceil(scaledNumber(actor, damageDef.scaling))
   if(damage <= 0){
     return
   }

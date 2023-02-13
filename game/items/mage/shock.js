@@ -8,7 +8,8 @@ export default {
         cooldown: 5000,
         actions: [
           attackAction({
-            damageRange: { min: 0.45 + level * 0.05, max: 1.8 + level * 0.2 },
+            damageMulti: 2.25 + level * 0.25,
+            range: [0, 1],
             damageType: 'magic'
           })
         ]

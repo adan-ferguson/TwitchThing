@@ -20,9 +20,13 @@ export function generateRandomChest(options = {}){
     level: 1,
     value: 1,
     noGold: false,
-    class: null,
+    classes: null,
     itemLimit: 1,
     ...options
+  }
+
+  if(!chest.classes){
+    throw 'Random chest did not get a list of classes to choose from, probably a bug.'
   }
 
   if(chest.type === 'shop'){
@@ -45,8 +49,8 @@ export function generateRandomChest(options = {}){
   let items = []
   while(valueRemaining > 0){
     // tutorial chests drop more fighter items
-    const chestClass = chest.class ?? (chest.type === 'tutorial' && Math.random() > 0.75 ? 'fighter' : null)
-    const baseType = chooseRandomBasicItem(valueRemaining, chestClass)
+    const chestClasses = chest.type === 'tutorial' && Math.random() > 0.75 ? ['fighter'] : chest.classes
+    const baseType = chooseRandomBasicItem(valueRemaining, chestClasses)
     items.push(baseType)
     valueRemaining -= getItemRarity(baseType.rarity).value
   }

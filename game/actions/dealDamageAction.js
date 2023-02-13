@@ -3,6 +3,7 @@ export default function(def){
     affects: 'enemy',
     damageType: 'phys',
     scaling: {},
+    range: null,
     ignoreDefense: false,
     ...def,
     type: 'dealDamage'

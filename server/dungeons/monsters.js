@@ -4,6 +4,7 @@ import { uniqueID } from '../../game/utilFunctions.js'
 import MonsterInstance from '../../game/monsterInstance.js'
 import { generateRandomChest } from './chests.js'
 import { addRewards } from './results.js'
+import { unlockedClasses } from '../../game/user.js'
 
 const monstersByFloor = [
   null,
@@ -127,7 +128,8 @@ export async function generateMonster(dungeonRun, boss){
 
         rewards.chests = generateRandomChest({
           level: Math.floor(dungeonRun.floor * advStats.get('chestLevel').value),
-          type
+          type,
+          classes: unlockedClasses(dungeonRun.user)
         })
       }
     }

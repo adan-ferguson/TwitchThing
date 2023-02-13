@@ -56,8 +56,4 @@ export default class Event extends HTMLElement{
   }
 }
 
-function sameRoom(e1, e2){
-  return e1.floor === e2.floor && e1.room === e2.room
-}
-
 customElements.define('di-dungeon-event', Event)

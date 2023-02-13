@@ -20,7 +20,7 @@ export async function chestShopItems(userDoc, purchases){
 
 export async function shopChestPurchased(userDoc, chestData){
   const chest = generateRandomChest({
-    class: chestData.className,
+    classes: [chestData.className],
     level: chestData.level,
     type: 'shop'
   })

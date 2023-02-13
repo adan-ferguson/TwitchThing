@@ -1,15 +1,6 @@
 import DIElement from '../../diElement.js'
-import { makeEl, roundToFixed } from '../../../../../game/utilFunctions.js'
-import classDisplayInfo from '../../../classDisplayInfo.js'
-import chestImage from '../../chestImage.js'
-import { getItemPicker } from '../../../../../server/items/generator.js'
-import _ from 'lodash'
 import { shopItemDisplayInfo } from './shopItemDisplayInfo.js'
 import { ICON_SVGS } from '../../../assetLoader.js'
-
-const DROP_CHANCE_HTML = (orbIcon, level, chance) => `
-${orbIcon}${level} - ${chance}%
-`
 
 const HTML = `
 <div class="shop-item-icon"></div>
@@ -69,27 +60,5 @@ export default class ShopItemDetails extends DIElement{
 
     return this
   }
-
-  _dropChances(shopItemDef){
-    const classInfo = classDisplayInfo(shopItemDef.data.className)
-    const chances = calcChances(shopItemDef.data.level)
-    const dropChancesEl = makeEl({ class: 'drop-chance' })
-    for(let i = 1; i <= 10; i++){
-      dropChancesEl.appendChild(makeEl({
-        content: DROP_CHANCE_HTML(classInfo.icon, i, chances[i])
-      }))
-    }
-    return dropChancesEl
-  }
 }
 customElements.define('di-shop-item-details', ShopItemDetails)
-
-function calcChances(level){
-  const itemPicker = getItemPicker()
-  const choices = []
-  for(let i = 1; i <= 10; i++){
-    choices[i] = itemPicker.weight(i, level)
-  }
-  const sum = _.sum(choices)
-  return choices.map(c => roundToFixed(100 * c / sum, 1))
-}
