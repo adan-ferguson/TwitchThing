@@ -73,14 +73,17 @@ export default class State extends HTMLElement{
 
   _setXP(xp, animate){
 
+    const prev = this._prevXpVal
+    this._prevXpVal = xp
+
     if(!animate){
       this.xp.textContent = suffixedNumber(xp)
       this._xpAnimation?.cancel()
-      this._prevXpVal = xp
       return
     }
 
     this._xpAnimation?.cancel()
+
 
     // TODO: make a text animation helper
     this._xpAnimation = new CustomAnimation({
@@ -91,10 +94,9 @@ export default class State extends HTMLElement{
       },
       finish: () => {
         this._xpAnimation = null
-        this._prevXpVal = xp
       },
       tick: pct => {
-        this.xp.textContent = suffixedNumber(Math.round(this._prevXpVal * (1 - pct) + xp * pct))
+        this.xp.textContent = suffixedNumber(Math.round(prev * (1 - pct) + xp * pct))
       }
     })
   }

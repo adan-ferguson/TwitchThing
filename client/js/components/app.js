@@ -8,6 +8,7 @@ import { addPageToHistory } from '../history.js'
 import { pathToPage } from './pathRouter.js'
 import { cancelAllFlyingText } from './visualEffects/flyingTextEffect.js'
 import _ from 'lodash'
+import { alertModal } from './simpleModal.js'
 
 const HTML = `
 <di-header></di-header>
@@ -129,7 +130,8 @@ export default class App extends HTMLElement{
 
   showError(error){
     this.setPage('')
-    console.log(_.isObject(error) ? JSON.stringify(error) : error)
+    debugger
+    alertModal(_.isObject(error) ? JSON.stringify(error) : error)
   }
 
   _resetBackground(){

@@ -87,7 +87,7 @@ export default class Header extends HTMLElement{
   }
 
   update(){
-    if(this.user.anonymous){
+    if(!this.user || this.user.anonymous){
       this.querySelector('.right-side').classList.add('hidden')
     }else{
       this.querySelector('.displayname').textContent = this.user.displayname

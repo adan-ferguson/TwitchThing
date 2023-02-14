@@ -30,7 +30,7 @@ export function getChestDisplayInfo(chest){
   }
 
   function shopChest(){
-    const info = classDisplayInfo(chest.class)
+    const info = classDisplayInfo(chest.classes[0])
     return {
       displayName: info.displayName,
       icon: info.icon,

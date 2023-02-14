@@ -124,6 +124,14 @@ export default class AdventurerInstance extends FighterInstance{
     this._state.food = minMax(0, val, this.maxFood)
   }
 
+  get isLoadoutValid(){
+    const orbs = this.orbs
+    if(!orbs.isValid){
+      return false
+    }
+    return true
+  }
+
   getEquippedSlotBonus(slotIndex){
     // TODO: equipping of slot bonuses, for now the slot bonuses are just hardcoded
     return this.bonusesData.instances.find(bonusInstance => {

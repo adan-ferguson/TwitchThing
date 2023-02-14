@@ -17,6 +17,9 @@ const ADV_CLASSES = {
   rogue: {
     description: 'Some description',
     color: '#7a7a7a'
+  },
+  multiclass: {
+    color: 'black'
   }
 }
 

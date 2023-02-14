@@ -121,8 +121,8 @@ export default class Inventory extends DIElement{
 }
 
 function isCompatible(adventurer, itemInstance){
-  const itemClass = itemInstance.itemDef.group
-  return adventurer.bonuses[itemClass] ? true : false
+  const itemClasses = itemInstance.classes
+  return itemClasses.every(cls => adventurer.bonuses[cls])
 }
 
 customElements.define('di-inventory', Inventory)

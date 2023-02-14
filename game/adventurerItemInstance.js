@@ -3,7 +3,7 @@ import FighterItemInstance from './fighterItemInstance.js'
 import OrbsData from './orbsData.js'
 import { uniqueID } from './utilFunctions.js'
 import { ITEM_RARITIES } from '../server/items/generator.js'
-import { isObject } from 'lodash'
+import _  from 'lodash'
 
 export default class AdventurerItemInstance extends FighterItemInstance{
 
@@ -45,7 +45,7 @@ export default class AdventurerItemInstance extends FighterItemInstance{
    */
   get orbs(){
     let baseOrbs
-    if(isObject(this.itemData.orbs)){
+    if(_.isObject(this.itemData.orbs)){
       baseOrbs = this.itemData.orbs
     }else{
       baseOrbs = { [this.itemData.group]: this.itemData.orbs }
@@ -54,6 +54,10 @@ export default class AdventurerItemInstance extends FighterItemInstance{
       baseOrbs,
       ...this.applicableSlotEffects.map(slotEffect => slotEffect.orbs ?? {})
     ])
+  }
+
+  get classes(){
+    return this.orbs.classes
   }
 
   get slotBonus(){
@@ -73,12 +77,12 @@ export default class AdventurerItemInstance extends FighterItemInstance{
   }
 
   get rarityInfo(){
-    return ITEM_RARITIES[this.itemDef.rarity ?? 0]
+    return ITEM_RARITIES[this.baseItem.rarity ?? 0]
   }
 
   get scrapValue(){
     const scrapVal = this.rarityInfo.value
-    return scrapVal * (1 + this.level * (this.level - 1))
+    return scrapVal * (1 + this.level * (this.level - 1) / 2)
   }
 
   get isMulticlass(){

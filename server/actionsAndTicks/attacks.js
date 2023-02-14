@@ -97,6 +97,7 @@ export function performAttackAction(combat, attacker, effect = null, actionDef =
   resultObj.data = damageResult.data
   resultObj.triggeredEvents.push(...damageResult.triggeredEvents)
   resultObj.triggeredEvents.push(...triggerEvent(combat, attacker, 'attackHit'))
+  resultObj.triggeredEvents.push(...triggerEvent(combat, attacker, damageInfo.damageType + 'AttackHit'))
   resultObj.triggeredEvents.push(...triggerEvent(combat, enemy, 'hitByAttack'))
 
   if(damageInfo.crit){
@@ -167,20 +168,20 @@ export function takeDamage(combat, subject, damageInfo){
   }
 
   const result = {
-    baseDamage: subject.stats.get('damageTaken').value * damageInfo.damage,
+    baseDamage:  damageInfo.damage,
     blocked: 0,
     damageType: damageInfo.damageType
   }
   const triggeredEvents = []
-  let damage = result.baseDamage
+  let damage = result.baseDamage * subject.stats.get('damageTaken').value
 
   if(damageInfo.range){
     damage *= randomBetween(...damageInfo.range)
   }
 
   if(!damageInfo.ignoreDefense){
-    const blocked = Math.floor(result.baseDamage * subject.stats.get(damageInfo.damageType + 'Def').value)
-    damage = result.baseDamage - blocked
+    const blocked = Math.floor(damage * subject.stats.get(damageInfo.damageType + 'Def').value)
+    damage = damage - blocked
     result.blocked = blocked
   }
 

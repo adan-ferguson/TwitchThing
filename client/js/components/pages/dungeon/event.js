@@ -31,17 +31,17 @@ export default class Event extends HTMLElement{
 
   async setContents(contents, animate = true){
 
-    console.log('content change', animate)
-
-    animate = animate && this.currentContents
-    if(animate){
-      console.log('fadeout')
-      await fadeOut(this)
-      console.log('fadein')
-      fadeIn(this)
-    }else{
-      console.log('nofade')
-    }
+    // console.log('content change', animate)
+    //
+    // animate = animate && this.currentContents
+    // if(animate){
+    //   console.log('fadeout')
+    //   await fadeOut(this, 100)
+    //   console.log('fadein')
+    //   fadeIn(this, 100)
+    // }else{
+    //   console.log('nofade')
+    // }
 
     this.innerHTML = ''
     this.currentContents = contents

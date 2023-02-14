@@ -174,7 +174,7 @@ export function suffixedNumber(val, digits = 5){
  * @param obj
  */
 export function cleanupObject(obj){
-  const newObj = {}
+  const newObj = _.isArray(obj) ? [] : {}
   for(let key in obj){
     if(_.isNumber(obj[key])){
       newObj[key] = roundToFixed(obj[key], 2)

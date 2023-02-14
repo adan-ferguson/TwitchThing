@@ -4,6 +4,7 @@ import Users from '../collections/users.js'
 import DungeonRunInstance from './dungeonRunInstance.js'
 import { emit } from '../socketServer.js'
 import { cancelRun } from './results.js'
+import AdventurerInstance from '../../game/adventurerInstance.js'
 
 let lastAdvancement = new Date()
 let running = false
@@ -154,6 +155,10 @@ function validateNew(adventurerDoc, userDoc, { startingFloor }){
   }
   if(adventurerDoc.nextLevelUp){
     throw 'Adventurer can not enter dungeon, they have a pending levelup'
+  }
+  const adventurer = new AdventurerInstance(adventurerDoc)
+  if(!adventurer.isLoadoutValid){
+    throw 'Adventurer has invalid loadout.'
   }
 }
 

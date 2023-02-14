@@ -1,56 +1,33 @@
 import { makeEl } from '../../../game/utilFunctions.js'
+import CustomAnimation from './customAnimation.js'
 
 export function fadeOut(el, duration = 300){
+  el.style.opacity = 1
   return new Promise(res => {
-    let cleared = false
-    if(document.hidden){
-      return clear()
-    }
-    const anim = el.animate([
-      { opacity: 1 },
-      { opacity: 0 }
-    ], {
+    new CustomAnimation({
       duration,
-      easing: 'ease-out'
-    })
-    anim.onfinish = () => {
-      clear()
-    }
-    function clear(){
-      if(cleared){
-        return
+      tick: pct => {
+        el.style.opacity = 1 - pct
+      },
+      finish: () => {
+        res()
       }
-      cleared = true
-      el.style.opacity = 0
-      res()
-    }
+    })
   })
 }
 
 export function fadeIn(el, duration = 300){
+  el.style.opacity = 0
   return new Promise(res => {
-    let cleared = false
-    if(document.hidden){
-      return clear()
-    }
-    const anim = el.animate([
-      { opacity: 0 },
-      { opacity: 1 }
-    ], {
+    new CustomAnimation({
       duration,
-      easing: 'ease-out'
-    })
-    anim.onfinish = () => {
-      clear()
-    }
-    function clear(){
-      if(cleared){
-        return
+      tick: pct => {
+        el.style.opacity = pct
+      },
+      finish: () => {
+        res()
       }
-      cleared = true
-      el.style.opacity = 1
-      res()
-    }
+    })
   })
 }
 

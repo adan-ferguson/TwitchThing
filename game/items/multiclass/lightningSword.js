@@ -7,7 +7,7 @@ export default {
     return {
       abilities: {
         physAttackHit: {
-          description: 'Your phys attacks deal an extra ',
+          description: `Your phys attacks deal an extra [magicScaling${0}] to [magicScaling${scaling}] magic damage.`,
           actions: [
             dealDamageAction({
               damageType: 'magic',

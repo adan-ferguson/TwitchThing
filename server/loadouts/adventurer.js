@@ -59,9 +59,9 @@ function calcCraftedItemDiff(oldLoadout, newLoadout){
 }
 
 function validateLoadout(adventurer){
-  const orbsData = new AdventurerInstance(adventurer).orbs
-  if(!orbsData.isValid){
-    throw { code: 403, error: 'Loadout orbs are invalid.' }
+  const adv = new AdventurerInstance(adventurer)
+  if(!adv.isLoadoutValid){
+    throw { code: 403, error: 'Loadout is invalid.' }
   }
 }
 

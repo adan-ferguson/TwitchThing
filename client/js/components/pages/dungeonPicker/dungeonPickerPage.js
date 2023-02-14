@@ -1,8 +1,6 @@
 import Page from '../page.js'
 import DungeonPage from '../dungeon/dungeonPage.js'
-import AdventurerPage from '../adventurer/adventurerPage.js'
 import DIForm from '../../form.js'
-import fizzetch from '../../../fizzetch.js'
 
 const FORM_HTML = `
 <div class="input-group">

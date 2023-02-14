@@ -3,14 +3,13 @@ import '../../adventurer/adventurerPane.js'
 import fizzetch from '../../../fizzetch.js'
 import tippyCallout from '../../visualEffects/tippyCallout.js'
 import { showLoader } from '../../../loader.js'
-import SimpleModal from '../../simpleModal.js'
+import SimpleModal, { alertModal } from '../../simpleModal.js'
 import AdventurerPreviousRunsPage from '../adventurerPreviousRuns/adventurerPreviousRunsPage.js'
 import DungeonPage from '../dungeon/dungeonPage.js'
 import AdventurerLoadoutEditorPage from '../adventurerLoadout/adventurerLoadoutEditorPage.js'
 import LevelupPage from '../levelup/levelupPage.js'
 import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
 import AdventurerInstance from '../../../../../game/adventurerInstance.js'
-import { makeEl } from '../../../../../game/utilFunctions.js'
 
 const HTML = `
 <div class="content-columns">
@@ -122,7 +121,9 @@ export default class AdventurerPage extends Page{
       const quickDungeon = user.features.dungeonPicker
       this._topRightButton.textContent = 'Enter Dungeon'
       this._topRightButton.addEventListener('click', () => {
-        if(quickDungeon){
+        if(!advInstance.isLoadoutValid){
+          alertModal('This adventurer has invalid items for some reason, can not enter dungeon.')
+        }else if(quickDungeon){
           this.redirectTo(DungeonPickerPage.path(this.adventurerID))
         }else{
           this._quickEnterDungeon()

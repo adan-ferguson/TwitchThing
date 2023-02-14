@@ -8,6 +8,10 @@ const SIMPLE_MODAL_HTML = `
   <div class='buttons displaynone'></div>
 `
 
+export function alertModal(message){
+  return new SimpleModal(message, { text: 'Okay' }).show()
+}
+
 export default class SimpleModal extends Modal{
 
   constructor(content = null, buttons = null, title = null){
