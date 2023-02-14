@@ -12,7 +12,7 @@ const FIRST_LEVEL_BONUSES = {
   fighter: 'fighterorb',
   mage: 'mageorb',
   paladin: 'paladinorb',
-  rogueorb: 'rogueorb'
+  rogue: 'rogueorb'
 }
 
 const RARITY_TO_WEIGHT = [

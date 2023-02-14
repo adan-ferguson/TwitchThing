@@ -12,7 +12,6 @@ import fighter from '../assets/icons/orbs/fighter.svg'
 import mage from '../assets/icons/orbs/mage.svg'
 import paladin from '../assets/icons/orbs/paladin.svg'
 import rogue from '../assets/icons/orbs/rogue.svg'
-const multiclass = fighter
 
 import combatResult from '../assets/rooms/combatResult.png'
 import dead from '../assets/rooms/dead.png'
@@ -41,8 +40,7 @@ export const CLASS_SVGS = {
   fighter,
   mage,
   paladin,
-  rogue,
-  multiclass
+  rogue
 }
 
 export const ROOM_IMAGES = {
