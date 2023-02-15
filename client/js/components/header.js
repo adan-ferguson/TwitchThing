@@ -38,6 +38,11 @@ export default class Header extends HTMLElement{
       window.history.back()
     })
 
+    this.querySelector('.autocrawl').addEventListener('click', e => {
+      e.preventDefault()
+      this.app.setPage('')
+    })
+
     this._userInfo = this.querySelector('.user-info')
 
     const goldButton = this.querySelector('.gold-button')

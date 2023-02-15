@@ -94,29 +94,35 @@ export function standardItemSort(rowA, rowB){
   return rowA.loadoutItem.displayName - rowB.loadoutItem.displayName
 }
 
-export function addInventoryItem(list, loadoutItem){
+export function addInventoryItem(list, loadoutItem, count = 1){
   const existingRow = list.findRow(row => row.loadoutItem.equals(loadoutItem))
   if(existingRow){
     if(loadoutItem.isBasic){
-      existingRow.count++
+      existingRow.count += count
     }
     return
   }
   loadoutItem.setOwner(null)
   const row = new LoadoutRow()
-  row.setItem(loadoutItem)
+  row.setItem(loadoutItem).setCount(count)
   list.addRow(row)
 }
 
-export function removeInventoryItem(list, loadoutItem){
+export function removeInventoryItem(list, loadoutItem, all = false){
   const existingRow = list.findRow(row => row.loadoutItem === loadoutItem)
   if(!existingRow){
     return
   }
-  if(existingRow.count > 1){
-    existingRow.count--
-  }else{
+  if(all){
     list.removeRow(existingRow)
+    return existingRow.count
+  }else{
+    if(existingRow.count > 1){
+      existingRow.count--
+    }else{
+      list.removeRow(existingRow)
+    }
+    return 1
   }
 }
 

@@ -93,7 +93,8 @@ export default class App extends HTMLElement{
         window.location = ex.error.redirect
         return
       }
-      if(ex.error?.targetPage){
+      const targetPage = ex.error?.targetPage ?? null
+      if(targetPage !== null){
         this.setPage(ex.error.targetPage)
         return
       }

@@ -46,7 +46,7 @@ export default class AdventurerLoadoutEditorPage extends Page{
   }
 
   get titleText(){
-    return this.adventurer.name + ' - Edit Equipment'
+    return 'Edit Equipment'
   }
 
   async unload(){

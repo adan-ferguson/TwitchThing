@@ -67,7 +67,7 @@ export default class List extends DIElement{
         return
       }
       if(this._options.clickableRows){
-        this.events.emit('clickrow', row)
+        this.events.emit('clickrow', { e, row })
       }
       if(this._options.selectableRows){
         if(row.classList.contains('selected')){

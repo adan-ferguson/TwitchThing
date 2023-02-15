@@ -77,7 +77,7 @@ export default class DungeonPickerPage extends Page{
   }
 
   get titleText(){
-    return this.adventurer.name + ' - Entering Dungeon'
+    return 'Entering Dungeon'
   }
 
   async load(){
