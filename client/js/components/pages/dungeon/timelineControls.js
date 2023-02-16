@@ -2,12 +2,14 @@ import Ticker from '../../../ticker.js'
 import Modal from '../../modal.js'
 import EventLog from './eventLog.js'
 import { mergeOptionsObjects, toTimerFormat } from '../../../../../game/utilFunctions.js'
+import fizzetch from '../../../fizzetch.js'
 
 const HTML = `
 <di-bar class="event-time-bar"></di-bar>
 <div class="flex-rows">
   <div class="flex-columns buttons">
     <button class="log" title="View event log"><i class="fa-solid fa-list"></i></button>
+    <button class="end-run replay-no" title="Tell your adventurer to leave via some sort of magic pager">Leave</button>
     <select class="speed replay-yes">
       <option value="25">25%</option>
       <option value="50">50%</option>
@@ -44,6 +46,7 @@ export default class TimelineControls extends HTMLElement{
   constructor(){
     super()
     this.innerHTML = HTML
+    this._setupLeaveButton()
     this._eventTimeBarEl = this.querySelector('.event-time-bar')
       .setOptions({
         showValue: false
@@ -128,13 +131,14 @@ export default class TimelineControls extends HTMLElement{
     return this._ticker
   }
 
-  setup(timeline, adventurer, options = {}){
+  setup(timeline, dungeonRun, options = {}){
     this.setOptions(options)
+    this._dungeonRun = dungeonRun
     this._timeline = timeline
     this._timeline.on('timechange', ({ before, after, jumped }) => {
       this._update()
     })
-    this._setupEventLog(adventurer)
+    this._setupEventLog(dungeonRun.adventurer)
     this._ticker.currentTime = this._timeline.timeSinceLastEntry
     this._update()
   }
@@ -303,6 +307,17 @@ export default class TimelineControls extends HTMLElement{
       })
     })
     this._speedEl.value = localStorage.getItem(STORAGE_NAME) ?? '100'
+  }
+  
+  _setupLeaveButton(){
+    debugger
+    const btn = this.querySelector('.end-run')
+    let leaving = false
+    btn.addEventListener('click', () => {
+      leaving = !leaving
+      btn.classList.toggle('selected', leaving)
+      fizzetch(`/game/dungeonrun/${this._dungeonRun.id}/instruct`, { leave: leaving })
+    })
   }
 }
 

@@ -7,6 +7,9 @@ export function adventurerItemsToRows(items){
   items.forEach((itemDef, i) => {
     if(itemDef){
       const row = makeRow(itemDef)
+      if(!row){
+        return
+      }
       row.__slotIndex = i
       rows.push(row)
     }
@@ -18,11 +21,17 @@ export function inventoryItemsToRows(items){
   const rows = []
   Object.keys(items.basic).forEach(group => {
     Object.keys(items.basic[group]).forEach(name => {
-      rows.push(makeRow({ group, name }, items.basic[group][name]))
+      const row = makeRow({ group, name }, items.basic[group][name])
+      if(row){
+        rows.push(row)
+      }
     })
   })
   Object.values(items.crafted).forEach(itemDef => {
-    rows.push(makeRow(itemDef))
+    const row = makeRow(itemDef)
+    if(row){
+      rows.push(row)
+    }
   })
   return rows
 }
@@ -127,7 +136,11 @@ export function removeInventoryItem(list, loadoutItem, all = false){
 }
 
 function makeRow(itemDef, count = null){
-  const info = new FighterItemLoadoutItem(new AdventurerItemInstance(itemDef))
+  const item = new AdventurerItemInstance(itemDef)
+  if(!item.isValid){
+    return null
+  }
+  const info = new FighterItemLoadoutItem(item)
   const row = new LoadoutRow().setItem(info)
   if(count !== null){
     row.setCount(count)

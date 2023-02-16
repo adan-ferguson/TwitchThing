@@ -7,7 +7,6 @@ import { commitAdventurerLoadout } from '../../loadouts/adventurer.js'
 import { requireRegisteredUser, validateParam } from '../../validations.js'
 import { generateLevelup, getRerollCost, rerollBonus, selectBonus } from '../../adventurer/bonuses.js'
 import DungeonRuns from '../../collections/dungeonRuns.js'
-import AdventurerInstance from '../../../game/adventurerInstance.js'
 
 const router = express.Router()
 const verifiedRouter = express.Router()
@@ -165,7 +164,7 @@ async function validateIdle(req, res, next){
   next()
 }
 
-export function requireOwnsAdventurer(req){
+function requireOwnsAdventurer(req){
   requireRegisteredUser(req)
   if(!req.user.adventurers.find(adv => adv.equals(req.adventurer._id))){
     throw { code: 400, message: 'Invalid adventurer ID' }

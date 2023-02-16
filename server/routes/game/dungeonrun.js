@@ -3,6 +3,7 @@ import { finalize } from '../../dungeons/results.js'
 import express from 'express'
 import Combats from '../../collections/combats.js'
 import { arrayToObject } from '../../../game/utilFunctions.js'
+import { requireRegisteredUser } from '../../validations.js'
 
 const router = express.Router()
 const verifiedRouter = express.Router()
@@ -30,6 +31,7 @@ verifiedRouter.post('/', async (req, res, next) => {
 })
 
 verifiedRouter.post('/finalize', async (req, res, next) => {
+  requireOwnsAdventurer(req)
   if(!req.dungeonRun.finished){
     throw { code: 400, message: 'Can not show results, dungeon run is not finished yet.' }
   }
@@ -41,5 +43,18 @@ verifiedRouter.post('/finalize', async (req, res, next) => {
   }
   res.status(200).send({})
 })
+
+verifiedRouter.post('/instruct', async(req, res, next) => {
+  requireOwnsAdventurer(req)
+  req.dungeonRun.updateInstructions(req.body)
+  res.status(200).send({})
+})
+
+function requireOwnsAdventurer(req){
+  requireRegisteredUser(req)
+  if(!req.user.adventurers.find(adv => adv.equals(req.dungeonRun.adventurer._id))){
+    throw { code: 400, message: 'Invalid adventurer ID' }
+  }
+}
 
 export default router

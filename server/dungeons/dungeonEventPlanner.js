@@ -54,6 +54,14 @@ export async function generateEvent(dungeonRun){
     return await generateCombatEvent(dungeonRun)
   }
 
+  if(dungeonRun.instructions.leave){
+    return {
+      runFinished: true,
+      roomType: 'cleared',
+      message: `${dungeonRun.adventurerInstance.displayName} leaves the dungeon as per your instructions.`
+    }
+  }
+
   const message = `${adventurerInstance.displayName} is wandering around.`
 
   return {

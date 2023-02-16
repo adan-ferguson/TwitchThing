@@ -187,6 +187,7 @@ export default class List extends DIElement{
 
   _update(){
 
+    hideAllTippys({ duration: 0 })
     this.isMobile = mobileMode()
 
     if(!this._options.paginate){
@@ -215,7 +216,6 @@ export default class List extends DIElement{
       }
     })
     this.rows.append(...toDisplay)
-    hideAllTippys()
   }
 }
 customElements.define('di-list', List)

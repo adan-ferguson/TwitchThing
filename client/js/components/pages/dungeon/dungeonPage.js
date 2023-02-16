@@ -254,7 +254,7 @@ export default class DungeonPage extends Page{
     this._timeline.on('timechange', obj => {
       this._timeChange(obj)
     })
-    this._timelineEl.setup(this._timeline, this.adventurer, {
+    this._timelineEl.setup(this._timeline, dungeonRun, {
       isReplay: this.isReplay
     })
   }

@@ -9,7 +9,12 @@ export default class AdventurerItemInstance extends FighterItemInstance{
 
   constructor(itemDef, state = null, owner = null){
 
-    const baseItem = Items[itemDef.group][itemDef.name] ?? {}
+    if(!Items[itemDef.group] || !Items[itemDef.group][itemDef.name]){
+      super()
+      return
+    }
+
+    const baseItem = Items[itemDef.group][itemDef.name]
     const level = itemDef.level ?? 1
     const itemData = {
       ...baseItem,
