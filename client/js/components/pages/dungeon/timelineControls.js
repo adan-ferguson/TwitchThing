@@ -310,13 +310,12 @@ export default class TimelineControls extends HTMLElement{
   }
   
   _setupLeaveButton(){
-    debugger
     const btn = this.querySelector('.end-run')
     let leaving = false
     btn.addEventListener('click', () => {
       leaving = !leaving
-      btn.classList.toggle('selected', leaving)
-      fizzetch(`/game/dungeonrun/${this._dungeonRun.id}/instruct`, { leave: leaving })
+      btn.classList.toggle('toggle-on', leaving)
+      fizzetch(`/game/dungeonrun/${this._dungeonRun._id}/instruct`, { leave: leaving })
     })
   }
 }

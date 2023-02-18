@@ -1,4 +1,4 @@
-import { getRunData } from '../../dungeons/dungeonRunner.js'
+import { getActiveRun, getRunData } from '../../dungeons/dungeonRunner.js'
 import { finalize } from '../../dungeons/results.js'
 import express from 'express'
 import Combats from '../../collections/combats.js'
@@ -46,7 +46,7 @@ verifiedRouter.post('/finalize', async (req, res, next) => {
 
 verifiedRouter.post('/instruct', async(req, res, next) => {
   requireOwnsAdventurer(req)
-  req.dungeonRun.updateInstructions(req.body)
+  getActiveRun(req.dungeonRun._id)?.updateInstructions(req.body)
   res.status(200).send({})
 })
 

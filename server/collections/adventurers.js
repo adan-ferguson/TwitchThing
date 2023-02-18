@@ -12,7 +12,8 @@ const DEFAULTS = {
   dungeonRunID: null,
   bonuses: {},
   accomplishments: {
-    deepestFloor: 1
+    deepestFloor: 1,
+    superMonsters: 0
   },
   rerolls: 0,
   nextLevelUp: null

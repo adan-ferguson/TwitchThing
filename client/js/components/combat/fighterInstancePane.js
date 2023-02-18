@@ -207,7 +207,12 @@ export default class FighterInstancePane extends HTMLElement{
       }
     }
 
-    this.hpBarEl.setOptions({ max: this.fighterInstance.hpMax })
+    if(this.fighterInstance.hpMax !== this.hpBarEl.max){
+      console.log('clear anims')
+      this.hpBarEl.setOptions({ max: this.fighterInstance.hpMax })
+      cancelAnimations = true
+    }
+
 
     if(this.fighterInstance.hp !== this.hpBarEl.value){
       if(cancelAnimations || (!this.hpBarEl.animating && this._hpChangeQueue.isEmpty)){

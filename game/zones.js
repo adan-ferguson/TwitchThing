@@ -18,6 +18,10 @@ const Zones = [{
   name: 'Water World',
   color: '#d2e8fd',
   texture: 'crypt.png',
+},{
+  name: 'SUPER Zone',
+  color: '#f1c4f8',
+  texture: 'maze-white.png'
 }]
 
 // Final floor gets this bonus size
@@ -37,6 +41,9 @@ export function floorToZone(floor){
 }
 
 export function floorSize(floor){
+  if(floor > 50){
+    return 50
+  }
   const zone = Math.floor((floor - 1) / 10)
   const zoneFloor = floor - zone * 10
   const bonus = zoneFloor === 10 ? FINAL_FLOOR_BONUS : 1

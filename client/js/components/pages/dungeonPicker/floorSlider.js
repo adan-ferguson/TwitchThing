@@ -65,7 +65,7 @@ export default class FloorSlider extends HTMLElement{
   }
 
   get value(){
-    return this._selectedFloorEl?.floorIndex
+    return this._selectedFloorEl?.getAttribute('floor-index')
   }
 
   setOptions(options){
@@ -103,7 +103,7 @@ export default class FloorSlider extends HTMLElement{
       floor.classList.toggle('not-selectable', !selectable)
       floor.classList.add('floor', 'flex-columns')
       floor.innerHTML = FLOOR_HTML(i, notchType)
-      floor.floorIndex = i
+      floor.setAttribute('floor-index', i)
       if(selectable){
         this._floorEls[i] = floor
       }

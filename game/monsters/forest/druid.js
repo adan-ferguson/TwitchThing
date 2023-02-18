@@ -7,14 +7,14 @@ export default {
     hpMax: '-10%',
     physPower: '-50%',
     magicPower: '+20%',
-    speed: 50
+    speed: 55
   },
   items: [
     {
       name: 'Bear Form',
       abilities: {
         active: {
-          initialCooldown: 10000,
+          initialCooldown: 11000,
           description: 'Switch to Bear Form.',
           uses: 1,
           actions: [

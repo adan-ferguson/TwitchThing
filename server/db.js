@@ -23,11 +23,12 @@ const init = async () => {
 
 const id = id => MongoDB.ObjectID(id)
 
-const fix = (doc, defaults, projection = null) => {
-  const fixedDoc = { _id: doc._id }
+const fix = (doc, defaults, projection = {}) => {
+  const fixedDoc = {} // _id: doc._id }
+  projection = fullProjection(defaults, projection)
   defaults = JSON.parse(JSON.stringify(defaults))
   for(let key in defaults){
-    if(!projection || !Object.keys(projection).length || projection[key]){
+    if(projection[key]){
       fixedDoc[key] = doc[key] ?? defaults[key]
     }
   }
@@ -99,4 +100,23 @@ export default {
     const docs = await connection.collection(collection).find(qoid(id ?? query), { projection }).sort(sort).toArray()
     return docs.map(doc => fix(doc, defaults, projection))
   }
+}
+
+function fullProjection(defaults, projection){
+
+  // If there's a projection with value > 1, then, everything else should be excluded.
+  const exclusionary = Object.values(projection).find(val => val > 0)
+  const fullProj = {}
+
+  Object.keys(defaults).forEach(key => {
+    fullProj[key] = exclusionary ? 0 : 1
+  })
+
+  fullProj._id = 1
+
+  Object.keys(projection).forEach(key => {
+    fullProj[key] = projection[key]
+  })
+
+  return fullProj
 }

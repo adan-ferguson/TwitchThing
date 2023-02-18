@@ -66,6 +66,10 @@ export default class Bar extends HTMLElement{
     return this._pct(this.value)
   }
 
+  get options(){
+    return { ...this._options }
+  }
+
   setOptions(options){
 
     const newOptions = mergeOptionsObjects(this._options, options)

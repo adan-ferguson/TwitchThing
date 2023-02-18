@@ -62,6 +62,9 @@ export async function finalize(dungeonRunDoc){
     adventurerDoc.xp = xpAfter
     adventurerDoc.level = advXpToLevel(xpAfter)
     adventurerDoc.accomplishments.deepestFloor = Math.max(deepestFloor, adventurerDoc.accomplishments.deepestFloor)
+    if(dungeonRunDoc.floor === 51){
+      adventurerDoc.accomplishments.superMonster = Math.max(dungeonRunDoc.room - 1, adventurerDoc.accomplishments.superMonster)
+    }
     await Adventurers.save(adventurerDoc)
   }
 

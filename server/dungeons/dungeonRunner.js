@@ -143,6 +143,10 @@ export async function getRunData(dungeonRunID, truncated = false){
   return data
 }
 
+export function getActiveRun(id){
+  return activeRuns[id]
+}
+
 function validateNew(adventurerDoc, userDoc, { startingFloor }){
   if(!adventurerDoc){
     throw 'Adventurer not found'

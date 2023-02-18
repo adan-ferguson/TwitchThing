@@ -17,18 +17,18 @@ const POWER_BASE = 10
 const POWER_GROWTH = 3
 const POWER_GROWTH_PCT = 0.1
 
-const XP_BASE = 5000000 //50
+const XP_BASE = 50
 const XP_GROWTH = 20
 const XP_GROWTH_PCT = 0.2
-const XP_ZONE_BONUS = 175
+const XP_ZONE_BONUS = 1.75
 
 export function levelToXpReward(lvl){
   const zoneBonuses = Math.floor((lvl - 1) / 10)
   const adjustedLevel = adjustedDifficultyLevel(lvl)
-  const val = Math.ceil(geometricProgession(XP_GROWTH_PCT, adjustedLevel - 1, XP_GROWTH * Math.pow(XP_ZONE_BONUS, zoneBonuses), 3))
+  const val = Math.ceil(geometricProgession(XP_GROWTH_PCT, adjustedLevel - 1, XP_GROWTH))
   return toNumberOfDigits(
-    XP_BASE + val,
-    2
+    XP_BASE + val * Math.pow(XP_ZONE_BONUS, zoneBonuses),
+    3
   )
 }
 
@@ -74,12 +74,16 @@ export default class MonsterInstance extends FighterInstance{
     this.monsterDef = monsterDef
   }
 
+  get isSuper(){
+    return this.monsterDef.super ?  true : false
+  }
+
   get description(){
     return this.fighterData.description
   }
 
   get displayName(){
-    return this.monsterDef.displayName ?? toDisplayName(this.fighterData.name)
+    return (this.isSuper ? 'SUPER ' : '' ) + (this.monsterDef.displayName ?? toDisplayName(this.fighterData.name))
   }
 
   get uniqueID(){

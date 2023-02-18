@@ -93,6 +93,15 @@ export function foundMonster(dungeonRun){
   // }
 }
 
+export function generateSuperMonster(level){
+  const monsterDefinition = getMonsterDefinition(level % 50)
+  return {
+    ...monsterDefinition,
+    level: level + 55,
+    super: true
+  }
+}
+
 export async function generateMonster(dungeonRun, boss){
 
   const level = boss ? dungeonRun.floor : floorToLevel(dungeonRun.floor)
