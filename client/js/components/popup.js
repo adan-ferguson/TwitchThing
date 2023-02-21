@@ -12,6 +12,7 @@ export function showPopup(data){
   if(!popupQueue.length){
     return
   }
+  debugger
   if(!running){
     running = true
     showNext()
@@ -52,6 +53,8 @@ function itemHtml(key, val){
     return `${ICON_SVGS.gold}<span> +${val}</span>`
   }else if(key === 'scrap'){
     return `<i class="fa-solid fa-recycle"></i><span> +${val}</span>`
+  }else if(key === 'zone'){
+    return `Zone Unlocked: ${val}`
   }
   return '??? ERROR ERROR ???'
 }

@@ -50,11 +50,7 @@ export default class EventContentsResults extends HTMLElement{
     await this._wait()
     this._addText(el, `Room: ${dungeonRun.room}`)
     await this._wait()
-
-    const monsterName = dungeonRun.results.killedByMonster ?
-      new MonsterInstance(dungeonRun.results.killedByMonster).displayName :
-      'Something'
-    this._addText(el, `Killed By: ${toDisplayName(monsterName)}`)
+    this._addText(el, getFinishReason(dungeonRun.results.finalEvent))
     await this._wait()
 
     this._addNewline(el)
@@ -167,6 +163,18 @@ function waitUntilDocumentVisible(){
       }
     })
   })
+}
+
+function getFinishReason(lastEvent){
+  if(lastEvent.roomType === 'cleared'){
+    return 'Zone cleared'
+  }else if(lastEvent.monster){
+    const mi = new MonsterInstance(lastEvent.monster)
+    return `Killed by: ${mi.displayName}`
+  }else if(lastEvent.roomType === 'outOfOrder'){
+    return 'Dungeon finished'
+  }
+  return 'Insert finish reason here'
 }
 
 customElements.define('di-dungeon-event-contents-results', EventContentsResults)

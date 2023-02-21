@@ -7,7 +7,10 @@ import goldIcon from '../../assets/icons/gold.svg'
 const HTML = `
 <div class="left-side">
   <button class="back-button"><i class="fa-solid fa-arrow-left"></i></button>
-  <a class="autocrawl clickable" href="/game">AUTOCRAWL</a>
+  <div class="flex-rows">
+    <a class="autocrawl clickable" href="/game">AUTOCRAWL</a>
+    <a class="version" href="/notes/0-7-1">v0.7.1</a>
+  </div>
 </div>
 <div class="right-side">
   <div class="scrap-button displaynone">

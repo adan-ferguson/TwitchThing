@@ -11,7 +11,8 @@ export function checkForUnlocks(userDoc){
     popups.push(zoneCleared(0, {
       message: 'Shop unlocked, visit it from the main page, or from the gold counter in the header.',
       items: {
-        gold: 100
+        gold: 100,
+        zone: 'Woods'
       }
     }))
   }
@@ -22,7 +23,8 @@ export function checkForUnlocks(userDoc){
     popups.push(zoneCleared(1, {
       message: 'Forge unlocked, visit it from the main page, or from the scrap counter in the header.',
       items: {
-        scrap: 50
+        scrap: 50,
+        zone: 'Crypt'
       }
     }))
   }
@@ -31,7 +33,8 @@ export function checkForUnlocks(userDoc){
     userDoc.features.advClasses.rogue = 1
     popups.push(zoneCleared(2, {
       items: {
-        class: 'rogue'
+        class: 'rogue',
+        zone: 'Swamp'
       }
     }))
   }
@@ -41,13 +44,14 @@ export function checkForUnlocks(userDoc){
     userDoc.inventory.gold += 1000
     popups.push(zoneCleared(3, {
       message: 'Here, have some stuff',
-      items: { scrap: 100, gold: 1000 }
+      items: { scrap: 100, gold: 1000, zone: 'Water World' }
     }))
   }
 
   if(!userDoc.features.advClasses.rogue && zone >= 5){
     popups.push(zoneCleared(4, {
-      message: 'You\'ve reached the end of the dungeon for now. Try the bonus floor 51 for wacky fun time wow!'
+      message: 'You\'ve reached the end of the dungeon for now. Try the bonus floor 51 for wacky fun time wow!',
+      zone: 'SUPER Zone'
     }))
   }
 

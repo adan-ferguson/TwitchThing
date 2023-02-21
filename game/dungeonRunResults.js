@@ -6,7 +6,6 @@ export default function calculateResults(eventsList){
   const results = {
     xp: eventsList.reduce((prev, e) => prev + (e.rewards?.xp ?? 0), 0) ?? 0,
     monstersKilled: monstersKilled(eventsList),
-    relics: relics(eventsList),
     chests: chests(eventsList)
   }
 
@@ -19,7 +18,7 @@ export default function calculateResults(eventsList){
   results.endingFloor = eventsList.at(-1).floor
 
   if(eventsList.at(-1)?.runFinished){
-    results.killedByMonster = eventsList.at(-1).monster
+    results.finalEvent = eventsList.at(-1)
   }
 
   return results
@@ -33,23 +32,6 @@ function monstersKilled(eventsList){
     }
   })
   return Object.keys(obj).map(name => { return { name, amount: obj[name] }} )
-}
-
-function relics(eventsList){
-  const arr = []
-  eventsList.forEach(e => {
-    if('relicSolved' in e){
-      const tier = e.relic.tier
-      if(!arr[tier]){
-        arr[tier] = { attempted: 0, solved: 0 }
-      }
-      arr[tier].attempted++
-      if(e.relicSolved){
-        arr[tier].solved++
-      }
-    }
-  })
-  return arr
 }
 
 function chests(eventsList){

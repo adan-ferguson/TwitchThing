@@ -1,7 +1,6 @@
 import express from 'express'
 import config from '../config.js'
-import { getRunData } from '../dungeons/dungeonRunner.js'
-import db from '../db.js'
+import path from 'path'
 
 const router = express.Router()
 
@@ -19,6 +18,10 @@ router.get('/login', (req, res) => {
       magicPublishableKey: config.magic.publishableKey
     })
   }
+})
+
+router.get('/notes/:version', (req, res) => {
+  res.sendFile(path.resolve('notes', req.params.version + '.txt'))
 })
 
 router.get('/', (req, res) => {

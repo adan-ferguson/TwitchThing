@@ -129,6 +129,8 @@ export default class DungeonPage extends Page{
 
   _socketUpdate = (dungeonRun) => {
 
+    console.log('socko')
+
     if(this.dungeonRun._id !== dungeonRun._id){
       return
     }

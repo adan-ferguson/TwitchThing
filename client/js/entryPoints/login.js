@@ -36,11 +36,7 @@ import { connect } from '../socketClient.js'
         }
       })
     })
-
-  const map = new LiveDungeonMap()
-  document.querySelector('.dungeon-map').appendChild(map)
-  map.load()
-
+  
   async function sendLink(){
     const email = diform.data().email
     const didToken = await magic.auth.loginWithMagicLink({ email })

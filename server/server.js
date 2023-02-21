@@ -13,6 +13,7 @@ import path from 'path'
 import DB from './db.js'
 import MongoStore from 'connect-mongo'
 import errorHandler from './errorHandler.js'
+import favicon from 'serve-favicon'
 
 const __filename = fileURLToPath(import.meta.url)
 const __dirname = path.dirname(__filename)
@@ -43,6 +44,7 @@ async function init(){
     .set('trust proxy', 1)
     .set('view engine', 'ejs')
     .set('views', path.join(__dirname, '../client/views'))
+    .use(favicon(path.join(__dirname, '../favicon.ico')))
     .use(sessionMiddlware)
     .use(express.json())
     .use(passport.initialize({}))

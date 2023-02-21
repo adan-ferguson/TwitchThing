@@ -13,14 +13,12 @@ export function runEnd(dungeonRun){
       message: `${dungeonRun.adventurerInstance.displayName} returns triumphantly after clearing the ${zone}.`
     }
   }
-  // if(floor === 50){
-  //   return {
-  //     runFinished: true,
-  //     roomType: 'outOfOrder',
-  //     floor: floor + 1,
-  //     room: 0,
-  //     message: `${dungeonRun.adventurerInstance.displayname} finds that the stairs to the next zone are out of order, what a rip off!`
-  //   }
-  // }
+  if(floor === 50){
+    return {
+      runFinished: true,
+      roomType: 'outOfOrder',
+      message: `${dungeonRun.adventurerInstance.displayname} finds that the stairs to the next zone are out of order, what a rip off!`
+    }
+  }
   return false
 }

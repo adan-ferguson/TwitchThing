@@ -13,15 +13,17 @@ import mage from '../assets/icons/orbs/mage.svg'
 import paladin from '../assets/icons/orbs/paladin.svg'
 import rogue from '../assets/icons/orbs/rogue.svg'
 
+import cleared from '../assets/rooms/cleared.png'
 import combatResult from '../assets/rooms/combatResult.png'
 import dead from '../assets/rooms/dead.png'
 import entrance from '../assets/rooms/entrance.png'
+import leave from '../assets/rooms/leave.png'
 import nextZone from '../assets/rooms/nextZone.png'
 import outOfOrder from '../assets/rooms/outOfOrder.png'
 import relic from '../assets/rooms/relic.png'
 import rest from '../assets/rooms/rest.png'
 import stairs from '../assets/rooms/stairs.png'
-import timeOver from '../assets/rooms/timeover.png'
+import timeOver from '../assets/rooms/timeOver.png'
 import wandering from '../assets/rooms/wandering.png'
 
 export const ICON_SVGS = {
@@ -44,9 +46,11 @@ export const CLASS_SVGS = {
 }
 
 export const ROOM_IMAGES = {
+  cleared,
   combatResult,
   dead,
   entrance,
+  leave,
   nextZone,
   outOfOrder,
   relic,
