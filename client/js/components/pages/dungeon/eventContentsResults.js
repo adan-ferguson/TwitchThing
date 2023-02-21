@@ -173,6 +173,8 @@ function getFinishReason(lastEvent){
     return `Killed by: ${mi.displayName}`
   }else if(lastEvent.roomType === 'outOfOrder'){
     return 'Dungeon finished'
+  }else if(lastEvent.roomType === 'leave'){
+    return 'Left dungeon'
   }
   return 'Insert finish reason here'
 }

@@ -129,8 +129,6 @@ export default class DungeonPage extends Page{
 
   _socketUpdate = (dungeonRun) => {
 
-    console.log('socko')
-
     if(this.dungeonRun._id !== dungeonRun._id){
       return
     }
@@ -154,7 +152,9 @@ export default class DungeonPage extends Page{
     }
 
     if(dungeonRun.virtualTime){
-      this._timelineEl.jumpTo(dungeonRun.virtualTime)
+      this._timelineEl.jumpTo(dungeonRun.virtualTime, {
+        force: dungeonRun.finished ? true : false
+      })
     }
   }
 

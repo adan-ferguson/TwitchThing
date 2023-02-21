@@ -168,7 +168,7 @@ export default class TimelineControls extends HTMLElement{
 
   jumpTo(time, options = {}){
     const diff = time - this._timeline.time
-    if(Math.abs(diff) < JUMP_MINIMUM_DIFF){
+    if(!options.force && Math.abs(diff) < JUMP_MINIMUM_DIFF){
       return
     }
     this._timeline.setTime(time, true)

@@ -57,7 +57,7 @@ export async function generateEvent(dungeonRun){
   if(dungeonRun.instructions.leave){
     return {
       runFinished: true,
-      roomType: 'cleared',
+      roomType: 'leave',
       message: `${dungeonRun.adventurerInstance.displayName} leaves the dungeon as per your instructions. (Boring)`
     }
   }

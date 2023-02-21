@@ -17,7 +17,7 @@ const POWER_BASE = 10
 const POWER_GROWTH = 3
 const POWER_GROWTH_PCT = 0.1
 
-const XP_BASE = 50000000 // 50
+const XP_BASE = 5000000000 // 50
 const XP_GROWTH = 20
 const XP_GROWTH_PCT = 0.2
 const XP_ZONE_BONUS = 1.75

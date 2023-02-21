@@ -130,6 +130,7 @@ export default class App extends HTMLElement{
   }
 
   showError(error){
+    debugger
     this.setPage('')
     alertModal(_.isObject(error) ? JSON.stringify(error) : error)
   }

@@ -1,7 +1,7 @@
 import SimpleModal from './simpleModal.js'
-import { toArray } from 'lodash'
 import classDisplayInfo from '../classDisplayInfo.js'
 import { ICON_SVGS } from '../assetLoader.js'
+import { toArray } from '../../../game/utilFunctions.js'
 
 const popupQueue = []
 
@@ -12,7 +12,6 @@ export function showPopup(data){
   if(!popupQueue.length){
     return
   }
-  debugger
   if(!running){
     running = true
     showNext()
