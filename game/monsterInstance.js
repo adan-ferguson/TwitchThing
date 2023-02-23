@@ -86,10 +86,6 @@ export default class MonsterInstance extends FighterInstance{
     return (this.isSuper ? 'SUPER ' : '' ) + (this.monsterDef.displayName ?? toDisplayName(this.fighterData.name))
   }
 
-  get uniqueID(){
-    return this.monsterDef._id
-  }
-
   get level(){
     return this._fighterData.level ?? 1
   }

@@ -29,6 +29,5 @@ export default {
       }
     }
   },
-  orbs: 4,
-  rarity: 1
+  orbs: 4
 }

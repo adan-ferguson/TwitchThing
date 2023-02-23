@@ -95,12 +95,11 @@ export function foundMonster(dungeonRun){
 
 export function generateSuperMonster(dungeonRun){
   const monsterDefinition = getMonsterDefinition((dungeonRun.room - 1) % 50)
-  const level = dungeonRun.room + 54
+  monsterDefinition.level = dungeonRun.room + 54
   return {
     ...monsterDefinition,
-    level,
     super: true,
-    rewards: generateRewards(dungeonRun, monsterDefinition, level)
+    rewards: generateRewards(dungeonRun, monsterDefinition)
   }
 }
 
@@ -108,17 +107,18 @@ export async function generateMonster(dungeonRun, boss){
 
   const level = boss ? dungeonRun.floor : floorToLevel(dungeonRun.floor)
   const monsterDefinition = getMonsterDefinition(level)
+  monsterDefinition.level = level
 
   return {
     ...monsterDefinition,
-    level,
-    rewards: generateRewards(dungeonRun, monsterDefinition, level)
+    rewards: generateRewards(dungeonRun, monsterDefinition)
   }
 }
 
-function generateRewards(dungeonRun, monsterDefinition, level){
+function generateRewards(dungeonRun, monsterDefinition){
   const monsterInstance = new MonsterInstance(monsterDefinition)
   const advStats = dungeonRun.adventurerInstance.stats
+  const level = monsterInstance.level
   const rewards = {
     xp: monsterInstance.xpReward * advStats.get('combatXP').value * (monsterInstance.isBoss ? BOSS_XP_BONUS : 1)
   }
@@ -139,7 +139,7 @@ function generateRewards(dungeonRun, monsterDefinition, level){
           'normal'
 
       rewards.chests = generateRandomChest({
-        level: Math.floor(dungeonRun.floor * advStats.get('chestLevel').value),
+        level: Math.floor(level * advStats.get('chestLevel').value),
         type,
         classes: unlockedClasses(dungeonRun.user)
       })

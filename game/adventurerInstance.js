@@ -67,10 +67,6 @@ export default class AdventurerInstance extends FighterInstance{
     return this.fighterData.name
   }
 
-  get uniqueID(){
-    return this.fighterData._id.toString()
-  }
-
   get ItemClass(){
     return AdventurerItemInstance
   }

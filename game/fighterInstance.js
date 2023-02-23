@@ -36,7 +36,7 @@ export default class FighterInstance{
     for(let i = 0; i < 8; i++){
       if(fighterData.items[i]){
         this._itemInstances[i] = new this.ItemClass(fighterData.items[i], null, this)
-        this._itemInstances[i].effectId = 'item-' + i
+        this._itemInstances[i].effectId = this.uniqueID + '-item-' + i
       }else{
         this._itemInstances[i] = null
       }
@@ -75,7 +75,7 @@ export default class FighterInstance{
    * @return {string}
    */
   get uniqueID(){
-    throw 'Not implemented'
+    return this.fighterData._id.toString()
   }
 
   get itemInstances(){

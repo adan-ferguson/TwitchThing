@@ -1,5 +1,3 @@
-import { cooldownReductionStat } from './stats/combined.js'
-
 export default class AbilityInstance{
 
   constructor(abilityDef, state, parentEffect){
