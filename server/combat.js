@@ -23,7 +23,7 @@ export async function generateCombatEvent(dungeonRun, boss = false){
 
   let monsterDef
   if(dungeonRun.floor === 51){
-    monsterDef = generateSuperMonster(dungeonRun.room - 1)
+    monsterDef = generateSuperMonster(dungeonRun)
   }else{
     monsterDef = await generateMonster(dungeonRun, boss)
   }

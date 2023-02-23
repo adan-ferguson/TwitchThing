@@ -10,7 +10,7 @@ let lastAdvancement = new Date()
 let running = false
 let activeRuns = {}
 
-export const ADVANCEMENT_INTERVAL = 5000
+export const ADVANCEMENT_INTERVAL = 2500
 
 export function cancelAllRuns(){
   activeRuns = {}

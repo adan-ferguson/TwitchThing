@@ -1,12 +1,25 @@
 New Things:
-- Added new Rogue class, which unlocks once you reach floor 30.
+- Added new Rogue class, which unlocks once you reach floor 30. Pulls the "crit" and "dodge" mechanics from fighter, which has some of its items changed.
 - Rarity of items no longer tied to its orb count, which gives me added flexibility to work with. For example, Rogue has a rare item with 0 orb cost.
 - Added a "leave" button. Your adventurer will attempt to leave if you toggle this on, though it's sort of delayed because what you see is a few seconds behind what's actually happening.
+- New stat: "Chest Level %", increases lvl of chests you find
+- The first time you clear a zone on an account, that adventurer's run will end immediately so you can use the new features immediately and sort of bask in the success. (Future adventurers will just keep going)
 
-Adjustments:
-
+Improvements/Changes:
+- Shortened time of in-between-combat events since they're generally uninteresting.
+- Fiddled with stats/orb costs/upgrades of a bunch of items.
+- Xp now uses thousands separators (like 1,000,000 or 1 000 000)
+- Images are generally preloaded better now
+- When watching replays, the combat data is all preloaded now instead of fetching each time.
+- Rest threshold % now saves between runs.
+- Left-clicking "AUTOCRAWL" header won't reload the page anymore.
+- Shop chests don't drop 5 items, instead they drop about <chest level> worth of scrap items.
+- Added to shop: 70 scrap for 1000 gold. (Chests are about 50 scrap for 1000)
+- Can shift-click to scrap all items of a type.
 
 Fixes:
 - Results no longer says "Killed by: Something" if nothing killed you.
 - Fixed some animation problems, such as when changing between events.
 - Added some infinite loop protection. Combats will just crash/abort the run if a tick triggers too many events or if time stops advancing.
+- Fixed some abilities so that if one part gets blocked/dodged, the entire thing doesn't get blocked/dodged. (Swift Strikes)
+- Fixed bug with health bar animations when maximum health changes (druid Bear Form).
