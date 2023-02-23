@@ -17,7 +17,7 @@ export function runEnd(dungeonRun){
     return {
       runFinished: true,
       roomType: 'outOfOrder',
-      message: `${dungeonRun.adventurerInstance.displayname} finds that the stairs to the next zone are out of order, what a rip off!`
+      message: `${dungeonRun.adventurerInstance.displayName} finds that the stairs to the next zone are out of order, what a rip off!`
     }
   }
   return false

@@ -58,12 +58,15 @@ $padding: 20rem
     //margin-top: $padding
     padding-top: $padding
     display: flex
-    justify-content: end
+    justify-content: stretch
 
     button
       padding: 4rem 16rem
-      margin-left: 2rem
       transition: background-color 0.3s ease, color 0.3s ease
+      flex-grow: 1
+
+      &:not(:last-child)
+        margin-right: 2rem
 
       &.style-scary
         border-color: #d25050
@@ -85,7 +88,7 @@ $padding: 20rem
 .popup-content
   ul
     padding-left: 2rem
-    text-align: center
+    text-align: left
   li
     list-style: none
     svg

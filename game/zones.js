@@ -44,10 +44,9 @@ export function floorSize(floor){
   if(floor > 50){
     return 50
   }
-  return 2
-  // const zone = Math.floor((floor - 1) / 10)
-  // const zoneFloor = floor - zone * 10
-  // const bonus = zoneFloor === 10 ? FINAL_FLOOR_BONUS : 1
-  // const base = SIZE_BASE + (zone > 0 ? SIZE_AFTER_ZONE_0 : 0)
-  // return Math.floor(bonus * (base + zoneFloor * SIZE_PER_FLOOR))
+  const zone = Math.floor((floor - 1) / 10)
+  const zoneFloor = floor - zone * 10
+  const bonus = zoneFloor === 10 ? FINAL_FLOOR_BONUS : 1
+  const base = SIZE_BASE + (zone > 0 ? SIZE_AFTER_ZONE_0 : 0)
+  return Math.floor(bonus * (base + zoneFloor * SIZE_PER_FLOOR))
 }

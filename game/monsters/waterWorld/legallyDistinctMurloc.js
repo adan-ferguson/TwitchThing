@@ -1,5 +1,6 @@
 export default {
   baseStats: {
-    speed: 70
+    speed: 70,
+    damageTaken: '-30%'
   }
 }

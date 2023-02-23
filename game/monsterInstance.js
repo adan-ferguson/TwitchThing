@@ -17,7 +17,7 @@ const POWER_BASE = 10
 const POWER_GROWTH = 3
 const POWER_GROWTH_PCT = 0.1
 
-const XP_BASE = 5000000000 // 50
+const XP_BASE = 50
 const XP_GROWTH = 20
 const XP_GROWTH_PCT = 0.2
 const XP_ZONE_BONUS = 1.75
@@ -107,7 +107,14 @@ export default class MonsterInstance extends FighterInstance{
   }
 
   get baseStats(){
-    return [this._fighterData.baseStats] ?? []
+    const stats = [this._fighterData.baseStats] ?? []
+    if(this.level > 50){
+      stats.push({
+        speed: 50,
+        cooldownReduction: '33%'
+      })
+    }
+    return stats
   }
 
   get orbs(){

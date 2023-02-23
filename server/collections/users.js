@@ -17,6 +17,9 @@ const DEFAULTS = {
     firstRunFinished: 0,
     chestsFound: 0
   },
+  rewards: {
+    zonesCleared: []
+  },
   features: { // featureName: 0 = locked, 1 = unlocked & brand new, 2 = unlocked
     editLoadout: 0,
     dungeonPicker: 0,

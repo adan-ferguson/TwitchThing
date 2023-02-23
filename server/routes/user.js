@@ -5,7 +5,7 @@ import Users from '../collections/users.js'
 import passport from 'passport'
 import { Strategy } from 'passport-magic'
 import { OAuthExtension } from '@magic-ext/oauth'
-import { checkForUnlocks } from '../user/unlocks.js'
+import { checkForRewards } from '../user/rewards.js'
 
 const router = express.Router()
 
@@ -77,7 +77,7 @@ router.get('/newuser', async (req, res) => {
 
 router.post('/appfetch', async (req, res) => {
   const user = Users.gameData(req.user) || { anonymous: true }
-  const popups = checkForUnlocks(req.user)
+  const popups = checkForRewards(req.user)
   res.send({ user, popups })
 })
 
