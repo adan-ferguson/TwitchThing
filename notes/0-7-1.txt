@@ -1,3 +1,10 @@
+v0.7.1.1
+--------
+- Fixed poison knife missing scaling
+- Fixed bug where 2nd adventurer for an account wouldn't get access to zone 51 after beating kraken
+
+v0.7.1
+------
 New Things:
 - Added new Rogue class, which unlocks once you reach floor 30. Pulls the "crit" and "dodge" mechanics from fighter, which has some of its items changed.
 - Rarity of items no longer tied to its orb count, which gives me added flexibility to work with. For example, Rogue has a rare item with 0 orb cost. There's no visual representation of an item's rarity right now.
