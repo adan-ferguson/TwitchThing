@@ -3,10 +3,10 @@ import statusEffectAction from '../../actions/statusEffectAction.js'
 
 export default {
   levelFn: level => {
-    const damage = 0.17 + 0.03
+    const damage = 0.17 + 0.03 * level
     return {
       stats: {
-        critChance: 0.17 + 0.03
+        critChance: damage
       },
       abilities: {
         crit: {
