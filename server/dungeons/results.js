@@ -48,7 +48,7 @@ export async function finalize(dungeonRunDoc){
   }
 
   const lastEvent = dungeonRunDoc.events.at(-1)
-  const deepestFloor = dungeonRunDoc.floor + (lastEvent.roomType === 'cleared' ? 1 : 0)
+  const deepestFloor = dungeonRunDoc.floor + ((lastEvent.roomType === 'cleared' || lastEvent.roomType === 'outOfOrder') ? 1 : 0)
 
   await saveAdventurer()
   await saveUser()
