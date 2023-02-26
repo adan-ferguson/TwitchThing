@@ -2,11 +2,15 @@ import * as Dropdown  from './dropdown.js'
 import SimpleModal from './simpleModal.js'
 import tippy from 'tippy.js'
 import { suffixedNumber } from '../../../game/utilFunctions.js'
+import goldIcon from '../../assets/icons/gold.svg'
 
 const HTML = `
 <div class="left-side">
   <button class="back-button"><i class="fa-solid fa-arrow-left"></i></button>
-  <a class="autocrawl clickable" href="/game">AUTOCRAWL</a>
+  <div class="flex-rows">
+    <a class="autocrawl clickable" href="/game">AUTOCRAWL</a>
+    <a class="version" href="/notes/0-7-1">v0.7.1.1</a>
+  </div>
 </div>
 <div class="right-side">
   <div class="scrap-button displaynone">
@@ -14,7 +18,8 @@ const HTML = `
     <span class="val"></span>
   </div>
   <div class="gold-button displaynone">
-    <img src="/assets/icons/gold.svg">
+    ${goldIcon}
+    <span class="val"></span>
     <span class="val"></span>
   </div>
   <div class="user-info clickable">
@@ -34,6 +39,11 @@ export default class Header extends HTMLElement{
 
     this.querySelector('.back-button').addEventListener('click', () => {
       window.history.back()
+    })
+
+    this.querySelector('.autocrawl').addEventListener('click', e => {
+      e.preventDefault()
+      this.app.setPage('')
     })
 
     this._userInfo = this.querySelector('.user-info')
@@ -85,7 +95,7 @@ export default class Header extends HTMLElement{
   }
 
   update(){
-    if(this.user.anonymous){
+    if(!this.user || this.user.anonymous){
       this.querySelector('.right-side').classList.add('hidden')
     }else{
       this.querySelector('.displayname').textContent = this.user.displayname

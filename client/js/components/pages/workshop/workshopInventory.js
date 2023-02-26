@@ -67,6 +67,7 @@ export default class WorkshopInventory extends DIElement{
       return row.loadoutItem?.itemInstance?.id === itemDef.id
     })
     if(row){
+      this.listEl.showRow(row)
       row.click()
     }
   }

@@ -5,7 +5,7 @@ export default {
   levelFn: level => ({
     abilities: {
       active: {
-        initialCooldown: 15000 + 5000 * level,
+        initialCooldown: 18000 + 2000 * level,
         actions: [
           attackAction({
             damageMulti: 2.5 + level * 0.5
@@ -15,5 +15,6 @@ export default {
     },
     mods: [physScaling]
   }),
-  orbs: 4
+  orbs: 3,
+  rarity: 1
 }

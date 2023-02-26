@@ -1,12 +1,13 @@
 import { cooldownReductionStat, magicPowerStat } from '../../stats/combined.js'
-import { exponentialPercentage, leveledPercentageString } from '../../growthFunctions.js'
+import { exponentialPercentage, leveledPctString } from '../../growthFunctions.js'
 
 export default {
   levelFn: level => ({
     stats: {
-      [magicPowerStat.name]: leveledPercentageString(50, 10, level),
-      [cooldownReductionStat.name]: exponentialPercentage(0.05, level - 1, 0.2)
+      [magicPowerStat.name]: leveledPctString(80, 20, level),
+      [cooldownReductionStat.name]: exponentialPercentage(0.08, level - 1, 0.25)
     }
   }),
-  orbs: 8
+  orbs: 11,
+  rarity: 2
 }

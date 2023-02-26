@@ -33,7 +33,7 @@ export default class ComponentRow extends DIElement{
       const classInfo = classDisplayInfo(component.group)
       const have = inventory ? (inventory.items.basic[component.group]?.[component.name] ?? 0) : component.count
       const required = inventory ? component.count : null
-      this.innerHTML = HTML(`<img class="component-icon" src="${classInfo.orbIcon}">`, instance.displayName + ' (Basic)')
+      this.innerHTML = HTML(classInfo.icon, instance.displayName + ' (Basic)')
       this.setValue(have, required)
     }
     return this

@@ -2,6 +2,7 @@ import { foundMonster } from './monsters.js'
 import { foundStairs } from './stairs.js'
 import { generateCombatEvent } from '../combat.js'
 import { shouldRest, rest } from './resting.js'
+import { runEnd } from './runEnd.js'
 
 /**
  * @param dungeonRun {DungeonRunInstance}
@@ -16,17 +17,14 @@ export async function generateEvent(dungeonRun){
   const previousEvent = dungeonRun.events.at(-1)
 
   if(previousEvent.boss){
-    if(floor === 50){
-      return {
-        runFinished: true,
-        roomType: 'outoforder',
-        message: `${adventurerInstance.display} finds that the stairs to the next zone are out of order, what a rip off!`
-      }
+    const runEndEvent = runEnd(dungeonRun)
+    if(runEndEvent){
+      return runEndEvent
     }
     return {
       nextRoom: 1,
       nextFloor: floor + 1,
-      roomType: 'nextzone',
+      roomType: 'nextZone',
       message : `${adventurerInstance.displayName} advances to the next zone.`
     }
   }
@@ -54,6 +52,14 @@ export async function generateEvent(dungeonRun){
 
   if(encounterPossible && foundMonster(dungeonRun)){
     return await generateCombatEvent(dungeonRun)
+  }
+
+  if(dungeonRun.instructions.leave){
+    return {
+      runFinished: true,
+      roomType: 'leave',
+      message: `${dungeonRun.adventurerInstance.displayName} leaves the dungeon as per your instructions. (Boring)`
+    }
   }
 
   const message = `${adventurerInstance.displayName} is wandering around.`

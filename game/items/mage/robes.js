@@ -1,11 +1,11 @@
 import { combatXPStat, magicPowerStat } from '../../stats/combined.js'
-import { leveledPercentageString } from '../../growthFunctions.js'
+import { leveledPctString } from '../../growthFunctions.js'
 
 export default {
   levelFn: level => ({
     stats: {
-      [magicPowerStat.name]: leveledPercentageString(20, 5, level),
-      [combatXPStat.name]: leveledPercentageString(20, 5, level),
+      [magicPowerStat.name]: leveledPctString(20, 5, level),
+      [combatXPStat.name]: leveledPctString(20, 5, level),
     }
   }),
   orbs: 3

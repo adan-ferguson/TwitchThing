@@ -3,13 +3,18 @@ import { toArray } from '../../../game/utilFunctions.js'
 import { fadeIn, fadeOut } from '../animations/simple.js'
 
 const SIMPLE_MODAL_HTML = `
+  <div class='title displaynone'></div>
   <div class='content'></div>
   <div class='buttons displaynone'></div>
 `
 
+export function alertModal(message){
+  return new SimpleModal(message, { text: 'Okay' }).show()
+}
+
 export default class SimpleModal extends Modal{
 
-  constructor(content = null, buttons = null){
+  constructor(content = null, buttons = null, title = null){
     super()
     this.innerContent.innerHTML = SIMPLE_MODAL_HTML
     if(content){
@@ -17,6 +22,9 @@ export default class SimpleModal extends Modal{
     }
     if(buttons){
       this.setButtons(buttons)
+    }
+    if(title){
+      this.setTitle(title)
     }
   }
 
@@ -77,6 +85,12 @@ export default class SimpleModal extends Modal{
       })
       buttonsEl.appendChild(btn)
     })
+  }
+
+  setTitle(title){
+    const titleEl = this.querySelector('.title')
+    titleEl.classList.remove('displaynone')
+    titleEl.innerHTML = title
   }
 
   awaitResult(){

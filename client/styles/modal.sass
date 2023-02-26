@@ -8,6 +8,12 @@ $padding: 20rem
   bottom: 0
   z-index: 8000
 
+  .title
+    text-align: center
+    font-size: 1.2em
+    font-weight: bold
+    margin-bottom: 1em
+
   .underlay
     position: absolute
     top: 0
@@ -26,7 +32,7 @@ $padding: 20rem
     padding: $padding
     font-size: 12rem
     max-height: 90%
-    //overflow: hidden
+    line-height: 1.5em
 
     .close-button
       position: absolute
@@ -48,16 +54,19 @@ $padding: 20rem
     white-space: pre-line
 
   .buttons
-    border-top: 1rem solid #555
-    margin-top: $padding
+    //border-top: 1rem solid #555
+    //margin-top: $padding
     padding-top: $padding
     display: flex
-    justify-content: end
+    justify-content: stretch
 
     button
       padding: 4rem 16rem
-      margin-left: 2rem
       transition: background-color 0.3s ease, color 0.3s ease
+      flex-grow: 1
+
+      &:not(:last-child)
+        margin-right: 2rem
 
       &.style-scary
         border-color: #d25050
@@ -75,3 +84,20 @@ $padding: 20rem
           color: #8eb48e
           background-color: white
 
+
+.popup-content
+  ul
+    padding-left: 2rem
+    text-align: left
+  li
+    list-style: none
+    svg
+      vertical-align: middle
+      height: 2em
+      &.orb-icon
+        height: 1.5em
+    i
+      font-size: 1.5em
+      vertical-align: middle
+    color: black
+    margin-bottom: 5rem

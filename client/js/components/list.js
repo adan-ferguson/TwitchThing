@@ -33,11 +33,9 @@ export default class List extends DIElement{
         return
       }
       if(e.deltaY < 0 && this._page > 1){
-        this._page--
-        this._update()
+        this.page--
       }else if(e.deltaY > 0 && this._page < this.maxPage){
-        this._page++
-        this._update()
+        this.page++
       }
     }, { passive: true })
 
@@ -48,23 +46,19 @@ export default class List extends DIElement{
     })
 
     this.querySelector('.first').addEventListener('click', () => {
-      this._page = 1
-      this._update()
+      this.page = 1
     })
 
     this.querySelector('.prev').addEventListener('click', () => {
-      this._page--
-      this._update()
+      this.page--
     })
 
     this.querySelector('.next').addEventListener('click', () => {
-      this._page++
-      this._update()
+      this.page++
     })
 
     this.querySelector('.last').addEventListener('click', () => {
-      this._page = this.maxPage
-      this._update()
+      this.page = this.maxPage
     })
 
     this.addEventListener('click', e => {
@@ -73,7 +67,7 @@ export default class List extends DIElement{
         return
       }
       if(this._options.clickableRows){
-        this.events.emit('clickrow', row)
+        this.events.emit('clickrow', { e, row })
       }
       if(this._options.selectableRows){
         if(row.classList.contains('selected')){
@@ -116,6 +110,19 @@ export default class List extends DIElement{
     return this._selectedRow
   }
 
+  get page(){
+    return this._page
+  }
+
+  set page(val){
+    val = parseInt(val)
+    if(val && this._page === val){
+      return
+    }
+    this._page = val
+    this._update()
+  }
+
   clear(){
     return this.setRows([])
   }
@@ -148,6 +155,18 @@ export default class List extends DIElement{
     return this._rowsCache.find(fn)
   }
 
+  /**
+   * Change page if necessary so that this row is visible.
+   * @param row
+   */
+  showRow(row){
+    const index = this._sortedRows.findIndex(r => r === row)
+    if(index === -1){
+      return
+    }
+    this.page = Math.ceil((index + 1) / this._pageSize)
+  }
+
   _fullUpdate(){
     const filtered = (!this._options.showFiltered && this._options.filterFn) ?
       this._rowsCache.filter(this._options.filterFn) : [...this._rowsCache]
@@ -168,6 +187,7 @@ export default class List extends DIElement{
 
   _update(){
 
+    hideAllTippys({ duration: 0 })
     this.isMobile = mobileMode()
 
     if(!this._options.paginate){
@@ -196,7 +216,6 @@ export default class List extends DIElement{
       }
     })
     this.rows.append(...toDisplay)
-    hideAllTippys()
   }
 }
 customElements.define('di-list', List)

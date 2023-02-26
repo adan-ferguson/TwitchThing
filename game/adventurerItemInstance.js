@@ -2,14 +2,19 @@ import Items from './items/combined.js'
 import FighterItemInstance from './fighterItemInstance.js'
 import OrbsData from './orbsData.js'
 import { uniqueID } from './utilFunctions.js'
-
-const BASE_UPGRADE_SCRAP = 3
+import { ITEM_RARITIES } from '../server/items/generator.js'
+import _  from 'lodash'
 
 export default class AdventurerItemInstance extends FighterItemInstance{
 
   constructor(itemDef, state = null, owner = null){
 
-    const baseItem = Items[itemDef.group][itemDef.name] ?? {}
+    if(!Items[itemDef.group] || !Items[itemDef.group][itemDef.name]){
+      super()
+      return
+    }
+
+    const baseItem = Items[itemDef.group][itemDef.name]
     const level = itemDef.level ?? 1
     const itemData = {
       ...baseItem,
@@ -44,10 +49,20 @@ export default class AdventurerItemInstance extends FighterItemInstance{
    * @returns {OrbsData}
    */
   get orbs(){
+    let baseOrbs
+    if(_.isObject(this.itemData.orbs)){
+      baseOrbs = this.itemData.orbs
+    }else{
+      baseOrbs = { [this.itemData.group]: this.itemData.orbs }
+    }
     return new OrbsData([
-      { [this.itemData.group]: this.itemData.orbs },
+      baseOrbs,
       ...this.applicableSlotEffects.map(slotEffect => slotEffect.orbs ?? {})
     ])
+  }
+
+  get classes(){
+    return this.orbs.classes
   }
 
   get slotBonus(){
@@ -66,8 +81,17 @@ export default class AdventurerItemInstance extends FighterItemInstance{
     return this.itemDef.level ?? 1
   }
 
+  get rarityInfo(){
+    return ITEM_RARITIES[this.baseItem.rarity ?? 0]
+  }
+
   get scrapValue(){
-    return this.orbs.total + (this.orbs.total + BASE_UPGRADE_SCRAP) * (this.level * (this.level - 1)) / 2
+    const scrapVal = this.rarityInfo.value
+    return scrapVal * (1 + this.level * (this.level - 1) / 2)
+  }
+
+  get isMulticlass(){
+    return this.orbs.classes.length > 1
   }
 
   upgradeInfo(){

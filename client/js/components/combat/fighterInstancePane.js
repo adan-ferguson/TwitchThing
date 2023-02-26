@@ -17,6 +17,7 @@ import { DAMAGE_COLORS, FLASH_COLORS } from '../../colors.js'
 import { flash } from '../../animations/simple.js'
 import LoadoutRow from '../loadout/loadoutRow.js'
 import EffectRow from '../effects/effectRow.js'
+import { ICON_SVGS } from '../../assetLoader.js'
 
 const HTML = `
 <div class="name"></div>
@@ -206,7 +207,11 @@ export default class FighterInstancePane extends HTMLElement{
       }
     }
 
-    this.hpBarEl.setOptions({ max: this.fighterInstance.hpMax })
+    if(this.fighterInstance.hpMax !== this.hpBarEl.options.max){
+      this.hpBarEl.setOptions({ max: this.fighterInstance.hpMax })
+      cancelAnimations = true
+    }
+
 
     if(this.fighterInstance.hp !== this.hpBarEl.value){
       if(cancelAnimations || (!this.hpBarEl.animating && this._hpChangeQueue.isEmpty)){
@@ -308,7 +313,7 @@ export default class FighterInstancePane extends HTMLElement{
   _updateActionBar(){
     const type = this.fighterInstance.basicAttackType
     if(!this._actionBarEl.querySelector('.basic-attack-type-' + type)){
-      this._actionBarEl.setBadge(`<img class="basic-attack-type basic-attack-type-${type}" src="/assets/icons/${type}Power.svg">`)
+      this._actionBarEl.setBadge(`${ICON_SVGS[type + 'Power']}`)
     }
     this._actionBarEl.setTime(
       this.fighterInstance._state.timeSinceLastAction ?? 0,

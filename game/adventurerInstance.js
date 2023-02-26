@@ -67,10 +67,6 @@ export default class AdventurerInstance extends FighterInstance{
     return this.fighterData.name
   }
 
-  get uniqueID(){
-    return this.fighterData._id.toString()
-  }
-
   get ItemClass(){
     return AdventurerItemInstance
   }
@@ -122,6 +118,14 @@ export default class AdventurerInstance extends FighterInstance{
 
   set food(val){
     this._state.food = minMax(0, val, this.maxFood)
+  }
+
+  get isLoadoutValid(){
+    const orbs = this.orbs
+    if(!orbs.isValid){
+      return false
+    }
+    return true
   }
 
   getEquippedSlotBonus(slotIndex){

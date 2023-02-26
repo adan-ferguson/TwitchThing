@@ -8,7 +8,6 @@ import FighterInstancePane from '../../combat/fighterInstancePane.js'
 import CombatEnactment from '../../../combatEnactment.js'
 import EventContentsResults from './eventContentsResults.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
-import { showLoader } from '../../../loader.js'
 
 const HTML = `
 <div class='content-columns'>
@@ -42,6 +41,8 @@ export default class DungeonPage extends Page{
   _timelineEl
 
   _timeline
+
+  _cachedCombats = {}
 
   dungeonRun
 
@@ -100,7 +101,10 @@ export default class DungeonPage extends Page{
 
   async load(){
 
-    const { dungeonRun } = await this.fetchData()
+    const { dungeonRun, combats } = await this.fetchData()
+    if(combats){
+      this._cachedCombats = combats
+    }
     this.dungeonRun = dungeonRun
 
     if(!this.isReplay){
@@ -130,12 +134,16 @@ export default class DungeonPage extends Page{
     }
 
     if(dungeonRun.error){
-      this.app.showError(dungeonRun.error)
+      return this.app.showError(dungeonRun.error)
     }
 
     this.dungeonRun = dungeonRun
     this._timelineEl.addEvents(dungeonRun.newEvents)
     this._timelineEl.play()
+
+    if(dungeonRun.newEvents){
+      dungeonRun.newEvents.forEach(ev => this._loadCombat(ev.combatID))
+    }
 
     if(dungeonRun.finished){
       this._timelineEl.setOptions({
@@ -144,7 +152,9 @@ export default class DungeonPage extends Page{
     }
 
     if(dungeonRun.virtualTime){
-      this._timelineEl.jumpTo(dungeonRun.virtualTime)
+      this._timelineEl.jumpTo(dungeonRun.virtualTime, {
+        force: dungeonRun.finished ? true : false
+      })
     }
   }
 
@@ -179,7 +189,7 @@ export default class DungeonPage extends Page{
     this._adventurerResultsPane.classList.add('displaynone')
 
     if(this.currentEvent.roomType === 'combat'){
-      this._enactCombat()
+      this._enactCombat(animate)
     }else{
       this._eventEl.update(this.currentEvent, animate)
       this._adventurerPane.setState(this.currentEvent.adventurerState ?? {}, animate)
@@ -194,7 +204,7 @@ export default class DungeonPage extends Page{
       return
     }
     const results = new EventContentsResults()
-    this._eventEl.setContents(results, false)
+    this._eventEl.setContents(results, true)
     this._timelineEl.pause()
     this._adventurerResultsPane.classList.remove('displaynone')
     this._adventurerPane.classList.add('displaynone')
@@ -207,10 +217,10 @@ export default class DungeonPage extends Page{
     results.play(this.dungeonRun, this._adventurerResultsPane, this.watching)
   }
 
-  async _enactCombat(){
-    const { combat } = await fizzetch(`/game/combat/${this.currentEvent.combatID}`)
+  async _enactCombat(animate){
+    const combat  = await this._getCombat(this.currentEvent.combatID)
     const enemyPane = new FighterInstancePane()
-    this._eventEl.setContents(enemyPane, false)
+    this._eventEl.setContents(enemyPane, animate)
     const ce = new CombatEnactment(this._adventurerPane, enemyPane, combat)
     ce.timeline.setTime(this._timeline.timeSinceLastEntry, true)
     ce.on('destroyed', () => {
@@ -246,9 +256,24 @@ export default class DungeonPage extends Page{
     this._timeline.on('timechange', obj => {
       this._timeChange(obj)
     })
-    this._timelineEl.setup(this._timeline, this.adventurer, {
+    this._timelineEl.setup(this._timeline, dungeonRun, {
       isReplay: this.isReplay
     })
+  }
+
+  async _getCombat(combatID){
+    if(!this._cachedCombats[combatID]){
+      await this._loadCombat(combatID)
+    }
+    return this._cachedCombats[combatID]
+  }
+
+  async _loadCombat(combatID){
+    if(!combatID || this._cachedCombats[combatID]){
+      return
+    }
+    const result = await fizzetch(`/game/combat/${combatID}`)
+    this._cachedCombats[combatID] = result.combat
   }
 }
 

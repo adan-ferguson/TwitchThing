@@ -34,6 +34,9 @@ di-loadout-row
   margin-bottom: 5rem
   box-sizing: border-box
 
+  .di-bar .bar-border
+    border-width: 2rem
+
   .hit-area
     position: absolute
     top: -4rem
@@ -81,7 +84,7 @@ di-loadout-row
 
   &[ability-state=disabled]
     .bar-border
-      opacity: 0.5
+      opacity: 0.35
 
     //.cooldown .bar-foreground
     //  opacity: 1
@@ -119,7 +122,7 @@ di-ability-description
   border: 0.5rem solid
   margin-top: 3rem
   text-align: left
-  line-height: 1.4em
+  line-height: 1.5em
 
   .parsed-description
     padding: 7rem
@@ -128,13 +131,14 @@ di-ability-description
     > *
       display: inline-block
 
-    img
+    svg
       height: 1em
       margin-right: 0.2em
       vertical-align: text-top
 
     .stat-wrap, .scaling-type
       font-weight: bold
+      display: inline
 
   //&[ability-type=active]
   //  border-color: $activeAbilityColor
@@ -186,7 +190,7 @@ di-ability-description
       font-weight: bold
       align-items: center
 
-      img
+      svg
         height: 1em
         margin-bottom: 4rem
         margin-right: 2rem

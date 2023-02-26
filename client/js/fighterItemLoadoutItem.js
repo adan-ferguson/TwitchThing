@@ -1,4 +1,3 @@
-import ItemCard from './components/itemCard.js'
 import abilityDisplayInfo from './abilityDisplayInfo.js'
 
 export default class FighterItemLoadoutItem{

@@ -77,9 +77,7 @@ export function useEffectAbility(combat, effect, eventName, triggerData = null){
   function iterateActions(actions){
     for(let i = 0; i < actions.length; i++){
       let actionDef = actions[i]
-      if(_.isFunction(actionDef)){
-        actionDef = actionDef({ combat, owner: effect.owner, results, triggerData })
-      }else if(_.isArray(actionDef)){
+      if(_.isArray(actionDef)){
         // Decoupled action array, use this to define actions where if one fails, the
         // subsequent ones should still be performed.
         //
@@ -88,6 +86,9 @@ export function useEffectAbility(combat, effect, eventName, triggerData = null){
         // actions: [attackDef, attackDef, attackDef] would not
         iterateActions(actionDef)
       }else{
+        if(_.isFunction(actionDef)){
+          actionDef = actionDef({ combat, owner: effect.owner, results, triggerData })
+        }
         const actionResult = doAction(combat, effect, actionDef) ?? {
           type: 'blank',
           subject: effect.owner.uniqueID

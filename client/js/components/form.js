@@ -125,6 +125,9 @@ export default class DIForm extends HTMLFormElement{
   }
 
   error(message){
+    if(message?.message){
+      message = message.message
+    }
     this._errorMessage.textContent = message
     this._errorMessage.classList.remove('hidden')
   }

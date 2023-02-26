@@ -1,18 +1,10 @@
-import { chooseRandomBasicItem } from '../items/generator.js'
+import { chooseRandomBasicItem, getItemRarity } from '../items/generator.js'
 import { toNumberOfDigits } from '../../game/utilFunctions.js'
 import { geometricProgession } from '../../game/growthFunctions.js'
 
-const GOLD_ONLY_CHANCE = 0.33
 const GOLD_BASE = 20
-const GOLD_GROWTH = 5
-const GOLD_GROWTH_PCT = 0.04
-
-const CHEST_SIZE = {
-  normal: 1,
-  tutorial: 1,
-  boss: 5,
-  shop: 5
-}
+const GOLD_GROWTH = 10
+const GOLD_GROWTH_PCT = 0.01
 
 export function generateRandomChest(options = {}){
 
@@ -26,15 +18,20 @@ export function generateRandomChest(options = {}){
       }
     },
     level: 1,
+    value: 1,
     noGold: false,
-    singlesOnly: false,
-    class: null,
+    classes: null,
+    itemLimit: 1,
     ...options
+  }
+
+  if(!chest.classes){
+    throw 'Random chest did not get a list of classes to choose from, probably a bug.'
   }
 
   if(chest.type === 'shop'){
     chest.noGold = true
-    chest.singlesOnly = true
+    chest.itemLimit = 10
   }
 
   if(chest.type === 'tutorial'){
@@ -42,23 +39,34 @@ export function generateRandomChest(options = {}){
   }
 
   if(chest.type === 'boss'){
-    // Guarantee 100 from boss chests so they can buy adv slot
-    chest.contents.gold += 100
+    chest.itemLimit = 5
+    chest.value *= 3
+    chest.contents.gold = addGold(chest.level)
   }
 
-  for(let i = 0; i < CHEST_SIZE[chest.type]; i++){
-    let valueRemaining = chest.level
-    if(chest.noGold || Math.random() > GOLD_ONLY_CHANCE){
-      // tutorial chests drop more fighter items
-      const chestClass = chest.class ?? (chest.type === 'tutorial' && Math.random() > 0.75 ? 'fighter' : null)
-      const baseType = chooseRandomBasicItem(chest.level, chestClass)
-      const count = chest.singlesOnly ? 1 : multiplyItem(valueRemaining, baseType.orbs)
-      valueRemaining -= toValue(count, baseType.orbs)
-      addItem(chest.contents.items.basic, baseType.group, baseType.name, count)
-    }
-    if(!chest.noGold && valueRemaining > 0){
-      chest.contents.gold += addGold(valueRemaining)
-    }
+  const totalValue = chest.level * chest.value
+  let valueRemaining = totalValue
+  let items = []
+  while(valueRemaining > 0){
+    // tutorial chests drop more fighter items
+    const chestClasses = chest.type === 'tutorial' && Math.random() > 0.75 ? ['fighter'] : chest.classes
+    const baseType = chooseRandomBasicItem(valueRemaining, chestClasses)
+    items.push(baseType)
+    valueRemaining -= getItemRarity(baseType.rarity).value
+  }
+
+  if(items.length > chest.itemLimit){
+    items = items.sort((a, b) => (b.rarity ?? 0) - (a.rarity ?? 0)).slice(0, chest.itemLimit)
+  }
+
+  let leftoverValue = totalValue
+  items.forEach(item => {
+    addItem(chest.contents.items.basic, item.group, item.name)
+    leftoverValue -= getItemRarity(item.rarity).value
+  })
+
+  if(leftoverValue > 0 && !chest.noGold){
+    chest.contents.gold += addGold(leftoverValue)
   }
 
   return chest
@@ -84,25 +92,12 @@ function addGold(valueRemaining){
   return toNumberOfDigits(gold,2)
 }
 
-function multiplyItem(valueRemaining, itemLevel){
-  let maxCount = 1
-  while(toValue(maxCount + 1, itemLevel) < valueRemaining){
-    maxCount++
-  }
-  return Math.max(1, Math.round(Math.random() * maxCount))
-}
-
-function toValue(count, itemLevel){
-  const baseVal = itemLevel * 5
-  return baseVal * count + baseVal * count * (count - 1) / 4
-}
-
-function addItem(obj, group, name, count){
+function addItem(obj, group, name){
   if(!obj[group]){
     obj[group] = {}
   }
   if(!obj[group][name]){
     obj[group][name] = 0
   }
-  obj[group][name] += count
+  obj[group][name] += 1
 }

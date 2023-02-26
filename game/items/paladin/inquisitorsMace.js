@@ -1,19 +1,20 @@
 import { stunnedStatusEffect } from '../../statusEffects/combined.js'
 import statusEffectAction from '../../actions/statusEffectAction.js'
-import { leveledPercentageString } from '../../growthFunctions.js'
+import { leveledPctString } from '../../growthFunctions.js'
+import { roundToFixed } from '../../utilFunctions.js'
 
 export default {
   levelFn: level => {
-    const chance = 20
+    const duration = 1900 + level * 100
     return {
       displayName: 'Inquisitor\'s Mace',
       stats: {
-        physPower: leveledPercentageString(25, 15, level)
+        physPower: leveledPctString(30, 10, level)
       },
       abilities: {
         attackHit: {
-          description: `After landing an attack, ${chance}% chance to stun for 3 seconds.`,
-          chance: chance / 100,
+          description: `After landing an attack, 20% chance to stun for ${roundToFixed(duration / 1000, 1)} seconds.`,
+          chance: 0.2,
           actions: [
             statusEffectAction({
               base: stunnedStatusEffect,
@@ -21,7 +22,7 @@ export default {
               effect: {
                 stacking: 'extend',
                 stackingId: 'macestun',
-                duration: 3000
+                duration
               }
             })
           ]
@@ -29,5 +30,6 @@ export default {
       }
     }
   },
-  orbs: 8
+  orbs: 6,
+  rarity: 1
 }

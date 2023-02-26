@@ -7,6 +7,9 @@ export function adventurerItemsToRows(items){
   items.forEach((itemDef, i) => {
     if(itemDef){
       const row = makeRow(itemDef)
+      if(!row){
+        return
+      }
       row.__slotIndex = i
       rows.push(row)
     }
@@ -18,11 +21,17 @@ export function inventoryItemsToRows(items){
   const rows = []
   Object.keys(items.basic).forEach(group => {
     Object.keys(items.basic[group]).forEach(name => {
-      rows.push(makeRow({ group, name }, items.basic[group][name]))
+      const row = makeRow({ group, name }, items.basic[group][name])
+      if(row){
+        rows.push(row)
+      }
     })
   })
   Object.values(items.crafted).forEach(itemDef => {
-    rows.push(makeRow(itemDef))
+    const row = makeRow(itemDef)
+    if(row){
+      rows.push(row)
+    }
   })
   return rows
 }
@@ -94,34 +103,44 @@ export function standardItemSort(rowA, rowB){
   return rowA.loadoutItem.displayName - rowB.loadoutItem.displayName
 }
 
-export function addInventoryItem(list, loadoutItem){
+export function addInventoryItem(list, loadoutItem, count = 1){
   const existingRow = list.findRow(row => row.loadoutItem.equals(loadoutItem))
   if(existingRow){
     if(loadoutItem.isBasic){
-      existingRow.count++
+      existingRow.count += count
     }
     return
   }
   loadoutItem.setOwner(null)
   const row = new LoadoutRow()
-  row.setItem(loadoutItem)
+  row.setItem(loadoutItem).setCount(count)
   list.addRow(row)
 }
 
-export function removeInventoryItem(list, loadoutItem){
+export function removeInventoryItem(list, loadoutItem, all = false){
   const existingRow = list.findRow(row => row.loadoutItem === loadoutItem)
   if(!existingRow){
     return
   }
-  if(existingRow.count > 1){
-    existingRow.count--
-  }else{
+  if(all){
     list.removeRow(existingRow)
+    return existingRow.count
+  }else{
+    if(existingRow.count > 1){
+      existingRow.count--
+    }else{
+      list.removeRow(existingRow)
+    }
+    return 1
   }
 }
 
 function makeRow(itemDef, count = null){
-  const info = new FighterItemLoadoutItem(new AdventurerItemInstance(itemDef))
+  const item = new AdventurerItemInstance(itemDef)
+  if(!item.isValid){
+    return null
+  }
+  const info = new FighterItemLoadoutItem(item)
   const row = new LoadoutRow().setItem(info)
   if(count !== null){
     row.setCount(count)

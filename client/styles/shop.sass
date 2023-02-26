@@ -2,6 +2,7 @@ di-shop-page
   .shop-items
     display: flex
     flex-wrap: wrap
+    align-content: start
 
     $padding: 20rem
     padding: $padding 0 0 $padding !important
@@ -27,6 +28,7 @@ di-shop-page
         > *
           height: 25rem
           width: 25rem
+          font-size: 2em
 
       &:hover
         border-style: solid
@@ -38,6 +40,7 @@ di-shop-item-details
     flex-direction: column
     align-items: center
 
+    font-size: 2em
     height: 25rem
     margin-bottom: 15rem
     > *
@@ -83,7 +86,7 @@ di-shop-item-details
   display: flex
   align-items: center
 
-  img
+  svg
     height: 1.5em
     padding-bottom: 6rem
     margin-left: 4rem

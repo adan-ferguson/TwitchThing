@@ -8,6 +8,7 @@ import { addPageToHistory } from '../history.js'
 import { pathToPage } from './pathRouter.js'
 import { cancelAllFlyingText } from './visualEffects/flyingTextEffect.js'
 import _ from 'lodash'
+import { alertModal } from './simpleModal.js'
 
 const HTML = `
 <di-header></di-header>
@@ -92,7 +93,8 @@ export default class App extends HTMLElement{
         window.location = ex.error.redirect
         return
       }
-      if(ex.error?.targetPage){
+      const targetPage = ex.error?.targetPage ?? null
+      if(targetPage !== null){
         this.setPage(ex.error.targetPage)
         return
       }
@@ -128,8 +130,9 @@ export default class App extends HTMLElement{
   }
 
   showError(error){
+    debugger
     this.setPage('')
-    alert(_.isObject(error) ? JSON.stringify(error) : error)
+    alertModal(_.isObject(error) ? JSON.stringify(error) : error)
   }
 
   _resetBackground(){
@@ -142,7 +145,9 @@ export default class App extends HTMLElement{
   }
 
   async _fetchUser(){
-    this._setUser(await fizzetch('/user'))
+    const { user, popups } = await fizzetch('/user/appfetch')
+    this._setUser(user)
+    showPopup(popups)
   }
 }
 

@@ -6,7 +6,7 @@ export default {
     mods: [magicScalingMod],
     abilities: {
       active: {
-        initialCooldown: 21000 - level * 1000,
+        initialCooldown: 20000,
         description: '{A0} Your next turn is 50% faster.',
         nextTurnOffset: {
           pct: 0.5
@@ -21,5 +21,5 @@ export default {
       }
     }
   }),
-  orbs: 4
+  orbs: 3
 }

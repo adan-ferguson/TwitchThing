@@ -99,6 +99,10 @@ export default class EffectInstance{
     return this.effectData.slotEffect ?? null
   }
 
+  get isValid(){
+    return this.effectData ? true : false
+  }
+
   generateAbilitiesData(){
     return new AbilitiesData(this.effectData.abilities, this._state?.abilities ?? {}, this)
   }

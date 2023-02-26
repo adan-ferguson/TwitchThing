@@ -4,6 +4,7 @@ import { uniqueID } from '../../game/utilFunctions.js'
 import MonsterInstance from '../../game/monsterInstance.js'
 import { generateRandomChest } from './chests.js'
 import { addRewards } from './results.js'
+import { unlockedClasses } from '../../game/user.js'
 
 const monstersByFloor = [
   null,
@@ -92,47 +93,59 @@ export function foundMonster(dungeonRun){
   // }
 }
 
+export function generateSuperMonster(dungeonRun){
+  const monsterDefinition = getMonsterDefinition((dungeonRun.room - 1) % 50)
+  monsterDefinition.level = dungeonRun.room + 54
+  return {
+    ...monsterDefinition,
+    super: true,
+    rewards: generateRewards(dungeonRun, monsterDefinition)
+  }
+}
+
 export async function generateMonster(dungeonRun, boss){
 
   const level = boss ? dungeonRun.floor : floorToLevel(dungeonRun.floor)
   const monsterDefinition = getMonsterDefinition(level)
+  monsterDefinition.level = level
 
   return {
     ...monsterDefinition,
-    level,
-    rewards: generateRewards()
+    rewards: generateRewards(dungeonRun, monsterDefinition)
   }
+}
 
-  function generateRewards(){
-    const monsterInstance = new MonsterInstance(monsterDefinition)
-    const advStats = dungeonRun.adventurerInstance.stats
-    const rewards = {
-      xp: monsterInstance.xpReward * advStats.get('combatXP').value * (monsterInstance.isBoss ? BOSS_XP_BONUS : 1)
-    }
-    if(dungeonRun.user.accomplishments.firstRunFinished){
-      const userChests = dungeonRun.user.accomplishments.chestsFound ?? 0
-      const hardEnemy = level >= dungeonRun.adventurerInstance.accomplishments.deepestFloor
-      const dropChance = userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE :
-        hardEnemy ? CHEST_DROP_CHANCE_HARD_ENEMY :
-          CHEST_DROP_CHANCE
-      const dropChest =
-        Math.random() < dropChance ||
-        monsterInstance.isBoss ||
-        dropPityChest(dungeonRun)
-
-      if(dropChest){
-        let type = monsterInstance.isBoss ? 'boss' :
-          userChests < BONUS_CHESTS_UNTIL ? 'tutorial' :
-            'normal'
-
-        rewards.chests = generateRandomChest({
-          level: dungeonRun.floor,
-          type
-        })
-      }
-    }
-    return addRewards(rewards, monsterInstance.rewards)
+function generateRewards(dungeonRun, monsterDefinition){
+  const monsterInstance = new MonsterInstance(monsterDefinition)
+  const advStats = dungeonRun.adventurerInstance.stats
+  const level = monsterInstance.level
+  const rewards = {
+    xp: monsterInstance.xpReward * advStats.get('combatXP').value * (monsterInstance.isBoss ? BOSS_XP_BONUS : 1)
   }
+  if(dungeonRun.user.accomplishments.firstRunFinished){
+    const userChests = dungeonRun.user.accomplishments.chestsFound ?? 0
+    const hardEnemy = level >= dungeonRun.adventurerInstance.accomplishments.deepestFloor
+    const dropChance = userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE :
+      hardEnemy ? CHEST_DROP_CHANCE_HARD_ENEMY :
+        CHEST_DROP_CHANCE
+    const dropChest =
+      Math.random() < dropChance ||
+      monsterInstance.isBoss ||
+      dropPityChest(dungeonRun)
+
+    if(dropChest){
+      let type = monsterInstance.isBoss ? 'boss' :
+        userChests < BONUS_CHESTS_UNTIL ? 'tutorial' :
+          'normal'
+
+      rewards.chests = generateRandomChest({
+        level: Math.floor(level * advStats.get('chestLevel').value),
+        type,
+        classes: unlockedClasses(dungeonRun.user)
+      })
+    }
+  }
+  return addRewards(rewards, monsterInstance.rewards)
 }
 
 /**

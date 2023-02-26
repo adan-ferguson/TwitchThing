@@ -5,7 +5,7 @@ export default {
   levelFn: level => ({
     abilities: {
       active: {
-        cooldown: 60000,
+        cooldown: 45000,
         description: `Stop time for the opponent for ${8 + level * 2}s.`,
         actions: [
           statusEffectAction({
@@ -21,5 +21,6 @@ export default {
     },
     mods: [magicScalingMod]
   }),
-  orbs: 10
+  orbs: 9,
+  rarity: 2
 }

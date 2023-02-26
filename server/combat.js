@@ -1,6 +1,6 @@
 import Combats from './collections/combats.js'
 import { randomOrder } from '../game/rando.js'
-import { generateMonster } from './dungeons/monsters.js'
+import { generateMonster, generateSuperMonster } from './dungeons/monsters.js'
 import MonsterInstance from '../game/monsterInstance.js'
 import { takeCombatTurn } from './actionsAndTicks/performAction.js'
 import { performCombatTicks } from './actionsAndTicks/ticks.js'
@@ -20,7 +20,13 @@ const MAX_TRIGGER_COUNTER = 500
 export async function generateCombatEvent(dungeonRun, boss = false){
 
   const adventurerInstance = dungeonRun.adventurerInstance
-  const monsterDef = await generateMonster(dungeonRun, boss)
+
+  let monsterDef
+  if(dungeonRun.floor === 51){
+    monsterDef = generateSuperMonster(dungeonRun)
+  }else{
+    monsterDef = await generateMonster(dungeonRun, boss)
+  }
   const monsterInstance = new MonsterInstance(monsterDef)
 
   const combat = await generateCombat(adventurerInstance, monsterInstance, {
@@ -55,7 +61,7 @@ export async function generateCombatEvent(dungeonRun, boss = false){
     return combatEvent
   }else if(combat.result === CombatResult.TIME_OVER){
     resultEvent.message = 'The combat took too long and everyone got bored and left.'
-    resultEvent.roomType = 'timeover'
+    resultEvent.roomType = 'timeOver'
   }
 
   return [combatEvent, resultEvent]

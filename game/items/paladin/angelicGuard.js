@@ -6,7 +6,7 @@ export default {
     return {
       abilities: {
         startOfCombat: {
-          description: `Gain [SblockChance100%] for the first ${Math.round(duration/1000)}s of combat.`,
+          description: `Prevent all damage taken for the first ${Math.round(duration/1000)}s of combat.`,
           actions: [
             statusEffectAction({
               effect: {
@@ -16,7 +16,7 @@ export default {
                 stacking: 'extend',
                 stackingId: 'angelicguard',
                 stats: {
-                  blockChance: '+100%'
+                  damageTaken: '-100%'
                 }
               }
             })
@@ -25,5 +25,6 @@ export default {
       }
     }
   },
-  orbs: 10
+  orbs: 12,
+  rarity: 2
 }

@@ -4,8 +4,8 @@ import tippy from 'tippy.js'
 import OrbsData from '../../../game/orbsData.js'
 import DIElement from './diElement.js'
 
-const ORB_ENTRY_HTML = (src, text) => `
-  <span>${text}</span> <img src="${src}">
+const ORB_ENTRY_HTML = (icon, text) => `
+  <span>${text}</span> ${icon}
 `
 
 export const OrbsDisplayStyle = {
@@ -76,7 +76,7 @@ class OrbEntry extends HTMLElement{
 
     const classInfo = classDisplayInfo(orbDatum.className)
     this.style.color = classInfo.color
-    this.innerHTML = ORB_ENTRY_HTML(classInfo.orbIcon || defaultOrbImg, text)
+    this.innerHTML = ORB_ENTRY_HTML(classInfo.icon || defaultOrbImg, text)
 
     const tooltipText = tooltip === OrbsTooltip.ITEM ?
       'Spend this many orbs to equip this item.' :

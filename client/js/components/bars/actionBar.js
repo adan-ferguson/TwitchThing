@@ -11,9 +11,9 @@ export default class ActionBar extends Bar{
       showMax: false,
       showValue: false,
       color: ACTION_COLOR,
-      label: val => {
+      labelOverride: (val, max) => {
         const timeInSeconds = (val / 1000).toFixed(1)
-        const totalInSeconds = (this._options.max / 1000).toFixed(1)
+        const totalInSeconds = (max / 1000).toFixed(1)
         return timeInSeconds + 's / ' + totalInSeconds + 's'
       }
     })

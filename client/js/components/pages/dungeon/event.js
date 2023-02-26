@@ -20,21 +20,28 @@ export default class Event extends HTMLElement{
   }
 
   update(dungeonEvent, animate = false){
-    const wasNormal = this.currentContents instanceof EventContentsNormal
-    if(wasNormal && sameRoom(this.currentContents.dungeonEvent, dungeonEvent)){
-      this.currentContents.update(dungeonEvent)
-    }else{
-      this.setContents(new EventContentsNormal(dungeonEvent), animate)
-    }
+    // const wasNormal = this.currentContents instanceof EventContentsNormal
+    // if(wasNormal && sameRoom(this.currentContents.dungeonEvent, dungeonEvent)){
+    //   console.log('update')
+    //   this.currentContents.update(dungeonEvent)
+    // }else{
+    // }
+    this.setContents(new EventContentsNormal(dungeonEvent), animate)
   }
 
   async setContents(contents, animate = true){
 
-    animate = animate && this.currentContents
-    if(animate){
-      await fadeOut(this)
-      fadeIn(this)
-    }
+    // console.log('content change', animate)
+    //
+    // animate = animate && this.currentContents
+    // if(animate){
+    //   console.log('fadeout')
+    //   await fadeOut(this, 100)
+    //   console.log('fadein')
+    //   fadeIn(this, 100)
+    // }else{
+    //   console.log('nofade')
+    // }
 
     this.innerHTML = ''
     this.currentContents = contents
@@ -47,10 +54,6 @@ export default class Event extends HTMLElement{
     }
     this.currentContents?.setTimeBar?.(this._timeline.timeSinceLastEntry,  this._timeline.currentEntry.duration)
   }
-}
-
-function sameRoom(e1, e2){
-  return e1.floor === e2.floor && e1.room === e2.room
 }
 
 customElements.define('di-dungeon-event', Event)

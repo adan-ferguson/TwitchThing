@@ -1,18 +1,16 @@
-import physScaling from '../../mods/generic/physScaling.js'
-import { critChanceStat } from '../../stats/combined.js'
-import { leveledPercentageString } from '../../growthFunctions.js'
+import { leveledPctString } from '../../growthFunctions.js'
 
 export default {
   levelFn: level => {
-    const pct = 0.3
     return {
       stats: {
-        [critChanceStat.name]: 0.22 + level * 0.03,
-        critLifesteal: pct,
-        hpMax: leveledPercentageString(20, 10, level)
-      },
-      mods: [physScaling]
+        physPower: leveledPctString(50, 10, level),
+        hpMax: leveledPctString(25, 5, level),
+        lifesteal: 0.10 + 0.02 * level
+      }
     }
   },
-  orbs: 10
+  rarity: 2,
+  displayName: 'Vampiric Blade',
+  orbs: 12
 }

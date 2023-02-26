@@ -35,7 +35,7 @@ export function inverseGeometricProgression(growthPct, val, base = 1){
  * Common thing
  * 20%, 1 => 20%
  * 20%, 2 => 36%
- * @param val {number|string} 0 to 100
+ * @param val {number|string} 0 to 1
  * @param iterations {number} natural number
  * @param base
  * @return {string} Whole percentage
@@ -60,6 +60,6 @@ export function oneTwoFive(val){
   return Math.pow(10, magnitude) * [1, 2, 5][mod]
 }
 
-export function leveledPercentageString(base, perLevel, level){
+export function leveledPctString(base, perLevel, level){
   return `+${base + level * perLevel}%`
 }

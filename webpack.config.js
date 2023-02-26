@@ -16,9 +16,10 @@ export default {
         loader: 'babel-loader',
       },
       {
-        test: /\.(eot|svg|ttf|woff|woff2|png|jpg|gif)$/i,
+        test: /\.(eot|ttf|woff|woff2|png|jpg|gif)$/i,
         type: 'asset',
       },
+      { test: /\.svg$/, loader: 'svg-inline-loader' }
     ],
   },
   devtool: 'inline-source-map',

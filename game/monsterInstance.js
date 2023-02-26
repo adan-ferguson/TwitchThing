@@ -11,24 +11,24 @@ const ADJUSTED_DIFFICULTY_PER_ZONE = 2.25
 
 const HP_BASE = 25
 const HP_GROWTH = 18
-const HP_GROWTH_PCT = 0.1 //0.25
+const HP_GROWTH_PCT = 0.11
 
 const POWER_BASE = 10
 const POWER_GROWTH = 3
-const POWER_GROWTH_PCT = 0.1 //0.25
+const POWER_GROWTH_PCT = 0.1
 
 const XP_BASE = 50
 const XP_GROWTH = 20
 const XP_GROWTH_PCT = 0.2
-const XP_ZONE_BONUS = 1.8
+const XP_ZONE_BONUS = 1.75
 
 export function levelToXpReward(lvl){
   const zoneBonuses = Math.floor((lvl - 1) / 10)
   const adjustedLevel = adjustedDifficultyLevel(lvl)
-  const val = Math.ceil(geometricProgession(XP_GROWTH_PCT, adjustedLevel - 1, XP_GROWTH * Math.pow(XP_ZONE_BONUS, zoneBonuses), 3))
+  const val = Math.ceil(geometricProgession(XP_GROWTH_PCT, adjustedLevel - 1, XP_GROWTH))
   return toNumberOfDigits(
-    XP_BASE + val,
-    2
+    XP_BASE + val * Math.pow(XP_ZONE_BONUS, zoneBonuses),
+    3
   )
 }
 
@@ -50,7 +50,9 @@ export function monsterLevelToPower(lvl){
 
 function adjustedDifficultyLevel(lvl){
   const zone = floorToZone(lvl)
-  return lvl + Math.max(0, zone - 1) * ADJUSTED_DIFFICULTY_PER_ZONE
+  return lvl
+    + Math.max(0, zone - 1) * ADJUSTED_DIFFICULTY_PER_ZONE
+    + (zone > 20 ? 1 : 0) // scrap-offsetting difficulty jump
 }
 
 export default class MonsterInstance extends FighterInstance{
@@ -72,16 +74,16 @@ export default class MonsterInstance extends FighterInstance{
     this.monsterDef = monsterDef
   }
 
+  get isSuper(){
+    return this.monsterDef.super ?  true : false
+  }
+
   get description(){
     return this.fighterData.description
   }
 
   get displayName(){
-    return this.monsterDef.displayName ?? toDisplayName(this.fighterData.name)
-  }
-
-  get uniqueID(){
-    return this.monsterDef._id
+    return (this.isSuper ? 'SUPER ' : '' ) + (this.monsterDef.displayName ?? toDisplayName(this.fighterData.name))
   }
 
   get level(){
@@ -101,7 +103,14 @@ export default class MonsterInstance extends FighterInstance{
   }
 
   get baseStats(){
-    return [this._fighterData.baseStats] ?? []
+    const stats = [this._fighterData.baseStats] ?? []
+    if(this.level > 50){
+      stats.push({
+        speed: 50,
+        cooldownReduction: '33%'
+      })
+    }
+    return stats
   }
 
   get orbs(){

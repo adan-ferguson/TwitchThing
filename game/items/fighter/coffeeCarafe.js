@@ -3,14 +3,14 @@ import { speedStat } from '../../stats/combined.js'
 
 export default {
   levelFn: level => {
-    const speed = 15 + level * 5
+    const speed = 22 + level * 3
     return {
       stats: {
         startingFood: level
       },
       abilities: {
         rest: {
-          description: `After resting, gain [Sspeed${speed}] for 15 seconds.`,
+          description: `After resting, gain [Sspeed${speed}] for 20 seconds.`,
           actions: [
             statusEffectAction({
               effect: {
@@ -18,7 +18,7 @@ export default {
                 displayName: 'Caffeine Rush',
                 persisting: true,
                 stacking: 'extend',
-                duration: 15000,
+                duration: 20000,
                 stats: {
                   [speedStat.name]: speed
                 }
@@ -29,5 +29,5 @@ export default {
       }
     }
   },
-  orbs: 3
+  orbs: 4
 }

@@ -1,4 +1,4 @@
-import { makeEl, toDisplayName, wait } from '../../../../../game/utilFunctions.js'
+import { makeEl, suffixedNumber, toDisplayName, wait } from '../../../../../game/utilFunctions.js'
 import ChestOpenage from './chestOpenage.js'
 import MonsterInstance from '../../../../../game/monsterInstance.js'
 
@@ -15,14 +15,13 @@ const HTML = `
 export default class EventContentsResults extends HTMLElement{
 
   _skipAnimations = false
+  _linkedAdventurerPane
 
   constructor(){
     super()
     this.classList.add('flex-rows', 'fill-contents')
     this.innerHTML = HTML
-    this.addEventListener('click', () => {
-      this._skipAnimations = true
-    })
+    window.addEventListener('click', this._skipAnims)
   }
 
   showFinalizerButton(fn){
@@ -32,6 +31,8 @@ export default class EventContentsResults extends HTMLElement{
   }
 
   play(dungeonRun, adventurerPane, watching){
+
+    this._linkedAdventurerPane = adventurerPane
 
     const tabz = this.querySelector('di-tabz')
     adventurerPane.setAdventurer(JSON.parse(JSON.stringify(dungeonRun.adventurer)))
@@ -49,11 +50,7 @@ export default class EventContentsResults extends HTMLElement{
     await this._wait()
     this._addText(el, `Room: ${dungeonRun.room}`)
     await this._wait()
-
-    const monsterName = dungeonRun.results.killedByMonster ?
-      new MonsterInstance(dungeonRun.results.killedByMonster).displayName :
-      'Something'
-    this._addText(el, `Killed By: ${toDisplayName(monsterName)}`)
+    this._addText(el, getFinishReason(dungeonRun.results.finalEvent))
     await this._wait()
 
     this._addNewline(el)
@@ -68,13 +65,12 @@ export default class EventContentsResults extends HTMLElement{
       return
     }
     const advName = adventurerPane.adventurerInstance.displayName
-    this._addText(el, `${advName} gained +${dungeonRunResults.xp} xp`)
+    this._addText(el, `${advName} gained ${suffixedNumber(dungeonRunResults.xp)} xp`)
     await adventurerPane.addXp(dungeonRunResults.xp, {
       onLevelup: level => {
         this._addText(el, `${advName} has reached level ${level}`)
       },
-      animate: !this._skipAnimations,
-      triggerEventsEvenIfNoAnimate: true
+      skipAnimation: this._skipAnimations
     })
   }
 
@@ -145,6 +141,14 @@ export default class EventContentsResults extends HTMLElement{
     })
     checkOpenAllButton()
   }
+
+  _skipAnims = () => {
+    this._skipAnimations = true
+    if(this._linkedAdventurerPane){
+      this._linkedAdventurerPane.skipToEndOfXpAnimation()
+    }
+    window.removeEventListener('click', this._skipAnims)
+  }
 }
 
 function waitUntilDocumentVisible(){
@@ -159,6 +163,20 @@ function waitUntilDocumentVisible(){
       }
     })
   })
+}
+
+function getFinishReason(lastEvent){
+  if(lastEvent.roomType === 'cleared'){
+    return 'Zone cleared'
+  }else if(lastEvent.monster){
+    const mi = new MonsterInstance(lastEvent.monster)
+    return `Killed by: ${mi.displayName}`
+  }else if(lastEvent.roomType === 'outOfOrder'){
+    return 'Dungeon finished'
+  }else if(lastEvent.roomType === 'leave'){
+    return 'Left dungeon'
+  }
+  return 'Insert finish reason here'
 }
 
 customElements.define('di-dungeon-event-contents-results', EventContentsResults)

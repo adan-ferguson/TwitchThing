@@ -20,7 +20,7 @@ const HTML = `
 const BONUS_HTML = (level, icon, name) => `
 <span class="name">${name}</span>
 <span>
-  <img class="flex-no-grow" src="${icon}"><span>${level}</span>
+  ${icon}<span>${level}</span>
 </span>
 `
 
@@ -52,7 +52,7 @@ export default class AdventurerInfo extends HTMLElement{
 
     bonusesData.instances.forEach(bonusInstance => {
       const info = classDisplayInfo(bonusInstance.group)
-      const item = wrapContent(BONUS_HTML(bonusInstance.level, info.orbIcon, bonusInstance.displayName), {
+      const item = wrapContent(BONUS_HTML(bonusInstance.level, info.icon, bonusInstance.displayName), {
         allowHTML: true,
         class: ['bonus-item', 'flex-columns']
       })

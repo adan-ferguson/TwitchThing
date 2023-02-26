@@ -1,8 +1,6 @@
 import Page from '../page.js'
 import DungeonPage from '../dungeon/dungeonPage.js'
-import AdventurerPage from '../adventurer/adventurerPage.js'
 import DIForm from '../../form.js'
-import fizzetch from '../../../fizzetch.js'
 
 const FORM_HTML = `
 <div class="input-group">
@@ -36,6 +34,8 @@ const HTML = `
 </div>
 `
 
+const REST_THRESHOLD_STORAGE_KEY = 'rest-threshold'
+
 export default class DungeonPickerPage extends Page{
 
   _formEl
@@ -56,10 +56,15 @@ export default class DungeonPickerPage extends Page{
     })
     this.querySelector('.stuff').appendChild(this._formEl)
 
+    const val = localStorage.getItem(REST_THRESHOLD_STORAGE_KEY) ?? 50
     const restSlider = this.querySelector('[name=restThreshold]')
+    restSlider.value = val
+
     const restText = this.querySelector('.rest-threshold-text')
+    restText.textContent = val
     restSlider.addEventListener('input', () => {
       restText.textContent = restSlider.value
+      localStorage.setItem(REST_THRESHOLD_STORAGE_KEY, restSlider.value)
     })
   }
 
@@ -72,7 +77,7 @@ export default class DungeonPickerPage extends Page{
   }
 
   get titleText(){
-    return this.adventurer.name + ' - Entering Dungeon'
+    return 'Entering Dungeon'
   }
 
   async load(){

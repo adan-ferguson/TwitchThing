@@ -10,7 +10,7 @@ const HTML = `
   </div>
   <div class="hinter">
       <div><--</div>
-      <div>Click items to swap</div>
+      <div>Click items to swap (shift for all)</div>
       <div>--></div>
   </div>
   <div class="content-rows">
@@ -57,16 +57,15 @@ export default class Scrapyard extends DIElement{
     this.workshopInventoryEl.setup({
       title: 'Choose items to scrap',
       userInventory: this._inventory
-    }).listEl.events.on('clickrow', row => {
-      this._addItemToScrapList(row.loadoutItem)
+    }).listEl.events.on('clickrow', ({ e, row }) => {
+      this._addItemToScrapList(row.loadoutItem, e.shiftKey)
     })
 
     this.toScrapEl.setOptions({
       pageSize: 12,
-      paginate: false,
       clickableRows: true
-    }).events.on('clickrow', row => {
-      this._removeItemFromScrapList(row.loadoutItem)
+    }).events.on('clickrow', ({ e, row }) => {
+      this._removeItemFromScrapList(row.loadoutItem, e.shiftKey)
     })
 
     this.scrapButton.addEventListener('click', async () => {
@@ -80,15 +79,15 @@ export default class Scrapyard extends DIElement{
     })
   }
 
-  _addItemToScrapList(loadoutItem){
-    removeInventoryItem(this.workshopInventoryEl.listEl, loadoutItem)
-    addInventoryItem(this.toScrapEl, loadoutItem)
+  _addItemToScrapList(loadoutItem, all = false){
+    const count = removeInventoryItem(this.workshopInventoryEl.listEl, loadoutItem, all)
+    addInventoryItem(this.toScrapEl, loadoutItem, count)
     this._updateScrapCount()
   }
 
-  _removeItemFromScrapList(loadoutItem){
-    removeInventoryItem(this.toScrapEl, loadoutItem)
-    addInventoryItem(this.workshopInventoryEl.listEl, loadoutItem)
+  _removeItemFromScrapList(loadoutItem, all = false){
+    const count = removeInventoryItem(this.toScrapEl, loadoutItem, all)
+    addInventoryItem(this.workshopInventoryEl.listEl, loadoutItem, count)
     this._updateScrapCount()
   }
 

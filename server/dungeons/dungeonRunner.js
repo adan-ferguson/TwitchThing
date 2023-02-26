@@ -4,12 +4,13 @@ import Users from '../collections/users.js'
 import DungeonRunInstance from './dungeonRunInstance.js'
 import { emit } from '../socketServer.js'
 import { cancelRun } from './results.js'
+import AdventurerInstance from '../../game/adventurerInstance.js'
 
 let lastAdvancement = new Date()
 let running = false
 let activeRuns = {}
 
-export const ADVANCEMENT_INTERVAL = 5000
+export const ADVANCEMENT_INTERVAL = 2500
 
 export function cancelAllRuns(){
   activeRuns = {}
@@ -142,6 +143,10 @@ export async function getRunData(dungeonRunID, truncated = false){
   return data
 }
 
+export function getActiveRun(id){
+  return activeRuns[id]
+}
+
 function validateNew(adventurerDoc, userDoc, { startingFloor }){
   if(!adventurerDoc){
     throw 'Adventurer not found'
@@ -155,6 +160,10 @@ function validateNew(adventurerDoc, userDoc, { startingFloor }){
   if(adventurerDoc.nextLevelUp){
     throw 'Adventurer can not enter dungeon, they have a pending levelup'
   }
+  const adventurer = new AdventurerInstance(adventurerDoc)
+  if(!adventurer.isLoadoutValid){
+    throw 'Adventurer has invalid loadout.'
+  }
 }
 
 async function advanceRuns(){
@@ -163,8 +172,9 @@ async function advanceRuns(){
     try {
       await run.advance()
     }catch(ex){
+      console.log('run canceled', run.doc._id, ex)
       emit(run.doc._id, 'dungeon run update', {
-        error: ex,
+        error: ex.message ?? ex,
         _id: run.doc._id
       })
       cancelRun(run.doc)

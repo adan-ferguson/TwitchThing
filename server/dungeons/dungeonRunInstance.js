@@ -5,11 +5,15 @@ import { addRewards } from './results.js'
 import { ADVANCEMENT_INTERVAL } from './dungeonRunner.js'
 import calculateResults from '../../game/dungeonRunResults.js'
 import { toArray } from '../../game/utilFunctions.js'
+import _ from 'lodash'
 
 export default class DungeonRunInstance extends EventEmitter{
 
   shouldEmit = false
   _lastAdvancement = new Date()
+  _instructions = {
+    leave: false
+  }
 
   constructor(doc, user){
     super()
@@ -64,6 +68,10 @@ export default class DungeonRunInstance extends EventEmitter{
     return this.doc.dungeonOptions.restThreshold ?? 0
   }
 
+  get instructions(){
+    return this._instructions
+  }
+
   async initialize(){
     this.doc.events = [{
       message: `${this.adventurer.name} enters the dungeon.`,
@@ -104,6 +112,16 @@ export default class DungeonRunInstance extends EventEmitter{
     const slice = this.events.slice(this._newEventIterator)
     this._newEventIterator = this.events.length
     return slice
+  }
+
+  updateInstructions(val){
+    if(!val){
+      return
+    }
+    this._instructions = {
+      ...this._instructions,
+      ...val
+    }
   }
 
   async _nextEvent(){

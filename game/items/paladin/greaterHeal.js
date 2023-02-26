@@ -14,7 +14,7 @@ export default {
         },
         actions: [
           gainHealthAction({
-            scaling: { magicPower: 2.5 + level * 0.5 }
+            scaling: { magicPower: 2.3 + level * 0.2 }
           }),
           removeStatusEffectAction({
             count: 'all'
@@ -23,5 +23,6 @@ export default {
       }
     }
   }),
-  orbs: 9
+  orbs: 7,
+  rarity: 1
 }

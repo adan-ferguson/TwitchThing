@@ -46,35 +46,37 @@ export default class AdventurerLoadoutEditorPage extends Page{
   }
 
   get titleText(){
-    return this.adventurer.name + ' - Edit Equipment'
+    return 'Edit Equipment'
   }
 
   async unload(){
 
-    if(!this.adventurerPane.loadoutEl.hasChanges || this._saved){
-      return false
-    }
+    return false
 
-    const result = await new SimpleModal('Save changes before leaving page?', [{
-      text: 'Leave Without Saving',
-      style: 'scary',
-      value: 'leave'
-    },{
-      text: 'Save',
-      style: 'good',
-      value: 'save'
-    }]).show().awaitResult()
-
-    if(result === 'leave'){
-      return false
-    }else if(result === 'save'){
-      if(await this._save()){
-        return false
-      }
-    }
-
-    // Neither button clicked, modal was closed, stay on the page
-    return true
+    // if(!this.adventurerPane.loadoutEl.hasChanges || this._saved){
+    //   return false
+    // }
+    //
+    // const result = await new SimpleModal('Save changes before leaving page?', [{
+    //   text: 'Leave Without Saving',
+    //   style: 'scary',
+    //   value: 'leave'
+    // },{
+    //   text: 'Save',
+    //   style: 'good',
+    //   value: 'save'
+    // }]).show().awaitResult()
+    //
+    // if(result === 'leave'){
+    //   return false
+    // }else if(result === 'save'){
+    //   if(await this._save()){
+    //     return false
+    //   }
+    // }
+    //
+    // // Neither button clicked, modal was closed, stay on the page
+    // return true
   }
 
   async load(){

@@ -4,6 +4,7 @@ import FighterItemLoadoutItem from '../../../fighterItemLoadoutItem.js'
 import AdventurerItemInstance from '../../../../../game/adventurerItemInstance.js'
 import { getChestDisplayInfo } from '../../../chestDisplayInfo.js'
 import DIElement from '../../diElement.js'
+import { ICON_SVGS } from '../../../assetLoader.js'
 
 const UNOPENED_HTML = `
 <span class="unopened">
@@ -65,7 +66,7 @@ export default class ChestOpenage extends DIElement{
     const contents = this.querySelector('.contents')
     if(this._chest.contents.gold){
       contents.appendChild(makeEl({
-        content: `<img src="/assets/icons/gold.svg"><span> +${this._chest.contents.gold}</span>`,
+        content: `${ICON_SVGS.gold}<span> +${this._chest.contents.gold}</span>`,
         class: 'gold-contents'
       }))
     }
@@ -107,5 +108,5 @@ function arrayOfItems(obj){
       })
     }
   }
-  return arr
+  return arr.sort((a, b) => a.orbs - b.orbs)
 }

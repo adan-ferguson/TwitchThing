@@ -119,7 +119,17 @@ export default class LoadoutRow extends DIElement{
     this._cooldownBarEl.style.visibility = this.loadoutItem ? 'visible' : 'hidden'
 
     const info = this.loadoutItem?.abilityDisplayInfo
-    if(!info){
+    if(!info || info.type === 'triggered' && !info.cooldownRefreshing){
+      this.classList.remove('disabled')
+      this.removeAttribute('ability-type')
+      this.removeAttribute('ability-state')
+      this._cooldownBarEl
+        .setOptions({
+          color: null,
+          borderColor: '#DDD',
+          max: 1
+        })
+        .setValue(0)
       return
     }
 

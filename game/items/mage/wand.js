@@ -1,10 +1,10 @@
 import { magicAttackMod } from '../../mods/combined.js'
-import { leveledPercentageString } from '../../growthFunctions.js'
+import { leveledPctString } from '../../growthFunctions.js'
 
 export default {
   levelFn: level => ({
     stats: {
-      magicPower: leveledPercentageString(5, 5, level)
+      magicPower: leveledPctString(7, 3, level)
     },
     mods: [magicAttackMod]
   }),
