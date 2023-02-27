@@ -6,10 +6,9 @@ import { showLoader } from '../../../loader.js'
 import SimpleModal, { alertModal } from '../../simpleModal.js'
 import AdventurerPreviousRunsPage from '../adventurerPreviousRuns/adventurerPreviousRunsPage.js'
 import DungeonPage from '../dungeon/dungeonPage.js'
-import AdventurerLoadoutEditorPage from '../adventurerLoadout/adventurerLoadoutEditorPage.js'
-import LevelupPage from '../levelup/levelupPage.js'
 import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
 import AdventurerInstance from '../../../../../game/adventurerInstance.js'
+import AdventurerEditPage from '../adventurerEdit/adventurerEditPage.js'
 
 const HTML = `
 <div class="content-columns">
@@ -105,31 +104,23 @@ export default class AdventurerPage extends Page{
     }
 
     btn.addEventListener('click', () => {
-      this.redirectTo(AdventurerLoadoutEditorPage.path(this.adventurerID))
+      this.redirectTo(AdventurerEditPage.path(this.adventurerID))
     })
   }
 
   _setupTopRightButton(user){
     const advInstance = new AdventurerInstance(this.adventurer)
-    if(advInstance.shouldLevelUp){
-      this._topRightButton.classList.add('highlight')
-      this._topRightButton.innerHTML = '<div>Level Up!<div/>'
-      this._topRightButton.addEventListener('click', () => {
-        this.redirectTo(LevelupPage.path(this.adventurerID))
-      })
-    }else{
-      const quickDungeon = user.features.dungeonPicker
-      this._topRightButton.textContent = 'Enter Dungeon'
-      this._topRightButton.addEventListener('click', () => {
-        if(!advInstance.isLoadoutValid){
-          alertModal('This adventurer has invalid items for some reason, can not enter dungeon.')
-        }else if(quickDungeon){
-          this.redirectTo(DungeonPickerPage.path(this.adventurerID))
-        }else{
-          this._quickEnterDungeon()
-        }
-      })
-    }
+    const quickDungeon = user.features.dungeonPicker
+    this._topRightButton.textContent = 'Enter Dungeon'
+    this._topRightButton.addEventListener('click', () => {
+      if(!advInstance.isLoadoutValid){
+        alertModal('This adventurer has invalid items for some reason, can not enter dungeon.')
+      }else if(quickDungeon){
+        this.redirectTo(DungeonPickerPage.path(this.adventurerID))
+      }else{
+        this._quickEnterDungeon()
+      }
+    })
   }
 
   async _quickEnterDungeon(){

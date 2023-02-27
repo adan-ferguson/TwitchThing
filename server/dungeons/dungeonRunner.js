@@ -157,9 +157,6 @@ function validateNew(adventurerDoc, userDoc, { startingFloor }){
   if(adventurerDoc.dungeonRun){
     throw 'Adventurer already in dungeon'
   }
-  if(adventurerDoc.nextLevelUp){
-    throw 'Adventurer can not enter dungeon, they have a pending levelup'
-  }
   const adventurer = new AdventurerInstance(adventurerDoc)
   if(!adventurer.isLoadoutValid){
     throw 'Adventurer has invalid loadout.'

@@ -1,4 +1,3 @@
-import defaultOrbImg from '/client/assets/icons/orbs/default.svg'
 import classDisplayInfo from '../classDisplayInfo.js'
 import tippy from 'tippy.js'
 import OrbsData from '../../../game/orbsData.js'
@@ -76,7 +75,7 @@ class OrbEntry extends HTMLElement{
 
     const classInfo = classDisplayInfo(orbDatum.className)
     this.style.color = classInfo.color
-    this.innerHTML = ORB_ENTRY_HTML(classInfo.icon || defaultOrbImg, text)
+    this.innerHTML = ORB_ENTRY_HTML(classInfo.icon, text)
 
     const tooltipText = tooltip === OrbsTooltip.ITEM ?
       'Spend this many orbs to equip this item.' :

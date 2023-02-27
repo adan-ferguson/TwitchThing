@@ -38,7 +38,7 @@ export const ICON_SVGS = {
   health
 }
 
-export const CLASS_SVGS = {
+export const ORB_SVGS = {
   fighter,
   mage,
   paladin,

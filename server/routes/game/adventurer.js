@@ -52,7 +52,7 @@ verifiedRouter.post('/enterdungeon', validateIdle, async(req, res) => {
   }
 })
 
-verifiedRouter.post('/editloadout', validateIdle, async (req, res) => {
+verifiedRouter.post('/edit', validateIdle, async (req, res) => {
   const user = await Users.gameData(req.user)
   res.status(200).send({
     adventurer: req.adventurer,

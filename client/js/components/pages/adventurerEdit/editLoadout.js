@@ -1,8 +1,7 @@
-import Page from '../page.js'
+import DIElement from '../../diElement.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import fizzetch from '../../../fizzetch.js'
 import setupEditable from '../../loadout/setupEditable.js'
-import SimpleModal from '../../simpleModal.js'
 
 const HTML = `
 <div class="content-columns">
@@ -23,65 +22,32 @@ const HTML = `
 </div>
 `
 
-export default class AdventurerLoadoutEditorPage extends Page{
+export default class EditLoadout extends DIElement{
 
-  _saved = false
-
-  constructor(adventurerID){
+  constructor(){
     super()
-    this.adventurerID = adventurerID
     this.innerHTML = HTML
-
     this.adventurerPane = this.querySelector('di-adventurer-pane')
     this.inventory = this.querySelector('di-inventory')
     this.saveButton = this.querySelector('button.save')
   }
 
-  static get pathDef(){
-    return ['adventurer', 0, 'editloadout']
+  get adventurerPaneEl(){
+    return this.querySelector('di-adventurer-edit-pane')
   }
 
-  get pathArgs(){
-    return [this.adventurerID]
+  get inventoryEl(){
+    return this.querySelector('di-user-inventory')
   }
 
-  get titleText(){
-    return 'Edit Equipment'
+  get saveButton(){
+    return this.querySelector('button.save')
   }
 
-  async unload(){
+  async show(parentPage){
 
-    return false
+    const { items, adventurer } = parentPage
 
-    // if(!this.adventurerPane.loadoutEl.hasChanges || this._saved){
-    //   return false
-    // }
-    //
-    // const result = await new SimpleModal('Save changes before leaving page?', [{
-    //   text: 'Leave Without Saving',
-    //   style: 'scary',
-    //   value: 'leave'
-    // },{
-    //   text: 'Save',
-    //   style: 'good',
-    //   value: 'save'
-    // }]).show().awaitResult()
-    //
-    // if(result === 'leave'){
-    //   return false
-    // }else if(result === 'save'){
-    //   if(await this._save()){
-    //     return false
-    //   }
-    // }
-    //
-    // // Neither button clicked, modal was closed, stay on the page
-    // return true
-  }
-
-  async load(){
-    const { adventurer, items } = await this.fetchData()
-    this.adventurer = adventurer
     this.inventory.setup(items, adventurer)
     this.adventurerPane.setAdventurer(adventurer)
 
@@ -91,6 +57,11 @@ export default class AdventurerLoadoutEditorPage extends Page{
         this._updateSaveButton()
       }
     })
+
+    // TODO: skills
+    // setupEditable(){
+    //
+    // }
 
     this.saveButton.addEventListener('click', async (e) => {
       if(!this.adventurerPane.loadoutEl.hasChanges){
@@ -129,4 +100,4 @@ export default class AdventurerLoadoutEditorPage extends Page{
   }
 }
 
-customElements.define('di-adventurer-loadout-editor-page', AdventurerLoadoutEditorPage)
+customElements.define('di-edit-loadout', EditLoadout)

@@ -1,5 +1,5 @@
 import { toDisplayName } from '../../game/utilFunctions.js'
-import { CLASS_SVGS, modifySvgString } from './assetLoader.js'
+import { ORB_SVGS, modifySvgString } from './assetLoader.js'
 
 const ADV_CLASSES = {
   fighter: {
@@ -24,7 +24,7 @@ for(let className in ADV_CLASSES){
   const cls = ADV_CLASSES[className]
   cls.className = className
   cls.displayName = toDisplayName(className)
-  cls.icon = modifySvgString(CLASS_SVGS[className], {
+  cls.icon = modifySvgString(ORB_SVGS[className], {
     class: 'orb-icon',
     fill: cls.color
   })
