@@ -77,7 +77,7 @@ router.get('/newuser', async (req, res) => {
 
 router.post('/appfetch', async (req, res) => {
   const user = Users.gameData(req.user) || { anonymous: true }
-  const popups = checkForRewards(req.user)
+  const popups = !user.anonymous ? checkForRewards(req.user) : null
   res.send({ user, popups })
 })
 

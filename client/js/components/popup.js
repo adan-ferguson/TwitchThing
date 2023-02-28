@@ -8,6 +8,9 @@ const popupQueue = []
 let running = false
 
 export function showPopup(data){
+  if(!data){
+    return
+  }
   popupQueue.push(...toArray(data))
   if(!popupQueue.length){
     return
