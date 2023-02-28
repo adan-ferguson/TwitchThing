@@ -215,16 +215,13 @@ export default class FighterInstance{
   }
 
   set hp(val){
-    if(isNaN(val)){
-      debugger
-    }
     this.hpPct = val / this.hpMax
   }
 
   get hpMax(){
     const hpMax = Math.ceil(this.stats.get('hpMax').value)
-    if(hpMax === 0){
-      debugger
+    if(hpMax <= 0){
+      return 1
     }
     return hpMax
   }
