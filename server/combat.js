@@ -169,7 +169,7 @@ class Combat{
   incrementTriggerCounter(){
     this._triggerCounter++
     if(this._triggerCounter > MAX_TRIGGER_COUNTER){
-      throw 'Trigger counter excessively high, probably infinite loop.'
+      throw 'Trigger counter excessively high, probably infinite loop'
     }
   }
 
@@ -181,7 +181,7 @@ class Combat{
 
     while(!this.finished){
       if(Date.now() - this._startTimestamp > COMBAT_TIMEOUT){
-        throw 'Combat took too long to compute.'
+        throw 'Combat took too long to compute'
       }
       this._advanceTime()
 
@@ -216,7 +216,7 @@ class Combat{
     if(!timeToAdvance){
       this._consecutiveZeroTimeAdvancements++
       if(this._consecutiveZeroTimeAdvancements >= MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS){
-        throw 'Combat was no longer advancing time, probably infinite loop.'
+        throw 'Combat was no longer advancing time, probably infinite loop'
       }
     }else{
       this._consecutiveZeroTimeAdvancements = 0
