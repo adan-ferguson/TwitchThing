@@ -13,6 +13,7 @@ const COMBAT_END_PADDING = 2500
 const MAX_TIME = 1000 * 120
 const BOSS_MAX_TIME = 1000 * 300
 const MIN_RESULT_TIME = 2500
+const COMBAT_TIMEOUT = 1000
 
 const MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS = 16
 const MAX_TRIGGER_COUNTER = 500
@@ -105,6 +106,7 @@ class Combat{
 
   _triggerCounter = 0
   _consecutiveZeroTimeAdvancements = 0
+  _startTimestamp = Date.now()
 
   constructor(fighterInstance1, fighterInstance2, params){
     this.params = params
@@ -178,6 +180,9 @@ class Combat{
   _run(){
 
     while(!this.finished){
+      if(Date.now() - this._startTimestamp > COMBAT_TIMEOUT){
+        throw 'Combat took too long to compute.'
+      }
       this._advanceTime()
 
       const tickUpdates = this._tick()
