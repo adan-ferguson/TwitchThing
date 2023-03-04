@@ -172,7 +172,7 @@ async function advanceRuns(){
     try {
       await run.advance()
     }catch(ex){
-      console.log('run canceled', run.doc._id, ex)
+      console.log('run cancelled', run.doc._id, ex)
       emit(run.doc._id, 'dungeon run update', {
         error: ex.message ?? ex,
         _id: run.doc._id
