@@ -5,15 +5,15 @@ import LoadoutRow from './loadoutRow.js'
 
 const HTML = `
 <div class="content-rows">
-  <div class="content-no-grow inventory-options">
+<!--  <div class="content-no-grow inventory-options">-->
 <!--    <div class="input-group">-->
 <!--      Sort By:-->
 <!--      <label><input type="radio" name="sortBy" value="class">Class</label>-->
 <!--    </div>-->
-    <div class="filtering-options require-adventurer displaynone">
-      <label><input type="checkbox" name="hideOther"> Hide Unequippable</label>
-    </div>
-  </div>
+<!--    <div class="filtering-options require-adventurer displaynone">-->
+<!--      <label><input type="checkbox" name="hideOther"> Hide Unequippable</label>-->
+<!--    </div>-->
+<!--  </div>-->
   <di-list></di-list>
 </div>
 `

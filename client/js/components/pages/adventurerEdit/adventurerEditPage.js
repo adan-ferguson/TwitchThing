@@ -5,8 +5,8 @@ import { orbPointIcon, skillPointIcon } from '../../common.js'
 
 const HTML = `
 <di-tabz>
-  <di-edit-loadout data-tab-name="Loadout"></di-edit-loadout>
-  <di-edit-points data-tab-name="Spend Points"></di-edit-points>
+  <di-edit-loadout class="fill-contents" data-tab-name="Loadout"></di-edit-loadout>
+  <di-edit-points class="fill-contents" data-tab-name="Spend Points"></di-edit-points>
 <!--  <div data-tab-name="Quick Forge"></div>-->
 </di-tabz>
 `
@@ -51,7 +51,7 @@ export default class AdventurerEditPage extends Page{
   async _loadTab(){
     showLoader()
     const tab = this.tabzEl.currentTab
-    await tab.show(this)
+    await tab.showData(this)
     hideLoader()
   }
 

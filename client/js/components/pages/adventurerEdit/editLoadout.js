@@ -4,20 +4,24 @@ import fizzetch from '../../../fizzetch.js'
 import setupEditable from '../../loadout/setupEditable.js'
 
 const HTML = `
-<div class="content-columns">
+<div class="content-columns fill-contents">
     <div class="content-well user-inventory fill-contents">
         <di-inventory class="fill-contents"></di-inventory>
     </div>
     <div class="hinter edit-hinter">
-        <div><--</div>
-        <div>Click or drag items to swap</div>
-        <div>--></div>
+      <i class="fa-solid fa-arrows-left-right"></i>
     </div>
     <div class="content-rows">
       <div class="content-well">
         <di-adventurer-pane></di-adventurer-pane>
       </div>
       <button class="save content-no-grow">Save</button>
+    </div>
+    <div class="hinter edit-hinter">
+      <i class="fa-solid fa-arrows-left-right"></i>
+    </div>
+    <div class="content-well adventurer-skills fill-contents">
+        <di-skills-list class="fill-contents"></di-skills-list>
     </div>
 </div>
 `
@@ -27,9 +31,6 @@ export default class EditLoadout extends DIElement{
   constructor(){
     super()
     this.innerHTML = HTML
-    this.adventurerPane = this.querySelector('di-adventurer-pane')
-    this.inventory = this.querySelector('di-inventory')
-    this.saveButton = this.querySelector('button.save')
   }
 
   get adventurerPaneEl(){
@@ -44,7 +45,7 @@ export default class EditLoadout extends DIElement{
     return this.querySelector('button.save')
   }
 
-  async show(parentPage){
+  async showData(parentPage){
 
     const { items, adventurer } = parentPage
 
