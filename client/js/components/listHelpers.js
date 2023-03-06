@@ -138,12 +138,11 @@ export function removeInventoryItem(list, loadoutItem, all = false){
 }
 
 function makeAdventurerItemRow(itemDef, count = null){
-  debugger
   const item = new AdventurerItem(itemDef)
   if(!item.isValid){
     return null
   }
-  const row = new AdventurerItemRow(item)
+  const row = new AdventurerItemRow().setItem(item)
   if(count !== null){
     row.setCount(count)
   }

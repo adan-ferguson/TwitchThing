@@ -29,6 +29,10 @@ export default class AdventurerItem{
     return this._data.effect ?? {}
   }
 
+  get isBasic(){
+    return this._itemDef.id ? false : true
+  }
+
   _basicItem(){
     const baseItem = Items[this._itemDef.group][this._itemDef.name]
     this._data = {
