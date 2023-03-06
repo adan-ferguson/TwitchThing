@@ -1,10 +1,11 @@
-import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
-import DIElement from '../diElement.js'
-import { inventoryItemsToRows, standardItemSort } from '../listHelpers.js'
+import { mergeOptionsObjects } from '../../../../../game/utilFunctions.js'
+import DIElement from '../../diElement.js'
+import { inventoryItemsToRows, standardItemSort } from '../../listHelpers.js'
 import LoadoutRow from './loadoutRow.js'
 
 const HTML = `
 <div class="content-rows">
+  <div class="inset-title">Items</div>
 <!--  <div class="content-no-grow inventory-options">-->
 <!--    <div class="input-group">-->
 <!--      Sort By:-->
@@ -30,7 +31,7 @@ export default class Inventory extends DIElement{
   constructor(){
     super()
     this.innerHTML = HTML
-    this._setupFilteringOptions()
+    // this._setupFilteringOptions()
     this.list = this.querySelector('di-list')
     this.list.setOptions({
       pageSize: 15
@@ -50,7 +51,7 @@ export default class Inventory extends DIElement{
 
   setup(items, adventurer){
     this.adventurer = adventurer
-    this.querySelector('.inventory-options').classList.toggle('displaynone', adventurer ? false : true)
+    // this.querySelector('.inventory-options').classList.toggle('displaynone', adventurer ? false : true)
     this._updateSortAndFilter()
     this.list.setRows(inventoryItemsToRows(items))
     return this

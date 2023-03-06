@@ -1,7 +1,7 @@
 import Adventurers from '../collections/adventurers.js'
 import { adjustInventoryBasics, spendInventoryBasics, spendScrap } from '../loadouts/inventory.js'
 import Users from '../collections/users.js'
-import AdventurerItemInstance from '../../game/adventurerItemInstance.js'
+import AdventurerItemInstance from '../../game/adventurerSlotInstance.js'
 
 export async function getUserWorkshop(userDoc){
   return {

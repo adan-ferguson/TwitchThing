@@ -1,5 +1,5 @@
 import FighterInstance from './fighterInstance.js'
-import AdventurerItemInstance from './adventurerItemInstance.js'
+import AdventurerItemInstance from './adventurerSlotInstance.js'
 import OrbsData from './orbsData.js'
 import { geometricProgession, inverseGeometricProgression } from './growthFunctions.js'
 import BonusesData from './bonusesData.js'

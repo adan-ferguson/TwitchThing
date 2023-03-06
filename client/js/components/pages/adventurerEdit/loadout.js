@@ -1,7 +1,7 @@
 import LoadoutRow from './loadoutRow.js'
-import OrbsData from '../../../../game/orbsData.js'
-import FighterItemLoadoutItem from '../../fighterItemLoadoutItem.js'
-import ConsoleTimer from '../../../../game/consoleTimer.js'
+import OrbsData from '../../../../../game/orbsData.js'
+import FighterItemLoadoutItem from '../../../fighterItemLoadoutItem.js'
+import ConsoleTimer from '../../../../../game/consoleTimer.js'
 
 const HTML = `
 <di-list></di-list>
@@ -132,4 +132,4 @@ export default class Loadout extends HTMLElement{
   }
 }
 
-customElements.define('di-loadout', Loadout)
+customElements.define('di-adventurer-edit-loadout', Loadout)

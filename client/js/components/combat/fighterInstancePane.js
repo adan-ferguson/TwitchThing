@@ -15,7 +15,7 @@ import {
 } from '../../../../game/mods/combined.js'
 import { DAMAGE_COLORS, FLASH_COLORS } from '../../colors.js'
 import { flash } from '../../animations/simple.js'
-import LoadoutRow from '../loadout/loadoutRow.js'
+import LoadoutRow from '../pages/adventurerEdit/loadoutRow.js'
 import EffectRow from '../effects/effectRow.js'
 import { ICON_SVGS } from '../../assetLoader.js'
 

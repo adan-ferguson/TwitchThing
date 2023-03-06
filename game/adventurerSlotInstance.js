@@ -1,29 +1,16 @@
 import Items from './items/combined.js'
-import FighterItemInstance from './fighterItemInstance.js'
 import OrbsData from './orbsData.js'
 import { uniqueID } from './utilFunctions.js'
 import { ITEM_RARITIES } from '../server/items/generator.js'
 import _  from 'lodash'
+import FighterSlotInstance from './fighterSlotInstance.js'
 
-export default class AdventurerItemInstance extends FighterItemInstance{
+export default class AdventurerSlotInstance extends FighterSlotInstance{
 
-  constructor(itemDef, state = null, owner = null){
-
-    if(!Items[itemDef.group] || !Items[itemDef.group][itemDef.name]){
-      super()
-      return
-    }
-
-    const baseItem = Items[itemDef.group][itemDef.name]
-    const level = itemDef.level ?? 1
-    const itemData = {
-      ...baseItem,
-      ...baseItem.levelFn(level),
-      orbs: baseItem.orbs
-    }
-
-    super(itemData, state, owner)
-    this._itemDef = itemDef
+  constructor({ item = null, skill = null }, state = null, owner = null){
+    super(expandEffectData(item, skill), state, owner )
+    this._item = item
+    this._skill = skill
   }
 
   get baseItem(){
@@ -34,8 +21,12 @@ export default class AdventurerItemInstance extends FighterItemInstance{
     return this._itemDef.id
   }
 
-  get itemDef(){
-    return this._itemDef
+  get item(){
+    return this._item
+  }
+
+  get skill(){
+    return this._skill
   }
 
   get displayName(){
@@ -112,5 +103,17 @@ export default class AdventurerItemInstance extends FighterItemInstance{
     }
 
     return { upgradedItemDef, components }
+  }
+}
+
+/**
+ * An adventurer slot is a combination of an AdventurerItem and an AdventurerSkill (possibly null)
+ * @param item
+ * @param skill
+ */
+function expandEffectData(item, skill){
+  return {
+    ...(item?.effectData ?? {}),
+    ...(skill?.effectData ?? {})
   }
 }

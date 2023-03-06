@@ -2,7 +2,7 @@ import Stats from './stats/stats.js'
 import { freezeActionBarMod, magicAttackMod, silencedMod, sneakAttackMod } from './mods/combined.js'
 import { StatusEffectsData } from './statusEffectsData.js'
 import ModsCollection from './modsCollection.js'
-import FighterItemInstance from './fighterItemInstance.js'
+import FighterSlotInstance from './fighterSlotInstance.js'
 import { minMax } from './utilFunctions.js'
 import freezeCooldownsMod from './mods/generic/freezeCooldowns.js'
 
@@ -373,7 +373,7 @@ export default class FighterInstance{
       }
     }
     // Check for status effects which might be disabling this item
-    if(effect instanceof FighterItemInstance){
+    if(effect instanceof FighterSlotInstance){
       if(this.statusEffectsData.instances.find(sei => sei.effectData.disarmedItemSlot === effect.slot)){
         return true
       }

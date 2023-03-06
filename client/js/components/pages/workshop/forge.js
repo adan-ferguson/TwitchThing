@@ -1,5 +1,5 @@
 import DIElement from '../../diElement.js'
-import AdventurerItemInstance from '../../../../../game/adventurerItemInstance.js'
+import AdventurerItemInstance from '../../../../../game/adventurerSlotInstance.js'
 import ComponentRow from './componentRow.js'
 import { hideLoader, showLoader } from '../../../loader.js'
 import fizzetch from '../../../fizzetch.js'

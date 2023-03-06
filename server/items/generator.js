@@ -1,7 +1,9 @@
 import BaseItems from '../../game/items/combined.js'
 import { v4 } from 'uuid'
 import Picker from '../../game/picker.js'
-import AdventurerItemInstance from '../../game/adventurerItemInstance.js'
+import AdventurerItemInstance from '../../game/adventurerSlotInstance.js'
+import AdventurerItem from '../../game/adventurerItem.js'
+import AdventurerSlotInstance from '../../game/adventurerSlotInstance.js'
 
 export const ITEM_RARITIES = [
   {
@@ -58,4 +60,19 @@ export function getItemPicker(value, validClasses){
 
 export function chooseRandomBasicItem(chestLevel, validClasses){
   return getItemPicker(chestLevel, validClasses).pickOne()
+}
+
+export function validateAllItems(){
+  for(let group in BaseItems){
+    for(let name in BaseItems[group]){
+      const item = new AdventurerItem({ group, name })
+      if(!item.isValid){
+        throw `Adventurer Item not valid (base item): ${name}`
+      }
+      const slotEffect = new AdventurerSlotInstance({ item })
+      if(!slotEffect.isValid){
+        throw `Adventurer Item not valid (slot effect): ${name}`
+      }
+    }
+  }
 }

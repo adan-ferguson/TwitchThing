@@ -1,12 +1,12 @@
 import tippy from 'tippy.js'
-import SimpleModal from '../simpleModal.js'
-import { wrapContent } from '../../../../game/utilFunctions.js'
-import { ITEM_ROW_COLORS } from '../../colors.js'
-import EffectDetails from '../effectDetails.js'
-import DIElement from '../diElement.js'
-import ItemCard from '../itemCard.js'
-import ItemDetails from '../itemDetails.js'
-import { AbilityState } from '../../abilityDisplayInfo.js'
+import SimpleModal from '../../simpleModal.js'
+import { wrapContent } from '../../../../../game/utilFunctions.js'
+import { ITEM_ROW_COLORS } from '../../../colors.js'
+import EffectDetails from '../../effectDetails.js'
+import DIElement from '../../diElement.js'
+import ItemCard from '../../itemCard.js'
+import ItemDetails from '../../itemDetails.js'
+import { AbilityState } from '../../../abilityDisplayInfo.js'
 
 const HTML = `
 <di-bar class="cooldown"></di-bar>

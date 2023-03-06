@@ -1,12 +1,14 @@
 import FighterItemLoadoutItem from '../fighterItemLoadoutItem.js'
-import AdventurerItemInstance from '../../../game/adventurerItemInstance.js'
-import LoadoutRow from './loadout/loadoutRow.js'
+import AdventurerItemInstance from '../../../game/adventurerSlotInstance.js'
+import LoadoutRow from './pages/adventurerEdit/loadoutRow.js'
+import AdventurerItem from '../../../game/adventurerItem.js'
+import AdventurerItemRow from './adventurer/adventurerItemRow.js'
 
 export function adventurerItemsToRows(items){
   const rows = []
   items.forEach((itemDef, i) => {
     if(itemDef){
-      const row = makeRow(itemDef)
+      const row = makeAdventurerItemRow(itemDef)
       if(!row){
         return
       }
@@ -21,14 +23,14 @@ export function inventoryItemsToRows(items){
   const rows = []
   Object.keys(items.basic).forEach(group => {
     Object.keys(items.basic[group]).forEach(name => {
-      const row = makeRow({ group, name }, items.basic[group][name])
+      const row = makeAdventurerItemRow({ group, name }, items.basic[group][name])
       if(row){
         rows.push(row)
       }
     })
   })
   Object.values(items.crafted).forEach(itemDef => {
-    const row = makeRow(itemDef)
+    const row = makeAdventurerItemRow(itemDef)
     if(row){
       rows.push(row)
     }
@@ -135,13 +137,13 @@ export function removeInventoryItem(list, loadoutItem, all = false){
   }
 }
 
-function makeRow(itemDef, count = null){
-  const item = new AdventurerItemInstance(itemDef)
+function makeAdventurerItemRow(itemDef, count = null){
+  debugger
+  const item = new AdventurerItem(itemDef)
   if(!item.isValid){
     return null
   }
-  const info = new FighterItemLoadoutItem(item)
-  const row = new LoadoutRow().setItem(info)
+  const row = new AdventurerItemRow(item)
   if(count !== null){
     row.setCount(count)
   }

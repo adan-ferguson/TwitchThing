@@ -4,30 +4,6 @@ di-loadout
   di-list
     flex-grow: 1
 
-di-inventory
-  .filtering-options
-    margin-bottom: 8rem !important
-
-.editable
-  di-loadout-row
-    .cooldown
-      background-color: transparent
-    &:not(.blank-row, .filtered)
-      cursor: pointer
-      &:hover
-        background-color: #e9ffdf
-    &.filtered
-      opacity: 0.4
-
-  .hoverable, &.hoverable
-    background-color: #f8f8ff
-
-  .hovered, &.hovered
-    background-color: #e1e7fa
-
-.popped-out
-  position: absolute
-
 di-loadout-row
   //border: 0.5rem solid #CCC
   position: relative

@@ -1,6 +1,6 @@
-import FighterItemInstance from './fighterItemInstance.js'
+import FighterSlotInstance from './fighterSlotInstance.js'
 
-export default class MonsterItemInstance extends FighterItemInstance{
+export default class MonsterItemInstance extends FighterSlotInstance{
 
   constructor(itemDef, state = null, owner = null){
 

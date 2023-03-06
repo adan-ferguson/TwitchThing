@@ -1,25 +1,22 @@
 import DIElement from '../../diElement.js'
+import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 
-// const HTML = `
-// <div class="name"></div>
-// <di-orb-row class="fighter-orbs displaynone"></di-orb-row>
-// <div class="absolute-full-size fill-contents standard-contents">
-//   <div class="flex-grow flex-rows top-section">
-//     <di-xp-bar></di-xp-bar>
-//     <di-stats-list></di-stats-list>
-//     <di-orb-row class="adventurer-orbs"></di-orb-row>
-//   </div>
-//   <di-loadout></di-loadout>
-// </div>
-// `
+const HTML = `
+<div class="inset-title name"></div>
+<div class="absolute-full-size fill-contents standard-contents">
+  <div class="flex-grow flex-rows top-section">
+    <di-stats-list></di-stats-list>
+    <di-orb-row class="adventurer-orbs"></di-orb-row>
+  </div>
+  <di-adventurer-edit-loadout></di-adventurer-edit-loadout>
+</div>
+`
 
 export default class AdventurerEditPane extends DIElement{
 
   constructor(){
     super()
-    // this.classList.add('flex-rows')
-    // this.innerHTML = HTML
-    // this._name = this.querySelector('div.name')
+    this.innerHTML = HTML
     // this.xpBar = this.querySelector('di-xp-bar')
     // this.xpBar.setLevelFunctions(advXpToLevel, advLevelToXp)
     // this.orbRow = this.querySelector('di-orb-row.adventurer-orbs')
@@ -40,15 +37,14 @@ export default class AdventurerEditPane extends DIElement{
     //   }
     // })
   }
-  //
-  // setAdventurer(adventurer){
-  //   this.adventurerInstance = new AdventurerInstance(adventurer)
-  //   this.adventurerInstance.idle = true
-  //   this._name.textContent = adventurer.name
-  //   this.xpBar.setValue(adventurer.xp)
-  //   this.loadoutEl.setFighterInstance(this.adventurerInstance)
-  //   this.update()
-  // }
+
+  setAdventurer(adventurer){
+    this.adventurerInstance = new AdventurerInstance(adventurer)
+    this.adventurerInstance.idle = true
+    this.querySelector('.name').textContent = `${adventurer.level} - ${adventurer.name}`
+    // this.loadoutEl.setAdventurerInstance(this.adventurerInstance)
+    // this.update()
+  }
   //
   // setExtraStats(extraStats){
   //   this._extraStats = extraStats
