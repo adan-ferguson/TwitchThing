@@ -4,10 +4,7 @@ import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 const HTML = `
 <div class="inset-title name"></div>
 <div class="absolute-full-size fill-contents standard-contents">
-  <div class="flex-grow flex-rows top-section">
-    <di-stats-list></di-stats-list>
-    <di-orb-row class="adventurer-orbs"></di-orb-row>
-  </div>
+  <di-stats-list class="adventurer-stats"></di-stats-list>
   <di-adventurer-edit-loadout></di-adventurer-edit-loadout>
 </div>
 `
@@ -16,26 +13,17 @@ export default class AdventurerEditPane extends DIElement{
 
   constructor(){
     super()
-    // this.innerHTML = HTML
-    // this.xpBar = this.querySelector('di-xp-bar')
-    // this.xpBar.setLevelFunctions(advXpToLevel, advLevelToXp)
-    // this.orbRow = this.querySelector('di-orb-row.adventurer-orbs')
-    //   .setOptions({
-    //     style: OrbsDisplayStyle.SHOW_MAX
-    //   })
-    //
-    // this.loadoutEl = this.querySelector('di-loadout')
-    // this.statsList = this.querySelector('di-stats-list')
-    //   .setOptions({
-    //     maxItems: 10,
-    //     forced: ['hpMax', 'physPower']
-    //   })
-    //
-    // this.querySelector('.top-section').addEventListener('click', e => {
-    //   if(this.adventurerInstance){
-    //     this._showAdventurerInfoModal()
-    //   }
-    // })
+    this.innerHTML = HTML
+    this.statsListEl
+      .setOptions({
+        maxItems: 10,
+        forced: ['hpMax', 'physPower']
+      })
+    // TODO: click more stats
+  }
+
+  get statsListEl(){
+    return this.querySelector('di-stats-list')
   }
 
   setAdventurer(adventurer){

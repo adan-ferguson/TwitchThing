@@ -1,4 +1,5 @@
 import DIElement from '../../diElement.js'
+import AdventurerSkillRow from '../../adventurer/adventurerSkillRow.js'
 
 const HTML = `
 <div class="content-rows">
@@ -14,7 +15,8 @@ export default class Skills extends DIElement{
     this.innerHTML = HTML
     this.list = this.querySelector('di-list')
     this.list.setOptions({
-      pageSize: 15
+      pageSize: 15,
+      blankFn: () => new AdventurerSkillRow()
     })
   }
 

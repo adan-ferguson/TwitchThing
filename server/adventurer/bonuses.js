@@ -1,29 +1,9 @@
 import Users from '../collections/users.js'
 import { chooseOne } from '../../game/rando.js'
-import Bonuses from '../../game/bonuses/combined.js'
 import Adventurers from '../collections/adventurers.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
-import { toArray } from '../../game/utilFunctions.js'
-import BonusInstance from '../../game/bonusInstance.js'
 import { oneTwoFive } from '../../game/growthFunctions.js'
 import { spendGold } from '../loadouts/inventory.js'
-
-const FIRST_LEVEL_BONUSES = {
-  fighter: 'fighterorb',
-  mage: 'mageorb',
-  paladin: 'paladinorb',
-  rogue: 'rogueorb'
-}
-
-const RARITY_TO_WEIGHT = [
-  1,
-  0.5,
-  0.25
-]
-
-export function firstLevelBonus(className){
-  return FIRST_LEVEL_BONUSES[className]
-}
 
 export async function generateLevelup(adventurerDoc){
   const advInstance = new AdventurerInstance(adventurerDoc)

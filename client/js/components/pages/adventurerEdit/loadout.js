@@ -1,8 +1,13 @@
-import LoadoutRow from './loadoutRow.js'
 import FighterItemLoadoutItem from '../../../fighterItemLoadoutItem.js'
+import { makeEl } from '../../../../../game/utilFunctions.js'
 
 const HTML = `
-<di-list></di-list>
+<di-orb-row></di-orb-row>
+`
+
+const SLOT_HTML = `
+<di-adventurer-item-row></di-adventurer-item-row>
+<di-adventurer-skill-row></di-adventurer-skill-row>
 `
 
 export default class Loadout extends HTMLElement{
@@ -16,20 +21,13 @@ export default class Loadout extends HTMLElement{
   constructor(){
     super()
     this.innerHTML = HTML
-    this.classList.add('fill-contents')
-
-    this.list = this.querySelector('di-list')
-    this.list.setOptions({
-      paginate: false,
-      pageSize: 8
-    })
-
-    this._rows = []
+    this.classList.add('fill-contents', 'flex-rows')
     for(let i = 0; i < 8; i++){
-      this._rows[i] = new LoadoutRow(i)
+      this.appendChild(makeEl({
+        class: 'loadout-slot',
+        content: SLOT_HTML
+      }))
     }
-
-    this.update()
   }
 
   get loadoutItems(){

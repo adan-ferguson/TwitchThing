@@ -11,7 +11,7 @@ const HTML = `
     <div class="hinter edit-hinter">
       <i class="fa-solid fa-arrows-left-right"></i>
     </div>
-    <div class="content-rows" style="flex-grow:1.5">
+    <div class="content-rows" style="flex-grow:2">
       <div class="content-well">
         <di-adventurer-edit-pane></di-adventurer-edit-pane>
       </div>
@@ -26,7 +26,7 @@ const HTML = `
 </div>
 `
 
-export default class EditLoadout extends DIElement{
+export default class EditLoadoutTab extends DIElement{
 
   constructor(){
     super()
@@ -106,4 +106,4 @@ export default class EditLoadout extends DIElement{
   }
 }
 
-customElements.define('di-edit-loadout', EditLoadout)
+customElements.define('di-edit-loadout-tab', EditLoadoutTab)

@@ -1,13 +1,31 @@
 di-adventurer-edit-page
+
   .tab
     .unspent-points
       margin-left: 8rem
-
       i
         margin-right: 3rem
 
   .content-columns > *
     margin-right: 10rem !important
+
+  di-adventurer-edit-pane
+    .adventurer-stats
+      padding: 15rem 30rem
+
+    di-adventurer-edit-loadout
+      flex: 0 0 320rem !important
+
+      .loadout-slot
+        display: flex
+        flex-direction: row
+        padding: 0 5rem 7rem
+
+        di-adventurer-item-row
+          margin-right: -10rem
+
+        di-adventurer-item-row, di-adventurer-skill-row
+          flex-grow: 1
 
 .loadout-row-tooltip
 

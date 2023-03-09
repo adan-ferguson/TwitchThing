@@ -5,7 +5,7 @@ import { orbPointIcon, skillPointIcon } from '../../common.js'
 
 const HTML = `
 <di-tabz>
-  <di-edit-loadout class="fill-contents" data-tab-name="Loadout"></di-edit-loadout>
+  <di-edit-loadout-tab class="fill-contents" data-tab-name="Loadout"></di-edit-loadout-tab>
   <di-edit-points class="fill-contents" data-tab-name="Spend Points"></di-edit-points>
 <!--  <div data-tab-name="Quick Forge"></div>-->
 </di-tabz>

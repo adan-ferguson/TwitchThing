@@ -102,7 +102,8 @@ export default class List extends DIElement{
       filterFn: null,
       showFiltered: false,
       selectableRows: false,
-      clickableRows: false
+      clickableRows: false,
+      blankFn: null
     }
   }
 
@@ -207,7 +208,7 @@ export default class List extends DIElement{
     this.rows.innerHTML = ''
     const start = (this._page - 1) * this._pageSize
     const toDisplay = this._sortedRows.slice(start, start + this._pageSize)
-    fillWithBlanks(toDisplay, this._pageSize)
+    this._fillWithBlanks(toDisplay)
     toDisplay.forEach(el => {
       el.classList.add('list-row')
       el.style.flexBasis = `${100 / this._pageSize}%`
@@ -217,16 +218,20 @@ export default class List extends DIElement{
     })
     this.rows.append(...toDisplay)
   }
+
+  _fillWithBlanks(arr){
+    for(let i = 0; i < this._pageSize; i++){
+      if(!arr[i]){
+        if(this._options.blankFn){
+          arr[i] = this._options.blankFn()
+        }else{
+          const blankRow = document.createElement('div')
+          blankRow.classList.add('blank-row')
+          arr[i] = blankRow
+        }
+      }
+    }
+    return arr
+  }
 }
 customElements.define('di-list', List)
-
-function fillWithBlanks(arr, length){
-  for(let i = 0; i < length; i++){
-    if(!arr[i]){
-      const blankRow = document.createElement('div')
-      blankRow.classList.add('blank-row')
-      arr[i] = blankRow
-    }
-  }
-  return arr
-}

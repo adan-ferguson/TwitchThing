@@ -12,11 +12,8 @@ const router = express.Router()
 const verifiedRouter = express.Router()
 
 router.post('/new', async(req, res) => {
-  const startingClass = validateParam(req.body.class, {
-    required: false
-  }) ?? 'fighter'
   const name = validateParam(req.body.name)
-  const adventurer = await Users.newAdventurer(req.user, name, startingClass)
+  const adventurer = await Users.newAdventurer(req.user, name)
   res.send({ adventurerID: adventurer._id })
 })
 

@@ -52,6 +52,7 @@ export default class AdventurerItemRow extends DIElement{
       this.nameEl.textContent = adventurerItem.displayName
       this.orbRow.setData(adventurerItem.orbs)
       this._setTexture(adventurerItem.isBasic ? null : 'maze-white')
+      this.classList.remove('blank')
     }
     return this
   }
@@ -65,12 +66,13 @@ export default class AdventurerItemRow extends DIElement{
     this.nameEl.textContent = ''
     this.orbRow.setData([])
     this._setTexture(null)
+    this.classList.add('blank')
   }
 
   _setTexture(name){
-    if(!name){
+    if (!name){
       this.style.backgroundImage = null
-    }else{
+    } else {
       this.style.backgroundImage = `url('/assets/textures/${name}.png')`
     }
   }

@@ -96,12 +96,12 @@ Users.setDisplayname = async function(userDoc, displayname){
   await Users.save(userDoc)
 }
 
-Users.newAdventurer = async function(userDoc, adventurername, startingClass){
+Users.newAdventurer = async function(userDoc, adventurername){
   const availableSlots = userDoc.inventory.adventurerSlots - userDoc.adventurers.length
   if(availableSlots <= 0){
     throw { message: 'No slots available.', code: 403 }
   }
-  // TODO: prevent duplicates?
+  const startingClass = userDoc.accomplishments.firstRunFinished ? null : 'fighter'
   const adventurerDoc = await Adventurers.createNew(userDoc._id, adventurername, startingClass)
   userDoc.adventurers.push(adventurerDoc._id)
   await Users.save(userDoc)
