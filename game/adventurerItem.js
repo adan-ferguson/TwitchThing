@@ -1,4 +1,5 @@
 import Items from './items/combined.js'
+import OrbsData from './orbsData.js'
 
 export default class AdventurerItem{
 
@@ -31,6 +32,39 @@ export default class AdventurerItem{
 
   get isBasic(){
     return this._itemDef.id ? false : true
+  }
+
+  get name(){
+    return this._itemDef.name
+  }
+
+  get group(){
+    return this._itemDef.group
+  }
+
+  get classes(){
+    return [this.group] // this.orbs.classes
+  }
+
+  /**
+   * @returns {OrbsData}
+   */
+  get orbs(){
+    return new OrbsData({ [this.group] : this._data.orbs })
+    // let baseOrbs
+    // if(_.isObject(this.itemData.orbs)){
+    //   baseOrbs = this.itemData.orbs
+    // }else{
+    //   baseOrbs = { [this.itemData.group]: this.itemData.orbs }
+    // }
+    // return new OrbsData([
+    //   baseOrbs,
+    //   ...this.applicableSlotEffects.map(slotEffect => slotEffect.orbs ?? {})
+    // ])
+  }
+
+  sameItem(adventurerItem){
+    return this.isBasic && adventurerItem.isBasic && this.name === adventurerItem.name
   }
 
   _basicItem(){

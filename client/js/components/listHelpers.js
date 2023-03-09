@@ -137,8 +137,8 @@ export function removeInventoryItem(list, loadoutItem, all = false){
   }
 }
 
-function makeAdventurerItemRow(itemDef, count = null){
-  const item = new AdventurerItem(itemDef)
+export function makeAdventurerItemRow(itemDef, count = null){
+  const item = itemDef instanceof AdventurerItem ? itemDef : new AdventurerItem(itemDef)
   if(!item.isValid){
     return null
   }

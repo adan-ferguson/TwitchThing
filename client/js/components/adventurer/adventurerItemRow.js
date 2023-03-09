@@ -1,4 +1,5 @@
 import DIElement from '../diElement.js'
+import { OrbsTooltip } from '../orbRow.js'
 
 const HTML = `
 <div class="border">
@@ -18,9 +19,12 @@ export default class AdventurerItemRow extends DIElement{
   _item
 
   constructor(){
-    debugger
     super()
     this.innerHTML = HTML
+    this.orbRow.setOptions({
+      tooltip: OrbsTooltip.NONE,
+      allowNegatives: true
+    })
     this._blank()
   }
 
@@ -36,7 +40,12 @@ export default class AdventurerItemRow extends DIElement{
     return this.querySelector('di-orb-row')
   }
 
+  get item(){
+    return this._item
+  }
+
   setItem(adventurerItem){
+    this._item = adventurerItem
     if(!adventurerItem){
       this._blank()
     }else{
@@ -65,5 +74,6 @@ export default class AdventurerItemRow extends DIElement{
       this.style.backgroundImage = `url('/assets/textures/${name}.png')`
     }
   }
-
 }
+
+customElements.define('di-adventurer-item-row', AdventurerItemRow)

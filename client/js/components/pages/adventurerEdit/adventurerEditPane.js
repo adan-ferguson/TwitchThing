@@ -16,7 +16,7 @@ export default class AdventurerEditPane extends DIElement{
 
   constructor(){
     super()
-    this.innerHTML = HTML
+    // this.innerHTML = HTML
     // this.xpBar = this.querySelector('di-xp-bar')
     // this.xpBar.setLevelFunctions(advXpToLevel, advLevelToXp)
     // this.orbRow = this.querySelector('di-orb-row.adventurer-orbs')

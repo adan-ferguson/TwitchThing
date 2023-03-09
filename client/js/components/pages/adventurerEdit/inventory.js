@@ -1,6 +1,6 @@
 import { mergeOptionsObjects } from '../../../../../game/utilFunctions.js'
 import DIElement from '../../diElement.js'
-import { inventoryItemsToRows, standardItemSort } from '../../listHelpers.js'
+import { inventoryItemsToRows, makeAdventurerItemRow, standardItemSort } from '../../listHelpers.js'
 import LoadoutRow from './loadoutRow.js'
 
 const HTML = `
@@ -46,7 +46,7 @@ export default class Inventory extends DIElement{
   }
 
   filterFn = row => {
-    return isCompatible(this.adventurer, row.loadoutItem.itemInstance)
+    return isCompatible(this.adventurer, row.item)
   }
 
   setup(items, adventurer){
@@ -57,21 +57,18 @@ export default class Inventory extends DIElement{
     return this
   }
 
-  addItem(item){
-    if(!item){
+  addItem(adventurerItem){
+    if(!adventurerItem){
       return
     }
-    if(item.itemInstance.isBasic){
-      const row = this.list.findRow(row => row.loadoutItem.equals(item))
+    if(adventurerItem.isBasic){
+      const row = this.list.findRow(row => row.item.sameItem(adventurerItem))
       if(row){
         row.count++
         return
       }
     }
-    item.itemInstance.owner = null
-    const row = new LoadoutRow()
-    row.setItem(item)
-    this.list.addRow(row)
+    this.list.addRow(makeAdventurerItemRow(adventurerItem))
   }
 
   removeItem(item){
@@ -79,7 +76,7 @@ export default class Inventory extends DIElement{
     if(!row){
       return
     }
-    if(item.itemInstance.isBasic && row.count > 1){
+    if(item.isBasic && row.count > 1){
       row.count--
     }else{
       this.list.removeRow(row)
@@ -121,9 +118,8 @@ export default class Inventory extends DIElement{
   }
 }
 
-function isCompatible(adventurer, itemInstance){
-  const itemClasses = itemInstance.classes
-  return itemClasses.every(cls => adventurer.bonuses[cls])
+function isCompatible(adventurer, adventurerItem){
+  return adventurerItem.classes.every(cls => adventurer.bonuses[cls])
 }
 
 customElements.define('di-inventory', Inventory)

@@ -2,9 +2,9 @@ import _ from 'lodash'
 
 export default class OrbsData{
 
-  constructor(maxOrbs = {}, usedOrbs = {}){
-    this._maxOrbs = toObj(maxOrbs)
+  constructor(usedOrbs = {}, maxOrbs = {}, ){
     this._usedOrbs = toObj(usedOrbs)
+    this._maxOrbs = toObj(maxOrbs)
   }
 
   get maxOrbs(){
