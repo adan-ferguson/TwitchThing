@@ -2,7 +2,7 @@ import Page from '../page.js'
 import { getSocket, joinSocketRoom, leaveSocketRoom } from '../../../socketClient.js'
 import Zones, { floorToZone, floorToZoneName } from '../../../../../game/zones.js'
 import Timeline from '../../../../../game/timeline.js'
-import AdventurerInstance from '../../../../../game/adventurerInstance.js'
+import Adventurer from '../../../../../game/adventurer.js'
 import fizzetch from '../../../fizzetch.js'
 import FighterInstancePane from '../../combat/fighterInstancePane.js'
 import CombatEnactment from '../../../combatEnactment.js'
@@ -92,7 +92,7 @@ export default class DungeonPage extends Page{
   }
 
   get adventurerInstance(){
-    return new AdventurerInstance(this.adventurer, this.currentEvent?.adventurerState ?? {})
+    return new Adventurer(this.adventurer, this.currentEvent?.adventurerState ?? {})
   }
 
   get isReplay(){
@@ -114,7 +114,7 @@ export default class DungeonPage extends Page{
 
     this._stateEl.setup(dungeonRun)
     this._setupTimeline(dungeonRun)
-    this._adventurerPane.setFighter(new AdventurerInstance(this.adventurer, dungeonRun.adventurerState))
+    this._adventurerPane.setFighter(new Adventurer(this.adventurer, dungeonRun.adventurerState))
     this._eventEl.setup(this.adventurer, this._timeline)
     this._update({ animate: false })
   }

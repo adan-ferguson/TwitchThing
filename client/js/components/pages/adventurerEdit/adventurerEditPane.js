@@ -1,5 +1,5 @@
 import DIElement from '../../diElement.js'
-import AdventurerInstance from '../../../../../game/adventurerInstance.js'
+import Adventurer from '../../../../../game/adventurer.js'
 
 const HTML = `
 <div class="inset-title name"></div>
@@ -27,7 +27,7 @@ export default class AdventurerEditPane extends DIElement{
   }
 
   setAdventurer(adventurer){
-    this.adventurerInstance = new AdventurerInstance(adventurer)
+    this.adventurerInstance = new Adventurer(adventurer)
     this.adventurerInstance.idle = true
     this.querySelector('.name').textContent = `${adventurer.level} - ${adventurer.name}`
     // this.loadoutEl.setAdventurerInstance(this.adventurerInstance)

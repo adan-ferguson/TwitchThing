@@ -1,4 +1,4 @@
-import Skills from './skills/combined.js'
+import Skills from './combined.js'
 
 export default class AdventurerSkill{
 
@@ -25,5 +25,23 @@ export default class AdventurerSkill{
 
   get id(){
     return this._skill.name
+  }
+
+  get index(){
+    return this.id.match(/(\d+)$/)[1]
+  }
+
+  get skillPoints(){
+    if(this.index <= 5){
+      return 1
+    }else if(this.index <= 9){
+      return 2
+    }else{
+      return 3
+    }
+  }
+
+  get requiredLevel(){
+    return Math.max(0, 5 * (this.index - 3))
   }
 }

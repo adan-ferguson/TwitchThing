@@ -3,46 +3,8 @@ import AdventurerItemInstance from './adventurerSlotInstance.js'
 import OrbsData from './orbsData.js'
 import { geometricProgession, inverseGeometricProgression } from './growthFunctions.js'
 import BonusesData from './bonusesData.js'
-import { minMax, toNumberOfDigits } from './utilFunctions.js'
+import { minMax } from './utilFunctions.js'
 import { startingFoodStat } from './stats/combined.js'
-
-const XP_BASE = 100
-const XP_GROWTH = 200
-const XP_GROWTH_PCT = 0.3
-
-const HP_BASE = 40
-const HP_GROWTH = 18
-const HP_GROWTH_PCT = 0.05
-
-const POWER_BASE = 10
-const POWER_GROWTH = 3
-const POWER_GROWTH_PCT = 0.05
-
-export function advXpToLevel(xp){
-  if(xp < XP_BASE){
-    return 1
-  }
-  const lvl = Math.floor(inverseGeometricProgression(XP_GROWTH_PCT, xp - XP_BASE, XP_GROWTH)) + 2
-  return advLevelToXp(lvl) <= xp ? lvl : lvl - 1
-}
-
-export function advLevelToXp(lvl){
-  if(lvl <= 1){
-    return 0
-  }
-  return toNumberOfDigits(
-    Math.round(geometricProgession(XP_GROWTH_PCT, lvl - 2, XP_GROWTH)) + XP_BASE,
-    3
-  )
-}
-
-export function adventurerLevelToHp(lvl){
-  return HP_BASE + Math.ceil(geometricProgession(HP_GROWTH_PCT, lvl - 1, HP_GROWTH))
-}
-
-export function adventurerLevelToPower(lvl){
-  return POWER_BASE + Math.ceil(geometricProgession(POWER_GROWTH_PCT, lvl - 1, POWER_GROWTH))
-}
 
 export default class AdventurerInstance extends FighterInstance{
 

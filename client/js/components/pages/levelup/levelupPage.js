@@ -3,8 +3,8 @@ import { fadeIn, fadeOut } from '../../../animations/simple.js'
 import { hideLoader, showLoader } from '../../../loader.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import fizzetch from '../../../fizzetch.js'
-import AdventurerInstance from '../../../../../game/adventurerInstance.js'
-import LevelupOption from './levelupOption.js'
+import Adventurer from '../../../../../game/adventurer.js'
+// import LevelupOption from './levelupOption.js'
 import { ICON_SVGS } from '../../../assetLoader.js'
 
 const HTML = `
@@ -53,7 +53,7 @@ export default class LevelupPage extends Page{
     if(!adventurer.nextLevelUp){
       return this.redirectTo(AdventurerPage.path(this.adventurerID))
     }
-    this._adventurer = new AdventurerInstance(adventurer)
+    this._adventurer = new Adventurer(adventurer)
     this._setupNext(adventurer.nextLevelUp)
     this._updateRerollCost(rerollCost)
   }

@@ -25,6 +25,7 @@ export function adventurerSkillsToRows(skills){
       rows.push(makeAdventurerSkillRow(advClass, skillId))
     }
   }
+  return rows
 }
 
 export function inventoryItemsToRows(items){

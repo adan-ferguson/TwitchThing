@@ -1,4 +1,4 @@
-import { advLevelToXp, advXpToLevel } from '../../../game/adventurerInstance.js'
+import { advLevelToXp, advXpToLevel } from '../../../game/adventurer.js'
 
 console.log(advLevelToXp(1))
 console.log(advLevelToXp(2))

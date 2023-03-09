@@ -1,6 +1,6 @@
 import Page from '../page.js'
 import { hideLoader, showLoader } from '../../../loader.js'
-import AdventurerInstance from '../../../../../game/adventurerInstance.js'
+import Adventurer from '../../../../../game/adventurer.js'
 import { orbPointIcon, skillPointIcon } from '../../common.js'
 
 const HTML = `
@@ -56,7 +56,7 @@ export default class AdventurerEditPage extends Page{
   }
 
   _showUnspentPoints(){
-    const ai = new AdventurerInstance(this.adventurer)
+    const ai = new Adventurer(this.adventurer)
     const unspentOrbs = ai.unspentOrbs
     const unspentSkillPoints = ai.unspentSkillPoints
     let prefixHtml = ''

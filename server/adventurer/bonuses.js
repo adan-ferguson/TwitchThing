@@ -1,12 +1,12 @@
 import Users from '../collections/users.js'
 import { chooseOne } from '../../game/rando.js'
 import Adventurers from '../collections/adventurers.js'
-import AdventurerInstance from '../../game/adventurerInstance.js'
+import Adventurer from '../../game/adventurer.js'
 import { oneTwoFive } from '../../game/growthFunctions.js'
 import { spendGold } from '../loadouts/inventory.js'
 
 export async function generateLevelup(adventurerDoc){
-  const advInstance = new AdventurerInstance(adventurerDoc)
+  const advInstance = new Adventurer(adventurerDoc)
   if(!advInstance.shouldLevelUp){
     return null
   }
@@ -53,7 +53,7 @@ export async function rerollBonus(userDoc, adventurerDoc){
 
 export async function generateBonusOptions(userDoc, adventurerDoc){
 
-  const ai = new AdventurerInstance(adventurerDoc)
+  const ai = new Adventurer(adventurerDoc)
   const orbsData = ai.orbs
   const classOptions = orbsData.classes.slice(0,3)
 

@@ -4,7 +4,7 @@ import Users from '../collections/users.js'
 import DungeonRunInstance from './dungeonRunInstance.js'
 import { emit } from '../socketServer.js'
 import { cancelRun } from './results.js'
-import AdventurerInstance from '../../game/adventurerInstance.js'
+import Adventurer from '../../game/adventurer.js'
 
 let lastAdvancement = new Date()
 let running = false
@@ -157,7 +157,7 @@ function validateNew(adventurerDoc, userDoc, { startingFloor }){
   if(adventurerDoc.dungeonRun){
     throw 'Adventurer already in dungeon'
   }
-  const adventurer = new AdventurerInstance(adventurerDoc)
+  const adventurer = new Adventurer(adventurerDoc)
   if(!adventurer.isLoadoutValid){
     throw 'Adventurer has invalid loadout.'
   }

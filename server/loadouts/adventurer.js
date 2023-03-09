@@ -1,4 +1,4 @@
-import AdventurerInstance from '../../game/adventurerInstance.js'
+import Adventurer from '../../game/adventurer.js'
 import _ from 'lodash'
 import { adjustInventoryBasics, adjustInventoryCrafted } from './inventory.js'
 
@@ -59,7 +59,7 @@ function calcCraftedItemDiff(oldLoadout, newLoadout){
 }
 
 function validateLoadout(adventurer){
-  const adv = new AdventurerInstance(adventurer)
+  const adv = new Adventurer(adventurer)
   if(!adv.isLoadoutValid){
     throw { code: 403, error: 'Loadout is invalid.' }
   }

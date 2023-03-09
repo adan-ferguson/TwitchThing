@@ -7,7 +7,7 @@ import SimpleModal, { alertModal } from '../../simpleModal.js'
 import AdventurerPreviousRunsPage from '../adventurerPreviousRuns/adventurerPreviousRunsPage.js'
 import DungeonPage from '../dungeon/dungeonPage.js'
 import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
-import AdventurerInstance from '../../../../../game/adventurerInstance.js'
+import Adventurer from '../../../../../game/adventurer.js'
 import AdventurerEditPage from '../adventurerEdit/adventurerEditPage.js'
 
 const HTML = `
@@ -81,7 +81,7 @@ export default class AdventurerPage extends Page{
     }
 
     this.adventurer = adventurer
-    this.adventurerPane.setAdventurer(adventurer)
+    // this.adventurerPane.setAdventurer(adventurer)
     this._setupEditEquipmentButton(user)
     this._setupTopRightButton(user)
 
@@ -109,7 +109,7 @@ export default class AdventurerPage extends Page{
   }
 
   _setupTopRightButton(user){
-    const advInstance = new AdventurerInstance(this.adventurer)
+    const advInstance = new Adventurer(this.adventurer)
     const quickDungeon = user.features.dungeonPicker
     this._topRightButton.textContent = 'Enter Dungeon'
     this._topRightButton.addEventListener('click', () => {

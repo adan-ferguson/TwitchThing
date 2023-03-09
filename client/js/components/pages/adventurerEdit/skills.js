@@ -1,5 +1,6 @@
 import DIElement from '../../diElement.js'
 import AdventurerSkillRow from '../../adventurer/adventurerSkillRow.js'
+import { adventurerSkillsToRows } from '../../listHelpers.js'
 
 const HTML = `
 <div class="content-rows">
@@ -32,13 +33,10 @@ export default class Skills extends DIElement{
   // }
 
   setup(adventurer){
+    debugger
     this.adventurer = adventurer
-    this.listEl.setRows(adventurerSkillsToRows(adventurer.skills))
+    this.listEl.setRows(adventurerSkillsToRows(adventurer.unlockedSkills))
   }
 }
 
 customElements.define('di-skills', Skills)
-
-function adventurerSkillsToRows(adventurer){
-
-}

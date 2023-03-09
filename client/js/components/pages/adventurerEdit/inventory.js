@@ -34,7 +34,8 @@ export default class Inventory extends DIElement{
   }
 
   filterFn = row => {
-    return row.item.classes.every(cls => this.adventurer.bonuses[cls])
+    debugger
+    return row.item.classes.every(cls => this.adventurer.orbs[cls])
   }
 
   setup(items, adventurer){

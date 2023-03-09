@@ -69,10 +69,10 @@ export function validateAllItems(){
       if(!item.isValid){
         throw `Adventurer Item not valid (base item): ${name}`
       }
-      const slotEffect = new AdventurerSlotInstance({ item })
-      if(!slotEffect.isValid){
-        throw `Adventurer Item not valid (slot effect): ${name}`
-      }
+      // const slotEffect = new AdventurerSlotInstance({ item })
+      // if(!slotEffect.isValid){
+      //   throw `Adventurer Item not valid (slot effect): ${name}`
+      // }
     }
   }
 }

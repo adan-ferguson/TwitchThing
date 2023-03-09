@@ -1,5 +1,5 @@
 import { OrbsDisplayStyle, OrbsTooltip } from '../orbRow.js'
-import AdventurerInstance from '../../../../game/adventurerInstance.js'
+import Adventurer from '../../../../game/adventurer.js'
 import { betterDateFormat } from '../timer.js'
 import MonsterInstance from '../../../../game/monsterInstance.js'
 
@@ -29,6 +29,7 @@ export default class AdventurerStatus extends HTMLElement{
   }
 
   setAdventurer(adventurer){
+    return
 
     this.querySelector('.name').textContent = adventurer.name
     this.querySelector('.level').textContent = adventurer.level
@@ -37,13 +38,14 @@ export default class AdventurerStatus extends HTMLElement{
         style: OrbsDisplayStyle.MAX_ONLY,
         tooltip: OrbsTooltip.NONE
       })
-      .setData(new AdventurerInstance(adventurer).orbs)
+      .setData(new Adventurer(adventurer).orbs)
 
     this.setDungeonRun(adventurer.dungeonRun)
     return this
   }
 
   setDungeonRun(dungeonRun){
+    return
 
     const statusEl = this.querySelector('.status')
     const descriptionEl = this.querySelector('.description')

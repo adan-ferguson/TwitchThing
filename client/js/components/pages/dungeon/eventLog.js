@@ -1,4 +1,4 @@
-import AdventurerInstance from '../../../../../game/adventurerInstance.js'
+import Adventurer from '../../../../../game/adventurer.js'
 import MonsterInstance from '../../../../../game/monsterInstance.js'
 
 const ROW_HTML = (floor, room, description) => `
@@ -89,7 +89,7 @@ class EventLogRow extends HTMLElement{
       desc
     )
 
-    const adv = new AdventurerInstance(adventurer, event.adventurerState)
+    const adv = new Adventurer(adventurer, event.adventurerState)
     const hpBar = this.querySelector('di-bar')
     hpBar.setOptions({
       max: 1,

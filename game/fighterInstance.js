@@ -34,7 +34,7 @@ export default class FighterInstance{
 
     this._itemInstances = []
     for(let i = 0; i < 8; i++){
-      if(fighterData.items[i]){
+      if(0 && fighterData.items[i]){
         this._itemInstances[i] = new this.ItemClass(fighterData.items[i], null, this)
         this._itemInstances[i].effectId = this.uniqueID + '-item-' + i
       }else{

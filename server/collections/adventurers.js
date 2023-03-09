@@ -17,7 +17,7 @@ const DEFAULTS = {
   nextLevelUp: null
 }
 
-const Adventurers = class AdventurersCollection extends Collection{
+class AdventurersCollection extends Collection{
   constructor(){
     super('adventurers', DEFAULTS)
   }
@@ -30,4 +30,4 @@ const Adventurers = class AdventurersCollection extends Collection{
   }
 }
 
-export default Adventurers
+export default new AdventurersCollection()

@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events'
-import AdventurerInstance from '../../game/adventurerInstance.js'
+import Adventurer from '../../game/adventurer.js'
 import { generateEvent } from './dungeonEventPlanner.js'
 import { addRewards } from './results.js'
 import { ADVANCEMENT_INTERVAL } from './dungeonRunner.js'
@@ -104,7 +104,7 @@ export default class DungeonRunInstance extends EventEmitter{
     // Reset this each advancement to make sure that everything is synced up.
     // If we just let this roll, then it's possible the doc state is wrong but
     // we would never notice unless the server reloaded.
-    this.adventurerInstance = new AdventurerInstance(this.doc.adventurer, this.doc.adventurerState)
+    this.adventurerInstance = new Adventurer(this.doc.adventurer, this.doc.adventurerState)
     await this._nextEvent()
   }
 

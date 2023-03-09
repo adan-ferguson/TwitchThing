@@ -2,7 +2,7 @@ import classDisplayInfo from '../../classDisplayInfo.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
 import tippy from 'tippy.js'
 import { StatsDisplayStyle } from '../../statsDisplayInfo.js'
-import { advLevelToXp, advXpToLevel } from '../../../../game/adventurerInstance.js'
+import { advLevelToXp, advXpToLevel } from '../../../../game/adventurer.js'
 import EffectDetails from '../effectDetails.js'
 
 const HTML = `

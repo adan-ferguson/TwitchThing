@@ -1,4 +1,4 @@
-import AdventurerInstance from '../../../../game/adventurerInstance.js'
+import Adventurer from '../../../../game/adventurer.js'
 import { OrbsDisplayStyle } from '../orbRow.js'
 import Modal from '../modal.js'
 import AdventurerInfo from '../adventurer/adventurerInfo.js'
@@ -238,7 +238,7 @@ export default class FighterInstancePane extends HTMLElement{
 
   _showFighterInfoModal(){
     const modal = new Modal()
-    if(this.fighterInstance instanceof AdventurerInstance){
+    if(this.fighterInstance instanceof Adventurer){
       modal.innerContent.appendChild(new AdventurerInfo(this.fighterInstance))
     }else{
       modal.innerContent.appendChild(new MonsterInfo(this.fighterInstance))

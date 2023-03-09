@@ -1,4 +1,4 @@
-import BonusInstance from './bonusInstance.js'
+// import BonusInstance from './bonusInstance.js'
 
 export default class BonusesData{
 
@@ -9,15 +9,15 @@ export default class BonusesData{
 
     this._owner = owner
 
-    for(let group in bonusesObj){
-      for(let name in bonusesObj[group]){
-        this._instances.push(new BonusInstance({
-          group,
-          name,
-          level: bonusesObj[group][name]
-        }, owner))
-      }
-    }
+    // for(let group in bonusesObj){
+    //   for(let name in bonusesObj[group]){
+    //     this._instances.push(new BonusInstance({
+    //       group,
+    //       name,
+    //       level: bonusesObj[group][name]
+    //     }, owner))
+    //   }
+    // }
   }
 
   get({ name, group }){
