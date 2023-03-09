@@ -1,20 +1,10 @@
 import { mergeOptionsObjects } from '../../../../../game/utilFunctions.js'
 import DIElement from '../../diElement.js'
 import { inventoryItemsToRows, makeAdventurerItemRow, standardItemSort } from '../../listHelpers.js'
-import LoadoutRow from './loadoutRow.js'
 
 const HTML = `
 <div class="content-rows">
   <div class="inset-title">Items</div>
-<!--  <div class="content-no-grow inventory-options">-->
-<!--    <div class="input-group">-->
-<!--      Sort By:-->
-<!--      <label><input type="radio" name="sortBy" value="class">Class</label>-->
-<!--    </div>-->
-<!--    <div class="filtering-options require-adventurer displaynone">-->
-<!--      <label><input type="checkbox" name="hideOther"> Hide Unequippable</label>-->
-<!--    </div>-->
-<!--  </div>-->
   <di-list></di-list>
 </div>
 `
@@ -31,9 +21,7 @@ export default class Inventory extends DIElement{
   constructor(){
     super()
     this.innerHTML = HTML
-    // this._setupFilteringOptions()
-    this.list = this.querySelector('di-list')
-    this.list.setOptions({
+    this.listEl.setOptions({
       pageSize: 15
     })
   }
@@ -46,14 +34,14 @@ export default class Inventory extends DIElement{
   }
 
   filterFn = row => {
-    return isCompatible(this.adventurer, row.item)
+    return row.item.classes.every(cls => this.adventurer.bonuses[cls])
   }
 
   setup(items, adventurer){
     this.adventurer = adventurer
     // this.querySelector('.inventory-options').classList.toggle('displaynone', adventurer ? false : true)
     this._updateSortAndFilter()
-    this.list.setRows(inventoryItemsToRows(items))
+    this.listEl.setRows(inventoryItemsToRows(items))
     return this
   }
 
@@ -62,24 +50,24 @@ export default class Inventory extends DIElement{
       return
     }
     if(adventurerItem.isBasic){
-      const row = this.list.findRow(row => row.item.sameItem(adventurerItem))
+      const row = this.listEl.findRow(row => row.item.sameItem(adventurerItem))
       if(row){
         row.count++
         return
       }
     }
-    this.list.addRow(makeAdventurerItemRow(adventurerItem))
+    this.listEl.addRow(makeAdventurerItemRow(adventurerItem))
   }
 
   removeItem(item){
-    const row = this.list.findRow(row => row.loadoutItem === item)
+    const row = this.listEl.findRow(row => row.loadoutItem === item)
     if(!row){
       return
     }
     if(item.isBasic && row.count > 1){
       row.count--
     }else{
-      this.list.removeRow(row)
+      this.listEl.removeRow(row)
     }
   }
 
@@ -110,7 +98,7 @@ export default class Inventory extends DIElement{
 
   _updateSortAndFilter(){
     localStorage.setItem(STORAGE_NAME, JSON.stringify(this._filterSortOptions))
-    this.list.setOptions({
+    this.listEl.setOptions({
       sortFn: standardItemSort,
       filterFn: this.filterFn,
       showFiltered: !this._filterSortOptions.hideOther

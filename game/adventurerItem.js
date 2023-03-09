@@ -34,7 +34,7 @@ export default class AdventurerItem{
     return this._itemDef.id ? false : true
   }
 
-  get name(){
+  get id(){
     return this._itemDef.name
   }
 
@@ -64,7 +64,7 @@ export default class AdventurerItem{
   }
 
   sameItem(adventurerItem){
-    return this.isBasic && adventurerItem.isBasic && this.name === adventurerItem.name
+    return this.isBasic && adventurerItem.isBasic && this.id === adventurerItem.id
   }
 
   _basicItem(){

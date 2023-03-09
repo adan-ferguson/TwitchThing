@@ -8,7 +8,7 @@ import VinylFile from 'vinyl'
 import path from 'path'
 
 const S = gulpSass(sass)
-const REGISTRIES = ['items', 'monsters', 'mods', 'bonuses', 'statusEffects', 'stats']
+const REGISTRIES = ['items', 'monsters', 'mods', 'skills', 'statusEffects', 'stats']
 
 function buildStyles(){
   return gulp.src('./client/styles/**/*.*ss')

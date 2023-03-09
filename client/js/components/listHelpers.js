@@ -1,5 +1,4 @@
 import FighterItemLoadoutItem from '../fighterItemLoadoutItem.js'
-import AdventurerItemInstance from '../../../game/adventurerSlotInstance.js'
 import LoadoutRow from './pages/adventurerEdit/loadoutRow.js'
 import AdventurerItem from '../../../game/adventurerItem.js'
 import AdventurerItemRow from './adventurer/adventurerItemRow.js'
@@ -17,6 +16,15 @@ export function adventurerItemsToRows(items){
     }
   })
   return rows
+}
+
+export function adventurerSkillsToRows(skills){
+  const rows = []
+  for(let advClass in skills){
+    for(let skillId in skills[advClass]){
+      rows.push(makeAdventurerSkillRow(advClass, skillId))
+    }
+  }
 }
 
 export function inventoryItemsToRows(items){
@@ -147,4 +155,12 @@ export function makeAdventurerItemRow(itemDef, count = null){
     row.setCount(count)
   }
   return row
+}
+
+export function makeAdventurerSkillRow(advClass, skillId){
+  const skill = new AdventurerSkill(advClass, skillId)
+  if(!skill.isValid){
+    return null
+  }
+  return new AdventurerSkillRow().setSkill(skill)
 }
