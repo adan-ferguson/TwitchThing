@@ -1,11 +1,17 @@
-import Skills from './combined.js'
+import Skills, { all }  from './combined.js'
+
+// Convert a skills obj to an array of AdventurerSkills
+export function getSkillsForClass(className){
+  debugger
+  return Object.keys(Skills[className]).map(skillId => new AdventurerSkill(skillId))
+}
 
 export default class AdventurerSkill{
 
   _skill
 
-  constructor(advClass, skillId){
-    this._skill = Skills[advClass]?.[skillId]
+  constructor(skillId){
+    this._skill = all[skillId]
   }
 
   get isValid(){

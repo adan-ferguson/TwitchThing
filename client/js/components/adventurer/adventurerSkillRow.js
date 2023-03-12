@@ -31,7 +31,7 @@ export default class AdventurerSkillRow extends DIElement{
     return this._item
   }
 
-  setItem(adventurerSkill){
+  setSkill(adventurerSkill){
     this._skill = adventurerSkill
     if(!adventurerSkill){
       this._blank()

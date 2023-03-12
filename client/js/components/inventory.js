@@ -1,6 +1,6 @@
-import { mergeOptionsObjects } from '../../../../../game/utilFunctions.js'
-import DIElement from '../../diElement.js'
-import { inventoryItemsToRows, makeAdventurerItemRow, standardItemSort } from '../../listHelpers.js'
+import { mergeOptionsObjects } from '../../../game/utilFunctions.js'
+import DIElement from './diElement.js'
+import { inventoryItemsToRows, makeAdventurerItemRow, standardItemSort } from './listHelpers.js'
 
 const HTML = `
 <div class="content-rows">
@@ -34,7 +34,6 @@ export default class Inventory extends DIElement{
   }
 
   filterFn = row => {
-    debugger
     return row.item.classes.every(cls => this.adventurer.orbs[cls])
   }
 

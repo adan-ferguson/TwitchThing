@@ -17,6 +17,10 @@ const ADV_CLASSES = {
   rogue: {
     description: 'Some description',
     color: '#7a7a7a'
+  },
+  chimera: {
+    description: 'Some description',
+    color: '#7a7a7a'
   }
 }
 

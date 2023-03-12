@@ -13,7 +13,7 @@ const HTML = `
     </div>
     <div class="content-rows" style="flex-grow:2">
       <div class="content-well">
-        <di-adventurer-edit-pane></di-adventurer-edit-pane>
+        <di-adventurer-edit-adventurer-pane></di-adventurer-edit-adventurer-pane>
       </div>
       <button class="save content-no-grow">Save</button>
     </div>
@@ -21,12 +21,12 @@ const HTML = `
       <i class="fa-solid fa-arrows-left-right"></i>
     </div>
     <div class="content-well adventurer-skills fill-contents">
-        <di-skills class="fill-contents"></di-skills>
+        <di-adventurer-edit-skills class="fill-contents"></di-adventurer-edit-skills>
     </div>
 </div>
 `
 
-export default class EditLoadoutTab extends DIElement{
+export default class LoadoutTab extends DIElement{
 
   constructor(){
     super()
@@ -34,7 +34,7 @@ export default class EditLoadoutTab extends DIElement{
   }
 
   get adventurerPaneEl(){
-    return this.querySelector('di-adventurer-edit-pane')
+    return this.querySelector('di-adventurer-edit-adventurer-pane')
   }
 
   get inventoryEl(){
@@ -42,7 +42,7 @@ export default class EditLoadoutTab extends DIElement{
   }
 
   get skillsEl(){
-    return this.querySelector('di-skills')
+    return this.querySelector('di-adventurer-edit-skills')
   }
 
   get saveButton(){
@@ -106,4 +106,4 @@ export default class EditLoadoutTab extends DIElement{
   }
 }
 
-customElements.define('di-edit-loadout-tab', EditLoadoutTab)
+customElements.define('di-adventurer-edit-loadout-tab', LoadoutTab)

@@ -173,4 +173,4 @@ export default class LoadoutRow extends DIElement{
   }
 }
 
-customElements.define('di-loadout-row', LoadoutRow)
+customElements.define('di-adventurer-edit-loadout-row', LoadoutRow)

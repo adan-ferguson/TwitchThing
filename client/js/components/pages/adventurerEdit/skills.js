@@ -33,10 +33,9 @@ export default class Skills extends DIElement{
   // }
 
   setup(adventurer){
-    debugger
     this.adventurer = adventurer
     this.listEl.setRows(adventurerSkillsToRows(adventurer.unlockedSkills))
   }
 }
 
-customElements.define('di-skills', Skills)
+customElements.define('di-adventurer-edit-skills', Skills)

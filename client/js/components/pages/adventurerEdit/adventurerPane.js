@@ -9,7 +9,7 @@ const HTML = `
 </div>
 `
 
-export default class AdventurerEditPane extends DIElement{
+export default class AdventurerPane extends DIElement{
 
   constructor(){
     super()
@@ -111,4 +111,4 @@ export default class AdventurerEditPane extends DIElement{
   // }
 }
 
-customElements.define('di-adventurer-edit-pane', AdventurerEditPane )
+customElements.define('di-adventurer-edit-adventurer-pane', AdventurerPane )
