@@ -44,7 +44,7 @@ export default class AdventurerEditPage extends Page{
     const { adventurer, items } = await this.fetchData()
     this.adventurer = new Adventurer(adventurer)
     this.items = items
-    this._showUnspentPoints()
+    this.updatePoints()
     this._loadTab()
   }
 
@@ -55,7 +55,7 @@ export default class AdventurerEditPage extends Page{
     hideLoader()
   }
 
-  _showUnspentPoints(){
+  updatePoints(){
     const unspentOrbs = this.adventurer.unspentOrbs
     const unspentSkillPoints = this.adventurer.unspentSkillPoints
     let prefixHtml = ''

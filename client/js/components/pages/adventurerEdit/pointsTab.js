@@ -1,4 +1,5 @@
 import DIElement from '../../diElement.js'
+import fizzetch from '../../../fizzetch.js'
 
 const HTML = `
 <div class="adv-classes content-columns">
@@ -20,26 +21,36 @@ export default class PointsTab extends DIElement{
   constructor(){
     super()
     this.innerHTML = HTML
+    this.classDisplays.forEach(cd => {
+      cd.events
+        .on('spend orb', className => {
+          const adv = this.parentPage?.adventurer
+          if(!adv || !adv.unspentOrbs){
+            return
+          }
+          adv.orbs[className] = (adv.orbs[className] ?? 0) + 1
+          fizzetch('/game' + this.parentPage.path + '/spendorb', { advClass: className })
+          this._updateAll()
+        })
+        .on('spend skill point', id => {
+
+        })
+    })
   }
 
   get classDisplays(){
     return this.querySelectorAll('di-adventurer-edit-class-display')
   }
 
-  async showData(parentPage){
-    const { adventurer, user } = parentPage
-    for(let i = 0; i < 3; i++){
-      this.classDisplays[i].setup(user, adventurer, i).events
-        .on('spend orb', className => {
-
-        })
-        .on('spend skill point', id => {
-
-        })
-    }
+  async showData(){
+    const { adventurer, user } = this.parentPage
+    this.classDisplays.forEach((cd, index) => {
+      cd.setup(user, adventurer, index)
+    })
   }
 
   _updateAll(){
+    this.parentPage.updatePoints()
     this.classDisplays.forEach(cd => cd.update())
   }
 }

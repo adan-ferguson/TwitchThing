@@ -99,7 +99,7 @@ export default class Adventurer{
   }
 
   get unspentOrbs(){
-    const totalOrbs = _.sum(...Object.values(this.doc.orbs))
+    const totalOrbs = _.sum(Object.values(this.doc.orbs))
     return Math.max(0, this.level - totalOrbs)
   }
 
@@ -112,7 +112,7 @@ export default class Adventurer{
 
   }
 
-  canUnlock(skill){
+  canUnlockSkill(skill){
 
   }
 }

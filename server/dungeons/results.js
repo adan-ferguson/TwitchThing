@@ -6,7 +6,7 @@ import DungeonRuns from '../collections/dungeonRuns.js'
 import { advXpToLevel } from '../../game/adventurer.js'
 import { applyChestToUser } from './chests.js'
 import Combats from '../collections/combats.js'
-import { adjustInventoryBasics } from '../loadouts/inventory.js'
+import { adjustInventoryBasics } from '../user/inventory.js'
 import { checkForRewards } from '../user/rewards.js'
 
 const REWARDS_TYPES = {

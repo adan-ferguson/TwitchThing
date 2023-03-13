@@ -3,6 +3,7 @@ import { orbPointIcon } from '../../common.js'
 import classDisplayInfo, { ADVENTURER_CLASS_LIST } from '../../../classDisplayInfo.js'
 import AdventurerSkillRow from '../../adventurer/adventurerSkillRow.js'
 import { getSkillsForClass } from '../../../../../game/skills/adventurerSkill.js'
+import { OrbsTooltip } from '../../orbRow.js'
 
 const HTML = `
 <div class="unset">
@@ -11,14 +12,14 @@ const HTML = `
   <div class="class-info displaynone">
     <div class="class-name supertitle"></div>
     <div class="description"></div>
-    <button class="unlock">Unlock 1 ${orbPointIcon()}</button>
+    <button class="unlock">Unlock ${orbPointIcon()}</button>
   </div>
 </div>
 <div class="set">
   <div class="class-name supertitle"></div>
-  <div class="orb-adder">
+  <div class="orb-adder flex-columns">
     <di-orb-row></di-orb-row>
-    <button>+1</button>
+    <button>${orbPointIcon()}<i class="fa-solid fa-plus"></i></button>
   </div>
   <div class="skills-list"></div>
 </div>
@@ -94,33 +95,41 @@ export default class ClassDisplay extends DIElement{
 
   _unset(){
     this.classSelectorEl.setClasses(ADVENTURER_CLASS_LIST.filter(cls => {
-      return !this._adventurer.orbs[cls.name]
+      return !this._adventurer.orbs[cls.name] && this._user.features.advClasses[cls.name]
     }))
     this.unlockButton.toggleAttribute('disabled', this._adventurer.unspentOrbs === 0)
   }
 
   _set(){
     this._setClass()
-    this.querySelector('.orb-adder di-orb-row').setData({
-      [this.advClass]: this._adventurer.orbs[this.advClass]
-    })
+    const adder = this.querySelector('.orb-adder')
+    adder.querySelector('di-orb-row')
+      .setData({
+        [this.advClass]: this._adventurer.orbs[this.advClass]
+      })
+      .setOptions({
+        tooltip: OrbsTooltip.NONE
+      })
+    adder.querySelector('button').classList.toggle('displaynone', this._adventurer.unspentOrbs === 0)
   }
 
   _setClass(){
     if(this._classSet){
       return
     }
+    const setEl = this.querySelector('.set')
     const cdi = classDisplayInfo(this.advClass)
     this.style.color = cdi.color
-    this.querySelector('.class-name').textContent = cdi.displayName
+    setEl.querySelector('.class-name').textContent = cdi.displayName
 
     const skills = getSkillsForClass(this.advClass)
-    const list = this.querySelector('.skills-list')
+    const list = setEl.querySelector('.skills-list')
     for(let i = 0; i < 12; i++){
       const skill = skills[i]
       const row = new AdventurerSkillRow().setSkill(skills[i], {
         status: skillStatus(this._adventurer, skill)
       })
+      list.appendChild(row)
     }
 
     this._classSet = true

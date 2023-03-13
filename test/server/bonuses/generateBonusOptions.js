@@ -1,4 +1,4 @@
-import { generateBonusOptions as gbo } from '../../../server/adventurer/bonuses.js'
+import { generateBonusOptions as gbo } from '../../../server/adventurer/skills.js'
 
 // describe('generateBonusOptions function', () => {
 //

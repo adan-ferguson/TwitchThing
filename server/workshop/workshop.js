@@ -1,5 +1,5 @@
 import Adventurers from '../collections/adventurers.js'
-import { adjustInventoryBasics, spendInventoryBasics, spendScrap } from '../loadouts/inventory.js'
+import { adjustInventoryBasics, spendInventoryBasics, spendScrap } from '../user/inventory.js'
 import Users from '../collections/users.js'
 import AdventurerItemInstance from '../../game/adventurerSlotInstance.js'
 

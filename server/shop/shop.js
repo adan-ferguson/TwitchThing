@@ -2,7 +2,7 @@ import { adventurerSlotShopItem } from './adventurerSlot.js'
 import { chestShopItems, shopChestPurchased } from './chest.js'
 import Users from '../collections/users.js'
 import Purchases from '../collections/purchases.js'
-import { spendGold } from '../loadouts/inventory.js'
+import { spendGold } from '../user/inventory.js'
 import { scrapShopItem } from './scrap.js'
 
 export async function getUserShop(userDoc){

@@ -140,19 +140,46 @@ di-ability-description
 
 di-adventurer-edit-points-tab
   di-adventurer-edit-class-display
+    > *
+      > *:not([last-child])
+        margin-bottom: 20rem
     display: block
     padding: 20rem
     .class-name
       text-align: center
-      margin-top: 20rem
-      margin-bottom: 20rem
     .class-info
       display: flex
       flex-direction: column
+      .class-name
+        margin-bottom: 20rem
       .unlock
         align-self: center
         position: absolute
         bottom: 20rem
+
+    .orb-adder
+      justify-content: center
+      align-items: center
+      di-orb-row
+        font-size: 2em
+      button
+        font-size: 2em
+        margin-left: 0.5em
+        width: 1.1em
+        height: 1.1em
+        border: none
+        color: white
+        align-items: center
+        position: relative
+
+        i
+          position: absolute
+          top: 50%
+          left: 50%
+          transform: translate(-50%, -50%)
+        i.fa-plus
+          font-size: 0.8em
+
 
   di-adventurer-edit-skill-point-meter
     flex-grow: 0 !important
@@ -160,7 +187,6 @@ di-adventurer-edit-points-tab
 di-adventurer-edit-class-selector
   display: flex
   flex-direction: row
-  margin-top: 8rem
   flex-wrap: wrap
   justify-content: center
   button

@@ -29,7 +29,8 @@ const DEFAULTS = {
       fighter: 2,
       mage: 2,
       paladin: 2,
-      rogue: 0
+      rogue: 0,
+      chimera: 0
     }
   },
   inventory: {

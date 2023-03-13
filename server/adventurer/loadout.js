@@ -1,6 +1,5 @@
 import Adventurer from '../../game/adventurer.js'
 import _ from 'lodash'
-import { adjustInventoryBasics, adjustInventoryCrafted } from './inventory.js'
 
 /**
  * Throw an http exception if this loadout transaction is invalid. The parameters are all
