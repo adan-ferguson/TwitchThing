@@ -6,16 +6,16 @@ import { getSkillsForClass } from '../../../../../game/skills/adventurerSkill.js
 
 const HTML = `
 <div class="unset">
-  <div class="class-icon">
-    <span class="class-not-selected">?</span>
+  <div class="supertitle align-center">Add a Class</div>
+  <di-adventurer-edit-class-selector></di-adventurer-edit-class-selector>
+  <div class="class-info displaynone">
+    <div class="class-name supertitle"></div>
+    <div class="description"></div>
+    <button class="unlock">Unlock 1 ${orbPointIcon()}</button>
   </div>
-  <div class="name"></div>
-  <div class="description">Choose a class</div>
-  <select class="class-dropdown"></select>
-  <button class="unlock">Unlock 1 ${orbPointIcon()}</button>
 </div>
 <div class="set">
-  <div class="class-name"></div>
+  <div class="class-name supertitle"></div>
   <div class="orb-adder">
     <di-orb-row></di-orb-row>
     <button>+1</button>
@@ -29,19 +29,24 @@ export default class ClassDisplay extends DIElement{
   constructor(){
     super()
     this.innerHTML = HTML
-    this.classDropdown.addEventListener('change', () => {
-      const cls = classDisplayInfo(this.classDropdown.value)
-      this.querySelector('.class-icon').innerHTML = cls.icon
-      this.querySelector('.description').textContent = cls.description
+    this.classSelectorEl.events.on('select', cdi => {
+      const ci = this.classInfoEl
+      ci.classList.remove('displaynone')
+      ci.querySelector('.class-name').textContent = cdi.displayName
+      ci.querySelector('.description').textContent = cdi.description
     })
     this.unlockButton.addEventListener('click', () => {
-      if(this.classDropdown.value){
-        this.events.emit('spend orb', this.classDropdown.value)
+      if(this.classSelectorEl.selectedClass){
+        this.events.emit('spend orb', this.classSelectorEl.selectedClass)
       }
     })
     this.adderButton.addEventListener('click', () => {
       this.events.emit('spend orb', this.advClass)
     })
+  }
+
+  get classInfoEl(){
+    return this.querySelector('.class-info')
   }
 
   get advClass(){
@@ -51,12 +56,12 @@ export default class ClassDisplay extends DIElement{
     return Object.keys(this._adventurer.doc.orbs)[this._index]
   }
 
-  get classDropdown(){
-    return this.querySelector('.class-dropdown')
+  get classSelectorEl(){
+    return this.querySelector('di-adventurer-edit-class-selector')
   }
 
   get unlockButton(){
-    return this.querySelector('.unlock-button')
+    return this.querySelector('button.unlock')
   }
 
   get adderButton(){
@@ -72,6 +77,11 @@ export default class ClassDisplay extends DIElement{
   }
 
   update(){
+    const blank = Object.keys(this._adventurer.doc.orbs).length < this._index
+    this.classList.toggle('displaynone', blank)
+    if(blank){
+      return
+    }
     const set = this.advClass ? true : false
     this.querySelector('.unset').classList.toggle('displaynone', set)
     this.querySelector('.set').classList.toggle('displaynone', !set)
@@ -83,9 +93,9 @@ export default class ClassDisplay extends DIElement{
   }
 
   _unset(){
-    this.classDropdown.innerHTML = ADVENTURER_CLASS_LIST.map(cls => {
-      return `<option value="${cls.advClass}">${cls.displayName}</option>`
-    }).join('')
+    this.classSelectorEl.setClasses(ADVENTURER_CLASS_LIST.filter(cls => {
+      return !this._adventurer.orbs[cls.name]
+    }))
     this.unlockButton.toggleAttribute('disabled', this._adventurer.unspentOrbs === 0)
   }
 

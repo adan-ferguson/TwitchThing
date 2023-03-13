@@ -2,7 +2,8 @@ import { geometricProgession, inverseGeometricProgression } from './growthFuncti
 import { toNumberOfDigits } from './utilFunctions.js'
 import AdventurerItem from './adventurerItem.js'
 import AdventurerSkill from './skills/adventurerSkill.js'
-import { sum } from 'lodash'
+import _ from 'lodash'
+import { unlockedSkillsArray } from './skills/adventurerSkillFns.js'
 
 const XP_BASE = 100
 const XP_GROWTH = 200
@@ -61,6 +62,14 @@ export default class Adventurer{
     return { ...this._doc }
   }
 
+  get orbs(){
+    return this.doc.orbs
+  }
+
+  get name(){
+    return this.doc.name
+  }
+
   get level(){
     return advXpToLevel(this.doc.xp)
   }
@@ -90,13 +99,12 @@ export default class Adventurer{
   }
 
   get unspentOrbs(){
-    const totalOrbs = sum(...Object.values(this.doc.orbs))
+    const totalOrbs = _.sum(...Object.values(this.doc.orbs))
     return Math.max(0, this.level - totalOrbs)
   }
 
   get unspentSkillPoints(){
-    debugger
-    const usedPoints = sum(this.skills.map(skill => skill.skillPoints))
+    const usedPoints = _.sum(unlockedSkillsArray(this.doc.unlockedSkills).map(skill => skill.skillPoints ?? 0))
     return Math.max(0, Math.floor(this.level / 5) - usedPoints)
   }
 

@@ -2,9 +2,15 @@ import DIElement from '../../diElement.js'
 
 const HTML = `
 <div class="adv-classes content-columns">
-  <di-adventurer-edit-class-display class="content-well"></di-adventurer-edit-class-display>
-  <di-adventurer-edit-class-display class="content-well"></di-adventurer-edit-class-display>
-  <di-adventurer-edit-class-display class="content-well"></di-adventurer-edit-class-display>
+  <div class="content-well">
+    <di-adventurer-edit-class-display></di-adventurer-edit-class-display>
+  </div>
+  <div class="content-well">
+    <di-adventurer-edit-class-display></di-adventurer-edit-class-display>
+  </div>
+  <div class="content-well">
+    <di-adventurer-edit-class-display></di-adventurer-edit-class-display>
+  </div>
 </div>
 <di-adventurer-edit-skill-point-meter></di-adventurer-edit-skill-point-meter>
 `

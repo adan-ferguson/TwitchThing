@@ -138,7 +138,39 @@ di-ability-description
     .scaling-type-hp
       color: #8be369
 
+di-adventurer-edit-points-tab
+  di-adventurer-edit-class-display
+    display: block
+    padding: 20rem
+    .class-name
+      text-align: center
+      margin-top: 20rem
+      margin-bottom: 20rem
+    .class-info
+      display: flex
+      flex-direction: column
+      .unlock
+        align-self: center
+        position: absolute
+        bottom: 20rem
 
+  di-adventurer-edit-skill-point-meter
+    flex-grow: 0 !important
+
+di-adventurer-edit-class-selector
+  display: flex
+  flex-direction: row
+  margin-top: 8rem
+  flex-wrap: wrap
+  justify-content: center
+  button
+    border: none
+    padding: 2rem
+
+    svg
+      height: 3em
+    &:not(.selected) svg
+      fill: #DDDDDD
 
 di-inventory, di-skills
   padding-top: 8rem

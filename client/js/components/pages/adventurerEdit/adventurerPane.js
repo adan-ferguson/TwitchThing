@@ -27,8 +27,7 @@ export default class AdventurerPane extends DIElement{
   }
 
   setAdventurer(adventurer){
-    this.adventurerInstance = new Adventurer(adventurer)
-    this.adventurerInstance.idle = true
+    this.adventurer = adventurer
     this.querySelector('.name').textContent = `${adventurer.level} - ${adventurer.name}`
     // this.loadoutEl.setAdventurerInstance(this.adventurerInstance)
     // this.update()

@@ -42,7 +42,7 @@ export default class AdventurerEditPage extends Page{
 
   async load(){
     const { adventurer, items } = await this.fetchData()
-    this.adventurer = adventurer
+    this.adventurer = new Adventurer(adventurer)
     this.items = items
     this._showUnspentPoints()
     this._loadTab()
@@ -56,9 +56,8 @@ export default class AdventurerEditPage extends Page{
   }
 
   _showUnspentPoints(){
-    const ai = new Adventurer(this.adventurer)
-    const unspentOrbs = ai.unspentOrbs
-    const unspentSkillPoints = ai.unspentSkillPoints
+    const unspentOrbs = this.adventurer.unspentOrbs
+    const unspentSkillPoints = this.adventurer.unspentSkillPoints
     let prefixHtml = ''
     if(unspentOrbs > 0){
       prefixHtml += `<span class="unspent-points">${orbPointIcon()}${unspentOrbs}</span>`

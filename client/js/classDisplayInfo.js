@@ -26,6 +26,7 @@ const ADV_CLASSES = {
 
 for(let className in ADV_CLASSES){
   const cls = ADV_CLASSES[className]
+  cls.name = className
   cls.className = className
   cls.displayName = toDisplayName(className)
   cls.icon = modifySvgString(ORB_SVGS[className], {

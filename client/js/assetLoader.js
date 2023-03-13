@@ -42,7 +42,8 @@ export const ORB_SVGS = {
   fighter,
   mage,
   paladin,
-  rogue
+  rogue,
+  chimera: rogue
 }
 
 export const ROOM_IMAGES = {
