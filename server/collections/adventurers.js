@@ -13,8 +13,7 @@ const DEFAULTS = {
   dungeonRunID: null,
   accomplishments: {
     deepestFloor: 1
-  },
-  nextLevelUp: null
+  }
 }
 
 class AdventurersCollection extends Collection{

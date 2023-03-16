@@ -101,20 +101,6 @@ verifiedRouter.post('', async(req, res, next) => {
   res.send({ adventurer: req.adventurerDoc, user: req.user })
 })
 
-verifiedRouter.post('/levelup', async(req, res) => {
-  if(!req.adventurerDoc.nextLevelUp){
-    req.adventurerDoc.nextLevelUp = await generateLevelup(req.adventurerDoc)
-    if(req.adventurerDoc.nextLevelUp){
-      await Adventurers.save(req.adventurerDoc)
-    }
-  }
-  res.send({
-    adventurer: req.adventurerDoc,
-    user: req.user,
-    rerollCost: getRerollCost(req.adventurerDoc)
-  })
-})
-
 verifiedRouter.post('/dismiss', async(req, res, next) => {
   const index = req.user.adventurers.findIndex(advID => advID.equals(req.adventurerDoc._id))
   if(index === -1){
