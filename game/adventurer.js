@@ -50,7 +50,7 @@ export default class Adventurer{
   _skills = []
 
   constructor(adventurerDoc){
-    this._doc = adventurerDoc
+    this._doc = JSON.parse(JSON.stringify(adventurerDoc))
     for(let i = 0; i < 8; i++){
       const slot = adventurerDoc.slots[i]
       this._items[i] = slot?.[i]?.item ? new AdventurerItem(slot[i].item) : null
@@ -125,7 +125,7 @@ export default class Adventurer{
     if(!this.canSeeSkill(skill)){
       return false
     }
-    return !this.hasSkillUnlocked(skill)
+    return true
   }
 
   /**
@@ -134,5 +134,15 @@ export default class Adventurer{
    */
   canSeeSkill(skill){
     return this.orbs[skill.class] >= skill.requiredOrbs
+  }
+
+  upgradeSkill(skill){
+    if(this.unspentSkillPoints < skill.skillPoints){
+      throw 'Not enough skill points to unlock/upgrade skill.'
+    }
+    if(!this.doc.unlockedSkills[skill.class]){
+      this.doc.unlockedSkills[skill.class] = {}
+    }
+    this.doc.unlockedSkills[skill.class][skill.id] = (this.doc.unlockedSkills[skill.class][skill.id] ?? 0) + 1
   }
 }

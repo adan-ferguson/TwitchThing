@@ -4,6 +4,7 @@ import classDisplayInfo, { ADVENTURER_CLASS_LIST } from '../../../classDisplayIn
 import AdventurerSkillRow, { AdventurerSkillRowStatus } from '../../adventurer/adventurerSkillRow.js'
 import { getSkillsForClass } from '../../../../../game/skills/adventurerSkill.js'
 import { OrbsTooltip } from '../../orbRow.js'
+import SimpleModal from '../../simpleModal.js'
 
 const HTML = `
 <div class="unset">
@@ -129,12 +130,23 @@ export default class ClassDisplay extends DIElement{
       const skill = skills[i]
       const row = new AdventurerSkillRow().setSkill(skills[i]).setOptions({
         status: skillStatus(this._adventurer, skill),
-        showSkillPoints: true
+        showSkillPoints: true,
+        clickable: true
+      })
+      row.addEventListener('click', () => {
+        this._showUnlockModal(skill)
       })
       list.appendChild(row)
     }
 
     this._classSet = true
+  }
+
+  async _showUnlockModal(skill){
+    const result = await new SimpleModal().show().awaitResult()
+    if(result === 'unlock'){
+      this.events.emit('spend skill points', skill)
+    }
   }
 }
 
@@ -143,10 +155,8 @@ customElements.define('di-adventurer-edit-class-display', ClassDisplay)
 function skillStatus(adventurer, skill){
   if(adventurer.hasSkillUnlocked(skill)){
     return AdventurerSkillRowStatus.UNLOCKED
-  }else if(adventurer.canUnlockSkill(skill)){
-    return AdventurerSkillRowStatus.CAN_UNLOCK
   }else if(adventurer.canSeeSkill(skill)){
-    return AdventurerSkillRowStatus.CANT_UNLOCK
+    return AdventurerSkillRowStatus.CAN_UNLOCK
   }else{
     return AdventurerSkillRowStatus.HIDDEN
   }

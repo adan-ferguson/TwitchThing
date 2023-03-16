@@ -4,9 +4,8 @@ import { addRun } from '../../dungeons/dungeonRunner.js'
 import db  from '../../db.js'
 import Users from '../../collections/users.js'
 import { requireRegisteredUser, validateParam } from '../../validations.js'
-import { generateLevelup, getRerollCost, rerollBonus, selectBonus } from '../../adventurer/skills.js'
 import DungeonRuns from '../../collections/dungeonRuns.js'
-import { spendAdventurerOrb } from '../../adventurer/edit.js'
+import { spendAdventurerOrb, spendAdventurerSkillPoint } from '../../adventurer/edit.js'
 
 const router = express.Router()
 const verifiedRouter = express.Router()
@@ -81,8 +80,12 @@ verifiedRouter.post('/edit/spendorb', validateIdle, async(req, res) => {
   res.status(200).send({ success: 1 })
 })
 
-verifiedRouter.post('/edit/spendskillorb', validateIdle, async(req, res) => {
-
+verifiedRouter.post('/edit/spendskillpoint', validateIdle, async(req, res) => {
+  requireOwnsAdventurer(req)
+  const skillId = validateParam(req.body.skillId, { type: 'string' })
+  spendAdventurerSkillPoint(req.adventurerDoc, skillId)
+  await Adventurers.save(req.adventurerDoc)
+  res.status(200).send({ success: 1 })
 })
 
 verifiedRouter.post('/edit/saveloadout', validateIdle, async (req, res) => {
@@ -130,23 +133,6 @@ verifiedRouter.post('/dismiss', async(req, res, next) => {
 
 verifiedRouter.post('/status', async(req, res, next) => {
   res.send({ status: req.adventurerDoc.dungeonRunID ? 'dungeon' : 'idle' })
-})
-
-verifiedRouter.post('/selectbonus/:index', async(req, res, next) => {
-  requireOwnsAdventurer(req)
-  const index = validateParam(req.params.index, {
-    type: 'integer',
-    validationFn: val => val >= 0 && val <= 2
-  })
-  res.send({ nextLevelUp: await selectBonus(req.adventurerDoc, index) })
-})
-
-verifiedRouter.post('/rerollbonus', async(req, res, next) => {
-  requireOwnsAdventurer(req)
-  res.send({
-    nextLevelUp: await rerollBonus(req.user, req.adventurerDoc),
-    rerollCost: getRerollCost(req.adventurerDoc)
-  })
 })
 
 verifiedRouter.post('/previousruns', async(req, res, next) => {

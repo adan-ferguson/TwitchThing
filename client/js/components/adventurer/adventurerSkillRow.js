@@ -12,7 +12,7 @@ const HIDDEN_HTML = (lvl, orbSvg) => `
 `
 
 const SKILL_POINTS_HTML = count => `
-${skillPointIcon()} ${count}
+${skillPointIcon()}${count}
 `
 
 const SKILL_HTML = (name, right) => `
@@ -25,8 +25,7 @@ const SKILL_HTML = (name, right) => `
 export const AdventurerSkillRowStatus = {
   UNLOCKED: 0,
   CAN_UNLOCK: 1,
-  CANT_UNLOCK: 2,
-  HIDDEN: 3
+  HIDDEN: 2
 }
 
 export default class AdventurerSkillRow extends DIElement{
@@ -48,8 +47,9 @@ export default class AdventurerSkillRow extends DIElement{
 
   get defaultOptions(){
     return {
-      status: 'unlocked',
+      status: AdventurerSkillRowStatus.UNLOCKED,
       showSkillPoints: false, // Show skillPoints instead of class icon
+      clickable: false
     }
   }
 
@@ -64,6 +64,8 @@ export default class AdventurerSkillRow extends DIElement{
     this.contentEl.innerHTML = ''
     const skill = this.skill
     this.classList.toggle('blank', skill ? false : true)
+    this.classList.toggle('clickable', false)
+    this.style.color = null
     if(!skill){
       return
     }
@@ -71,9 +73,15 @@ export default class AdventurerSkillRow extends DIElement{
     const info = classDisplayInfo(skill.class)
     if(this._options.status === AdventurerSkillRowStatus.HIDDEN){
       this.contentEl.innerHTML = HIDDEN_HTML(skill.requiredOrbs, info.icon)
-    }else{
-      const icon = this._options.showSkillPoints ? SKILL_POINTS_HTML(skill.skillPoints) : info.icon
-      this.contentEl.innerHTML = SKILL_HTML(skill.displayName, icon)
+      return
+    }
+
+    const icon = this._options.showSkillPoints ? SKILL_POINTS_HTML(skill.skillPoints) : info.icon
+    this.contentEl.innerHTML = SKILL_HTML(skill.displayName, icon)
+    this.classList.toggle('clickable', this._options.clickable)
+    if(this._options.status === AdventurerSkillRowStatus.UNLOCKED){
+      const cdi = classDisplayInfo(skill.class)
+      this.style.color = cdi.color
     }
   }
 }

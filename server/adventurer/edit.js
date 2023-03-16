@@ -1,4 +1,5 @@
 import Adventurer from '../../game/adventurer.js'
+import AdventurerSkill from '../../game/skills/adventurerSkill.js'
 
 export function spendAdventurerOrb(advDoc, userDoc, advClass){
   const adv = new Adventurer(advDoc)
@@ -16,4 +17,11 @@ export function spendAdventurerOrb(advDoc, userDoc, advClass){
     return
   }
   advDoc.orbs[advClass]++
+}
+
+export function spendAdventurerSkillPoint(advDoc, skillId){
+  const adv = new Adventurer(advDoc)
+  const skill = new AdventurerSkill(skillId)
+  adv.upgradeSkill(skill)
+  advDoc.unlockedSkills = adv.doc.unlockedSkills
 }

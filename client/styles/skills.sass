@@ -1,6 +1,13 @@
 di-adventurer-skill-row
 
   position: relative
+  color: #999
+
+  &.clickable
+    cursor: pointer
+    &:hover
+      .border
+        background-color: #dfeaff
 
   &.blank .border
     border-style: dashed
@@ -16,14 +23,15 @@ di-adventurer-skill-row
     display: flex
     flex-direction: row
     align-items: center
-    padding: 0 7rem
+    padding: 0 9rem
     height: 100%
-    border: 0.5rem solid #BBB
+    border: 0.4rem solid currentColor
     border-radius: 20rem
     background-color: white
 
     i.skill-point
       vertical-align: middle
+      margin-right: 2rem
 
     > *
       width: 100%
@@ -32,9 +40,6 @@ di-adventurer-skill-row
     text-align: center
     svg
       vertical-align: top
-
-  > div:first-child
-    padding-left: 6rem
 
   .name
     color: black

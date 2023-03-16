@@ -32,8 +32,14 @@ export default class PointsTab extends DIElement{
           fizzetch('/game' + this.parentPage.path + '/spendorb', { advClass: className })
           this._updateAll()
         })
-        .on('spend skill point', id => {
-
+        .on('spend skill points', skill => {
+          const adv = this.parentPage?.adventurer
+          if(!adv || !skill){
+            return
+          }
+          adv.upgradeSkill(skill)
+          fizzetch('/game' + this.parentPage.path + '/spendskillpoint', { skillId: skill.id })
+          this._updateAll()
         })
     })
   }
