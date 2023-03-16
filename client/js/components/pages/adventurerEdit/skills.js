@@ -28,10 +28,6 @@ export default class Skills extends DIElement{
     return this.querySelector('di-list')
   }
 
-  // filterFn = row => {
-  //   return this.adventurerrow.skill.class.every(cls => this.adventurer.bonuses[cls])
-  // }
-
   setup(adventurer){
     this.adventurer = adventurer
     this.listEl.setRows(adventurerSkillsToRows(adventurer.unlockedSkills))

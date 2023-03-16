@@ -12,16 +12,9 @@ const HTML = `
     <div class="flex-columns">
         <di-stats-list></di-stats-list>
         <div class="divider"></div>
-        <div class="bonuses-list"></div>
+        <div class="bonuses-list">Put split loadout here</div>
     </div>
 </div>
-`
-
-const BONUS_HTML = (level, icon, name) => `
-<span class="name">${name}</span>
-<span>
-  ${icon}<span>${level}</span>
-</span>
 `
 
 export default class AdventurerInfo extends HTMLElement{
@@ -41,29 +34,9 @@ export default class AdventurerInfo extends HTMLElement{
       })
       .setStats(adventurerInstance.stats, adventurerInstance)
 
-    this._setBonuses(adventurerInstance.bonusesData)
     this.querySelector('di-xp-bar')
       .setLevelFunctions(advXpToLevel, advLevelToXp)
       .setValue(adventurerInstance.fighterData.xp)
-  }
-
-  _setBonuses(bonusesData){
-    const bonusesList = this.querySelector('.bonuses-list')
-
-    bonusesData.instances.forEach(bonusInstance => {
-      const info = classDisplayInfo(bonusInstance.group)
-      const item = wrapContent(BONUS_HTML(bonusInstance.level, info.icon, bonusInstance.displayName), {
-        allowHTML: true,
-        class: ['bonus-item', 'flex-columns']
-      })
-      item.style.color = info.color
-      tippy(item, {
-        theme: 'light',
-        allowHTML: true,
-        content: new EffectDetails().setEffect(bonusInstance)
-      })
-      bonusesList.appendChild(item)
-    })
   }
 }
 

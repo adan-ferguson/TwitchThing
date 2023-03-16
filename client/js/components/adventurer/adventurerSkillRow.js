@@ -12,7 +12,7 @@ const HIDDEN_HTML = (lvl, orbSvg) => `
 `
 
 const SKILL_POINTS_HTML = count => `
-${skillPointIcon()}${count}
+${count}${skillPointIcon()}
 `
 
 const SKILL_HTML = (name, right) => `

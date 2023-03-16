@@ -60,10 +60,10 @@ export default class AdventurerEditPage extends Page{
     const unspentSkillPoints = this.adventurer.unspentSkillPoints
     let prefixHtml = ''
     if(unspentOrbs > 0){
-      prefixHtml += `<span class="unspent-points">${orbPointIcon()}${unspentOrbs}</span>`
+      prefixHtml += `<span class="unspent-points">${unspentOrbs}${orbPointIcon()}</span>`
     }
     if(unspentSkillPoints > 0){
-      prefixHtml += `<span class="unspent-points">${skillPointIcon()}${unspentSkillPoints}</span>`
+      prefixHtml += `<span class="unspent-points">${unspentSkillPoints}${skillPointIcon()}</span>`
     }
     this.tabzEl.querySelector('.tab[data-tab-name="Spend Points"]').innerHTML = 'Spend Points' + prefixHtml
   }

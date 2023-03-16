@@ -1,10 +1,11 @@
 import DIElement from '../../diElement.js'
-import { orbPointIcon } from '../../common.js'
+import { orbPointIcon, skillPointIcon } from '../../common.js'
 import classDisplayInfo, { ADVENTURER_CLASS_LIST } from '../../../classDisplayInfo.js'
 import AdventurerSkillRow, { AdventurerSkillRowStatus } from '../../adventurer/adventurerSkillRow.js'
-import { getSkillsForClass } from '../../../../../game/skills/adventurerSkill.js'
+import AdventurerSkill, { getSkillsForClass } from '../../../../../game/skills/adventurerSkill.js'
 import { OrbsTooltip } from '../../orbRow.js'
 import SimpleModal from '../../simpleModal.js'
+import { makeEl, wrapContent } from '../../../../../game/utilFunctions.js'
 
 const HTML = `
 <div class="unset">
@@ -134,7 +135,7 @@ export default class ClassDisplay extends DIElement{
         clickable: true
       })
       row.addEventListener('click', () => {
-        this._showUnlockModal(skill)
+        this._showUnlockModal(skill, )
       })
       list.appendChild(row)
     }
@@ -142,11 +143,23 @@ export default class ClassDisplay extends DIElement{
     this._classSet = true
   }
 
-  async _showUnlockModal(skill){
-    const result = await new SimpleModal().show().awaitResult()
-    if(result === 'unlock'){
-      this.events.emit('spend skill points', skill)
+  _showUnlockModal(skill){
+    const content = makeEl({
+      class: 'skill-unlock-modal-content'
+    })
+    if(skill.level > 1){
+      const skill = new AdventurerSkill(skill.id, skill.level - 1)
+      content.appendChild(new SkillDetails().setSkill(skill))
+      content.appendChild(wrapContent('<i class="fa-solid fa-arrow-right"></i>'))
     }
+    content.appendChild(new SkillDetails().setSkill(skill))
+    const buttons = [{
+      content: `Unlock ${skill.skillPoints}${skillPointIcon()}`,
+      fn: () => {
+        this.events.emit('spend skill points', skill)
+      }
+    }]
+    new SimpleModal(content, buttons).show()
   }
 }
 

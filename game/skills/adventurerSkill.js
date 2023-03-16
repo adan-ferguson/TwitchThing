@@ -9,8 +9,9 @@ export default class AdventurerSkill{
 
   _skill
 
-  constructor(skillId){
+  constructor(skillId, level = 1){
     this._skill = all[skillId]
+    this._level = level
   }
 
   get isValid(){
@@ -18,6 +19,10 @@ export default class AdventurerSkill{
       return false
     }
     return this.displayName ? true : false
+  }
+
+  get level(){
+    return this._level
   }
 
   get displayName(){
