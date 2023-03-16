@@ -1,7 +1,7 @@
 import DIElement from '../../diElement.js'
 import { orbPointIcon } from '../../common.js'
 import classDisplayInfo, { ADVENTURER_CLASS_LIST } from '../../../classDisplayInfo.js'
-import AdventurerSkillRow from '../../adventurer/adventurerSkillRow.js'
+import AdventurerSkillRow, { AdventurerSkillRowStatus } from '../../adventurer/adventurerSkillRow.js'
 import { getSkillsForClass } from '../../../../../game/skills/adventurerSkill.js'
 import { OrbsTooltip } from '../../orbRow.js'
 
@@ -15,7 +15,7 @@ const HTML = `
     <button class="unlock">Unlock ${orbPointIcon()}</button>
   </div>
 </div>
-<div class="set">
+<div class="set flex-rows">
   <div class="class-name supertitle"></div>
   <div class="orb-adder flex-columns">
     <di-orb-row></di-orb-row>
@@ -29,6 +29,7 @@ export default class ClassDisplay extends DIElement{
 
   constructor(){
     super()
+    this.classList.add('fill-contents')
     this.innerHTML = HTML
     this.classSelectorEl.events.on('select', cdi => {
       const ci = this.classInfoEl
@@ -126,8 +127,9 @@ export default class ClassDisplay extends DIElement{
     const list = setEl.querySelector('.skills-list')
     for(let i = 0; i < 12; i++){
       const skill = skills[i]
-      const row = new AdventurerSkillRow().setSkill(skills[i], {
-        status: skillStatus(this._adventurer, skill)
+      const row = new AdventurerSkillRow().setSkill(skills[i]).setOptions({
+        status: skillStatus(this._adventurer, skill),
+        showSkillPoints: true
       })
       list.appendChild(row)
     }
@@ -140,10 +142,12 @@ customElements.define('di-adventurer-edit-class-display', ClassDisplay)
 
 function skillStatus(adventurer, skill){
   if(adventurer.hasSkillUnlocked(skill)){
-    return 'unlocked'
+    return AdventurerSkillRowStatus.UNLOCKED
   }else if(adventurer.canUnlockSkill(skill)){
-    return 'locked'
+    return AdventurerSkillRowStatus.CAN_UNLOCK
+  }else if(adventurer.canSeeSkill(skill)){
+    return AdventurerSkillRowStatus.CANT_UNLOCK
   }else{
-    return 'hidden'
+    return AdventurerSkillRowStatus.HIDDEN
   }
 }

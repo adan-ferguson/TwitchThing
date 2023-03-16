@@ -15,13 +15,23 @@ di-adventurer-skill-row
   .border
     display: flex
     flex-direction: row
-    justify-content: space-between
     align-items: center
-    padding: 0 2rem
+    padding: 0 7rem
     height: 100%
     border: 0.5rem solid #BBB
     border-radius: 20rem
     background-color: white
+
+    i.skill-point
+      vertical-align: middle
+
+    > *
+      width: 100%
+
+  .hidden-skill
+    text-align: center
+    svg
+      vertical-align: top
 
   > div:first-child
     padding-left: 6rem

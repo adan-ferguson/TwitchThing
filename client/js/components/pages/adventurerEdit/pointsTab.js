@@ -3,13 +3,13 @@ import fizzetch from '../../../fizzetch.js'
 
 const HTML = `
 <div class="adv-classes content-columns">
-  <div class="content-well">
+  <div class="content-well fill-contents">
     <di-adventurer-edit-class-display></di-adventurer-edit-class-display>
   </div>
-  <div class="content-well">
+  <div class="content-well fill-contents">
     <di-adventurer-edit-class-display></di-adventurer-edit-class-display>
   </div>
-  <div class="content-well">
+  <div class="content-well fill-contents">
     <di-adventurer-edit-class-display></di-adventurer-edit-class-display>
   </div>
 </div>

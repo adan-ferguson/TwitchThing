@@ -4,9 +4,11 @@ $smallMargin: 5rem
 di-app .page
   display: flex
   align-items: stretch
-  margin: $margin
+  padding: $margin
   flex-grow: 1
-  overflow-x: hidden
+  overflow: hidden
+  box-sizing: border-box
+  max-height: 100%
 
   > *
     flex: 1 1

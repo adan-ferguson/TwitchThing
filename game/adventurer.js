@@ -108,11 +108,31 @@ export default class Adventurer{
     return Math.max(0, Math.floor(this.level / 5) - usedPoints)
   }
 
+  /**
+   * @param skill {AdventurerSkill}
+   */
   hasSkillUnlocked(skill){
-
+    return this.doc.unlockedSkills[skill.class]?.[skill.id] ? true : false
   }
 
+  /**
+   * @param skill {AdventurerSkill}
+   */
   canUnlockSkill(skill){
+    if(skill.skillPoints > this.unspentSkillPoints){
+      return false
+    }
+    if(!this.canSeeSkill(skill)){
+      return false
+    }
+    return !this.hasSkillUnlocked(skill)
+  }
 
+  /**
+   * Could unlock it if they had enough SP.
+   * @param skill
+   */
+  canSeeSkill(skill){
+    return this.orbs[skill.class] >= skill.requiredOrbs
   }
 }

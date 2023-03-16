@@ -1,13 +1,33 @@
 import DIElement from '../diElement.js'
 import classDisplayInfo from '../../classDisplayInfo.js'
+import { skillPointIcon } from '../common.js'
 
 const HTML = `
-<div class="border">
-  <span class="name"></span>
-  <span class="icon"></span>  
-</div>
+<div class="border"></div>
 <div class="hit-area"></div>
 `
+
+const HIDDEN_HTML = (lvl, orbSvg) => `
+<span class="hidden-skill">${lvl} ${orbSvg}</span>
+`
+
+const SKILL_POINTS_HTML = count => `
+${skillPointIcon()} ${count}
+`
+
+const SKILL_HTML = (name, right) => `
+<span class="center-contents" style="justify-content: space-between">
+  <span>${name}</span>
+  <span>${right}</span>
+</span>
+`
+
+export const AdventurerSkillRowStatus = {
+  UNLOCKED: 0,
+  CAN_UNLOCK: 1,
+  CANT_UNLOCK: 2,
+  HIDDEN: 3
+}
 
 export default class AdventurerSkillRow extends DIElement{
 
@@ -16,38 +36,45 @@ export default class AdventurerSkillRow extends DIElement{
   constructor(){
     super()
     this.innerHTML = HTML
-    this._blank()
-  }
-
-  get nameEl(){
-    return this.querySelector('.name')
-  }
-
-  get iconEl(){
-    return this.querySelector('.icon')
   }
 
   get skill(){
-    return this._item
+    return this._skill
+  }
+
+  get contentEl(){
+    return this.querySelector('.border')
+  }
+
+  get defaultOptions(){
+    return {
+      status: 'unlocked',
+      showSkillPoints: false, // Show skillPoints instead of class icon
+    }
   }
 
   setSkill(adventurerSkill){
     this._skill = adventurerSkill
-    if(!adventurerSkill){
-      this._blank()
-    }else{
-      const info = classDisplayInfo(adventurerSkill.group)
-      this.nameEl.textContent = adventurerSkill.displayName
-      this.iconEl.innerHTML = info.icon
-      this.classList.remove('blank')
-    }
+    this._update()
     return this
   }
 
-  _blank(){
-    this.nameEl.textContent = ''
-    this.iconEl.textContent = ''
-    this.classList.add('blank')
+  _update(){
+
+    this.contentEl.innerHTML = ''
+    const skill = this.skill
+    this.classList.toggle('blank', skill ? false : true)
+    if(!skill){
+      return
+    }
+
+    const info = classDisplayInfo(skill.class)
+    if(this._options.status === AdventurerSkillRowStatus.HIDDEN){
+      this.contentEl.innerHTML = HIDDEN_HTML(skill.requiredOrbs, info.icon)
+    }else{
+      const icon = this._options.showSkillPoints ? SKILL_POINTS_HTML(skill.skillPoints) : info.icon
+      this.contentEl.innerHTML = SKILL_HTML(skill.displayName, icon)
+    }
   }
 }
 

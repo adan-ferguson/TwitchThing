@@ -46,7 +46,7 @@ export default class AdventurerSkill{
     }
   }
 
-  get requiredLevel(){
+  get requiredOrbs(){
     return Math.max(0, 5 * (this.index - 3))
   }
 }
