@@ -40,3 +40,7 @@ export default function(className){
 }
 
 export const ADVENTURER_CLASS_LIST = Object.values(ADV_CLASSES)
+
+export function classIcon(className){
+  return ADV_CLASSES[className]?.icon
+}

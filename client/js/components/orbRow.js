@@ -49,22 +49,53 @@ export default class OrbRow extends DIElement{
       return
     }
     this._orbsData.list.forEach(orbDatum => {
-      this.appendChild(new OrbEntry(orbDatum, this._options))
+      this.appendChild(new OrbEntry().setOptions(this._options).setData(orbDatum))
     })
   }
 }
 customElements.define('di-orb-row', OrbRow)
 
-class OrbEntry extends HTMLElement{
-  constructor(orbDatum, { style, allowNegatives, tooltip }){
+class OrbEntry extends DIElement{
+
+  constructor(){
     super()
+    this._update()
+  }
+
+  get defaultOptions(){
+    return {
+      style: OrbsDisplayStyle.USED_ONLY,
+      allowNegatives: false,
+      tooltip: OrbsTooltip.NORMAL
+    }
+  }
+
+  setData({ className, used, max }){
+    if(className !== undefined){
+      this.setAttribute('orb-class', className)
+    }
+    if(used !== undefined){
+      this.setAttribute('orb-used', used)
+    }
+    if(max !== undefined){
+      this.setAttribute('orb-max', max)
+    }
+    this._update()
+    return this
+  }
+
+  _update(){
+
+    const style = this._options.style
+    const allowNegatives = this._options.allowNegatives
+    const className = this.getAttribute('orb-class')
+    const used = n(this.getAttribute('orb-used'))
+    const max = n(this.getAttribute('orb-max'))
 
     let text
-    let used = n(orbDatum.used)
-    let max = n(orbDatum.max)
     if(style === OrbsDisplayStyle.SHOW_MAX){
       text = `${used}/${max}`
-      this.classList.toggle('error', orbDatum.remaining < 0)
+      this.classList.toggle('error', used > max)
     }else if(style === OrbsDisplayStyle.MAX_ADDITIVE){
       text = (max >= 0 ? '+' : '') + max
     }else if(style === OrbsDisplayStyle.MAX_ONLY){
@@ -73,11 +104,11 @@ class OrbEntry extends HTMLElement{
       text = '' + used
     }
 
-    const classInfo = classDisplayInfo(orbDatum.className)
+    const classInfo = classDisplayInfo(className)
     this.style.color = classInfo.color
     this.innerHTML = ORB_ENTRY_HTML(classInfo.icon, text)
 
-    const tooltipText = tooltip === OrbsTooltip.ITEM ?
+    const tooltipText = this._options.tooltip === OrbsTooltip.ITEM ?
       'Spend this many orbs to equip this item.' :
       `${classInfo.displayName} orbs`
 

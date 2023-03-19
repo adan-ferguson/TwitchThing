@@ -1,11 +1,12 @@
 import DIElement from '../../diElement.js'
-import { orbPointIcon, skillPointIcon } from '../../common.js'
+import { orbPointIcon, skillPointEntry } from '../../common.js'
 import classDisplayInfo, { ADVENTURER_CLASS_LIST } from '../../../classDisplayInfo.js'
 import AdventurerSkillRow, { AdventurerSkillRowStatus } from '../../adventurer/adventurerSkillRow.js'
 import AdventurerSkill, { getSkillsForClass } from '../../../../../game/skills/adventurerSkill.js'
 import { OrbsTooltip } from '../../orbRow.js'
 import SimpleModal from '../../simpleModal.js'
 import { makeEl, wrapContent } from '../../../../../game/utilFunctions.js'
+import SkillCard from '../../skillCard.js'
 
 const HTML = `
 <div class="unset">
@@ -135,7 +136,7 @@ export default class ClassDisplay extends DIElement{
         clickable: true
       })
       row.addEventListener('click', () => {
-        this._showUnlockModal(skill, )
+        this._showUnlockModal(skill)
       })
       list.appendChild(row)
     }
@@ -154,7 +155,7 @@ export default class ClassDisplay extends DIElement{
     }
     content.appendChild(new SkillCard().setSkill(skill))
     const buttons = [{
-      content: `Unlock ${skill.skillPoints}${skillPointIcon()}`,
+      content: `Unlock ${skillPointEntry(skill.skillPoints)}`,
       fn: () => {
         this.events.emit('spend skill points', skill)
       }

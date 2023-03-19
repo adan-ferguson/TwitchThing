@@ -25,5 +25,5 @@ export function validateAllSkills(){
 }
 
 function validateSkill(id){
-  validateObject(new AdventurerSkill(id).skillData, SKILL_VALIDATION)
+  validateObject(new AdventurerSkill(id).data, SKILL_VALIDATION)
 }

@@ -15,16 +15,16 @@ export default class AdventurerSkill{
     if(!baseSkill){
       throw 'Invalid skillId: ' + skillId
     }
-    if(!_.isFunction(baseSkill)){
-      throw 'Skill is not a function: ' + skillId
+    if(!baseSkill.levelFn){
+      throw 'Skill is missing its levelFn: ' + skillId
     }
     this._level = level
     this._id = skillId
     this._class = baseSkill.group
-    this._skill = baseSkill(level)
+    this._skill = baseSkill.levelFn(level)
   }
 
-  get skillData(){
+  get data(){
     return this._skill
   }
 
