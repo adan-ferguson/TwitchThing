@@ -1,47 +1,66 @@
 import { isObject } from '../game/utilFunctions.js'
 import Users from './collections/users.js'
+import _ from 'lodash'
 
 export function validateParam(val, options){
+  try {
+    validateValue(val, options)
+  }catch(ex){
+    throw { code: 400, message: ex }
+  }
+  return val
+}
+
+export function validateObject(obj, validation){
+  for(let key in obj){
+    if(!validation[key]){
+      throw 'Invalid key: ' + key
+    }
+  }
+  for(let key in validation){
+    try {
+      validateValue(obj[key], validation[key])
+    }catch(msg){
+      throw `Invalid value for key "${key}": ${msg}`
+    }
+  }
+}
+
+export function validateValue(val, options){
 
   options = isObject(options) ? options : {}
   options = {
     required: true,
     type: null,
-    validationFn: null,
+    arrayOf: null,
     ...options
   }
+
   if(val === undefined){
     if(options.required){
-      throw { code: 400, message:  'Required parameter is missing.' }
+      throw 'Required parameter is missing.'
     }
-  }else{
-    validateType()
+  }else if(options.arrayOf){
+    options.type = 'array'
   }
 
-  if(options.validationFn && !options.validationFn(val)){
-    throw { code: 400, message:  'Validation function failed.' }
-  }
-
-  return val
-
-  function validateType(){
-    const type = options.type
-
-    let err = false
-    if(type === 'array' && !Array.isArray(val)){
-      err = true
-    }else if(type === 'integer'){
-      val = parseInt(val)
-      if(!Number.isInteger(val)){
-        err = true
-      }
-    }else if(isObject(type)){
-      Object.keys(type).find(key => validateParam(val[key], type[key]))
+  if(_.isArray(options.type)){
+    if(options.type.includes(val)){
+      throw `Expected one of "${options.type}" but did not get one.`
     }
-
-    if(err){
-      throw { code: 400, message: `Parameter ${val} is invalid type, expected ${type}.` }
+  }else if(options.type === 'array' && !_.isArray(val)){
+    if(!_.isArray(val)){
+      throw 'Expected array value but did not get one.'
     }
+    if(options.arrayOf){
+      val.forEach(v => validateValue(v, options.arrayOf))
+    }
+  }else if(options.type === 'integer'){
+    if(!Number.isInteger(val)){
+      throw 'Expected integer value but did not get one.'
+    }
+  }else if(isObject(options.type)){
+    Object.keys(options.type).forEach(key => validateParam(val[key], options.type[key]))
   }
 }
 

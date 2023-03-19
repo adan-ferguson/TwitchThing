@@ -1,4 +1,5 @@
 import Skills, { all }  from './combined.js'
+import { toArray } from '../utilFunctions.js'
 
 // Convert a skills obj to an array of AdventurerSkills
 export function getSkillsForClass(className){
@@ -10,15 +11,23 @@ export default class AdventurerSkill{
   _skill
 
   constructor(skillId, level = 1){
-    this._skill = all[skillId]
+    const baseSkill = all[skillId]
+    if(!baseSkill){
+      throw 'Invalid skillId: ' + skillId
+    }
+    if(!baseSkill.levelFn){
+      throw 'Skill is missing a levelFn: ' + skillId
+    }
     this._level = level
+    this._skill = {
+      ...baseSkill,
+      ...baseSkill.levelFn(level)
+    }
+    delete this._skill.levelFn
   }
 
-  get isValid(){
-    if(!this._skill){
-      return false
-    }
-    return this.displayName ? true : false
+  get skillData(){
+    return this._skill
   }
 
   get level(){

@@ -1,3 +1,6 @@
 export default {
-  displayName: 'Slash'
+  displayName: 'Blank Skill',
+  levelFn: () => {
+    return {}
+  }
 }

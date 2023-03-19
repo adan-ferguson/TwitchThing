@@ -66,9 +66,6 @@ export function validateAllItems(){
   for(let group in BaseItems){
     for(let name in BaseItems[group]){
       const item = new AdventurerItem({ group, name })
-      if(!item.isValid){
-        throw `Adventurer Item not valid (base item): ${name}`
-      }
       // const slotEffect = new AdventurerSlotInstance({ item })
       // if(!slotEffect.isValid){
       //   throw `Adventurer Item not valid (slot effect): ${name}`
