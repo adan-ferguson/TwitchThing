@@ -137,7 +137,7 @@ export default class Adventurer{
   }
 
   upgradeSkill(skill){
-    if(this.unspentSkillPoints < skill.skillPoints){
+    if(this.unspentSkillPoints < skill.baseSkillPoints){
       throw 'Not enough skill points to unlock/upgrade skill.'
     }
     if(!this.doc.unlockedSkills[skill.class]){

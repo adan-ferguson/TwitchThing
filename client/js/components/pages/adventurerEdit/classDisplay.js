@@ -149,10 +149,10 @@ export default class ClassDisplay extends DIElement{
     })
     if(skill.level > 1){
       const skill = new AdventurerSkill(skill.id, skill.level - 1)
-      content.appendChild(new SkillDetails().setSkill(skill))
+      content.appendChild(new SkillCard().setSkill(skill))
       content.appendChild(wrapContent('<i class="fa-solid fa-arrow-right"></i>'))
     }
-    content.appendChild(new SkillDetails().setSkill(skill))
+    content.appendChild(new SkillCard().setSkill(skill))
     const buttons = [{
       content: `Unlock ${skill.skillPoints}${skillPointIcon()}`,
       fn: () => {

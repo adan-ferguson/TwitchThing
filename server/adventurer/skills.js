@@ -2,15 +2,17 @@ import { all }  from '../../game/skills/combined.js'
 import AdventurerSkill from '../../game/skills/adventurerSkill.js'
 import { validateObject } from '../validations.js'
 
-const SLOT_MODIFIER_VALIDATION = {
+const LOADOUT_MODIFIER_VALIDATION = {
   slot: { required: true, type: ['attached'] },
   orbs: { type: 'integer' },
   restriction: { type: ['empty'] }
 }
 
 const SKILL_VALIDATION = {
+  group: { required: true, type: 'string' },
+  name: { required: true, type: 'string' },
   displayName: { required: true, type: 'string' },
-  slotModifiers: { arrayOf: SLOT_MODIFIER_VALIDATION }
+  loadoutModifiers: { arrayOf: LOADOUT_MODIFIER_VALIDATION }
 }
 
 export function validateAllSkills(){

@@ -2,7 +2,7 @@ export default {
   displayName: 'Signature Weapon',
   levelFn: level => {
     return {
-      slotModifiers: [{ slot: 'attached', orbs: -3 }]
+      loadoutModifiers: [{ slot: 'attached', orbs: -3 }]
     }
   }
 }

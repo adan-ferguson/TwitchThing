@@ -13,20 +13,20 @@ export default class EffectDetails extends DIElement{
     }
   }
 
-  setEffect(effectInstance){
-    this._effectInstance = effectInstance
+  setEffect(effect){
+    this._effect = effect
     this._update()
     return this
   }
 
   _update(){
     this.innerHTML = ''
-    if(!this._effectInstance){
+    if(!this._effect){
       return
     }
-    this._addAbilityDescription()
-    this._addDescription()
-    this._addStats()
+    // this._addAbilityDescription()
+    // this._addDescription()
+    // this._addStats()
   }
 
   _addAbilityDescription(){

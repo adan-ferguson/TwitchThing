@@ -2,9 +2,16 @@ import { isObject } from '../game/utilFunctions.js'
 import Users from './collections/users.js'
 import _ from 'lodash'
 
+/**
+ * Validate a query parameter.
+ * @param val
+ * @param options
+ * @deprecated Use validateValue or validateObject instead
+ * @returns {*}
+ */
 export function validateParam(val, options){
   try {
-    validateValue(val, options)
+    validateValue(val, { required: true, ...options })
   }catch(ex){
     throw { code: 400, message: ex }
   }
@@ -30,7 +37,7 @@ export function validateValue(val, options){
 
   options = isObject(options) ? options : {}
   options = {
-    required: true,
+    required: false,
     type: null,
     arrayOf: null,
     ...options
@@ -40,6 +47,7 @@ export function validateValue(val, options){
     if(options.required){
       throw 'Required parameter is missing.'
     }
+    return val
   }else if(options.arrayOf){
     options.type = 'array'
   }
@@ -60,8 +68,10 @@ export function validateValue(val, options){
       throw 'Expected integer value but did not get one.'
     }
   }else if(isObject(options.type)){
-    Object.keys(options.type).forEach(key => validateParam(val[key], options.type[key]))
+    Object.keys(options.type).forEach(key => validateValue(val[key], options.type[key]))
   }
+
+  return val
 }
 
 export function requireRegisteredUser(req){

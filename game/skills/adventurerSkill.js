@@ -51,6 +51,10 @@ export default class AdventurerSkill{
   }
 
   get skillPoints(){
+    return this.baseSkillPoints * this.level
+  }
+
+  get baseSkillPoints(){
     if(this.index <= 5){
       return 1
     }else if(this.index <= 9){
