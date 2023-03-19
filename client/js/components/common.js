@@ -9,3 +9,11 @@ export function skillPointIcon(){
 export function coloredIcon(iconName, color, cls = null){
   return `<i style="color:${color};" class="fa-solid fa-${iconName} ${cls}"></i>`
 }
+
+export function attachedItem(){
+  return '<i class="fa-solid fa-arrow-left attached-item" title="Attached Item"></i>'
+}
+
+export function attachedSkill(){
+  return '<i class="fa-solid fa-arrow-right attached-skill" title="Attached Skill"></i>'
+}

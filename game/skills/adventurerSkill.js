@@ -1,5 +1,5 @@
 import Skills, { all }  from './combined.js'
-import { toArray } from '../utilFunctions.js'
+import _ from 'lodash'
 
 // Convert a skills obj to an array of AdventurerSkills
 export function getSkillsForClass(className){
@@ -15,15 +15,13 @@ export default class AdventurerSkill{
     if(!baseSkill){
       throw 'Invalid skillId: ' + skillId
     }
-    if(!baseSkill.levelFn){
-      throw 'Skill is missing a levelFn: ' + skillId
+    if(!_.isFunction(baseSkill)){
+      throw 'Skill is not a function: ' + skillId
     }
     this._level = level
-    this._skill = {
-      ...baseSkill,
-      ...baseSkill.levelFn(level)
-    }
-    delete this._skill.levelFn
+    this._id = skillId
+    this._class = baseSkill.group
+    this._skill = baseSkill(level)
   }
 
   get skillData(){
@@ -39,11 +37,11 @@ export default class AdventurerSkill{
   }
 
   get class(){
-    return this._skill.group
+    return this._class
   }
 
   get id(){
-    return this._skill.name
+    return this._id
   }
 
   get index(){

@@ -9,10 +9,9 @@ const LOADOUT_MODIFIER_VALIDATION = {
 }
 
 const SKILL_VALIDATION = {
-  group: { required: true, type: 'string' },
-  name: { required: true, type: 'string' },
   displayName: { required: true, type: 'string' },
-  loadoutModifiers: { arrayOf: LOADOUT_MODIFIER_VALIDATION }
+  loadoutModifiers: { arrayOf: LOADOUT_MODIFIER_VALIDATION },
+  vals: { type: 'object' }
 }
 
 export function validateAllSkills(){

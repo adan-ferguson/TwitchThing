@@ -29,41 +29,41 @@ export default class EffectDetails extends DIElement{
     // this._addStats()
   }
 
-  _addAbilityDescription(){
-    if(this._effectInstance.hasAbilities){
-      const desc = new AbilityDescription().setItem(this._effectInstance, this._options.showTooltips)
-      if(desc){
-        this.appendChild(desc)
-      }
-    }
-  }
-
-  _addStats(){
-    const statsList = new StatsList()
-    statsList.setOptions({
-      // showTooltips: false,
-      statsDisplayStyle: StatsDisplayStyle.ADDITIONAL
-    })
-    if(!this._effectInstance.effectData.scaledStats){
-      statsList.setStats(this._effectInstance.stats)
-    }
-    if(!statsList.empty){
-      this.appendChild(statsList)
-    }
-  }
-
-  _addDescription(){
-    const description = parseDescriptionString(this._effectInstance.description ?? '')
-    description.classList.add('effect-description')
-    this._effectInstance.mods.list.forEach(mod => {
-      if(mod.description){
-        description.append(wrapContent(mod.description))
-      }
-    })
-    if(description.innerHTML.length){
-      this.appendChild(description)
-    }
-  }
+  // _addAbilityDescription(){
+  //   if(this._effectInstance.hasAbilities){
+  //     const desc = new AbilityDescription().setItem(this._effectInstance, this._options.showTooltips)
+  //     if(desc){
+  //       this.appendChild(desc)
+  //     }
+  //   }
+  // }
+  //
+  // _addStats(){
+  //   const statsList = new StatsList()
+  //   statsList.setOptions({
+  //     // showTooltips: false,
+  //     statsDisplayStyle: StatsDisplayStyle.ADDITIONAL
+  //   })
+  //   if(!this._effectInstance.effectData.scaledStats){
+  //     statsList.setStats(this._effectInstance.stats)
+  //   }
+  //   if(!statsList.empty){
+  //     this.appendChild(statsList)
+  //   }
+  // }
+  //
+  // _addDescription(){
+  //   const description = parseDescriptionString(this._effectInstance.description ?? '')
+  //   description.classList.add('effect-description')
+  //   this._effectInstance.mods.list.forEach(mod => {
+  //     if(mod.description){
+  //       description.append(wrapContent(mod.description))
+  //     }
+  //   })
+  //   if(description.innerHTML.length){
+  //     this.appendChild(description)
+  //   }
+  // }
 
 }
 

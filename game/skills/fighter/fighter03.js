@@ -1,7 +1,7 @@
 export default {
-  displayName: 'Punch',
   levelFn: level => {
     return {
+      displayName: 'Punch',
       loadoutModifiers: [{ slot: 'attached', restriction: 'empty' }]
     }
   }

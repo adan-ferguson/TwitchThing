@@ -1,8 +1,10 @@
 export default {
-  displayName: 'Signature Weapon',
-  levelFn: level => {
+  levelFn(level){
+    const orbs = -3 - level * 2
     return {
-      loadoutModifiers: [{ slot: 'attached', orbs: -3 }]
+      displayName: 'Signature Weapon',
+      loadoutModifiers: [{ slot: 'attached', orbs }],
+      vals: { orbs }
     }
   }
 }
