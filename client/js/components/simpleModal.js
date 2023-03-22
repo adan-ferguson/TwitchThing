@@ -66,12 +66,14 @@ export default class SimpleModal extends Modal{
         content: null,
         style: 'normal',
         value: null,
+        disabled: false,
         fn: () => {}, // Called on click. If it returns false, the modal won't close after clicking.
         ...options
       }
 
       const btn = document.createElement('button')
       btn.classList.add('style-' + options.style)
+      btn.toggleAttribute('disabled', options.disabled)
       if(options.content){
         if(_.isString(options.content)){
           btn.innerHTML = options.content

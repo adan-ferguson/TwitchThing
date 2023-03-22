@@ -6,7 +6,7 @@ import { classIcon } from '../classDisplayInfo.js'
 const HTML = `
 <div class="skill-border">
   <div class="inset-title skill-name"></div>
-  <div class="inset-title-right skill-points"></div>
+  <div class="inset-title-right skill-points displaynone"></div>
   <di-effect-details></di-effect-details>
   <div class="extra-details"></div>
 </div>
@@ -34,7 +34,7 @@ export default class SkillCard extends DIElement{
 
     this.innerHTML = HTML
     this.nameEl.innerHTML = adventurerSkill.displayName + classIcon(adventurerSkill.class)
-    this.skillPointsEl.innerHTML = skillPointEntry(adventurerSkill.skillPoints)
+    // this.skillPointsEl.innerHTML = skillPointEntry(adventurerSkill.skillPoints)
     this.effectDetailsEl.setOptions({ showTooltips }).setEffect(adventurerSkill.effect)
 
     const sdi = skillDisplayInfo(adventurerSkill)

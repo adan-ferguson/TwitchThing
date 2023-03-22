@@ -1,6 +1,5 @@
 import DIElement from '../diElement.js'
 import classDisplayInfo from '../../classDisplayInfo.js'
-import { skillPointIcon } from '../common.js'
 
 const HTML = `
 <div class="border"></div>
@@ -11,14 +10,10 @@ const HIDDEN_HTML = (lvl, orbSvg) => `
 <span class="hidden-skill">${lvl} ${orbSvg}</span>
 `
 
-const SKILL_POINTS_HTML = count => `
-${count}${skillPointIcon()}
-`
-
 const SKILL_HTML = (name, right) => `
 <span class="center-contents" style="justify-content: space-between">
   <span>${name}</span>
-  <span>${right}</span>
+  <span class="class-identifier">${right}</span>
 </span>
 `
 
@@ -48,7 +43,6 @@ export default class AdventurerSkillRow extends DIElement{
   get defaultOptions(){
     return {
       status: AdventurerSkillRowStatus.UNLOCKED,
-      showSkillPoints: false, // Show skillPoints instead of class icon
       clickable: false
     }
   }
@@ -65,6 +59,8 @@ export default class AdventurerSkillRow extends DIElement{
     const skill = this.skill
     this.classList.toggle('blank', skill ? false : true)
     this.classList.toggle('clickable', false)
+    this.classList.toggle('unlocked', this._options.status === AdventurerSkillRowStatus.UNLOCKED)
+
     this.style.color = null
     if(!skill){
       return
@@ -76,7 +72,7 @@ export default class AdventurerSkillRow extends DIElement{
       return
     }
 
-    const icon = this._options.showSkillPoints ? SKILL_POINTS_HTML(skill.skillPoints) : info.icon
+    const icon = info.icon
     this.contentEl.innerHTML = SKILL_HTML(skill.displayName, icon)
     this.classList.toggle('clickable', this._options.clickable)
     if(this._options.status === AdventurerSkillRowStatus.UNLOCKED){

@@ -67,15 +67,16 @@ export function mergeOptionsObjects(currentOptions, newOptions){
   return options
 }
 
-export function wrapContent(content, options = {}){
-  if(options.allowHTML){
-    return makeEl({
-      content: content,
-      ...options
-    })
-  }
+export function wrapText(text, options = {}){
   return makeEl({
-    text: content,
+    text,
+    ...options
+  })
+}
+
+export function wrapContent(content, options = {}){
+  return makeEl({
+    content,
     ...options
   })
 }

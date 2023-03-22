@@ -5,6 +5,7 @@ import gold from '../assets/icons/gold.svg'
 import health from '../assets/icons/health.svg'
 import magicDef from '../assets/icons/magicDef.svg'
 import magicPower from '../assets/icons/magicPower.svg'
+import orbAdd from '../assets/icons/orbAdd.svg'
 import physDef from '../assets/icons/physDef.svg'
 import physPower from '../assets/icons/physPower.svg'
 
@@ -31,6 +32,7 @@ export const ICON_SVGS = {
   adventurerSlot,
   chest,
   gold,
+  orbAdd,
   physPower,
   physDef,
   magicPower,

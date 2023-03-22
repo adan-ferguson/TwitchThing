@@ -7,7 +7,7 @@ export function skillPointIcon(){
 }
 
 export function skillPointEntry(count){
-  return `<span class="skil-point-entry">${count}${skillPointIcon()}</span>`
+  return `<span class="skill-point-entry">${count}${skillPointIcon()}</span>`
 }
 
 export function coloredIcon(iconName, color, cls = null){

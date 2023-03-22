@@ -104,7 +104,7 @@ export default class Adventurer{
   }
 
   get unspentSkillPoints(){
-    const usedPoints = _.sum(unlockedSkillsArray(this.doc.unlockedSkills).map(skill => skill.skillPoints ?? 0))
+    const usedPoints = _.sum(Object.values(this.doc.unlockedSkills))
     return Math.max(0, Math.floor(this.level / 5) - usedPoints)
   }
 
@@ -112,14 +112,14 @@ export default class Adventurer{
    * @param skill {AdventurerSkill}
    */
   hasSkillUnlocked(skill){
-    return this.doc.unlockedSkills[skill.class]?.[skill.id] ? true : false
+    return this.doc.unlockedSkills[skill.id] ? true : false
   }
 
   /**
    * @param skill {AdventurerSkill}
    */
   canUnlockSkill(skill){
-    if(skill.skillPoints > this.unspentSkillPoints){
+    if(skill.level > this.unspentSkillPoints){
       return false
     }
     if(!this.canSeeSkill(skill)){
@@ -137,12 +137,10 @@ export default class Adventurer{
   }
 
   upgradeSkill(skill){
-    if(this.unspentSkillPoints < skill.baseSkillPoints){
-      throw 'Not enough skill points to unlock/upgrade skill.'
+    const currentLevel = this.doc.unlockedSkills[skill.id] ?? 0
+    if(this.unspentSkillPoints < currentLevel){
+      throw 'Not enough skill points'
     }
-    if(!this.doc.unlockedSkills[skill.class]){
-      this.doc.unlockedSkills[skill.class] = {}
-    }
-    this.doc.unlockedSkills[skill.class][skill.id] = (this.doc.unlockedSkills[skill.class][skill.id] ?? 0) + 1
+    this.doc.unlockedSkills[skill.id] = currentLevel + 1
   }
 }

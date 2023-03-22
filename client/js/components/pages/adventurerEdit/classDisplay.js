@@ -7,6 +7,7 @@ import { OrbsTooltip } from '../../orbRow.js'
 import SimpleModal from '../../simpleModal.js'
 import { makeEl, wrapContent } from '../../../../../game/utilFunctions.js'
 import SkillCard from '../../skillCard.js'
+import { ICON_SVGS } from '../../../assetLoader.js'
 
 const HTML = `
 <div class="unset">
@@ -15,14 +16,14 @@ const HTML = `
   <div class="class-info displaynone">
     <div class="class-name supertitle"></div>
     <div class="description"></div>
-    <button class="unlock">Unlock ${orbPointIcon()}</button>
+    <button class="unlock">Unlock ${ICON_SVGS.orbAdd}</button>
   </div>
 </div>
 <div class="set flex-rows">
   <div class="class-name supertitle"></div>
   <div class="orb-adder flex-columns">
     <di-orb-row></di-orb-row>
-    <button>${orbPointIcon()}<i class="fa-solid fa-plus"></i></button>
+    <button>${ICON_SVGS.orbAdd}</button>
   </div>
   <div class="skills-list"></div>
 </div>
@@ -115,6 +116,21 @@ export default class ClassDisplay extends DIElement{
         tooltip: OrbsTooltip.NONE
       })
     adder.querySelector('button').classList.toggle('displaynone', this._adventurer.unspentOrbs === 0)
+
+    const skills = getSkillsForClass(this.advClass, this._adventurer.doc.unlockedSkills)
+    const list = this.querySelector('.skills-list')
+    list.innerHTML = ''
+    for(let i = 0; i < 12; i++){
+      const skill = skills[i]
+      const row = new AdventurerSkillRow().setSkill(skills[i]).setOptions({
+        status: skillStatus(this._adventurer, skill),
+        clickable: true
+      })
+      row.addEventListener('click', () => {
+        this._showUnlockModal(skill)
+      })
+      list.appendChild(row)
+    }
   }
 
   _setClass(){
@@ -125,22 +141,6 @@ export default class ClassDisplay extends DIElement{
     const cdi = classDisplayInfo(this.advClass)
     this.style.color = cdi.color
     setEl.querySelector('.class-name').textContent = cdi.displayName
-
-    const skills = getSkillsForClass(this.advClass)
-    const list = setEl.querySelector('.skills-list')
-    for(let i = 0; i < 12; i++){
-      const skill = skills[i]
-      const row = new AdventurerSkillRow().setSkill(skills[i]).setOptions({
-        status: skillStatus(this._adventurer, skill),
-        showSkillPoints: true,
-        clickable: true
-      })
-      row.addEventListener('click', () => {
-        this._showUnlockModal(skill)
-      })
-      list.appendChild(row)
-    }
-
     this._classSet = true
   }
 
@@ -148,17 +148,19 @@ export default class ClassDisplay extends DIElement{
     const content = makeEl({
       class: 'skill-unlock-modal-content'
     })
-    if(skill.level > 1){
-      const skill = new AdventurerSkill(skill.id, skill.level - 1)
+    const isUpgrade = skill.level > 0
+    if(isUpgrade){
       content.appendChild(new SkillCard().setSkill(skill))
-      content.appendChild(wrapContent('<i class="fa-solid fa-arrow-right"></i>'))
+      content.appendChild(wrapContent('<i class="fa-solid fa-arrow-down"></i>'))
     }
-    content.appendChild(new SkillCard().setSkill(skill))
+    const nextSkill = new AdventurerSkill(skill.id, skill.level + 1)
+    content.appendChild(new SkillCard().setSkill(nextSkill))
     const buttons = [{
-      content: `Unlock ${skillPointEntry(skill.skillPoints)}`,
+      content: `${isUpgrade ? 'Upgrade' : 'Unlock'} ${skillPointEntry(skill.level + 1)}`,
       fn: () => {
         this.events.emit('spend skill points', skill)
-      }
+      },
+      disabled: !this._adventurer.canUnlockSkill(skill)
     }]
     new SimpleModal(content, buttons).show()
   }

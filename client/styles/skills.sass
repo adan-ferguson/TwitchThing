@@ -12,6 +12,9 @@ di-adventurer-skill-row
   &.blank .border
     border-style: dashed
 
+  .orb-icon
+    height: 1em
+
   .hit-area
     position: absolute
     top: -4rem
@@ -20,6 +23,7 @@ di-adventurer-skill-row
     right: 0
 
   .border
+    position: relative
     display: flex
     flex-direction: row
     align-items: center
@@ -36,6 +40,9 @@ di-adventurer-skill-row
     > *
       width: 100%
 
+  &.unlocked .border
+    border-width: 2rem
+
   .hidden-skill
     text-align: center
     svg
@@ -46,6 +53,15 @@ di-adventurer-skill-row
 
   > di-orb-row
     font-size: 0.9em
+
+  .class-identifier .orb-icon
+    position: absolute
+    top: 50%
+    right: 2rem
+    transform: translateY(-50%)
+    height: 90% !important
+    opacity: 1
+    fill: currentColor
 
 di-skill-card
   .skill-name
@@ -73,4 +89,3 @@ di-skill-card
   display: flex
   font-weight: bold
   padding: 3rem 6rem
-  align-items: center
