@@ -1,7 +1,7 @@
 di-adventurer-skill-row
 
   position: relative
-  color: #999
+  color: #222
 
   &.clickable
     cursor: pointer
@@ -9,7 +9,12 @@ di-adventurer-skill-row
       .border
         background-color: #dfeaff
 
+  &.locked .border
+    color: #999
+    border: 0.4rem solid #BBB
+
   &.blank .border
+    border-width: 0.5rem
     border-style: dashed
 
   .orb-icon
@@ -29,7 +34,7 @@ di-adventurer-skill-row
     align-items: center
     padding: 0 9rem
     height: 100%
-    border: 0.4rem solid currentColor
+    border: 1.8rem solid #666
     border-radius: 20rem
     background-color: white
 
@@ -39,9 +44,6 @@ di-adventurer-skill-row
 
     > *
       width: 100%
-
-  &.unlocked .border
-    border-width: 2rem
 
   .hidden-skill
     text-align: center
@@ -61,7 +63,6 @@ di-adventurer-skill-row
     transform: translateY(-50%)
     height: 90% !important
     opacity: 1
-    fill: currentColor
 
 di-skill-card
   .skill-name

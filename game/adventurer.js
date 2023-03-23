@@ -1,9 +1,7 @@
 import { geometricProgession, inverseGeometricProgression } from './growthFunctions.js'
 import { toNumberOfDigits } from './utilFunctions.js'
-import AdventurerItem from './adventurerItem.js'
-import AdventurerSkill from './skills/adventurerSkill.js'
 import _ from 'lodash'
-import { unlockedSkillsArray } from './skills/adventurerSkillFns.js'
+import AdventurerLoadout from './adventurerLoadout.js'
 
 const XP_BASE = 100
 const XP_GROWTH = 200
@@ -51,11 +49,7 @@ export default class Adventurer{
 
   constructor(adventurerDoc){
     this._doc = JSON.parse(JSON.stringify(adventurerDoc))
-    for(let i = 0; i < 8; i++){
-      const slot = adventurerDoc.slots[i]
-      this._items[i] = slot?.[i]?.item ? new AdventurerItem(slot[i].item) : null
-      this._skills[i] = slot?.[i]?.skill ? new AdventurerSkill(slot[i].skill) : null
-    }
+    this._loadout = new AdventurerLoadout(this)
   }
 
   get doc(){
@@ -82,13 +76,17 @@ export default class Adventurer{
     return adventurerLevelToPower(this.level)
   }
 
-  get items(){
-    return [...this._items]
+  get loadout(){
+    return this._loadout
   }
 
-  get skills(){
-    return [...this._skills]
-  }
+  // get items(){
+  //   return [...this._items]
+  // }
+  //
+  // get skills(){
+  //   return [...this._skills]
+  // }
 
   get baseStats(){
     return [

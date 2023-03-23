@@ -1,5 +1,4 @@
 import DIElement from '../../diElement.js'
-import Adventurer from '../../../../../game/adventurer.js'
 
 const HTML = `
 <div class="inset-title name"></div>
@@ -17,7 +16,7 @@ export default class AdventurerPane extends DIElement{
     this.statsListEl
       .setOptions({
         maxItems: 10,
-        forced: ['hpMax', 'physPower']
+        forced: ['hpMax', 'physPower', 'magicPower']
       })
     // TODO: click more stats
   }
@@ -26,12 +25,27 @@ export default class AdventurerPane extends DIElement{
     return this.querySelector('di-stats-list')
   }
 
+  get loadoutEl(){
+    return this.querySelector('di-adventurer-edit-loadout')
+  }
+
   setAdventurer(adventurer){
     this.adventurer = adventurer
     this.querySelector('.name').textContent = `${adventurer.level} - ${adventurer.name}`
-    // this.loadoutEl.setAdventurerInstance(this.adventurerInstance)
-    // this.update()
+    this.updateAll()
   }
+
+  updateAll(showStatChangeEffect = false){
+    this.loadoutEl.setLoadout(this.adventurer.loadout)
+    this._update(true)
+  }
+
+  _update(showStatChangeEffect = false){
+    // this.updateStats(showStatChangeEffect)
+    // this.updateOrbs()
+    // this.loadoutEl.update()
+  }
+
   //
   // setExtraStats(extraStats){
   //   this._extraStats = extraStats
@@ -41,13 +55,6 @@ export default class AdventurerPane extends DIElement{
   // updateItems(){
   //   this.adventurerPane.updateStats(true)
   //   this.adventurerPane.updateOrbs()
-  // }
-  //
-  // update(showStatChangeEffect = false){
-  //   this.adventurerInstance._itemInstances = this.loadoutEl.loadoutItems.map(loadoutItem => loadoutItem?.itemInstance)
-  //   this.updateStats(showStatChangeEffect)
-  //   this.updateOrbs()
-  //   this.loadoutEl.update()
   // }
   //
   // updateOrbs(){
@@ -90,23 +97,6 @@ export default class AdventurerPane extends DIElement{
   //   const modal = new Modal()
   //   modal.innerContent.appendChild(new AdventurerInfo(this.adventurerInstance, this.statsList.stats))
   //   modal.show()
-  // }
-  //
-  // _excluded(){
-  //   const excluded = []
-  //   const magicAttack = this.adventurerInstance.mods.contains(magicAttackMod)
-  //   const showPhys = this.adventurerInstance.mods.contains(physScalingMod) ||
-  //     this.adventurerInstance.physPower !== this.adventurerInstance.basePower
-  //   const showMagic = this.adventurerInstance.mods.contains(magicScalingMod) ||
-  //     this.adventurerInstance.magicPower !== this.adventurerInstance.basePower
-  //
-  //   if((showPhys || !magicAttack) && showMagic){
-  //     return [...excluded]
-  //   }else if(magicAttack && !showPhys){
-  //     return [...excluded, 'physPower']
-  //   }else{
-  //     return [...excluded, 'magicPower']
-  //   }
   // }
 }
 

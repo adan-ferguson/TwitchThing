@@ -7,7 +7,10 @@ const DEFAULTS = {
   level: 1,
   xp: 0,
   userID: null,
-  slots: [null, null, null, null, null, null, null, null],
+  loadout: {
+    items: [null, null, null, null, null, null, null, null],
+    skills: [null, null, null, null, null, null, null, null]
+  },
   orbs: {},
   unlockedSkills: {},
   dungeonRunID: null,

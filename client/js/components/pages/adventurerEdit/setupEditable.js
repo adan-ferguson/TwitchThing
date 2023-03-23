@@ -14,21 +14,20 @@ let initialPoint
  * - Item can be dragged within loadout to change the slot
  * - Item can be dragged from inventory to a specific loadout slot
  * - When loadout changes, it should update its header data (orbs)
- * @param inventoryEl {Inventory}
- * @param loadoutEl {Loadout}
+ * @param inventoryEl {List}
+ * @param loadoutEl {DIElement}
  * @param options {object}
  */
-export default function(inventoryEl, loadoutEl, options = {}){
+export default function(inventoryEl, loadoutEl, options){
 
   options = {
-    onChange: () => undefined,
+    suggestChange: null,
+    rowSelector: null,
     ...options
   }
 
   inventoryEl.classList.add('editable')
-  loadoutEl.setOptions({
-    editable: true
-  })
+  loadoutEl.classList.add('editable')
 
   inventoryEl.addEventListener('click', click)
   inventoryEl.addEventListener('pointerdown', pointerdown)
@@ -40,30 +39,34 @@ export default function(inventoryEl, loadoutEl, options = {}){
   loadoutEl.addEventListener('pointermove', pointermove)
   loadoutEl.addEventListener('pointerup', pointerup)
 
-  function click(e){
-    const row = e.target.closest('di-loadout-row')
-    if(!row?.loadoutItem || row.classList.contains('filtered')){
-      return
+  function isChangeable(row){
+    if(row.classList.contains('blank')){
+      return false
     }
-    if(dragStarted){
+    return true
+  }
+
+  function click(e){
+    const row = e.target.closest(options.rowSelector)
+    if(!isChangeable(row) || dragStarted){
       return
     }
     if(inventoryEl.contains(row)){
-      if(!loadoutEl.isFull){
-        inventoryEl.removeItem(row.loadoutItem)
-        loadoutEl.addItem(row.loadoutItem)
-        changed()
-      }
+      options.suggestChange({
+        type: 'add',
+        row
+      })
     }else{
-      inventoryEl.addItem(row.loadoutItem)
-      loadoutEl.setItem(row.index, null)
-      changed()
+      options.suggestChange({
+        type: 'remove',
+        row
+      })
     }
   }
 
   function pointerdown(e){
-    const row = e.target.closest('di-loadout-row')
-    if(!row?.loadoutItem || row.classList.contains('filtered')){
+    const row = e.target.closest(options.rowSelector)
+    if(!isChangeable(row) || row.classList.contains('filtered')){
       return
     }
     draggedElement = row
@@ -81,7 +84,7 @@ export default function(inventoryEl, loadoutEl, options = {}){
       reset()
       return
     }
-    const row = e.target.closest('di-loadout-row')
+    const row = e.target.closest(options.rowSelector)
     if(!draggedElement || draggedElement !== row){
       return
     }
@@ -108,25 +111,28 @@ export default function(inventoryEl, loadoutEl, options = {}){
   }
 
   function pointerup(e){
-    const row = e.target.closest('di-loadout-row')
+    const row = e.target.closest(options.rowSelector)
     if(draggedElement !== row || !dragStarted){
       return
     }
     if(hoveredElement){
       if(hoveredElement === inventoryEl){
-        inventoryEl.addItem(draggedElement.loadoutItem)
-        loadoutEl.setItem(draggedElement.index, null)
-        changed()
+        options.suggestChange({
+          type: 'remove',
+          row
+        })
       }else if(loadoutEl.contains(draggedElement)){
-        loadoutEl.swap(draggedElement.index, hoveredElement.index)
-        changed()
+        options.suggestChange({
+          type: 'swap',
+          row,
+          row2: hoveredElement
+        })
       }else{
-        inventoryEl.removeItem(draggedElement.loadoutItem)
-        if(hoveredElement.loadoutItem){
-          inventoryEl.addItem(hoveredElement.loadoutItem)
-        }
-        loadoutEl.setItem(hoveredElement.index, draggedElement.loadoutItem)
-        changed()
+        options.suggestChange({
+          type: 'add',
+          row,
+          row2: hoveredElement
+        })
       }
     }
     reset()
@@ -138,7 +144,7 @@ export default function(inventoryEl, loadoutEl, options = {}){
       inventoryEl.classList.add('hoverable')
     }
 
-    loadoutEl.querySelectorAll('di-loadout-row, .blank-row').forEach(row => row.classList.add('hoverable'))
+    [...loadoutEl.children].forEach(row => row.classList.add('hoverable'))
     draggedElement.classList.remove('hoverable')
 
     hoverables = []
@@ -149,10 +155,6 @@ export default function(inventoryEl, loadoutEl, options = {}){
 
   function getHoverableUnderPoint(point){
     return hoverables.find(hoverable => contains(hoverable.rect, point))?.el
-  }
-
-  function changed(){
-    options.onChange()
   }
 }
 

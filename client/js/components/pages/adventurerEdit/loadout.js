@@ -1,13 +1,12 @@
 import FighterItemLoadoutItem from '../../../fighterItemLoadoutItem.js'
-import { makeEl } from '../../../../../game/utilFunctions.js'
+import AdventurerItemRow from '../../adventurer/adventurerItemRow.js'
+import AdventurerSkillRow from '../../adventurer/adventurerSkillRow.js'
 
 const HTML = `
-<di-orb-row></di-orb-row>
-`
-
-const SLOT_HTML = `
-<di-adventurer-item-row></di-adventurer-item-row>
-<di-adventurer-skill-row></di-adventurer-skill-row>
+<div class="adv-items slots">
+</div>
+<div class="adv-skills slots">
+</div>
 `
 
 export default class Loadout extends HTMLElement{
@@ -21,14 +20,32 @@ export default class Loadout extends HTMLElement{
   constructor(){
     super()
     this.innerHTML = HTML
-    this.classList.add('fill-contents', 'flex-rows')
+    this.classList.add('fill-contents', 'flex-columns')
     for(let i = 0; i < 8; i++){
-      this.appendChild(makeEl({
-        class: 'loadout-slot',
-        content: SLOT_HTML
-      }))
+      const itemRow = new AdventurerItemRow()
+      itemRow.setAttribute('slot-index', i)
+      this.itemSlots.appendChild(itemRow)
+      const skillRow = new AdventurerSkillRow()
+      skillRow.setAttribute('slot-index', i)
+      this.skillSlots.appendChild(skillRow)
     }
   }
+
+  get itemSlots(){
+    return this.querySelector('.adv-items')
+  }
+
+  get skillSlots(){
+    return this.querySelector('.adv-skills')
+  }
+
+  setLoadout(loadoutObj){
+    // this.itemSlots
+    this.skillSlots.querySelectorAll('di-adventurer-skill-row').forEach((row, i) => {
+      row.setSkill(loadoutObj.skills[i])
+    })
+  }
+
 
   get loadoutItems(){
     return this._rows.map(row => row.loadoutItem)

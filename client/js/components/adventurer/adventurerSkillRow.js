@@ -30,10 +30,15 @@ export default class AdventurerSkillRow extends DIElement{
   constructor(){
     super()
     this.innerHTML = HTML
+    this._update()
   }
 
   get skill(){
     return this._skill
+  }
+
+  set skill(adventurerSkill){
+    this.setSkill(adventurerSkill)
   }
 
   get contentEl(){
@@ -59,9 +64,8 @@ export default class AdventurerSkillRow extends DIElement{
     const skill = this.skill
     this.classList.toggle('blank', skill ? false : true)
     this.classList.toggle('clickable', false)
-    this.classList.toggle('unlocked', this._options.status === AdventurerSkillRowStatus.UNLOCKED)
+    this.classList.toggle('locked', this._options.status !== AdventurerSkillRowStatus.UNLOCKED)
 
-    this.style.color = null
     if(!skill){
       return
     }
@@ -75,10 +79,6 @@ export default class AdventurerSkillRow extends DIElement{
     const icon = info.icon
     this.contentEl.innerHTML = SKILL_HTML(skill.displayName, icon)
     this.classList.toggle('clickable', this._options.clickable)
-    if(this._options.status === AdventurerSkillRowStatus.UNLOCKED){
-      const cdi = classDisplayInfo(skill.class)
-      this.style.color = cdi.color
-    }
   }
 }
 

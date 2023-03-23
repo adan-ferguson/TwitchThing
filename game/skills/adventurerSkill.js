@@ -45,7 +45,7 @@ export default class AdventurerSkill{
   }
 
   get index(){
-    return this.id.match(/(\d+)$/)[1]
+    return parseInt(this.id.match(/(\d+)$/)[1])
   }
 
   get requiredOrbs(){

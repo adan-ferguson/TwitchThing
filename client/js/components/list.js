@@ -130,14 +130,14 @@ export default class List extends DIElement{
 
   setRows(rows){
     this._rowsCache = rows.slice()
-    this._fullUpdate()
+    this.fullUpdate()
     return this
   }
 
   addRow(row){
     // TODO: binary search here
     this._rowsCache.push(row)
-    this._fullUpdate()
+    this.fullUpdate()
   }
 
   removeRow(row){
@@ -168,19 +168,20 @@ export default class List extends DIElement{
     this.page = Math.ceil((index + 1) / this._pageSize)
   }
 
-  _fullUpdate(){
+  fullUpdate(){
     const filtered = (!this._options.showFiltered && this._options.filterFn) ?
       this._rowsCache.filter(this._options.filterFn) : [...this._rowsCache]
     this._sortedRows = this._options.sortFn ? filtered.sort((a, b) => {
-      if(this._options.showFiltered && this._options.filterFn){
-        const aFiltered = this._options.filterFn(a)
-        const bFiltered = this._options.filterFn(b)
-        if(aFiltered && !bFiltered){
-          return -1
-        }else if(bFiltered && !aFiltered){
-          return 1
-        }
-      }
+      // TODO: do this some other way
+      // if(this._options.showFiltered && this._options.filterFn){
+      //   const aFiltered = this._options.filterFn(a)
+      //   const bFiltered = this._options.filterFn(b)
+      //   if(aFiltered && !bFiltered){
+      //     return -1
+      //   }else if(bFiltered && !aFiltered){
+      //     return 1
+      //   }
+      // }
       return this._options.sortFn(a, b)
     }) : filtered
     this._update()

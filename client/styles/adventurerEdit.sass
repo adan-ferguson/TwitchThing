@@ -15,17 +15,17 @@ di-adventurer-edit-page
 
     di-adventurer-edit-loadout
       flex: 0 0 320rem !important
+      padding: 12rem
+      gap: 5rem
 
-      .loadout-slot
+      .slots
         display: flex
-        flex-direction: row
-        padding: 0 5rem 7rem
+        flex-direction: column
+        gap: 8rem
+        flex-basis: 50%
 
-        di-adventurer-item-row
-          margin-right: -10rem
-
-        di-adventurer-item-row, di-adventurer-skill-row
-          flex-grow: 1
+        > *
+          flex-basis: 12.5%
 
 .loadout-row-tooltip
 
@@ -211,21 +211,23 @@ di-inventory
     border: none
 
 .editable
-  di-loadout-row
+  di-adventurer-skill-row
     .cooldown
       background-color: transparent
-    &:not(.blank-row, .filtered)
+    &:not(.blank, .filtered)
       cursor: pointer
-      &:hover
+      &:hover .border
         background-color: #e9ffdf
     &.filtered
       opacity: 0.4
 
-  .hoverable, &.hoverable
-    background-color: #f8f8ff
-
-  .hovered, &.hovered
-    background-color: #e1e7fa
+    &.hoverable .border
+      background-color: #f8f8ff
+    &.hovered .border
+      background-color: #e1e7fa
 
 .popped-out
   position: absolute
+
+di-adventurer-edit-skills
+  padding-top: 8rem
