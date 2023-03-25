@@ -33,4 +33,8 @@ export default class AdventurerLoadout{
   setSkill(skill, slotIndex){
     this._skills[slotIndex] = skill
   }
+
+  setItem(item, slotIndex){
+    this._items[slotIndex] = item
+  }
 }

@@ -40,7 +40,9 @@ export default class Loadout extends HTMLElement{
   }
 
   setLoadout(loadoutObj){
-    // this.itemSlots
+    this.itemSlots.querySelectorAll('di-adventurer-item-row').forEach((row, i) => {
+      row.setItem(loadoutObj.items[i])
+    })
     this.skillSlots.querySelectorAll('di-adventurer-skill-row').forEach((row, i) => {
       row.setSkill(loadoutObj.skills[i])
     })

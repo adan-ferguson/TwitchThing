@@ -136,7 +136,7 @@ export function removeInventoryItem(list, loadoutItem, all = false){
   }
 }
 
-export function makeAdventurerItemRow(itemDef, count = null){
+export function makeAdventurerItemRow(itemDef, count = 1){
   const item = itemDef instanceof AdventurerItem ? itemDef : new AdventurerItem(itemDef)
   const row = new AdventurerItemRow().setItem(item).setCount(count)
   return row

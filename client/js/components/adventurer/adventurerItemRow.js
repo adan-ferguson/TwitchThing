@@ -17,6 +17,7 @@ const HTML = `
 export default class AdventurerItemRow extends DIElement{
 
   _item
+  _count = 1
 
   constructor(){
     super()
@@ -44,6 +45,15 @@ export default class AdventurerItemRow extends DIElement{
     return this._item
   }
 
+  get count(){
+    return this._count
+  }
+
+  set count(val){
+    console.log(val)
+    this._count = val
+  }
+
   setItem(adventurerItem){
     this._item = adventurerItem
     if(!adventurerItem){
@@ -60,6 +70,7 @@ export default class AdventurerItemRow extends DIElement{
   setCount(count){
     this.countEl.classList.toggle('displaynone', count >= 2 ? false : true)
     this.countEl.textContent = 'x' + count
+    this.count = count
     return this
   }
 

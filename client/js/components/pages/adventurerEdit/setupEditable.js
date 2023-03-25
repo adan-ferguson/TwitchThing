@@ -40,7 +40,7 @@ export default function(inventoryEl, loadoutEl, options){
   loadoutEl.addEventListener('pointerup', pointerup)
 
   function isChangeable(row){
-    if(row.classList.contains('blank') || row.classList.contains('filtered')){
+    if(!row || row.classList.contains('blank') || row.classList.contains('filtered')){
       return false
     }
     return true
