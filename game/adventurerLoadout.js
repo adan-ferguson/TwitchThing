@@ -22,6 +22,10 @@ export default class AdventurerLoadout{
     return [...this._items]
   }
 
+  canItemFillSlot(item){
+    return true //TODO: slot restrictions
+  }
+
   canSkillFillSlot(skill){
     return true // TODO: slot restrictions
   }

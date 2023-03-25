@@ -1,40 +1,21 @@
 di-adventurer-item-row
 
-  position: relative
-
-  &.blank .border
-    border-style: dashed
-
-  .hit-area
-    position: absolute
-    top: -4rem
-    bottom: -4rem
-    left: 0
-    right: 0
-
-  .border
-    display: flex
-    flex-direction: row
-    justify-content: space-between
-    align-items: center
-    padding: 0 2rem
-    height: 100%
-    border: 0.5rem solid #BBB
-
-  > div:first-child
-    padding-left: 6rem
-
   .count-tab
     border: 0.5rem solid #BBB
-    padding: 2rem 5rem
+    padding: 3rem 3rem
     margin-right: 6rem
     color: black
+    font-size: 0.9em
 
   .name
     color: black
 
-  > di-orb-row
+  di-orb-row
     font-size: 0.9em
+
+  .border
+    justify-content: space-between
+    padding: 0 2rem !important
 
 di-list.clickable-rows di-loadout-row
   cursor: pointer

@@ -11,7 +11,7 @@ const HTML = `
     <div class="hinter edit-hinter">
       <i class="fa-solid fa-arrows-left-right"></i>
     </div>
-    <div class="content-rows" style="flex-grow:1.9">
+    <div class="content-rows" style="flex-grow:2">
       <div class="content-well">
         <di-adventurer-edit-adventurer-pane></di-adventurer-edit-adventurer-pane>
       </div>
@@ -56,19 +56,8 @@ export default class LoadoutTab extends DIElement{
     this.inventoryEl.setup(items, adventurer)
     this.adventurerPaneEl.setAdventurer(adventurer)
     this.skillsEl.setup(adventurer)
+    this._setupItemEdit(adventurer)
     this._setupSkillEdit(adventurer)
-
-    // setupEditable(this.inventory, this.adventurerPaneEl.loadoutEl, {
-    //   onChange: () => {
-    //     this.adventurerPaneEl.update(true)
-    //     this._updateSaveButton()
-    //   }
-    // })
-
-    // TODO: skills
-    // setupEditable(){
-    //
-    // }
 
     this.saveButton.addEventListener('click', async (e) => {
       if(!this.adventurerPaneEl.loadoutEl.hasChanges){
@@ -98,11 +87,53 @@ export default class LoadoutTab extends DIElement{
   }
 
   _updateSaveButton(){
-    const orbs = this.adventurerPaneEl.adventurerInstance.orbs
-    if(orbs.isValid && !this._saving){
-      this.saveButton.removeAttribute('disabled')
-    }else{
-      this.saveButton.setAttribute('disabled', 'disabled')
+    // const orbs = this.adventurerPaneEl.adventurerInstance.orbs
+    // if(orbs.isValid && !this._saving){
+    //   this.saveButton.removeAttribute('disabled')
+    // }else{
+    //   this.saveButton.setAttribute('disabled', 'disabled')
+    // }
+  }
+
+  _setupItemEdit(adventurer){
+
+    setupEditable(this.inventoryEl.listEl, this.adventurerPaneEl.querySelector('.adv-items'), {
+      rowSelector: 'di-adventurer-item-row',
+      suggestChange: change => {
+        const loadout = adventurer.loadout
+        if(change.type === 'add'){
+          const item = change.row.item
+          const slot = change.row2 ?
+            slotIndex(change.row2) :
+            getNextSlotIndex(loadout, item)
+          if(slot === -1){
+            return
+          }
+          this.inventoryEl.removeItem(item)
+          loadout.setItem(item, slot)
+        }else if(change.type === 'remove'){
+          this.inventoryEl.addItem(change.row.item)
+          loadout.setItem(null, slotIndex(change.row))
+        }else if(change.type === 'swap'){
+          loadout.setItem(change.row.item, slotIndex(change.row2))
+          loadout.setItem(change.row2.item, slotIndex(change.row))
+        }
+        this.adventurerPaneEl.updateAll(true)
+        this._updateSaveButton()
+      }
+    })
+
+    function getNextSlotIndex(loadout, item){
+      for(let i = 0; i < 8; i++){
+        if(!loadout.items[i] && loadout.canItemFillSlot(i, item)){
+          return i
+        }
+      }
+      return -1
+    }
+
+    function slotIndex(row){
+      return parseInt(row.getAttribute('slot-index'))
     }
   }
 
@@ -129,12 +160,13 @@ export default class LoadoutTab extends DIElement{
         }
         this.adventurerPaneEl.updateAll(true)
         this.skillsEl.listEl.fullUpdate()
+        this._updateSaveButton()
       }
     })
 
     function getNextSlotIndex(loadout, skill){
       for(let i = 0; i < 8; i++){
-        if(loadout.canSkillFillSlot(i, skill)){
+        if(!loadout.skills[i] && loadout.canSkillFillSlot(i, skill)){
           return i
         }
       }

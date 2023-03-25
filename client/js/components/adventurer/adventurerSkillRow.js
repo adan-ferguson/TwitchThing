@@ -70,7 +70,7 @@ export default class AdventurerSkillRow extends DIElement{
       return
     }
 
-    const info = classDisplayInfo(skill.class)
+    const info = classDisplayInfo(skill.advClass)
     if(this._options.status === AdventurerSkillRowStatus.HIDDEN){
       this.contentEl.innerHTML = HIDDEN_HTML(skill.requiredOrbs, info.icon)
       return

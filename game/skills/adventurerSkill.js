@@ -7,7 +7,7 @@ export function getSkillsForClass(className, levels){
 
 export default class AdventurerSkill{
 
-  _skill
+  _data
 
   constructor(skillId, level = 1){
     const baseSkill = all[skillId]
@@ -20,11 +20,11 @@ export default class AdventurerSkill{
     this._level = level
     this._id = skillId
     this._class = baseSkill.group
-    this._skill = baseSkill.levelFn(level)
+    this._data = baseSkill.levelFn(level)
   }
 
   get data(){
-    return this._skill
+    return this._data
   }
 
   get level(){
@@ -33,10 +33,10 @@ export default class AdventurerSkill{
 
   get displayName(){
     let txt = this.level > 1 ? `L${this.level} ` : ''
-    return txt + this._skill.displayName
+    return txt + this._data.displayName
   }
 
-  get class(){
+  get advClass(){
     return this._class
   }
 

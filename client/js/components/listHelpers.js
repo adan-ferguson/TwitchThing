@@ -22,13 +22,11 @@ export function adventurerItemsToRows(items){
 
 export function inventoryItemsToRows(items){
   const rows = []
-  Object.keys(items.basic).forEach(group => {
-    Object.keys(items.basic[group]).forEach(name => {
-      const row = makeAdventurerItemRow({ group, name }, items.basic[group][name])
-      if(row){
-        rows.push(row)
-      }
-    })
+  Object.keys(items.basic).forEach(itemId => {
+    const row = makeAdventurerItemRow(itemId, items.basic[itemId])
+    if(row){
+      rows.push(row)
+    }
   })
   Object.values(items.crafted).forEach(itemDef => {
     const row = makeAdventurerItemRow(itemDef)
@@ -67,14 +65,14 @@ export function rowsToInventoryItems(rows){
 
 export function standardItemSort(rowA, rowB){
 
-  if(rowA.loadoutItem.isBasic && !rowB.loadoutItem.isBasic){
+  if(rowA.item.isBasic && !rowB.item.isBasic){
     return 1
-  }else if(!rowA.loadoutItem.isBasic && rowB.loadoutItem.isBasic){
+  }else if(!rowA.item.isBasic && rowB.item.isBasic){
     return -1
   }
 
-  const orbsA = rowA.loadoutItem.orbs._maxOrbs
-  const orbsB = rowB.loadoutItem.orbs._maxOrbs
+  const orbsA = rowA.item.orbs._usedOrbs
+  const orbsB = rowB.item.orbs._usedOrbs
 
   const classesA = Object.keys(orbsA)
   const classesB = Object.keys(orbsB)
@@ -103,7 +101,7 @@ export function standardItemSort(rowA, rowB){
     return -1
   }
 
-  return rowA.loadoutItem.displayName - rowB.loadoutItem.displayName
+  return rowA.item.displayName - rowB.item.displayName
 }
 
 export function addInventoryItem(list, loadoutItem, count = 1){
@@ -140,12 +138,6 @@ export function removeInventoryItem(list, loadoutItem, all = false){
 
 export function makeAdventurerItemRow(itemDef, count = null){
   const item = itemDef instanceof AdventurerItem ? itemDef : new AdventurerItem(itemDef)
-  if(!item.isValid){
-    return null
-  }
-  const row = new AdventurerItemRow().setItem(item)
-  if(count !== null){
-    row.setCount(count)
-  }
+  const row = new AdventurerItemRow().setItem(item).setCount(count)
   return row
 }

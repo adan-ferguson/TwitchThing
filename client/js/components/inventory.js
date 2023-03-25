@@ -1,6 +1,7 @@
 import { mergeOptionsObjects } from '../../../game/utilFunctions.js'
 import DIElement from './diElement.js'
 import { inventoryItemsToRows, makeAdventurerItemRow, standardItemSort } from './listHelpers.js'
+import AdventurerItemRow from './adventurer/adventurerItemRow.js'
 
 const HTML = `
 <div class="content-rows">
@@ -22,7 +23,8 @@ export default class Inventory extends DIElement{
     super()
     this.innerHTML = HTML
     this.listEl.setOptions({
-      pageSize: 15
+      pageSize: 15,
+      blankFn: () => new AdventurerItemRow()
     })
   }
 
@@ -34,7 +36,8 @@ export default class Inventory extends DIElement{
   }
 
   filterFn = row => {
-    return row.item.classes.every(cls => this.adventurer.orbs[cls])
+    return row.item && this.adventurer.orbs[row.item.advClass]
+    // return row.item?.classes.every(cls => this.adventurer.orbs[cls]) ?? false
   }
 
   setup(items, adventurer){
@@ -60,7 +63,7 @@ export default class Inventory extends DIElement{
   }
 
   removeItem(item){
-    const row = this.listEl.findRow(row => row.loadoutItem === item)
+    const row = this.listEl.findRow(row => row.item === item)
     if(!row){
       return
     }
@@ -101,7 +104,7 @@ export default class Inventory extends DIElement{
     this.listEl.setOptions({
       sortFn: standardItemSort,
       filterFn: this.filterFn,
-      showFiltered: !this._filterSortOptions.hideOther
+      showFiltered: true //!this._filterSortOptions.hideOther
     })
   }
 }

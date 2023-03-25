@@ -1,5 +1,4 @@
-di-adventurer-skill-row
-
+di-adventurer-skill-row, di-adventurer-item-row
   position: relative
   color: #222
 
@@ -17,9 +16,6 @@ di-adventurer-skill-row
     border-width: 0.5rem
     border-style: dashed
 
-  .orb-icon
-    height: 1em
-
   .hit-area
     position: absolute
     top: -4rem
@@ -34,9 +30,15 @@ di-adventurer-skill-row
     align-items: center
     padding: 0 9rem
     height: 100%
-    border: 1.8rem solid #666
-    border-radius: 20rem
+    border: 1.2rem solid #666
+
     background-color: white
+    box-sizing: border-box
+
+di-adventurer-skill-row
+
+  .border
+    border-radius: 20rem
 
     i.skill-point
       vertical-align: middle
@@ -52,9 +54,6 @@ di-adventurer-skill-row
 
   .name
     color: black
-
-  > di-orb-row
-    font-size: 0.9em
 
   .class-identifier .orb-icon
     position: absolute

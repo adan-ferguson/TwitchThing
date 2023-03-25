@@ -1,56 +1,47 @@
-import Items from './items/combined.js'
+import { all } from './items/combined.js'
 import OrbsData from './orbsData.js'
+import _ from 'lodash'
 
 export default class AdventurerItem{
 
   _itemDef
   _data
+  _baseItemId
+  _advClass
 
   constructor(itemDef){
-    this._itemDef = itemDef
-    if(Items[itemDef.group]?.[itemDef.name]){
-      this._basicItem()
-    }else if(itemDef._id){
-      this._craftedItem()
+    if(_.isString(itemDef)){
+      this._basicItem(itemDef)
+    }else{
+      this._craftedItem(itemDef)
     }
   }
 
-  get isValid(){
-    if(!this._data){
-      return false
-    }
-    return this.displayName ? true : false
+  get data(){
+    return this._data
   }
 
   get displayName(){
     return this._data.displayName ?? ''
   }
 
-  get effectData(){
-    return this._data.effect ?? {}
-  }
-
   get isBasic(){
-    return this._itemDef.id ? false : true
+    return true // this._itemDef.id ? false : true
   }
 
-  get id(){
-    return this._itemDef.name
+  get advClass(){
+    return this._advClass
   }
 
-  get group(){
-    return this._itemDef.group
-  }
-
-  get classes(){
-    return [this.group] // this.orbs.classes
+  get baseItemId(){
+    return this._baseItemId
   }
 
   /**
    * @returns {OrbsData}
    */
   get orbs(){
-    return new OrbsData({ [this.group] : this._data.orbs })
+    return new OrbsData({ [this.advClass] : this._data.orbs })
     // let baseOrbs
     // if(_.isObject(this.itemData.orbs)){
     //   baseOrbs = this.itemData.orbs
@@ -64,16 +55,20 @@ export default class AdventurerItem{
   }
 
   sameItem(adventurerItem){
-    return this.isBasic && adventurerItem.isBasic && this.id === adventurerItem.id
+    return this.isBasic && adventurerItem.isBasic && this.baseItemId === adventurerItem.baseItemId
   }
 
-  _basicItem(){
-    const baseItem = Items[this._itemDef.group][this._itemDef.name]
-    this._data = {
-      ...baseItem,
-      ...baseItem.levelFn(1)
+  _basicItem(baseItemId){
+    const baseItem = all[baseItemId]
+    if(!baseItem){
+      throw 'Invalid baseItemId: ' + baseItemId
     }
-    delete this._data.levelFn
+    if(!baseItem.levelFn){
+      throw 'Item is missing its levelFn: ' + baseItemId
+    }
+    this._baseItemId = baseItemId
+    this._advClass = baseItem.group
+    this._data = baseItem.levelFn(1)
   }
 
   _craftedItem(){

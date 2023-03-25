@@ -58,8 +58,9 @@ export default class AdventurerItemRow extends DIElement{
   }
 
   setCount(count){
-    this.countEl.classList.toggle('displaynone', count >= 1 ? false : true)
+    this.countEl.classList.toggle('displaynone', count >= 2 ? false : true)
     this.countEl.textContent = 'x' + count
+    return this
   }
 
   _blank(){

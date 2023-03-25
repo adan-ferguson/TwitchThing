@@ -131,7 +131,7 @@ export default class Adventurer{
    * @param skill
    */
   canSeeSkill(skill){
-    return this.orbs[skill.class] >= skill.requiredOrbs
+    return this.orbs[skill.advClass] >= skill.requiredOrbs
   }
 
   upgradeSkill(skill){

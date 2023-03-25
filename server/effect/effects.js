@@ -1,0 +1,1 @@
+export const ADVENTURER_EFFECT_VALIDATION = {}

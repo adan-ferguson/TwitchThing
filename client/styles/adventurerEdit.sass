@@ -211,11 +211,13 @@ di-inventory
     border: none
 
 .editable
-  di-adventurer-skill-row
+  di-adventurer-skill-row, di-adventurer-item-row
     .cooldown
       background-color: transparent
     &:not(.blank, .filtered)
       cursor: pointer
+      .border
+        filter: drop-shadow(1.75rem 1.75rem 0.75rem #ccc)
       &:hover .border
         background-color: #e9ffdf
     &.filtered

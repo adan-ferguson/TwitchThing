@@ -1,6 +1,6 @@
-import { all }  from '../../game/skills/combined.js'
-import AdventurerSkill from '../../game/skills/adventurerSkill.js'
+import { all } from '../../game/items/combined.js'
 import { validateObject } from '../validations.js'
+import AdventurerItem from '../../game/adventurerItem.js'
 import { ADVENTURER_EFFECT_VALIDATION } from '../effect/effects.js'
 
 const LOADOUT_MODIFIER_VALIDATION = {
@@ -9,23 +9,24 @@ const LOADOUT_MODIFIER_VALIDATION = {
   restriction: { type: ['empty'] }
 }
 
-const SKILL_VALIDATION = {
+const ITEM_VALIDATION = {
   displayName: { required: true, type: 'string' },
+  orbs: { required: true, type: 'integer' },
   loadoutModifiers: { arrayOf: LOADOUT_MODIFIER_VALIDATION },
   vals: { type: 'object' },
   effect: { type: ADVENTURER_EFFECT_VALIDATION }
 }
 
-export function validateAllSkills(){
+export function validateAllItems(){
   for(let id in all){
     try {
-      validateSkill(id)
+      validateItem(id)
     }catch(ex){
       throw `Skill "${id}" failed validation: ` + ex
     }
   }
 }
 
-function validateSkill(id){
-  validateObject(new AdventurerSkill(id).data, SKILL_VALIDATION)
+function validateItem(baseItemId){
+  validateObject(new AdventurerItem(baseItemId).data, ITEM_VALIDATION)
 }
