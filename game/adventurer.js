@@ -2,6 +2,8 @@ import { geometricProgession, inverseGeometricProgression } from './growthFuncti
 import { toNumberOfDigits } from './utilFunctions.js'
 import _ from 'lodash'
 import AdventurerLoadout from './adventurerLoadout.js'
+import AdventurerSkill from './skills/adventurerSkill.js'
+import OrbsData from './orbsData.js'
 
 const XP_BASE = 100
 const XP_GROWTH = 200
@@ -44,8 +46,6 @@ export function adventurerLevelToPower(lvl){
 export default class Adventurer{
 
   _doc
-  _items = []
-  _skills = []
 
   constructor(adventurerDoc){
     this._doc = JSON.parse(JSON.stringify(adventurerDoc))
@@ -57,7 +57,7 @@ export default class Adventurer{
   }
 
   get orbs(){
-    return this.doc.orbs
+    return new OrbsData(this.loadout.usedOrbs, this.doc.orbs)
   }
 
   get name(){
@@ -102,7 +102,11 @@ export default class Adventurer{
   }
 
   get unspentSkillPoints(){
-    const usedPoints = _.sum(Object.values(this.doc.unlockedSkills))
+    let usedPoints = 0
+    Object.keys(this.doc.unlockedSkills).forEach(skillId => {
+      const skill = new AdventurerSkill(skillId, this.doc.unlockedSkills[skillId])
+      usedPoints += skill.skillPointsCumulative
+    })
     return Math.max(0, Math.floor(this.level / 5) - usedPoints)
   }
 
@@ -116,8 +120,11 @@ export default class Adventurer{
   /**
    * @param skill {AdventurerSkill}
    */
-  canUnlockSkill(skill){
-    if(skill.level > this.unspentSkillPoints){
+  canUpgradeSkill(skill){
+    if(skill.isMaxLevel){
+      return false
+    }
+    if(this.unspentSkillPoints < skill.skillPointsToUpgrade){
       return false
     }
     if(!this.canSeeSkill(skill)){
@@ -135,10 +142,10 @@ export default class Adventurer{
   }
 
   upgradeSkill(skill){
-    const currentLevel = this.doc.unlockedSkills[skill.id] ?? 0
-    if(this.unspentSkillPoints < currentLevel){
-      throw 'Not enough skill points'
+    if(!this.canUpgradeSkill(skill)){
+      throw 'Can not upgrade skill'
     }
+    const currentLevel = this.doc.unlockedSkills[skill.id] ?? 0
     this.doc.unlockedSkills[skill.id] = currentLevel + 1
   }
 }

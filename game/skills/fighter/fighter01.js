@@ -3,5 +3,6 @@ export default {
     return {
       displayName: 'Slash'
     }
-  }
+  },
+  skillPoints: [1,1]
 }

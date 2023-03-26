@@ -10,12 +10,17 @@ di-adventurer-edit-page
     margin-right: 10rem !important
 
   di-adventurer-edit-adventurer-pane
-    .adventurer-stats
-      padding: 15rem 30rem
+
+    .standard-contents
+      padding: 20rem 8rem 8rem
+
+    .adventurer-orbs
+      width: 50%
+      margin-bottom: 5rem
+      flex: 0 0 0 !important
 
     di-adventurer-edit-loadout
       flex: 0 0 320rem !important
-      padding: 12rem
       gap: 5rem
 
       .slots
@@ -222,11 +227,15 @@ di-inventory
         background-color: #e9ffdf
     &.filtered
       opacity: 0.4
-
     &.hoverable .border
       background-color: #f8f8ff
     &.hovered .border
       background-color: #e1e7fa
+
+  &.hoverable .border
+    background-color: #f8f8ff
+  &.hovered .border
+    background-color: #e1e7fa
 
 .popped-out
   position: absolute

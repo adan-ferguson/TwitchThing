@@ -118,7 +118,7 @@ export default class LoadoutTab extends DIElement{
           loadout.setItem(change.row.item, slotIndex(change.row2))
           loadout.setItem(change.row2.item, slotIndex(change.row))
         }
-        this.adventurerPaneEl.updateAll(true)
+        this.adventurerPaneEl.update(true)
         this._updateSaveButton()
       }
     })
@@ -158,7 +158,7 @@ export default class LoadoutTab extends DIElement{
           loadout.setSkill(change.row.skill, slotIndex(change.row2))
           loadout.setSkill(change.row2.skill, slotIndex(change.row))
         }
-        this.adventurerPaneEl.updateAll(true)
+        this.adventurerPaneEl.update(true)
         this.skillsEl.listEl.fullUpdate()
         this._updateSaveButton()
       }

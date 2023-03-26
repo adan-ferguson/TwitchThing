@@ -5,13 +5,11 @@ import { ADVENTURER_EFFECT_VALIDATION } from '../effect/effects.js'
 
 const LOADOUT_MODIFIER_VALIDATION = {
   slot: { required: true, type: ['attached'] },
-  orbs: { type: 'integer' },
   restriction: { type: ['empty'] }
 }
 
 const ITEM_VALIDATION = {
   displayName: { required: true, type: 'string' },
-  orbs: { required: true, type: 'integer' },
   loadoutModifiers: { arrayOf: LOADOUT_MODIFIER_VALIDATION },
   vals: { type: 'object' },
   effect: { type: ADVENTURER_EFFECT_VALIDATION }

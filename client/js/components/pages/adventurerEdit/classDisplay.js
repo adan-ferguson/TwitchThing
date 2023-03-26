@@ -148,19 +148,30 @@ export default class ClassDisplay extends DIElement{
     const content = makeEl({
       class: 'skill-unlock-modal-content'
     })
-    const isUpgrade = skill.level > 0
-    if(isUpgrade){
+
+    let buttonHTML
+    if(skill.isMaxLevel){
       content.appendChild(new SkillCard().setSkill(skill))
-      content.appendChild(wrapContent('<i class="fa-solid fa-arrow-down"></i>'))
+      buttonHTML = 'Max Level'
+    }else{
+      const isUpgrade = skill.level > 0
+      if(isUpgrade){
+        buttonHTML = 'Upgrade'
+        content.appendChild(new SkillCard().setSkill(skill))
+        content.appendChild(wrapContent('<i class="fa-solid fa-arrow-down"></i>'))
+      }else{
+        buttonHTML = 'Unlock'
+      }
+      buttonHTML += ' ' + skillPointEntry(skill.skillPointsToUpgrade)
     }
     const nextSkill = new AdventurerSkill(skill.id, skill.level + 1)
     content.appendChild(new SkillCard().setSkill(nextSkill))
     const buttons = [{
-      content: `${isUpgrade ? 'Upgrade' : 'Unlock'} ${skillPointEntry(skill.level + 1)}`,
+      content: buttonHTML,
       fn: () => {
         this.events.emit('spend skill points', skill)
       },
-      disabled: !this._adventurer.canUnlockSkill(skill)
+      disabled: !this._adventurer.canUpgradeSkill(skill)
     }]
     new SimpleModal(content, buttons).show()
   }

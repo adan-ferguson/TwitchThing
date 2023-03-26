@@ -1,9 +1,11 @@
 import DIElement from '../../diElement.js'
+import { OrbsDisplayStyle } from '../../orbRow.js'
 
 const HTML = `
 <div class="inset-title name"></div>
 <div class="absolute-full-size fill-contents standard-contents">
   <di-stats-list class="adventurer-stats"></di-stats-list>
+  <di-orb-row class="adventurer-orbs"></di-orb-row>
   <di-adventurer-edit-loadout></di-adventurer-edit-loadout>
 </div>
 `
@@ -18,6 +20,10 @@ export default class AdventurerPane extends DIElement{
         maxItems: 10,
         forced: ['hpMax', 'physPower', 'magicPower']
       })
+    this.orbRowEl
+      .setOptions({
+        style: OrbsDisplayStyle.REMAINING
+      })
     // TODO: click more stats
   }
 
@@ -29,75 +35,27 @@ export default class AdventurerPane extends DIElement{
     return this.querySelector('di-adventurer-edit-loadout')
   }
 
+  get orbRowEl(){
+    return this.querySelector('di-orb-row.adventurer-orbs')
+  }
+
   setAdventurer(adventurer){
     this.adventurer = adventurer
     this.querySelector('.name').textContent = `${adventurer.level} - ${adventurer.name}`
-    this.updateAll()
+    this.update()
   }
 
-  updateAll(showStatChangeEffect = false){
+  update(showChangeEffect = false){
+    this._update(showChangeEffect)
+  }
+
+  _update(showChangeEffect = false){
     this.loadoutEl.setLoadout(this.adventurer.loadout)
-    this._update(true)
-  }
+    this.orbRowEl.setData(this.adventurer.orbs, showChangeEffect)
 
-  _update(showStatChangeEffect = false){
-    // this.updateStats(showStatChangeEffect)
-    // this.updateOrbs()
-    // this.loadoutEl.update()
+    // const adventurerInstance = new AdventurerInstance(this.adventurer)
+    // this.statsList.setStats(adventurerInstance.stats, adventurerInstance, showChangeEffect)
   }
-
-  //
-  // setExtraStats(extraStats){
-  //   this._extraStats = extraStats
-  //   this.update()
-  // }
-  //
-  // updateItems(){
-  //   this.adventurerPane.updateStats(true)
-  //   this.adventurerPane.updateOrbs()
-  // }
-  //
-  // updateOrbs(){
-  //   this.orbRow.setData(this.adventurerInstance.orbs)
-  // }
-  //
-  // updateStats(showStatChangeEffect){
-  //   this.statsList.setOptions({
-  //     excluded: this._excluded()
-  //   }).setStats(this.adventurerInstance.stats, this.adventurerInstance, showStatChangeEffect)
-  // }
-  //
-  // async addXp(toAdd, options = { }){
-  //   const advData = this.adventurerInstance.fighterData
-  //   this._xpAnimation = true
-  //   await this.xpBar.setValue(advData.xp + toAdd, {
-  //     ...options,
-  //     animate: true,
-  //     skipToEndOfAnimation: options.skipAnimation ? true : false,
-  //     onLevelup: (level, animate = true) => {
-  //       if(animate){
-  //         this.update(true)
-  //       }
-  //       advData.xp = advLevelToXp(level)
-  //       options.onLevelup?.(level)
-  //     }
-  //   })
-  //   this.update(true)
-  // }
-  //
-  // skipToEndOfXpAnimation(){
-  //   if(this._xpAnimation){
-  //     this._xpAnimation = false
-  //     this.xpBar.skipToEndOfAnimation()
-  //     this.update()
-  //   }
-  // }
-  //
-  // _showAdventurerInfoModal(){
-  //   const modal = new Modal()
-  //   modal.innerContent.appendChild(new AdventurerInfo(this.adventurerInstance, this.statsList.stats))
-  //   modal.show()
-  // }
 }
 
 customElements.define('di-adventurer-edit-adventurer-pane', AdventurerPane )

@@ -55,13 +55,21 @@ di-adventurer-skill-row
   .name
     color: black
 
-  .class-identifier .orb-icon
+  .skill-contents
+    display: flex
+    align-items: center
+    justify-content: space-between
+    padding-right: 15rem
+
+  .class-identifier
     position: absolute
     top: 50%
     right: 2rem
     transform: translateY(-50%)
     height: 90% !important
     opacity: 1
+    .orb-icon
+      height: 100%
 
 di-skill-card
   .skill-name

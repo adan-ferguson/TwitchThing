@@ -6,5 +6,6 @@ export default {
       loadoutModifiers: [{ slot: 'attached', orbs }],
       vals: { orbs }
     }
-  }
+  },
+  skillPoints: [1,2,5,'...']
 }

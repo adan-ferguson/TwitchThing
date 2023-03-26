@@ -1,5 +1,6 @@
 import AdventurerItem from './adventurerItem.js'
 import AdventurerSkill from './skills/adventurerSkill.js'
+import OrbsData from './orbsData.js'
 
 export default class AdventurerLoadout{
   
@@ -20,6 +21,10 @@ export default class AdventurerLoadout{
 
   get items(){
     return [...this._items]
+  }
+
+  get usedOrbs(){
+    return new OrbsData(this.items.map(item => item?.orbs.usedOrbs || {}))
   }
 
   canItemFillSlot(item){

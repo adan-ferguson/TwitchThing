@@ -1,5 +1,6 @@
 import DIElement from '../diElement.js'
 import classDisplayInfo from '../../classDisplayInfo.js'
+import { skillPointEntry } from '../common.js'
 
 const HTML = `
 <div class="border"></div>
@@ -10,10 +11,11 @@ const HIDDEN_HTML = (lvl, orbSvg) => `
 <span class="hidden-skill">${lvl} ${orbSvg}</span>
 `
 
-const SKILL_HTML = (name, right) => `
-<span class="center-contents" style="justify-content: space-between">
+const SKILL_HTML = (name, right, classIcon) => `
+<span class="skill-contents">
   <span>${name}</span>
-  <span class="class-identifier">${right}</span>
+  <span>${right}</span>
+  <span class="class-identifier">${classIcon}</span>
 </span>
 `
 
@@ -48,7 +50,8 @@ export default class AdventurerSkillRow extends DIElement{
   get defaultOptions(){
     return {
       status: AdventurerSkillRowStatus.UNLOCKED,
-      clickable: false
+      clickable: false,
+      showSkillPoints: true
     }
   }
 
@@ -77,7 +80,8 @@ export default class AdventurerSkillRow extends DIElement{
     }
 
     const icon = info.icon
-    this.contentEl.innerHTML = SKILL_HTML(skill.displayName, icon)
+    const spd = '' //this._options.showSkillPoints ? skillPointEntry(skill.skillPointsCumulative) : ''
+    this.contentEl.innerHTML = SKILL_HTML(skill.displayName, spd, icon)
     this.classList.toggle('clickable', this._options.clickable)
   }
 }

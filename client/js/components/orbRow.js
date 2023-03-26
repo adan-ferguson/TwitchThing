@@ -11,7 +11,8 @@ export const OrbsDisplayStyle = {
   USED_ONLY: 0,
   SHOW_MAX: 1,
   MAX_ADDITIVE: 2,
-  MAX_ONLY: 3
+  MAX_ONLY: 3,
+  REMAINING: 4
 }
 
 export const OrbsTooltip = {
@@ -100,6 +101,8 @@ class OrbEntry extends DIElement{
       text = (max >= 0 ? '+' : '') + max
     }else if(style === OrbsDisplayStyle.MAX_ONLY){
       text = '' + max
+    }else if(style === OrbsDisplayStyle.REMAINING){
+      text = '' + (max - used)
     }else{
       text = '' + used
     }
@@ -108,14 +111,14 @@ class OrbEntry extends DIElement{
     this.style.color = classInfo.color
     this.innerHTML = ORB_ENTRY_HTML(classInfo.icon, text)
 
-    const tooltipText = this._options.tooltip === OrbsTooltip.ITEM ?
-      'Spend this many orbs to equip this item.' :
-      `${classInfo.displayName} orbs`
-
-    tippy(this, {
-      theme: 'light',
-      content: tooltipText
-    })
+    if(this._options.tooltip !== OrbsTooltip.NONE){
+      const tooltipText = this._options.tooltip === OrbsTooltip.ITEM ?
+        'Spend this many orbs to equip this item.' :
+        `${classInfo.displayName} orbs`
+      this.setTooltip(tooltipText)
+    }else{
+      this.setTooltip(null)
+    }
 
     function n(val){
       return allowNegatives ? val : Math.max(0, val)

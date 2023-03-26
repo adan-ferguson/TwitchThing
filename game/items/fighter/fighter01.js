@@ -8,8 +8,8 @@ export default {
           physPower: wrappedPct(10 * level),
         }
       },
-      orbs: level,
       displayName: 'Short Sword'
     }
-  }
+  },
+  orbs: [1, '...']
 }

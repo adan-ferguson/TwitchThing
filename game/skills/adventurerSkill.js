@@ -1,4 +1,5 @@
 import Skills, { all }  from './combined.js'
+import UpgradeData from '../upgradeData.js'
 
 // Convert a skills obj to an array of AdventurerSkills
 export function getSkillsForClass(className, levels){
@@ -21,6 +22,7 @@ export default class AdventurerSkill{
     this._id = skillId
     this._class = baseSkill.group
     this._data = baseSkill.levelFn(level)
+    this._skillPoints = new UpgradeData(baseSkill.skillPoints ?? [1, '...'])
   }
 
   get data(){
@@ -50,5 +52,21 @@ export default class AdventurerSkill{
 
   get requiredOrbs(){
     return Math.max(0, 5 * (this.index - 2))
+  }
+
+  get skillPoints(){
+    return this._skillPoints
+  }
+
+  get isMaxLevel(){
+    return this.skillPoints.maxLevel ? this.skillPoints.maxLevel <= this.level : false
+  }
+
+  get skillPointsToUpgrade(){
+    return this.skillPoints.get(this.level + 1)
+  }
+
+  get skillPointsCumulative(){
+    return this.skillPoints.total(this.level)
   }
 }

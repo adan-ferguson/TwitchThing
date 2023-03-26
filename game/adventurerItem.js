@@ -1,6 +1,7 @@
 import { all } from './items/combined.js'
 import OrbsData from './orbsData.js'
 import _ from 'lodash'
+import UpgradeData from './upgradeData.js'
 
 export default class AdventurerItem{
 
@@ -8,6 +9,7 @@ export default class AdventurerItem{
   _data
   _baseItemId
   _advClass
+  _level
 
   constructor(itemDef){
     if(_.isString(itemDef)){
@@ -15,6 +17,10 @@ export default class AdventurerItem{
     }else{
       this._craftedItem(itemDef)
     }
+  }
+
+  get level(){
+    return this._level
   }
 
   get data(){
@@ -41,7 +47,7 @@ export default class AdventurerItem{
    * @returns {OrbsData}
    */
   get orbs(){
-    return new OrbsData({ [this.advClass] : this._data.orbs })
+    return new OrbsData({ [this.advClass] : this._orbs.total(this.level) })
     // let baseOrbs
     // if(_.isObject(this.itemData.orbs)){
     //   baseOrbs = this.itemData.orbs
@@ -68,7 +74,9 @@ export default class AdventurerItem{
     }
     this._baseItemId = baseItemId
     this._advClass = baseItem.group
+    this._level = 1
     this._data = baseItem.levelFn(1)
+    this._orbs = new UpgradeData(baseItem.orbs ?? [0])
   }
 
   _craftedItem(){
