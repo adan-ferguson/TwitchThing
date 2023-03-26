@@ -4,6 +4,7 @@ import AdventurerItem from '../../../game/adventurerItem.js'
 import AdventurerItemRow from './adventurer/adventurerItemRow.js'
 import AdventurerSkill from '../../../game/skills/adventurerSkill.js'
 import AdventurerSkillRow from './adventurer/adventurerSkillRow.js'
+import { ADVENTURER_CLASS_LIST } from '../classDisplayInfo.js'
 
 export function adventurerItemsToRows(items){
   const rows = []
@@ -138,6 +139,9 @@ export function removeInventoryItem(list, loadoutItem, all = false){
 
 export function makeAdventurerItemRow(itemDef, count = 1){
   const item = itemDef instanceof AdventurerItem ? itemDef : new AdventurerItem(itemDef)
-  const row = new AdventurerItemRow().setItem(item).setCount(count)
-  return row
+  return new AdventurerItemRow().setItem(item).setCount(count)
+}
+
+export function advClassIndex(advClassName){
+  return ADVENTURER_CLASS_LIST.findIndex(advClass => advClass.name === advClassName)
 }

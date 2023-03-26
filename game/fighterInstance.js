@@ -1,9 +1,7 @@
 import Stats from './stats/stats.js'
 import { freezeActionBarMod, magicAttackMod, silencedMod, sneakAttackMod } from './mods/combined.js'
-import { StatusEffectsData } from './statusEffectsData.js'
 import ModsCollection from './modsCollection.js'
-import FighterSlotInstance from './fighterSlotInstance.js'
-import { minMax } from './utilFunctions.js'
+import { minMax, uniqueID } from './utilFunctions.js'
 import freezeCooldownsMod from './mods/generic/freezeCooldowns.js'
 
 // Stupid
@@ -25,39 +23,19 @@ export const COMBAT_BASE_TURN_TIME = 3000
  */
 export default class FighterInstance{
 
-  _fighterData
+  _loadoutEffectInstances
+  _statusEffectInstances = []
   _state
-  _itemInstances
 
-  constructor(fighterData, initialState = {}){
-    this._fighterData = fighterData
+  constructor(loadoutEffectInstances, initialState = {}){
+    this._loadoutEffectInstances = loadoutEffectInstances
 
-    this._itemInstances = []
-    for(let i = 0; i < 8; i++){
-      if(0 && fighterData.items[i]){
-        this._itemInstances[i] = new this.ItemClass(fighterData.items[i], null, this)
-        this._itemInstances[i].effectId = this.uniqueID + '-item-' + i
-      }else{
-        this._itemInstances[i] = null
-      }
-    }
+    loadoutEffectInstances.forEach(lei => {
+      lei.owner = this
+      lei.effectId = uniqueID()
+    })
 
-    this.statusEffectsData = new StatusEffectsData(this)
     this.setState(initialState)
-  }
-
-  /**
-   * @return {number}
-   */
-  get level(){
-    throw 'Not implemented'
-  }
-
-  /**
-   * @return {object}
-   */
-  get fighterData(){
-    return this._fighterData
   }
 
   /**
@@ -67,19 +45,11 @@ export default class FighterInstance{
     throw 'Not implemented'
   }
 
-  get ItemClass(){
-    throw 'Not implemented'
-  }
-
   /**
    * @return {string}
    */
   get uniqueID(){
-    return this.fighterData._id.toString()
-  }
-
-  get itemInstances(){
-    return this._itemInstances
+    throw 'Not implemented'
   }
 
   /**
@@ -103,35 +73,45 @@ export default class FighterInstance{
     throw 'Not implemented'
   }
 
+  get loadoutEffectInstances(){
+    throw 'Not implemented'
+  }
+
+  get statusEffectInstances(){
+    return this._statusEffectInstances
+  }
+
   /**
    * @returns {Stats}
    */
   get stats(){
-
+    if(this._cachedStats){
+      return this._cachedStats
+    }
+    // TODO: this has to cache
     const derivedStats = {
       physPower: this.basePower,
       magicPower: this.basePower,
       hpMax: this.baseHp
     }
     const baseStatAffectors = this.baseStats
-    const loadoutStatAffectors = this.itemInstances.filter(s => s).map(ii => ii.stats)
-
-    // lol
-    const effectAffectors = this.statusEffectsData.instances.map(effect => {
-      if(!effect){
-        debugger
-      }
-      return effect.stats
-    })
-    return new Stats([derivedStats, ...baseStatAffectors, ...loadoutStatAffectors], effectAffectors)
-  }
-
-  get baseMods(){
-    return []
+    const loadoutStatAffectors = this.loadoutEffectInstances.map(ii => ii.stats)
+    // TODO: performance of this
+    // const statusEffectAffectors = this.statusEffectsData.instances.map(effect => {
+    //   if(!effect){
+    //     debugger
+    //   }
+    //   return effect.stats
+    // })
+    this._cachedStats = new Stats(
+      [derivedStats, ...baseStatAffectors, ...loadoutStatAffectors]
+      ///, statusEffectAffectors)
+    )
+    return this._cachedStats
   }
 
   get effectInstances(){
-    return [...this.itemInstances.filter(ii => ii), ...this.statusEffectsData.instances]
+    return [...this.loadoutEffectInstances, ...this.statusEffectInstances]
   }
 
   /**
@@ -141,28 +121,17 @@ export default class FighterInstance{
     return new ModsCollection(this.effectInstances.map(ei => ei.mods).filter(m => m))
   }
 
-  /**
-   * @return {OrbsData}
-   */
-  get orbs(){
-    throw 'Not implemented'
-  }
-
   get state(){
     const baseState = { ...this._state }
-    baseState.itemStates = this._itemInstances.map(ii => {
-      if(!ii){
-        return null
-      }else{
-        return ii.state
-      }
+    baseState.effects = {}
+    this.effectInstances.forEach(ei => {
+      baseState.effects[ei.effectId] = ei.state
     })
-    baseState.effects = this.statusEffectsData.stateVal
     return { ...baseState }
   }
 
   get turnTime(){
-    const speed = this.stats.get('speed').value // - this.stats.get('slow').value
+    const speed = this.stats.get('speed').value
     let turnTime
     if(speed >= 0){
       turnTime = COMBAT_BASE_TURN_TIME * (100 / (speed + 100))
@@ -215,18 +184,11 @@ export default class FighterInstance{
   }
 
   set hp(val){
-    if(isNaN(val)){
-      debugger
-    }
     this.hpPct = val / this.hpMax
   }
 
   get hpMax(){
-    const hpMax = Math.ceil(this.stats.get('hpMax').value)
-    if(hpMax === 0){
-      debugger
-    }
-    return hpMax
+    return Math.ceil(this.stats.get('hpMax').value)
   }
 
   get hpPct(){
@@ -271,19 +233,27 @@ export default class FighterInstance{
    * @param newState
    */
   setState(newState){
-    const itemStates = newState.itemStates ?? []
-    this.itemInstances.forEach((itemInstance, i) => {
-      if(itemInstance){
-        itemInstance.state = itemStates[i]
-      }
-    })
-    this.statusEffectsData.stateVal = newState.effects
     this._state = {
       ...STATE_DEFAULTS,
       ...newState
     }
-    delete this._state.itemStates
-    delete this._state.effects
+    // const states = newState.effectStates ?? {}
+    // for(let effectId in states){
+    //
+    // }
+    // states.forEach(state => {
+    //   if(itemInstance){
+    //     itemInstance.state = itemStates[i]
+    //   }
+    // })
+    // this.statusEffectsData.stateVal = newState.effects
+    // this._state = {
+    //   ...STATE_DEFAULTS,
+    //   ...newState
+    // }
+    // newState.effects ?? [])
+    // delete this._state.itemStates
+    // delete this._state.effects
   }
 
   advanceTime(ms){
@@ -291,24 +261,25 @@ export default class FighterInstance{
       this._state.timeSinceLastAction += ms
     }
     if(!this.mods.contains(freezeCooldownsMod)){
-      this.itemInstances.forEach(itemInstance => {
+      this.loadoutEffectInstances.forEach(itemInstance => {
         if(itemInstance){
           itemInstance.advanceTime(ms)
         }
       })
     }
-    this.statusEffectsData.advanceTime(ms)
+    // this.statusEffectsData.advanceTime(ms)
     if(this.inCombat){
       this._state.combatTime += ms
     }
+    this._cachedStats = null
   }
 
   nextActiveItemIndex(){
     if(this.mods.contains(silencedMod)){
       return -1
     }
-    return this.itemInstances.findIndex(itemInstance => {
-      const ability = itemInstance?.getAbility('active')
+    return this.loadoutEffectInstances.findIndex(lei => {
+      const ability = lei?.getAbility('active')
       if(ability?.ready){
         return true
       }
@@ -328,7 +299,8 @@ export default class FighterInstance{
   nextTurn(){
     this._state.timeSinceLastAction = this._state.nextTurnOffset ?? 0
     delete this._state.nextTurnOffset
-    this.statusEffectsData.nextTurn()
+    // this.statusEffectsData.nextTurn()
+    this._cachedStats = null
   }
 
   meetsConditions(conditions){
@@ -339,9 +311,9 @@ export default class FighterInstance{
       if(conditionName === 'hpPctBelow'){
         return this.hpPct <= conditions[conditionName]
       }else if(conditionName === 'debuffed'){
-        return this.statusEffectsData.instances.some(sei => {
-          return !sei.isBuff && !sei.expired && !sei.phantom
-        })
+        // return this.statusEffectsData.instances.some(sei => {
+        //   return !sei.isBuff && !sei.expired && !sei.phantom
+        // })
       }else if(conditionName === 'combatTimeAbove'){
         return this._state.combatTime >= conditions[conditionName]
       }
@@ -350,7 +322,8 @@ export default class FighterInstance{
   }
 
   cleanupState(){
-    this.statusEffectsData.cleanupExpired()
+    // this.statusEffectsData.cleanupExpired()
+    this._cachedStats = null
   }
 
   startCombat(){
@@ -373,40 +346,40 @@ export default class FighterInstance{
       }
     }
     // Check for status effects which might be disabling this item
-    if(effect instanceof FighterSlotInstance){
-      if(this.statusEffectsData.instances.find(sei => sei.effectData.disarmedItemSlot === effect.slot)){
-        return true
-      }
-    }
+    // if(effect instanceof FighterSlotInstance){
+    //   if(this.statusEffectsData.instances.find(sei => sei.effectData.disarmedItemSlot === effect.slot)){
+    //     return true
+    //   }
+    // }
     return false
   }
 
-  getSlotEffectsFor(slotIndex){
+  // getSlotEffectsFor(slotIndex){
+  //
+  //   const item = this.itemInstances[slotIndex]
+  //
+  //   if(!item){
+  //     // TODO: not necessarily correct
+  //     return []
+  //   }
+  //
+  //   const slotEffects = []
+  //   this.effectInstances.forEach(ei => {
+  //     if(ei.slotEffect){
+  //       if(ei.slotEffect.slotIndex === slotIndex || item.slotTags.indexOf(ei.slotEffect.slotTag) >= 0){
+  //         slotEffects.push(ei.slotEffect)
+  //       }
+  //     }
+  //   })
+  //
+  //   return slotEffects
+  // }
 
-    const item = this.itemInstances[slotIndex]
-
-    if(!item){
-      // TODO: not necessarily correct
-      return []
-    }
-
-    const slotEffects = []
-    this.effectInstances.forEach(ei => {
-      if(ei.slotEffect){
-        if(ei.slotEffect.slotIndex === slotIndex || item.slotTags.indexOf(ei.slotEffect.slotTag) >= 0){
-          slotEffects.push(ei.slotEffect)
-        }
-      }
-    })
-
-    return slotEffects
-  }
-
-  statsForEffect(effect){
-    // TODO: stupid
-    if(!effect || !effect.applicableSlotEffects){
-      return this.stats
-    }
-    return new Stats([this.stats, ...effect.applicableSlotEffects.map(se => se.stats ?? {})])
-  }
+  // statsForEffect(effect){
+  //   // TODO: stupid
+  //   if(!effect || !effect.applicableSlotEffects){
+  //     return this.stats
+  //   }
+  //   return new Stats([this.stats, ...effect.applicableSlotEffects.map(se => se.stats ?? {})])
+  // }
 }

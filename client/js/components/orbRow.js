@@ -94,6 +94,7 @@ class OrbEntry extends DIElement{
     const max = n(this.getAttribute('orb-max'))
 
     let text
+    let err = false
     if(style === OrbsDisplayStyle.SHOW_MAX){
       text = `${used}/${max}`
       this.classList.toggle('error', used > max)
@@ -103,6 +104,7 @@ class OrbEntry extends DIElement{
       text = '' + max
     }else if(style === OrbsDisplayStyle.REMAINING){
       text = '' + (max - used)
+      err = used > max
     }else{
       text = '' + used
     }
@@ -110,6 +112,7 @@ class OrbEntry extends DIElement{
     const classInfo = classDisplayInfo(className)
     this.style.color = classInfo.color
     this.innerHTML = ORB_ENTRY_HTML(classInfo.icon, text)
+    this.classList.toggle('error', err)
 
     if(this._options.tooltip !== OrbsTooltip.NONE){
       const tooltipText = this._options.tooltip === OrbsTooltip.ITEM ?

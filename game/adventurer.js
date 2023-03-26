@@ -7,15 +7,15 @@ import OrbsData from './orbsData.js'
 
 const XP_BASE = 100
 const XP_GROWTH = 200
-const XP_GROWTH_PCT = 0.3
+const XP_GROWTH_PCT = 0.18
 
 const HP_BASE = 40
 const HP_GROWTH = 18
-const HP_GROWTH_PCT = 0.05
+const HP_GROWTH_PCT = 0.04
 
 const POWER_BASE = 10
 const POWER_GROWTH = 3
-const POWER_GROWTH_PCT = 0.05
+const POWER_GROWTH_PCT = 0.04
 
 export function advXpToLevel(xp){
   if(xp < XP_BASE){
@@ -56,6 +56,9 @@ export default class Adventurer{
     return { ...this._doc }
   }
 
+  /**
+   * @returns {OrbsData}
+   */
   get orbs(){
     return new OrbsData(this.loadout.usedOrbs, this.doc.orbs)
   }
@@ -79,14 +82,6 @@ export default class Adventurer{
   get loadout(){
     return this._loadout
   }
-
-  // get items(){
-  //   return [...this._items]
-  // }
-  //
-  // get skills(){
-  //   return [...this._skills]
-  // }
 
   get baseStats(){
     return [
@@ -138,7 +133,7 @@ export default class Adventurer{
    * @param skill
    */
   canSeeSkill(skill){
-    return this.orbs[skill.advClass] >= skill.requiredOrbs
+    return this.orbs.maxOrbs[skill.advClass] >= skill.requiredOrbs
   }
 
   upgradeSkill(skill){

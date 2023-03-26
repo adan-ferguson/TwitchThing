@@ -1,13 +1,12 @@
 import DIElement from '../../diElement.js'
 import AdventurerSkillRow from '../../adventurer/adventurerSkillRow.js'
-import { adventurerSkillsToRows, makeAdventurerSkillRow } from '../../listHelpers.js'
-import { ADVENTURER_CLASS_LIST } from '../../../classDisplayInfo.js'
 import AdventurerSkill from '../../../../../game/skills/adventurerSkill.js'
+import { advClassIndex } from '../../listHelpers.js'
 
 const HTML = `
 <div class="content-rows">
   <div class="inset-title">Skills</div>
-  <di-list class="skill-style-list"></di-list>
+  <di-list advClass="skill-style-list"></di-list>
 </div>
 `
 
@@ -23,8 +22,8 @@ export default class Skills extends DIElement{
       sortFn: (rowA, rowB) => {
         const skillA = rowA.skill
         const skillB = rowB.skill
-        if(skillA.class !== skillB.class){
-          return classIndex(skillA.class) - classIndex(skillB.class)
+        if(skillA.advClass !== skillB.advClass){
+          return advClassIndex(skillA.advClass) - advClassIndex(skillB.advClass)
         }
         return skillA.index - skillB.index
       },
@@ -61,7 +60,3 @@ export default class Skills extends DIElement{
 }
 
 customElements.define('di-adventurer-edit-skills', Skills)
-
-function classIndex(className){
-  return ADVENTURER_CLASS_LIST.findIndex(advClass => advClass.name === className)
-}

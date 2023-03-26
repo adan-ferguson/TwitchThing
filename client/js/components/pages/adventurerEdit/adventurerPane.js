@@ -1,5 +1,6 @@
 import DIElement from '../../diElement.js'
 import { OrbsDisplayStyle } from '../../orbRow.js'
+import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 
 const HTML = `
 <div class="inset-title name"></div>
@@ -53,8 +54,8 @@ export default class AdventurerPane extends DIElement{
     this.loadoutEl.setLoadout(this.adventurer.loadout)
     this.orbRowEl.setData(this.adventurer.orbs, showChangeEffect)
 
-    // const adventurerInstance = new AdventurerInstance(this.adventurer)
-    // this.statsList.setStats(adventurerInstance.stats, adventurerInstance, showChangeEffect)
+    const adventurerInstance = new AdventurerInstance(this.adventurer)
+    this.statsList.setStats(adventurerInstance.stats, adventurerInstance, showChangeEffect)
   }
 }
 

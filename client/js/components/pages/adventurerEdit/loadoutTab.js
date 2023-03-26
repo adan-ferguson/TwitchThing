@@ -53,6 +53,8 @@ export default class LoadoutTab extends DIElement{
 
     const { items, adventurer } = parentPage
 
+    this._adventurer = adventurer
+
     this.inventoryEl.setup(items, adventurer)
     this.adventurerPaneEl.setAdventurer(adventurer)
     this.skillsEl.setup(adventurer)
@@ -87,12 +89,8 @@ export default class LoadoutTab extends DIElement{
   }
 
   _updateSaveButton(){
-    // const orbs = this.adventurerPaneEl.adventurerInstance.orbs
-    // if(orbs.isValid && !this._saving){
-    //   this.saveButton.removeAttribute('disabled')
-    // }else{
-    //   this.saveButton.setAttribute('disabled', 'disabled')
-    // }
+    const orbs = this._adventurer.orbs
+    this.saveButton.toggleAttribute('disabled', !orbs.isValid || this._saving)
   }
 
   _setupItemEdit(adventurer){

@@ -1,4 +1,4 @@
-import { toDisplayName } from './utilFunctions.js'
+import { toDisplayName, uniqueID } from './utilFunctions.js'
 import Stats  from './stats/stats.js'
 import AbilitiesData from './abilitiesData.js'
 import ModsCollection from './modsCollection.js'
@@ -11,10 +11,12 @@ export default class EffectInstance{
 
   owner
   _state = {}
-  effectId = ''
 
   constructor(owner, state = {}){
     this.owner = owner
+    if(!state.effectId){
+      state.effectId = uniqueID()
+    }
     this._state = state
   }
 

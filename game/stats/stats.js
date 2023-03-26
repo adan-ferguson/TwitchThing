@@ -37,6 +37,8 @@ export default class Stats{
 
   get(nameOrStat){
 
+    // TODO: cache this stuff
+
     const name = nameOrStat.name ?? nameOrStat
     const statObj = makeStatObject(name)
 
