@@ -28,6 +28,8 @@ const HTML = `
 
 export default class LoadoutTab extends DIElement{
 
+  _saving = false
+
   constructor(){
     super()
     this.innerHTML = HTML
@@ -62,11 +64,8 @@ export default class LoadoutTab extends DIElement{
     this._setupSkillEdit(adventurer)
 
     this.saveButton.addEventListener('click', async (e) => {
-      if(!this.adventurerPaneEl.loadoutEl.hasChanges){
-        return this.redirectTo(AdventurerPage.path(this.adventurerID))
-      }
       if(await this._save()){
-        this.redirectTo(AdventurerPage.path(this.adventurerID))
+        this.parentPage.redirectTo(AdventurerPage.path(this._adventurer.id))
       }
     })
   }
@@ -74,9 +73,9 @@ export default class LoadoutTab extends DIElement{
   async _save(){
     this._saving = true
     this._updateSaveButton()
-    const items = this.adventurerPaneEl.loadoutEl.objs.map(item => item ? item.id ?? item.itemDef : null)
-    const { error, success } = await fizzetch('/game' + this.path + '/save', {
-      items
+    const { error, success } = await fizzetch('/game' + this.parentPage.path + '/save', {
+      items: this._adventurer.loadout.items.map(i => i?.def),
+      skills: this._adventurer.loadout.skills.map(s => s?.id)
     })
     if(!success){
       console.error(error || 'Saving failed for some reason')

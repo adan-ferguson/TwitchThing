@@ -49,12 +49,12 @@ export async function upgradeAdventurerItem(userDoc, slotIndex, adventurerID){
   if(advDoc.dungeonRunID){
     throw 'Adventurer is in a dungeon run.'
   }
-  const itemDef = advDoc.items[slotIndex]
+  const itemDef = advDoc.loadout.items[slotIndex]
   if(!itemDef){
     throw 'Could not find item.'
   }
   const upgradedItemDef = await upgradeItem(userDoc, itemDef)
-  advDoc.items[slotIndex] = upgradedItemDef
+  advDoc.loadout.items[slotIndex] = upgradedItemDef
   await Adventurers.save(advDoc)
   await Users.saveAndEmit(userDoc)
   return upgradedItemDef

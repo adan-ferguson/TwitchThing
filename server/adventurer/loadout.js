@@ -1,25 +1,45 @@
 import Adventurer from '../../game/adventurer.js'
 import _ from 'lodash'
+import { adjustInventoryBasics, adjustInventoryCrafted } from '../user/inventory.js'
 
 /**
  * Throw an http exception if this loadout transaction is invalid. The parameters are all
  * assumed to have been processed, i.e. they are a non-null adventurer, user, and item id array.
- * @param adventurer [AdventurerDoc]
+ * @param adventurerDoc [AdventurerDoc]
  * @param user [UserDoc]
  * @param newItems [string]
+ * @param newSkills
  */
-export function commitAdventurerLoadout(adventurer, user, newItems){
+export function commitAdventurerLoadout(adventurerDoc, user, newItems, newSkills){
+  setItems(adventurerDoc, user, newItems)
+  setSkills(adventurerDoc, newSkills)
+  validateLoadout(adventurerDoc)
+}
 
-  newItems = convertFromAjaxData(adventurer, user, newItems)
-
-  const basicItemDiff = calcBasicItemDiff(adventurer.items, newItems)
+function setItems(adventurerDoc, user, newItems){
+  newItems = convertFromAjaxData(adventurerDoc, user, newItems)
+  const basicItemDiff = calcBasicItemDiff(adventurerDoc.loadout.items, newItems)
   adjustInventoryBasics(user, basicItemDiff)
-
-  const { added, removed } = calcCraftedItemDiff(adventurer.items, newItems)
+  const { added, removed } = calcCraftedItemDiff(adventurerDoc.loadout.items, newItems)
   adjustInventoryCrafted(user, added, removed)
+  adventurerDoc.loadout.items = newItems
+}
 
-  adventurer.items = newItems
-  validateLoadout(adventurer)
+function setSkills(adventurerDoc, newSkills){
+  const obj = {}
+  if(newSkills.length !== 8){
+    throw { code: 403, error: 'Skills array length is wrong.' }
+  }
+  newSkills.filter(s => s).forEach(skillId => {
+    if(!adventurerDoc.unlockedSkills[skillId]){
+      throw { code: 403, error: 'Attempted to equip skill which was not unlocked.' }
+    }
+    if(obj[skillId]){
+      throw { code: 403, error: 'Attempt to equip the same skill twice.' }
+    }
+    obj[skillId] = 1
+  })
+  adventurerDoc.loadout.skills = newSkills
 }
 
 function calcBasicItemDiff(oldLoadout, newLoadout){
@@ -27,14 +47,11 @@ function calcBasicItemDiff(oldLoadout, newLoadout){
   count(oldLoadout)
   count(newLoadout, -1)
   function count(items, increment = 1){
-    items.filter(i => i && !i.id).forEach(({ group, name }) => {
-      if(!diff[group]){
-        diff[group] = {}
+    items.filter(i => i && !i.id).forEach(baseItemId => {
+      if(!diff[baseItemId]){
+        diff[baseItemId] = 0
       }
-      if(!diff[group][name]){
-        diff[group][name] = 0
-      }
-      diff[group][name] += increment
+      diff[baseItemId] += increment
     })
   }
   return diff
@@ -59,7 +76,7 @@ function calcCraftedItemDiff(oldLoadout, newLoadout){
 
 function validateLoadout(adventurer){
   const adv = new Adventurer(adventurer)
-  if(!adv.isLoadoutValid){
+  if(!adv.loadout.isValid){
     throw { code: 403, error: 'Loadout is invalid.' }
   }
 }
@@ -71,9 +88,10 @@ function validateLoadout(adventurer){
  */
 function convertFromAjaxData(adventurer, user, newItems){
   return newItems.map(val => {
-    if(_.isString(val)){
-      return adventurer.items.find(item => item?.id === val) ?? user.inventory.items.crafted[val] ?? null
-    }
+    // if(!_.isString(val)){
+    //   const id = val.id
+    //   return adventurer.loadout.items.find(item => item?.id === val) ?? user.inventory.items.crafted[val] ?? null
+    // }
     return val
   })
 }

@@ -3,9 +3,10 @@ import Adventurers from '../../collections/adventurers.js'
 import { addRun } from '../../dungeons/dungeonRunner.js'
 import db  from '../../db.js'
 import Users from '../../collections/users.js'
-import { requireRegisteredUser, validateParam } from '../../validations.js'
+import { requireRegisteredUser, validateBody, validateParam } from '../../validations.js'
 import DungeonRuns from '../../collections/dungeonRuns.js'
 import { spendAdventurerOrb, spendAdventurerSkillPoint } from '../../adventurer/edit.js'
+import { commitAdventurerLoadout } from '../../adventurer/loadout.js'
 
 const router = express.Router()
 const verifiedRouter = express.Router()
@@ -88,13 +89,16 @@ verifiedRouter.post('/edit/spendskillpoint', validateIdle, async(req, res) => {
   res.status(200).send({ success: 1 })
 })
 
-verifiedRouter.post('/edit/saveloadout', validateIdle, async (req, res) => {
-  // requireOwnsAdventurer(req)
-  // const items = validateParam(req.body.items, { type: 'array' })
-  // await commitAdventurerLoadout(req.adventurerDoc, req.user, items)
-  // await Adventurers.save(req.adventurerDoc)
-  // await Users.save(req.user)
-  // res.status(200).send({ success: 1 })
+verifiedRouter.post('/edit/save', validateIdle, async (req, res) => {
+  requireOwnsAdventurer(req)
+  validateBody(req.body, {
+    items: { type: 'array' },
+    skills: { type: 'array' }
+  })
+  await commitAdventurerLoadout(req.adventurerDoc, req.user, req.body.items, req.body.skills)
+  await Adventurers.save(req.adventurerDoc)
+  await Users.save(req.user)
+  res.status(200).send({ success: 1 })
 })
 
 verifiedRouter.post('', async(req, res, next) => {
@@ -107,11 +111,11 @@ verifiedRouter.post('/dismiss', async(req, res, next) => {
     throw 'Adventurer can not be dismissed, not in user\'s adventurer list'
   }
   req.user.adventurers.splice(index, 1)
-  req.adventurerDoc.items.forEach(i => {
+  req.adventurerDoc.loadout.items.forEach(i => {
     if(!i){
       return
     }
-    req.user.inventory.items[i.id] = i
+    req.user.inventory.loadout.items[i.id] = i
   })
   await Users.save(req.user)
   res.status(200).send({ success: 1 })

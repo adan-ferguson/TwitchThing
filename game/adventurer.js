@@ -52,6 +52,10 @@ export default class Adventurer{
     this._loadout = new AdventurerLoadout(this)
   }
 
+  get id(){
+    return this.doc._id
+  }
+
   get doc(){
     return { ...this._doc }
   }

@@ -5,7 +5,7 @@ import UpgradeData from './upgradeData.js'
 
 export default class AdventurerItem{
 
-  _itemDef
+  _def
   _data
   _baseItemId
   _advClass
@@ -17,6 +17,11 @@ export default class AdventurerItem{
     }else{
       this._craftedItem(itemDef)
     }
+    this._def = itemDef
+  }
+
+  get def(){
+    return this._def
   }
 
   get level(){

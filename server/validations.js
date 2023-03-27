@@ -18,6 +18,14 @@ export function validateParam(val, options){
   return val
 }
 
+export function validateBody(body, validation){
+  try {
+    validateObject(body, validation)
+  }catch(ex){
+    throw { code: 400, message: ex }
+  }
+}
+
 export function validateObject(obj, validation){
   for(let key in obj){
     if(!validation[key]){

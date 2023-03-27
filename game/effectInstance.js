@@ -33,12 +33,12 @@ export default class EffectInstance{
   }
 
   get disabled(){
-    if(!this.owner){
-      return false
-    }
-    if(this.owner.isEffectDisabled(this)){
-      return true
-    }
+    // if(!this.owner){
+    //   return false
+    // }
+    // if(this.owner.isEffectDisabled(this)){
+    //   return true
+    // }
     return false
   }
 
@@ -49,10 +49,10 @@ export default class EffectInstance{
     if(this.disabled){
       return new Stats()
     }
-    const scaledStats = this.effectData.scaledStats
-    if(scaledStats){
-      return new Stats(scaleStats(scaledStats.stats, scaledStats.scaling, this.owner))
-    }
+    // const scaledStats = this.effectData.scaledStats
+    // if(scaledStats){
+    //   return new Stats(scaleStats(scaledStats.stats, scaledStats.scaling, this.owner))
+    // }
     return new Stats(this.effectData.stats)
   }
 

@@ -14,14 +14,16 @@ export default class AdventurerInstance extends FighterInstance{
     for(let i = 0; i < 8; i++){
       if(loadout.items[i]){
         itemInstances[i] = new LoadoutEffectInstance({
-          owner: loadout.items[i],
+          obj: loadout.items[i],
+          owner: this,
           slotIndex: i,
           state: initialState.items?.[i]
         })
       }
       if(loadout.skills[i]){
         skillInstances[i] = new LoadoutEffectInstance({
-          owner: loadout.skills[i],
+          obj: loadout.skills[i],
+          owner: this,
           slotIndex: i,
           state: initialState.skills?.[i]
         })
@@ -29,6 +31,12 @@ export default class AdventurerInstance extends FighterInstance{
     }
     this._itemInstances = itemInstances
     this._skillInstances = skillInstances
+    this._adventurer = adventurer
+    this.setState(initialState)
+  }
+
+  get adventurer(){
+    return this._adventurer
   }
 
   get accomplishments(){
@@ -52,11 +60,11 @@ export default class AdventurerInstance extends FighterInstance{
   }
 
   get baseHp(){
-    return adventurerLevelToHp(this.level)
+    return adventurerLevelToHp(this.adventurer.level)
   }
 
   get basePower(){
-    return adventurerLevelToPower(this.level)
+    return adventurerLevelToPower(this.adventurer.level)
   }
 
   get baseStats(){

@@ -18,7 +18,7 @@ export default class AdventurerPane extends DIElement{
     this.innerHTML = HTML
     this.statsListEl
       .setOptions({
-        maxItems: 10,
+        maxItems: 16,
         forced: ['hpMax', 'physPower', 'magicPower']
       })
     this.orbRowEl
@@ -55,7 +55,7 @@ export default class AdventurerPane extends DIElement{
     this.orbRowEl.setData(this.adventurer.orbs, showChangeEffect)
 
     const adventurerInstance = new AdventurerInstance(this.adventurer)
-    this.statsList.setStats(adventurerInstance.stats, adventurerInstance, showChangeEffect)
+    this.statsListEl.setStats(adventurerInstance.stats, adventurerInstance, showChangeEffect)
   }
 }
 

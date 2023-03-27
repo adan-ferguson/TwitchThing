@@ -23,20 +23,8 @@ export const COMBAT_BASE_TURN_TIME = 3000
  */
 export default class FighterInstance{
 
-  _loadoutEffectInstances
   _statusEffectInstances = []
   _state
-
-  constructor(loadoutEffectInstances, initialState = {}){
-    this._loadoutEffectInstances = loadoutEffectInstances
-
-    loadoutEffectInstances.forEach(lei => {
-      lei.owner = this
-      lei.effectId = uniqueID()
-    })
-
-    this.setState(initialState)
-  }
 
   /**
    * @return {string}

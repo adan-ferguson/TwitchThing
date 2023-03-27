@@ -27,6 +27,10 @@ export default class AdventurerLoadout{
     return new OrbsData(this.items.map(item => item?.orbs.usedOrbs || {}))
   }
 
+  get isValid(){
+    return true //TODO: validate
+  }
+
   canItemFillSlot(item){
     return true //TODO: slot restrictions
   }
