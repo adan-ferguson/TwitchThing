@@ -76,7 +76,7 @@ function calcCraftedItemDiff(oldLoadout, newLoadout){
 
 function validateLoadout(adventurer){
   const adv = new Adventurer(adventurer)
-  if(!adv.loadout.isValid){
+  if(!adv.orbs.isValid || !adv.loadout.isValid){
     throw { code: 403, error: 'Loadout is invalid.' }
   }
 }

@@ -2,7 +2,7 @@ import tippy from 'tippy.js'
 import SimpleModal from '../../simpleModal.js'
 import { wrapContent } from '../../../../../game/utilFunctions.js'
 import { ITEM_ROW_COLORS } from '../../../colors.js'
-import EffectDetails from '../../effectDetails.js'
+import LoadoutObjectDetails from '../../loadoutObjectDetails.js'
 import DIElement from '../../diElement.js'
 import ItemCard from '../../itemCard.js'
 import ItemDetails from '../../itemDetails.js'
@@ -66,7 +66,7 @@ export default class LoadoutRow extends DIElement{
 
     tooltip.classList.add('loadout-row-tooltip')
     tooltip.appendChild(
-      new EffectDetails().setEffect(this.loadoutItem.obj)
+      new LoadoutObjectDetails().setEffect(this.loadoutItem.obj)
     )
     tooltip.appendChild(wrapContent('Right-click for more info', {
       class: 'right-click subtitle'

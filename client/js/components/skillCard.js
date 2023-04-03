@@ -1,14 +1,12 @@
 import DIElement from './diElement.js'
-import { skillPointEntry } from './common.js'
-import { skillDisplayInfo } from '../skillDisplayInfo.js'
 import { classIcon } from '../classDisplayInfo.js'
+import { skillPointEntry } from './common.js'
 
 const HTML = `
 <div class="skill-border">
   <div class="inset-title skill-name"></div>
-  <div class="inset-title-right skill-points displaynone"></div>
-  <di-effect-details></di-effect-details>
-  <div class="extra-details"></div>
+  <div class="inset-title-right skill-points"></div>
+  <di-loadout-object-details></di-loadout-object-details>
 </div>
 `
 
@@ -22,26 +20,15 @@ export default class SkillCard extends DIElement{
     return this.querySelector('.skill-points')
   }
 
-  get effectDetailsEl(){
-    return this.querySelector('di-effect-details')
-  }
-
-  get extraDetailsEl(){
-    return this.querySelector('.extra-details')
+  get loadoutObjectDetails(){
+    return this.querySelector('di-loadout-object-details')
   }
 
   setSkill(adventurerSkill, showTooltips = true){
-
     this.innerHTML = HTML
     this.nameEl.innerHTML = adventurerSkill.displayName + classIcon(adventurerSkill.advClass)
-    // this.skillPointsEl.innerHTML = skillPointEntry(adventurerSkill.skillPoints)
-    this.effectDetailsEl.setOptions({ showTooltips }).setEffect(adventurerSkill.effect)
-
-    const sdi = skillDisplayInfo(adventurerSkill)
-    if(sdi.extraDetails){
-      this.extraDetailsEl.innerHTML = sdi.extraDetails
-    }
-
+    this.skillPointsEl.innerHTML = skillPointEntry(adventurerSkill.skillPointsCumulative)
+    this.loadoutObjectDetails.setOptions({ showTooltips }).setObject(adventurerSkill)
     return this
   }
 }

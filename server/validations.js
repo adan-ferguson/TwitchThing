@@ -77,6 +77,10 @@ export function validateValue(val, options){
     }
   }else if(isObject(options.type)){
     Object.keys(options.type).forEach(key => validateValue(val[key], options.type[key]))
+  }else if(options.type === 'boolean'){
+    if(!Boolean.isBoolean(val)){
+      throw 'Expected boolean value but did not get one.'
+    }
   }
 
   return val

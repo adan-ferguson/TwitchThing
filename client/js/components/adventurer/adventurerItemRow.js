@@ -1,5 +1,7 @@
 import DIElement from '../diElement.js'
 import { OrbsTooltip } from '../orbRow.js'
+import SkillCard from '../skillCard.js'
+import ItemCard from '../itemCard.js'
 
 const HTML = `
 <div class="border">
@@ -50,8 +52,23 @@ export default class AdventurerItemRow extends DIElement{
   }
 
   set count(val){
-    console.log(val)
     this._count = val
+  }
+
+  get tooltip(){
+
+    if(!this.item){
+      return null
+    }
+
+    const tooltip = document.createElement('div')
+    tooltip.classList.add('loadout-row-tooltip')
+    tooltip.appendChild(new ItemCard().setItem(this.item))
+    // tooltip.appendChild(wrapContent('Right-click for more info', {
+    //   class: 'right-click subtitle'
+    // }))
+
+    return tooltip
   }
 
   setItem(adventurerItem){
@@ -63,6 +80,7 @@ export default class AdventurerItemRow extends DIElement{
       this.orbRow.setData(adventurerItem.orbs)
       this._setTexture(adventurerItem.isBasic ? null : 'maze-white')
       this.classList.remove('blank')
+      this.setTooltip()
     }
     return this
   }
@@ -79,6 +97,7 @@ export default class AdventurerItemRow extends DIElement{
     this.orbRow.setData([])
     this._setTexture(null)
     this.classList.add('blank')
+    this.setTooltip(null)
   }
 
   _setTexture(name){

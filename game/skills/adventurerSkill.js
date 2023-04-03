@@ -1,16 +1,18 @@
 import Skills, { all }  from './combined.js'
 import UpgradeData from '../upgradeData.js'
+import AdventurerLoadoutObject from '../adventurerLoadoutObject.js'
 
 // Convert a skills obj to an array of AdventurerSkills
 export function getSkillsForClass(className, levels){
   return Object.keys(Skills[className]).map(skillId => new AdventurerSkill(skillId, levels[skillId] ?? 0))
 }
 
-export default class AdventurerSkill{
+export default class AdventurerSkill extends AdventurerLoadoutObject{
 
   _data
 
   constructor(skillId, level = 1){
+    super()
     const baseSkill = all[skillId]
     if(!baseSkill){
       throw 'Invalid skillId: ' + skillId
@@ -23,10 +25,6 @@ export default class AdventurerSkill{
     this._class = baseSkill.group
     this._data = baseSkill.levelFn(level)
     this._skillPoints = new UpgradeData(baseSkill.skillPoints ?? [1, '...'])
-  }
-
-  get data(){
-    return this._data
   }
 
   get level(){

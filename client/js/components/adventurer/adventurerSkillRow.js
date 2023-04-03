@@ -1,6 +1,9 @@
 import DIElement from '../diElement.js'
 import classDisplayInfo from '../../classDisplayInfo.js'
 import { skillPointEntry } from '../common.js'
+import LoadoutObjectDetails from '../loadoutObjectDetails.js'
+import { wrapContent } from '../../../../game/utilFunctions.js'
+import SkillCard from '../skillCard.js'
 
 const HTML = `
 <div class="border"></div>
@@ -55,6 +58,22 @@ export default class AdventurerSkillRow extends DIElement{
     }
   }
 
+  get tooltip(){
+
+    if(!this.skill){
+      return null
+    }
+
+    const tooltip = document.createElement('div')
+    tooltip.classList.add('loadout-row-tooltip')
+    tooltip.appendChild(new SkillCard().setSkill(this.skill))
+    // tooltip.appendChild(wrapContent('Right-click for more info', {
+    //   class: 'right-click subtitle'
+    // }))
+
+    return tooltip
+  }
+
   setSkill(adventurerSkill){
     this._skill = adventurerSkill
     this._update()
@@ -68,6 +87,7 @@ export default class AdventurerSkillRow extends DIElement{
     this.classList.toggle('blank', skill ? false : true)
     this.classList.toggle('clickable', false)
     this.classList.toggle('locked', this._options.status !== AdventurerSkillRowStatus.UNLOCKED)
+    this.setTooltip(this.tooltip)
 
     if(!skill){
       return
@@ -77,8 +97,8 @@ export default class AdventurerSkillRow extends DIElement{
     if(this._options.status === AdventurerSkillRowStatus.HIDDEN){
       this.contentEl.innerHTML = HIDDEN_HTML(skill.requiredOrbs, info.icon)
       return
-    }
 
+    }
     const icon = info.icon
     const spd = '' //this._options.showSkillPoints ? skillPointEntry(skill.skillPointsCumulative) : ''
     this.contentEl.innerHTML = SKILL_HTML(skill.displayName, spd, icon)

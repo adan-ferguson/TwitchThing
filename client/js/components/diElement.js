@@ -32,10 +32,11 @@ export default class DIElement extends HTMLElement{
   setTooltip(content = null){
     if(!this._tippy){
       tippy(this, {
-        theme: 'light'
+        theme: 'light',
+        onHide: () => false
       })
     }
-    if(content){
+    if(content && !this.closest('.tippy-content')){
       this._tippy.enable()
       this._tippy.setContent(content)
     }else{

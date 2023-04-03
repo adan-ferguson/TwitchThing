@@ -10,6 +10,14 @@ export function skillPointEntry(count){
   return `<span class="skill-point-entry">${count}${skillPointIcon()}</span>`
 }
 
+export function orbEntries(obj){
+  return Object.keys(obj).map(key => orbEntry(key, obj[key]))
+}
+
+export function orbEntry(cls, count){
+  return `<di-orb-entry orb-class="${cls}" orb-used="${count}"></di-orb-entry>`
+}
+
 export function coloredIcon(iconName, color, cls = null){
   return `<i style="color:${color};" class="fa-solid fa-${iconName} ${cls}"></i>`
 }

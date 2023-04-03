@@ -1,10 +1,23 @@
 export default {
   levelFn(level){
-    const orbs = -1 - level * 2
+    const fighter = -level
     return {
-      displayName: 'Signature Weapon',
-      loadoutModifiers: [{ slot: 'attached', orbs }],
-      vals: { orbs }
+      displayName: 'Slot 8 Only',
+      loadoutModifiers: {
+        orbs: {
+          allItems: {
+            fighter: -fighter
+          }
+        },
+        restrictions: {
+          self: {
+            slot: 8
+          }
+        }
+      },
+      vals: {
+        fighter
+      }
     }
   },
   skillPoints: [1,2,5,'...']

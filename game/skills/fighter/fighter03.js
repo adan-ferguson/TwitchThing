@@ -2,7 +2,13 @@ export default {
   levelFn: level => {
     return {
       displayName: 'Punch',
-      loadoutModifiers: [{ slot: 'attached', restriction: 'empty' }]
+      loadoutModifiers: {
+        restrictions: {
+          attached: {
+            empty: true
+          }
+        }
+      },
     }
   }
 }

@@ -2,16 +2,17 @@ import { all } from './items/combined.js'
 import OrbsData from './orbsData.js'
 import _ from 'lodash'
 import UpgradeData from './upgradeData.js'
+import AdventurerLoadoutObject from './adventurerLoadoutObject.js'
 
-export default class AdventurerItem{
+export default class AdventurerItem extends AdventurerLoadoutObject{
 
   _def
-  _data
   _baseItemId
   _advClass
   _level
 
   constructor(itemDef){
+    super()
     if(_.isString(itemDef)){
       this._basicItem(itemDef)
     }else{
@@ -28,12 +29,9 @@ export default class AdventurerItem{
     return this._level
   }
 
-  get data(){
-    return this._data
-  }
-
   get displayName(){
-    return this._data.displayName ?? ''
+    let txt = this.level > 1 ? `L${this.level} ` : ''
+    return txt + this._data.displayName
   }
 
   get isBasic(){
