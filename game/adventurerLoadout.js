@@ -7,8 +7,7 @@ export default class AdventurerLoadout{
   _items = []
   _skills = []
 
-  constructor(adventurer){
-    const loadoutObj = adventurer.doc.loadout
+  constructor(loadoutObj){
     for(let i = 0; i < 8; i++){
       this._items[i] = loadoutObj.items[i] ? new AdventurerItem(loadoutObj.items[i]) : null
       this._skills[i] = loadoutObj.skills[i] ? new AdventurerSkill(loadoutObj.skills[i]) : null
@@ -28,26 +27,47 @@ export default class AdventurerLoadout{
     for(let i = 0; i < 8; i++){
       const item = this.getSlotInfo(true, i)
       const skill = this.getSlotInfo(false, i)
-      data.push(item.modifiedOrbs ?? {}, skill.modifiedOrbs)
+      data.push(item.modifiedOrbsData?.usedOrbs ?? {}, skill.modifiedOrbsData?.usedOrbs)
     }
     return new OrbsData(data)
   }
 
   get isValid(){
-    try {
-      validateLoadoutRestrictions(this.items, this.skills)
-    }catch(ex){
-      return false
+    for(let i = 0; i < 8; i++){
+      if(!this.getSlotInfo(true, i).restrictionsPassed){
+        return false
+      }
+      if(!this.getSlotInfo(false, i).restrictionsPassed){
+        return false
+      }
     }
     return true
   }
 
+  getSlot(isItem, slot){
+    return (isItem ? this.items : this.skills)[slot]
+  }
+
   getSlotInfo(isItem, slot){
-    const loadoutItem = (isItem ? this.items : this.skills)[slot]
-    const loadoutModifiers = this._getLoadoutModifiers(isItem, slot)
+    const applicableLoadoutModifiers = this._loadoutModifiersFor(isItem, slot)
+    const loadoutItem = this.getSlot(isItem, slot)
+    let modifiedOrbsData = null
+    if(loadoutItem?.orbs){
+      const modOrbs = applicableLoadoutModifiers.orbs ?? []
+      modifiedOrbsData = new OrbsData([loadoutItem.orbs, ...modOrbs])
+    }
+    const restrictionsPassed = (applicableLoadoutModifiers?.restrictions ?? []).every(restriction => {
+      if(restriction.slot){
+        return slot === restriction.slot - 1
+      }
+      if(restriction.empty){
+        return loadoutItem ? false : true
+      }
+      return false
+    })
     return {
-      modifiedOrbs: {},
-      restrictionsPassed: true,
+      modifiedOrbsData,
+      restrictionsPassed,
       loadoutItem
     }
   }
@@ -59,7 +79,7 @@ export default class AdventurerLoadout{
    * @param slot
    * @returns {boolean}
    */
-  canFillSlot(isItem, loadoutObject, slot){
+  canFillSlot(isItem, slot, loadoutObject){
     const oldObject = this._getLoadoutObject(isItem, slot)
     this.setSlot(isItem, loadoutObject, slot)
     const slotInfo = this.getSlotInfo(isItem, slot)
@@ -75,12 +95,29 @@ export default class AdventurerLoadout{
     return this._objArray(isItem)[slot]
   }
 
-  _getLoadoutModifiers(isItem, slot){
-    const modifiers = []
-    for(let i = 0; i < 8; i++){
-
+  _loadoutModifiersFor(isItem, slot){
+    const modifiersObj = {}
+    const addModifiersFrom = (isItem2, slot2) => {
+      const obj = this.getSlot(isItem2, slot2)
+      if(!obj?.loadoutModifiers){
+        return
+      }
+      for(let subjectKey in obj.loadoutModifiers){
+        if(subjectMatch(isItem2, slot2, isItem, slot, subjectKey)){
+          for(let restrictionKey in obj.loadoutModifiers[subjectKey]){
+            if(!modifiersObj[restrictionKey]){
+              modifiersObj[restrictionKey] = []
+            }
+            modifiersObj[restrictionKey].push(obj.loadoutModifiers[subjectKey][restrictionKey])
+          }
+        }
+      }
     }
-    return modifiers
+    for(let i = 0; i < 8; i++){
+      addModifiersFrom(true, i)
+      addModifiersFrom(false, i)
+    }
+    return modifiersObj
   }
 
   _objArray(isItem){
@@ -88,59 +125,28 @@ export default class AdventurerLoadout{
   }
 }
 
-function validateLoadoutRestrictions(items, skills){
-
-  debugger
-
-  for(let i = 0; i < 8; i++){
-    checkRestrictions(true, i)
-    checkRestrictions(false, i)
+/**
+ * @param sourceIsItem
+ * @param sourceSlot
+ * @param targetIsItem
+ * @param targetSlot
+ * @param subjectKey
+ * @return [AdventurerLoadoutObject]
+ */
+function subjectMatch(sourceIsItem, sourceSlot, targetIsItem, targetSlot, subjectKey){
+  const sameType = sourceIsItem === targetIsItem
+  const sameSlot = sourceSlot === targetSlot
+  if(subjectKey === 'self'){
+    return sameType && sameSlot
   }
-
-  function checkRestrictions(isItem, slotIndex){
-    const obj = (isItem ? items : skills)[slotIndex]
-    if(!obj){
-      return
-    }
-    for(let subjectKey in obj.loadoutRestrictions){
-      const subjects = getSubjects(isItem, slotIndex, subjectKey)
-      subjects
-        .filter(s => s)
-        .forEach(loadoutObject => validate(loadoutObject, obj.loadoutRestrictions[subjectKey], slotIndex))
-    }
+  if(subjectKey === 'attached'){
+    return !sameType && sameSlot
   }
-
-  /**
-   * @param isItem
-   * @param slotIndex
-   * @param subjectKey
-   * @return [AdventurerLoadoutObject]
-   */
-  function getSubjects(isItem, slotIndex, subjectKey){
-    const same = isItem ? items : skills
-    const other = isItem ? skills: items
-    if(subjectKey === 'self'){
-      return [same[slotIndex]]
-    }
-    if(subjectKey === 'attached'){
-      return [other[slotIndex]]
-    }
-    if(subjectKey === 'neighbour'){
-      return [same[slotIndex - 1], same[slotIndex - 1]]
-    }
+  if(subjectKey === 'neighbour'){
+    return sameType && Math.abs(sourceSlot - targetSlot) === 1
   }
-
-  function validate(loadoutObject, restriction, slotIndex){
-    for(let restrictionKey in restriction){
-      if(restrictionKey === 'slot'){
-        if(slotIndex + 1 !== restriction[restrictionKey]){
-          throw 'Slot restriction not met'
-        }
-      }else if(restrictionKey === 'empty'){
-        if(loadoutObject){
-          throw 'Empty restriction not met'
-        }
-      }
-    }
+  if(subjectKey === 'allItems'){
+    return targetIsItem
   }
+  return false
 }

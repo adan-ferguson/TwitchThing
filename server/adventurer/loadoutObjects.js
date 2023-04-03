@@ -5,27 +5,34 @@ import { ADVENTURER_EFFECT_VALIDATION } from '../effect/effects.js'
 import AdventurerSkill from '../../game/skills/adventurerSkill.js'
 
 const SUBJECT_KEYS = ['self', 'attached', 'neighbouring', 'allItems']
-const LOADOUT_RESTRICTION_VALIDATION = {}
-const ORB_MODIFIER_VALIDATION = {}
 
-SUBJECT_KEYS.forEach(key => {
-  LOADOUT_RESTRICTION_VALIDATION[key] = {
-    empty: { type: 'boolean' },
-    slot: { type: [0,1,2,3,4,5,6,7] }
+const ORB_MODIFIER_VALIDATION = {
+  type: {
+    all: { type: 'integer' },
+    fighter: { type: 'integer' },
+    mage: { type: 'integer' },
+    paladin: { type: 'integer' },
+    rogue: { type: 'integer' },
+    chimera: { type: 'integer' },
   }
+}
 
-  ORB_MODIFIER_VALIDATION[key] = {}
-  const orbTypes = ['all','fighter','mage','paladin','rogue','chimera']
-  orbTypes.forEach(orbType => {
-    ORB_MODIFIER_VALIDATION[key][orbType] = { type: 'integer' }
-  })
-})
+const RESTRICTION_VALIDATION = {
+  empty: { type: 'boolean' },
+  slot: { type: [0,1,2,3,4,5,6,7] }
+}
 
 const LOADOUT_OBJECT_VALIDATION = {
   displayName: { required: true, type: 'string' },
   loadoutModifiers: {
-    orbs: { type: ORB_MODIFIER_VALIDATION },
-    restrictions: { type: LOADOUT_RESTRICTION_VALIDATION }
+    type: 'object',
+    validKeys: SUBJECT_KEYS,
+    validValue: {
+      type: {
+        orbs: { type: ORB_MODIFIER_VALIDATION },
+        restrictions: { type: RESTRICTION_VALIDATION }
+      }
+    }
   },
   vals: { type: 'object' },
   effect: { type: ADVENTURER_EFFECT_VALIDATION }

@@ -28,7 +28,7 @@ export default class SkillCard extends DIElement{
     this.innerHTML = HTML
     this.nameEl.innerHTML = adventurerSkill.displayName + classIcon(adventurerSkill.advClass)
     this.skillPointsEl.innerHTML = skillPointEntry(adventurerSkill.skillPointsCumulative)
-    this.loadoutObjectDetails.setOptions({ showTooltips }).setObject(adventurerSkill)
+    this.loadoutObjectDetails.setObject(adventurerSkill)
     return this
   }
 }

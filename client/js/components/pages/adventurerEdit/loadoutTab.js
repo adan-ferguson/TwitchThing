@@ -62,6 +62,7 @@ export default class LoadoutTab extends DIElement{
     this.skillsEl.setup(adventurer)
     this._setupItemEdit(adventurer)
     this._setupSkillEdit(adventurer)
+    this._updateSaveButton()
 
     this.saveButton.addEventListener('click', async (e) => {
       if(await this._save()){
@@ -88,8 +89,9 @@ export default class LoadoutTab extends DIElement{
   }
 
   _updateSaveButton(){
-    const orbs = this._adventurer.orbs
-    this.saveButton.toggleAttribute('disabled', !orbs.isValid || this._saving)
+    const orbsValid = this._adventurer.orbs.isValid
+    const loadoutValid = this._adventurer.loadout.isValid
+    this.saveButton.toggleAttribute('disabled', !orbsValid || !loadoutValid || this._saving)
   }
 
   _setupItemEdit(adventurer){
@@ -107,13 +109,13 @@ export default class LoadoutTab extends DIElement{
             return
           }
           this.inventoryEl.removeItem(item)
-          loadout.setItem(item, slot)
+          loadout.setSlot(true,  item, slot)
         }else if(change.type === 'remove'){
           this.inventoryEl.addItem(change.row.item)
-          loadout.setItem(null, slotIndex(change.row))
+          loadout.setSlot(true,  null, slotIndex(change.row))
         }else if(change.type === 'swap'){
-          loadout.setItem(change.row.item, slotIndex(change.row2))
-          loadout.setItem(change.row2.item, slotIndex(change.row))
+          loadout.setSlot(true,  change.row.item, slotIndex(change.row2))
+          loadout.setSlot(true,  change.row2.item, slotIndex(change.row))
         }
         this.adventurerPaneEl.update(true)
         this._updateSaveButton()
@@ -122,7 +124,7 @@ export default class LoadoutTab extends DIElement{
 
     function getNextSlotIndex(loadout, item){
       for(let i = 0; i < 8; i++){
-        if(!loadout.items[i] && loadout.canItemFillSlot(i, item)){
+        if(!loadout.items[i] && loadout.canFillSlot(true, i, item)){
           return i
         }
       }
@@ -148,12 +150,12 @@ export default class LoadoutTab extends DIElement{
           if(slot === -1){
             return
           }
-          loadout.setSkill(skill, slot)
+          loadout.setSlot(false, skill, slot)
         }else if(change.type === 'remove'){
-          loadout.setSkill(null, slotIndex(change.row))
+          loadout.setSlot(false, null, slotIndex(change.row))
         }else if(change.type === 'swap'){
-          loadout.setSkill(change.row.skill, slotIndex(change.row2))
-          loadout.setSkill(change.row2.skill, slotIndex(change.row))
+          loadout.setSlot(false, change.row.skill, slotIndex(change.row2))
+          loadout.setSlot(false, change.row2.skill, slotIndex(change.row))
         }
         this.adventurerPaneEl.update(true)
         this.skillsEl.listEl.fullUpdate()
@@ -163,7 +165,7 @@ export default class LoadoutTab extends DIElement{
 
     function getNextSlotIndex(loadout, skill){
       for(let i = 0; i < 8; i++){
-        if(!loadout.skills[i] && loadout.canSkillFillSlot(i, skill)){
+        if(!loadout.skills[i] && loadout.canFillSlot(false, i, skill)){
           return i
         }
       }

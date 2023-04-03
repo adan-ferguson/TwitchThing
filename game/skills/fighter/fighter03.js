@@ -3,8 +3,8 @@ export default {
     return {
       displayName: 'Punch',
       loadoutModifiers: {
-        restrictions: {
-          attached: {
+        attached: {
+          restrictions: {
             empty: true
           }
         }

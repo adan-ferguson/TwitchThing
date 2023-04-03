@@ -122,8 +122,9 @@ export default class ClassDisplay extends DIElement{
     list.innerHTML = ''
     for(let i = 0; i < 12; i++){
       const skill = skills[i]
-      const row = new AdventurerSkillRow().setSkill(skills[i]).setOptions({
+      const row = new AdventurerSkillRow().setOptions({
         status: skillStatus(this._adventurer, skill),
+        skill: skills[i],
         clickable: true
       })
       row.addEventListener('click', () => {

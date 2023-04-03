@@ -18,9 +18,6 @@ const HTML = `
 
 export default class AdventurerItemRow extends DIElement{
 
-  _item
-  _count = 1
-
   constructor(){
     super()
     this.innerHTML = HTML
@@ -44,26 +41,26 @@ export default class AdventurerItemRow extends DIElement{
   }
 
   get item(){
-    return this._item
+    return this._options.item
   }
 
   get count(){
-    return this._count
+    return this._options.count
   }
 
   set count(val){
-    this._count = val
+    this.setOptions({ count: val })
   }
 
   get tooltip(){
 
-    if(!this.item){
+    if(!this._options.item){
       return null
     }
 
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
-    tooltip.appendChild(new ItemCard().setItem(this.item))
+    tooltip.appendChild(new ItemCard().setItem(this._options.item))
     // tooltip.appendChild(wrapContent('Right-click for more info', {
     //   class: 'right-click subtitle'
     // }))
@@ -71,24 +68,34 @@ export default class AdventurerItemRow extends DIElement{
     return tooltip
   }
 
-  setItem(adventurerItem){
-    this._item = adventurerItem
-    if(!adventurerItem){
-      this._blank()
-    }else{
-      this.nameEl.textContent = adventurerItem.displayName
-      this.orbRow.setData(adventurerItem.orbs)
-      this._setTexture(adventurerItem.isBasic ? null : 'maze-white')
-      this.classList.remove('blank')
-      this.setTooltip()
+  get defaultOptions(){
+    return {
+      item: null,
+      count: null,
+      valid: null,
+      orbs: null
     }
-    return this
   }
 
-  setCount(count){
-    this.countEl.classList.toggle('displaynone', count >= 2 ? false : true)
-    this.countEl.textContent = 'x' + count
-    this.count = count
+  _update(){
+
+    this.classList.toggle('invalid', !(this._options.valid ?? true))
+    this.setTooltip(this.tooltip)
+
+    if(!this.item){
+      this._blank()
+    }else{
+
+      const count = this.count
+      this.countEl.classList.toggle('displaynone', count >= 2 ? false : true)
+      this.countEl.textContent = 'x' + count
+      this.count = count
+
+      this.nameEl.textContent = this.item.displayName
+      this.orbRow.setData(this._options.orbs ?? this.item.orbs)
+      this._setTexture(this.item.isBasic ? null : 'maze-white')
+      this.classList.remove('blank')
+    }
     return this
   }
 

@@ -55,7 +55,7 @@ export default class Inventory extends DIElement{
     if(adventurerItem.isBasic){
       const row = this.listEl.findRow(row => row.item.sameItem(adventurerItem))
       if(row){
-        row.setCount(row.count + 1)
+        row.count += 1
         return
       }
     }
@@ -68,7 +68,7 @@ export default class Inventory extends DIElement{
       return
     }
     if(item.isBasic && row.count > 1){
-      row.setCount(row.count - 1)
+      row.count -= 1
     }else{
       this.listEl.removeRow(row)
     }

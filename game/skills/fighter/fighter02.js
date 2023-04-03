@@ -4,13 +4,13 @@ export default {
     return {
       displayName: 'Slot 8 Only',
       loadoutModifiers: {
-        orbs: {
-          allItems: {
-            fighter: -fighter
+        allItems: {
+          orbs: {
+            fighter: fighter
           }
         },
-        restrictions: {
-          self: {
+        self: {
+          restrictions: {
             slot: 8
           }
         }

@@ -6,11 +6,7 @@ export default class AdventurerLoadoutObject{
     return this._data
   }
 
-  get loadoutRestrictions(){
-    return this.data.loadoutModifiers?.restrictions ?? null
-  }
-
-  get loadoutOrbModifiers(){
-    return this.data.loadoutModifiers?.orbs ?? null
+  get loadoutModifiers(){
+    return this.data.loadoutModifiers ?? null
   }
 }

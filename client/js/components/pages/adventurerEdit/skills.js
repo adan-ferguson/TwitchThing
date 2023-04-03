@@ -53,7 +53,7 @@ export default class Skills extends DIElement{
     const rows = []
     for(let id in unlocked){
       const skill = new AdventurerSkill(id, unlocked[id])
-      rows.push(new AdventurerSkillRow().setSkill(skill))
+      rows.push(new AdventurerSkillRow().setOptions({ skill }))
     }
     this.listEl.setRows(rows)
   }

@@ -18,27 +18,23 @@ export default class ItemCard extends HTMLElement{
     return this.querySelector('.item-name')
   }
 
-  get effectDetails(){
+  get loadoutObjectDetails(){
     return this.querySelector('di-loadout-object-details')
   }
 
-  setItem(itemInstance){
+  setItem(adventurerItem){
     this.innerHTML = HTML
-    if (!itemInstance){
+    if (!adventurerItem){
       return
     }
-    this.nameEl.textContent = itemInstance.displayName
+    this.nameEl.textContent = adventurerItem.displayName
     this.orbEl
       .setOptions({
-        style: OrbsDisplayStyle.MAX_ONLY,
+        style: OrbsDisplayStyle.USED_ONLY,
         tooltip: OrbsTooltip.ITEM
       })
-      .setData(itemInstance.orbs)
-    this.effectDetails
-      .setOptions({
-        showTooltips: true
-      })
-      .setEffect(itemInstance)
+      .setData(adventurerItem.orbs)
+    this.loadoutObjectDetails.setObject(adventurerItem)
     return this
   }
 }

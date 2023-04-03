@@ -5,6 +5,9 @@ import DIElement from './diElement.js'
 import { parseDescriptionString } from '../descriptionString.js'
 import { wrapContent } from '../../../game/utilFunctions.js'
 import { orbEntries, orbEntry } from './common.js'
+import AdventurerSkill from '../../../game/skills/adventurerSkill.js'
+import AdventurerItem from '../../../game/adventurerItem.js'
+import { loadoutObjectDisplayInfo } from '../loadoutObjectDisplayInfo.js'
 
 export default class LoadoutObjectDetails extends DIElement{
 
@@ -28,39 +31,22 @@ export default class LoadoutObjectDetails extends DIElement{
     // this._addAbilityDescription()
     // this._addDescription()
     // this._addStats()
-    this._addOrbModifiers()
-    this._addLoadoutRestrictions()
+    this._addLoadoutModifiers()
   }
 
-  _addOrbModifiers(){
-    if(!this._obj.loadoutOrbModifiers){
+  _addLoadoutModifiers(){
+    // const loadoutModifiersOverride = loadoutObjectDisplayInfo(this._obj)?.loadoutModifiers
+    if (!this._obj.loadoutModifiers){
       return
     }
-    let str = ''
-    for(let modifierKey in this._obj.loadoutOrbModifiers){
-      const mod = this._obj.loadoutOrbModifiers[modifierKey]
-      if(modifierKey === 'allItems'){
-        str += `All items cost ${orbEntries(mod)} less.`
-      }
-    }
-    if(str){
-      this.appendChild(wrapContent(str))
-    }
-  }
 
-  _addLoadoutRestrictions(){
-    if(!this._obj.loadoutRestrictions){
-      return
-    }
-    let str = ''
-    for(let restrictionKey in this._obj.loadoutRestrictions){
-      const res = this._obj.loadoutRestrictions[restrictionKey]
-      if(restrictionKey === 'self' && res.slot){
-        str += `Must be equipped in Slot ${res.slot}.`
+    for (let subjectKey in this._obj.loadoutModifiers){
+      for (let modifierKey in this._obj.loadoutModifiers[subjectKey]){
+        const el = loadoutModifierToEl(subjectKey, modifierKey, this._obj.loadoutModifiers[subjectKey][modifierKey])
+        if(el){
+          this.appendChild(el)
+        }
       }
-    }
-    if(str){
-      this.appendChild(wrapContent(str))
     }
   }
 
@@ -103,3 +89,32 @@ export default class LoadoutObjectDetails extends DIElement{
 }
 
 customElements.define('di-loadout-object-details', LoadoutObjectDetails)
+
+function loadoutModifierToEl(subjectKey, modifierKey, value){
+
+  let html = ''
+  if(subjectKey === 'self'){
+    html += 'This '
+  }else if(subjectKey === 'allItems'){
+    html += 'All items '
+  }
+
+  if(modifierKey === 'orbs'){
+    const key = Object.keys(value)[0]
+    let moreOrLess = 'more'
+    value = { ...value }
+    if(value[key] < 0){
+      value[key] *= -1
+      moreOrLess = 'less'
+    }
+    html += `cost ${orbEntries(value)} ${moreOrLess}.`
+  }else if(modifierKey === 'restrictions'){
+    if(value.slot){
+      html += `must be in slot ${value.slot}.`
+    }
+  }
+
+  if(html){
+    return wrapContent(html)
+  }
+}

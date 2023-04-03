@@ -78,8 +78,21 @@ export function validateValue(val, options){
   }else if(isObject(options.type)){
     Object.keys(options.type).forEach(key => validateValue(val[key], options.type[key]))
   }else if(options.type === 'boolean'){
-    if(!Boolean.isBoolean(val)){
+    if('boolean' !== typeof val){
       throw 'Expected boolean value but did not get one.'
+    }
+  }else if(options.type === 'object'){
+    if(options.validKeys){
+      for(let key in val){
+        if(!options.validKeys.includes(key)){
+          throw 'Key was not one of the validKeys'
+        }
+      }
+    }
+    if(options.validValue){
+      for(let key in val){
+        validateValue(val[key], options.validValue)
+      }
     }
   }
 

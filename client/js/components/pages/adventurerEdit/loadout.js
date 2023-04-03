@@ -40,10 +40,19 @@ export default class Loadout extends HTMLElement{
 
   setLoadout(loadoutObj){
     this.itemSlots.querySelectorAll('di-adventurer-item-row').forEach((row, i) => {
-      row.setItem(loadoutObj.items[i])
+      const slotInfo = loadoutObj.getSlotInfo(true, i)
+      row.setOptions({
+        item: slotInfo.loadoutItem,
+        valid: slotInfo.restrictionsPassed,
+        orbs: slotInfo.modifiedOrbsData
+      })
     })
     this.skillSlots.querySelectorAll('di-adventurer-skill-row').forEach((row, i) => {
-      row.setSkill(loadoutObj.skills[i])
+      const slotInfo = loadoutObj.getSlotInfo(false, i)
+      row.setOptions({
+        skill: slotInfo.loadoutItem,
+        valid: slotInfo.restrictionsPassed
+      })
     })
   }
 

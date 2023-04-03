@@ -3,8 +3,8 @@ export default {
     return {
       displayName: 'BIG Weapon',
       loadoutModifiers: {
-        restrictions: {
-          neighbouring: {
+        neighbouring: {
+          restrictions: {
             empty: true
           }
         }

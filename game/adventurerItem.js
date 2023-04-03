@@ -46,21 +46,10 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
     return this._baseItemId
   }
 
-  /**
-   * @returns {OrbsData}
-   */
   get orbs(){
-    return new OrbsData({ [this.advClass] : this._orbs.total(this.level) })
-    // let baseOrbs
-    // if(_.isObject(this.itemData.orbs)){
-    //   baseOrbs = this.itemData.orbs
-    // }else{
-    //   baseOrbs = { [this.itemData.group]: this.itemData.orbs }
-    // }
-    // return new OrbsData([
-    //   baseOrbs,
-    //   ...this.applicableSlotEffects.map(slotEffect => slotEffect.orbs ?? {})
-    // ])
+    return {
+      [this.advClass]: this._orbs.total(this.level)
+    }
   }
 
   sameItem(adventurerItem){

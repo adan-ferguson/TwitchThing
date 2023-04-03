@@ -30,8 +30,6 @@ export const AdventurerSkillRowStatus = {
 
 export default class AdventurerSkillRow extends DIElement{
 
-  _skill
-
   constructor(){
     super()
     this.innerHTML = HTML
@@ -39,11 +37,11 @@ export default class AdventurerSkillRow extends DIElement{
   }
 
   get skill(){
-    return this._skill
+    return this._options.skill
   }
 
   set skill(adventurerSkill){
-    this.setSkill(adventurerSkill)
+    this.setOptions({ skill: adventurerSkill })
   }
 
   get contentEl(){
@@ -54,19 +52,21 @@ export default class AdventurerSkillRow extends DIElement{
     return {
       status: AdventurerSkillRowStatus.UNLOCKED,
       clickable: false,
-      showSkillPoints: true
+      showSkillPoints: true,
+      skill: null,
+      valid: null
     }
   }
 
   get tooltip(){
 
-    if(!this.skill){
+    if(!this._options.skill){
       return null
     }
 
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
-    tooltip.appendChild(new SkillCard().setSkill(this.skill))
+    tooltip.appendChild(new SkillCard().setSkill(this._options.skill))
     // tooltip.appendChild(wrapContent('Right-click for more info', {
     //   class: 'right-click subtitle'
     // }))
@@ -74,19 +74,15 @@ export default class AdventurerSkillRow extends DIElement{
     return tooltip
   }
 
-  setSkill(adventurerSkill){
-    this._skill = adventurerSkill
-    this._update()
-    return this
-  }
-
   _update(){
 
     this.contentEl.innerHTML = ''
-    const skill = this.skill
+
+    const skill = this._options.skill
     this.classList.toggle('blank', skill ? false : true)
     this.classList.toggle('clickable', false)
     this.classList.toggle('locked', this._options.status !== AdventurerSkillRowStatus.UNLOCKED)
+    this.classList.toggle('invalid', !(this._options.valid ?? true))
     this.setTooltip(this.tooltip)
 
     if(!skill){
