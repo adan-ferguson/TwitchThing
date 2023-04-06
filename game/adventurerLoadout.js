@@ -1,32 +1,34 @@
 import AdventurerItem from './adventurerItem.js'
 import AdventurerSkill from './skills/adventurerSkill.js'
 import OrbsData from './orbsData.js'
+import SlotModifierCollection from './slotModifierCollection.js'
+import { isolate } from './utilFunctions.js'
 
 export default class AdventurerLoadout{
-  
-  _items = []
-  _skills = []
+
+  _objs
 
   constructor(loadoutObj){
+    this._objs = [[], []]
     for(let i = 0; i < 8; i++){
-      this._items[i] = loadoutObj.items[i] ? new AdventurerItem(loadoutObj.items[i]) : null
-      this._skills[i] = loadoutObj.skills[i] ? new AdventurerSkill(loadoutObj.skills[i]) : null
+      this._objs[0][i] = loadoutObj.items[i] ? new AdventurerItem(loadoutObj.items[i]) : null
+      this._objs[1][i] = loadoutObj.skills[i] ? new AdventurerSkill(loadoutObj.skills[i]) : null
     }
   }
 
   get skills(){
-    return [...this._skills]
+    return [...this._objs[1]]
   }
 
   get items(){
-    return [...this._items]
+    return [...this._objs[0]]
   }
 
   get usedOrbs(){
     const data = []
     for(let i = 0; i < 8; i++){
-      const item = this.getSlotInfo(true, i)
-      const skill = this.getSlotInfo(false, i)
+      const item = this.getSlotInfo(0, i)
+      const skill = this.getSlotInfo(1, i)
       data.push(item.modifiedOrbsData?.usedOrbs ?? {}, skill.modifiedOrbsData?.usedOrbs)
     }
     return new OrbsData(data)
@@ -34,119 +36,97 @@ export default class AdventurerLoadout{
 
   get isValid(){
     for(let i = 0; i < 8; i++){
-      if(!this.getSlotInfo(true, i).restrictionsPassed){
+      if(this.getSlotInfo(0, i).restrictionsFailed){
         return false
       }
-      if(!this.getSlotInfo(false, i).restrictionsPassed){
+      if(this.getSlotInfo(1, i).restrictionsFailed){
         return false
       }
     }
     return true
   }
 
-  getSlot(isItem, slot){
-    return (isItem ? this.items : this.skills)[slot]
+  get modifiers(){
+    if(!this._modifiers){
+      this._modifiers = new SlotModifierCollection([this.items, this.skills], 'loadoutModifiers')
+      console.log(this._modifiers)
+    }
+    return this._modifiers
   }
 
-  getSlotInfo(isItem, slot){
-    const applicableLoadoutModifiers = this._loadoutModifiersFor(isItem, slot)
-    const loadoutItem = this.getSlot(isItem, slot)
-    let modifiedOrbsData = null
-    if(loadoutItem?.orbs){
-      const modOrbs = applicableLoadoutModifiers.orbs ?? []
-      modifiedOrbsData = new OrbsData([loadoutItem.orbs, ...modOrbs])
-    }
-    const restrictionsPassed = (applicableLoadoutModifiers?.restrictions ?? []).every(restriction => {
-      if(restriction.slot){
-        return slot === restriction.slot - 1
+  getSlotInfo(col, slot){
+
+    const restrictionsFailed = () => {
+      const outgoing = this.modifiers.outgoingModifiers(col, slot)
+      if(!outgoing){
+        return false
       }
-      if(restriction.empty){
-        return loadoutItem ? false : true
+      for(let i in outgoing){
+        for(let j in outgoing[i]){
+          const restrictions = isolate(outgoing[i][j], 'restrictions')
+          for(let restriction of restrictions){
+            if(restrictionFailed(this._objs[i][j], restriction, i, j)){
+              return true
+            }
+          }
+        }
       }
       return false
-    })
-    return {
-      modifiedOrbsData,
-      restrictionsPassed,
-      loadoutItem
     }
+
+    const loadoutItem = this._objs[col][slot]
+    const ret = { loadoutItem }
+
+    if(loadoutItem?.orbs){
+      const modOrbs = this.modifiers.get(col, slot, 'orbs')
+      ret.modifiedOrbsData = new OrbsData([loadoutItem.orbs, ...modOrbs])
+    }
+
+    const sourceRestrictions = this.modifiers.get(col, slot, 'restrictions')
+    ret.causedRestrictionFailure = sourceRestrictions.find(restriction => {
+      return restrictionFailed(loadoutItem, restriction, col, slot)
+    }) ? true : false
+
+    ret.restrictionsFailed = restrictionsFailed()
+
+    return ret
   }
 
   /**
    * Could this loadoutObject be placed in this slot without violating a restriction?
-   * @param isItem
+   * @param col
    * @param loadoutObject
    * @param slot
    * @returns {boolean}
    */
-  canFillSlot(isItem, slot, loadoutObject){
-    const oldObject = this._getLoadoutObject(isItem, slot)
-    this.setSlot(isItem, loadoutObject, slot)
-    const slotInfo = this.getSlotInfo(isItem, slot)
-    this.setSlot(isItem, oldObject, slot)
-    return slotInfo.restrictionsPassed
+  canFillSlot(col, slot, loadoutObject){
+
+    const cachedObjs = [[...this._objs[0]],[...this._objs[1]]]
+    const cachedMods = this._modifiers
+
+    this.setSlot(col, slot, loadoutObject)
+    const slotInfo = this.getSlotInfo(col, slot)
+
+    this._objs = cachedObjs
+    this._modifiers = cachedMods
+
+    return !slotInfo.causedRestrictionFailure
   }
 
-  setSlot(isItem, loadoutObject, slot){
-    this._objArray(isItem)[slot] = loadoutObject
-  }
-
-  _getLoadoutObject(isItem, slot){
-    return this._objArray(isItem)[slot]
-  }
-
-  _loadoutModifiersFor(isItem, slot){
-    const modifiersObj = {}
-    const addModifiersFrom = (isItem2, slot2) => {
-      const obj = this.getSlot(isItem2, slot2)
-      if(!obj?.loadoutModifiers){
-        return
-      }
-      for(let subjectKey in obj.loadoutModifiers){
-        if(subjectMatch(isItem2, slot2, isItem, slot, subjectKey)){
-          for(let restrictionKey in obj.loadoutModifiers[subjectKey]){
-            if(!modifiersObj[restrictionKey]){
-              modifiersObj[restrictionKey] = []
-            }
-            modifiersObj[restrictionKey].push(obj.loadoutModifiers[subjectKey][restrictionKey])
-          }
-        }
-      }
-    }
-    for(let i = 0; i < 8; i++){
-      addModifiersFrom(true, i)
-      addModifiersFrom(false, i)
-    }
-    return modifiersObj
-  }
-
-  _objArray(isItem){
-    return isItem ? this._items : this._skills
+  setSlot(col, row, loadoutObject){
+    this._objs[col][row] = loadoutObject
+    this._modifiers = null
   }
 }
 
-/**
- * @param sourceIsItem
- * @param sourceSlot
- * @param targetIsItem
- * @param targetSlot
- * @param subjectKey
- * @return [AdventurerLoadoutObject]
- */
-function subjectMatch(sourceIsItem, sourceSlot, targetIsItem, targetSlot, subjectKey){
-  const sameType = sourceIsItem === targetIsItem
-  const sameSlot = sourceSlot === targetSlot
-  if(subjectKey === 'self'){
-    return sameType && sameSlot
+function restrictionFailed(obj, restriction, col, row){
+  col = parseInt(col)
+  row = parseInt(row)
+  if(restriction.empty){
+    return obj ? true : false
   }
-  if(subjectKey === 'attached'){
-    return !sameType && sameSlot
-  }
-  if(subjectKey === 'neighbour'){
-    return sameType && Math.abs(sourceSlot - targetSlot) === 1
-  }
-  if(subjectKey === 'allItems'){
-    return targetIsItem
+  if(restriction.slot){
+    return row !== restriction.slot - 1
   }
   return false
 }

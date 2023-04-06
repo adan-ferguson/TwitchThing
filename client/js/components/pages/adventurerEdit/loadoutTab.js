@@ -109,13 +109,13 @@ export default class LoadoutTab extends DIElement{
             return
           }
           this.inventoryEl.removeItem(item)
-          loadout.setSlot(true,  item, slot)
+          loadout.setSlot(0,  slot, item)
         }else if(change.type === 'remove'){
           this.inventoryEl.addItem(change.row.item)
-          loadout.setSlot(true,  null, slotIndex(change.row))
+          loadout.setSlot(0,  slotIndex(change.row), null, )
         }else if(change.type === 'swap'){
-          loadout.setSlot(true,  change.row.item, slotIndex(change.row2))
-          loadout.setSlot(true,  change.row2.item, slotIndex(change.row))
+          loadout.setSlot(0, slotIndex(change.row2), change.row.item, )
+          loadout.setSlot(0, slotIndex(change.row), change.row2.item, )
         }
         this.adventurerPaneEl.update(true)
         this._updateSaveButton()
@@ -124,7 +124,7 @@ export default class LoadoutTab extends DIElement{
 
     function getNextSlotIndex(loadout, item){
       for(let i = 0; i < 8; i++){
-        if(!loadout.items[i] && loadout.canFillSlot(true, i, item)){
+        if(!loadout.items[i] && loadout.canFillSlot(0, i, item)){
           return i
         }
       }
@@ -150,12 +150,12 @@ export default class LoadoutTab extends DIElement{
           if(slot === -1){
             return
           }
-          loadout.setSlot(false, skill, slot)
+          loadout.setSlot(1, slot, skill)
         }else if(change.type === 'remove'){
-          loadout.setSlot(false, null, slotIndex(change.row))
+          loadout.setSlot(1, slotIndex(change.row), null)
         }else if(change.type === 'swap'){
-          loadout.setSlot(false, change.row.skill, slotIndex(change.row2))
-          loadout.setSlot(false, change.row2.skill, slotIndex(change.row))
+          loadout.setSlot(1, slotIndex(change.row2), change.row.skill)
+          loadout.setSlot(1, slotIndex(change.row), change.row2.skill)
         }
         this.adventurerPaneEl.update(true)
         this.skillsEl.listEl.fullUpdate()
@@ -165,7 +165,7 @@ export default class LoadoutTab extends DIElement{
 
     function getNextSlotIndex(loadout, skill){
       for(let i = 0; i < 8; i++){
-        if(!loadout.skills[i] && loadout.canFillSlot(false, i, skill)){
+        if(!loadout.skills[i] && loadout.canFillSlot(1, i, skill)){
           return i
         }
       }

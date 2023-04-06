@@ -188,3 +188,17 @@ export function cleanupObject(obj){
   }
   return newObj
 }
+
+export function isolate(arrayOfObjs, propName){
+  const arr = []
+  arrayOfObjs.forEach(obj => {
+    if(obj[propName]){
+      arr.push(obj[propName])
+    }
+  })
+  return arr
+}
+
+export function deepClone(obj){
+  return JSON.parse(JSON.stringify(obj))
+}
