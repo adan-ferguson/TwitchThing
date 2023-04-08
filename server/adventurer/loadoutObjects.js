@@ -3,23 +3,20 @@ import { validateObject } from '../validations.js'
 import AdventurerItem from '../../game/adventurerItem.js'
 import { ADVENTURER_EFFECT_VALIDATION } from '../effect/effects.js'
 import AdventurerSkill from '../../game/skills/adventurerSkill.js'
-
-const SUBJECT_KEYS = ['self', 'attached', 'neighbouring', 'allItems']
+import { SUBJECT_KEYS } from './subjectKeys.js'
 
 const ORB_MODIFIER_VALIDATION = {
-  type: {
-    all: { type: 'integer' },
-    fighter: { type: 'integer' },
-    mage: { type: 'integer' },
-    paladin: { type: 'integer' },
-    rogue: { type: 'integer' },
-    chimera: { type: 'integer' },
-  }
+  all: { type: 'integer' },
+  fighter: { type: 'integer' },
+  mage: { type: 'integer' },
+  paladin: { type: 'integer' },
+  rogue: { type: 'integer' },
+  chimera: { type: 'integer' },
 }
 
 const RESTRICTION_VALIDATION = {
   empty: { type: 'boolean' },
-  slot: { type: [0,1,2,3,4,5,6,7] }
+  slot: { type: [1,2,3,4,5,6,7,8] }
 }
 
 const LOADOUT_OBJECT_VALIDATION = {
@@ -34,8 +31,19 @@ const LOADOUT_OBJECT_VALIDATION = {
       }
     }
   },
-  vals: { type: 'object' },
-  effect: { type: ADVENTURER_EFFECT_VALIDATION }
+  vars: { type: 'object' },
+  effect: {
+    type: {
+      ...ADVENTURER_EFFECT_VALIDATION,
+      // metaEffect: {
+      //   type: 'object',
+      //   validKeys: SUBJECT_KEYS,
+      //   validValue: {
+      //     type: ADVENTURER_EFFECT_VALIDATION
+      //   }
+      // }
+    }
+  }
 }
 
 export function validateAllItems(){

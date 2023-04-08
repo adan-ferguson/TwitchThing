@@ -106,19 +106,19 @@ function wrapOrbs(classType, val, stats){
     })
 }
 
-function wrapStat(statType, val){
-  const stats = new Stats({ [statType]: val })
-  const info = getStatDisplayInfo(stats.get(statType), {
-    style: StatsDisplayStyle.ADDITIONAL
-  })
-  let content = info.displayedValue
-  if(info.icon){
-    content = `${info.icon}` + content
-  }else{
-    content += ' ' + info.text
-  }
-  return makeEl({ content, class: 'stat-wrap' })
-}
+// function wrapStat(statType, val){
+//   const stats = new Stats({ [statType]: val })
+//   const info = getStatDisplayInfo(stats.get(statType), {
+//     style: StatsDisplayStyle.ADDITIONAL
+//   })
+//   let content = info.displayedValue
+//   if(info.icon){
+//     content = `${info.icon}` + content
+//   }else{
+//     content += ' ' + info.text
+//   }
+//   return makeEl({ content, class: 'stat-wrap' })
+// }
 
 function toPct(val){
   return Math.round(val * 100) + '%'

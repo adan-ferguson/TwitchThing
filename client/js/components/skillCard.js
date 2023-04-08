@@ -3,7 +3,7 @@ import { classIcon } from '../classDisplayInfo.js'
 import { skillPointEntry } from './common.js'
 
 const HTML = `
-<div class="skill-border">
+<div class="obj-border">
   <div class="inset-title skill-name"></div>
   <div class="inset-title-right skill-points"></div>
   <di-loadout-object-details></di-loadout-object-details>

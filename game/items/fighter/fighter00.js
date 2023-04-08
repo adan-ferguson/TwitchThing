@@ -1,8 +1,20 @@
 export default {
   levelFn: function(level){
     return {
-      displayName: 'Blank Weapon'
+      displayName: 'Heavy Axe',
+      effect: {
+        stats: {
+          speed: -30
+        },
+        // metaEffect: {
+        //   attached: {
+        //     stats: {
+        //       physPower: '2x'
+        //     }
+        //   }
+        // }
+      }
     }
   },
-  orbs: [50]
+  orbs: [5]
 }

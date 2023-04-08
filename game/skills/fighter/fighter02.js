@@ -15,7 +15,7 @@ export default {
           }
         }
       },
-      vals: {
+      vars: {
         fighter
       }
     }

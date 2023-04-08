@@ -1,3 +1,11 @@
+import Stats from '../../../game/stats/stats.js'
+import { getStatDisplayInfo, StatsDisplayStyle } from '../statsDisplayInfo.js'
+import { makeEl } from '../../../game/utilFunctions.js'
+import healthIcon from '../../assets/icons/health.svg'
+import physPower from '../../assets/icons/physPower.svg'
+import magicPower from '../../assets/icons/magicPower.svg'
+import _ from 'lodash'
+
 export function orbPointIcon(){
   return coloredIcon('circle', '#f3d472')
 }
@@ -28,4 +36,40 @@ export function attachedItem(){
 
 export function attachedSkill(){
   return '<i class="fa-solid fa-arrow-right attached-skill"></i>'
+}
+
+export function wrapStat(statType, val){
+  const stats = new Stats({ [statType]: val })
+  const info = getStatDisplayInfo(stats.get(statType), {
+    style: StatsDisplayStyle.ADDITIONAL
+  })
+  let content = info.displayedValue
+  if(info.icon){
+    content = `${info.icon}` + content
+  }else{
+    content += ' ' + info.text
+  }
+  return makeEl({ content, class: 'stat-wrap' })
+}
+
+export function physScaling(pct){
+  return scalingWrap('phys', pct)
+}
+
+export function magicScaling(pct){
+  return scalingWrap('magic', pct)
+}
+
+function scalingWrap(damageType, amount){
+  const ICONS = {
+    magic: magicPower,
+    phys: physPower,
+    health: healthIcon
+  }
+  const valStr = _.isNumber(amount) ? Math.ceil(amount) : amount
+  return makeEl({
+    class: ['scaling-type', 'scaling-type-' + damageType],
+    content: `${ICONS[damageType]}${valStr}`,
+    elementType: 'span'
+  })
 }

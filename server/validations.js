@@ -43,7 +43,7 @@ export function validateObject(obj, validation){
 
 export function validateValue(val, options){
 
-  options = isObject(options) ? options : {}
+  options = isObject(options) ? options : { type: options }
   options = {
     required: false,
     type: null,
@@ -61,10 +61,10 @@ export function validateValue(val, options){
   }
 
   if(_.isArray(options.type)){
-    if(options.type.includes(val)){
+    if(!options.type.includes(val)){
       throw `Expected one of "${options.type}" but did not get one.`
     }
-  }else if(options.type === 'array' && !_.isArray(val)){
+  }else if(options.type === 'array'){
     if(!_.isArray(val)){
       throw 'Expected array value but did not get one.'
     }
@@ -76,7 +76,10 @@ export function validateValue(val, options){
       throw 'Expected integer value but did not get one.'
     }
   }else if(isObject(options.type)){
-    Object.keys(options.type).forEach(key => validateValue(val[key], options.type[key]))
+    if(!isObject(val)){
+      throw 'Expected object but did not get one.'
+    }
+    validateObject(val, options.type)
   }else if(options.type === 'boolean'){
     if('boolean' !== typeof val){
       throw 'Expected boolean value but did not get one.'
@@ -94,6 +97,12 @@ export function validateValue(val, options){
         validateValue(val[key], options.validValue)
       }
     }
+  }else if(options.type === 'string'){
+    if(typeof val !== 'string'){
+      throw 'Expected string value but did not get one.'
+    }
+  }else{
+    throw 'Invalid validation.'
   }
 
   return val

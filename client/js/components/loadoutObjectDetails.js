@@ -1,12 +1,9 @@
-import AbilityDescription from './abilityDescription.js'
-import StatsList from './stats/statsList.js'
-import { StatsDisplayStyle } from '../statsDisplayInfo.js'
 import DIElement from './diElement.js'
-import { parseDescriptionString } from '../descriptionString.js'
 import { wrapContent } from '../../../game/utilFunctions.js'
-import { orbEntries, orbEntry } from './common.js'
-import AdventurerSkill from '../../../game/skills/adventurerSkill.js'
+import { attachedItem, attachedSkill, orbEntries } from './common.js'
 import AdventurerItem from '../../../game/adventurerItem.js'
+import Stats from '../../../game/stats/stats.js'
+import StatsList from './stats/statsList.js'
 import { loadoutObjectDisplayInfo } from '../loadoutObjectDisplayInfo.js'
 
 export default class LoadoutObjectDetails extends DIElement{
@@ -15,6 +12,10 @@ export default class LoadoutObjectDetails extends DIElement{
     return {
       showTooltips: false,
     }
+  }
+
+  get isItem(){
+    return this._obj instanceof AdventurerItem
   }
 
   setObject(obj){
@@ -28,21 +29,22 @@ export default class LoadoutObjectDetails extends DIElement{
     if(!this._obj){
       return
     }
-    // this._addAbilityDescription()
+    const info = loadoutObjectDisplayInfo(this._obj)
+    this._addMeta()
+    this._addAbility(info)
     // this._addDescription()
     // this._addStats()
     this._addLoadoutModifiers()
   }
 
-  _addLoadoutModifiers(){
-    // const loadoutModifiersOverride = loadoutObjectDisplayInfo(this._obj)?.loadoutModifiers
-    if (!this._obj.loadoutModifiers){
+  _addMeta(){
+    const metaEffect = this._obj.effect.metaEffect
+    if(!metaEffect){
       return
     }
-
-    for (let subjectKey in this._obj.loadoutModifiers){
-      for (let modifierKey in this._obj.loadoutModifiers[subjectKey]){
-        const el = loadoutModifierToEl(subjectKey, modifierKey, this._obj.loadoutModifiers[subjectKey][modifierKey])
+    for(let subjectKey in metaEffect){
+      for(let modifierKey in metaEffect[subjectKey]){
+        const el = loadoutModifierToEl(subjectKey, modifierKey, metaEffect[subjectKey][modifierKey], this.isItem)
         if(el){
           this.appendChild(el)
         }
@@ -50,14 +52,33 @@ export default class LoadoutObjectDetails extends DIElement{
     }
   }
 
-  // _addAbilityDescription(){
-  //   if(this._effectInstance.hasAbilities){
-  //     const desc = new AbilityDescription().setItem(this._effectInstance, this._options.showTooltips)
-  //     if(desc){
-  //       this.appendChild(desc)
-  //     }
-  //   }
-  // }
+  _addLoadoutModifiers(){
+    const loadoutModifiers = this._obj.loadoutModifiers
+    if (!loadoutModifiers){
+      return
+    }
+
+    for (let subjectKey in loadoutModifiers){
+      for (let modifierKey in loadoutModifiers[subjectKey]){
+        const el = loadoutModifierToEl(subjectKey, modifierKey, loadoutModifiers[subjectKey][modifierKey], this.isItem)
+        if(el){
+          this.appendChild(el)
+        }
+      }
+    }
+  }
+
+  _addAbility(displayInfo){
+    if(displayInfo.abilityDescription){
+
+    }
+    // if(this._effectInstance.hasAbilities){
+    //   const desc = new AbilityDescription().setItem(this._effectInstance, this._options.showTooltips)
+    //   if(desc){
+    //     this.appendChild(desc)
+    //   }
+    // }
+  }
   //
   // _addStats(){
   //   const statsList = new StatsList()
@@ -90,13 +111,19 @@ export default class LoadoutObjectDetails extends DIElement{
 
 customElements.define('di-loadout-object-details', LoadoutObjectDetails)
 
-function loadoutModifierToEl(subjectKey, modifierKey, value){
+function loadoutModifierToEl(subjectKey, modifierKey, value, isItem){
 
+  const placeholders = []
   let html = ''
   if(subjectKey === 'self'){
     html += 'This '
   }else if(subjectKey === 'allItems'){
-    html += 'All items '
+    html += 'Each equipped item '
+  }else if(subjectKey === 'attached'){
+    html += isItem ? attachedSkill() : attachedItem()
+    html += `Attached ${isItem ? 'item' : 'skill'} `
+  }else if(subjectKey === 'neighbouring'){
+    html += `Neighbouring ${isItem ? 'items' : 'skills'} `
   }
 
   if(modifierKey === 'orbs'){
@@ -111,10 +138,21 @@ function loadoutModifierToEl(subjectKey, modifierKey, value){
   }else if(modifierKey === 'restrictions'){
     if(value.slot){
       html += `must be in slot ${value.slot}.`
+    }else if(value.empty){
+      html += ' must be empty.'
     }
   }
+  // else if(modifierKey === 'stats'){
+  //   // wrapStat()
+  //   placeholders.push(new StatsList().setOptions({ inline: true, stats: new Stats(value) }))
+  //   html += `benefits from <div class="placeholder-${placeholders.length - 1}"></div>`
+  // }
 
   if(html){
-    return wrapContent(html)
+    const el = wrapContent(html)
+    placeholders.forEach((ph, i) => {
+      el.querySelector('.placeholder-' + i).replaceWith(placeholders[i])
+    })
+    return el
   }
 }

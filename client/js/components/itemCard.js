@@ -1,7 +1,7 @@
 import { OrbsDisplayStyle, OrbsTooltip } from './orbRow.js'
 
 const HTML = `
-<div class="card-border">
+<div class="obj-border">
   <span class="inset-title item-name"></span>
   <di-orb-row class="inset-title-right item-orbs"></di-orb-row>
   <di-loadout-object-details></di-loadout-object-details>

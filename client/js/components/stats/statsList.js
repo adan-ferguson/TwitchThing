@@ -12,6 +12,8 @@ const STAT_EFFECT_TIME = 500
 export default class StatsList extends HTMLElement{
 
   _options = {
+    stats: new Stats(),
+    owner: null,
     statsDisplayStyle: StatsDisplayStyle.CUMULATIVE,
     iconsOnly: false,
     showTooltips: true,
@@ -22,11 +24,8 @@ export default class StatsList extends HTMLElement{
     excluded: []
   }
 
-  _stats = new Stats()
-  _owner = null
-
   get stats(){
-    return this._stats
+    return this._options.stats
   }
 
   get empty(){
@@ -45,8 +44,8 @@ export default class StatsList extends HTMLElement{
 
   setStats(stats, owner = null, showStatChangeEffect = false){
     // TODO: options
-    this._stats = stats
-    this._owner = owner
+    this._options.stats = stats
+    this._options.owner = owner
     this._update(showStatChangeEffect)
   }
 
@@ -59,7 +58,7 @@ export default class StatsList extends HTMLElement{
       unusedStats[row.getAttribute('stat-key')] = row
     })
 
-    const statsToShow = this._stats.getAll(this._options.forced)
+    const statsToShow = this._options.stats.getAll(this._options.forced)
 
     for(let key in statsToShow){
       const stat = statsToShow[key]
@@ -69,7 +68,7 @@ export default class StatsList extends HTMLElement{
       if(this._options.hideIfDefaultValue && stat.value === stat.defaultValue){
         continue
       }
-      this._updateStat(stat, this._owner, showStatChangeEffect)
+      this._updateStat(stat, this._options.owner, showStatChangeEffect)
       delete unusedStats[key]
     }
 
