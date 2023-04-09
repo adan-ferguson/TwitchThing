@@ -1,5 +1,6 @@
 import DIElement from '../../diElement.js'
 import fizzetch from '../../../fizzetch.js'
+import { skillPointEntry } from '../../common.js'
 
 const HTML = `
 <div class="adv-classes content-columns">
@@ -13,7 +14,7 @@ const HTML = `
     <di-adventurer-edit-class-display></di-adventurer-edit-class-display>
   </div>
 </div>
-<di-adventurer-edit-skill-point-meter></di-adventurer-edit-skill-point-meter>
+<div style="flex: 0 1; display: flex; align-items: center; align-self: center;">Gain ${skillPointEntry(1)} every 5 levels</div>
 `
 
 export default class PointsTab extends DIElement{

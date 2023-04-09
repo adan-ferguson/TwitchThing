@@ -4,24 +4,27 @@ import Stats from '../../../../game/stats/stats.js'
 import { mergeOptionsObjects, wait } from '../../../../game/utilFunctions.js'
 import { flash } from '../../animations/simple.js'
 import _ from 'lodash'
+import DIElement from '../diElement.js'
 
 const STAT_INCREASE_COLOR = '#c0ffc0'
 const STAT_DECREASE_COLOR = '#fabcbc'
 const STAT_EFFECT_TIME = 500
 
-export default class StatsList extends HTMLElement{
+export default class StatsList extends DIElement{
 
-  _options = {
-    stats: new Stats(),
-    owner: null,
-    statsDisplayStyle: StatsDisplayStyle.CUMULATIVE,
-    iconsOnly: false,
-    showTooltips: true,
-    truncate: true,
-    maxItems: 999,
-    hideIfDefaultValue: false,
-    forced: [],
-    excluded: []
+  get defaultOptions(){
+    return {
+      stats: new Stats(),
+      owner: null,
+      statsDisplayStyle: StatsDisplayStyle.CUMULATIVE,
+      iconsOnly: false,
+      showTooltips: true,
+      truncate: true,
+      maxItems: 999,
+      hideIfDefaultValue: false,
+      forced: [],
+      excluded: []
+    }
   }
 
   get stats(){
@@ -32,21 +35,10 @@ export default class StatsList extends HTMLElement{
     return this.querySelector('di-stat-row') ? false : true
   }
 
-  setOptions(options){
-    const newOptions = mergeOptionsObjects(this._options, options)
-    if(_.isEqual(newOptions, this._options)){
-      return this
-    }
-    this._options = newOptions
-    this._update()
-    return this
-  }
-
-  setStats(stats, owner = null, showStatChangeEffect = false){
-    // TODO: options
+  setStats(stats, showStatChangeEffect = false){
     this._options.stats = stats
-    this._options.owner = owner
     this._update(showStatChangeEffect)
+    return this
   }
 
   async _update(showStatChangeEffect = false){

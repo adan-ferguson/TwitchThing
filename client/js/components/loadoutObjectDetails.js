@@ -7,6 +7,7 @@ import StatsList from './stats/statsList.js'
 import { loadoutObjectDisplayInfo } from '../loadoutObjectDisplayInfo.js'
 import AbilityDescription from './abilityDescription.js'
 import { getIdleAbilityDisplayInfo } from '../abilityDisplayInfo.js'
+import { StatsDisplayStyle } from '../statsDisplayInfo.js'
 
 export default class LoadoutObjectDetails extends DIElement{
 
@@ -34,7 +35,7 @@ export default class LoadoutObjectDetails extends DIElement{
     this._addMeta()
     this._addAbility()
     // this._addDescription()
-    // this._addStats()
+    this._addStats()
     this._addLoadoutModifiers()
   }
 
@@ -75,20 +76,19 @@ export default class LoadoutObjectDetails extends DIElement{
       this.appendChild(new AbilityDescription().setAbilityDisplayInfo(info))
     }
   }
-  //
-  // _addStats(){
-  //   const statsList = new StatsList()
-  //   statsList.setOptions({
-  //     // showTooltips: false,
-  //     statsDisplayStyle: StatsDisplayStyle.ADDITIONAL
-  //   })
-  //   if(!this._effectInstance.effectData.scaledStats){
-  //     statsList.setStats(this._effectInstance.stats)
-  //   }
-  //   if(!statsList.empty){
-  //     this.appendChild(statsList)
-  //   }
-  // }
+
+  _addStats(){
+    const stats = this._obj.effect.stats
+    if(stats){
+      this.appendChild(
+        new StatsList().setOptions({
+          statsDisplayStyle: StatsDisplayStyle.ADDITIONAL,
+          stats: new Stats(stats)
+        })
+      )
+    }
+  }
+
   //
   // _addDescription(){
   //   const description = parseDescriptionString(this._effectInstance.description ?? '')

@@ -37,7 +37,7 @@ export default class DIElement extends HTMLElement{
     if(!this._tippy){
       tippy(this, {
         theme: 'light',
-        onHide: () => false,
+        // onHide: () => false,
         maxWidth: 'none',
         delay: 100,
         duration: 150

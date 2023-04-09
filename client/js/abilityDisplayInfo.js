@@ -27,27 +27,28 @@ export function getIdleAbilityDisplayInfo(loadoutObject){
   }
 }
 
-// export function getAbilityDisplayInfo(loadoutObject){
-//   const objDisplayInfo = loadoutObjectDisplayInfo(loadoutObject)
-//   const { ability, trigger } = getMainAbility(loadoutObject.effect.abilities)
-//   if(!ability){
-//     return null
-//   }
-//   // const idle = !effectInstance.owner || effectInstance.owner.idle || false
-//   // const stats = effectInstance.owner ? ability.parentEffect.exclusiveStats : null
-//   return {
-//     ability,
-//     trigger,
-//     type: trigger === 'active' ? 'active' : 'triggered',
-//     descriptionEl: descriptionEl(ability, stats),
-//     idle: true,
-//     state: idle ? AbilityState.IDLE : state(ability),
-//     barValue: idle ? 0 : barValue(ability),
-//     barMax: idle ? 1 : barMax(ability),
-//     cooldownRefreshing: ability.cooldownRefreshing,
-//     phantom: ability.phantom ? true : false
-//   }
-// }
+export default function getAbilityDisplayInfo(loadoutObject){
+  // TODO: fix
+  const objDisplayInfo = loadoutObjectDisplayInfo(loadoutObject)
+  const { ability, trigger } = getMainAbility(loadoutObject.effect.abilities)
+  if(!ability){
+    return null
+  }
+  // const idle = !effectInstance.owner || effectInstance.owner.idle || false
+  // const stats = effectInstance.owner ? ability.parentEffect.exclusiveStats : null
+  return {
+    ability,
+    trigger,
+    type: trigger === 'active' ? 'active' : 'triggered',
+    descriptionEl: descriptionEl(ability, stats),
+    idle: true,
+    state: idle ? AbilityState.IDLE : state(ability),
+    barValue: idle ? 0 : barValue(ability),
+    barMax: idle ? 1 : barMax(ability),
+    cooldownRefreshing: ability.cooldownRefreshing,
+    phantom: ability.phantom ? true : false
+  }
+}
 
 function getMainAbility(abilities){
   if(!abilities){
