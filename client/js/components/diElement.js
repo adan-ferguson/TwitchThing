@@ -19,6 +19,10 @@ export default class DIElement extends HTMLElement{
     return this.closest('.page')
   }
 
+  get inTooltip(){
+    return this.closest('.tippy-content')
+  }
+
   setOptions(options = {}){
     const newOptions = mergeOptionsObjects(this._options, options)
     if(_.isEqual(newOptions, this._options)){
@@ -33,10 +37,13 @@ export default class DIElement extends HTMLElement{
     if(!this._tippy){
       tippy(this, {
         theme: 'light',
-        onHide: () => false
+        onHide: () => false,
+        maxWidth: 'none',
+        delay: 100,
+        duration: 150
       })
     }
-    if(content && !this.closest('.tippy-content')){
+    if(content && !this.inTooltip){
       this._tippy.enable()
       this._tippy.setContent(content)
     }else{

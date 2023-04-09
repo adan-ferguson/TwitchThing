@@ -9,14 +9,14 @@ export function loadoutObjectDisplayInfo(adventurerLoadoutObject){
   }else if(adventurerLoadoutObject instanceof AdventurerItem){
     def = itemDefs[adventurerLoadoutObject.baseItemId]
   }
-  return def(adventurerLoadoutObject.vars)
+  return def ? def(adventurerLoadoutObject.data.vars) : {}
 }
 
 const skillDefs = {}
 const itemDefs = {
   fighter06: vars => {
     return {
-      abilityDescription: `${attachedSkill()} phys damage dealt by attached skill causes the enemy to bleed for ${physScaling(vars.physScaling)} phys damage per second.`
+      abilityDescription: `${attachedSkill()} Phys damage dealt by attached skill causes the enemy to bleed for ${physScaling(vars.physScaling)} phys damage per second.`
     }
   }
 }

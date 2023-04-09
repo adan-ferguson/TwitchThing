@@ -1,20 +1,12 @@
 import { makeEl, roundToFixed } from '../../../game/utilFunctions.js'
 import tippy from 'tippy.js'
-import abilityDisplayInfo from '../abilityDisplayInfo.js'
 import { ABILITY_DESCRIPTION_COLORS, ITEM_ROW_COLORS } from '../colors.js'
+import DIElement from './diElement.js'
 
-export default class AbilityDescription extends HTMLElement{
+export default class AbilityDescription extends DIElement{
 
-  constructor(itemInstance){
-    super()
-    if(itemInstance){
-      this.setItem(itemInstance)
-    }
-  }
+  setAbilityDisplayInfo(displayInfo){
 
-  setItem(itemInstance, tooltips = false){
-
-    const displayInfo = abilityDisplayInfo(itemInstance)
     this.innerHTML = ''
 
     if(!displayInfo || displayInfo.phantom){
@@ -26,10 +18,10 @@ export default class AbilityDescription extends HTMLElement{
     this.style.backgroundColor = ABILITY_DESCRIPTION_COLORS[displayInfo.type]
     this.setAttribute('ability-type', displayInfo.type)
 
-    this.appendChild(displayInfo.descriptionEl)
+    this.innerHTML += displayInfo.descriptionHTML
     this.appendChild(makeBotRow(displayInfo))
 
-    if(tooltips){
+    if(!this.inTooltip){
       tooltip(this.querySelector('.initial-cooldown'), 'Initial Cooldown / Cooldown')
       tooltip(this.querySelector('.cooldown'), 'Cooldown')
     }

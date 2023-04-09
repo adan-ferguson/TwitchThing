@@ -5,6 +5,8 @@ import AdventurerItem from '../../../game/adventurerItem.js'
 import Stats from '../../../game/stats/stats.js'
 import StatsList from './stats/statsList.js'
 import { loadoutObjectDisplayInfo } from '../loadoutObjectDisplayInfo.js'
+import AbilityDescription from './abilityDescription.js'
+import { getIdleAbilityDisplayInfo } from '../abilityDisplayInfo.js'
 
 export default class LoadoutObjectDetails extends DIElement{
 
@@ -29,9 +31,8 @@ export default class LoadoutObjectDetails extends DIElement{
     if(!this._obj){
       return
     }
-    const info = loadoutObjectDisplayInfo(this._obj)
     this._addMeta()
-    this._addAbility(info)
+    this._addAbility()
     // this._addDescription()
     // this._addStats()
     this._addLoadoutModifiers()
@@ -68,16 +69,11 @@ export default class LoadoutObjectDetails extends DIElement{
     }
   }
 
-  _addAbility(displayInfo){
-    if(displayInfo.abilityDescription){
-
+  _addAbility(){
+    const info = getIdleAbilityDisplayInfo(this._obj)
+    if(info){
+      this.appendChild(new AbilityDescription().setAbilityDisplayInfo(info))
     }
-    // if(this._effectInstance.hasAbilities){
-    //   const desc = new AbilityDescription().setItem(this._effectInstance, this._options.showTooltips)
-    //   if(desc){
-    //     this.appendChild(desc)
-    //   }
-    // }
   }
   //
   // _addStats(){

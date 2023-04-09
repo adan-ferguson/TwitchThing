@@ -60,16 +60,16 @@ export function magicScaling(pct){
   return scalingWrap('magic', pct)
 }
 
-function scalingWrap(damageType, amount){
+function scalingWrap(damageType, pct){
   const ICONS = {
     magic: magicPower,
     phys: physPower,
     health: healthIcon
   }
-  const valStr = _.isNumber(amount) ? Math.ceil(amount) : amount
+  const valStr = _.isNumber(pct) ? `${pct * 100}%` : pct
   return makeEl({
     class: ['scaling-type', 'scaling-type-' + damageType],
     content: `${ICONS[damageType]}${valStr}`,
     elementType: 'span'
-  })
+  }).outerHTML
 }

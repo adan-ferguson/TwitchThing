@@ -1,6 +1,7 @@
 import { parseDescriptionString } from './descriptionString.js'
 import { silencedMod } from '../../game/mods/combined.js'
 import { isArray } from 'lodash'
+import { loadoutObjectDisplayInfo } from './loadoutObjectDisplayInfo.js'
 
 export const AbilityState = {
   NONE: 'none',
@@ -10,28 +11,48 @@ export const AbilityState = {
   IDLE: 'idle'
 }
 
-export default function(effectInstance){
-  const { ability, trigger } = getMainAbility(effectInstance.abilities)
+export function getIdleAbilityDisplayInfo(loadoutObject){
+  const objDisplayInfo = loadoutObjectDisplayInfo(loadoutObject)
+  const { ability, trigger } = getMainAbility(loadoutObject.effect.abilities)
   if(!ability){
     return null
   }
-  const idle = !effectInstance.owner || effectInstance.owner.idle || false
-  const stats = effectInstance.owner ? ability.parentEffect.exclusiveStats : null
   return {
     ability,
     trigger,
     type: trigger === 'active' ? 'active' : 'triggered',
-    descriptionEl: descriptionEl(ability, stats),
-    idle,
-    state: idle ? AbilityState.IDLE : state(ability),
-    barValue: idle ? 0 : barValue(ability),
-    barMax: idle ? 1 : barMax(ability),
-    cooldownRefreshing: ability.cooldownRefreshing,
+    descriptionHTML: objDisplayInfo.abilityDescription ?? abilityDescription(ability),
+    state: AbilityState.IDLE,
     phantom: ability.phantom ? true : false
   }
 }
 
+// export function getAbilityDisplayInfo(loadoutObject){
+//   const objDisplayInfo = loadoutObjectDisplayInfo(loadoutObject)
+//   const { ability, trigger } = getMainAbility(loadoutObject.effect.abilities)
+//   if(!ability){
+//     return null
+//   }
+//   // const idle = !effectInstance.owner || effectInstance.owner.idle || false
+//   // const stats = effectInstance.owner ? ability.parentEffect.exclusiveStats : null
+//   return {
+//     ability,
+//     trigger,
+//     type: trigger === 'active' ? 'active' : 'triggered',
+//     descriptionEl: descriptionEl(ability, stats),
+//     idle: true,
+//     state: idle ? AbilityState.IDLE : state(ability),
+//     barValue: idle ? 0 : barValue(ability),
+//     barMax: idle ? 1 : barMax(ability),
+//     cooldownRefreshing: ability.cooldownRefreshing,
+//     phantom: ability.phantom ? true : false
+//   }
+// }
+
 function getMainAbility(abilities){
+  if(!abilities){
+    return {}
+  }
   const active = abilities.active
   if(active){
     return { trigger: 'active', ability: active }
@@ -45,17 +66,18 @@ function getMainAbility(abilities){
   return {}
 }
 
-function descriptionEl(ability, useStats = null){
-  const derived = deriveActionStrings(ability.actions)
-  let str
-  if(ability.description){
-    str = ability.description.replace(/{A(\d+)}/g, (a, b, c) => {
-      return derived[b]
-    })
-  }else{
-    str = derived.filter(s => s).join(' ')
-  }
-  return parseDescriptionString(str, useStats)
+function abilityDescription(ability){
+  return ''
+  // const derived = deriveActionStrings(ability.actions)
+  // let str
+  // if(ability.description){
+  //   str = ability.description.replace(/{A(\d+)}/g, (a, b, c) => {
+  //     return derived[b]
+  //   })
+  // }else{
+  //   str = derived.filter(s => s).join(' ')
+  // }
+  // return parseDescriptionString(str, useStats)
 }
 
 function state(ability){
