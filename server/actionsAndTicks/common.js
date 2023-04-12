@@ -1,9 +1,6 @@
-import { useEffectAbility } from './performAction.js'
 import { makeActionResult } from '../../game/actionResult.js'
 import scaledNumber from '../../game/scaledNumber.js'
 import gainHealthAction from '../../game/actions/gainHealthAction.js'
-import damageAction from '../../game/actions/dealDamageAction.js'
-import { dealDamage } from './attacks.js'
 
 export function performGainHealthAction(combat, actor, gainHealthDef){
   gainHealthDef = gainHealthAction(gainHealthDef)
@@ -24,16 +21,7 @@ export function performGainHealthAction(combat, actor, gainHealthDef){
 }
 
 export function triggerEvent(combat, owner, eventName, triggerData = {}){
-  combat?.incrementTriggerCounter()
-  const effects = owner.triggeredEffects(eventName)
-  const results = []
-  for(let effect of effects){
-    results.push(useEffectAbility(combat, effect, eventName, triggerData))
-    if(results.at(-1)?.cancelled){
-      return results
-    }
-  }
-  return results
+  combat.triggerEvent(owner, eventName, triggerData)
 }
 
 export function performRemoveStackAction(combat, owner, effect){

@@ -11,44 +11,6 @@ import { blankActionResult, validateActionResult } from '../../game/actionResult
 import { chooseOne } from '../../game/rando.js'
 import { noBasicAttackMod } from '../../game/mods/combined.js'
 
-export function takeCombatTurn(combat, actor){
-  if(!actor.inCombat){
-    throw 'Actor is not in combat'
-  }
-  const index = actor.nextActiveItemIndex()
-  const abilities = []
-  if(index > -1){
-    const item = actor.itemInstances[index]
-    abilities.push(useEffectAbility(combat, item, 'active'))
-    // TODO: don't hardcode, this can be some sort of triggered ability
-    // if(actor.mods.contains(doubleStrikeMod) && index === 0){
-    //   if(actor.itemInstances[1]?.getAbility('active')?.ready){
-    //     abilities.push(useEffectAbility(combat, actor.itemInstances[1], 'active'))
-    //   }
-    // }
-  }else if(actor.mods.contains(noBasicAttackMod)){
-    abilities.push({
-      basicAttack: true,
-      owner: actor.uniqueID,
-      results: [performCancelAction(actor, {
-        cancelReason: 'Can\'t attack'
-      })]
-    })
-  }else{
-    for(let i = 0; i < actor.stats.get('attacks').value; i++){
-      abilities.push({
-        basicAttack: true,
-        owner: actor.uniqueID,
-        results: [performAttackAction(combat, actor, null, {
-          damageType: 'auto'
-        })]
-      })
-    }
-  }
-  actor.nextTurn()
-  return abilities
-}
-
 export function useEffectAbility(combat, effect, eventName, triggerData = null){
   const ability = effect.getAbility(eventName)
   if(!ability){

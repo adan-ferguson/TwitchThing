@@ -1,6 +1,6 @@
 import { foundMonster } from './monsters.js'
 import { foundStairs } from './stairs.js'
-import { generateCombatEvent } from '../combat.js'
+import { generateCombatEvent } from '../combat/fns.js'
 import { shouldRest, rest } from './resting.js'
 import { runEnd } from './runEnd.js'
 

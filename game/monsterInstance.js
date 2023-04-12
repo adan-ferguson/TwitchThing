@@ -3,9 +3,10 @@ import * as Monsters from './monsters/combined.js'
 import MonsterItemInstance from './monsterItemInstance.js'
 import { geometricProgession } from './growthFunctions.js'
 import OrbsData from './orbsData.js'
-import { toDisplayName, toNumberOfDigits } from './utilFunctions.js'
+import { deepClone, toDisplayName, toNumberOfDigits } from './utilFunctions.js'
 import { bossMod } from './mods/combined.js'
 import { floorToZone } from './zones.js'
+import LoadoutEffectInstance from './loadoutEffectInstance.js'
 
 const ADJUSTED_DIFFICULTY_PER_ZONE = 2.25
 
@@ -57,21 +58,42 @@ function adjustedDifficultyLevel(lvl){
 
 export default class MonsterInstance extends FighterInstance{
 
-  monsterDef
+  _monsterData
+  _monsterDef
+  _itemInstances = []
 
   constructor(monsterDef, initialState = {}){
+    super()
 
     const baseInfo = Monsters.all[monsterDef.baseType]
-    const monsterData = {
+    this._monsterData = {
       description: null,
       baseStats: {},
       items: [],
       ...baseInfo,
       ...monsterDef
     }
+    this._monsterDef = monsterDef
 
-    super(monsterData, initialState)
-    this.monsterDef = monsterDef
+    for(let i = 0; i < 8; i++){
+      if(this.monsterData.items[i]){
+        this._itemInstances[i] = new LoadoutEffectInstance({
+          obj: this.monsterData.items[i],
+          owner: this,
+          state: initialState.items?.[i]
+        })
+      }
+    }
+
+    this.setState(initialState)
+  }
+
+  get monsterDef(){
+    return deepClone(this._monsterDef)
+  }
+
+  get monsterData(){
+    return deepClone(this._monsterData)
   }
 
   get isSuper(){
@@ -79,15 +101,15 @@ export default class MonsterInstance extends FighterInstance{
   }
 
   get description(){
-    return this.fighterData.description
+    return this.monsterData.description
   }
 
   get displayName(){
-    return (this.isSuper ? 'SUPER ' : '' ) + (this.monsterDef.displayName ?? toDisplayName(this.fighterData.name))
+    return (this.isSuper ? 'SUPER ' : '' ) + (this.monsterDef.displayName ?? toDisplayName(this.monsterData.name))
   }
 
   get level(){
-    return this._fighterData.level ?? 1
+    return this.monsterData.level ?? 1
   }
 
   get ItemClass(){
@@ -103,14 +125,7 @@ export default class MonsterInstance extends FighterInstance{
   }
 
   get baseStats(){
-    const stats = [this._fighterData.baseStats] ?? []
-    if(this.level > 50){
-      stats.push({
-        speed: 50,
-        cooldownReduction: '33%'
-      })
-    }
-    return stats
+    return [this.monsterData.baseStats] ?? []
   }
 
   get orbs(){
@@ -126,6 +141,10 @@ export default class MonsterInstance extends FighterInstance{
   }
 
   get rewards(){
-    return this._fighterData.rewards ?? {}
+    return this.monsterData.rewards ?? {}
+  }
+
+  get loadoutEffectInstances(){
+    return this._itemInstances.filter(i => i)
   }
 }

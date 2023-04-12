@@ -16,7 +16,6 @@ export default class AdventurerInstance extends FighterInstance{
         itemInstances[i] = new LoadoutEffectInstance({
           obj: loadout.items[i],
           owner: this,
-          slotIndex: i,
           state: initialState.items?.[i]
         })
       }
@@ -24,7 +23,6 @@ export default class AdventurerInstance extends FighterInstance{
         skillInstances[i] = new LoadoutEffectInstance({
           obj: loadout.skills[i],
           owner: this,
-          slotIndex: i,
           state: initialState.skills?.[i]
         })
       }

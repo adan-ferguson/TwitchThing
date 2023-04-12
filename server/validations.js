@@ -101,8 +101,6 @@ export function validateValue(val, options){
     if(typeof val !== 'string'){
       throw 'Expected string value but did not get one.'
     }
-  }else{
-    throw 'Invalid validation.'
   }
 
   return val

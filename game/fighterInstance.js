@@ -1,7 +1,7 @@
 import Stats from './stats/stats.js'
 import { freezeActionBarMod, magicAttackMod, silencedMod, sneakAttackMod } from './mods/combined.js'
 import ModsCollection from './modsCollection.js'
-import { minMax, uniqueID } from './utilFunctions.js'
+import { minMax } from './utilFunctions.js'
 import freezeCooldownsMod from './mods/generic/freezeCooldowns.js'
 
 // Stupid
@@ -262,11 +262,11 @@ export default class FighterInstance{
     this._cachedStats = null
   }
 
-  nextActiveItemIndex(){
+  getNextActiveEffect(){
     if(this.mods.contains(silencedMod)){
-      return -1
+      return null
     }
-    return this.loadoutEffectInstances.findIndex(lei => {
+    return this.loadoutEffectInstances.find(lei => {
       const ability = lei?.getAbility('active')
       if(ability?.ready){
         return true
