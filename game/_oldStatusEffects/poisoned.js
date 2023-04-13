@@ -1,4 +1,4 @@
-import { roundToFixed } from '../../utilFunctions.js'
+import { roundToFixed } from '../utilFunctions.js'
 import takeDamageAction from '../../actions/actionDefs/common/takeDamageAction.js'
 
 export default {

@@ -1,11 +1,8 @@
+import dealDamage from './dealDamage.js'
+
 export default function(combat, attacker, effect = null, actionDef = {}){
 
   const enemy = combat.getEnemyOf(attacker)
-  // const resultObj = {
-  //   type: 'attack',
-  //   triggeredEvents: [],
-  //   subject: enemy.uniqueID
-  // }
 
   if(actionDef.damageType === 'auto'){
     actionDef.damageType = attacker.basicAttackType
@@ -48,33 +45,28 @@ export default function(combat, attacker, effect = null, actionDef = {}){
   //   }
   // })
 
-  const damageInfo = {
+  let damageInfo = {
     damageType: actionDef.damageType,
     damage: damage * attacker.stats.get('damageDealt').value,
     range: actionDef.range
   }
 
-  // if(attemptCrit(actor, enemy, actionDef.extraCritChance)){
-  //   damageInfo.damage *= (1 + attacker.stats.get('critDamage').value + actionDef.extraCritDamage)
-  //   damageInfo.crit = true
-  // }
-
-  const damageResult = dealDamage(combat, attacker, enemy, damageInfo)
-
-  resultObj.data = damageResult.data
-  resultObj.triggeredEvents.push(...damageResult.triggeredEvents)
-  resultObj.triggeredEvents.push(...triggerEvent(combat, attacker, 'attackHit'))
-  resultObj.triggeredEvents.push(...triggerEvent(combat, attacker, damageInfo.damageType + 'AttackHit'))
-  resultObj.triggeredEvents.push(...triggerEvent(combat, enemy, 'hitByAttack'))
-
-  if(damageInfo.crit){
-    resultObj.data.crit = true
-    resultObj.triggeredEvents.push(...triggerEvent(combat, attacker, 'crit', {
-      damageResultData: damageResult.data
-    }))
+  if(attemptCrit(attacker, enemy, actionDef.extraCritChance)){
+    damageInfo.damage *= (1 + attacker.stats.get('critDamage').value + actionDef.extraCritDamage)
+    damageInfo.crit = true
   }
 
-  return makeActionResult(resultObj)
+  damageInfo = dealDamage(combat, attacker, enemy, damageInfo)
+
+  combat.triggerEvent(attacker, 'attackHit', damageInfo)
+  combat.triggerEvent(attacker, damageInfo.damageType + 'AttackHit', damageInfo)
+  combat.triggerEvent(enemy, 'hitByAttack', damageInfo)
+
+  if(damageInfo.crit){
+    combat.triggerEvent(attacker, 'crit', damageInfo)
+  }
+
+  return { damageInfo }
 }
 
 function attemptCrit(actor, target, bonusCritChance){
@@ -86,10 +78,6 @@ function attemptCrit(actor, target, bonusCritChance){
 
 function dodgeAttack(actor){
   return Math.random() + actor.stats.get('dodgeChance').value > 1
-}
-
-function blockAttack(actor){
-  return Math.random() + actor.stats.get('blockChance').value > 1
 }
 
 function missAttack(actor){

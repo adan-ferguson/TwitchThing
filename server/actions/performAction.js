@@ -1,7 +1,5 @@
-import { performAttackAction, performDealDamageAction, performTakeDamageAction } from './attacks.js'
 import _ from 'lodash'
-import { blankActionResult, validateActionResult } from '../../game/actionResult.js'
-import { chooseOne } from '../../game/rando.js'
+import { validateActionResult } from '../../game/actionResult.js'
 import { all } from './combined.js'
 import { expandActionDef } from '../../game/actionDefs/expandActionDef.js'
 
@@ -69,50 +67,4 @@ export function useEffectAbility(combat, effect, eventName, triggerData = null){
       }
     }
   }
-}
-
-/**
- * @param combat
- * @param effect
- * @param actionDef
- * @returns {object}
- */
-function doAction(combat, effect, actionDef){
-  if(!actionDef){
-    return null // Blank
-  }
-  const owner = effect.owner
-  const type = _.isString(actionDef) ? actionDef : actionDef.type
-  if(type === 'attack'){
-    return performAttackAction(combat, owner, effect, actionDef)
-  }else if(type === 'dealDamage'){
-    return performDealDamageAction(combat, owner, actionDef)
-  }else if(type === 'takeDamage'){
-    return performTakeDamageAction(combat, owner, actionDef)
-  }else if(type === 'statusEffect'){
-    return performStatusEffectAction(combat, effect, actionDef)
-  }else if(type === 'removeStatusEffect'){
-    return performRemoveStatusEffectAction(combat, owner, actionDef)
-  }else if(type === 'random'){
-    return doAction(combat, effect, chooseOne(actionDef.choices))
-  }else if(type === 'gainHealth'){
-    return performGainHealthAction(combat, owner, actionDef)
-  }else if(type === 'removeStack'){
-    return performRemoveStackAction(combat, owner, effect)
-  }else if(type === 'cancel'){
-    return performCancelAction(owner, actionDef)
-  }else if(type === 'maybe'){
-    if(Math.random() > actionDef.chance){
-      return performCancelAction(owner)
-    }else{
-      return blankActionResult()
-    }
-  }else if(type === 'turnTime'){
-    return performTurnTimeAction(combat, owner, actionDef)
-  }else if(type === 'parentEffectAction'){
-    return performParentEffectAction(combat, effect, actionDef)
-  }else if(type === 'refreshCooldowns'){
-    return performRefreshCooldownsAction(combat, owner, effect, actionDef)
-  }
-  throw 'Undefined action'
 }

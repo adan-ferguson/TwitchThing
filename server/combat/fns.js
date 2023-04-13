@@ -1,15 +1,8 @@
-import Combats from '../collections/combats.js'
-import { randomOrder } from '../../game/rando.js'
 import { generateMonster, generateSuperMonster } from '../dungeons/monsters.js'
 import MonsterInstance from '../../game/monsterInstance.js'
-import { takeCombatTurn } from '../actionsAndTicks/performAction.js'
-import { performCombatTicks } from '../actionsAndTicks/ticks.js'
-import { toFighterInstance } from '../../game/toFighterInstance.js'
-import { triggerEvent } from '../actionsAndTicks/common.js'
 import { CombatResult } from '../../game/combatResult.js'
 import { generateCombat } from './interop.js'
 
-const START_TIME_DELAY = 200
 const COMBAT_END_PADDING = 2500
 const MIN_RESULT_TIME = 2500
 
@@ -33,7 +26,7 @@ export async function generateCombatEvent(dungeonRun, boss = false){
   adventurerInstance.cleanupState()
 
   const combatEvent = {
-    duration: combat.duration + COMBAT_END_PADDING,
+    duration: combat.duration + combat.responseTime,
     combatID: combat._id,
     roomType: 'combat',
     monster: monsterDef,

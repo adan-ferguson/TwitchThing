@@ -1,9 +1,8 @@
-
-export function performRefreshCooldownsAction(combat, owner, effect, actionDef){
-  owner.itemInstances.forEach(ii => {
-    if(actionDef.excludeSelf && ii === effect){
-      return
-    }
-    ii?.refreshCooldown(actionDef)
-  })
+export default function(combat, attacker, effect = null, actionDef = {}){
+  // owner.itemInstances.forEach(ii => {
+  //   if(actionDef.excludeSelf && ii === effect){
+  //     return
+  //   }
+  //   ii?.refreshCooldown(actionDef)
+  // })
 }

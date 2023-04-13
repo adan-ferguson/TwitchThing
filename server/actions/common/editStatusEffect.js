@@ -1,6 +1,4 @@
-import { makeActionResult } from '../../../game/actionResult.js'
-
-export function performRemoveStackAction(combat, owner, effect){
+export default function(combat, attacker, effect = null, actionDef = {}){
   effect.removeStack()
   return makeActionResult({
     type: 'removeStack',

@@ -1,4 +1,4 @@
-export default function(combat, actor, effect, actionDef){
+export default function(combat, attacker, effect = null, actionDef = {}){
   // damageDef = takeDamageAction(damageDef)
   // let damage = Math.ceil(scaledNumber(actor, damageDef.scaling))
   // if(damage <= 0){

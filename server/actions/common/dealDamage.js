@@ -1,4 +1,4 @@
-export default function(combat, actor, effect, damageDef){
+export default function(combat, attacker, effect = null, actionDef = {}){
   // damageDef = dealDamageAction(damageDef)
   // const subject = damageDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
   // let damage = Math.ceil(scaledNumber(actor, damageDef.scaling))

@@ -69,37 +69,14 @@ function exporterConcater(itemType, targetFile){
 
   function combinedFileContents(){
     let str = ''
-    const groups = {}
+    const all = []
     files.forEach(({ name, path, group }) => {
       str += `import ${name} from './${path}'\n`
-      str += `${name}.name = '${name}'\n`
-      str += `${name}.group = '${group}'\n`
-      if(!groups[group]){
-        groups[group] = []
-      }
-      groups[group].push(name)
+      all.push(name)
     })
-    str += 'export default {\n'
-    let all = []
-    for(let groupName in groups){
-      all.push(...groups[groupName])
-      str += `  ${groupName}: { ${groups[groupName].map(name => `${name}`).join(',')} },\n`
-    }
-    str += '}\n'
-    str += `export const all = { ${all.join(',')} }\n`
-    str += `export { ${all.map(name => `${name} as ${name + capFirst(itemType)}`).join(',')} }\n`
+    str += `export default { ${all.join(',')} }\n`
     return str
   }
-}
-
-function capFirst(str){
-  // Remove 's'
-  str = str.slice(0, 1).toUpperCase() + str.slice(1, str.length - 1)
-  if(str.charAt(str.length - 1) === 'e'){
-    // Remove 'e'
-    str = str.slice(0, str.length - 1)
-  }
-  return str
 }
 
 function makeComponentImporter(targetPath){

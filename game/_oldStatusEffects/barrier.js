@@ -1,4 +1,4 @@
-import scaledNumber from '../../scaledNumber.js'
+import scaledNumber from '../scaledNumber.js'
 
 export default {
   stateParamsFn: ({ sourceEffect, params = {} }) => {

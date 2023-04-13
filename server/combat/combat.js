@@ -1,7 +1,8 @@
 import { toFighterInstance } from '../../game/toFighterInstance.js'
 import { CombatResult } from '../../game/combatResult.js'
 import { shuffle } from '../../game/rando.js'
-import { takeCombatTurn, useEffectAbility } from '../actionsAndTicks/performAction.js'
+import { takeCombatTurn } from './takeCombatTurn.js'
+import { useEffectAbility } from '../actions/performAction.js'
 
 const MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS = 30
 const MAX_TRIGGER_LOOPS = 30
