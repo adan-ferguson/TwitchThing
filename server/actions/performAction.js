@@ -1,15 +1,20 @@
 import { performAttackAction, performDealDamageAction, performTakeDamageAction } from './attacks.js'
 import _ from 'lodash'
-import {
-  performCancelAction,
-  performGainHealthAction, performParentEffectAction, performRefreshCooldownsAction,
-  performRemoveStackAction,
-  performTurnTimeAction
-} from './common.js'
-import { performRemoveStatusEffectAction, performStatusEffectAction } from './statusEffects.js'
 import { blankActionResult, validateActionResult } from '../../game/actionResult.js'
 import { chooseOne } from '../../game/rando.js'
-import { noBasicAttackMod } from '../../game/mods/combined.js'
+import { all } from './combined.js'
+import { expandActionDef } from '../../game/actionDefs/expandActionDef.js'
+
+export function performAction(combat, actor, effect, actionDef){
+  const expandedActionDef = expandActionDef(actionDef)
+  const results = all[actionDef.type](combat, actor, effect, expandedActionDef)
+  return {
+    actionDef,
+    actorId: actor.uniqueID,
+    effectId: effect?.effectId,
+    results
+  }
+}
 
 export function useEffectAbility(combat, effect, eventName, triggerData = null){
   const ability = effect.getAbility(eventName)

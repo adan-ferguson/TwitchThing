@@ -1,5 +1,5 @@
 import physScaling from '../../mods/generic/physScaling.js'
-import attackAction from '../../actions/attackAction.js'
+import attackAction from '../../actions/actionDefs/common/attack.js'
 import { fillArray } from '../../utilFunctions.js'
 
 export default {

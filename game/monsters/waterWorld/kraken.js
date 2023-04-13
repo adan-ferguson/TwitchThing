@@ -1,8 +1,8 @@
 import { bossMod } from '../../mods/combined.js'
 import constrictMonsterItem from '../../monsterItems/constrictMonsterItem.js'
-import gainHealthAction from '../../actions/gainHealthAction.js'
+import gainHealthAction from '../../actions/actionDefs/common/gainHealthAction.js'
 import { fillArray } from '../../utilFunctions.js'
-import attackAction from '../../actions/attackAction.js'
+import attackAction from '../../actions/actionDefs/common/attack.js'
 
 export default {
   baseStats: {

@@ -1,4 +1,4 @@
-import cancelAction from '../../actions/cancelAction.js'
+import cancelAction from '../../actions/actionDefs/common/cancelAction.js'
 import { roundToNearestIntervalOf } from '../../utilFunctions.js'
 
 export default {

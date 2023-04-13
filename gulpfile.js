@@ -8,7 +8,8 @@ import VinylFile from 'vinyl'
 import path from 'path'
 
 const S = gulpSass(sass)
-const REGISTRIES = ['items', 'monsters', 'mods', 'skills', 'statusEffects', 'stats']
+const REGISTRIES = ['items', 'monsters', 'mods', 'skills', 'statusEffects', 'stats', 'actionDefs']
+const SERVER_REGISTRIES = ['actions']
 
 function buildStyles(){
   return gulp.src('./client/styles/**/*.*ss')
@@ -28,7 +29,12 @@ function generateRegistries(){
       .pipe(exporterConcater(t, './game/' + t + '/combined.js'))
       .pipe(gulp.dest('.'))
   })
-  return merge(...pipes)
+  const serverPipes = SERVER_REGISTRIES.map(t => {
+    return gulp.src('./server/' + t + '/*/**/*.js')
+      .pipe(exporterConcater(t, './server/' + t + '/combined.js'))
+      .pipe(gulp.dest('.'))
+  })
+  return merge(...pipes, ...serverPipes)
 }
 
 function importComponents(){

@@ -1,5 +1,5 @@
-import gainHealthAction from '../../actions/gainHealthAction.js'
-import removeStatusEffectAction from '../../actions/removeStatusEffectAction.js'
+import gainHealthAction from '../../actions/actionDefs/common/gainHealthAction.js'
+import removeStatusEffectAction from '../../actions/actionDefs/common/removeStatusEffectAction.js'
 import { magicScalingMod } from '../../mods/combined.js'
 
 export default {

@@ -1,6 +1,6 @@
 import { poisonedStatusEffect } from '../../statusEffects/combined.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
-import attackAction from '../../actions/attackAction.js'
+import statusEffectAction from '../../actions/actionDefs/common/statusEffectAction.js'
+import attackAction from '../../actions/actionDefs/common/attack.js'
 
 const damage = 0.1
 

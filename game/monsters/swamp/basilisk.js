@@ -1,5 +1,5 @@
-import maybeAction from '../../actions/maybeAction.js'
-import attackAction from '../../actions/attackAction.js'
+import maybeAction from '../../actions/actionDefs/common/maybeAction.js'
+import attackAction from '../../actions/actionDefs/common/attack.js'
 
 export default {
   baseStats: {

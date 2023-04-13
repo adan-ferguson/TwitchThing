@@ -1,4 +1,4 @@
-import turnTimeAction from '../../actions/turnTimeAction.js'
+import turnTimeAction from '../../actions/actionDefs/common/turnTimeAction.js'
 import { exponentialPercentage } from '../../growthFunctions.js'
 
 export default {

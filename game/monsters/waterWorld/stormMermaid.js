@@ -1,7 +1,7 @@
 import { magicAttackMod } from '../../mods/combined.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
-import maybeAction from '../../actions/maybeAction.js'
-import attackAction from '../../actions/attackAction.js'
+import statusEffectAction from '../../actions/actionDefs/common/statusEffectAction.js'
+import maybeAction from '../../actions/actionDefs/common/maybeAction.js'
+import attackAction from '../../actions/actionDefs/common/attack.js'
 import { stunnedStatusEffect } from '../../statusEffects/combined.js'
 
 const lightningStorm = {

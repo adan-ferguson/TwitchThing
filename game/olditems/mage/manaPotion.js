@@ -1,4 +1,4 @@
-import refreshCooldownsAction from '../../actions/refreshCooldownsAction.js'
+import refreshCooldownsAction from '../../actions/actionDefs/common/refreshCooldownsAction.js'
 
 export default {
   levelFn: level => {

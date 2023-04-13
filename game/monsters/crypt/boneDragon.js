@@ -1,5 +1,5 @@
 import { bossMod, noBasicAttackMod } from '../../mods/combined.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
+import statusEffectAction from '../../actions/actionDefs/common/statusEffectAction.js'
 
 export default {
   baseStats: {

@@ -1,4 +1,4 @@
-import statusEffect from '../../actions/statusEffectAction.js'
+import statusEffect from '../../actions/actionDefs/common/statusEffectAction.js'
 import { diseasedStatusEffect } from '../../statusEffects/combined.js'
 
 export default {

@@ -1,5 +1,5 @@
-import attackAction from '../actions/attackAction.js'
-import gainHealthAction from '../actions/gainHealthAction.js'
+import attackAction from '../actions/actionDefs/common/attack.js'
+import gainHealthAction from '../actions/actionDefs/common/gainHealthAction.js'
 
 export default function(def){
   return {

@@ -1,4 +1,4 @@
-import gainHealthAction from '../actions/gainHealthAction.js'
+import gainHealthAction from '../actions/actionDefs/common/gainHealthAction.js'
 
 export default {
   name: 'Tasty',

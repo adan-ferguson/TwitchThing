@@ -1,8 +1,8 @@
 import { freezeActionBarMod, silencedMod } from '../../mods/combined.js'
 import { poisonedStatusEffect } from '../../statusEffects/combined.js'
-import randomAction from '../../actions/randomAction.js'
-import statusEffect from '../../actions/statusEffectAction.js'
-import gainHealthAction from '../../actions/gainHealthAction.js'
+import randomAction from '../../actions/actionDefs/common/randomAction.js'
+import statusEffect from '../../actions/actionDefs/common/statusEffectAction.js'
+import gainHealthAction from '../../actions/actionDefs/common/gainHealthAction.js'
 
 const burningSpores = statusEffect({
   base: poisonedStatusEffect,

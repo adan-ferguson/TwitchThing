@@ -1,5 +1,5 @@
 import { roundToFixed } from '../../utilFunctions.js'
-import takeDamageAction from '../../actions/takeDamageAction.js'
+import takeDamageAction from '../../actions/actionDefs/common/takeDamageAction.js'
 
 export default {
   stateParamsFn: ({ sourceEffect, params = {} }) => {

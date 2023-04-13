@@ -1,5 +1,5 @@
-import cancelAction from '../../actions/cancelAction.js'
-import removeThisStatusEffectAction from '../../actions/removeThisStatusEffectAction.js'
+import cancelAction from '../../actions/actionDefs/common/cancelAction.js'
+import removeThisStatusEffectAction from '../../actions/actionDefs/common/removeThisStatusEffectAction.js'
 
 export default {
   abilities: {

@@ -1,6 +1,6 @@
 import { magicAttackMod } from '../../mods/combined.js'
-import randomAction from '../../actions/randomAction.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
+import randomAction from '../../actions/actionDefs/common/randomAction.js'
+import statusEffectAction from '../../actions/actionDefs/common/statusEffectAction.js'
 import { dodgingStatusEffect } from '../../statusEffects/combined.js'
 
 const hex = {

@@ -1,5 +1,5 @@
 import { stunnedStatusEffect } from '../../statusEffects/combined.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
+import statusEffectAction from '../../actions/actionDefs/common/statusEffectAction.js'
 import { leveledPctString } from '../../growthFunctions.js'
 import { roundToFixed } from '../../utilFunctions.js'
 

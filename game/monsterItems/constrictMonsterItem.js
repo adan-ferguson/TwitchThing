@@ -1,7 +1,7 @@
-import statusEffectAction from '../actions/statusEffectAction.js'
+import statusEffectAction from '../actions/actionDefs/common/statusEffectAction.js'
 import { freezeActionBarMod } from '../mods/combined.js'
-import damageAction from '../actions/dealDamageAction.js'
-import takeDamageAction from '../actions/takeDamageAction.js'
+import damageAction from '../actions/actionDefs/common/dealDamageAction.js'
+import takeDamageAction from '../actions/actionDefs/common/takeDamageAction.js'
 
 export default function(def){
   return {

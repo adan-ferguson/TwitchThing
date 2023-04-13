@@ -1,4 +1,4 @@
-import dealDamageAction from '../../actions/dealDamageAction.js'
+import dealDamageAction from '../../actions/actionDefs/common/dealDamageAction.js'
 import { exponentialPercentage, leveledPctString } from '../../growthFunctions.js'
 
 export default {

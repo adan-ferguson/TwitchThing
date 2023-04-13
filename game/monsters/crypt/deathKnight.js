@@ -1,5 +1,5 @@
-import attackAction from '../../actions/attackAction.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
+import attackAction from '../../actions/actionDefs/common/attack.js'
+import statusEffectAction from '../../actions/actionDefs/common/statusEffectAction.js'
 
 export default {
   baseStats: {

@@ -1,6 +1,6 @@
-import attackAction from '../../actions/attackAction.js'
+import attackAction from '../../actions/actionDefs/common/attack.js'
 import { magicScalingMod } from '../../mods/combined.js'
-import takeDamageAction from '../../actions/takeDamageAction.js'
+import takeDamageAction from '../../actions/actionDefs/common/takeDamageAction.js'
 
 export default {
   baseStats: {

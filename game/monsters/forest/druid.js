@@ -1,6 +1,6 @@
 import { magicScalingMod, silencedMod } from '../../mods/combined.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
-import gainHealthAction from '../../actions/gainHealthAction.js'
+import statusEffectAction from '../../actions/actionDefs/common/statusEffectAction.js'
+import gainHealthAction from '../../actions/actionDefs/common/gainHealthAction.js'
 
 export default {
   baseStats: {

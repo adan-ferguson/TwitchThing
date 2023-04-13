@@ -1,4 +1,4 @@
-import removeStatusEffectAction from '../../actions/removeStatusEffectAction.js'
+import removeStatusEffectAction from '../../actions/actionDefs/common/removeStatusEffectAction.js'
 
 export default {
   levelFn: level => {

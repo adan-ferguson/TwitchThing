@@ -1,5 +1,5 @@
 import bossMonsterItem from '../../monsterItems/bossMonsterItem.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
+import statusEffectAction from '../../actions/actionDefs/common/statusEffectAction.js'
 import { barrierStatusEffect } from '../../statusEffects/combined.js'
 
 const EXTRA_HEAD = statusEffectAction({

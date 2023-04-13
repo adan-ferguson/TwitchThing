@@ -1,5 +1,5 @@
 import { leveledPctString } from '../../growthFunctions.js'
-import takeDamageAction from '../../actions/takeDamageAction.js'
+import takeDamageAction from '../../actions/actionDefs/common/takeDamageAction.js'
 
 export default {
   levelFn: level => {

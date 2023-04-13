@@ -1,6 +1,6 @@
-import statusEffectAction from '../../actions/statusEffectAction.js'
+import statusEffectAction from '../../actions/actionDefs/common/statusEffectAction.js'
 import { magicScalingMod } from '../../mods/combined.js'
-import removeStackAction from '../../actions/removeStackAction.js'
+import removeStackAction from '../../actions/actionDefs/common/removeStackAction.js'
 
 export default {
   baseStats: {

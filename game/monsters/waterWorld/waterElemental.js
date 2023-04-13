@@ -1,8 +1,8 @@
 import { magicAttackMod } from '../../mods/combined.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
+import statusEffectAction from '../../actions/actionDefs/common/statusEffectAction.js'
 import { barrierStatusEffect } from '../../statusEffects/combined.js'
-import attackAction from '../../actions/attackAction.js'
-import gainHealthAction from '../../actions/gainHealthAction.js'
+import attackAction from '../../actions/actionDefs/common/attack.js'
+import gainHealthAction from '../../actions/actionDefs/common/gainHealthAction.js'
 
 export default {
   baseStats: {

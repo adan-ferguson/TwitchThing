@@ -1,6 +1,6 @@
-import attackAction from '../../actions/attackAction.js'
+import attackAction from '../../actions/actionDefs/common/attack.js'
 import { magicScalingMod } from '../../mods/combined.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
+import statusEffectAction from '../../actions/actionDefs/common/statusEffectAction.js'
 import { poisonedStatusEffect } from '../../statusEffects/combined.js'
 
 export default {

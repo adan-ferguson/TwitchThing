@@ -1,6 +1,6 @@
-import statusEffectAction from '../../actions/statusEffectAction.js'
+import statusEffectAction from '../../actions/actionDefs/common/statusEffectAction.js'
 import { freezeActionBarMod, magicScalingMod } from '../../mods/combined.js'
-import gainHealthAction from '../../actions/gainHealthAction.js'
+import gainHealthAction from '../../actions/actionDefs/common/gainHealthAction.js'
 
 export default {
   baseStats: {

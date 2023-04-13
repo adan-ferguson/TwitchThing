@@ -1,4 +1,4 @@
-import statusEffectAction from '../../actions/statusEffectAction.js'
+import statusEffectAction from '../../actions/actionDefs/common/statusEffectAction.js'
 import { leveledPctString } from '../../growthFunctions.js'
 
 export default {

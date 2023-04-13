@@ -1,6 +1,6 @@
-import statusEffectAction from '../../actions/statusEffectAction.js'
+import statusEffectAction from '../../actions/actionDefs/common/statusEffectAction.js'
 import { dodgingStatusEffect } from '../../statusEffects/combined.js'
-import attackAction from '../../actions/attackAction.js'
+import attackAction from '../../actions/actionDefs/common/attack.js'
 import { magicScalingMod } from '../../mods/combined.js'
 import flutteringMonsterItem from '../../monsterItems/flutteringMonsterItem.js'
 

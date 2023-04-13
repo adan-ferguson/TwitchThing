@@ -1,4 +1,4 @@
-import attackAction from '../../actions/attackAction.js'
+import attackAction from '../../actions/actionDefs/common/attack.js'
 
 export default {
   baseStats: {

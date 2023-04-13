@@ -1,7 +1,6 @@
 import { noBasicAttackMod } from '../../game/mods/combined.js'
-import { performCancelAction } from '../actionsAndTicks/common.js'
-import { performAttackAction } from '../actionsAndTicks/attacks.js'
-import { useEffectAbility } from '../actionsAndTicks/performAction.js'
+import attackAction from '../../game/actions/actionDefs/common/attack.js'
+import { performAction } from '../actions/performAction.js'
 
 export function takeCombatTurn(combat, actor){
   if(!actor.inCombat){
@@ -24,13 +23,10 @@ export function takeCombatTurn(combat, actor){
     })
   }else{
     for(let i = 0; i < actor.stats.get('attacks').value; i++){
-      actions.push({
-        basicAttack: true,
-        owner: actor.uniqueID,
-        results: [performAttackAction(combat, actor, null, {
-          damageType: 'auto'
-        })]
-      })
+      actions.push(performAction(combat, actor, null, {
+        type: 'attack',
+        basic: true
+      }))
     }
   }
   actor.nextTurn()
