@@ -1,4 +1,4 @@
-import { all as StatDefs } from '../../game/stats/combined.js'
+import StatDefs from '../../game/stats/combined.js'
 import { roundToFixed, toDisplayName } from '../../game/utilFunctions.js'
 import { StatType } from '../../game/stats/statType.js'
 import statValueFns from '../../game/stats/statValueFns.js'

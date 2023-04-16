@@ -1,4 +1,4 @@
-import { all as Effects } from './statusEffects/combined.js'
+import Effects from './statusEffects/combined.js'
 import Stats from './stats/stats.js'
 import { roundToFixed, toDisplayName, uniqueID } from './utilFunctions.js'
 import EffectInstance from './effectInstance.js'

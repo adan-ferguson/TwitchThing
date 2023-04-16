@@ -2,7 +2,6 @@ import Adventurer, { advLevelToXp, advXpToLevel } from '../../../../game/adventu
 import { OrbsDisplayStyle } from '../orbRow.js'
 import Modal from '../modal.js'
 import AdventurerInfo from './adventurerInfo.js'
-import { magicAttackMod, magicScalingMod, physScalingMod } from '../../../../game/mods/combined.js'
 
 const HTML = `
 <div class="name"></div>
@@ -121,10 +120,10 @@ export default class AdventurerPane extends HTMLElement{
 
   _excluded(){
     const excluded = []
-    const magicAttack = this.adventurerInstance.mods.contains(magicAttackMod)
-    const showPhys = this.adventurerInstance.mods.contains(physScalingMod) ||
+    const magicAttack = this.adventurerInstance.mods.contains('magicAttack')
+    const showPhys = this.adventurerInstance.mods.contains('physScaling') ||
       this.adventurerInstance.physPower !== this.adventurerInstance.basePower
-    const showMagic = this.adventurerInstance.mods.contains(magicScalingMod) ||
+    const showMagic = this.adventurerInstance.mods.contains('magicScaling') ||
       this.adventurerInstance.magicPower !== this.adventurerInstance.basePower
 
     if((showPhys || !magicAttack) && showMagic){

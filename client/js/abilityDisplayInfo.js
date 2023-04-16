@@ -1,5 +1,3 @@
-import { parseDescriptionString } from './descriptionString.js'
-import { silencedMod } from '../../game/mods/combined.js'
 import { isArray } from 'lodash'
 import { loadoutObjectDisplayInfo } from './loadoutObjectDisplayInfo.js'
 

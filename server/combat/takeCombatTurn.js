@@ -1,4 +1,3 @@
-import { noBasicAttackMod } from '../../game/mods/combined.js'
 import { performAction, useEffectAbility } from '../actions/performAction.js'
 
 export function takeCombatTurn(combat, actor){
@@ -12,7 +11,7 @@ export function takeCombatTurn(combat, actor){
   const actions = []
   if(effect){
     actions.push(useEffectAbility(combat, effect, 'active'))
-  }else if(actor.mods.contains(noBasicAttackMod)){
+  }else if(actor.mods.contains('noBasicAttack')){
     actions.push(performAction(combat, actor, null, {
       type: 'idle',
       reason: 'Can\'t attack'

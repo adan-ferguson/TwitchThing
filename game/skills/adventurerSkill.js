@@ -1,10 +1,11 @@
-import Skills, { all }  from './combined.js'
+import Skills from './combined.js'
 import UpgradeData from '../upgradeData.js'
 import AdventurerLoadoutObject from '../adventurerLoadoutObject.js'
+import { getClassDisplayInfo } from '../adventurerClassInfo.js'
 
 // Convert a skills obj to an array of AdventurerSkills
 export function getSkillsForClass(className, levels){
-  return Object.keys(Skills[className]).map(skillId => new AdventurerSkill(skillId, levels[skillId] ?? 0))
+  return getClassDisplayInfo(className).skills.map(skillDef => new AdventurerSkill(skillDef.id, levels[skillDef.id] ?? 0))
 }
 
 export default class AdventurerSkill extends AdventurerLoadoutObject{
@@ -13,7 +14,7 @@ export default class AdventurerSkill extends AdventurerLoadoutObject{
 
   constructor(skillId, level = 1){
     super()
-    const baseSkill = all[skillId]
+    const baseSkill = Skills[skillId]
     if(!baseSkill){
       throw 'Invalid skillId: ' + skillId
     }
@@ -21,8 +22,7 @@ export default class AdventurerSkill extends AdventurerLoadoutObject{
       throw 'Skill is missing its levelFn: ' + skillId
     }
     this._level = level
-    this._id = skillId
-    this._class = baseSkill.group
+    this._baseSkill = baseSkill
     this._data = baseSkill.levelFn(level)
     this._skillPoints = new UpgradeData(baseSkill.skillPoints ?? [1, '...'])
   }
@@ -37,15 +37,15 @@ export default class AdventurerSkill extends AdventurerLoadoutObject{
   }
 
   get advClass(){
-    return this._class
-  }
-
-  get id(){
-    return this._id
+    return this._baseSkill.group
   }
 
   get index(){
-    return parseInt(this.id.match(/(\d+)$/)[1])
+    return this._baseSkill.index
+  }
+
+  get id(){
+    return this._baseSkill.id
   }
 
   get requiredOrbs(){

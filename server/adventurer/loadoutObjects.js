@@ -1,4 +1,5 @@
-import { all } from '../../game/items/combined.js'
+import Items from '../../game/items/combined.js'
+import Skills from '../../game/skills/combined.js'
 import { validateObject } from '../validations.js'
 import AdventurerItem from '../../game/adventurerItem.js'
 import { ADVENTURER_EFFECT_VALIDATION } from '../effect/effects.js'
@@ -47,7 +48,7 @@ const LOADOUT_OBJECT_VALIDATION = {
 }
 
 export function validateAllItems(){
-  for(let id in all){
+  for(let id in Items){
     try {
       validateItem(id)
     }catch(ex){
@@ -61,7 +62,7 @@ function validateItem(baseItemId){
 }
 
 export function validateAllSkills(){
-  for(let id in all){
+  for(let id in Skills){
     try {
       validateSkill(id)
     }catch(ex){

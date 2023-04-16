@@ -1,10 +1,10 @@
 import FighterInstance  from './fighterInstance.js'
-import * as Monsters from './monsters/combined.js'
+import Monsters from './monsters/combined.js'
 import MonsterItemInstance from './monsterItemInstance.js'
 import { geometricProgession } from './growthFunctions.js'
 import OrbsData from './orbsData.js'
 import { deepClone, toDisplayName, toNumberOfDigits } from './utilFunctions.js'
-import { bossMod } from './mods/combined.js'
+import Mods from './mods/combined.js'
 import { floorToZone } from './zones.js'
 import LoadoutEffectInstance from './loadoutEffectInstance.js'
 
@@ -65,7 +65,7 @@ export default class MonsterInstance extends FighterInstance{
   constructor(monsterDef, initialState = {}){
     super()
 
-    const baseInfo = Monsters.all[monsterDef.baseType]
+    const baseInfo = Monsters[monsterDef.baseType]
     this._monsterData = {
       description: null,
       baseStats: {},
@@ -137,7 +137,7 @@ export default class MonsterInstance extends FighterInstance{
   }
 
   get isBoss(){
-    return this.mods.contains(bossMod)
+    return this.mods.contains(Mods.boss)
   }
 
   get rewards(){

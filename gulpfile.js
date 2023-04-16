@@ -72,6 +72,8 @@ function exporterConcater(itemType, targetFile){
     const all = []
     files.forEach(({ name, path, group }) => {
       str += `import ${name} from './${path}'\n`
+      str += `if(!(${name} instanceof Function)) ${name}.id = '${name}'\n`
+      str += `if(!(${name} instanceof Function)) ${name}.group = '${group}'\n`
       all.push(name)
     })
     str += `export default { ${all.join(',')} }\n`

@@ -1,6 +1,5 @@
 import FighterInstance from './fighterInstance.js'
 import { minMax } from './utilFunctions.js'
-import { startingFoodStat } from './stats/combined.js'
 import LoadoutEffectInstance from './loadoutEffectInstance.js'
 import { adventurerLevelToHp, adventurerLevelToPower } from './adventurer.js'
 
@@ -67,14 +66,12 @@ export default class AdventurerInstance extends FighterInstance{
 
   get baseStats(){
     return [
-      {
-        [startingFoodStat.name]: 3
-      }
+      { startingFood: 3 }
     ]
   }
 
   get maxFood(){
-    return this.stats.get(startingFoodStat).value
+    return this.stats.get('startingFood').value
   }
 
   get food(){

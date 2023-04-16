@@ -1,5 +1,5 @@
 import { chooseOne } from '../../game/rando.js'
-import { all as Monsters } from '../../game/monsters/combined.js'
+import Monsters from '../../game/monsters/combined.js'
 import { uniqueID } from '../../game/utilFunctions.js'
 import MonsterInstance from '../../game/monsterInstance.js'
 import { generateRandomChest } from './chests.js'

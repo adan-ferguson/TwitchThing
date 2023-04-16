@@ -1,11 +1,8 @@
 import healthIcon from '../assets/icons/health.svg'
 import physPower from '../assets/icons/physPower.svg'
 import magicPower from '../assets/icons/magicPower.svg'
-import { getStatDisplayInfo, StatsDisplayStyle } from './statsDisplayInfo.js'
 import OrbRow, { OrbsDisplayStyle } from './components/orbRow.js'
-import Stats from '../../game/stats/stats.js'
 import { makeEl, toArray } from '../../game/utilFunctions.js'
-import { attackDamageStat, magicPowerStat, physPowerStat } from '../../game/stats/combined.js'
 import _ from 'lodash'
 
 const ICONS = {

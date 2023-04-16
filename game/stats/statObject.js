@@ -1,5 +1,5 @@
 import { StatType } from './statType.js'
-import { all as StatDefinitions } from './combined.js'
+import StatDefinitions from './combined.js'
 import _ from 'lodash'
 
 const DEFAULT_DEFINITION = {

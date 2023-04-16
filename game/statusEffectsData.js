@@ -1,7 +1,6 @@
 import StatusEffectInstance  from './statusEffectInstance.js'
-import _ from 'lodash'
 import { toArray } from './utilFunctions.js'
-import { all as Effects } from './statusEffects/combined.js'
+import Effects from './statusEffects/combined.js'
 
 /**
  * @param sourceEffect

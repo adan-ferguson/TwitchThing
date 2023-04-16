@@ -1,8 +1,7 @@
 import Stats from './stats/stats.js'
-import { freezeActionBarMod, magicAttackMod, silencedMod, sneakAttackMod } from './mods/combined.js'
+import Mods from './mods/combined.js'
 import ModsCollection from './modsCollection.js'
 import { minMax } from './utilFunctions.js'
-import freezeCooldownsMod from './mods/generic/freezeCooldowns.js'
 
 // Stupid
 new Stats()
@@ -188,7 +187,7 @@ export default class FighterInstance{
   }
 
   get basicAttackType(){
-    return this.mods.contains(magicAttackMod) ? 'magic' : 'phys'
+    return this.mods.contains(Mods.magicAttack) ? 'magic' : 'phys'
   }
 
   get magicPower(){
@@ -245,10 +244,10 @@ export default class FighterInstance{
   }
 
   advanceTime(ms){
-    if(!this.mods.contains(freezeActionBarMod) && this.inCombat){
+    if(!this.mods.contains(Mods.freezeActionBar) && this.inCombat){
       this._state.timeSinceLastAction += ms
     }
-    if(!this.mods.contains(freezeCooldownsMod)){
+    if(!this.mods.contains(Mods.freezeCooldowns)){
       this.loadoutEffectInstances.forEach(itemInstance => {
         if(itemInstance){
           itemInstance.advanceTime(ms)
@@ -263,7 +262,7 @@ export default class FighterInstance{
   }
 
   getNextActiveEffect(){
-    if(this.mods.contains(silencedMod)){
+    if(this.mods.contains(Mods.silenced)){
       return null
     }
     return this.loadoutEffectInstances.find(lei => {
@@ -317,7 +316,7 @@ export default class FighterInstance{
   startCombat(){
     this.inCombat = true
     this._state.combatTime = 0
-    this._state.timeSinceLastAction = this.mods.contains(sneakAttackMod) ? this.nextActionTime - 1 : 0
+    this._state.timeSinceLastAction = this.mods.contains(Mods.sneakAttack) ? this.nextActionTime - 1 : 0
   }
 
   endCombat(){

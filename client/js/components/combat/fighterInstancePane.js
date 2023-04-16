@@ -6,13 +6,6 @@ import MonsterInfo from '../monsterInfo.js'
 import FlyingTextEffect from '../visualEffects/flyingTextEffect.js'
 import CustomAnimation from '../../animations/customAnimation.js'
 import { mergeOptionsObjects, roundToFixed, toDisplayName } from '../../../../game/utilFunctions.js'
-import {
-  freezeActionBarMod,
-  freezeCooldownsMod,
-  magicAttackMod,
-  magicScalingMod,
-  physScalingMod
-} from '../../../../game/mods/combined.js'
 import { DAMAGE_COLORS, FLASH_COLORS } from '../../colors.js'
 import { flash } from '../../animations/simple.js'
 import LoadoutRow from '../pages/adventurerEdit/loadoutRow.js'
@@ -95,10 +88,10 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   advanceTime(ms){
-    if(this.fighterInstance.inCombat && !this.fighterInstance.mods.contains(freezeActionBarMod)){
+    if(this.fighterInstance.inCombat && !this.fighterInstance.mods.contains('freezeActionBar')){
       this._actionBarEl.advanceTime(ms)
     }
-    if(!this.fighterInstance.mods.contains(freezeCooldownsMod)){
+    if(!this.fighterInstance.mods.contains('freezeCooldown')){
       this._loadoutEl.advanceTime(ms)
     }
     this._effectsListEl.advanceTime(ms)
@@ -248,10 +241,10 @@ export default class FighterInstancePane extends HTMLElement{
 
   _excluded(){
     const excluded = ['hpMax','speed']
-    const magicAttack = this.fighterInstance.mods.contains(magicAttackMod)
-    const showPhys = this.fighterInstance.mods.contains(physScalingMod) ||
+    const magicAttack = this.fighterInstance.mods.contains('magicAttack')
+    const showPhys = this.fighterInstance.mods.contains('physScaling') ||
       this.fighterInstance.physPower !== this.fighterInstance.basePower
-    const showMagic = this.fighterInstance.mods.contains(magicScalingMod) ||
+    const showMagic = this.fighterInstance.mods.contains('magicScaling') ||
       this.fighterInstance.magicPower !== this.fighterInstance.basePower
 
     if((showPhys || !magicAttack) && showMagic){

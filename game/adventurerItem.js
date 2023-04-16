@@ -1,5 +1,4 @@
-import { all } from './items/combined.js'
-import OrbsData from './orbsData.js'
+import Items from './items/combined.js'
 import _ from 'lodash'
 import UpgradeData from './upgradeData.js'
 import AdventurerLoadoutObject from './adventurerLoadoutObject.js'
@@ -7,8 +6,6 @@ import AdventurerLoadoutObject from './adventurerLoadoutObject.js'
 export default class AdventurerItem extends AdventurerLoadoutObject{
 
   _def
-  _baseItemId
-  _advClass
   _level
 
   constructor(itemDef){
@@ -38,14 +35,6 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
     return true // this._itemDef.id ? false : true
   }
 
-  get advClass(){
-    return this._advClass
-  }
-
-  get baseItemId(){
-    return this._baseItemId
-  }
-
   get orbs(){
     return {
       [this.advClass]: this._orbs.total(this.level)
@@ -53,11 +42,11 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
   }
 
   sameItem(adventurerItem){
-    return this.isBasic && adventurerItem.isBasic && this.baseItemId === adventurerItem.baseItemId
+    return this.isBasic && adventurerItem.isBasic && this.def === adventurerItem.def
   }
 
   _basicItem(baseItemId){
-    const baseItem = all[baseItemId]
+    const baseItem = Items[baseItemId]
     if(!baseItem){
       throw 'Invalid baseItemId: ' + baseItemId
     }
@@ -65,7 +54,7 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
       throw 'Item is missing its levelFn: ' + baseItemId
     }
     this._baseItemId = baseItemId
-    this._advClass = baseItem.group
+
     this._level = 1
     this._data = baseItem.levelFn(1)
     this._orbs = new UpgradeData(baseItem.orbs ?? [0])

@@ -1,11 +1,11 @@
 import _ from 'lodash'
 import { validateActionResult } from '../../game/actionResult.js'
-import { all } from './combined.js'
+import Actions from './combined.js'
 import { expandActionDef } from '../../game/actionDefs/expandActionDef.js'
 
 export function performAction(combat, actor, effect, actionDef){
   const expandedActionDef = expandActionDef(actionDef)
-  const results = all[actionDef.type](combat, actor, effect, expandedActionDef)
+  const results = Actions[actionDef.type](combat, actor, effect, expandedActionDef)
   return {
     actionDef,
     actorId: actor.uniqueID,

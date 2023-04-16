@@ -1,4 +1,4 @@
-import { all } from './combined.js'
+import Actions from './combined.js'
 import { cleanupObject, mergeOptionsObjects } from '../utilFunctions.js'
 
 export function expandActionDef(actionDef){
@@ -7,11 +7,11 @@ export function expandActionDef(actionDef){
     throw 'actionDef missing a type'
   }
 
-  if(!all[actionDef.type]){
+  if(!Actions[actionDef.type]){
     throw 'Invalid action type: ' + actionDef.type
   }
 
-  const defaults = all[actionDef.type]
+  const defaults = Actions[actionDef.type]
 
   return cleanupObject(
     mergeOptionsObjects(defaults, {
