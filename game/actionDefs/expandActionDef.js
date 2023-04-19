@@ -11,12 +11,10 @@ export function expandActionDef(actionDef){
     throw 'Invalid action type: ' + actionDef.type
   }
 
-  const defaults = Actions[actionDef.type]
+  const defaults = Actions[actionDef.type].def
 
-  return cleanupObject(
-    mergeOptionsObjects(defaults, {
-      ...actionDef,
-      type: actionDef.type
-    })
-  )
+  return {
+    ...cleanupObject(mergeOptionsObjects(defaults, actionDef)),
+    type: actionDef.type
+  }
 }

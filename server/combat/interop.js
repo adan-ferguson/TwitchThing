@@ -11,6 +11,7 @@ export async function startCombatWorker(){
   const workerPath = path.resolve(fileURLToPath(import.meta.url), '..', 'worker.js')
   worker = new Worker(workerPath)
   worker.on('message', obj => {
+    console.log('message', obj)
     if(callbacks[obj.workerId]){
       callbacks[obj.workerId](obj)
       delete callbacks[obj.workerId]

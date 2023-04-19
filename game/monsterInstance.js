@@ -84,6 +84,10 @@ export default class MonsterInstance extends FighterInstance{
     this.setState(initialState)
   }
 
+  get uniqueID(){
+    return this.monsterDef._id
+  }
+
   get monsterDef(){
     return deepClone(this._monsterDef)
   }

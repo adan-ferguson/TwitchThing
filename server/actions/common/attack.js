@@ -1,4 +1,4 @@
-import dealDamage from './dealDamage.js'
+import { dealDamage } from '../../combat/dealDamage.js'
 
 export default function(combat, attacker, effect = null, actionDef = {}){
 
@@ -16,18 +16,18 @@ export default function(combat, attacker, effect = null, actionDef = {}){
 
   const eventsToTrigger = ['targeted', 'attacked', actionDef.damageType + 'Attacked']
   for(let eventName of eventsToTrigger){
-    combat.triggerEvent(combat, enemy, eventName)
+    combat.triggerEvent(enemy, eventName)
   }
 
   if(dodgeAttack(enemy)){
-    combat.triggerEvent(combat, enemy, 'dodge')
+    combat.triggerEvent(enemy, 'dodge')
     return {
       cancelled: 'dodge'
     }
   }
 
   if(missAttack(attacker)){
-    combat.triggerEvent(combat, attacker, 'miss')
+    combat.triggerEvent(attacker, 'miss')
     return {
       cancelled: 'miss'
     }

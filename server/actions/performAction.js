@@ -5,7 +5,7 @@ import { expandActionDef } from '../../game/actionDefs/expandActionDef.js'
 
 export function performAction(combat, actor, effect, actionDef){
   const expandedActionDef = expandActionDef(actionDef)
-  const results = Actions[actionDef.type](combat, actor, effect, expandedActionDef)
+  const results = Actions[expandedActionDef.type].def(combat, actor, effect, expandedActionDef)
   return {
     actionDef,
     actorId: actor.uniqueID,
