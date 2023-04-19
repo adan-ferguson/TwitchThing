@@ -47,7 +47,6 @@ for(let advClass in INFO){
   })
 }
 
-export function getClassDisplayInfo(className){
-  // TODO: preprocessing
+export function getClassInfo(className){
   return INFO[className]
 }

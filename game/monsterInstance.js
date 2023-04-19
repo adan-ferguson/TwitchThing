@@ -67,16 +67,12 @@ export default class MonsterInstance extends FighterInstance{
 
     const baseInfo = Monsters[monsterDef.baseType]
     this._monsterData = {
-      description: null,
-      baseStats: {},
-      items: [],
-      ...baseInfo,
-      ...monsterDef
+      ...baseInfo.def
     }
     this._monsterDef = monsterDef
 
     for(let i = 0; i < 8; i++){
-      if(this.monsterData.items[i]){
+      if(this.monsterData.items?.[i]){
         this._itemInstances[i] = new LoadoutEffectInstance({
           obj: this.monsterData.items[i],
           owner: this,
@@ -105,7 +101,7 @@ export default class MonsterInstance extends FighterInstance{
   }
 
   get displayName(){
-    return (this.isSuper ? 'SUPER ' : '' ) + (this.monsterDef.displayName ?? toDisplayName(this.monsterData.name))
+    return (this.isSuper ? 'SUPER ' : '' ) + (this.monsterData.displayName ?? toDisplayName(this.monsterDef.baseType))
   }
 
   get level(){

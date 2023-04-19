@@ -2,10 +2,15 @@ import Server from './server.js'
 import db from './db.js'
 import * as DungeonRunner from './dungeons/dungeonRunner.js'
 import { initLogging } from './logging.js'
-import { validateAllItems, validateAllSkills } from './adventurer/loadoutObjects.js'
 import { startCombatWorker } from './combat/interop.js'
+import { validateAllMonsters } from './validations/monster.js'
+import { validateAllItems } from './validations/adventurerItem.js'
+import { validateAllSkills } from './validations/adventurerSkill.js'
 
-init()
+init().catch(ex => {
+  console.error(ex)
+  process.exit()
+})
 
 async function init(){
   await initLogging()
@@ -21,5 +26,6 @@ async function init(){
 function validateEverything(){
   validateAllItems()
   validateAllSkills()
+  validateAllMonsters()
 }
 

@@ -69,14 +69,12 @@ function exporterConcater(itemType, targetFile){
 
   function combinedFileContents(){
     let str = ''
-    const all = []
+    const exportStrings = []
     files.forEach(({ name, path, group }) => {
       str += `import ${name} from './${path}'\n`
-      str += `if(!(${name} instanceof Function)) ${name}.id = '${name}'\n`
-      str += `if(!(${name} instanceof Function)) ${name}.group = '${group}'\n`
-      all.push(name)
+      exportStrings.push(`${name}: { def: ${name}, id: '${name}', group: '${group}' }`)
     })
-    str += `export default { ${all.join(',')} }\n`
+    str += `export default { ${exportStrings.join(',')} }\n`
     return str
   }
 }

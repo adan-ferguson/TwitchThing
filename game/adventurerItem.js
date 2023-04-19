@@ -50,14 +50,14 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
     if(!baseItem){
       throw 'Invalid baseItemId: ' + baseItemId
     }
-    if(!baseItem.levelFn){
+    if(!baseItem.def.levelFn){
       throw 'Item is missing its levelFn: ' + baseItemId
     }
     this._baseItemId = baseItemId
 
     this._level = 1
-    this._data = baseItem.levelFn(1)
-    this._orbs = new UpgradeData(baseItem.orbs ?? [0])
+    this._data = baseItem.def.levelFn(1)
+    this._orbs = new UpgradeData(baseItem.def.orbs ?? [0])
   }
 
   _craftedItem(){

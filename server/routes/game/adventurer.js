@@ -3,7 +3,7 @@ import Adventurers from '../../collections/adventurers.js'
 import { addRun } from '../../dungeons/dungeonRunner.js'
 import db  from '../../db.js'
 import Users from '../../collections/users.js'
-import { requireRegisteredUser, validateBody, validateParam } from '../../validations.js'
+import { requireRegisteredUser, validateParam } from '../../validations.js'
 import DungeonRuns from '../../collections/dungeonRuns.js'
 import { spendAdventurerOrb, spendAdventurerSkillPoint } from '../../adventurer/edit.js'
 import { commitAdventurerLoadout } from '../../adventurer/loadout.js'
@@ -91,10 +91,8 @@ verifiedRouter.post('/edit/spendskillpoint', validateIdle, async(req, res) => {
 
 verifiedRouter.post('/edit/save', validateIdle, async (req, res) => {
   requireOwnsAdventurer(req)
-  validateBody(req.body, {
-    items: { type: 'array' },
-    skills: { type: 'array' }
-  })
+  validateParam(req.body.items, 'array')
+  validateParam(req.body.skills, 'array')
   await commitAdventurerLoadout(req.adventurerDoc, req.user, req.body.items, req.body.skills)
   await Adventurers.save(req.adventurerDoc)
   await Users.save(req.user)

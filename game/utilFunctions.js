@@ -1,5 +1,6 @@
 import { v4 } from 'uuid'
 import _ from 'lodash'
+import Joi from 'joi'
 
 export function toArray(arrayOrVal){
   return Array.isArray(arrayOrVal) ? arrayOrVal : [arrayOrVal]
@@ -201,4 +202,8 @@ export function isolate(arrayOfObjs, propName){
 
 export function deepClone(obj){
   return JSON.parse(JSON.stringify(obj))
+}
+
+export function keyedObject(keyList, defaultValue = null){
+  return keyList.reduce((val, key) => { return { ...val, [key]: defaultValue } }, {})
 }

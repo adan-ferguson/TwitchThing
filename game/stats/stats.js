@@ -6,8 +6,7 @@ import _ from 'lodash'
 
 export default class Stats{
 
-  _scaleFn
-
+  _cache = {}
   baseAffectors = []
   additionalAffectors = []
 
@@ -24,22 +23,14 @@ export default class Stats{
     return this.baseAffectors.concat(this.additionalAffectors)
   }
 
-  get scale(){
-    if(this._scaleFn){
-      return this._scaleFn()
-    }
-    return 1
-  }
-
-  set scaleFn(val){
-    this._scaleFn = val
-  }
-
   get(nameOrStat){
 
-    // TODO: cache this stuff
-
     const name = nameOrStat.name ?? nameOrStat
+
+    if(this._cache[name]){
+      return this._cache[name]
+    }
+
     const statObj = makeStatObject(name)
 
     const fn = statValueFns[statObj.type]
@@ -53,10 +44,12 @@ export default class Stats{
     statObj.baseMods = base.mods
 
     const current = fn(extractValues(this.affectors, name), statObj.defaultValue)
-    statObj.value = shine(current.value * this.scale)
+    statObj.value = shine(current.value)
     statObj.mods = current.mods
 
     statObj.diff = calcStatDiff(statObj)
+
+    this._cache[name] = statObj
 
     return statObj
 

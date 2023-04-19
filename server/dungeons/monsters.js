@@ -200,7 +200,7 @@ function getBasicMonsterDefinition(floor){
   }
   return {
     _id: 'basic-' + uniqueID(),
-    baseType: monstersByFloor[floor].name,
+    baseType: monstersByFloor[floor].id,
     level: floor
   }
 }
