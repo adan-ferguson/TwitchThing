@@ -178,4 +178,4 @@ export default class LoadoutTab extends DIElement{
   }
 }
 
-customElements.define('di-adventurer-edit-loadout-tab', LoadoutTab)
+customElements.define('di-adventurer-loadout-tab', LoadoutTab)

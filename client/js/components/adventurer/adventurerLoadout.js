@@ -1,5 +1,6 @@
-import AdventurerItemRow from '../../adventurer/adventurerItemRow.js'
-import AdventurerSkillRow from '../../adventurer/adventurerSkillRow.js'
+import AdventurerItemRow from './adventurerItemRow.js'
+import AdventurerSkillRow from './adventurerSkillRow.js'
+import DIElement from '../diElement.js'
 
 const HTML = `
 <div class="adv-items slots">
@@ -8,13 +9,7 @@ const HTML = `
 </div>
 `
 
-export default class Loadout extends HTMLElement{
-
-  _options = {
-    editable: false,
-  }
-
-  _fighterInstance
+export default class AdventurerLoadout extends DIElement{
 
   constructor(){
     super()
@@ -54,15 +49,8 @@ export default class Loadout extends HTMLElement{
         valid: !slotInfo.restrictionsFailed
       })
     })
-  }
-
-  setOptions(options = {}){
-    for (let key in options){
-      this._options[key] = options[key]
-    }
-    this.update()
     return this
   }
 }
 
-customElements.define('di-adventurer-edit-loadout', Loadout)
+customElements.define('di-adventurer-loadout', AdventurerLoadout)

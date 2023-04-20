@@ -17,8 +17,8 @@ export default class CombatEnactment extends EventEmitter{
     this._fighterPane2 = fighterPane2
     this._combat = combat
 
-    this._fighterPane1.setFighter(toFighterInstance(combat.fighter1.data, combat.fighter1.startState))
-    this._fighterPane2.setFighter(toFighterInstance(combat.fighter2.data, combat.fighter2.startState))
+    this._fighterPane1.setFighter(toFighterInstance(combat.fighter1.def, combat.fighter1.startState))
+    this._fighterPane2.setFighter(toFighterInstance(combat.fighter2.def, combat.fighter2.startState))
     this._setupTimeline(combat)
   }
 
@@ -74,7 +74,7 @@ export default class CombatEnactment extends EventEmitter{
       entry.actions.forEach(action => {
         this._performAction(action)
       })
-      entry.tickUpdates.forEach(tickUpdate => {
+      entry.triggers.forEach(tickUpdate => {
         this._performTickUpdate(tickUpdate)
       })
     })

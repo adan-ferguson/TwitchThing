@@ -84,6 +84,10 @@ export default class MonsterInstance extends FighterInstance{
     this.setState(initialState)
   }
 
+  get loadout(){
+    return { monsterInstance: this, items: this._itemInstances }
+  }
+
   get uniqueID(){
     return this.monsterDef._id
   }

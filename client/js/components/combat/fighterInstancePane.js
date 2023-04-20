@@ -1,5 +1,4 @@
 import Adventurer from '../../../../game/adventurer.js'
-import { OrbsDisplayStyle } from '../orbRow.js'
 import Modal from '../modal.js'
 import AdventurerInfo from '../adventurer/adventurerInfo.js'
 import MonsterInfo from '../monsterInfo.js'
@@ -11,6 +10,9 @@ import { flash } from '../../animations/simple.js'
 import LoadoutRow from '../pages/adventurerEdit/loadoutRow.js'
 import EffectRow from '../effects/effectRow.js'
 import { ICON_SVGS } from '../../assetLoader.js'
+import AdventurerInstance from '../../../../game/adventurerInstance.js'
+import AdventurerLoadout from '../adventurer/adventurerLoadout.js'
+import MonsterLoadout from '../monster/monsterLoadout.js'
 
 const HTML = `
 <div class="name"></div>
@@ -22,7 +24,7 @@ const HTML = `
     <di-effects-list></di-effects-list>
   </div>
   <di-action-bar></di-action-bar>
-  <di-loadout></di-loadout>
+  <div class="loadout-container"></div>
 </div>
 `
 
@@ -31,10 +33,6 @@ const TEXT_EFFECT_MAX = 2.1
 const STAGGER_TIME = 175
 
 export default class FighterInstancePane extends HTMLElement{
-
-  _orbRowEl
-  _loadoutEl
-  _effectsListEl
 
   hpBarEl
 
@@ -46,15 +44,10 @@ export default class FighterInstancePane extends HTMLElement{
     this.innerHTML = HTML
     this.hpBarEl = this.querySelector('di-hp-bar')
     this._actionBarEl = this.querySelector('di-action-bar')
-    this._loadoutEl = this.querySelector('di-loadout')
-    this._orbRowEl = this.querySelector('.fighter-orbs').setOptions({
-      style: OrbsDisplayStyle.MAX_ONLY
-    })
     this.statsList = this.querySelector('di-stats-list').setOptions({
       iconsOnly: true,
       forced: ['physPower','magicPower'] // Excluded takes priority, so these might be hidden
     })
-    this._effectsListEl = this.querySelector('di-effects-list')
     this._hpChangeQueue = new ResultQueue()
 
     this.querySelector('.top-section').addEventListener('click', e => {
@@ -66,6 +59,14 @@ export default class FighterInstancePane extends HTMLElement{
     return this._actionBarEl.querySelector('.bar-badge')
   }
 
+  get loadoutEl(){
+    return this.querySelector('.loadout-container > *')
+  }
+
+  get effectsListEl(){
+    return this.querySelector('di-effects-list')
+  }
+
   setOptions(options){
     this._options = mergeOptionsObjects(this._options, options)
     return this
@@ -73,10 +74,10 @@ export default class FighterInstancePane extends HTMLElement{
 
   setFighter(fighterInstance){
     this.fighterInstance = fighterInstance
-    this._loadoutEl.setFighterInstance(fighterInstance)
+    this._setupLoadout()
+
     this.querySelector('.name').textContent = fighterInstance.displayName
-    this._orbRowEl.setData(fighterInstance.orbs)
-    this._effectsListEl.setFighterInstance(fighterInstance)
+    // this.effectsListEl.setFighterInstance(fighterInstance)
     this._update(false)
     return this
   }
@@ -91,48 +92,49 @@ export default class FighterInstancePane extends HTMLElement{
     if(this.fighterInstance.inCombat && !this.fighterInstance.mods.contains('freezeActionBar')){
       this._actionBarEl.advanceTime(ms)
     }
-    if(!this.fighterInstance.mods.contains('freezeCooldown')){
-      this._loadoutEl.advanceTime(ms)
-    }
-    this._effectsListEl.advanceTime(ms)
+    // if(!this.fighterInstance.mods.contains('freezeCooldown')){
+    //   this.loadoutEl.advanceTime(ms)
+    // }
+    // this.effectsListEl.advanceTime(ms)
   }
 
   displayActionPerformed(action){
-    if(action.basicAttack){
-      const color = DAMAGE_COLORS[this.fighterInstance.basicAttackType]
-      flash(this.basicAttackEl, color)
-    }else if(action.effect){
-      const effectEl = this._getEffectEl(action.effect)
-      if(effectEl instanceof LoadoutRow){
-        flash(effectEl, FLASH_COLORS[effectEl.loadoutItem.abilityDisplayInfo.type], 500)
-      }else if(effectEl instanceof EffectRow){
-        effectEl.flash()
-      }
-    }
+    debugger
+    // if(action.basicAttack){
+    //   const color = DAMAGE_COLORS[this.fighterInstance.basicAttackType]
+    //   flash(this.basicAttackEl, color)
+    // }else if(action.effect){
+    //   const effectEl = this._getEffectEl(action.effect)
+    //   if(effectEl instanceof LoadoutRow){
+    //     flash(effectEl, FLASH_COLORS[effectEl.loadoutItem.abilityDisplayInfo.type], 500)
+    //   }else if(effectEl instanceof EffectRow){
+    //     effectEl.flash()
+    //   }
+    // }
   }
 
   displayResult(result, effect){
-
-    if(result.type === 'attack'){
-      this._queueHpChange(() => this._displayDamageResult(result))
-    }else if(result.type === 'damage'){
-      this._queueHpChange(() => this._displayDamageResult(result))
-    }else if(result.type === 'gainHealth'){
-      this._queueHpChange(() => this._displayLifeGained(result.data.amount))
-    }else if(result.type === 'cancel'){
-      this._displayCancellation(result, effect)
-    }
+    debugger
+    // if(result.type === 'attack'){
+    //   this._queueHpChange(() => this._displayDamageResult(result))
+    // }else if(result.type === 'damage'){
+    //   this._queueHpChange(() => this._displayDamageResult(result))
+    // }else if(result.type === 'gainHealth'){
+    //   this._queueHpChange(() => this._displayLifeGained(result.data.amount))
+    // }else if(result.type === 'cancel'){
+    //   this._displayCancellation(result, effect)
+    // }
   }
 
   _displayLifeGained(amount){
-    if(!amount){
-      return
-    }
-    new FlyingTextEffect(this.hpBarEl, amount, {
-      fontSize: TEXT_EFFECT_MIN + Math.min(0.5, amount / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX,
-      clearExistingForSource: true
-    })
-    this.hpBarEl.setValue(amount, { relative: true, animate: true })
+    // if(!amount){
+    //   return
+    // }
+    // new FlyingTextEffect(this.hpBarEl, amount, {
+    //   fontSize: TEXT_EFFECT_MIN + Math.min(0.5, amount / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX,
+    //   clearExistingForSource: true
+    // })
+    // this.hpBarEl.setValue(amount, { relative: true, animate: true })
   }
 
   _queueHpChange(fn){
@@ -141,49 +143,49 @@ export default class FighterInstancePane extends HTMLElement{
 
   _displayDamageResult = (damageResult) => {
 
-    if(damageResult.cancelled){
-      this._displayCancellation(damageResult)
-      return
-    }
-
-    const data = damageResult.data
-    const classes = ['damage']
-    if(data.crit){
-      classes.push('crit')
-    }
-    if(data.damageType === 'magic'){
-      classes.push('magic')
-    }
-
-    for(let key in data.damageDistribution){
-      if(data.damageDistribution[key] === 0){
-        continue
-      }
-      let dmgStr = roundToFixed(data.damageDistribution[key], 2)
-      let html = `<span class="${classes.join(' ')}">-${dmgStr}${data.crit ? '!!' : ''}</span>`
-      let barEl = key === 'hp' ? this.hpBarEl : this._getEffectEl(key)?.barEl
-      if(!barEl){
-        continue
-      }
-      barEl.setValue(-data.damageDistribution[key], { relative: true, animate: true })
-      new FlyingTextEffect(barEl, html, {
-        html: true,
-        fontSize: TEXT_EFFECT_MIN + Math.min(0.5, dmgStr / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX,
-        clearExistingForSource: true
-      })
-    }
-
-    if(data.blocked){
-      const blockedHtml = `<span class="blocked">[${data.blocked}]</span>`
-      const statEl = this.statsList.querySelector(`di-stat-row[stat-key=${data.damageType}Def]`)
-      if(statEl){
-        new FlyingTextEffect(statEl, blockedHtml, {
-          html: true,
-          color: '#000',
-          clearExistingForSource: true
-        })
-      }
-    }
+    // if(damageResult.cancelled){
+    //   this._displayCancellation(damageResult)
+    //   return
+    // }
+    //
+    // const data = damageResult.data
+    // const classes = ['damage']
+    // if(data.crit){
+    //   classes.push('crit')
+    // }
+    // if(data.damageType === 'magic'){
+    //   classes.push('magic')
+    // }
+    //
+    // for(let key in data.damageDistribution){
+    //   if(data.damageDistribution[key] === 0){
+    //     continue
+    //   }
+    //   let dmgStr = roundToFixed(data.damageDistribution[key], 2)
+    //   let html = `<span class="${classes.join(' ')}">-${dmgStr}${data.crit ? '!!' : ''}</span>`
+    //   let barEl = key === 'hp' ? this.hpBarEl : this._getEffectEl(key)?.barEl
+    //   if(!barEl){
+    //     continue
+    //   }
+    //   barEl.setValue(-data.damageDistribution[key], { relative: true, animate: true })
+    //   new FlyingTextEffect(barEl, html, {
+    //     html: true,
+    //     fontSize: TEXT_EFFECT_MIN + Math.min(0.5, dmgStr / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX,
+    //     clearExistingForSource: true
+    //   })
+    // }
+    //
+    // if(data.blocked){
+    //   const blockedHtml = `<span class="blocked">[${data.blocked}]</span>`
+    //   const statEl = this.statsList.querySelector(`di-stat-row[stat-key=${data.damageType}Def]`)
+    //   if(statEl){
+    //     new FlyingTextEffect(statEl, blockedHtml, {
+    //       html: true,
+    //       color: '#000',
+    //       clearExistingForSource: true
+    //     })
+    //   }
+    // }
   }
 
   /**
@@ -205,7 +207,6 @@ export default class FighterInstancePane extends HTMLElement{
       cancelAnimations = true
     }
 
-
     if(this.fighterInstance.hp !== this.hpBarEl.value){
       if(cancelAnimations || (!this.hpBarEl.animating && this._hpChangeQueue.isEmpty)){
         this._hpChangeQueue.clear()
@@ -218,9 +219,9 @@ export default class FighterInstancePane extends HTMLElement{
     })
 
     this.statsList.setStats(this.fighterInstance.stats, this.fighterInstance)
-    this._effectsListEl.update(cancelAnimations)
+    // this.effectsListEl.update(cancelAnimations)
     this._updateActionBar()
-    this._loadoutEl.updateAllRows()
+    // this.loadoutEl.updateAllRows()
     this.classList.toggle('boss', this.fighterInstance.isBoss ? true : false)
 
     if(!this.fighterInstance.hp){
@@ -257,19 +258,19 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   _getEffectEl(effectId, eventName){
-    if(!effectId){
-      return null
-    }
-    const loadoutRow = this._loadoutEl._rows.find(el => {
-      // TODO: eventName should have to be the main event for the effect
-      return el.loadoutItem?.obj.effectId === effectId
-    })
-    if(loadoutRow){
-      return loadoutRow
-    }
-    return [...this._effectsListEl.querySelectorAll('di-effect-row')].find(el => {
-      return el.effect.effectId === effectId
-    })
+    // if(!effectId){
+    //   return null
+    // }
+    // const loadoutRow = this.loadoutEl._rows.find(el => {
+    //   // TODO: eventName should have to be the main event for the effect
+    //   return el.loadoutItem?.obj.effectId === effectId
+    // })
+    // if(loadoutRow){
+    //   return loadoutRow
+    // }
+    // return [...this._effectsListEl.querySelectorAll('di-effect-row')].find(el => {
+    //   return el.effect.effectId === effectId
+    // })
   }
 
   _displayCancellation(result, effect){
@@ -312,6 +313,17 @@ export default class FighterInstancePane extends HTMLElement{
       this.fighterInstance._state.timeSinceLastAction ?? 0,
       this.fighterInstance.timeUntilNextAction
     )
+  }
+
+  _setupLoadout(){
+    const loadoutContainer = this.querySelector('.loadout-container')
+    loadoutContainer.innerHTML = ''
+    debugger
+    if(this.fighterInstance instanceof AdventurerInstance){
+      loadoutContainer.appendChild(new AdventurerLoadout().setLoadout(this.fighterInstance.loadout))
+    }else{
+      loadoutContainer.appendChild(new MonsterLoadout().setLoadout(this.fighterInstance.loadout))
+    }
   }
 }
 

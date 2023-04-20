@@ -1,7 +1,7 @@
 import DIElement from '../diElement.js'
 import { OrbsTooltip } from '../orbRow.js'
-import SkillCard from '../skillCard.js'
 import ItemCard from '../itemCard.js'
+import { wrapContent } from '../../../../game/utilFunctions.js'
 
 const HTML = `
 <div class="border">
@@ -61,9 +61,9 @@ export default class AdventurerItemRow extends DIElement{
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
     tooltip.appendChild(new ItemCard().setItem(this._options.item))
-    // tooltip.appendChild(wrapContent('Right-click for more info', {
-    //   class: 'right-click subtitle'
-    // }))
+    tooltip.appendChild(wrapContent('Right-click for more info', {
+      class: 'right-click subtitle'
+    }))
 
     return tooltip
   }

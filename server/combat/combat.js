@@ -195,7 +195,7 @@ class Combat{
     this.timeline.push({
       time: this._currentTime,
       actions: [],
-      triggerUpdates: this._triggerUpdates,
+      triggers: this._triggerUpdates,
       fighterState1: this.fighterInstance1.state,
       fighterState2: this.fighterInstance2.state,
       ...options

@@ -7,7 +7,7 @@ const HTML = `
 <div class="absolute-full-size fill-contents standard-contents">
   <di-stats-list class="adventurer-stats"></di-stats-list>
   <di-orb-row class="adventurer-orbs"></di-orb-row>
-  <di-adventurer-edit-loadout></di-adventurer-edit-loadout>
+  <di-adventurer-loadout></di-adventurer-loadout>
 </div>
 `
 
@@ -33,7 +33,7 @@ export default class AdventurerPane extends DIElement{
   }
 
   get loadoutEl(){
-    return this.querySelector('di-adventurer-edit-loadout')
+    return this.querySelector('di-adventurer-loadout')
   }
 
   get orbRowEl(){
