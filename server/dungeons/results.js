@@ -1,6 +1,6 @@
 import Adventurers from '../collections/adventurers.js'
 import Users from '../collections/users.js'
-import { toArray } from '../../game/utilFunctions.js'
+import { arrayize } from '../../game/utilFunctions.js'
 import { emit } from '../socketServer.js'
 import DungeonRuns from '../collections/dungeonRuns.js'
 import { advXpToLevel } from '../../game/adventurer.js'
@@ -31,7 +31,7 @@ export function addRewards(rewards, toAdd){
       if(!r[key]){
         r[key] = []
       }
-      r[key].push(...toArray(toAdd[key]))
+      r[key].push(...arrayize(toAdd[key]))
     }
   }
   return r

@@ -1,5 +1,5 @@
 import StatusEffectInstance  from './statusEffectInstance.js'
-import { toArray } from './utilFunctions.js'
+import { arrayize } from './utilFunctions.js'
 import Effects from './statusEffects/combined.js'
 
 /**
@@ -118,7 +118,7 @@ export class StatusEffectsData{
   }
 
   remove(toRemove){
-    toRemove = toArray(toRemove)
+    toRemove = arrayize(toRemove)
     this._instances = this._instances.filter(instance => {
       if(toRemove.indexOf(instance) > -1){
         return false

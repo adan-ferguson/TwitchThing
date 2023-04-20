@@ -1,5 +1,5 @@
 import Modal from './modal.js'
-import { toArray } from '../../../game/utilFunctions.js'
+import { arrayize } from '../../../game/utilFunctions.js'
 import { fadeIn, fadeOut } from '../animations/simple.js'
 import _ from 'lodash'
 
@@ -53,7 +53,7 @@ export default class SimpleModal extends Modal{
 
   setButtons(buttons){
 
-    buttons = toArray(buttons)
+    buttons = arrayize(buttons)
 
     const buttonsEl = this.querySelector('.buttons')
     buttonsEl.classList.toggle('displaynone', !buttons.length)

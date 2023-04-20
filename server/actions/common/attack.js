@@ -66,7 +66,10 @@ export default function(combat, attacker, effect = null, actionDef = {}){
     combat.triggerEvent(attacker, 'crit', damageInfo)
   }
 
-  return { damageInfo }
+  return {
+    subject: enemy.uniqueID,
+    damageInfo
+  }
 }
 
 function attemptCrit(actor, target, bonusCritChance){

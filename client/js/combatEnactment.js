@@ -1,7 +1,7 @@
 import { EventEmitter } from 'events'
 import { toFighterInstance } from '../../game/toFighterInstance.js'
 import Timeline from '../../game/timeline.js'
-import { toArray } from '../../game/utilFunctions.js'
+import { arrayize } from '../../game/utilFunctions.js'
 
 export default class CombatEnactment extends EventEmitter{
 
@@ -69,7 +69,7 @@ export default class CombatEnactment extends EventEmitter{
     if(this._destroyed){
       return
     }
-    entries = toArray(entries)
+    entries = arrayize(entries)
     entries.forEach(entry => {
       entry.actions.forEach(action => {
         this._performAction(action)
@@ -93,13 +93,12 @@ export default class CombatEnactment extends EventEmitter{
   }
 
   async _performAction(action){
-    this._getPane(action.owner).displayActionPerformed(action)
+    this._getPane(action.actorId).displayActionPerformed(action)
     action.results.forEach(result => {
       if(result.type === 'blank'){
         return
       }
       this._getPane(result.subject).displayResult(result, action.effect)
-      result.triggeredEvents?.forEach(action => this._performAction(action))
     })
   }
 

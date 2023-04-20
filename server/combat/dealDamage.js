@@ -16,8 +16,8 @@ export function dealDamage(combat, actor, target, damageInfo){
 
   if(hpToGain){
     const healthGainResult = gainHealth(combat, actor, { flat: hpToGain })
-    damageInfo.lifesteal = healthGainResult.amount
+    damageResult.lifesteal = healthGainResult.amount
   }
 
-  return damageInfo
+  return damageResult
 }

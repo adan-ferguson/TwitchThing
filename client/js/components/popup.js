@@ -1,14 +1,14 @@
 import SimpleModal from './simpleModal.js'
 import classDisplayInfo from '../classDisplayInfo.js'
 import { ICON_SVGS } from '../assetLoader.js'
-import { toArray } from '../../../game/utilFunctions.js'
+import { arrayize } from '../../../game/utilFunctions.js'
 
 const popupQueue = []
 
 let running = false
 
 export function showPopup(data){
-  popupQueue.push(...toArray(data))
+  popupQueue.push(...arrayize(data))
   if(!popupQueue.length){
     return
   }

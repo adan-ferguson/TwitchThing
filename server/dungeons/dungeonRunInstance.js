@@ -4,7 +4,7 @@ import { generateEvent } from './dungeonEventPlanner.js'
 import { addRewards } from './results.js'
 import { ADVANCEMENT_INTERVAL } from './dungeonRunner.js'
 import calculateResults from '../../game/dungeonRunResults.js'
-import { toArray } from '../../game/utilFunctions.js'
+import { arrayize } from '../../game/utilFunctions.js'
 import _ from 'lodash'
 
 export default class DungeonRunInstance extends EventEmitter{
@@ -133,7 +133,7 @@ export default class DungeonRunInstance extends EventEmitter{
   async _addEvent(events){
 
     let durationSum = 0
-    events = toArray(events)
+    events = arrayize(events)
     events.forEach((e, i) => {
       const nextEvent = {
         room: this.doc.room,

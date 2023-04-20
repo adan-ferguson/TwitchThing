@@ -2,10 +2,17 @@ import _ from 'lodash'
 import { validateActionResult } from '../../game/actionResult.js'
 import Actions from './combined.js'
 import { expandActionDef } from '../../game/actionDefs/expandActionDef.js'
+import { arrayize } from '../../game/utilFunctions.js'
 
 export function performAction(combat, actor, effect, actionDef){
   const expandedActionDef = expandActionDef(actionDef)
-  const results = Actions[expandedActionDef.type].def(combat, actor, effect, expandedActionDef)
+  let results = Actions[expandedActionDef.type].def(combat, actor, effect, expandedActionDef)
+  results = arrayize(results)
+  results.forEach(r => {
+    if(!r.subject){
+      throw 'Action result missing object '
+    }
+  })
   return {
     actionDef,
     actorId: actor.uniqueID,

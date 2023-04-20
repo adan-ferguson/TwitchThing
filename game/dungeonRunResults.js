@@ -1,4 +1,4 @@
-import { toArray } from './utilFunctions.js'
+import { arrayize } from './utilFunctions.js'
 import { CombatResult } from './combatResult.js'
 
 export default function calculateResults(eventsList){
@@ -37,7 +37,7 @@ function monstersKilled(eventsList){
 function chests(eventsList){
   const arr = []
   eventsList.forEach(e => {
-    const chests = toArray(e.rewards?.chests ?? [])
+    const chests = arrayize(e.rewards?.chests ?? [])
     chests.forEach(chest => {
       arr.push(chest)
     })

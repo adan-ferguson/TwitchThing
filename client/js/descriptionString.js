@@ -2,7 +2,7 @@ import healthIcon from '../assets/icons/health.svg'
 import physPower from '../assets/icons/physPower.svg'
 import magicPower from '../assets/icons/magicPower.svg'
 import OrbRow, { OrbsDisplayStyle } from './components/orbRow.js'
-import { makeEl, toArray } from '../../game/utilFunctions.js'
+import { makeEl, arrayize } from '../../game/utilFunctions.js'
 import _ from 'lodash'
 
 const ICONS = {
@@ -22,7 +22,7 @@ export function parseDescriptionString(description, stats = null){
     if(i !== 0){
       const parsed = parseProp(props[i-1])
       if(parsed){
-        el.appendChild(...toArray(parsed))
+        el.appendChild(...arrayize(parsed))
       }
     }
     el.append(chunk)

@@ -2,7 +2,7 @@ import { v4 } from 'uuid'
 import _ from 'lodash'
 import Joi from 'joi'
 
-export function toArray(arrayOrVal){
+export function arrayize(arrayOrVal){
   return Array.isArray(arrayOrVal) ? arrayOrVal : [arrayOrVal]
 }
 

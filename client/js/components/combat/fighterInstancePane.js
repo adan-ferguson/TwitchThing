@@ -99,7 +99,12 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   displayActionPerformed(action){
-    debugger
+    if(action.actionDef.type === 'attack'){
+      if(action.actionDef.basic){
+        const color = DAMAGE_COLORS[this.fighterInstance.basicAttackType]
+        flash(this.basicAttackEl, color)
+      }
+    }
     // if(action.basicAttack){
     //   const color = DAMAGE_COLORS[this.fighterInstance.basicAttackType]
     //   flash(this.basicAttackEl, color)
@@ -113,10 +118,11 @@ export default class FighterInstancePane extends HTMLElement{
     // }
   }
 
-  displayResult(result, effect){
-    debugger
+  displayResult(result, sourceEffect){
+    if(result.damageInfo){
+      this._queueHpChange(() => this._displayDamageResult(result))
+    }
     // if(result.type === 'attack'){
-    //   this._queueHpChange(() => this._displayDamageResult(result))
     // }else if(result.type === 'damage'){
     //   this._queueHpChange(() => this._displayDamageResult(result))
     // }else if(result.type === 'gainHealth'){
@@ -147,45 +153,45 @@ export default class FighterInstancePane extends HTMLElement{
     //   this._displayCancellation(damageResult)
     //   return
     // }
-    //
-    // const data = damageResult.data
-    // const classes = ['damage']
-    // if(data.crit){
-    //   classes.push('crit')
-    // }
-    // if(data.damageType === 'magic'){
-    //   classes.push('magic')
-    // }
-    //
-    // for(let key in data.damageDistribution){
-    //   if(data.damageDistribution[key] === 0){
-    //     continue
-    //   }
-    //   let dmgStr = roundToFixed(data.damageDistribution[key], 2)
-    //   let html = `<span class="${classes.join(' ')}">-${dmgStr}${data.crit ? '!!' : ''}</span>`
-    //   let barEl = key === 'hp' ? this.hpBarEl : this._getEffectEl(key)?.barEl
-    //   if(!barEl){
-    //     continue
-    //   }
-    //   barEl.setValue(-data.damageDistribution[key], { relative: true, animate: true })
-    //   new FlyingTextEffect(barEl, html, {
-    //     html: true,
-    //     fontSize: TEXT_EFFECT_MIN + Math.min(0.5, dmgStr / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX,
-    //     clearExistingForSource: true
-    //   })
-    // }
-    //
-    // if(data.blocked){
-    //   const blockedHtml = `<span class="blocked">[${data.blocked}]</span>`
-    //   const statEl = this.statsList.querySelector(`di-stat-row[stat-key=${data.damageType}Def]`)
-    //   if(statEl){
-    //     new FlyingTextEffect(statEl, blockedHtml, {
-    //       html: true,
-    //       color: '#000',
-    //       clearExistingForSource: true
-    //     })
-    //   }
-    // }
+
+    const data = damageResult.damageInfo
+    const classes = ['damage']
+    if(data.crit){
+      classes.push('crit')
+    }
+    if(data.damageType === 'magic'){
+      classes.push('magic')
+    }
+
+    for(let key in data.damageDistribution){
+      if(data.damageDistribution[key] === 0){
+        continue
+      }
+      let dmgStr = roundToFixed(data.damageDistribution[key], 2)
+      let html = `<span class="${classes.join(' ')}">-${dmgStr}${data.crit ? '!!' : ''}</span>`
+      let barEl = key === 'hp' ? this.hpBarEl : this._getEffectEl(key)?.barEl
+      if(!barEl){
+        continue
+      }
+      barEl.setValue(-data.damageDistribution[key], { relative: true, animate: true })
+      new FlyingTextEffect(barEl, html, {
+        html: true,
+        fontSize: TEXT_EFFECT_MIN + Math.min(0.5, dmgStr / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX,
+        clearExistingForSource: true
+      })
+    }
+
+    if(data.blocked){
+      const blockedHtml = `<span class="blocked">[${data.blocked}]</span>`
+      const statEl = this.statsList.querySelector(`di-stat-row[stat-key=${data.damageType}Def]`)
+      if(statEl){
+        new FlyingTextEffect(statEl, blockedHtml, {
+          html: true,
+          color: '#000',
+          clearExistingForSource: true
+        })
+      }
+    }
   }
 
   /**
@@ -318,7 +324,6 @@ export default class FighterInstancePane extends HTMLElement{
   _setupLoadout(){
     const loadoutContainer = this.querySelector('.loadout-container')
     loadoutContainer.innerHTML = ''
-    debugger
     if(this.fighterInstance instanceof AdventurerInstance){
       loadoutContainer.appendChild(new AdventurerLoadout().setLoadout(this.fighterInstance.loadout))
     }else{

@@ -30,12 +30,11 @@ export function takeDamage(combat, subject, damageInfo){
 
   damage = Math.ceil(damage)
 
-  // result.damageDistribution = subject.statusEffectsData.ownerTakingDamage(damage)
-  // subject.hp -= result.damageDistribution.hp
-  // result.totalDamage = Object.values(result.damageDistribution).reduce((prev, val) => prev + val)
+  // TODO: iterate over damage replacements
 
-  subject.hp -= damage
-  result.totalDamage = damage
+  result.damageDistribution = { hp: damage }
+  result.totalDamage = Object.values(result.damageDistribution).reduce((prev, val) => prev + val)
+  subject.hp -= result.damageDistribution.hp
 
   if(damage > 0){
     combat.triggerEvent(subject, 'takeDamage')
