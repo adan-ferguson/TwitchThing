@@ -1,41 +1,31 @@
 export default class AbilityInstance{
 
-  constructor(abilityDef, state, parentEffect){
+  constructor(abilityDef, type, event, state, parentEffect){
     this._abilityDef = abilityDef
+    this._type = type
+    this._event = event
     this._parentEffect = parentEffect
     this._state = state ?? {}
+  }
+
+  get abilityDef(){
+    return this._abilityDef
+  }
+
+  get type(){
+    return this._type
+  }
+
+  get event(){
+    return this._event
   }
 
   get parentEffect(){
     return this._parentEffect
   }
 
-  get name(){
-    return this._abilityDef.name
-  }
-
-  get description(){
-    return this._abilityDef.description ?? null
-  }
-
-  get actions(){
-    return this._abilityDef.actions
-  }
-
-  get fighterInstance(){
-    return this._parentEffect.owner
-  }
-
   get state(){
     return { ...this._state }
-  }
-
-  set state(newVal){
-    this._state = { ...newVal }
-  }
-
-  get isPositive(){
-    return this._abilityDef.isPositive ?? this._parentEffect.isBuff ?? true
   }
 
   get cooldownRemaining(){
@@ -82,40 +72,32 @@ export default class AbilityInstance{
     return this._state.timesUsed ?? 0
   }
 
-  get conditions(){
-    return this._abilityDef.conditions ?? null
-  }
-
   get ready(){
-    return !this.cooldownRemaining && this.enabled
+    return !this.cooldownRemaining // && this.enabled
   }
 
-  get enabled(){
-    if(this.uses && this._state.timesUsed >= this.uses){
-      return false
-    }
-    return this.fighterInstance.meetsConditions(this.conditions)
-  }
-
-  get nextTurnOffset(){
-    return this._abilityDef.nextTurnOffset
-  }
+  // get enabled(){
+  //   if(this.uses && this._state.timesUsed >= this.uses){
+  //     return false
+  //   }
+  //   return this.fighterInstance.meetsConditions(this.conditions)
+  // }
 
   get cooldownRefreshing(){
     return this.cooldown && (!this.uses || this.timesUsed < this.uses)
   }
 
-  get phantom(){
-    return this._abilityDef.phantom ?? false
-  }
-
-  shouldTrigger(){
-    if (this.cooldownRemaining || !this.enabled){
+  tryUse(){
+    if(!this.ready){
       return false
     }
-    if (this._abilityDef.chance && Math.random() > this._abilityDef.chance){
-      return false
+    if(this.cooldown){
+      this.cooldownElapsedPct = 0
     }
+    //   if (this._abilityDef.chance && Math.random() > this._abilityDef.chance){
+    //     return false
+    //   }
+    this._state.timesUsed = (this._state.timesUsed ?? 0) + 1
     return true
   }
 
@@ -125,11 +107,15 @@ export default class AbilityInstance{
     }
   }
 
-  use(){
-    if(this.cooldown){
-      this.cooldownElapsedPct = 0
-    }
-    this._state.timesUsed = (this._state.timesUsed ?? 0) + 1
-    return this
-  }
+  // get conditions(){
+  //   return this._abilityDef.conditions ?? null
+  // }
+  //
+  // get nextTurnOffset(){
+  //   return this._abilityDef.nextTurnOffset
+  // }
+  //
+  // get phantom(){
+  //   return this._abilityDef.phantom ?? false
+  // }
 }

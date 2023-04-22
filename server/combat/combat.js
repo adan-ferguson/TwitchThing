@@ -3,6 +3,7 @@ import { CombatResult } from '../../game/combatResult.js'
 import { shuffle } from '../../game/rando.js'
 import { takeCombatTurn } from './takeCombatTurn.js'
 import { useEffectAbility } from '../actions/performAction.js'
+import { processAbilityEvents } from '../mechanics/abilities.js'
 
 const MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS = 30
 const MAX_TRIGGER_LOOPS = 30
@@ -92,14 +93,10 @@ class Combat{
     return this.params.boss ?? false
   }
 
-  triggerEvent(owner, eventName, triggerData = {}){
-    const effects = owner.triggeredEffects(eventName)
-    for(let effect of effects){
-      // TODO: test if it should actually trigger
-      this._pendingTriggers.push({ effect, eventName, triggerData })
-      if(this._pendingTriggers.length > MAX_TRIGGER_COUNTER){
-        throw 'Trigger counter excessively high, probably infinite loop.'
-      }
+  addPendingTriggers(pendingTriggers){
+    this._pendingTriggers.push(...pendingTriggers)
+    if(this._pendingTriggers.length > MAX_TRIGGER_COUNTER){
+      throw 'Trigger counter excessively high, probably infinite loop.'
     }
   }
 
@@ -117,10 +114,10 @@ class Combat{
       // this.fighterInstance2.cleanupState()
 
       if(!this.fighterInstance1.hp){
-        this.triggerEvent(this.fighterInstance1, 'defeated')
+        processAbilityEvents(this, 'defeated', this.fighterInstance1)
       }
       if(!this.fighterInstance2.hp){
-        this.triggerEvent(this.fighterInstance2, 'defeated')
+        processAbilityEvents(this, 'defeated', this.fighterInstance2)
       }
 
       this._addTimelineEntry({
@@ -186,8 +183,8 @@ class Combat{
   }
 
   _startCombat(){
-    this.triggerEvent(this.fighterInstance1, 'startOfCombat')
-    this.triggerEvent(this.fighterInstance2, 'startOfCombat')
+    processAbilityEvents(this, 'startOfCombat', this.fighterInstance1)
+    processAbilityEvents(this, 'startOfCombat', this.fighterInstance2)
     this._addTimelineEntry()
   }
 

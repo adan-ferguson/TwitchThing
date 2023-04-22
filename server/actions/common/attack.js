@@ -1,8 +1,10 @@
-import { dealDamage } from '../../combat/dealDamage.js'
+import { processAbilityEvents } from '../../mechanics/abilities.js'
+import { dealDamage } from '../../mechanics/dealDamage.js'
 
 export default function(combat, attacker, effect = null, actionDef = {}){
 
   const enemy = combat.getEnemyOf(attacker)
+  const ret = { subject: enemy.uniqueID }
 
   if(actionDef.damageType === 'auto'){
     actionDef.damageType = attacker.basicAttackType
@@ -12,22 +14,16 @@ export default function(combat, attacker, effect = null, actionDef = {}){
     actionDef.damageScaling = actionDef.damageType
   }
 
-  // TODO: replacements
+  actionDef = processAbilityEvents(combat, ['attacked', actionDef.damageType + 'Attacked'], enemy, actionDef)
 
-  const eventsToTrigger = ['targeted', 'attacked', actionDef.damageType + 'Attacked']
-  for(let eventName of eventsToTrigger){
-    combat.triggerEvent(enemy, eventName)
-  }
-
-  if(dodgeAttack(enemy)){
-    combat.triggerEvent(enemy, 'dodge')
+  if(actionDef.forceDodge || dodgeAttack(enemy)){
     return {
       cancelled: 'dodge'
     }
   }
 
   if(missAttack(attacker)){
-    combat.triggerEvent(attacker, 'miss')
+    processAbilityEvents('miss', attacker)
     return {
       cancelled: 'miss'
     }
@@ -57,19 +53,16 @@ export default function(combat, attacker, effect = null, actionDef = {}){
   }
 
   damageInfo = dealDamage(combat, attacker, enemy, damageInfo)
-
-  combat.triggerEvent(attacker, 'attackHit', damageInfo)
-  combat.triggerEvent(attacker, damageInfo.damageType + 'AttackHit', damageInfo)
-  combat.triggerEvent(enemy, 'hitByAttack', damageInfo)
+  damageInfo = processAbilityEvents(combat, ['attackHit', damageInfo.damageType + 'AttackHit'], attacker, damageInfo)
+  damageInfo = processAbilityEvents(combat, 'hitByAttack', enemy, damageInfo)
 
   if(damageInfo.crit){
-    combat.triggerEvent(attacker, 'crit', damageInfo)
+    damageInfo = processAbilityEvents(combat, 'crit', attacker, damageInfo)
   }
 
-  return {
-    subject: enemy.uniqueID,
-    damageInfo
-  }
+  ret.damageInfo = damageInfo
+
+  return ret
 }
 
 function attemptCrit(actor, target, bonusCritChance){

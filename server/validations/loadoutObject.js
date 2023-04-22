@@ -1,5 +1,5 @@
 import { SUBJECT_KEYS } from './subjectKeys.js'
-import { ADVENTURER_EFFECT_SCHEMA } from './adventurerEffect.js'
+import { EFFECT_SCHEMA } from './effect.js'
 import Joi from 'joi'
 
 const ORB_MODIFIER_SCHEMA = Joi.object({
@@ -28,5 +28,5 @@ export const LOADOUT_OBJECT_SCHEMA = Joi.object({
   displayName: Joi.string().required(),
   loadoutModifiers: Joi.object(LOADOUT_MODIFIERS),
   vars: Joi.object(),
-  effect: ADVENTURER_EFFECT_SCHEMA,
+  effect: EFFECT_SCHEMA,
 })

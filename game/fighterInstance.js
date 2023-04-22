@@ -273,16 +273,6 @@ export default class FighterInstance{
     })
   }
 
-  triggeredEffects(triggerType){
-    const effects = []
-    this.effectInstances.forEach(effectInstance => {
-      if(effectInstance?.shouldTrigger(triggerType)){
-        effects.push(effectInstance)
-      }
-    })
-    return effects
-  }
-
   nextTurn(){
     this._state.timeSinceLastAction = this._state.nextTurnOffset ?? 0
     delete this._state.nextTurnOffset

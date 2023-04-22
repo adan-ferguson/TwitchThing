@@ -1,4 +1,5 @@
 import { randomBetween } from '../../game/rando.js'
+import { processAbilityEvents } from './abilities.js'
 
 export function takeDamage(combat, subject, damageInfo){
 
@@ -10,7 +11,7 @@ export function takeDamage(combat, subject, damageInfo){
     ...damageInfo
   }
 
-  const result = {
+  let result = {
     baseDamage:  damageInfo.damage,
     blocked: 0,
     damageType: damageInfo.damageType
@@ -37,7 +38,7 @@ export function takeDamage(combat, subject, damageInfo){
   subject.hp -= result.damageDistribution.hp
 
   if(damage > 0){
-    combat.triggerEvent(subject, 'takeDamage')
+    result = processAbilityEvents(combat, 'takeDamage', subject, result)
   }
 
   return result

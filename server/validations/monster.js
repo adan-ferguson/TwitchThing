@@ -1,9 +1,11 @@
 import Monsters from '../../game/monsters/combined.js'
 import Joi from 'joi'
 import { STATS_SCHEMA } from './stats.js'
+import { MONSTER_ITEM_SCHEMA } from './monsterItem.js'
 
 const MONSTER_SCHEMA = Joi.object({
-  baseStats: STATS_SCHEMA
+  baseStats: STATS_SCHEMA,
+  items: Joi.array().items(MONSTER_ITEM_SCHEMA)
 })
 
 export function validateAllMonsters(){

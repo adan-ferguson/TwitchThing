@@ -10,7 +10,7 @@ const monstersByFloor = [
   null,
   // Caves
   Monsters.rat,
-  // Monsters.bat,
+  Monsters.bat,
   // Monsters.bandit,
   // Monsters.spider,
   // Monsters.kobold,
