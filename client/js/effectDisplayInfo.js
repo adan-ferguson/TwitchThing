@@ -1,5 +1,5 @@
 import { STATUSEFFECT_COLORS } from './colors.js'
-import abilityDisplayInfo from './abilityDisplayInfo.js'
+import abilityDisplayInfo from './displayInfo/abilityDisplayInfo.js'
 
 export function effectDisplayInfo(effectInstance){
 

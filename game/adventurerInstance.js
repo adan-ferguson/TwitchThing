@@ -1,6 +1,6 @@
 import FighterInstance from './fighterInstance.js'
 import { minMax } from './utilFunctions.js'
-import LoadoutEffectInstance from './loadoutEffectInstance.js'
+import LoadoutObjectInstance from './loadoutObjectInstance.js'
 import { adventurerLevelToHp, adventurerLevelToPower } from './adventurer.js'
 
 export default class AdventurerInstance extends FighterInstance{
@@ -12,14 +12,14 @@ export default class AdventurerInstance extends FighterInstance{
     const loadout = adventurer.loadout
     for(let i = 0; i < 8; i++){
       if(loadout.items[i]){
-        itemInstances[i] = new LoadoutEffectInstance({
+        itemInstances[i] = new LoadoutObjectInstance({
           obj: loadout.items[i],
           owner: this,
           state: initialState.items?.[i]
         })
       }
       if(loadout.skills[i]){
-        skillInstances[i] = new LoadoutEffectInstance({
+        skillInstances[i] = new LoadoutObjectInstance({
           obj: loadout.skills[i],
           owner: this,
           state: initialState.skills?.[i]

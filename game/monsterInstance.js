@@ -1,12 +1,12 @@
 import FighterInstance  from './fighterInstance.js'
 import Monsters from './monsters/combined.js'
-import MonsterItemInstance from './monsterItemInstance.js'
 import { geometricProgession } from './growthFunctions.js'
 import OrbsData from './orbsData.js'
 import { deepClone, toDisplayName, toNumberOfDigits } from './utilFunctions.js'
 import Mods from './mods/combined.js'
 import { floorToZone } from './zones.js'
-import LoadoutEffectInstance from './loadoutEffectInstance.js'
+import LoadoutObjectInstance from './loadoutObjectInstance.js'
+import MonsterItem from './monsterItem.js'
 
 const ADJUSTED_DIFFICULTY_PER_ZONE = 2.25
 
@@ -105,10 +105,6 @@ export default class MonsterInstance extends FighterInstance{
     return this.monsterData.level ?? 1
   }
 
-  get ItemClass(){
-    return MonsterItemInstance
-  }
-
   get baseHp(){
     return monsterLevelToHp(this.level)
   }
@@ -152,8 +148,8 @@ export default class MonsterInstance extends FighterInstance{
   set loadoutState(stateDef){
     for(let i = 0; i < 8; i++){
       if(this.monsterData.items?.[i]){
-        this._itemInstances[i] = new LoadoutEffectInstance({
-          obj: this.monsterData.items[i],
+        this._itemInstances[i] = new LoadoutObjectInstance({
+          obj: new MonsterItem(this.monsterData.items[i]),
           owner: this,
           state: stateDef[i]
         })

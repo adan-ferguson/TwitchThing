@@ -6,7 +6,7 @@ import LoadoutObjectDetails from '../../loadoutObjectDetails.js'
 import DIElement from '../../diElement.js'
 import ItemCard from '../../itemCard.js'
 import ItemDetails from '../../itemDetails.js'
-import { AbilityState } from '../../../abilityDisplayInfo.js'
+import { AbilityState } from '../../../displayInfo/abilityDisplayInfo.js'
 
 const HTML = `
 <di-bar class="cooldown"></di-bar>

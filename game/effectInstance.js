@@ -184,3 +184,7 @@ function abilitiesStateValue(abilities){
   })
   return val
 }
+
+export function abilitiesObjToArray(abilitiesObj){
+
+}

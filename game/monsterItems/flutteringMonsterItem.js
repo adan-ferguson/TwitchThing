@@ -1,5 +1,5 @@
 export default {
-  name: 'Fluttering',
+  name: 'fluttering',
   effect: {
     abilities: {
       replacement: {

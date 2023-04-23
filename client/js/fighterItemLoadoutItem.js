@@ -1,4 +1,4 @@
-import abilityDisplayInfo from './abilityDisplayInfo.js'
+import abilityDisplayInfo from './displayInfo/abilityDisplayInfo.js'
 
 export default class FighterItemLoadoutItem{
 

@@ -4,10 +4,9 @@ import { attachedItem, attachedSkill, orbEntries } from './common.js'
 import AdventurerItem from '../../../game/adventurerItem.js'
 import Stats from '../../../game/stats/stats.js'
 import StatsList from './stats/statsList.js'
-import { loadoutObjectDisplayInfo } from '../loadoutObjectDisplayInfo.js'
 import AbilityDescription from './abilityDescription.js'
-import { getIdleAbilityDisplayInfo } from '../abilityDisplayInfo.js'
 import { StatsDisplayStyle } from '../statsDisplayInfo.js'
+import { getAbilityDisplayInfo } from '../displayInfo/abilityDisplayInfo.js'
 
 export default class LoadoutObjectDetails extends DIElement{
 
@@ -33,7 +32,7 @@ export default class LoadoutObjectDetails extends DIElement{
       return
     }
     this._addMeta()
-    this._addAbility()
+    this._addAbilities()
     // this._addDescription()
     this._addStats()
     this._addLoadoutModifiers()
@@ -70,11 +69,11 @@ export default class LoadoutObjectDetails extends DIElement{
     }
   }
 
-  _addAbility(){
-    const info = getIdleAbilityDisplayInfo(this._obj)
-    if(info){
-      this.appendChild(new AbilityDescription().setAbilityDisplayInfo(info))
-    }
+  _addAbilities(){
+    const infos = getAbilityDisplayInfo(this._obj)
+    infos.forEach(adi => {
+      this.appendChild(new AbilityDescription().setAbilityDisplayInfo(adi))
+    })
   }
 
   _addStats(){

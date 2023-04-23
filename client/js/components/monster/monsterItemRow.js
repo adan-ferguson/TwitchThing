@@ -1,5 +1,7 @@
 import DIElement from '../diElement.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
+import LoadoutObjectInstance from '../../../../game/loadoutObjectInstance.js'
+import MonsterItemCard from './monsterItemCard.js'
 
 const HTML = `
 <div class="border">
@@ -9,6 +11,9 @@ const HTML = `
 `
 
 export default class MonsterItemRow extends DIElement{
+
+  _monsterItem
+  _monsterItemInstance
 
   constructor(){
     super()
@@ -20,19 +25,23 @@ export default class MonsterItemRow extends DIElement{
     return this.querySelector('.name')
   }
 
-  get item(){
-    return this._options.item
+  get monsterItem(){
+    return this._monsterItem
+  }
+
+  get monsterItemInstance(){
+    return this._monsterItemInstance
   }
 
   get tooltip(){
 
-    if(!this._options.item){
+    if(!this.monsterItem){
       return null
     }
 
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
-    tooltip.appendChild(new MonsterItemCard().setItem(this._options.item))
+    tooltip.appendChild(new MonsterItemCard().setItem(this.monsterItem))
     tooltip.appendChild(wrapContent('Right-click for more info', {
       class: 'right-click subtitle'
     }))
@@ -48,14 +57,24 @@ export default class MonsterItemRow extends DIElement{
 
   _update(){
 
+    if(this._options.item instanceof LoadoutObjectInstance){
+      debugger
+      this._monsterItemInstance = this._options.item
+      this._monsterItem = this._monsterItemInstance.obj
+    }else{
+      this._monsterItemInstance = null
+      this._monsterItem = this._options.item
+    }
+
     this.setTooltip(this.tooltip)
 
-    if(!this.item){
+    if(!this.monsterItem){
       this._blank()
     }else{
-      this.nameEl.textContent = this.item.displayName
+      this.nameEl.textContent = this.monsterItem.displayName
       this.classList.remove('blank')
     }
+
     return this
   }
 
@@ -63,6 +82,7 @@ export default class MonsterItemRow extends DIElement{
     this.nameEl.textContent = ''
     this.classList.add('blank')
     this.setTooltip(null)
+    return this
   }
 }
 
