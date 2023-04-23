@@ -1,6 +1,5 @@
 import AdventurerSkill from '../../../game/skills/adventurerSkill.js'
 import AdventurerItem from '../../../game/items/adventurerItem.js'
-import { attachedSkill } from '../components/common.js'
 import LoadoutObjectInstance from '../../../game/loadoutObjectInstance.js'
 import MonsterItem from '../../../game/monsterItem.js'
 

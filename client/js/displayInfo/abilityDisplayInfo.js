@@ -2,8 +2,10 @@ import LoadoutObject from '../../../game/loadoutObject.js'
 import EffectInstance from '../../../game/effectInstance.js'
 
 const abilityDefinitions = {
-  fluttering: () => {
-
+  flutteringDodge: () => {
+    return {
+      description: 'Automatically dodge an attack.'
+    }
   },
   serratedBladeTrigger: () => {
 

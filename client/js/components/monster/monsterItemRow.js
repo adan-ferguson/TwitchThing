@@ -2,6 +2,7 @@ import DIElement from '../diElement.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
 import LoadoutObjectInstance from '../../../../game/loadoutObjectInstance.js'
 import MonsterItemCard from './monsterItemCard.js'
+import LoadoutObjectDetails from '../loadoutObjectDetails.js'
 
 const HTML = `
 <div class="border">
@@ -41,7 +42,7 @@ export default class MonsterItemRow extends DIElement{
 
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
-    tooltip.appendChild(new MonsterItemCard().setItem(this.monsterItemInstance ?? this.monsterItem))
+    tooltip.appendChild(new LoadoutObjectDetails().setObject(this.monsterItemInstance ?? this.monsterItem))
     tooltip.appendChild(wrapContent('Right-click for more info', {
       class: 'right-click subtitle'
     }))
