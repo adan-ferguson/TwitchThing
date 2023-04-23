@@ -14,7 +14,6 @@ export default class MonsterLoadout extends DIElement{
   }
 
   setMonsterInstance(monsterInstance){
-    debugger
     this._monsterInstance = monsterInstance
     this.querySelectorAll('di-monster-item-row').forEach((row, i) => {
       row.setOptions({

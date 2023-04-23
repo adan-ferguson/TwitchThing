@@ -1,4 +1,5 @@
 import EffectInstance from './effectInstance.js'
+import { toDisplayName } from './utilFunctions.js'
 
 export default class LoadoutObjectInstance extends EffectInstance{
   constructor({ obj, owner, state }){
@@ -12,5 +13,9 @@ export default class LoadoutObjectInstance extends EffectInstance{
 
   get effectData(){
     return this._obj.effect ?? {}
+  }
+
+  get displayName(){
+    return this.obj.displayName
   }
 }

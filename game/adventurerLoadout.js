@@ -1,4 +1,4 @@
-import AdventurerItem from './adventurerItem.js'
+import AdventurerItem from './items/adventurerItem.js'
 import AdventurerSkill from './skills/adventurerSkill.js'
 import OrbsData from './orbsData.js'
 import SlotModifierCollection from './slotModifierCollection.js'

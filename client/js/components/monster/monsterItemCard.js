@@ -1,5 +1,3 @@
-import { OrbsDisplayStyle, OrbsTooltip } from '../orbRow.js'
-
 const HTML = `
 <div class="obj-border">
   <span class="inset-title item-name"></span>
@@ -26,7 +24,6 @@ export default class MonsterItemCard extends HTMLElement{
     if (!monsterItem){
       return
     }
-    debugger
     this.nameEl.textContent = monsterItem.displayName
     this.loadoutObjectDetails.setObject(monsterItem)
     return this

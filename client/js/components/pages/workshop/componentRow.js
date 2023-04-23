@@ -1,6 +1,6 @@
 import DIElement from '../../diElement.js'
 import AdventurerItemInstance from '../../../../../game/adventurerSlotInstance.js'
-import classDisplayInfo from '../../../classDisplayInfo.js'
+import classDisplayInfo from '../../../displayInfo/classDisplayInfo.js'
 
 const HTML = (iconEl, name, have = null, required = null) => {
 

@@ -1,5 +1,5 @@
 import StatRow from './statRow.js'
-import { getStatDisplayInfo, StatsDisplayStyle } from '../../statsDisplayInfo.js'
+import { getStatDisplayInfo, StatsDisplayStyle } from '../../displayInfo/statsDisplayInfo.js'
 import Stats from '../../../../game/stats/stats.js'
 import { mergeOptionsObjects, wait } from '../../../../game/utilFunctions.js'
 import { flash } from '../../animations/simple.js'

@@ -5,18 +5,18 @@ export const DAMAGE_COLORS = {
 export const FLASH_COLORS = {
   attack: '#9fff9f',
   active: '#74d5d9',
-  triggered: '#ffa227'
+  nonactive: '#ffa227'
 }
 
 export const ITEM_ROW_COLORS = {
   active: '#74d5d9',
-  triggered: '#ffa227',
+  nonactive: '#ffa227',
   disabled: '#bbbbbb'
 }
 
 export const ABILITY_DESCRIPTION_COLORS = {
   active: '#e9ffff',
-  triggered: '#ffecdb'
+  nonactive: '#ffecdb'
 }
 
 export const STATUSEFFECT_COLORS = {

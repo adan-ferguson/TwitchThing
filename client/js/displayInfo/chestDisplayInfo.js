@@ -1,4 +1,4 @@
-import { toDisplayName } from '../../game/utilFunctions.js'
+import { toDisplayName } from '../../../game/utilFunctions.js'
 import classDisplayInfo from './classDisplayInfo.js'
 
 const CHESTS = {

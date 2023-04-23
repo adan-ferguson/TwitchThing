@@ -13,7 +13,6 @@ export default class AdventurerSkill extends AdventurerLoadoutObject{
   _data
 
   constructor(skillId, level = 1){
-    super()
     const baseSkill = Skills[skillId]
     if(!baseSkill){
       throw 'Invalid skillId: ' + skillId
@@ -21,9 +20,11 @@ export default class AdventurerSkill extends AdventurerLoadoutObject{
     if(!baseSkill.def.levelFn){
       throw 'Skill is missing its levelFn: ' + skillId
     }
+
+    super(baseSkill.def.levelFn(level))
+
     this._level = level
     this._baseSkill = baseSkill
-    this._data = baseSkill.def.levelFn(level)
     this._skillPoints = new UpgradeData(baseSkill.def.skillPoints ?? [1, '...'])
   }
 
@@ -33,7 +34,7 @@ export default class AdventurerSkill extends AdventurerLoadoutObject{
 
   get displayName(){
     let txt = this.level > 1 ? `L${this.level} ` : ''
-    return txt + this._data.displayName
+    return txt + super.displayName
   }
 
   get advClass(){

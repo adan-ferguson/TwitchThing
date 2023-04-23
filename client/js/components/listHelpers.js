@@ -1,10 +1,10 @@
 import FighterItemLoadoutItem from '../fighterItemLoadoutItem.js'
 import LoadoutRow from './pages/adventurerEdit/loadoutRow.js'
-import AdventurerItem from '../../../game/adventurerItem.js'
+import AdventurerItem from '../../../game/items/adventurerItem.js'
 import AdventurerItemRow from './adventurer/adventurerItemRow.js'
 import AdventurerSkill from '../../../game/skills/adventurerSkill.js'
 import AdventurerSkillRow from './adventurer/adventurerSkillRow.js'
-import { ADVENTURER_CLASS_LIST } from '../classDisplayInfo.js'
+import { ADVENTURER_CLASS_LIST } from '../displayInfo/classDisplayInfo.js'
 
 export function adventurerItemsToRows(items){
   const rows = []

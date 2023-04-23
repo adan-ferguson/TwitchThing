@@ -54,9 +54,9 @@ function getFighterInstanceAbilities(fighterInstance, type, eventName){
   return abilities
 }
 
-export function getEffectInstanceAbilities(effectInstance, type, actionKey){
+export function getEffectInstanceAbilities(effectInstance, type, trigger){
   return effectInstance.abilities.filter(ai => {
-    if(ai.type !== type || ai.actionKey !== actionKey){
+    if(ai.type !== type || ai.trigger !== trigger){
       return false
     }
     return true

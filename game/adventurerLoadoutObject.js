@@ -1,4 +1,6 @@
-export default class AdventurerLoadoutObject{
+import LoadoutObject from './loadoutObject.js'
+
+export default class AdventurerLoadoutObject extends LoadoutObject{
 
   _data
 

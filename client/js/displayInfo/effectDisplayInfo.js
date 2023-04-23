@@ -1,5 +1,5 @@
-import { STATUSEFFECT_COLORS } from './colors.js'
-import abilityDisplayInfo from './displayInfo/abilityDisplayInfo.js'
+import { STATUSEFFECT_COLORS } from '../colors.js'
+import { abilityStateInfo } from '../abilityStateInfo.js'
 
 export function effectDisplayInfo(effectInstance){
 
@@ -21,7 +21,7 @@ export function effectDisplayInfo(effectInstance){
     showValue = true
   }
 
-  const abilityInfo = abilityDisplayInfo(effectInstance)
+  const abilityInfo = abilityStateInfo(effectInstance)
 
   return {
     text,

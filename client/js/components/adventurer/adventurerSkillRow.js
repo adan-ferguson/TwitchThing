@@ -1,5 +1,5 @@
 import DIElement from '../diElement.js'
-import classDisplayInfo from '../../classDisplayInfo.js'
+import classDisplayInfo from '../../displayInfo/classDisplayInfo.js'
 import { skillPointEntry } from '../common.js'
 import LoadoutObjectDetails from '../loadoutObjectDetails.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'

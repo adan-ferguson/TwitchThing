@@ -1,16 +1,7 @@
-import { toDisplayName } from './utilFunctions.js'
+import LoadoutObject from './loadoutObject.js'
 
-export default class MonsterItem{
-  
+export default class MonsterItem extends LoadoutObject{
   constructor(data){
-    this._data = data
-  }
-
-  get effect(){
-    return this._data.effect
-  }
-
-  get displayName(){
-    return this._data.displayName ??  toDisplayName(this._data.name)
+    super(data)
   }
 }

@@ -1,7 +1,7 @@
-import classDisplayInfo from '../../classDisplayInfo.js'
+import classDisplayInfo from '../../displayInfo/classDisplayInfo.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
 import tippy from 'tippy.js'
-import { StatsDisplayStyle } from '../../statsDisplayInfo.js'
+import { StatsDisplayStyle } from '../../displayInfo/statsDisplayInfo.js'
 import { advLevelToXp, advXpToLevel } from '../../../../game/adventurer.js'
 import LoadoutObjectDetails from '../loadoutObjectDetails.js'
 

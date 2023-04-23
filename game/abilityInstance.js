@@ -1,11 +1,13 @@
 export default class AbilityInstance{
 
-  constructor(abilityDef, type, actionKey, state, parentEffect){
+  constructor(abilityDef, state, parentEffect){
     this._abilityDef = abilityDef
-    this._type = type
-    this._actionKey = actionKey
     this._parentEffect = parentEffect
     this._state = state ?? {}
+  }
+
+  get name(){
+    return this.abilityDef.name
   }
 
   get abilityDef(){
@@ -13,11 +15,11 @@ export default class AbilityInstance{
   }
 
   get type(){
-    return this._type
+    return this.abilityDef.actions ? 'action' : 'replacement'
   }
 
-  get actionKey(){
-    return this._actionKey
+  get trigger(){
+    return this.abilityDef.trigger
   }
 
   get parentEffect(){

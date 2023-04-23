@@ -1,5 +1,5 @@
-import { toDisplayName } from '../../game/utilFunctions.js'
-import { ORB_SVGS, modifySvgString } from './assetLoader.js'
+import { toDisplayName } from '../../../game/utilFunctions.js'
+import { ORB_SVGS, modifySvgString } from '../assetLoader.js'
 
 const ADV_CLASSES = {
   fighter: {

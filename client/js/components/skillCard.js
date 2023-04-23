@@ -1,5 +1,5 @@
 import DIElement from './diElement.js'
-import { classIcon } from '../classDisplayInfo.js'
+import { classIcon } from '../displayInfo/classDisplayInfo.js'
 import { skillPointEntry } from './common.js'
 
 const HTML = `

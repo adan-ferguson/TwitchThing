@@ -1,8 +1,8 @@
-import StatDefs from '../../game/stats/combined.js'
-import { roundToFixed, toDisplayName } from '../../game/utilFunctions.js'
-import { StatType } from '../../game/stats/statType.js'
-import statValueFns from '../../game/stats/statValueFns.js'
-import { ICON_SVGS } from './assetLoader.js'
+import StatDefs from '../../../game/stats/combined.js'
+import { roundToFixed, toDisplayName } from '../../../game/utilFunctions.js'
+import { StatType } from '../../../game/stats/statType.js'
+import statValueFns from '../../../game/stats/statValueFns.js'
+import { ICON_SVGS } from '../assetLoader.js'
 
 export const StatsDisplayStyle = {
   CUMULATIVE: 0, // Eg. "50%", i.e. our total of this stat is 50%

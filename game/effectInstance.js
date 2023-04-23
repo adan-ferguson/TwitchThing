@@ -157,34 +157,12 @@ function makeAbilities(abilitiesDef, abilitiesStateVal, parent){
     return []
   }
   const abilities = []
-  for(let type in abilitiesDef){
-    for(let actionKey in abilitiesDef[type]){
-      abilities.push(new AbilityInstance(
-        abilitiesDef[type][actionKey],
-        type,
-        actionKey,
-        abilitiesStateVal[type]?.[actionKey] ?? {},
-        parent
-      ))
-    }
-  }
+  abilitiesDef.forEach((abilityDef, i) => {
+    abilities.push(new AbilityInstance(abilityDef, abilitiesStateVal[i], parent))
+  })
   return abilities
 }
 
 function abilitiesStateValue(abilities){
-  const val = {}
-  abilities.forEach(a => {
-    if(!val[a.type]){
-      val[a.type] = {}
-    }
-    if(!val[a.type][a.actionKey]){
-      val[a.type][a.actionKey] = {}
-    }
-    val[a.type][a.actionKey] = a.state
-  })
-  return val
-}
-
-export function abilitiesObjToArray(abilitiesObj){
-
+  return abilities.map(a => a.state)
 }

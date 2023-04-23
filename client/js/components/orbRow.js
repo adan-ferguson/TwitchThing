@@ -1,4 +1,4 @@
-import classDisplayInfo from '../classDisplayInfo.js'
+import classDisplayInfo from '../displayInfo/classDisplayInfo.js'
 import tippy from 'tippy.js'
 import OrbsData from '../../../game/orbsData.js'
 import DIElement from './diElement.js'

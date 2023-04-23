@@ -41,7 +41,7 @@ export default class MonsterItemRow extends DIElement{
 
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
-    tooltip.appendChild(new MonsterItemCard().setItem(this.monsterItem))
+    tooltip.appendChild(new MonsterItemCard().setItem(this.monsterItemInstance ?? this.monsterItem))
     tooltip.appendChild(wrapContent('Right-click for more info', {
       class: 'right-click subtitle'
     }))
@@ -58,7 +58,6 @@ export default class MonsterItemRow extends DIElement{
   _update(){
 
     if(this._options.item instanceof LoadoutObjectInstance){
-      debugger
       this._monsterItemInstance = this._options.item
       this._monsterItem = this._monsterItemInstance.obj
     }else{

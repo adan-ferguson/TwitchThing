@@ -1,4 +1,4 @@
-import classDisplayInfo from '../classDisplayInfo.js'
+import classDisplayInfo from '../displayInfo/classDisplayInfo.js'
 import { ICON_SVGS, modifySvgString } from '../assetLoader.js'
 
 export default function(className){

@@ -8,7 +8,7 @@ import LiveDungeonMapPage from '../liveDungeonMap/liveDungeonMapPage.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import ShopPage from '../shop/shopPage.js'
 import WorkshopPage from '../workshop/workshopPage.js'
-import { ADVENTURER_CLASS_LIST } from '../../../classDisplayInfo.js'
+import { ADVENTURER_CLASS_LIST } from '../../../displayInfo/classDisplayInfo.js'
 
 const HTML = `
 <div class="content-rows">

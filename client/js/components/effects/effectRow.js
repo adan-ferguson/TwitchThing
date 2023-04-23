@@ -1,5 +1,5 @@
 import tippy from 'tippy.js'
-import { effectDisplayInfo } from '../../effectDisplayInfo.js'
+import { effectDisplayInfo } from '../../displayInfo/effectDisplayInfo.js'
 import { flash } from '../../animations/simple.js'
 import { ACTION_COLOR } from '../../colors.js'
 import { parseDescriptionString } from '../../descriptionString.js'

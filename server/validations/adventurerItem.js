@@ -1,5 +1,5 @@
 import Items from '../../game/items/combined.js'
-import AdventurerItem from '../../game/adventurerItem.js'
+import AdventurerItem from '../../game/items/adventurerItem.js'
 import { LOADOUT_OBJECT_SCHEMA } from './loadoutObject.js'
 import Joi from 'joi'
 

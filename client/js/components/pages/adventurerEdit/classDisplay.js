@@ -1,6 +1,6 @@
 import DIElement from '../../diElement.js'
 import { orbPointIcon, skillPointEntry } from '../../common.js'
-import classDisplayInfo, { ADVENTURER_CLASS_LIST } from '../../../classDisplayInfo.js'
+import classDisplayInfo, { ADVENTURER_CLASS_LIST } from '../../../displayInfo/classDisplayInfo.js'
 import AdventurerSkillRow, { AdventurerSkillRowStatus } from '../../adventurer/adventurerSkillRow.js'
 import AdventurerSkill, { getSkillsForClass } from '../../../../../game/skills/adventurerSkill.js'
 import { OrbsTooltip } from '../../orbRow.js'

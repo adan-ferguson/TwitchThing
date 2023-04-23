@@ -1,12 +1,12 @@
 import DIElement from './diElement.js'
 import { wrapContent } from '../../../game/utilFunctions.js'
 import { attachedItem, attachedSkill, orbEntries } from './common.js'
-import AdventurerItem from '../../../game/adventurerItem.js'
+import AdventurerItem from '../../../game/items/adventurerItem.js'
 import Stats from '../../../game/stats/stats.js'
 import StatsList from './stats/statsList.js'
 import AbilityDescription from './abilityDescription.js'
-import { StatsDisplayStyle } from '../statsDisplayInfo.js'
-import { getAbilityDisplayInfo } from '../displayInfo/abilityDisplayInfo.js'
+import { StatsDisplayStyle } from '../displayInfo/statsDisplayInfo.js'
+import { getAbilityDisplayInfoForObj } from '../displayInfo/abilityDisplayInfo.js'
 
 export default class LoadoutObjectDetails extends DIElement{
 
@@ -39,7 +39,7 @@ export default class LoadoutObjectDetails extends DIElement{
   }
 
   _addMeta(){
-    const metaEffect = this._obj.effect.metaEffect
+    const metaEffect = this._obj.effectData.metaEffect
     if(!metaEffect){
       return
     }
@@ -70,14 +70,14 @@ export default class LoadoutObjectDetails extends DIElement{
   }
 
   _addAbilities(){
-    const infos = getAbilityDisplayInfo(this._obj)
-    infos.forEach(adi => {
+    const infos = getAbilityDisplayInfoForObj(this._obj)
+    infos.filter(i => i).forEach(adi => {
       this.appendChild(new AbilityDescription().setAbilityDisplayInfo(adi))
     })
   }
 
   _addStats(){
-    const stats = this._obj.effect.stats
+    const stats = this._obj.effectData.stats
     if(stats){
       this.appendChild(
         new StatsList().setOptions({

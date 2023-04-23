@@ -9,11 +9,6 @@ export default class AbilityDescription extends DIElement{
 
     this.innerHTML = ''
 
-    if(!displayInfo || displayInfo.phantom){
-      this.classList.add('displaynone')
-      return
-    }
-
     this.style.borderColor = ITEM_ROW_COLORS[displayInfo.type]
     this.style.backgroundColor = ABILITY_DESCRIPTION_COLORS[displayInfo.type]
     this.setAttribute('ability-type', displayInfo.type)
@@ -32,27 +27,27 @@ export default class AbilityDescription extends DIElement{
 
 customElements.define('di-ability-description', AbilityDescription)
 
-function makeBotRow(adi){
+function makeBotRow(displayInfo){
 
   const row = makeEl({
     class: ['bot-row', 'flex-centered', 'flex-columns', 'flex-spaced']
   })
 
-  let botLeftText = adi.type === 'active' ? 'Active' : ''
-  if(adi.ability.uses){
+  let botLeftText = displayInfo.type === 'active' ? 'Active' : ''
+  if(displayInfo.ability.uses){
     botLeftText += (botLeftText.length ? ', ' : '')
-    botLeftText += `${adi.ability.uses} use${adi.ability.uses > 1 ? 's' : ''}`
+    botLeftText += `${displayInfo.ability.uses} use${displayInfo.ability.uses > 1 ? 's' : ''}`
   }
   row.appendChild(makeEl({ text: botLeftText }))
 
-  if(adi.ability.cooldown){
+  if(displayInfo.ability.cooldown){
     let str = ''
-    if(adi.ability.initialCooldown){
-      str += d2(adi.ability.cooldown - adi.ability.initialCooldown) + '/'
+    if(displayInfo.ability.initialCooldown){
+      str += d2(displayInfo.ability.cooldown - displayInfo.ability.initialCooldown) + '/'
     }
-    str += d2(adi.ability.cooldown)
+    str += d2(displayInfo.ability.cooldown)
     row.appendChild(makeEl({
-      class: adi.ability.initialCooldown ? 'initial-cooldown' : 'cooldown',
+      class: displayInfo.ability.initialCooldown ? 'initial-cooldown' : 'cooldown',
       content: '<i class="fa-solid fa-hourglass"></i>' + str
     }))
   }else if(!botLeftText){

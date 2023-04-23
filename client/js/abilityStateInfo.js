@@ -1,6 +1,12 @@
-import { AbilityState } from './displayInfo/abilityDisplayInfo.js'
+export const AbilityState = {
+  NONE: 'none',
+  DISABLED: 'disabled',
+  READY: 'ready',
+  RECHARGING: 'recharging',
+  IDLE: 'idle'
+}
 
-export function getAbilityState(obj){
+export function abilityStateInfo(obj){
   const ability = getMainAbility(loadoutObject.effect.abilities)
   if(!ability){
     return null

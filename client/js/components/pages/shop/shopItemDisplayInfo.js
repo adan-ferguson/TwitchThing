@@ -1,4 +1,4 @@
-import classDisplayInfo from '../../../classDisplayInfo.js'
+import classDisplayInfo from '../../../displayInfo/classDisplayInfo.js'
 import chestImage from '../../chestImage.js'
 import { ICON_SVGS } from '../../../assetLoader.js'
 

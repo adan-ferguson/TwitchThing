@@ -1,5 +1,5 @@
 import DIElement from '../../diElement.js'
-import classDisplayInfo from '../../../classDisplayInfo.js'
+import classDisplayInfo from '../../../displayInfo/classDisplayInfo.js'
 import { shopItemDisplayInfo } from './shopItemDisplayInfo.js'
 import { ICON_SVGS } from '../../../assetLoader.js'
 

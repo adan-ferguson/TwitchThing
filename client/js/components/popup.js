@@ -1,5 +1,5 @@
 import SimpleModal from './simpleModal.js'
-import classDisplayInfo from '../classDisplayInfo.js'
+import classDisplayInfo from '../displayInfo/classDisplayInfo.js'
 import { ICON_SVGS } from '../assetLoader.js'
 import { arrayize } from '../../../game/utilFunctions.js'
 

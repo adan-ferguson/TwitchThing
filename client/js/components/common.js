@@ -1,5 +1,5 @@
 import Stats from '../../../game/stats/stats.js'
-import { getStatDisplayInfo, StatsDisplayStyle } from '../statsDisplayInfo.js'
+import { getStatDisplayInfo, StatsDisplayStyle } from '../displayInfo/statsDisplayInfo.js'
 import { makeEl } from '../../../game/utilFunctions.js'
 import healthIcon from '../../assets/icons/health.svg'
 import physPower from '../../assets/icons/physPower.svg'

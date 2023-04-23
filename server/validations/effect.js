@@ -1,9 +1,8 @@
 import { SUBJECT_KEYS } from './subjectKeys.js'
 import Joi from 'joi'
-import { keyedObject } from '../../game/utilFunctions.js'
 import { STATS_SCHEMA } from './stats.js'
 
-const ABILITY_KEYS = ['physAttackHit','attacked']
+const TRIGGER_NAMES = ['physAttackHit','attacked']
 
 const ACTION_SCHEMA = Joi.object({
   statusEffect: Joi.object({
@@ -12,29 +11,24 @@ const ACTION_SCHEMA = Joi.object({
   })
 })
 
-const ABILITY_OBJ = {
-  conditions: Joi.object({
-    source: Joi.string().valid(...SUBJECT_KEYS)
-  }),
-  cooldown: Joi.number().integer(),
-}
-
-const ACTION_ABILITY_SCHEMA = Joi.object({
-  ...ABILITY_OBJ,
-  actions: Joi.array().items(ACTION_SCHEMA).required()
-})
-
 const REPLACEMENT_SCHEMA = Joi.object({
-  ...ABILITY_OBJ,
   dataMerge: Joi.object({
     forceDodge: Joi.boolean()
   })
 })
 
-export const EFFECT_SCHEMA = Joi.object({
-  abilities: Joi.object({
-    replacement: Joi.object(keyedObject(ABILITY_KEYS, REPLACEMENT_SCHEMA)),
-    action: Joi.object(keyedObject(ABILITY_KEYS, ACTION_ABILITY_SCHEMA))
+const ABILITY_SCHEMA = Joi.object({
+  conditions: Joi.object({
+    source: Joi.string().valid(...SUBJECT_KEYS)
   }),
+  cooldown: Joi.number().integer(),
+  replacements: REPLACEMENT_SCHEMA,
+  name: Joi.string().required(),
+  actions: Joi.array().items(ACTION_SCHEMA),
+  trigger: Joi.string().valid(...TRIGGER_NAMES).required()
+}).xor('replacements', 'actions')
+
+export const EFFECT_SCHEMA = Joi.object({
+  abilities: Joi.array().items(ABILITY_SCHEMA),
   stats: STATS_SCHEMA
 })

@@ -1,60 +1,35 @@
-import { isArray } from 'lodash'
-import LoadoutObjectInstance from '../../../game/loadoutObjectInstance.js'
-import StatusEffectInstance from '../../../game/statusEffectInstance.js'
-import AdventurerLoadoutObject from '../../../game/adventurerLoadoutObject.js'
-import { adventurerLoadoutObjectDisplayInfo } from './adventurerLoadoutObjectDisplayInfo.js'
-import { monsterItemDisplayInfo } from './monsterItemDisplayInfo.js'
-import MonsterItem from '../../../game/monsterItem.js'
-import { abilitiesObjToArray } from '../../../game/effectInstance.js'
+import LoadoutObject from '../../../game/loadoutObject.js'
+import EffectInstance from '../../../game/effectInstance.js'
 
-export const AbilityState = {
-  NONE: 'none',
-  DISABLED: 'disabled',
-  READY: 'ready',
-  RECHARGING: 'recharging',
-  IDLE: 'idle'
+const abilityDefinitions = {
+  fluttering: () => {
+
+  },
+  serratedBladeTrigger: () => {
+
+  }
 }
 
-export function getAbilityDisplayInfo(obj){
+/**
+ * @param obj {LoadoutObject|EffectInstance}
+ * @returns {*[]|*}
+ */
+export function getAbilityDisplayInfoForObj(obj){
   if(obj instanceof LoadoutObject){
-    return fromLoadoutObject(obj)
+    return obj.data.effectData.abilities.map(getAbilityDisplayInfo)
   }else if(obj instanceof EffectInstance){
-    return fromEffectInstance(obj)
-  }else if(obj instanceof StatusEffectInstance){
-    return fromStatusEffectInstance(obj)
+    return obj.abilities.map(getAbilityDisplayInfo)
   }
   return []
 }
 
-function fromEffectInstance(ei){
-  const fn = ei instanceof StatusEffectInstance ?
-    statusEffectDisplayInfo :
-    loadoutEffectDisplayInfo
-  const info = fn(ei)
-  return ei.abilities.map(ai => {
-    return {
-      abilityDef: ai.abilityDef,
-      actionKey: ai.actionKey,
-      type: ai.type,
-      descriptionHTML: info.abilityDescription ?? abilityInstanceDescription(ai)
-    }
-  })
-}
-
-
-function fromLoadoutObject(loadoutObject){
-  const fn = loadoutObject instanceof AdventurerLoadoutObject ?
-    adventurerLoadoutObjectDisplayInfo :
-    monsterItemDisplayInfo
-  const info = fn(loadoutObject)
-  return abilitiesObjToArray(loadoutObject.effect.abilities).map(({ abilityDef, actionKey, type }) => {
-    return {
-      abilityDef,
-      actionKey,
-      type,
-      descriptionHTML: info.abilityDescription ?? abilityDescription(abilityDef)
-    }
-  })
+export function getAbilityDisplayInfo(ability){
+  const definition = abilityDefinitions[ability.name]?.(ability) ?? {}
+  return {
+    ability,
+    descriptionHTML: definition.description ?? abilityDescription(ability),
+    type: ability.trigger === 'active' ? 'active' : 'nonactive'
+  }
 }
 
 function abilityDescription(ability){
