@@ -19,7 +19,7 @@ export function processAbilityEvents(triggerHandler, eventNames, owner, data = {
 }
 
 function doTriggers(owner, eventName, data, combat = null){
-  const abilities = getFighterInstanceAbilities(owner, 'triggered', eventName)
+  const abilities = getFighterInstanceAbilities(owner, 'action', eventName)
   const pendingTriggers = []
   for(let ability of abilities){
     // TODO: check if conditions met, ability is ready
@@ -43,7 +43,7 @@ function doReplacements(owner, eventName, actionData = {}){
 }
 
 function performReplacement(replacementAbility, actionData){
-  return { ...actionData, ...replacementAbility.dataMerge }
+  return { ...actionData, ...replacementAbility.abilityDef.dataMerge }
 }
 
 function getFighterInstanceAbilities(fighterInstance, type, eventName){
@@ -54,8 +54,13 @@ function getFighterInstanceAbilities(fighterInstance, type, eventName){
   return abilities
 }
 
-function getEffectInstanceAbilities(effectInstance, type, actionKey){
-
+export function getEffectInstanceAbilities(effectInstance, type, actionKey){
+  return effectInstance.abilities.filter(ai => {
+    if(ai.type !== type || ai.actionKey !== actionKey){
+      return false
+    }
+    return true
+  })
 }
 
 // refreshCooldowns(def = null){

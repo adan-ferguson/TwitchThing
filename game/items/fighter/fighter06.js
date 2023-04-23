@@ -5,7 +5,7 @@ export default {
       displayName: 'Serrated Blade',
       effect: {
         abilities: {
-          triggered: {
+          action: {
             physAttackHit: {
               conditions: {
                 source: 'attached'

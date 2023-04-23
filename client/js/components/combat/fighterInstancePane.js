@@ -1,7 +1,7 @@
 import Adventurer from '../../../../game/adventurer.js'
 import Modal from '../modal.js'
 import AdventurerInfo from '../adventurer/adventurerInfo.js'
-import MonsterInfo from '../monsterInfo.js'
+import MonsterInfo from '../monster/monsterInfo.js'
 import FlyingTextEffect from '../visualEffects/flyingTextEffect.js'
 import CustomAnimation from '../../animations/customAnimation.js'
 import { mergeOptionsObjects, roundToFixed, toDisplayName } from '../../../../game/utilFunctions.js'
@@ -325,9 +325,11 @@ export default class FighterInstancePane extends HTMLElement{
     const loadoutContainer = this.querySelector('.loadout-container')
     loadoutContainer.innerHTML = ''
     if(this.fighterInstance instanceof AdventurerInstance){
+      // TODO: error incoming
+      debugger
       loadoutContainer.appendChild(new AdventurerLoadout().setLoadout(this.fighterInstance.loadout))
     }else{
-      loadoutContainer.appendChild(new MonsterLoadout().setLoadout(this.fighterInstance.loadout))
+      loadoutContainer.appendChild(new MonsterLoadout().setMonsterInstance(this.fighterInstance))
     }
   }
 }

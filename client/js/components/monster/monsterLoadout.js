@@ -13,11 +13,12 @@ export default class MonsterLoadout extends DIElement{
     }
   }
 
-  setLoadout(loadoutObj){
-    this._monsterInstance = loadoutObj.monsterInstance
+  setMonsterInstance(monsterInstance){
+    debugger
+    this._monsterInstance = monsterInstance
     this.querySelectorAll('di-monster-item-row').forEach((row, i) => {
       row.setOptions({
-        item: loadoutObj.items[i]
+        item: monsterInstance.itemInstances[i]
       })
     })
     return this

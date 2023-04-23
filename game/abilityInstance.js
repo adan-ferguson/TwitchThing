@@ -1,9 +1,9 @@
 export default class AbilityInstance{
 
-  constructor(abilityDef, type, event, state, parentEffect){
+  constructor(abilityDef, type, actionKey, state, parentEffect){
     this._abilityDef = abilityDef
     this._type = type
-    this._event = event
+    this._actionKey = actionKey
     this._parentEffect = parentEffect
     this._state = state ?? {}
   }
@@ -16,8 +16,8 @@ export default class AbilityInstance{
     return this._type
   }
 
-  get event(){
-    return this._event
+  get actionKey(){
+    return this._actionKey
   }
 
   get parentEffect(){

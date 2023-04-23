@@ -15,7 +15,11 @@ export default class EffectInstance{
     if(!state.effectId){
       state.effectId = uniqueID()
     }
-    this._state = state
+    this.state = state
+  }
+
+  get effectId(){
+    return this._state.effectId
   }
 
   get effectData(){
@@ -42,9 +46,9 @@ export default class EffectInstance{
     return new Stats(this.effectData.stats)
   }
 
-  // get exclusiveStats(){
-  //   return this.owner?.statsForEffect(this) ?? new Stats()
-  // }
+  get exclusiveStats(){
+    return this.owner.statsForEffect(this)
+  }
 
   get state(){
     if(this._abilities){
@@ -64,9 +68,15 @@ export default class EffectInstance{
 
   get abilities(){
     if(!this._abilities){
-      this._abilities = makeAbilities(this.effectData.abilities, this._state.abilities)
+      this._abilities = makeAbilities(this.effectData.abilities, this._state.abilities, this)
     }
     return this._abilities
+  }
+
+  advanceTime(ms){
+    this.abilities.forEach(ai => {
+      ai.advanceTime(ms)
+    })
   }
 
   // /**
@@ -135,12 +145,6 @@ export default class EffectInstance{
   //   return true
   // }
   //
-  // advanceTime(ms){
-  //   const ad = this.generateAbilitiesData()
-  //   ad.advanceTime(ms)
-  //   this._state.abilities = ad.stateVal
-  // }
-  //
   // refreshCooldown(def = null){
   //   const ad = this.generateAbilitiesData()
   //   ad.refreshCooldowns(def)
@@ -148,19 +152,19 @@ export default class EffectInstance{
   // }
 }
 
-function makeAbilities(abilitiesDef, abilitiesStateVal){
+function makeAbilities(abilitiesDef, abilitiesStateVal, parent){
   if(!abilitiesDef){
     return []
   }
   const abilities = []
   for(let type in abilitiesDef){
-    for(let event in abilitiesDef[type]){
+    for(let actionKey in abilitiesDef[type]){
       abilities.push(new AbilityInstance(
-        abilitiesDef[type][event],
+        abilitiesDef[type][actionKey],
         type,
-        event,
-        abilitiesStateVal[type]?.[event] ?? {},
-        this
+        actionKey,
+        abilitiesStateVal[type]?.[actionKey] ?? {},
+        parent
       ))
     }
   }
@@ -173,9 +177,10 @@ function abilitiesStateValue(abilities){
     if(!val[a.type]){
       val[a.type] = {}
     }
-    if(!val[a.type][a.event]){
-      val[a.type][a.event] = {}
+    if(!val[a.type][a.actionKey]){
+      val[a.type][a.actionKey] = {}
     }
-    val[a.type][a.event] = a.state
+    val[a.type][a.actionKey] = a.state
   })
+  return val
 }

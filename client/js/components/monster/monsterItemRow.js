@@ -1,5 +1,4 @@
 import DIElement from '../diElement.js'
-import ItemCard from '../itemCard.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
 
 const HTML = `
@@ -33,7 +32,7 @@ export default class MonsterItemRow extends DIElement{
 
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
-    tooltip.appendChild(new ItemCard().setItem(this._options.item))
+    tooltip.appendChild(new MonsterItemCard().setItem(this._options.item))
     tooltip.appendChild(wrapContent('Right-click for more info', {
       class: 'right-click subtitle'
     }))

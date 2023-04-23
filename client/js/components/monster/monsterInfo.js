@@ -1,4 +1,4 @@
-import { StatsDisplayStyle } from '../statsDisplayInfo.js'
+import { StatsDisplayStyle } from '../../statsDisplayInfo.js'
 
 const HTML = `
 <div class="top">

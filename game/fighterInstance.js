@@ -1,13 +1,16 @@
 import Stats from './stats/stats.js'
 import Mods from './mods/combined.js'
 import ModsCollection from './modsCollection.js'
-import { minMax } from './utilFunctions.js'
+import { deepClone, minMax } from './utilFunctions.js'
+import { getEffectInstanceAbilities } from '../server/mechanics/abilities.js'
 
 // Stupid
 new Stats()
 
 const STATE_DEFAULTS = {
-  inCombat: false
+  inCombat: false,
+  loadout: [],
+  statusEffects: []
 }
 
 export const COMBAT_BASE_TURN_TIME = 3000
@@ -64,6 +67,14 @@ export default class FighterInstance{
     throw 'Not implemented'
   }
 
+  get loadoutState(){
+    throw 'Not implemented'
+  }
+
+  set loadoutState(val){
+    throw 'Not implemented'
+  }
+
   get statusEffectInstances(){
     return this._statusEffectInstances
   }
@@ -110,11 +121,22 @@ export default class FighterInstance{
 
   get state(){
     const baseState = { ...this._state }
-    baseState.effects = {}
-    this.effectInstances.forEach(ei => {
-      baseState.effects[ei.effectId] = ei.state
-    })
-    return { ...baseState }
+    baseState.loadout = this.loadoutState
+    baseState.statusEffects = this.statusEffectInstances.map(sei => sei.state)
+    return deepClone(baseState)
+  }
+
+  /**
+   * Generally want to avoid using this. Do a full update of this fighter
+   * instance's state.
+   * @param state
+   */
+  set state(state){
+    this._state = {
+      ...STATE_DEFAULTS,
+      ...state
+    }
+    this.loadoutState = this._state.loadout
   }
 
   get turnTime(){
@@ -133,17 +155,15 @@ export default class FighterInstance{
   }
 
   get timeUntilNextUpdate(){
-    let nextTick = Infinity
+    const vals = [this.timeUntilNextAction]
     this.effectInstances.forEach(ei => {
-      const tickAbility = ei.getAbility('tick')
-      if(tickAbility){
-        nextTick = Math.min(nextTick, tickAbility.cooldownRemaining)
-      }
+      getEffectInstanceAbilities(ei, 'action', 'tick')
+        .forEach(tickAbility => vals.push(tickAbility.cooldownRemaining))
       if(ei.durationRemaining){
-        nextTick = Math.min(nextTick, ei.durationRemaining)
+        vals.push(ei.durationRemaining)
       }
     })
-    return Math.min(this.timeUntilNextAction, nextTick)
+    return Math.min(...vals)
   }
 
   get timeSinceLastAction(){
@@ -214,35 +234,6 @@ export default class FighterInstance{
     this._state.nextTurnOffset = val
   }
 
-  /**
-   * Generally want to avoid using this. Do a full update of this fighter
-   * instance's state.
-   * @param newState
-   */
-  setState(newState){
-    this._state = {
-      ...STATE_DEFAULTS,
-      ...newState
-    }
-    // const states = newState.effectStates ?? {}
-    // for(let effectId in states){
-    //
-    // }
-    // states.forEach(state => {
-    //   if(itemInstance){
-    //     itemInstance.state = itemStates[i]
-    //   }
-    // })
-    // this.statusEffectsData.stateVal = newState.effects
-    // this._state = {
-    //   ...STATE_DEFAULTS,
-    //   ...newState
-    // }
-    // newState.effects ?? [])
-    // delete this._state.itemStates
-    // delete this._state.effects
-  }
-
   advanceTime(ms){
     if(!this.mods.contains(Mods.freezeActionBar) && this.inCombat){
       this._state.timeSinceLastAction += ms
@@ -266,7 +257,7 @@ export default class FighterInstance{
       return null
     }
     return this.loadoutEffectInstances.find(lei => {
-      const ability = lei?.getAbility('active')
+      const ability = getEffectInstanceAbilities(lei, 'action', 'active')
       if(ability?.ready){
         return true
       }
@@ -352,11 +343,13 @@ export default class FighterInstance{
   //   return slotEffects
   // }
 
-  // statsForEffect(effect){
-  //   // TODO: stupid
-  //   if(!effect || !effect.applicableSlotEffects){
-  //     return this.stats
-  //   }
-  //   return new Stats([this.stats, ...effect.applicableSlotEffects.map(se => se.stats ?? {})])
-  // }
+  statsForEffect(effect){
+    // TODO: metaEffects for this effect
+    return this.stats
+    // // TODO: stupid
+    // if(!effect || !effect.applicableSlotEffects){
+    //   return this.stats
+    // }
+    // return new Stats([this.stats, ...effect.applicableSlotEffects.map(se => se.stats ?? {})])
+  }
 }

@@ -70,22 +70,11 @@ export default class MonsterInstance extends FighterInstance{
       ...baseInfo.def
     }
     this._monsterDef = monsterDef
-
-    for(let i = 0; i < 8; i++){
-      if(this.monsterData.items?.[i]){
-        this._itemInstances[i] = new LoadoutEffectInstance({
-          obj: this.monsterData.items[i],
-          owner: this,
-          state: initialState.items?.[i]
-        })
-      }
-    }
-
-    this.setState(initialState)
+    this.state = initialState
   }
 
-  get loadout(){
-    return { monsterInstance: this, items: this._itemInstances }
+  get itemInstances(){
+    return this._itemInstances
   }
 
   get uniqueID(){
@@ -150,5 +139,25 @@ export default class MonsterInstance extends FighterInstance{
 
   get loadoutEffectInstances(){
     return this._itemInstances.filter(i => i)
+  }
+
+  get loadoutState(){
+    const stateDef = []
+    for(let i = 0; i < 8; i++){
+      stateDef[i] = this._itemInstances[i]?.state
+    }
+    return stateDef
+  }
+
+  set loadoutState(stateDef){
+    for(let i = 0; i < 8; i++){
+      if(this.monsterData.items?.[i]){
+        this._itemInstances[i] = new LoadoutEffectInstance({
+          obj: this.monsterData.items[i],
+          owner: this,
+          state: stateDef[i]
+        })
+      }
+    }
   }
 }

@@ -10,7 +10,7 @@ export function performAction(combat, actor, effect, actionDef){
   results = arrayize(results)
   results.forEach(r => {
     if(!r.subject){
-      throw 'Action result missing object '
+      throw 'Action result missing object.'
     }
   })
   return {

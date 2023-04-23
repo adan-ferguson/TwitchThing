@@ -36,7 +36,7 @@ export function generateCombat(fighterDef1, fighterDef2, params = {}){
         return
       }
       combatDoc.responseTime = Date.now() - timestamp
-      console.log('combat', combatDoc.calculationTime, combatDoc.responseTime)
+      console.log('combat calctime/responsetime', combatDoc.calculationTime, combatDoc.responseTime, id)
       res(await Combats.save(combatDoc))
     }
     worker.postMessage({

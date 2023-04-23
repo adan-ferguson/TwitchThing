@@ -7,6 +7,6 @@ export default class LoadoutEffectInstance extends EffectInstance{
   }
 
   get effectData(){
-    return this._obj.data.effect ?? {}
+    return this._obj.effect ?? {}
   }
 }

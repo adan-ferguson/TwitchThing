@@ -18,6 +18,7 @@ export default function(combat, attacker, effect = null, actionDef = {}){
 
   if(actionDef.forceDodge || dodgeAttack(enemy)){
     return {
+      ...ret,
       cancelled: 'dodge'
     }
   }
@@ -25,6 +26,7 @@ export default function(combat, attacker, effect = null, actionDef = {}){
   if(missAttack(attacker)){
     processAbilityEvents('miss', attacker)
     return {
+      ...ret,
       cancelled: 'miss'
     }
   }

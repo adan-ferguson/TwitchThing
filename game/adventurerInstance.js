@@ -29,7 +29,7 @@ export default class AdventurerInstance extends FighterInstance{
     this._itemInstances = itemInstances
     this._skillInstances = skillInstances
     this._adventurer = adventurer
-    this.setState(initialState)
+    this.state = initialState
   }
 
   get adventurer(){

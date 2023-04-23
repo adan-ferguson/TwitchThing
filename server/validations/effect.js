@@ -19,9 +19,9 @@ const ABILITY_OBJ = {
   cooldown: Joi.number().integer(),
 }
 
-const TRIGGER_SCHEMA = Joi.object({
+const ACTION_ABILITY_SCHEMA = Joi.object({
   ...ABILITY_OBJ,
-  actions: Joi.array().items(ACTION_SCHEMA)
+  actions: Joi.array().items(ACTION_SCHEMA).required()
 })
 
 const REPLACEMENT_SCHEMA = Joi.object({
@@ -31,13 +31,10 @@ const REPLACEMENT_SCHEMA = Joi.object({
   })
 })
 
-const TRIGGERS_SCHEMA = Joi.object(keyedObject(ABILITY_KEYS, TRIGGER_SCHEMA))
-const REPLACEMENTS_SCHEMA = Joi.object(keyedObject(ABILITY_KEYS, REPLACEMENT_SCHEMA))
-
 export const EFFECT_SCHEMA = Joi.object({
   abilities: Joi.object({
-    replacement: REPLACEMENTS_SCHEMA,
-    triggered: TRIGGERS_SCHEMA
+    replacement: Joi.object(keyedObject(ABILITY_KEYS, REPLACEMENT_SCHEMA)),
+    action: Joi.object(keyedObject(ABILITY_KEYS, ACTION_ABILITY_SCHEMA))
   }),
   stats: STATS_SCHEMA
 })
