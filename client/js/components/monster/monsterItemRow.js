@@ -60,6 +60,10 @@ export default class MonsterItemRow extends DIElement{
     }
   }
 
+  get stateEl(){
+    return this.querySelector('di-loadout-row-state')
+  }
+
   _update(){
 
     if(this._options.item instanceof LoadoutObjectInstance){
@@ -79,7 +83,7 @@ export default class MonsterItemRow extends DIElement{
       this.classList.remove('blank')
     }
 
-    this.querySelector('di-loadout-row-state').setOptions({
+    this.stateEl.setOptions({
       loadoutEffectInstance: this._monsterItemInstance
     })
 

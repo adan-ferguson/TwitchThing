@@ -9,11 +9,13 @@ export default class DIElement extends HTMLElement{
     super()
     this.events = new EventEmitter() // Because DOM events don't show up in performance tab
     this._options = { ...this.defaultOptions }
-    this.innerHTML = this.initialHTML
+    if(this.initialHTML){
+      this.innerHTML = this.initialHTML
+    }
   }
 
   get initialHTML(){
-    return ''
+    return null
   }
 
   get defaultOptions(){

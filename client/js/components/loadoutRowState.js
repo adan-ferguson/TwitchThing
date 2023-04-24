@@ -8,7 +8,8 @@ export default class LoadoutRowState extends DIElement{
   constructor(){
     super()
     this.cooldownBar.setOptions({
-      showValue: false
+      showValue: false,
+      color: '#AAAAAA'
     })
     this._update()
   }
@@ -40,7 +41,6 @@ export default class LoadoutRowState extends DIElement{
       return
     }
 
-    debugger
     this.classList.remove('displaynone')
     this.classList.toggle('disabled', this._stateInfo.disabled)
     this.setAttribute('ability-type', this._stateInfo.abilityType)
@@ -53,7 +53,7 @@ export default class LoadoutRowState extends DIElement{
   }
 
   advanceTime(ms){
-    if(this.idle || !this._stateInfo){
+    if(this.idle || !this._stateInfo || this.getAttribute('ability-state') === 'ready'){
       return
     }
     if(this._stateInfo.cooldownRefreshing){

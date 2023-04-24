@@ -43,7 +43,7 @@ function doReplacements(owner, eventName, actionData = {}){
 }
 
 function performReplacement(replacementAbility, actionData){
-  return { ...actionData, ...replacementAbility.abilityDef.dataMerge }
+  return { ...actionData, ...replacementAbility.replacements.dataMerge }
 }
 
 function getFighterInstanceAbilities(fighterInstance, type, eventName){

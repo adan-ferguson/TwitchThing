@@ -6,6 +6,10 @@ export default class AbilityInstance{
     this._state = state ?? {}
   }
 
+  get replacements(){
+    return this.abilityDef.replacements
+  }
+
   get name(){
     return this.abilityDef.name
   }

@@ -2,6 +2,7 @@ export function effectInstanceState(ei){
   if(!ei){
     return null
   }
+  console.log('state')
   const ai = ei.abilities[0]
   return {
     disabled: ei.disabled,

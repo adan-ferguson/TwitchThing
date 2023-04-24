@@ -13,14 +13,29 @@ export default class MonsterLoadout extends DIElement{
     }
   }
 
+  get itemRows(){
+    return this.querySelectorAll('di-monster-item-row')
+  }
+
   setMonsterInstance(monsterInstance){
     this._monsterInstance = monsterInstance
-    this.querySelectorAll('di-monster-item-row').forEach((row, i) => {
+    this.updateAllRows()
+    return this
+  }
+
+  updateAllRows(){
+    this.itemRows.forEach((row, i) => {
       row.setOptions({
-        item: monsterInstance.itemInstances[i]
+        item: this._monsterInstance.itemInstances[i]
       })
     })
     return this
+  }
+
+  advanceTime(ms){
+    this.itemRows.forEach(row => {
+      row.stateEl.advanceTime(ms)
+    })
   }
 }
 

@@ -92,9 +92,9 @@ export default class FighterInstancePane extends HTMLElement{
     if(this.fighterInstance.inCombat && !this.fighterInstance.mods.contains('freezeActionBar')){
       this._actionBarEl.advanceTime(ms)
     }
-    // if(!this.fighterInstance.mods.contains('freezeCooldown')){
-    //   this.loadoutEl.advanceTime(ms)
-    // }
+    if(!this.fighterInstance.mods.contains('freezeCooldown')){
+      this.loadoutEl.advanceTime(ms)
+    }
     // this.effectsListEl.advanceTime(ms)
   }
 
@@ -227,7 +227,7 @@ export default class FighterInstancePane extends HTMLElement{
     this.statsList.setStats(this.fighterInstance.stats, this.fighterInstance)
     // this.effectsListEl.update(cancelAnimations)
     this._updateActionBar()
-    // this.loadoutEl.updateAllRows()
+    this.loadoutEl.updateAllRows()
     this.classList.toggle('boss', this.fighterInstance.isBoss ? true : false)
 
     if(!this.fighterInstance.hp){
