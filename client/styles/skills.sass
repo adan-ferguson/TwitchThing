@@ -1,20 +1,21 @@
 di-adventurer-skill-row, di-adventurer-item-row, di-monster-item-row
   position: relative
   color: #222
+  background-color: white
 
   &.clickable
     cursor: pointer
     &:hover
-      .border
+      .content
         background-color: #dfeaff
 
-  &.locked .border
-    color: #999
+  &.locked
     border: 0.4rem solid #BBB
+    .content
+      color: #999
 
-  &.blank .border
-    border-width: 0.5rem
-    border-style: dashed
+  &.blank
+    border: 1rem dashed #BBB
 
   .hit-area
     position: absolute
@@ -23,23 +24,19 @@ di-adventurer-skill-row, di-adventurer-item-row, di-monster-item-row
     left: 0
     right: 0
 
-  .border
+  .content
     position: relative
     display: flex
     flex-direction: row
     align-items: center
     padding: 0 9rem
     height: 100%
-    border: 1.2rem solid #666
-
-    background-color: white
-    box-sizing: border-box
 
 di-adventurer-skill-row
 
-  .border
-    border-radius: 20rem
+  border-radius: 20rem
 
+  .content
     i.skill-point
       vertical-align: middle
       margin-right: 2rem

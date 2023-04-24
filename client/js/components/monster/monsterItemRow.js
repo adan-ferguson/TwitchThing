@@ -1,12 +1,12 @@
 import DIElement from '../diElement.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
 import LoadoutObjectInstance from '../../../../game/loadoutObjectInstance.js'
-import MonsterItemCard from './monsterItemCard.js'
 import LoadoutObjectDetails from '../loadoutObjectDetails.js'
 
 const HTML = `
-<div class="border">
-    <span class="name"></span>
+<di-loadout-row-state></di-loadout-row-state>
+<div class="content">
+  <span class="name"></span>
 </div>
 <div class="hit-area"></div>
 `
@@ -24,6 +24,10 @@ export default class MonsterItemRow extends DIElement{
 
   get nameEl(){
     return this.querySelector('.name')
+  }
+
+  get borderEl(){
+    return this.querySelector('.border')
   }
 
   get monsterItem(){
@@ -74,6 +78,10 @@ export default class MonsterItemRow extends DIElement{
       this.nameEl.textContent = this.monsterItem.displayName
       this.classList.remove('blank')
     }
+
+    this.querySelector('di-loadout-row-state').setOptions({
+      loadoutEffectInstance: this._monsterItemInstance
+    })
 
     return this
   }

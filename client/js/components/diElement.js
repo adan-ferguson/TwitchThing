@@ -9,6 +9,11 @@ export default class DIElement extends HTMLElement{
     super()
     this.events = new EventEmitter() // Because DOM events don't show up in performance tab
     this._options = { ...this.defaultOptions }
+    this.innerHTML = this.initialHTML
+  }
+
+  get initialHTML(){
+    return ''
   }
 
   get defaultOptions(){
@@ -37,7 +42,7 @@ export default class DIElement extends HTMLElement{
     if(!this._tippy){
       tippy(this, {
         theme: 'light',
-        onHide: () => false,
+        // onHide: () => false,
         maxWidth: 'none',
         delay: 100,
         duration: 150

@@ -1,5 +1,5 @@
 import tippy from 'tippy.js'
-import { effectDisplayInfo } from '../../displayInfo/effectDisplayInfo.js'
+import { statusEffectDisplayInfo } from '../../displayInfo/statusEffectDisplayInfo.js'
 import { flash } from '../../animations/simple.js'
 import { ACTION_COLOR } from '../../colors.js'
 import { parseDescriptionString } from '../../descriptionString.js'
@@ -35,7 +35,7 @@ export default class EffectRow extends HTMLElement{
   update(effect, cancelAnimations = false){
 
     this.effect = effect
-    const info = effectDisplayInfo(effect)
+    const info = statusEffectDisplayInfo(effect)
 
     this.classList.toggle('persisting', effect.persisting)
 
@@ -71,7 +71,7 @@ export default class EffectRow extends HTMLElement{
   }
 
   flash(){
-    flash(this.barEl.foregroundEl, effectDisplayInfo(this.effect).colors.flash, 500)
+    flash(this.barEl.foregroundEl, statusEffectDisplayInfo(this.effect).colors.flash, 500)
   }
 }
 customElements.define('di-effect-row', EffectRow)

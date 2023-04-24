@@ -1,24 +1,27 @@
-di-loadout
-  flex: 0 0 300rem !important
-
-  di-list
-    flex-grow: 1
-
-di-loadout-row
-  //border: 0.5rem solid #CCC
+.loadout-container
+  flex: 0 0 300rem
   position: relative
-  margin-bottom: 5rem
+
+  > *
+    position: absolute
+    top: 0
+    left: 0
+    right: 0
+    bottom: 0
+
+di-loadout-row-state
+
+  position: absolute
+  top: 0
+  right: 0
+  left: 0
+  bottom: 0
+
+  border: 1rem solid #888
   box-sizing: border-box
 
   .di-bar .bar-border
-    border-width: 2rem
-
-  .hit-area
-    position: absolute
-    top: -4rem
-    bottom: -4rem
-    left: 0
-    right: 0
+    border: none !important
 
   &.disabled
     opacity: 0.5
@@ -55,12 +58,12 @@ di-loadout-row
     //  border: none !important
 
   &[ability-state=ready]
-    .bar-border
-      border-width: 2rem
+    border-width: 2rem
+
+    &[ability-type=active]
+      border-color: #74d5d9
+    &[ability-type=nonactive]
+      border-color: #ffa227
 
   &[ability-state=disabled]
-    .bar-border
-      opacity: 0.35
-
-    //.cooldown .bar-foreground
-    //  opacity: 1
+    opacity: 0.4

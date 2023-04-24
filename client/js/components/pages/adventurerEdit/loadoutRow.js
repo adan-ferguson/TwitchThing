@@ -155,8 +155,8 @@ export default class LoadoutRow extends DIElement{
     if(this._abilityInfo?.cooldownRefreshing){
       this._cooldownBarEl.setValue(ms, { relative: true })
       if(this._cooldownBarEl.pct === 1){
-        if(this._abilityInfo.state === AbilityState.RECHARGING){
-          this.setAttribute('ability-state', AbilityState.READY)
+        if(this._abilityInfo.state === EffectAbilityState.RECHARGING){
+          this.setAttribute('ability-state', EffectAbilityState.READY)
         }
       }
     }
