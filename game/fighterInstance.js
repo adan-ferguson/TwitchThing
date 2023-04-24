@@ -8,9 +8,7 @@ import { getEffectInstanceAbilities } from '../server/mechanics/abilities.js'
 new Stats()
 
 const STATE_DEFAULTS = {
-  inCombat: false,
-  loadout: [],
-  statusEffects: []
+  inCombat: false
 }
 
 export const COMBAT_BASE_TURN_TIME = 3000

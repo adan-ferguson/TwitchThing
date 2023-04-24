@@ -36,7 +36,7 @@ export default class Inventory extends DIElement{
   }
 
   filterFn = row => {
-    return row.item && this.adventurer.orbs.classes.includes(row.item.advClass)
+    return row.adventurerItem && this.adventurer.orbs.classes.includes(row.adventurerItem.advClass)
     // return row.item?.classes.every(cls => this.adventurer.orbs[cls]) ?? false
   }
 

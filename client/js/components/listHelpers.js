@@ -66,24 +66,27 @@ export function rowsToInventoryItems(rows){
 
 export function standardItemSort(rowA, rowB){
 
-  if(!rowA.item){
-    if(!rowB.item){
+  const itemA = rowA.adventurerItem
+  const itemB = rowB.adventurerItem
+
+  if(!itemA){
+    if(!itemB){
       return 0
     }
     return -1
   }
-  if(!rowB.item){
+  if(!itemB){
     return 1
   }
 
-  if(rowA.item.isBasic && !rowB.item.isBasic){
+  if(itemA.isBasic && !itemB.isBasic){
     return 1
-  }else if(!rowA.item.isBasic && rowB.item.isBasic){
+  }else if(!itemA.isBasic && itemB.isBasic){
     return -1
   }
 
-  const orbsA = rowA.item.orbs
-  const orbsB = rowB.item.orbs
+  const orbsA = itemA.orbs
+  const orbsB = itemB.orbs
 
   const classesA = Object.keys(orbsA)
   const classesB = Object.keys(orbsB)
@@ -112,7 +115,7 @@ export function standardItemSort(rowA, rowB){
     return -1
   }
 
-  return rowA.item.displayName - rowB.item.displayName
+  return itemA.displayName - itemB.displayName
 }
 
 export function addInventoryItem(list, loadoutItem, count = 1){

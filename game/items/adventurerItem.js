@@ -21,6 +21,10 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
     this._orbs = new UpgradeData(baseItem.def.orbs ?? [0])
   }
 
+  get advClass(){
+    return this._baseItem.group
+  }
+
   get def(){
     return this._def
   }

@@ -17,12 +17,7 @@ const abilityDefinitions = {
  * @returns {*[]|*}
  */
 export function getAbilityDisplayInfoForObj(obj){
-  if(obj instanceof LoadoutObject){
-    return obj.data.effectData.abilities.map(getAbilityDisplayInfo)
-  }else if(obj instanceof EffectInstance){
-    return obj.abilities.map(getAbilityDisplayInfo)
-  }
-  return []
+  return obj.abilities.map(getAbilityDisplayInfo)
 }
 
 export function getAbilityDisplayInfo(ability){

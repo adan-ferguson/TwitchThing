@@ -6,16 +6,13 @@ di-adventurer-skill-row, di-adventurer-item-row, di-monster-item-row
   &.clickable
     cursor: pointer
     &:hover
-      .content
-        background-color: #dfeaff
+      background-color: #dfeaff
 
-  &.locked
-    border: 0.4rem solid #BBB
-    .content
-      color: #999
+  &.idle
+    border: 1rem solid #888
 
   &.blank
-    border: 1rem dashed #BBB
+    border: 1rem dashed #888
 
   .hit-area
     position: absolute
@@ -35,6 +32,11 @@ di-adventurer-skill-row, di-adventurer-item-row, di-monster-item-row
 di-adventurer-skill-row
 
   border-radius: 20rem
+
+  &.locked
+    border: 0.4rem solid #BBB
+    .content
+      color: #999
 
   .content
     i.skill-point

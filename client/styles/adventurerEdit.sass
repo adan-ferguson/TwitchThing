@@ -232,15 +232,14 @@ di-inventory
       background-color: transparent
     &:not(.blank, .filtered)
       cursor: pointer
-      .border
-        filter: drop-shadow(1.75rem 1.75rem 0.75rem #ccc)
-      &:hover .border
+      filter: drop-shadow(1.75rem 1.75rem 0.75rem #ccc)
+      &:hover
         background-color: #e9ffdf
     &.filtered
       opacity: 0.4
-    &.hoverable .border
+    &.hoverable
       background-color: #f8f8ff
-    &.hovered .border
+    &.hovered
       background-color: #e1e7fa
 
   &.hoverable .border

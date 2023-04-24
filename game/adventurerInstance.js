@@ -5,29 +5,12 @@ import { adventurerLevelToHp, adventurerLevelToPower } from './adventurer.js'
 
 export default class AdventurerInstance extends FighterInstance{
 
+  _adventurer
+  _itemInstances = []
+  _skillInstances = []
+
   constructor(adventurer, initialState = {}){
     super()
-    const itemInstances = []
-    const skillInstances = []
-    const loadout = adventurer.loadout
-    for(let i = 0; i < 8; i++){
-      if(loadout.items[i]){
-        itemInstances[i] = new LoadoutObjectInstance({
-          obj: loadout.items[i],
-          owner: this,
-          state: initialState.items?.[i]
-        })
-      }
-      if(loadout.skills[i]){
-        skillInstances[i] = new LoadoutObjectInstance({
-          obj: loadout.skills[i],
-          owner: this,
-          state: initialState.skills?.[i]
-        })
-      }
-    }
-    this._itemInstances = itemInstances
-    this._skillInstances = skillInstances
     this._adventurer = adventurer
     this.state = initialState
   }
@@ -80,5 +63,36 @@ export default class AdventurerInstance extends FighterInstance{
 
   set food(val){
     this._state.food = minMax(0, val, this.maxFood)
+  }
+
+  get loadoutState(){
+    const stateDef = { items: [], skills: [] }
+    for(let i = 0; i < 8; i++){
+      stateDef.items[i] = this._itemInstances[i]?.state
+      stateDef.skills[i] = this._skillInstances[i]?.state
+    }
+    return stateDef
+  }
+
+  set loadoutState(stateDef){
+    const items = stateDef?.items ?? []
+    const skills = stateDef?.skills ?? []
+    const loadout = this.adventurer.loadout
+    for(let i = 0; i < 8; i++){
+      if(loadout.items[i]){
+        this._itemInstances[i] = new LoadoutObjectInstance({
+          obj: loadout.items[i],
+          owner: this,
+          state: items[i]
+        })
+      }
+      if(loadout.skills[i]){
+        this._skillInstances[i] = new LoadoutObjectInstance({
+          obj: loadout.skills[i],
+          owner: this,
+          state: skills[i]
+        })
+      }
+    }
   }
 }

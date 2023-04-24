@@ -2,9 +2,11 @@ import DIElement from '../diElement.js'
 import { OrbsTooltip } from '../orbRow.js'
 import ItemCard from '../itemCard.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
+import LoadoutObjectInstance from '../../../../game/loadoutObjectInstance.js'
 
 const HTML = `
-<div class="border">
+<di-loadout-row-state></di-loadout-row-state>
+<div class="content">
   <div class="flex-columns flex-centered">
     <div class="count-tab displaynone"></div>
     <span class="name"></span>
@@ -40,8 +42,8 @@ export default class AdventurerItemRow extends DIElement{
     return this.querySelector('di-orb-row')
   }
 
-  get item(){
-    return this._options.item
+  get stateEl(){
+    return this.querySelector('di-loadout-row-state')
   }
 
   get count(){
@@ -52,15 +54,27 @@ export default class AdventurerItemRow extends DIElement{
     this.setOptions({ count: val })
   }
 
+  get item(){
+    return this.adventurerItem
+  }
+
+  get adventurerItem(){
+    return this._adventurerItem
+  }
+
+  get adventurerItemInstance(){
+    return this._adventurerItemInstance
+  }
+
   get tooltip(){
 
-    if(!this._options.item){
+    if(!this.adventurerItem){
       return null
     }
 
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
-    tooltip.appendChild(new ItemCard().setItem(this._options.item))
+    tooltip.appendChild(new ItemCard().setItem(this.adventurerItemInstance ?? this.adventurerItem))
     tooltip.appendChild(wrapContent('Right-click for more info', {
       class: 'right-click subtitle'
     }))
@@ -79,10 +93,19 @@ export default class AdventurerItemRow extends DIElement{
 
   _update(){
 
+    if(this._options.item instanceof LoadoutObjectInstance){
+      this._adventurerItemInstance = this._options.item
+      this._adventurerItem = this._adventurerItemInstance.obj
+    }else{
+      this._adventurerItemInstance = null
+      this._adventurerItem = this._options.item
+    }
+
     this.classList.toggle('invalid', !(this._options.valid ?? true))
+    this.classList.toggle('idle', this.adventurerItemInstance ? false : true)
     this.setTooltip(this.tooltip)
 
-    if(!this.item){
+    if(!this.adventurerItem){
       this._blank()
     }else{
 
@@ -91,11 +114,16 @@ export default class AdventurerItemRow extends DIElement{
       this.countEl.textContent = 'x' + count
       this.count = count
 
-      this.nameEl.textContent = this.item.displayName
-      this.orbRow.setData(this._options.orbs ?? this.item.orbs)
-      this._setTexture(this.item.isBasic ? null : 'maze-white')
+      this.nameEl.textContent = this.adventurerItem.displayName
+      this.orbRow.setData(this._options.orbs ?? this.adventurerItem.orbs)
+      this._setTexture(this.adventurerItem.isBasic ? null : 'maze-white')
       this.classList.remove('blank')
     }
+
+    this.stateEl.setOptions({
+      loadoutEffectInstance: this.adventurerItemInstance
+    })
+
     return this
   }
 

@@ -5,6 +5,9 @@ export default class LoadoutObject{
   _data
 
   constructor(data){
+    if(!data){
+      throw 'No data'
+    }
     this._data = data
   }
 
@@ -20,12 +23,15 @@ export default class LoadoutObject{
     return this._data
   }
 
+  get abilities(){
+    return this.effect.abilities ?? []
+  }
+
   get effect(){
     return this.data.effect ?? {}
   }
 
-  get loadoutModifiers(){
-    return this.data.loadoutModifiers ?? null
+  get effectData(){
+    return this.effect
   }
-
 }

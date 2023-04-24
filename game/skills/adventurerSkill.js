@@ -10,8 +10,6 @@ export function getSkillsForClass(className, levels){
 
 export default class AdventurerSkill extends AdventurerLoadoutObject{
 
-  _data
-
   constructor(skillId, level = 1){
     const baseSkill = Skills[skillId]
     if(!baseSkill){
