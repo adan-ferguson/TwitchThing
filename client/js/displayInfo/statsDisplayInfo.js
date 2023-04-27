@@ -1,4 +1,3 @@
-import StatDefs from '../../../game/stats/combined.js'
 import { roundToFixed, toDisplayName } from '../../../game/utilFunctions.js'
 import { StatType } from '../../../game/stats/statType.js'
 import statValueFns from '../../../game/stats/statValueFns.js'
@@ -10,51 +9,51 @@ export const StatsDisplayStyle = {
 }
 
 const statDefinitionsInfo = {
-  [StatDefs.hpMax.name]: {
+  hpMax: {
     text: 'Max Health',
     icon: ICON_SVGS.health,
     description: 'Max Health (good description)'
   },
-  [StatDefs.physPower.name]: {
+  physPower: {
     text: 'Phys Power',
     icon: ICON_SVGS.physPower,
     description: 'Phys power (basic attack damage)'
   },
-  [StatDefs.magicPower.name]: {
+  magicPower: {
     text: 'Magic Power',
     icon: ICON_SVGS.magicPower,
     description: 'Magic power'
   },
-  [StatDefs.physDef.name]: {
+  physDef: {
     text: 'Phys Defense',
     icon: ICON_SVGS.physDef,
     description: 'Blocks physical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
   },
-  [StatDefs.magicDef.name]: {
+  magicDef: {
     text: 'Magic Defense',
     icon: ICON_SVGS.magicDef,
     description: 'Blocks magical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
   },
-  [StatDefs.missChance.name]: {},
-  [StatDefs.speed.name]: {
+  missChance: {},
+  speed: {
     text: 'Speed',
     displayInverted: true,
     icon: ICON_SVGS.action,
     description: 'Speed. Each extra 100 speed is about +1 turn per 3 seconds.',
   },
-  [StatDefs.damageDealt.name]: {},
-  [StatDefs.damageTaken.name]: {},
-  [StatDefs.critChance.name]: {
+  damageDealt: {},
+  damageTaken: {},
+  critChance: {
     text: 'Crit Chance',
     description: 'Chance to deal bonus damage.',
     displayedValueFn: flatValuePercentageDisplay
   },
-  [StatDefs.enemyCritChance.name]: {
+  enemyCritChance: {
     text: 'Enemy Crit Chance',
     description: 'Increases enemy\'s crit chance.',
     displayedValueFn: flatValuePercentageDisplay
   },
-  [StatDefs.critDamage.name]: {
+  critDamage: {
     text: 'Crit Damage',
     description: 'Increases damage deal by crits.',
     displayedValueFn: (value, { style }) => {
@@ -64,15 +63,15 @@ const statDefinitionsInfo = {
       return `+${Math.round((value - 1) * 100)}%`
     }
   },
-  [StatDefs.dodgeChance.name]: {
+  dodgeChance: {
     text: 'Dodge Chance',
     description: 'Chance to dodge attacks.',
   },
-  [StatDefs.blockChance.name]: {
+  blockChance: {
     text: 'Block Chance',
     description: 'Chance to block attacks.',
   },
-  [StatDefs.lifesteal.name]: {
+  lifesteal: {
     text: 'Lifesteal',
     displayedValueFn: (value, { style }) => {
       if(style === StatsDisplayStyle.CUMULATIVE){
@@ -81,7 +80,7 @@ const statDefinitionsInfo = {
       return `+${Math.round(value * 100)}%`
     }
   },
-  [StatDefs.critLifesteal.name]: {
+  critLifesteal: {
     text: 'Crit Lifesteal',
     displayedValueFn: (value, { style }) => {
       if(style === StatsDisplayStyle.CUMULATIVE){
@@ -90,13 +89,13 @@ const statDefinitionsInfo = {
       return `+${Math.round(value * 100)}%`
     }
   },
-  [StatDefs.combatXP.name]: {
+  combatXP: {
     text: 'XP Gain'
   },
-  [StatDefs.startingFood.name]: {
+  startingFood: {
     text: 'Starting Food'
   },
-  [StatDefs.cooldownReduction.name]: {
+  cooldownReduction: {
     text: 'Cooldown Reduction'
   },
   chestLevel: {

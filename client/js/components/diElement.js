@@ -46,7 +46,7 @@ export default class DIElement extends HTMLElement{
         theme: 'light',
         // onHide: () => false,
         maxWidth: 'none',
-        delay: 100,
+        delay: 50,
         duration: 150
       })
     }

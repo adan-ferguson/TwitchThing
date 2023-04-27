@@ -7,7 +7,7 @@ import Joi from 'joi'
  * @param type
  * @returns {*}
  */
-export function validateParam(val, type = 'any'){
+export function validateParam(val, { type = 'any' }){
   try {
     return Joi.attempt(val, Joi[type]().required())
   }catch(ex){

@@ -60,10 +60,14 @@ export default class Adventurer{
     return { ...this._doc }
   }
 
+  get orbs(){
+    return this.doc.orbs
+  }
+
   /**
    * @returns {OrbsData}
    */
-  get orbs(){
+  get orbsData(){
     return new OrbsData(this.loadout.usedOrbs, this.doc.orbs)
   }
 
@@ -137,7 +141,7 @@ export default class Adventurer{
    * @param skill
    */
   canSeeSkill(skill){
-    return this.orbs.maxOrbs[skill.advClass] >= skill.requiredOrbs
+    return this.orbs[skill.advClass] >= skill.requiredOrbs
   }
 
   upgradeSkill(skill){

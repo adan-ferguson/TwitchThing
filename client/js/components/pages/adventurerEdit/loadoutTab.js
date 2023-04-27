@@ -13,7 +13,7 @@ const HTML = `
     </div>
     <div class="content-rows" style="flex-grow:2">
       <div class="content-well">
-        <di-adventurer-edit-adventurer-pane></di-adventurer-edit-adventurer-pane>
+        <di-adventurer-pane></di-adventurer-pane>
       </div>
       <button class="save content-no-grow">Save</button>
     </div>
@@ -36,7 +36,7 @@ export default class LoadoutTab extends DIElement{
   }
 
   get adventurerPaneEl(){
-    return this.querySelector('di-adventurer-edit-adventurer-pane')
+    return this.querySelector('di-adventurer-pane')
   }
 
   get inventoryEl(){
@@ -89,7 +89,7 @@ export default class LoadoutTab extends DIElement{
   }
 
   _updateSaveButton(){
-    const orbsValid = this._adventurer.orbs.isValid
+    const orbsValid = this._adventurer.orbsData.isValid
     const loadoutValid = this._adventurer.loadout.isValid
     this.saveButton.toggleAttribute('disabled', !orbsValid || !loadoutValid || this._saving)
   }

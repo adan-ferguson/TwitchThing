@@ -1,5 +1,5 @@
 import DIElement from '../../diElement.js'
-import { orbPointIcon, skillPointEntry } from '../../common.js'
+import { skillPointEntry } from '../../common.js'
 import classDisplayInfo, { ADVENTURER_CLASS_LIST } from '../../../displayInfo/classDisplayInfo.js'
 import AdventurerSkillRow, { AdventurerSkillRowStatus } from '../../adventurer/adventurerSkillRow.js'
 import AdventurerSkill, { getSkillsForClass } from '../../../../../game/skills/adventurerSkill.js'
@@ -110,7 +110,7 @@ export default class ClassDisplay extends DIElement{
     const adder = this.querySelector('.orb-adder')
     adder.querySelector('di-orb-row')
       .setData({
-        [this.advClass]: this._adventurer.orbs[this.advClass]
+        [this.advClass]: this._adventurer.doc.orbs[this.advClass]
       })
       .setOptions({
         tooltip: OrbsTooltip.NONE
@@ -181,7 +181,9 @@ export default class ClassDisplay extends DIElement{
 customElements.define('di-adventurer-edit-class-display', ClassDisplay)
 
 function skillStatus(adventurer, skill){
-  if(adventurer.hasSkillUnlocked(skill)){
+  if(!skill){
+    return AdventurerSkillRowStatus.HIDDEN
+  }else if(adventurer.hasSkillUnlocked(skill)){
     return AdventurerSkillRowStatus.UNLOCKED
   }else if(adventurer.canSeeSkill(skill)){
     return AdventurerSkillRowStatus.CAN_UNLOCK

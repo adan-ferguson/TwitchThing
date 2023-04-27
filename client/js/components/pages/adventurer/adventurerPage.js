@@ -80,8 +80,8 @@ export default class AdventurerPage extends Page{
       return this.redirectTo(DungeonPage.path(adventurer.dungeonRunID))
     }
 
-    this.adventurer = adventurer
-    // this.adventurerPane.setAdventurer(adventurer)
+    this.adventurer = new Adventurer(adventurer)
+    this.adventurerPane.setAdventurer(this.adventurer)
     this._setupEditEquipmentButton(user)
     this._setupTopRightButton(user)
 
@@ -109,11 +109,10 @@ export default class AdventurerPage extends Page{
   }
 
   _setupTopRightButton(user){
-    const advInstance = new Adventurer(this.adventurer)
     const quickDungeon = user.features.dungeonPicker
     this._topRightButton.textContent = 'Enter Dungeon'
     this._topRightButton.addEventListener('click', () => {
-      if(!advInstance.isLoadoutValid){
+      if(!this.adventurer.isLoadoutValid){
         alertModal('This adventurer has invalid items for some reason, can not enter dungeon.')
       }else if(quickDungeon){
         this.redirectTo(DungeonPickerPage.path(this.adventurerID))

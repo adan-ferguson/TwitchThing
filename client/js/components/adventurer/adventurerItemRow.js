@@ -3,6 +3,7 @@ import { OrbsTooltip } from '../orbRow.js'
 import ItemCard from '../itemCard.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
 import LoadoutObjectInstance from '../../../../game/loadoutObjectInstance.js'
+import LoadoutObjectDetails from '../loadoutObjectDetails.js'
 
 const HTML = `
 <di-loadout-row-state></di-loadout-row-state>
@@ -74,7 +75,7 @@ export default class AdventurerItemRow extends DIElement{
 
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
-    tooltip.appendChild(new ItemCard().setItem(this.adventurerItemInstance ?? this.adventurerItem))
+    tooltip.appendChild(new LoadoutObjectDetails().setObject(this.adventurerItemInstance ?? this.adventurerItem))
     tooltip.appendChild(wrapContent('Right-click for more info', {
       class: 'right-click subtitle'
     }))
@@ -108,7 +109,6 @@ export default class AdventurerItemRow extends DIElement{
     if(!this.adventurerItem){
       this._blank()
     }else{
-
       const count = this.count
       this.countEl.classList.toggle('displaynone', count >= 2 ? false : true)
       this.countEl.textContent = 'x' + count

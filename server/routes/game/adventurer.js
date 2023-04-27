@@ -91,8 +91,8 @@ verifiedRouter.post('/edit/spendskillpoint', validateIdle, async(req, res) => {
 
 verifiedRouter.post('/edit/save', validateIdle, async (req, res) => {
   requireOwnsAdventurer(req)
-  validateParam(req.body.items, 'array')
-  validateParam(req.body.skills, 'array')
+  validateParam(req.body.items, { type: 'array' })
+  validateParam(req.body.skills, { type: 'array' })
   await commitAdventurerLoadout(req.adventurerDoc, req.user, req.body.items, req.body.skills)
   await Adventurers.save(req.adventurerDoc)
   await Users.save(req.user)

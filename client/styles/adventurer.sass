@@ -23,11 +23,38 @@ di-adventurer-page
         background-color: red !important
 
 di-adventurer-pane
-  .top-section
-    di-stats-list
-      flex-grow: 1 !important
 
-di-adventurer-pane, di-fighter-instance-pane
+  di-stats-list
+    flex-wrap: wrap
+    di-stat-row
+      width: 50%
+
+  .standard-contents
+    padding: 20rem 8rem 8rem
+
+  .adventurer-orbs
+    width: 49.3%
+    margin-bottom: -2rem
+
+    flex: 0 0 0 !important
+
+  di-adventurer-loadout
+    flex: 0 0 300rem !important
+    gap: 5rem
+
+    .invalid
+      filter: invert(0.9)
+
+    .slots
+      display: flex
+      flex-direction: column
+      gap: 8rem
+      flex-basis: 50%
+
+      > *
+        flex-basis: 12.5%
+
+di-fighter-instance-pane
 
   > .name
     position: absolute
