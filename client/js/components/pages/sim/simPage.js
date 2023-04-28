@@ -69,10 +69,9 @@ export default class SimPage extends Page{
 
     const mrows = []
     monsters.forEach(monsterDef => {
-      const monsterInstance = new MonsterInstance(monsterDef)
-      const row = makeMonsterRow(monsterInstance)
+      const row = makeMonsterRow(monsterDef)
       row.addEventListener('click', e => {
-        this._chooseMonster(monsterInstance)
+        this._chooseMonster(monsterDef)
       })
       mrows.push(row)
     })

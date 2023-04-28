@@ -2,6 +2,7 @@ import DIElement from '../../diElement.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import fizzetch from '../../../fizzetch.js'
 import setupEditable from './setupEditable.js'
+import { OrbsDisplayStyle } from '../../orbRow.js'
 
 const HTML = `
 <div class="content-columns fill-contents">
@@ -33,6 +34,10 @@ export default class LoadoutTab extends DIElement{
   constructor(){
     super()
     this.innerHTML = HTML
+    this.adventurerPaneEl.setOptions({
+      orbsStyle: OrbsDisplayStyle.REMAINING,
+      hideXpBar: true
+    })
   }
 
   get adventurerPaneEl(){

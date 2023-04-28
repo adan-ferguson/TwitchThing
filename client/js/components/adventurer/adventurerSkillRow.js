@@ -76,7 +76,7 @@ export default class AdventurerSkillRow extends DIElement{
 
   get tooltip(){
 
-    if(!this._options.skill){
+    if (!this._options.skill){
       return null
     }
 

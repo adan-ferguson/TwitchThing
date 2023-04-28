@@ -1,7 +1,7 @@
 import FighterInstance from './fighterInstance.js'
 import { minMax } from './utilFunctions.js'
 import LoadoutObjectInstance from './loadoutObjectInstance.js'
-import { adventurerLevelToHp, adventurerLevelToPower } from './adventurer.js'
+import Adventurer, { adventurerLevelToHp, adventurerLevelToPower } from './adventurer.js'
 
 export default class AdventurerInstance extends FighterInstance{
 
@@ -10,9 +10,14 @@ export default class AdventurerInstance extends FighterInstance{
   _skillInstances = []
 
   constructor(adventurer, initialState = {}){
+    adventurer = adventurer instanceof Adventurer ? adventurer : new Adventurer(adventurer)
     super()
     this._adventurer = adventurer
     this.state = initialState
+  }
+
+  get uniqueID(){
+    return this.adventurer.id
   }
 
   get adventurer(){
@@ -28,7 +33,7 @@ export default class AdventurerInstance extends FighterInstance{
   }
 
   get displayName(){
-    return this.fighterData.name
+    return this.adventurer.name
   }
 
   get loadoutEffectInstances(){
@@ -94,5 +99,13 @@ export default class AdventurerInstance extends FighterInstance{
         })
       }
     }
+  }
+
+  getSlotInfo(col, row){
+    // TODO: check for temporary item
+    const slotInfo = this._adventurer.loadout.getSlotInfo(col, row)
+    slotInfo.valid = true
+    slotInfo.item = (col === 0 ? this._itemInstances : this._skillInstances)[row]
+    return slotInfo
   }
 }

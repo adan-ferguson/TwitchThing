@@ -1,5 +1,6 @@
 import Users from './collections/users.js'
 import Joi from 'joi'
+import _ from 'lodash'
 
 /**
  * Validate a query parameter.
@@ -7,8 +8,9 @@ import Joi from 'joi'
  * @param type
  * @returns {*}
  */
-export function validateParam(val, { type = 'any' }){
+export function validateParam(val, type = 'any'){
   try {
+    type = _.isString(type) ? type : type.type
     return Joi.attempt(val, Joi[type]().required())
   }catch(ex){
     throw { code: 400, message: ex }

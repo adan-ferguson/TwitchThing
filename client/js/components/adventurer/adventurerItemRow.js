@@ -1,6 +1,5 @@
 import DIElement from '../diElement.js'
 import { OrbsTooltip } from '../orbRow.js'
-import ItemCard from '../itemCard.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
 import LoadoutObjectInstance from '../../../../game/loadoutObjectInstance.js'
 import LoadoutObjectDetails from '../loadoutObjectDetails.js'

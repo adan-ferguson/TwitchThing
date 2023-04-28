@@ -40,19 +40,21 @@ di-adventurer-pane
 
   di-adventurer-loadout
     flex: 0 0 300rem !important
+
+di-adventurer-loadout
+  gap: 5rem
+  
+  .invalid
+    filter: invert(0.9)
+
+  .slots
+    display: flex
+    flex-direction: column
     gap: 5rem
+    flex-basis: 50%
 
-    .invalid
-      filter: invert(0.9)
-
-    .slots
-      display: flex
-      flex-direction: column
-      gap: 8rem
-      flex-basis: 50%
-
-      > *
-        flex-basis: 12.5%
+    > *
+      flex-basis: 12.5%
 
 di-fighter-instance-pane
 

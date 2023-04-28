@@ -325,9 +325,7 @@ export default class FighterInstancePane extends HTMLElement{
     const loadoutContainer = this.querySelector('.loadout-container')
     loadoutContainer.innerHTML = ''
     if(this.fighterInstance instanceof AdventurerInstance){
-      // TODO: error incoming
-      debugger
-      loadoutContainer.appendChild(new AdventurerLoadout().setLoadout(this.fighterInstance.loadout))
+      loadoutContainer.appendChild(new AdventurerLoadout().setAdventurer(this.fighterInstance))
     }else{
       loadoutContainer.appendChild(new MonsterLoadout().setMonsterInstance(this.fighterInstance))
     }

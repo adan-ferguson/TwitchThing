@@ -23,16 +23,13 @@ export default class AdventurerPane extends DIElement{
         maxItems: 16,
         forced: ['hpMax', 'physPower', 'magicPower']
       })
-    this.orbRowEl
-      .setOptions({
-        style: OrbsDisplayStyle.REMAINING
-      })
     // TODO: click more stats
   }
 
   get defaultOptions(){
     return {
-      hideXpBar: false
+      hideXpBar: false,
+      orbsStyle: OrbsDisplayStyle.MAX_ONLY
     }
   }
 
@@ -63,8 +60,15 @@ export default class AdventurerPane extends DIElement{
   }
 
   _update(showChangeEffect = false){
-    this.loadoutEl.setLoadout(this.adventurer.loadout)
-    this.orbRowEl.setData(this.adventurer.orbsData, showChangeEffect)
+    if(!this.adventurer){
+      return
+    }
+    this.loadoutEl.setAdventurer(this.adventurer)
+    this.orbRowEl
+      .setOptions({
+        style: this._options.orbsStyle
+      })
+      .setData(this.adventurer.orbsData, showChangeEffect)
     const adventurerInstance = new AdventurerInstance(this.adventurer)
     this.xpBar
       .setLevelFunctions(advXpToLevel, advLevelToXp)

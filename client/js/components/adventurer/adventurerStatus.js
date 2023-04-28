@@ -28,9 +28,8 @@ export default class AdventurerStatus extends HTMLElement{
     }
   }
 
-  setAdventurer(adventurer){
-    return
-
+  setAdventurer(adventurerDoc){
+    const adventurer = new Adventurer(adventurerDoc)
     this.querySelector('.name').textContent = adventurer.name
     this.querySelector('.level').textContent = adventurer.level
     this.querySelector('di-orb-row')
@@ -38,9 +37,8 @@ export default class AdventurerStatus extends HTMLElement{
         style: OrbsDisplayStyle.MAX_ONLY,
         tooltip: OrbsTooltip.NONE
       })
-      .setData(new Adventurer(adventurer).orbs)
-
-    this.setDungeonRun(adventurer.dungeonRun)
+      .setData(adventurer.orbsData)
+    // this.setDungeonRun(adventurer.dungeonRun)
     return this
   }
 
