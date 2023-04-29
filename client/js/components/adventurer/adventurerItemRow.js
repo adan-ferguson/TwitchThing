@@ -3,6 +3,9 @@ import { OrbsTooltip } from '../orbRow.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
 import LoadoutObjectInstance from '../../../../game/loadoutObjectInstance.js'
 import LoadoutObjectDetails from '../loadoutObjectDetails.js'
+import SkillCard from '../skillCard.js'
+import SimpleModal from '../simpleModal.js'
+import ItemCard from '../itemCard.js'
 
 const HTML = `
 <di-loadout-row-state></di-loadout-row-state>
@@ -28,6 +31,13 @@ export default class AdventurerItemRow extends DIElement{
       allowNegatives: true
     })
     this._blank()
+    this.addEventListener('contextmenu', e => {
+      if(this.adventurerItem){
+        e.preventDefault()
+        const details = new ItemCard().setItem(this.adventurerItem)
+        new SimpleModal(details).show()
+      }
+    })
   }
 
   get countEl(){
@@ -103,7 +113,7 @@ export default class AdventurerItemRow extends DIElement{
     }
 
     this.classList.toggle('invalid', !(this._options.valid ?? true))
-    this.classList.toggle('idle', this.adventurerItemInstance ? false : true)
+    this.classList.toggle('idle', this._options.showState ? false : true)
     this.setTooltip(this.tooltip)
 
     if(!this.adventurerItem){

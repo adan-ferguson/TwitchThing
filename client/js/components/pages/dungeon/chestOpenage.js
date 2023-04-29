@@ -1,5 +1,4 @@
 import { fillArray, makeEl, wait } from '../../../../../game/utilFunctions.js'
-import LoadoutRow from '../adventurerEdit/loadoutRow.js'
 import FighterItemLoadoutItem from '../../../fighterItemLoadoutItem.js'
 import AdventurerItemInstance from '../../../../../game/adventurerSlotInstance.js'
 import { getChestDisplayInfo } from '../../../displayInfo/chestDisplayInfo.js'

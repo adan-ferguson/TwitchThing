@@ -3,6 +3,9 @@ import classDisplayInfo from '../../displayInfo/classDisplayInfo.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
 import LoadoutObjectDetails from '../loadoutObjectDetails.js'
 import LoadoutObjectInstance from '../../../../game/loadoutObjectInstance.js'
+import ItemDetails from '../itemDetails.js'
+import SimpleModal from '../simpleModal.js'
+import SkillCard from '../skillCard.js'
 
 const HTML = `
 <di-loadout-row-state></di-loadout-row-state>
@@ -37,6 +40,13 @@ export default class AdventurerSkillRow extends DIElement{
     super()
     this.innerHTML = HTML
     this._update()
+    this.addEventListener('contextmenu', e => {
+      if(this.adventurerSkill){
+        e.preventDefault()
+        const details = new SkillCard().setSkill(this.adventurerSkill)
+        new SimpleModal(details).show()
+      }
+    })
   }
 
   get stateEl(){

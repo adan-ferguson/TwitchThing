@@ -5,7 +5,7 @@ export default {
     return {
       effect: {
         stats: {
-          physPower: wrappedPct(10 * level),
+          physPower: wrappedPct(10 + 10 * level),
         }
       },
       displayName: 'Short Sword'
