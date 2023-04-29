@@ -117,10 +117,10 @@ export default class LoadoutTab extends DIElement{
           loadout.setSlot(0,  slot, item)
         }else if(change.type === 'remove'){
           this.inventoryEl.addItem(change.row.item)
-          loadout.setSlot(0,  slotIndex(change.row), null, )
+          loadout.setSlot(0,  slotIndex(change.row), null)
         }else if(change.type === 'swap'){
-          loadout.setSlot(0, slotIndex(change.row2), change.row.item, )
-          loadout.setSlot(0, slotIndex(change.row), change.row2.item, )
+          loadout.setSlot(0, slotIndex(change.row2), change.row.item)
+          loadout.setSlot(0, slotIndex(change.row), change.row2.item)
         }
         this.adventurerPaneEl.update(true)
         this._updateSaveButton()

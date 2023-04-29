@@ -1,7 +1,7 @@
 export default {
   damageType: 'phys',
   basic: false,
-  damageScaling: 'auto',
+  scaling: {},
   // damageMulti: 1,
   // targetHpPct: 0,
   // targetMaxHpPct: 0,

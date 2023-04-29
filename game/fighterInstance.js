@@ -255,7 +255,7 @@ export default class FighterInstance{
       return null
     }
     return this.loadoutEffectInstances.find(lei => {
-      const ability = getEffectInstanceAbilities(lei, 'action', 'active')
+      const ability = getEffectInstanceAbilities(lei, 'action', 'active')?.[0]
       if(ability?.ready){
         return true
       }

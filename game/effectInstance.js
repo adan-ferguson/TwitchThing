@@ -47,7 +47,8 @@ export default class EffectInstance{
   }
 
   get exclusiveStats(){
-    return this.owner.statsForEffect(this)
+    // TODO: this
+    return this.owner.stats
   }
 
   get state(){

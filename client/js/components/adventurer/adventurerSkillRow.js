@@ -1,6 +1,5 @@
 import DIElement from '../diElement.js'
 import classDisplayInfo from '../../displayInfo/classDisplayInfo.js'
-import SkillCard from '../skillCard.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
 import LoadoutObjectDetails from '../loadoutObjectDetails.js'
 import LoadoutObjectInstance from '../../../../game/loadoutObjectInstance.js'
@@ -70,7 +69,8 @@ export default class AdventurerSkillRow extends DIElement{
       clickable: false,
       showSkillPoints: true,
       skill: null,
-      valid: null
+      valid: null,
+      showState: false
     }
   }
 
@@ -82,7 +82,7 @@ export default class AdventurerSkillRow extends DIElement{
 
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
-    tooltip.appendChild(new LoadoutObjectDetails().setObject(this.adventurerSkill ?? this.adventurerSkillInstance))
+    tooltip.appendChild(new LoadoutObjectDetails().setObject(this.adventurerSkillInstance ?? this.adventurerSkill))
     tooltip.appendChild(wrapContent('Right-click for more info', {
       class: 'right-click subtitle'
     }))
@@ -92,17 +92,17 @@ export default class AdventurerSkillRow extends DIElement{
 
   _update(){
 
-    if(this._options.item instanceof LoadoutObjectInstance){
-      this._adventurerSkillInstance = this._options.item
+    if(this._options.skill instanceof LoadoutObjectInstance){
+      this._adventurerSkillInstance = this._options.skill
       this._adventurerSkill = this._adventurerSkillInstance.obj
     }else{
       this._adventurerSkillInstance = null
-      this._adventurerSkill = this._options.item
+      this._adventurerSkill = this._options.skill
     }
 
-    const skill = this._options.skill
+    const skill = this.adventurerSkill
     this.classList.toggle('blank', skill ? false : true)
-    this.classList.toggle('idle', this.adventurerSkillInstance ? false : true)
+    this.classList.toggle('idle', this._options.showState ? false : true)
     this.classList.toggle('clickable', false)
     this.classList.toggle('locked', this._options.status !== AdventurerSkillRowStatus.UNLOCKED)
     this.classList.toggle('invalid', !(this._options.valid ?? true))
@@ -116,15 +116,14 @@ export default class AdventurerSkillRow extends DIElement{
         this.contentEl.innerHTML = HIDDEN_HTML(skill.requiredOrbs, info.icon)
         return
       }
-
-      const icon = info.icon
+      const icon = this._options.status === AdventurerSkillRowStatus.UNLOCKED ? info.icon : info.colorlessIcon
       const spd = '' //this._options.showSkillPoints ? skillPointEntry(skill.skillPointsCumulative) : ''
       this.contentEl.innerHTML = SKILL_HTML(skill.displayName, spd, icon)
       this.classList.toggle('clickable', this._options.clickable)
     }
 
     this.stateEl.setOptions({
-      loadoutEffectInstance: this.adventurerSkillInstance
+      loadoutEffectInstance: this._options.showState ? this.adventurerSkillInstance : false
     })
 
     return this

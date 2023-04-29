@@ -15,7 +15,10 @@ export function runCombat(data){
   const fighterInstance2 = toFighterInstance(data.fighterDef2)
   const combat = new Combat(fighterInstance1, fighterInstance2, data.params)
   return {
-    startTime: Date.now(),
+    times: {
+      start: timestamp,
+      finish: Date.now()
+    },
     duration: combat.duration,
     fighter1: {
       id: 1,
@@ -31,8 +34,7 @@ export function runCombat(data){
     },
     timeline: combat.timeline,
     result: combat.result,
-    params: data.params,
-    calculationTime: Date.now() - timestamp
+    params: data.params
   }
 }
 

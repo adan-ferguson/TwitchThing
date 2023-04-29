@@ -15,7 +15,7 @@ export function skillPointIcon(){
 }
 
 export function skillPointEntry(count){
-  return `<span class="skill-point-entry">${count}${skillPointIcon()}</span>`
+  return `<span class="skill-point-entry icon-and-value">${count}${skillPointIcon()}</span>`
 }
 
 export function orbEntries(obj){
@@ -52,24 +52,14 @@ export function wrapStat(statType, val){
   return makeEl({ content, class: 'stat-wrap' })
 }
 
-export function physScaling(pct){
-  return scalingWrap('phys', pct)
-}
-
-export function magicScaling(pct){
-  return scalingWrap('magic', pct)
-}
-
-function scalingWrap(damageType, pct){
+export function scalingWrap(scalingType, valStr){
   const ICONS = {
-    magic: magicPower,
-    phys: physPower,
+    magicPower: magicPower,
+    physPower: physPower,
     health: healthIcon
   }
-  const valStr = _.isNumber(pct) ? `${pct * 100}%` : pct
-  return makeEl({
-    class: ['scaling-type', 'scaling-type-' + damageType],
-    content: `${ICONS[damageType]}${valStr}`,
-    elementType: 'span'
-  }).outerHTML
+  return `
+<span class="icon-and-value" scaling-type="${scalingType}">
+    ${valStr}${ICONS[scalingType]}
+</span>`
 }

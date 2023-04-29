@@ -49,7 +49,7 @@ export default class Adventurer{
 
   constructor(adventurerDoc){
     this._doc = JSON.parse(JSON.stringify(adventurerDoc))
-    this._loadout = new AdventurerLoadout(adventurerDoc.loadout)
+    this._loadout = new AdventurerLoadout(adventurerDoc)
   }
 
   get id(){

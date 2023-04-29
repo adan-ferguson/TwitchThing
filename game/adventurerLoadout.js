@@ -3,16 +3,20 @@ import AdventurerSkill from './skills/adventurerSkill.js'
 import OrbsData from './orbsData.js'
 import SlotModifierCollection from './slotModifierCollection.js'
 import { isolate } from './utilFunctions.js'
+import LoadoutObjectInstance from './loadoutObjectInstance.js'
 
 export default class AdventurerLoadout{
 
   _objs
 
-  constructor(loadoutObj){
+  constructor(adventurerDoc){
     this._objs = [[], []]
+    const loadoutObj = adventurerDoc.loadout
     for(let i = 0; i < 8; i++){
       this._objs[0][i] = loadoutObj.items[i] ? new AdventurerItem(loadoutObj.items[i]) : null
-      this._objs[1][i] = loadoutObj.skills[i] ? new AdventurerSkill(loadoutObj.skills[i]) : null
+
+      const skillName = loadoutObj.skills[i]
+      this._objs[1][i] = skillName ? new AdventurerSkill(skillName, adventurerDoc.unlockedSkills[skillName]) : null
     }
   }
 
@@ -114,7 +118,7 @@ export default class AdventurerLoadout{
   }
 
   setSlot(col, row, loadoutObject){
-    this._objs[col][row] = loadoutObject
+    this._objs[col][row] = loadoutObject instanceof LoadoutObjectInstance ? loadoutObject.obj : loadoutObject
     this._modifiers = null
   }
 }

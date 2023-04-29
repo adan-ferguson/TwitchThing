@@ -70,6 +70,7 @@ export default class LoadoutObjectDetails extends DIElement{
   }
 
   _addAbilities(){
+    console.log('abi')
     const infos = getAbilityDisplayInfoForObj(this._obj)
     infos.filter(i => i).forEach(adi => {
       this.appendChild(new AbilityDescription().setAbilityDisplayInfo(adi))

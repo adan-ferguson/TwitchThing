@@ -3,7 +3,7 @@ import Skills from './skills/combined.js'
 
 const fighter = {
   skills: [
-    Skills.fighter00,
+    Skills.slash,
     Skills.fighter01,
     Skills.fighter02,
     Skills.fighter03,

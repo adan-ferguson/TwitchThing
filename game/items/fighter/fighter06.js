@@ -6,14 +6,14 @@ export default {
       effect: {
         abilities: [{
           trigger: 'physAttackHit',
-          name: 'serratedBladeTrigger',
+          abilityId: 'serratedBladeTrigger',
           conditions: {
             source: 'attached'
           },
           actions: [
             {
               statusEffect: {
-                name: 'serratedBladeBleed',
+                actionId: 'serratedBladeBleed',
                 vars: {
                   physScaling
                 }

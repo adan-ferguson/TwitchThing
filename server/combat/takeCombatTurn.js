@@ -18,12 +18,19 @@ export function takeCombatTurn(combat, actor){
     }))
   }else{
     for(let i = 0; i < actor.stats.get('attacks').value; i++){
-      actions.push(performAction(combat, actor, null, {
-        type: 'attack',
-        basic: true
-      }))
+      actions.push(performAction(combat, actor, null, basicAttackDef(actor)))
     }
   }
   actor.nextTurn()
   return actions
+}
+
+function basicAttackDef(actor){
+  return {
+    basic: true,
+    damageType: actor.basicAttackType,
+    scaling: {
+      [actor.basicAttackType + 'Power']: 1
+    }
+  }
 }

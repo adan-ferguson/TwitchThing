@@ -25,7 +25,7 @@ SUBJECT_KEYS.forEach(sk => {
 })
 
 export const LOADOUT_OBJECT_SCHEMA = Joi.object({
-  displayName: Joi.string().required(),
+  displayName: Joi.string(),
   loadoutModifiers: Joi.object(LOADOUT_MODIFIERS),
   vars: Joi.object(),
   effect: EFFECT_SCHEMA,

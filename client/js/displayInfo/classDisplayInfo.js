@@ -33,6 +33,10 @@ for(let className in ADV_CLASSES){
     class: 'orb-icon',
     fill: cls.color
   })
+  cls.colorlessIcon = modifySvgString(ORB_SVGS[className], {
+    class: 'orb-icon',
+    fill: '#BBB'
+  })
 }
 
 export default function(className){

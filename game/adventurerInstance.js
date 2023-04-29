@@ -105,7 +105,7 @@ export default class AdventurerInstance extends FighterInstance{
     // TODO: check for temporary item
     const slotInfo = this._adventurer.loadout.getSlotInfo(col, row)
     slotInfo.valid = true
-    slotInfo.item = (col === 0 ? this._itemInstances : this._skillInstances)[row]
+    slotInfo.loadoutItem = (col === 0 ? this._itemInstances : this._skillInstances)[row]
     return slotInfo
   }
 }

@@ -5,6 +5,8 @@ di-adventurer-skill-row, di-adventurer-item-row, di-monster-item-row
 
   &.clickable
     cursor: pointer
+    filter: drop-shadow(1.75rem 1.75rem 1.75rem #999)
+
     &:hover
       background-color: #dfeaff
 
@@ -80,7 +82,7 @@ di-skill-card, di-item-card, di-monster-item-card
       margin-bottom: 2rem
   .obj-border
     position: relative
-    padding: 20rem 10rem 10rem
+    padding: 20rem 10rem 15rem
     //margin-top: 10rem
     width: 250rem
     border: 0.5rem solid #BBB
@@ -88,12 +90,14 @@ di-skill-card, di-item-card, di-monster-item-card
     align-items: center
     justify-content: center
 
-.skill-point-entry
-  display: flex
-  font-weight: bold
-  padding: 3rem 6rem
-
 .tippy-content
   .skill-border
     white-space: initial
     margin: 0 10rem
+
+.skill-unlock-modal-content
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 12rem
+  padding-top: 12rem

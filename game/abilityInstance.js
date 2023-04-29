@@ -10,8 +10,12 @@ export default class AbilityInstance{
     return this.abilityDef.replacements
   }
 
-  get name(){
-    return this.abilityDef.name
+  get abilityId(){
+    return this.abilityDef.abilityId
+  }
+
+  get actions(){
+    return this.abilityDef.actions
   }
 
   get abilityDef(){
@@ -91,6 +95,10 @@ export default class AbilityInstance{
 
   get cooldownRefreshing(){
     return this.cooldown && (!this.uses || this.timesUsed < this.uses)
+  }
+
+  get exclusiveStats(){
+    return this.parentEffect.exclusiveStats
   }
 
   tryUse(){

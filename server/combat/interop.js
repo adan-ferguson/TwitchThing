@@ -35,8 +35,10 @@ export function generateCombat(fighterDef1, fighterDef2, params = {}){
         rej(error)
         return
       }
-      combatDoc.responseTime = Date.now() - timestamp
-      console.log('combat calctime/responsetime', combatDoc.calculationTime, combatDoc.responseTime, id)
+      combatDoc.times.init = timestamp
+      combatDoc.times.startup = combatDoc.times.start - combatDoc.times.init
+      combatDoc.times.calc = combatDoc.times.finish - combatDoc.times.start
+      console.log('combat startup & calc:', combatDoc.times.startup, combatDoc.times.calc, id)
       res(await Combats.save(combatDoc))
     }
     worker.postMessage({

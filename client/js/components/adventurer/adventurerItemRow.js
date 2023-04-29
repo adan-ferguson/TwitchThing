@@ -87,7 +87,8 @@ export default class AdventurerItemRow extends DIElement{
       item: null,
       count: null,
       valid: null,
-      orbs: null
+      orbs: null,
+      showState: false
     }
   }
 
@@ -120,7 +121,7 @@ export default class AdventurerItemRow extends DIElement{
     }
 
     this.stateEl.setOptions({
-      loadoutEffectInstance: this.adventurerItemInstance
+      loadoutEffectInstance: this._options.showState ? this.adventurerItemInstance : false
     })
 
     return this

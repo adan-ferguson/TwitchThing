@@ -1,18 +1,11 @@
 import { processAbilityEvents } from '../../mechanics/abilities.js'
 import { dealDamage } from '../../mechanics/dealDamage.js'
+import scaledNumber from '../../../game/scaledNumber.js'
 
 export default function(combat, attacker, effect = null, actionDef = {}){
 
   const enemy = combat.getEnemyOf(attacker)
   const ret = { subject: enemy.uniqueID }
-
-  if(actionDef.damageType === 'auto'){
-    actionDef.damageType = attacker.basicAttackType
-  }
-
-  if(actionDef.damageScaling === 'auto'){
-    actionDef.damageScaling = actionDef.damageType
-  }
 
   actionDef = processAbilityEvents(combat, ['attacked', actionDef.damageType + 'Attacked'], enemy, actionDef)
 
@@ -31,7 +24,7 @@ export default function(combat, attacker, effect = null, actionDef = {}){
     }
   }
 
-  let damage = attacker[actionDef.damageScaling + 'Power']
+  let damage = scaledNumber(attacker, actionDef.scaling)
   // damage *= actionDef.damageMulti
   // damage += actionDef.targetHpPct * enemy.hp
   // damage += actionDef.targetMaxHpPct * enemy.hpMax

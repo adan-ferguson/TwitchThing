@@ -2,7 +2,7 @@ export default {
   name: 'fluttering',
   effect: {
     abilities: [{
-      name: 'flutteringDodge',
+      abilityId: 'flutteringDodge',
       trigger: 'attacked',
       cooldown: 10000,
       replacements: {

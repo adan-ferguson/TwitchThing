@@ -2,6 +2,7 @@ import Skills from './combined.js'
 import UpgradeData from '../upgradeData.js'
 import AdventurerLoadoutObject from '../adventurerLoadoutObject.js'
 import { getClassInfo } from '../adventurerClassInfo.js'
+import { toDisplayName } from '../utilFunctions.js'
 
 // Convert a skills obj to an array of AdventurerSkills
 export function getSkillsForClass(className, levels){
@@ -32,7 +33,7 @@ export default class AdventurerSkill extends AdventurerLoadoutObject{
 
   get displayName(){
     let txt = this.level > 1 ? `L${this.level} ` : ''
-    return txt + super.displayName
+    return txt + (this.data.displayName ?? toDisplayName(this._baseSkill.id))
   }
 
   get advClass(){
