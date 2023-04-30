@@ -1,6 +1,6 @@
 import { processAbilityEvents } from '../../mechanics/abilities.js'
 import { dealDamage } from '../../mechanics/dealDamage.js'
-import { scaledNumberFromAbilityInstance, scaledNumberFromFighterInstance } from '../../../game/scaledNumber.js'
+import { scaledNumberFromAbilityInstance } from '../../../game/scaledNumber.js'
 
 export default function(combat, attacker, abilityInstance = null, actionDef = {}){
 
@@ -12,7 +12,7 @@ export default function(combat, attacker, abilityInstance = null, actionDef = {}
   if(actionDef.forceDodge || dodgeAttack(enemy)){
     return {
       ...ret,
-      cancelled: 'dodge',
+      cancelled: 'dodge'
     }
   }
 
@@ -20,7 +20,7 @@ export default function(combat, attacker, abilityInstance = null, actionDef = {}
     processAbilityEvents('miss', attacker)
     return {
       ...ret,
-      cancelled: 'miss',
+      cancelled: 'miss'
     }
   }
 

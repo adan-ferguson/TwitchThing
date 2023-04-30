@@ -53,7 +53,6 @@ export default class AdventurerLoadout{
   get modifiers(){
     if(!this._modifiers){
       this._modifiers = new SlotModifierCollection([this.items, this.skills], 'loadoutModifiers')
-      console.log(this._modifiers)
     }
     return this._modifiers
   }

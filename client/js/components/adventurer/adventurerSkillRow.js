@@ -133,7 +133,8 @@ export default class AdventurerSkillRow extends DIElement{
     }
 
     this.stateEl.setOptions({
-      loadoutEffectInstance: this._options.showState ? this.adventurerSkillInstance : false
+      loadoutEffectInstance: this._options.showState ? this.adventurerSkillInstance : false,
+      displayStyle: 'skill'
     })
 
     return this

@@ -97,8 +97,8 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   displayActionPerformed(action){
-    if(action.actionDef.type === 'attack'){
-      if(action.actionDef.basic){
+    if(action.actionDef.attack){
+      if(action.actionDef.attack.basic){
         const color = DAMAGE_COLORS[this.fighterInstance.basicAttackType]
         flash(this.basicAttackEl, color)
       }
@@ -119,6 +119,8 @@ export default class FighterInstancePane extends HTMLElement{
   displayResult(result, sourceEffect){
     if(result.damageInfo){
       this._queueHpChange(() => this._displayDamageResult(result))
+    }else if(result.cancelled){
+      this._displayCancellation(result.cancelled)
     }
     // if(result.type === 'attack'){
     // }else if(result.type === 'damage'){
@@ -277,17 +279,15 @@ export default class FighterInstancePane extends HTMLElement{
     // })
   }
 
-  _displayCancellation(result, effect){
-    if(result.data?.cancelReason){
-      const targetEl = this._getEffectEl(effect) ?? this.hpBarEl
-      new FlyingTextEffect(
-        targetEl,
-        toDisplayName(result.data.cancelReason),
-        {
-          clearExistingForSource: true
-        }
-      )
-    }
+  _displayCancellation(cancelReason){
+    const targetEl = this.hpBarEl
+    new FlyingTextEffect(
+      targetEl,
+      toDisplayName(cancelReason),
+      {
+        clearExistingForSource: true
+      }
+    )
   }
 
   _showOnDefeat(){
@@ -323,7 +323,11 @@ export default class FighterInstancePane extends HTMLElement{
     const loadoutContainer = this.querySelector('.loadout-container')
     loadoutContainer.innerHTML = ''
     if(this.fighterInstance instanceof AdventurerInstance){
-      loadoutContainer.appendChild(new AdventurerLoadout().setAdventurer(this.fighterInstance))
+      loadoutContainer.appendChild(
+        new AdventurerLoadout()
+          .setOptions({ showState: true })
+          .setAdventurer(this.fighterInstance)
+      )
     }else{
       loadoutContainer.appendChild(new MonsterLoadout().setMonsterInstance(this.fighterInstance))
     }

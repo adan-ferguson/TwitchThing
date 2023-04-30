@@ -1,5 +1,7 @@
 import DIElement from './diElement.js'
 import { effectInstanceState } from '../effectInstanceState.js'
+import { FLASH_COLORS } from '../colors.js'
+import { flash } from '../animations/simple.js'
 
 export default class LoadoutRowState extends DIElement{
 
@@ -24,7 +26,8 @@ export default class LoadoutRowState extends DIElement{
 
   get defaultOptions(){
     return {
-      loadoutEffectInstance: null
+      loadoutEffectInstance: null,
+      displayStyle: null
     }
   }
 
@@ -34,6 +37,7 @@ export default class LoadoutRowState extends DIElement{
 
   _update(){
 
+    const prevStateInfo = this._stateInfo
     this._stateInfo = effectInstanceState(this._options.loadoutEffectInstance)
 
     if(!this._stateInfo){
@@ -45,11 +49,18 @@ export default class LoadoutRowState extends DIElement{
     this.classList.toggle('disabled', this._stateInfo.disabled)
     this.setAttribute('ability-type', this._stateInfo.abilityType)
     this.setAttribute('ability-state', this._stateInfo.abilityState)
+    this.setAttribute('display-style', this._options.displayStyle)
     this.cooldownBar
       .setOptions({
         max: this._stateInfo.abilityBarMax
       })
       .setValue(this._stateInfo.abilityBarValue === this._stateInfo.abilityBarMax ? 0 : this._stateInfo.abilityBarValue)
+
+    // Flash if we just used the ability
+    // TODO: probably false positives here?
+    if(prevStateInfo?.abilityState === 'ready' && this._stateInfo.abilityState === 'recharging'){
+      flash(this, FLASH_COLORS[this._stateInfo.abilityType])
+    }
   }
 
   advanceTime(ms){
