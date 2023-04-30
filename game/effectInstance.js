@@ -7,19 +7,23 @@ new Stats()
 
 export default class EffectInstance{
 
-  owner
+  _fighterInstance
   _state = {}
 
   constructor(owner, state = {}){
-    this.owner = owner
-    if(!state.effectId){
-      state.effectId = uniqueID()
+    this._fighterInstance = owner
+    if(!state.uniqueID){
+      state.uniqueID = uniqueID()
     }
     this.state = state
   }
 
-  get effectId(){
-    return this._state.effectId
+  get uniqueID(){
+    return this._state.uniqueID
+  }
+
+  get fighterInstance(){
+    return this._fighterInstance
   }
 
   get effectData(){
@@ -48,7 +52,7 @@ export default class EffectInstance{
 
   get exclusiveStats(){
     // TODO: this
-    return this.owner.stats
+    return this.fighterInstance.stats
   }
 
   get state(){
@@ -72,6 +76,15 @@ export default class EffectInstance{
       this._abilities = makeAbilities(this.effectData.abilities, this._state.abilities, this)
     }
     return this._abilities
+  }
+
+  getAbilities(type, trigger){
+    return this.abilities.filter(ai => {
+      if(ai.type !== type || ai.trigger !== trigger){
+        return false
+      }
+      return true
+    })
   }
 
   advanceTime(ms){
@@ -159,7 +172,7 @@ function makeAbilities(abilitiesDef, abilitiesStateVal, parent){
   }
   const abilities = []
   abilitiesDef.forEach((abilityDef, i) => {
-    abilities.push(new AbilityInstance(abilityDef, abilitiesStateVal[i], parent))
+    abilities.push(new AbilityInstance(abilityDef, abilitiesStateVal[i], parent, i))
   })
   return abilities
 }

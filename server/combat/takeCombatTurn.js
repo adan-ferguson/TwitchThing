@@ -1,4 +1,4 @@
-import { performAction, useEffectAbility } from '../actions/performAction.js'
+import { performAction, useAbility } from '../actions/performAction.js'
 
 export function takeCombatTurn(combat, actor){
   if(!actor.inCombat){
@@ -7,30 +7,32 @@ export function takeCombatTurn(combat, actor){
   if(!actor.actionReady){
     return []
   }
-  const effect = actor.getNextActiveEffect()
-  const actions = []
-  if(effect){
-    actions.push(useEffectAbility(combat, effect, 'active'))
+  const ability = actor.getNextActiveAbility()
+  const actionResults = []
+  if(ability){
+    actionResults.push(...useAbility(combat, ability))
   }else if(actor.mods.contains('noBasicAttack')){
-    actions.push(performAction(combat, actor, null, {
+    actionResults.push(performAction(combat, actor, null, {
       type: 'idle',
-      reason: 'Can\'t attack'
+      reason: 'Can\'t attack',
     }))
   }else{
     for(let i = 0; i < actor.stats.get('attacks').value; i++){
-      actions.push(performAction(combat, actor, null, basicAttackDef(actor)))
+      actionResults.push(performAction(combat, actor, null, basicAttackDef(actor)))
     }
   }
   actor.nextTurn()
-  return actions
+  return actionResults
 }
 
 function basicAttackDef(actor){
   return {
-    basic: true,
-    damageType: actor.basicAttackType,
-    scaling: {
-      [actor.basicAttackType + 'Power']: 1
-    }
+    attack: {
+      basic: true,
+      damageType: actor.basicAttackType,
+      scaling: {
+        [actor.basicAttackType + 'Power']: 1,
+      },
+    },
   }
 }

@@ -93,12 +93,12 @@ export default class CombatEnactment extends EventEmitter{
   }
 
   async _performAction(action){
-    this._getPane(action.actorId).displayActionPerformed(action)
+    this._getPane(action.actor).displayActionPerformed(action)
     action.results.forEach(result => {
       if(result.type === 'blank'){
         return
       }
-      this._getPane(result.subject).displayResult(result, action.effect)
+      this._getPane(result.subject).displayResult(result, action)
     })
   }
 

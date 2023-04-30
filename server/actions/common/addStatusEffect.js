@@ -1,5 +1,3 @@
-import { expandStatusEffectsDef } from '../../../game/statusEffectsData.js'
-
 export default function(combat, attacker, effect = null, actionDef = {}){
   // const actor = sourceEffect.owner
   // const subject = actionDef.affects === 'self' ? actor : combat.getEnemyOf(actor)

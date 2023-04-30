@@ -1,8 +1,8 @@
 import { processAbilityEvents } from '../../mechanics/abilities.js'
 import { dealDamage } from '../../mechanics/dealDamage.js'
-import scaledNumber from '../../../game/scaledNumber.js'
+import { scaledNumberFromAbilityInstance, scaledNumberFromFighterInstance } from '../../../game/scaledNumber.js'
 
-export default function(combat, attacker, effect = null, actionDef = {}){
+export default function(combat, attacker, abilityInstance = null, actionDef = {}){
 
   const enemy = combat.getEnemyOf(attacker)
   const ret = { subject: enemy.uniqueID }
@@ -12,7 +12,7 @@ export default function(combat, attacker, effect = null, actionDef = {}){
   if(actionDef.forceDodge || dodgeAttack(enemy)){
     return {
       ...ret,
-      cancelled: 'dodge'
+      cancelled: 'dodge',
     }
   }
 
@@ -20,11 +20,15 @@ export default function(combat, attacker, effect = null, actionDef = {}){
     processAbilityEvents('miss', attacker)
     return {
       ...ret,
-      cancelled: 'miss'
+      cancelled: 'miss',
     }
   }
 
-  let damage = scaledNumber(attacker, actionDef.scaling)
+  if(!abilityInstance){
+    abilityInstance = fakeBasicAttackAbilityInstance(attacker)
+  }
+
+  let damage = scaledNumberFromAbilityInstance(abilityInstance, actionDef.scaling)
   // damage *= actionDef.damageMulti
   // damage += actionDef.targetHpPct * enemy.hp
   // damage += actionDef.targetMaxHpPct * enemy.hpMax
@@ -38,22 +42,22 @@ export default function(combat, attacker, effect = null, actionDef = {}){
 
   let damageInfo = {
     damageType: actionDef.damageType,
-    damage: damage * attacker.stats.get('damageDealt').value,
-    range: actionDef.range
+    damage: damage // * attacker.stats.get('damageDealt').value,
+    // range: actionDef.range,
   }
 
-  if(attemptCrit(attacker, enemy, actionDef.extraCritChance)){
-    damageInfo.damage *= (1 + attacker.stats.get('critDamage').value + actionDef.extraCritDamage)
-    damageInfo.crit = true
-  }
+  // if(attemptCrit(attacker, enemy, actionDef.extraCritChance)){
+  //   damageInfo.damage *= (1 + attacker.stats.get('critDamage').value + actionDef.extraCritDamage)
+  //   damageInfo.crit = true
+  // }
 
   damageInfo = dealDamage(combat, attacker, enemy, damageInfo)
   damageInfo = processAbilityEvents(combat, ['attackHit', damageInfo.damageType + 'AttackHit'], attacker, damageInfo)
   damageInfo = processAbilityEvents(combat, 'hitByAttack', enemy, damageInfo)
 
-  if(damageInfo.crit){
-    damageInfo = processAbilityEvents(combat, 'crit', attacker, damageInfo)
-  }
+  // if(damageInfo.crit){
+  //   damageInfo = processAbilityEvents(combat, 'crit', attacker, damageInfo)
+  // }
 
   ret.damageInfo = damageInfo
 
@@ -73,4 +77,11 @@ function dodgeAttack(actor){
 
 function missAttack(actor){
   return Math.random() + actor.stats.get('missChance').value > 1
+}
+
+function fakeBasicAttackAbilityInstance(attacker){
+  return {
+    exclusiveStats: attacker.stats,
+    fighterInstance: attacker
+  }
 }

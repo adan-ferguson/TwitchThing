@@ -2,8 +2,8 @@ import { toFighterInstance } from '../../game/toFighterInstance.js'
 import { CombatResult } from '../../game/combatResult.js'
 import { shuffle } from '../../game/rando.js'
 import { takeCombatTurn } from './takeCombatTurn.js'
-import { useEffectAbility } from '../actions/performAction.js'
 import { processAbilityEvents } from '../mechanics/abilities.js'
+import { useAbility } from '../actions/performAction.js'
 
 const MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS = 30
 const MAX_TRIGGER_LOOPS = 30
@@ -154,7 +154,7 @@ class Combat{
   _resolveTriggers(){
 
     const resolveTrigger = trigger => {
-      return useEffectAbility(this, trigger.effect, trigger.eventName, trigger.triggerData)
+      return useAbility(this, trigger.ability, trigger.data)
     }
 
     let loops = 0

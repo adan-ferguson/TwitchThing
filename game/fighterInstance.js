@@ -2,7 +2,6 @@ import Stats from './stats/stats.js'
 import Mods from './mods/combined.js'
 import ModsCollection from './modsCollection.js'
 import { deepClone, minMax } from './utilFunctions.js'
-import { getEffectInstanceAbilities } from '../server/mechanics/abilities.js'
 
 // Stupid
 new Stats()
@@ -134,7 +133,7 @@ export default class FighterInstance{
       ...STATE_DEFAULTS,
       ...state
     }
-    this.loadoutState = this._state.loadout
+    this.loadoutState = this._state.loadout ?? {}
   }
 
   get turnTime(){
@@ -155,7 +154,7 @@ export default class FighterInstance{
   get timeUntilNextUpdate(){
     const vals = [this.timeUntilNextAction]
     this.effectInstances.forEach(ei => {
-      getEffectInstanceAbilities(ei, 'action', 'tick')
+      ei.getAbilities('action', 'tick')
         .forEach(tickAbility => vals.push(tickAbility.cooldownRemaining))
       if(ei.durationRemaining){
         vals.push(ei.durationRemaining)
@@ -250,16 +249,24 @@ export default class FighterInstance{
     this._cachedStats = null
   }
 
-  getNextActiveEffect(){
+  getNextActiveAbility(){
     if(this.mods.contains(Mods.silenced)){
       return null
     }
-    return this.loadoutEffectInstances.find(lei => {
-      const ability = getEffectInstanceAbilities(lei, 'action', 'active')?.[0]
-      if(ability?.ready){
-        return true
+    for(let ai of this.getAbilities('action', 'active')){
+      if(ai.ready){
+        return ai
       }
+    }
+    return null
+  }
+
+  getAbilities(type, eventName){
+    const abilities = []
+    this.effectInstances.forEach(effectInstance => {
+      abilities.push(...effectInstance.getAbilities(type, eventName))
     })
+    return abilities
   }
 
   nextTurn(){

@@ -8,7 +8,7 @@ export default class StatusEffectInstance extends EffectInstance{
   constructor(data, owner, state = {}, ){
     super(owner, state)
     this._data = data
-    this.effectId = state.effectId ?? 'statusEffect-' + uniqueID()
+    this.uniqueID = state.uniqueID ?? 'statusEffect-' + uniqueID()
   }
 
   get phantom(){
@@ -91,7 +91,7 @@ export default class StatusEffectInstance extends EffectInstance{
   get state(){
     const state = super.state
     state.data = this._data
-    state.effectId = this.effectId
+    state.uniqueID = this.uniqueID
     return state
   }
 

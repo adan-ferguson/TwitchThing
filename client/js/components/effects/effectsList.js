@@ -23,7 +23,7 @@ export default class EffectsList extends HTMLElement{
       if(!shouldShow(effect)){
         return
       }
-      const key = effect.effectId
+      const key = effect.uniqueID
       if(effectRows[key]){
         if(!effect.expired){
           effectRows[key].update(effect, cancelAnimations)

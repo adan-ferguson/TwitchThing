@@ -84,9 +84,9 @@ export default class SimPage extends Page{
     this._chooseFighter(row, adventurer)
   }
 
-  _chooseMonster(monsterInstance){
-    const row = makeMonsterRow(monsterInstance)
-    this._chooseFighter(row, monsterInstance.monsterDef)
+  _chooseMonster(monsterDef){
+    const row = makeMonsterRow(monsterDef)
+    this._chooseFighter(row, monsterDef)
   }
 
   _chooseFighter(row, fighterDef){
@@ -130,7 +130,8 @@ export default class SimPage extends Page{
 }
 customElements.define('di-sim-page', SimPage)
 
-function makeMonsterRow(monsterInstance){
+function makeMonsterRow(monsterDef){
+  const monsterInstance = new MonsterInstance(monsterDef)
   return makeEl({
     class: ['monster-row', 'buttonish'],
     text: `Lvl. ${monsterInstance.level} ${monsterInstance.displayName}`

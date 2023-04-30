@@ -1,9 +1,14 @@
 export default class AbilityInstance{
 
-  constructor(abilityDef, state, parentEffect){
+  constructor(abilityDef, state, parentEffect, index){
     this._abilityDef = abilityDef
     this._parentEffect = parentEffect
     this._state = state ?? {}
+    this._index = index
+  }
+
+  get index(){
+    return this._index
   }
 
   get replacements(){
@@ -28,6 +33,10 @@ export default class AbilityInstance{
 
   get trigger(){
     return this.abilityDef.trigger
+  }
+
+  get fighterInstance(){
+    return this.parentEffect.fighterInstance
   }
 
   get parentEffect(){

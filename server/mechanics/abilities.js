@@ -22,7 +22,6 @@ function doTriggers(owner, eventName, data, combat = null){
   const abilities = getFighterInstanceAbilities(owner, 'action', eventName)
   const pendingTriggers = []
   for(let ability of abilities){
-    // TODO: check if conditions met, ability is ready
     if(ability.tryUse()){
       pendingTriggers.push({ ability, data })
     }
@@ -46,21 +45,8 @@ function performReplacement(replacementAbility, actionData){
   return { ...actionData, ...replacementAbility.replacements.dataMerge }
 }
 
-function getFighterInstanceAbilities(fighterInstance, type, eventName){
-  const abilities = []
-  fighterInstance.effectInstances.forEach(effectInstance => {
-    abilities.push(...getEffectInstanceAbilities(effectInstance, type, eventName))
-  })
-  return abilities
-}
-
-export function getEffectInstanceAbilities(effectInstance, type, trigger){
-  return effectInstance.abilities.filter(ai => {
-    if(ai.type !== type || ai.trigger !== trigger){
-      return false
-    }
-    return true
-  })
+export function getFighterInstanceAbilities(fighterInstance, type, eventName){
+  return fighterInstance.getAbilities(type, eventName)
 }
 
 // refreshCooldowns(def = null){
