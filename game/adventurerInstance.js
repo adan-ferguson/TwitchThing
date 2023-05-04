@@ -24,10 +24,6 @@ export default class AdventurerInstance extends FighterInstance{
     return this._adventurer
   }
 
-  get accomplishments(){
-    return this.fighterData.accomplishments
-  }
-
   get bonuses(){
     return this.bonusesData.instances
   }

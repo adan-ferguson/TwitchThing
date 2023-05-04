@@ -57,6 +57,7 @@ export default class CombatEnactment extends EventEmitter{
     this._prevEntryIndex = this._timeline.currentEntryIndex
     this._applyEntries(this._timeline.entries[0], false)
     this._timeline.on('timechange', ({ before, after, jumped }) => {
+      console.log(before, after, jumped)
       if(jumped || this._prevEntryIndex > this._timeline.currentEntryIndex){
         this._updatePanes(true)
       }else if(this._prevEntryIndex !== this._timeline.currentEntryIndex){

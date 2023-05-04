@@ -117,6 +117,14 @@ export default class Adventurer{
     return Math.max(0, 1 + Math.floor(this.level / 5) - usedPoints)
   }
 
+  get xp(){
+    return this._doc.xp
+  }
+
+  set xp(val){
+    this._doc.xp = val
+  }
+
   /**
    * @param skill {AdventurerSkill}
    */

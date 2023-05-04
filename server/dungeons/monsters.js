@@ -124,7 +124,7 @@ function generateRewards(dungeonRun, monsterDefinition){
   }
   if(dungeonRun.user.accomplishments.firstRunFinished){
     const userChests = dungeonRun.user.accomplishments.chestsFound ?? 0
-    const hardEnemy = level >= dungeonRun.adventurerInstance.accomplishments.deepestFloor
+    const hardEnemy = level >= dungeonRun.adventurer.accomplishments.deepestFloor
     const dropChance = userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE :
       hardEnemy ? CHEST_DROP_CHANCE_HARD_ENEMY :
         CHEST_DROP_CHANCE

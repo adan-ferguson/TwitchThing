@@ -50,7 +50,12 @@ export default class XpBar extends Bar{
       animate: false,
       skipToEndOfAnimation: false,
       onLevelup: null,
+      relative: false,
       ...options
+    }
+
+    if(options.relative){
+      val = this._val + val
     }
 
     if(!options.animate){

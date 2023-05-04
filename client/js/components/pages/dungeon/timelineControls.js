@@ -267,7 +267,6 @@ export default class TimelineControls extends HTMLElement{
     this._currentEvent = this._timeline.currentEntry
     this._ticker.currentTime = this._timeline.timeSinceLastEntry
     this._ticker.endTime = this._timeline.currentEntry.duration
-    this._ticker.start()
     this._update()
 
     if(!eventChanged && !options.jumped){

@@ -42,7 +42,8 @@ export function generateCombat(data, combatID = null){
       if(combatID){
         combatDoc._id = combatID
       }
-      res(await Combats.save(combatDoc))
+      const doc = await Combats.save(combatDoc)
+      res(doc)
     }
     worker.postMessage({
       workerId: id,

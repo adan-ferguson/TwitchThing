@@ -65,7 +65,7 @@ export default class EventContentsResults extends HTMLElement{
     if(!dungeonRunResults.xp){
       return
     }
-    const advName = adventurerPane.displayName
+    const advName = adventurerPane.adventurer.name
     this._addText(el, `${advName} gained ${suffixedNumber(dungeonRunResults.xp)} xp`)
     await adventurerPane.addXp(dungeonRunResults.xp, {
       onLevelup: level => {

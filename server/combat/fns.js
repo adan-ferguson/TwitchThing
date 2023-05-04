@@ -2,8 +2,8 @@ import { generateMonster } from '../dungeons/monsters.js'
 import { CombatResult } from '../../game/combatResult.js'
 import { generateCombat } from './interop.js'
 import { emit } from '../socketServer.js'
-import db from '../db.js'
 import { ADVANCEMENT_INTERVAL } from '../dungeons/dungeonRunner.js'
+import Combats from '../collections/combats.js'
 
 const MIN_RESULT_TIME = 2000
 const END_COMBAT_PADDING = 1500
@@ -11,7 +11,7 @@ const END_COMBAT_PADDING = 1500
 export async function generateCombatEvent(dungeonRun, boss){
 
   const monsterDef = await generateMonster(dungeonRun, boss)
-  const combatID = db.id()
+  const combatID = (await Combats.save({}))._id
   const combatEvent = {
     pending: true,
     combatID: combatID,

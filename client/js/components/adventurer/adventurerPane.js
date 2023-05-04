@@ -59,12 +59,31 @@ export default class AdventurerPane extends DIElement{
     this._update(showChangeEffect)
   }
 
-  addXp(val, options){
-    this.xpBar.add
+  async addXp(toAdd, options = { }){
+    this._xpAnimation = true
+    const total = this.adventurer.xp + toAdd
+    await this.xpBar.setValue(total, {
+      ...options,
+      animate: true,
+      skipToEndOfAnimation: options.skipAnimation ? true : false,
+      onLevelup: (level, animate = true) => {
+        this.adventurer.xp = advLevelToXp(level)
+        options.onLevelup?.(level)
+        if(animate){
+          this.update(true)
+        }
+      }
+    })
+    this.adventurer.xp = total
+    this.update(true)
   }
 
   skipToEndOfXpAnimation(){
-    this.xpBar.skipToEndOfXpAnimation()
+    if(this._xpAnimation){
+      this._xpAnimation = false
+      this.xpBar.skipToEndOfAnimation()
+      // this.update()
+    }
   }
 
   _update(showChangeEffect = false){
