@@ -112,7 +112,7 @@ export default class AdventurerPage extends Page{
     const quickDungeon = user.features.dungeonPicker
     this._topRightButton.textContent = 'Enter Dungeon'
     this._topRightButton.addEventListener('click', () => {
-      if(!this.adventurer.isLoadoutValid){
+      if(!this.adventurer.loadout.isValid){
         alertModal('This adventurer has invalid items for some reason, can not enter dungeon.')
       }else if(quickDungeon){
         this.redirectTo(DungeonPickerPage.path(this.adventurerID))

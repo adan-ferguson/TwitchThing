@@ -11,15 +11,10 @@ export default class CombatEnactment extends EventEmitter{
   _timeline
   _destroyed = false
 
-  constructor(fighterPane1, fighterPane2, combat){
+  constructor(fighterPane1, fighterPane2){
     super()
     this._fighterPane1 = fighterPane1
     this._fighterPane2 = fighterPane2
-    this._combat = combat
-
-    this._fighterPane1.setFighter(toFighterInstance(combat.fighter1.def, combat.fighter1.startState))
-    this._fighterPane2.setFighter(toFighterInstance(combat.fighter2.def, combat.fighter2.startState))
-    this._setupTimeline(combat)
   }
 
   get fighterInstance1(){
@@ -35,7 +30,21 @@ export default class CombatEnactment extends EventEmitter{
   }
 
   get combatID(){
-    return this._combat._id
+    return this._combatID
+  }
+
+  setPendingCombat(combatEvent){
+    this._combatID = combatEvent.combatID
+    this._fighterPane2.setFighter(toFighterInstance(combatEvent.monster))
+    this._showRefereeTime()
+  }
+
+  setCombat(combat){
+    this._combat = combat
+    this._combatID = combat._id
+    this._fighterPane1.setFighter(toFighterInstance(combat.fighter1.def, combat.fighter1.startState))
+    this._fighterPane2.setFighter(toFighterInstance(combat.fighter2.def, combat.fighter2.startState))
+    this._setupTimeline(combat)
   }
 
   destroy(){
@@ -86,6 +95,12 @@ export default class CombatEnactment extends EventEmitter{
       return
     }
     const currentEntry = this._timeline.currentEntry
+    if(!currentEntry){
+      debugger
+      this._showRefereeTime()
+    }else{
+      this._hideRefereeTime()
+    }
     this._fighterPane1.setState(currentEntry.fighterState1, cancelAnimations)
     this._fighterPane2.setState(currentEntry.fighterState2, cancelAnimations)
     this._fighterPane1.advanceTime(this._timeline.timeSinceLastEntry)
@@ -126,5 +141,13 @@ export default class CombatEnactment extends EventEmitter{
     }else{
       this._getPane(tickUpdate.owner ?? tickUpdate.subject).displayResult(tickUpdate)
     }
+  }
+
+  _showRefereeTime(){
+    // TODO: referee time
+  }
+
+  _hideRefereeTime(){
+    // TODO: referee time
   }
 }

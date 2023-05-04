@@ -7,6 +7,7 @@ import { requireRegisteredUser, validateParam } from '../../validations.js'
 import DungeonRuns from '../../collections/dungeonRuns.js'
 import { spendAdventurerOrb, spendAdventurerSkillPoint } from '../../adventurer/edit.js'
 import { commitAdventurerLoadout } from '../../adventurer/loadout.js'
+import Joi from 'joi'
 
 const router = express.Router()
 const verifiedRouter = express.Router()
@@ -34,14 +35,12 @@ verifiedRouter.post('/dungeonpicker', validateIdle, async(req, res) => {
 
 verifiedRouter.post('/enterdungeon', validateIdle, async(req, res) => {
   requireOwnsAdventurer(req)
-  const startingFloor = validateParam(req.body.startingFloor, { type: 'integer', required: false }) || 1
-  const pace = validateParam(req.body.pace, { type: 'string', required: false })
-  const restThreshold = validateParam(req.body.restThreshold, { type: 'integer', required: false })
-  const dungeonRun = await addRun(req.adventurerDoc._id, {
-    startingFloor,
-    pace,
-    restThreshold
-  })
+  const params = Joi.attempt(req.body, Joi.object({
+    startingFloor: Joi.number().integer(),
+    pace: Joi.string(),
+    restThreshold: Joi.number().integer()
+  }))
+  const dungeonRun = await addRun(req.adventurerDoc._id, params)
   res.send({ dungeonRun })
   if(req.user.features.dungeonPicker === 1){
     req.user.features.dungeonPicker = 2

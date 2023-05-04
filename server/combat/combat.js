@@ -4,15 +4,29 @@ import { shuffle } from '../../game/rando.js'
 import { takeCombatTurn } from './takeCombatTurn.js'
 import { processAbilityEvents } from '../mechanics/abilities.js'
 import { useAbility } from '../actions/performAction.js'
+import { wait } from '../../game/utilFunctions.js'
 
 const MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS = 30
 const MAX_TRIGGER_LOOPS = 30
 const MAX_TRIGGER_COUNTER = 500
 
-export function runCombat(data){
+export async function runCombat(data){
+  data = {
+    fighterDef1: null,
+    fighterDef2: null,
+    fighterState1: {},
+    fighterState2: {},
+    params: {},
+    ...data
+  }
+
+  if(!data.fighterDef1 || !data.fighterDef2){
+    throw 'Combat missing fighter def'
+  }
+
   const timestamp = Date.now()
-  const fighterInstance1 = toFighterInstance(data.fighterDef1)
-  const fighterInstance2 = toFighterInstance(data.fighterDef2)
+  const fighterInstance1 = toFighterInstance(data.fighterDef1, data.fighterState1)
+  const fighterInstance2 = toFighterInstance(data.fighterDef2, data.fighterState2)
   const combat = new Combat(fighterInstance1, fighterInstance2, data.params)
   return {
     times: {
@@ -32,6 +46,7 @@ export function runCombat(data){
       startState: combat.fighterStartState2,
       endState: combat.fighterEndState2
     },
+    date: new Date(),
     timeline: combat.timeline,
     result: combat.result,
     params: data.params
@@ -47,15 +62,15 @@ class Combat{
 
   constructor(fighterInstance1, fighterInstance2, params){
     this.params = params
-    fighterInstance1.inCombat = true
-    fighterInstance2.inCombat = true
     fighterInstance1.startCombat(this)
     fighterInstance2.startCombat(this)
     this.fighterStartState1 = {
-      ...fighterInstance1.state
+      ...fighterInstance1.state,
+      inCombat: true
     }
     this.fighterStartState2 = {
-      ...fighterInstance2.state
+      ...fighterInstance2.state,
+      inCombat: true
     }
     this.fighterInstance1 = fighterInstance1
     this.fighterInstance2 = fighterInstance2
@@ -64,8 +79,6 @@ class Combat{
     this._run()
     fighterInstance1.endCombat()
     fighterInstance2.endCombat()
-    fighterInstance1.inCombat = false
-    fighterInstance2.inCombat = false
     this.fighterEndState1 = { ...fighterInstance1.state }
     this.fighterEndState2 = { ...fighterInstance2.state }
     this.duration = this._currentTime

@@ -1,11 +1,11 @@
 import { EventEmitter } from 'events'
-import Adventurer from '../../game/adventurer.js'
 import { generateEvent } from './dungeonEventPlanner.js'
 import { addRewards } from './results.js'
 import { ADVANCEMENT_INTERVAL } from './dungeonRunner.js'
 import calculateResults from '../../game/dungeonRunResults.js'
 import { arrayize } from '../../game/utilFunctions.js'
-import _ from 'lodash'
+import AdventurerInstance from '../../game/adventurerInstance.js'
+import { resumeCombatEvent } from '../combat/fns.js'
 
 export default class DungeonRunInstance extends EventEmitter{
 
@@ -29,6 +29,12 @@ export default class DungeonRunInstance extends EventEmitter{
     return this.doc.adventurer
   }
 
+  get adventurerInstance(){
+    if(!this._adventurerInstance){
+      this._adventurerInstance = new AdventurerInstance(this.doc.adventurer, this.doc.adventurerState)
+    }
+    return this._adventurerInstance
+  }
   get floor(){
     return this.doc.floor
   }
@@ -57,7 +63,13 @@ export default class DungeonRunInstance extends EventEmitter{
   }
 
   get nextEventTime(){
-    return this.newestEvent ? this.newestEvent.time + this.newestEvent.duration : 0
+    if(this.newestEvent){
+      if(this.newestEvent.pending){
+        return Number.POSITIVE_INFINITY
+      }
+      return this.newestEvent.time + this.newestEvent.duration
+    }
+    return 0
   }
 
   get pace(){
@@ -104,7 +116,7 @@ export default class DungeonRunInstance extends EventEmitter{
     // Reset this each advancement to make sure that everything is synced up.
     // If we just let this roll, then it's possible the doc state is wrong but
     // we would never notice unless the server reloaded.
-    this.adventurerInstance = new Adventurer(this.doc.adventurer, this.doc.adventurerState)
+    this._adventurerInstance = null
     await this._nextEvent()
   }
 
@@ -124,6 +136,18 @@ export default class DungeonRunInstance extends EventEmitter{
     }
   }
 
+  finishRunningCombat(newCombatEvent, resultEvent){
+    this.shouldEmit = true
+    this.events.pop()
+    this._addEvent([newCombatEvent, resultEvent])
+  }
+
+  resumePending(){
+    if(this.newestEvent.pending){
+      resumeCombatEvent(this)
+    }
+  }
+
   async _nextEvent(){
     this.doc.room = this.newestEvent?.nextRoom || this.doc.room
     this.doc.floor = this.newestEvent?.nextFloor || this.doc.floor
@@ -132,13 +156,14 @@ export default class DungeonRunInstance extends EventEmitter{
 
   async _addEvent(events){
 
-    let durationSum = 0
     events = arrayize(events)
+    let durationSum = 0
+    let startTime = events[0].time ?? this.doc.elapsedTime
     events.forEach((e, i) => {
       const nextEvent = {
         room: this.doc.room,
         floor: this.doc.floor,
-        time: this.doc.elapsedTime + durationSum,
+        time: startTime + durationSum,
         duration: ADVANCEMENT_INTERVAL,
         ...e
       }
@@ -162,6 +187,8 @@ export default class DungeonRunInstance extends EventEmitter{
       }
       this._updateState(nextEvent)
     })
+
+    this.doc.elapsedTime = Math.min(this.doc.elapsedTime, this.nextEventTime)
   }
 
   /**
@@ -169,11 +196,6 @@ export default class DungeonRunInstance extends EventEmitter{
    * @param event
    */
   _updateState(event){
-
-    if('hp' in this.adventurerInstance.state && isNaN(this.adventurerInstance.state.hpPct)){
-      debugger
-    }
-
     event.adventurerState = this.adventurerInstance.state
     this.doc.adventurerState = this.adventurerInstance.state
   }

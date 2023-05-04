@@ -75,6 +75,10 @@ export default class Adventurer{
     return this.doc.name
   }
 
+  get displayName(){
+    return this.name
+  }
+
   get level(){
     return advXpToLevel(this.doc.xp)
   }

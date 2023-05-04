@@ -26,7 +26,7 @@ class AdventurersCollection extends Collection{
   async createNew(userID, name, startingClass = null){
     const doc = { name, userID }
     if(startingClass){
-      doc.orbs[startingClass] = 1
+      doc.orbs = { [startingClass]: 1 }
     }
     return await this.save(doc)
   }

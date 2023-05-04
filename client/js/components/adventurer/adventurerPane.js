@@ -59,6 +59,14 @@ export default class AdventurerPane extends DIElement{
     this._update(showChangeEffect)
   }
 
+  addXp(val, options){
+    this.xpBar.add
+  }
+
+  skipToEndOfXpAnimation(){
+    this.xpBar.skipToEndOfXpAnimation()
+  }
+
   _update(showChangeEffect = false){
     if(!this.adventurer){
       return

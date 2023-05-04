@@ -8,6 +8,7 @@ import FighterInstancePane from '../../combat/fighterInstancePane.js'
 import CombatEnactment from '../../../combatEnactment.js'
 import EventContentsResults from './eventContentsResults.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
+import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 
 const HTML = `
 <div class='content-columns'>
@@ -69,10 +70,10 @@ export default class DungeonPage extends Page{
   }
 
   get isMyAdventurer(){
-    if(!this.app.user || !this.adventurer){
+    if(!this.app.user || !this.adventurerDoc){
       return false
     }
-    return this.app.user._id === this.adventurer.userID
+    return this.app.user._id === this.adventurerDoc.userID
   }
 
   get watching(){
@@ -87,12 +88,12 @@ export default class DungeonPage extends Page{
     return this._timeline.currentEntry
   }
 
-  get adventurer(){
+  get adventurerDoc(){
     return this.dungeonRun.adventurer
   }
 
   get adventurerInstance(){
-    return new Adventurer(this.adventurer, this.currentEvent?.adventurerState ?? {})
+    return new AdventurerInstance(this.adventurerDoc, this.currentEvent?.adventurerState ?? {})
   }
 
   get isReplay(){
@@ -114,8 +115,8 @@ export default class DungeonPage extends Page{
 
     this._stateEl.setup(dungeonRun)
     this._setupTimeline(dungeonRun)
-    this._adventurerPane.setFighter(new Adventurer(this.adventurer, dungeonRun.adventurerState))
-    this._eventEl.setup(this.adventurer, this._timeline)
+    this._adventurerPane.setFighter(new AdventurerInstance(this.adventurerDoc, dungeonRun.adventurerState))
+    this._eventEl.setup(this.adventurerDoc, this._timeline)
     this._update({ animate: false })
   }
 
@@ -127,14 +128,18 @@ export default class DungeonPage extends Page{
     this._timelineEl.destroy()
   }
 
-  _socketUpdate = (dungeonRun) => {
+  _socketUpdate = ({ id, error, combatUpdate, dungeonRun }) => {
 
-    if(this.dungeonRun._id !== dungeonRun._id){
+    if(this.dungeonRun._id !== id){
       return
     }
 
-    if(dungeonRun.error){
-      return this.app.showError(dungeonRun.error)
+    if(error){
+      return this.app.showError(error)
+    }
+
+    if(combatUpdate){
+      return this._combatLoaded(combatUpdate)
     }
 
     this.dungeonRun = dungeonRun
@@ -211,22 +216,36 @@ export default class DungeonPage extends Page{
     if(this.isMyAdventurer){
       results.showFinalizerButton(async () => {
         await fizzetch(`/game/dungeonrun/${this._dungeonRunID}/finalize`)
-        this.redirectTo(AdventurerPage.path(this.adventurer._id))
+        this.redirectTo(AdventurerPage.path(this.adventurerDoc._id))
       })
     }
     results.play(this.dungeonRun, this._adventurerResultsPane, this.watching)
   }
 
   async _enactCombat(animate){
-    const combat  = await this._getCombat(this.currentEvent.combatID)
+    const combat = await this._getCombat(this.currentEvent.combatID)
     const enemyPane = new FighterInstancePane()
     this._eventEl.setContents(enemyPane, animate)
-    const ce = new CombatEnactment(this._adventurerPane, enemyPane, combat)
-    ce.timeline.setTime(this._timeline.timeSinceLastEntry, true)
+    const ce = new CombatEnactment(this._adventurerPane, enemyPane)
+    if(combat){
+      ce.setCombat(combat)
+      ce.timeline.setTime(this._timeline.timeSinceLastEntry - (this.currentEvent.refereeTime ?? 0), true)
+    }else{
+      ce.setPendingCombat(this.currentEvent)
+    }
     ce.on('destroyed', () => {
       this._ce = null
     })
     this._ce = ce
+  }
+
+  _combatLoaded({ combatDoc, newCombatEvent }){
+    this._timelineEl.updateEvent(newCombatEvent)
+    this._cachedCombats[combatDoc._id] = combatDoc
+    if(this._ce?.combatID === combatDoc._id){
+      this._ce.setCombat(combatDoc)
+      this._ce.timeline.setTime(this._timeline.timeSinceLastEntry - (this.currentEvent.refereeTime ?? 0), true)
+    }
   }
 
   _timeChange({ before, after, jumped }){
@@ -234,7 +253,7 @@ export default class DungeonPage extends Page{
       return
     }
     if(this._ce && this.currentEvent.roomType === 'combat'){
-      this._ce.timeline.setTime(this._timeline.timeSinceLastEntry, jumped)
+      this._ce.timeline?.setTime(this._timeline.timeSinceLastEntry - (this.currentEvent.refereeTime ?? 0), jumped)
     }
     if(this._timeline.finished && this.isReplay){
       this._showResults()

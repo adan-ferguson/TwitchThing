@@ -8,10 +8,6 @@ export function foundStairs(dungeonRun){
   const room = dungeonRun.room
   const pace = dungeonRun.pace ?? 'Brisk'
 
-  if(floor === 51){
-    return false
-  }
-
   if(floor === 50){
     return room >= DEEPEST_FLOOR_SIZE ? true : false
   }

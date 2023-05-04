@@ -50,6 +50,7 @@ export async function start(){
       return
     }
     activeRuns[dr._id] = new DungeonRunInstance(dr, user)
+    activeRuns[dr._id].resumePending()
   })
 
   console.log('go!')
@@ -158,7 +159,7 @@ function validateNew(adventurerDoc, userDoc, { startingFloor }){
     throw 'Adventurer already in dungeon'
   }
   const adventurer = new Adventurer(adventurerDoc)
-  if(!adventurer.isLoadoutValid){
+  if(!adventurer.loadout.isValid){
     throw 'Adventurer has invalid loadout.'
   }
 }
@@ -171,8 +172,8 @@ async function advanceRuns(){
     }catch(ex){
       console.log('run canceled', run.doc._id, ex)
       emit(run.doc._id, 'dungeon run update', {
-        error: ex.message ?? ex,
-        _id: run.doc._id
+        id: run.doc._id,
+        error: ex.message ?? ex
       })
       cancelRun(run.doc)
       delete activeRuns[id]
@@ -195,7 +196,7 @@ function emitSocketEvents(){
     }
     delete clipped.events
 
-    emit(clipped._id, 'dungeon run update', clipped)
+    emit(clipped._id, 'dungeon run update', { id: clipped._id, dungeonRun: clipped })
     if(!perUser[clipped.adventurer.userID]){
       perUser[clipped.adventurer.userID] = []
     }
@@ -236,6 +237,6 @@ function truncatedRun(doc){
   return truncatedDoc
 }
 
-function virtualTime(doc){
+export function virtualTime(doc){
   return doc.elapsedTime + (new Date() - lastAdvancement) - ADVANCEMENT_INTERVAL
 }

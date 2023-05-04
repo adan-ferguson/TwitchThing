@@ -1,66 +1,92 @@
-import { generateMonster, generateSuperMonster } from '../dungeons/monsters.js'
-import MonsterInstance from '../../game/monsterInstance.js'
+import { generateMonster } from '../dungeons/monsters.js'
 import { CombatResult } from '../../game/combatResult.js'
 import { generateCombat } from './interop.js'
+import { emit } from '../socketServer.js'
+import db from '../db.js'
+import { ADVANCEMENT_INTERVAL } from '../dungeons/dungeonRunner.js'
 
-const COMBAT_END_PADDING = 2500
-const MIN_RESULT_TIME = 2500
+const MIN_RESULT_TIME = 2000
+const END_COMBAT_PADDING = 1500
 
-export async function generateCombatEvent(dungeonRun, boss = false){
+export async function generateCombatEvent(dungeonRun, boss){
 
-  const adventurerInstance = dungeonRun.adventurerInstance
-
-  let monsterDef
-  if(dungeonRun.floor === 51){
-    monsterDef = generateSuperMonster(dungeonRun)
-  }else{
-    monsterDef = await generateMonster(dungeonRun, boss)
+  const monsterDef = await generateMonster(dungeonRun, boss)
+  const combatID = db.id()
+  const combatEvent = {
+    pending: true,
+    combatID: combatID,
+    duration: 999999999,
+    roomType: 'combat',
+    monster: monsterDef
   }
-  const monsterInstance = new MonsterInstance(monsterDef)
 
-  const combat = await generateCombat(adventurerInstance, monsterInstance, {
-    floor: dungeonRun.floor,
-    boss
+  setTimeout(() => {
+    runCombat(dungeonRun, monsterDef)
   })
 
-  adventurerInstance.cleanupState()
+  return combatEvent
+}
 
-  const combatEvent = {
-    duration: combat.duration + combat.responseTime,
-    combatID: combat._id,
-    roomType: 'combat',
-    monster: monsterDef,
-    boss
-  }
+export function resumeCombatEvent(dungeonRun){
+  runCombat(dungeonRun, dungeonRun.newestEvent.monster)
+}
+
+export async function runCombat(dungeonRun, monsterDef){
+
+  const adventurerInstance = dungeonRun.adventurerInstance
+  const combatEvent = dungeonRun.newestEvent
+  const combatDoc = await generateCombat({
+    fighterDef1: adventurerInstance.adventurer.doc,
+    fighterState1: adventurerInstance.state,
+    fighterDef2: monsterDef,
+    params: {
+      floor: dungeonRun.floor
+    }
+  }, combatEvent.combatID)
+
+  adventurerInstance.state = combatDoc.fighter1.endState
+
+  const refereeTime = Math.max(0, combatDoc.times.total - ADVANCEMENT_INTERVAL)
+  combatEvent.duration = combatDoc.duration + refereeTime + END_COMBAT_PADDING
+  combatEvent.refereeTime = refereeTime
+  combatEvent.pending = false
 
   const resultEvent = {
     duration: MIN_RESULT_TIME,
-    result: combat.result,
-    combatID: combat._id,
+    result: combatDoc.result,
+    combatID: combatDoc._id,
     roomType: 'combatResult',
-    monster: monsterDef,
-    boss
+    monster: monsterDef
   }
 
-  if(combat.result === CombatResult.F1_WIN){
+  if(combatDoc.result === CombatResult.F1_WIN){
     resultEvent.rewards = monsterDef.rewards
-    resultEvent.message = `${adventurerInstance.displayName} has defeated the ${monsterInstance.displayName}.`
-  }else if(combat.result === CombatResult.F2_WIN){
+  }else if(combatDoc.result === CombatResult.F2_WIN){
     combatEvent.runFinished = true
     return combatEvent
-  }else if(combat.result === CombatResult.TIME_OVER){
-    resultEvent.message = 'The combat took too long and everyone got bored and left.'
-    resultEvent.roomType = 'timeOver'
+  }else{
+    debugger
   }
 
-  return [combatEvent, resultEvent]
+  emit(dungeonRun.doc._id, 'dungeon run update', {
+    id: dungeonRun.doc._id,
+    combatUpdate: {
+      newCombatEvent: combatEvent,
+      combatDoc: combatDoc
+    }
+  })
+  dungeonRun.finishRunningCombat(combatEvent, resultEvent)
 }
 
 export async function generateSimulatedCombat(fighterDef1, fighterDef2){
   fighterDef1._id += 'a'
   fighterDef2._id += 'b'
-  return await generateCombat(fighterDef1, fighterDef2, {
-    sim: true,
-    boss: true
+  return await generateCombat({
+    fighterDef1,
+    fighterDef2,
+    params: {
+      sim: true,
+      boss: true
+    }
   })
 }

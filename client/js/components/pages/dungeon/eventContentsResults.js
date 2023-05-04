@@ -1,6 +1,7 @@
 import { makeEl, suffixedNumber, toDisplayName, wait } from '../../../../../game/utilFunctions.js'
 import ChestOpenage from './chestOpenage.js'
 import MonsterInstance from '../../../../../game/monsterInstance.js'
+import Adventurer from '../../../../../game/adventurer.js'
 
 const WAIT_TIME = 500
 
@@ -35,7 +36,7 @@ export default class EventContentsResults extends HTMLElement{
     this._linkedAdventurerPane = adventurerPane
 
     const tabz = this.querySelector('di-tabz')
-    adventurerPane.setAdventurer(JSON.parse(JSON.stringify(dungeonRun.adventurer)))
+    adventurerPane.setAdventurer(new Adventurer(JSON.parse(JSON.stringify(dungeonRun.adventurer))))
 
     waitUntilDocumentVisible().then(() => {
       this._showMainResults(tabz.getContentEl('Results'), dungeonRun, adventurerPane, watching)
@@ -64,7 +65,7 @@ export default class EventContentsResults extends HTMLElement{
     if(!dungeonRunResults.xp){
       return
     }
-    const advName = adventurerPane.adventurerInstance.displayName
+    const advName = adventurerPane.displayName
     this._addText(el, `${advName} gained ${suffixedNumber(dungeonRunResults.xp)} xp`)
     await adventurerPane.addXp(dungeonRunResults.xp, {
       onLevelup: level => {

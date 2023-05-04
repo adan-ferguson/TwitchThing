@@ -9,11 +9,11 @@ try {
 }
 
 function init(){
-  parentPort.on('message', data => {
+  parentPort.on('message', async data => {
     try {
       parentPort.postMessage({
         workerId: data.workerId,
-        combatDoc: runCombat(data)
+        combatDoc: await runCombat(data.data)
       })
     }catch(error){
       parentPort.postMessage({

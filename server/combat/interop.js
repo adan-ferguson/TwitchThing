@@ -26,7 +26,7 @@ export async function startCombatWorker(){
   console.log('Worker connected')
 }
 
-export function generateCombat(fighterDef1, fighterDef2, params = {}){
+export function generateCombat(data, combatID = null){
   return new Promise((res, rej) => {
     const id = uniqueID()
     const timestamp = Date.now()
@@ -38,14 +38,15 @@ export function generateCombat(fighterDef1, fighterDef2, params = {}){
       combatDoc.times.init = timestamp
       combatDoc.times.startup = combatDoc.times.start - combatDoc.times.init
       combatDoc.times.calc = combatDoc.times.finish - combatDoc.times.start
-      console.log('combat startup & calc:', combatDoc.times.startup, combatDoc.times.calc, id)
+      combatDoc.times.total = combatDoc.times.finish - combatDoc.times.init
+      if(combatID){
+        combatDoc._id = combatID
+      }
       res(await Combats.save(combatDoc))
     }
     worker.postMessage({
       workerId: id,
-      params,
-      fighterDef1,
-      fighterDef2
+      data
     })
   })
 }

@@ -158,6 +158,10 @@ export default class TimelineControls extends HTMLElement{
     })
   }
 
+  updateEvent(currentEvent){
+    this._timeline.updateNewestEntry(currentEvent)
+  }
+
   addEvents(events){
     const update = this._timeline.finished
     events.forEach(event => this._timeline.addEntry(event))
@@ -263,6 +267,7 @@ export default class TimelineControls extends HTMLElement{
     this._currentEvent = this._timeline.currentEntry
     this._ticker.currentTime = this._timeline.timeSinceLastEntry
     this._ticker.endTime = this._timeline.currentEntry.duration
+    this._ticker.start()
     this._update()
 
     if(!eventChanged && !options.jumped){
