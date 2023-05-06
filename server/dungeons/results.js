@@ -80,7 +80,7 @@ export async function finalize(dungeonRunDoc){
     }
 
     if(!userDoc.accomplishments.firstRunFinished){
-      adjustInventoryBasics(userDoc, { fighter : { slash : 1 } })
+      adjustInventoryBasics(userDoc, { shortSword: 1 })
       userDoc.accomplishments.firstRunFinished = 1
       userDoc.features.editLoadout = 1
       emit(userDoc._id, 'show popup', {

@@ -7,7 +7,8 @@ const fighter = {
   ],
   items: [
     [
-      Items.shortSword
+      Items.shortSword,
+      Items.sprintingShoes
     ],
     [],
     []
@@ -51,4 +52,16 @@ for(let advClass in INFO){
 
 export function getClassInfo(className){
   return INFO[className]
+}
+
+export function getAllItemKeys(){
+  const keys = []
+  for(let className in INFO){
+    INFO[className].items.forEach(arr => {
+      arr.forEach(item => {
+        keys.push(item.id)
+      })
+    })
+  }
+  return keys
 }

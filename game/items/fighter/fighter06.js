@@ -12,11 +12,11 @@ export default {
           },
           actions: [
             {
-              statusEffect: {
-                actionId: 'serratedBladeBleed',
-                vars: {
-                  physScaling
-                }
+              addStatusEffect: {
+                // actionId: 'serratedBladeBleed',
+                // vars: {
+                //   physScaling
+                // }
               }
             }
           ]

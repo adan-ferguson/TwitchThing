@@ -10,6 +10,7 @@ import { generateSimulatedCombat } from '../../combat/fns.js'
 import { getAllMonsters } from '../../dungeons/monsters.js'
 import Purchases from '../../collections/purchases.js'
 import { purgeAllOldRuns } from '../../dungeons/results.js'
+import { getAllItemKeys } from '../../../game/adventurerClassInfo.js'
 
 const router = express.Router()
 
@@ -58,6 +59,16 @@ router.post('/runcommand', async(req, res) => {
   }else if(cmd === 'purge'){
     const removed = await purgeAllOldRuns()
     result = `Old runs purged. ${removed} combats removed.`
+  }else if(cmd === 'give items'){
+    const users = await Users.find()
+    const newItems = {}
+    getAllItemKeys().forEach(key => {
+      newItems[key] = 10
+    })
+    users.forEach(userDoc => {
+      userDoc.inventory.items.basic = { ...newItems }
+      Users.save(userDoc)
+    })
   }
   res.status(200).send({ result })
 })

@@ -2,7 +2,7 @@ import { SUBJECT_KEYS } from './subjectKeys.js'
 import Joi from 'joi'
 import { STATS_SCHEMA } from './stats.js'
 
-const TRIGGER_NAMES = ['active','physAttackHit','attacked']
+const TRIGGER_NAMES = ['active','physAttackHit','attacked','startOfCombat']
 
 const SCALED_NUMBER_SCHEMA = Joi.object({
   hpMax: Joi.number(),
@@ -14,9 +14,11 @@ const SCALED_NUMBER_SCHEMA = Joi.object({
 })
 
 const ACTION_SCHEMA = Joi.object({
-  statusEffect: Joi.object({
-    actionId: Joi.string(),
-    vars: Joi.object()
+  addStatusEffect: Joi.object({
+    affects: Joi.string().valid('self', 'enemy'),
+    statusEffect: Joi.custom(val => {
+      return Joi.attempt(val, STATUS_EFFECT_SCHEMA)
+    })
   }),
   attack: Joi.object({
     damageType: Joi.string().valid('phys', 'magic'),
@@ -44,4 +46,8 @@ const ABILITY_SCHEMA = Joi.object({
 export const EFFECT_SCHEMA = Joi.object({
   abilities: Joi.array().items(ABILITY_SCHEMA),
   stats: STATS_SCHEMA
+})
+
+export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
+  duration: Joi.number().integer()
 })
