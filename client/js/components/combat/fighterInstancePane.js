@@ -75,7 +75,7 @@ export default class FighterInstancePane extends HTMLElement{
     this._setupLoadout()
 
     this.querySelector('.name').textContent = fighterInstance.displayName
-    // this.effectsListEl.setFighterInstance(fighterInstance)
+    this.effectsListEl.setFighterInstance(fighterInstance)
     this._update(false)
     return this
   }
@@ -93,7 +93,7 @@ export default class FighterInstancePane extends HTMLElement{
     if(!this.fighterInstance.mods.contains('freezeCooldown')){
       this.loadoutEl.advanceTime(ms)
     }
-    // this.effectsListEl.advanceTime(ms)
+    this.effectsListEl.advanceTime(ms)
   }
 
   displayActionPerformed(action){
@@ -225,7 +225,7 @@ export default class FighterInstancePane extends HTMLElement{
     })
 
     this.statsList.setStats(this.fighterInstance.stats, this.fighterInstance)
-    // this.effectsListEl.update(cancelAnimations)
+    this.effectsListEl.update(cancelAnimations)
     this._updateActionBar()
     this.loadoutEl.updateAllRows()
     this.classList.toggle('boss', this.fighterInstance.isBoss ? true : false)

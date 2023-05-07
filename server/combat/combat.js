@@ -133,6 +133,7 @@ class Combat{
       if(!this.fighterInstance2.hp){
         processAbilityEvents(this, 'defeated', this.fighterInstance2)
       }
+      this._resolveTriggers()
       this._addTimelineEntry({
         actions
       })
@@ -156,7 +157,16 @@ class Combat{
     }
     this._currentTime += timeToAdvance
     if(timeToAdvance){
-      this.fighters.forEach(fi => fi.advanceTime(timeToAdvance))
+      this.fighters.forEach(fi => {
+        fi.advanceTime(timeToAdvance)
+        processAbilityEvents(this, 'tick', fi)
+        processAbilityEvents(this, 'combatTime', fi, {
+          combatTime: {
+            before: this._currentTime - timeToAdvance,
+            after: this._currentTime
+          }
+        })
+      })
     }
     this._resolveTriggers()
   }

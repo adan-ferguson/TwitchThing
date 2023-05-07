@@ -12,6 +12,8 @@ export default {
             applyStatusEffect: {
               affects: 'self',
               statusEffect: {
+                name: 'sprinting',
+                isBuff: true,
                 duration,
                 stats: {
                   speed

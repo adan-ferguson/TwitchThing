@@ -3,7 +3,12 @@ import { effectInstanceState } from '../effectInstanceState.js'
 
 export function statusEffectDisplayInfo(effectInstance){
 
-  let text = `${effectInstance.displayName}`
+  const def = DEFS[effectInstance.name] ?? {}
+  let text = def.displayName ?? effectInstance.displayName ?? null
+  if(!text){
+    return null
+  }
+
   if(effectInstance.stacks >= 2){
     text += ` x${effectInstance.stacks}`
   }
@@ -40,4 +45,8 @@ function getColors(effectInstance){
     return STATUSEFFECT_COLORS.barrier
   }
   return STATUSEFFECT_COLORS[effectInstance.isBuff ? 'buff' : 'debuff']
+}
+
+const DEFS = {
+
 }

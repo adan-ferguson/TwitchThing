@@ -116,12 +116,17 @@ export default class AbilityInstance{
     return this.parentEffect.exclusiveStats
   }
 
-  tryUse(){
+  tryUse(data = {}){
     if(!this.ready){
       return false
     }
     if(this.cooldown){
       this.cooldownElapsedPct = 0
+    }
+    if(data.combatTime && this.trigger.combatTime){
+      if(data.combatTime.before >= this.trigger.combatTime || this.trigger.combatTime < data.combatTime.after){
+        return false
+      }
     }
     //   if (this._abilityDef.chance && Math.random() > this._abilityDef.chance){
     //     return false

@@ -10,34 +10,40 @@ export default class StatusEffectInstance extends EffectInstance{
     this._data = data
   }
 
-  get phantom(){
-    return this.effectData.displayName ? false : true
-  }
-
   get data(){
     return this._data
   }
 
+  get name(){
+    return this.effectData.name ?? null
+  }
+
+  get displayName(){
+    return this.effectData.displayName ?? toDisplayName(this.effectData.name) ?? null
+  }
+
   get effectData(){
-    if(!this._data.name){
-      return this.data
-    }
-    let effectData
-    const baseDef = Effects[this._data.name]
-    if(baseDef.defFn){
-      effectData = {
-        name: baseDef.name,
-        group: baseDef.group,
-        displayName: toDisplayName(baseDef.name),
-        ...baseDef.defFn(this._data.params, this._state)
-      }
-    }else{
-      effectData = baseDef
-    }
-    return {
-      ...effectData,
-      ...this.data
-    }
+    return this.data
+    //  TODO: baseEffect not name
+    // if(!this._data.name){
+    //   return this.data
+    // }
+    // let effectData
+    // const baseDef = Effects[this._data.name]
+    // if(baseDef.defFn){
+    //   effectData = {
+    //     name: baseDef.name,
+    //     group: baseDef.group,
+    //     displayName: toDisplayName(baseDef.name),
+    //     ...baseDef.defFn(this._data.params, this._state)
+    //   }
+    // }else{
+    //   effectData = baseDef
+    // }
+    // return {
+    //   ...effectData,
+    //   ...this.data
+    // }
   }
 
   /**

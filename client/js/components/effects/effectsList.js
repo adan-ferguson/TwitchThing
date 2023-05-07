@@ -1,4 +1,5 @@
 import EffectRow from './effectRow.js'
+import { statusEffectDisplayInfo } from '../../displayInfo/statusEffectDisplayInfo.js'
 
 export default class EffectsList extends HTMLElement{
 
@@ -19,18 +20,19 @@ export default class EffectsList extends HTMLElement{
     })
     const expiredEffectRows = { ...effectRows }
 
-    this._fighterInstance.statusEffectsData.instances.forEach(effect => {
-      if(!shouldShow(effect)){
+    this._fighterInstance.statusEffectInstances.forEach(sei => {
+      const sedi = statusEffectDisplayInfo(sei)
+      if(!sedi){
         return
       }
-      const key = effect.uniqueID
+      const key = sei.uniqueID
       if(effectRows[key]){
-        if(!effect.expired){
-          effectRows[key].update(effect, cancelAnimations)
+        if(!sei.expired){
+          effectRows[key].update(sei, cancelAnimations)
           delete expiredEffectRows[key]
         }
       }else{
-        effectRows[key] = this._addRow(key, effect)
+        effectRows[key] = this._addRow(key, sei)
       }
     })
 
@@ -57,9 +59,6 @@ export default class EffectsList extends HTMLElement{
 customElements.define('di-effects-list', EffectsList)
 
 function shouldShow(effect){
-  if(effect.phantom){
-    return false
-  }
   if(effect.expired){
     return false
   }

@@ -36,6 +36,9 @@ export default class EffectRow extends HTMLElement{
 
     this.effect = effect
     const info = statusEffectDisplayInfo(effect)
+    if(!info){
+      debugger // Shouldn't reach here...
+    }
 
     this.classList.toggle('persisting', effect.persisting)
 
@@ -54,7 +57,7 @@ export default class EffectRow extends HTMLElement{
     }
 
     if(info.abilityInfo){
-      this._timedMiniBar = info.abilityInfo.ability.cooldown ? true : false
+      this._timedMiniBar = info.abilityInfo.cooldownRefreshing ? true : false
       this._miniBarEl
         .setOptions({ max: info.abilityInfo.barMax })
         .setValue(info.abilityInfo.barValue)

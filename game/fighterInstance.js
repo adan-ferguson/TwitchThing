@@ -130,9 +130,11 @@ export default class FighterInstance{
       ...state
     }
     this.loadoutState = this._state.loadout ?? {}
-    this._statusEffectInstances = this._state.statusEffects?.forEach(({ data, state }) => {
+    this._statusEffectInstances = []
+    this._state.statusEffects?.forEach(({ data, state }) => {
       this.addStatusEffect(data, state)
-    }) ?? []
+    })
+    this._cachedStats = null
   }
 
   get turnTime(){

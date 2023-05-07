@@ -18,11 +18,11 @@ export function processAbilityEvents(triggerHandler, eventNames, owner, data = {
   return data
 }
 
-function doTriggers(owner, eventName, data, combat = null){
+function doTriggers(owner, eventName, data){
   const abilities = getFighterInstanceAbilities(owner, 'action', eventName)
   const pendingTriggers = []
   for(let ability of abilities){
-    if(ability.tryUse()){
+    if(ability.tryUse(data)){
       pendingTriggers.push({ ability, data })
     }
   }

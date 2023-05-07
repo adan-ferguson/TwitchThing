@@ -57,5 +57,7 @@ export const EFFECT_SCHEMA = Joi.object({
 
 export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
   duration: Joi.number().integer(),
-  stacking: Joi.string()
+  stacking: Joi.string(),
+  isBuff: Joi.boolean().required(),
+  name: Joi.string()
 })
