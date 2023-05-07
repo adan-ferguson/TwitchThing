@@ -2,7 +2,7 @@ import DIElement from '../diElement.js'
 import { OrbsTooltip } from '../orbRow.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
 import LoadoutObjectInstance from '../../../../game/loadoutObjectInstance.js'
-import LoadoutObjectDetails from '../loadoutObjectDetails.js'
+import EffectDetails from '../effectDetails.js'
 import SkillCard from '../skillCard.js'
 import SimpleModal from '../simpleModal.js'
 import ItemCard from '../itemCard.js'
@@ -84,7 +84,7 @@ export default class AdventurerItemRow extends DIElement{
 
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
-    tooltip.appendChild(new LoadoutObjectDetails().setObject(this.adventurerItemInstance ?? this.adventurerItem))
+    tooltip.appendChild(new EffectDetails().setObject(this.adventurerItemInstance ?? this.adventurerItem))
     tooltip.appendChild(wrapContent('Right-click for more info', {
       class: 'right-click subtitle'
     }))

@@ -1,7 +1,7 @@
 import DIElement from '../diElement.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
 import LoadoutObjectInstance from '../../../../game/loadoutObjectInstance.js'
-import LoadoutObjectDetails from '../loadoutObjectDetails.js'
+import EffectDetails from '../effectDetails.js'
 
 const HTML = `
 <di-loadout-row-state></di-loadout-row-state>
@@ -46,7 +46,7 @@ export default class MonsterItemRow extends DIElement{
 
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
-    tooltip.appendChild(new LoadoutObjectDetails().setObject(this.monsterItemInstance ?? this.monsterItem))
+    tooltip.appendChild(new EffectDetails().setObject(this.monsterItemInstance ?? this.monsterItem))
     tooltip.appendChild(wrapContent('Right-click for more info', {
       class: 'right-click subtitle'
     }))

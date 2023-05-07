@@ -1,6 +1,6 @@
 export default {
   levelFn: function(level){
-    const speed = 10 + level * 20
+    const speed = 30 + level * 20
     const duration = 8000
     return {
       effect: {

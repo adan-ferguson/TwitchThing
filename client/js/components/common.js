@@ -1,6 +1,6 @@
 import Stats from '../../../game/stats/stats.js'
 import { getStatDisplayInfo, StatsDisplayStyle } from '../displayInfo/statsDisplayInfo.js'
-import { makeEl } from '../../../game/utilFunctions.js'
+import { makeEl, roundToNearestIntervalOf } from '../../../game/utilFunctions.js'
 import healthIcon from '../../assets/icons/health.svg'
 import physPower from '../../assets/icons/physPower.svg'
 import magicPower from '../../assets/icons/magicPower.svg'
@@ -45,11 +45,10 @@ export function wrapStat(statType, val){
   })
   let content = info.displayedValue
   if(info.icon){
-    content = `${info.icon}` + content
+    return `<span class="stat-wrap icon-and-value">${content}${info.icon}</span>`
   }else{
-    content += ' ' + info.text
+    return `<span class="stat-wrap icon-and-value">${content} ${info.text}</span>`
   }
-  return makeEl({ content, class: 'stat-wrap' })
 }
 
 export function scalingWrap(scalingType, valStr){
@@ -62,4 +61,8 @@ export function scalingWrap(scalingType, valStr){
 <span class="icon-and-value" scaling-type="${scalingType}">
     ${valStr}${ICONS[scalingType]}
 </span>`
+}
+
+export function toSeconds(ms){
+  return roundToNearestIntervalOf(ms / 1000, 0.01) + 's'
 }

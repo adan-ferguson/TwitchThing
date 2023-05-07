@@ -46,7 +46,7 @@ export default class EffectsList extends HTMLElement{
   }
 
   _addRow(key, effect){
-    const effectRow = new EffectRow(key, effect)
+    const effectRow = new EffectRow().setEffect(effect, key)
     this.appendChild(effectRow)
     return effectRow
   }

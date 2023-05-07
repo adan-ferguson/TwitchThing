@@ -1,7 +1,7 @@
 import DIElement from '../diElement.js'
 import classDisplayInfo from '../../displayInfo/classDisplayInfo.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
-import LoadoutObjectDetails from '../loadoutObjectDetails.js'
+import EffectDetails from '../effectDetails.js'
 import LoadoutObjectInstance from '../../../../game/loadoutObjectInstance.js'
 import ItemDetails from '../itemDetails.js'
 import SimpleModal from '../simpleModal.js'
@@ -92,7 +92,7 @@ export default class AdventurerSkillRow extends DIElement{
 
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
-    tooltip.appendChild(new LoadoutObjectDetails().setObject(this.adventurerSkillInstance ?? this.adventurerSkill))
+    tooltip.appendChild(new EffectDetails().setObject(this.adventurerSkillInstance ?? this.adventurerSkill))
     tooltip.appendChild(wrapContent('Right-click for more info', {
       class: 'right-click subtitle'
     }))

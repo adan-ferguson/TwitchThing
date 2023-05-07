@@ -1,7 +1,7 @@
 const HTML = `
 <div class="obj-border">
   <span class="inset-title item-name"></span>
-  <di-loadout-object-details></di-loadout-object-details>
+  <di-effect-details></di-effect-details>
 </div>
 `
 
@@ -16,7 +16,7 @@ export default class MonsterItemCard extends HTMLElement{
   }
 
   get loadoutObjectDetails(){
-    return this.querySelector('di-loadout-object-details')
+    return this.querySelector('di-effect-details')
   }
 
   setItem(monsterItem){

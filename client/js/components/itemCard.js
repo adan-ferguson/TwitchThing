@@ -4,7 +4,7 @@ const HTML = `
 <div class="obj-border">
   <span class="inset-title item-name"></span>
   <di-orb-row class="inset-title-right item-orbs"></di-orb-row>
-  <di-loadout-object-details></di-loadout-object-details>
+  <di-effect-details></di-effect-details>
 </div>
 `
 
@@ -19,7 +19,7 @@ export default class ItemCard extends HTMLElement{
   }
 
   get loadoutObjectDetails(){
-    return this.querySelector('di-loadout-object-details')
+    return this.querySelector('di-effect-details')
   }
 
   setItem(adventurerItem){

@@ -1,40 +1,51 @@
-import tippy from 'tippy.js'
 import { statusEffectDisplayInfo } from '../../displayInfo/statusEffectDisplayInfo.js'
 import { flash } from '../../animations/simple.js'
 import { ACTION_COLOR } from '../../colors.js'
-import { parseDescriptionString } from '../../descriptionString.js'
+import DIElement from '../diElement.js'
+import EffectDetails from '../effectDetails.js'
+import { wrapContent } from '../../../../game/utilFunctions.js'
 
 const HTML = `
 <di-bar></di-bar>
 <di-mini-bar></di-mini-bar>
 `
 
-export default class EffectRow extends HTMLElement{
+export default class EffectRow extends DIElement{
 
   barEl
 
   constructor(key, effect){
     super()
     this.innerHTML = HTML
-    this.setAttribute('effect-key', key)
     this.barEl = this.querySelector('di-bar')
     this._miniBarEl = this.querySelector('di-mini-bar')
       .setOptions({
         color: ACTION_COLOR
       })
-    if(effect.description){
-      const parsed = parseDescriptionString(effect.description)
-      this._tippy = tippy(this, {
-        theme: 'light',
-        content: parsed
-      })
-    }
-    this.update(effect, false)
   }
 
-  update(effect, cancelAnimations = false){
+  get tooltip(){
 
-    this.effect = effect
+    if(!this._effect){
+      return null
+    }
+
+    const tooltip = document.createElement('div')
+    tooltip.classList.add('loadout-row-tooltip')
+    tooltip.appendChild(new EffectDetails().setObject(this._effect))
+
+    return tooltip
+  }
+
+  setEffect(effect, key){
+    this.setAttribute('effect-key', key)
+    return this.update(effect, true)
+  }
+
+  update(effect, key, cancelAnimations = false){
+
+    this._effect = effect
+
     const info = statusEffectDisplayInfo(effect)
     if(!info){
       debugger // Shouldn't reach here...
@@ -62,6 +73,9 @@ export default class EffectRow extends HTMLElement{
         .setOptions({ max: info.abilityInfo.barMax })
         .setValue(info.abilityInfo.barValue)
     }
+
+    this.setTooltip(this.tooltip)
+    return this
   }
 
   advanceTime(ms){
@@ -74,7 +88,7 @@ export default class EffectRow extends HTMLElement{
   }
 
   flash(){
-    flash(this.barEl.foregroundEl, statusEffectDisplayInfo(this.effect).colors.flash, 500)
+    flash(this.barEl.foregroundEl, statusEffectDisplayInfo(this._effect).colors.flash, 500)
   }
 }
 customElements.define('di-effect-row', EffectRow)

@@ -1,5 +1,6 @@
 import { STATUSEFFECT_COLORS } from '../colors.js'
 import { effectInstanceState } from '../effectInstanceState.js'
+import { toSeconds, wrapStat } from '../components/common.js'
 
 export function statusEffectDisplayInfo(effectInstance){
 
@@ -38,6 +39,19 @@ export function statusEffectDisplayInfo(effectInstance){
     animateChanges: effectInstance.duration ? false : true,
     showValue
   }
+}
+
+export function statusEffectDescription(statusEffectDef){
+  const chunks = []
+  if(statusEffectDef.stats){
+    for(let key in statusEffectDef.stats){
+      chunks.push(wrapStat(key, statusEffectDef.stats[key]))
+    }
+  }
+  if(statusEffectDef.duration){
+    chunks.push(`for ${toSeconds(statusEffectDef.duration)}`)
+  }
+  return { chunks }
 }
 
 function getColors(effectInstance){

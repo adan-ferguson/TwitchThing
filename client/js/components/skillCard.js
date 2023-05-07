@@ -6,7 +6,7 @@ const HTML = `
 <div class="obj-border">
   <div class="inset-title skill-name"></div>
   <div class="inset-title-right skill-points displaynone"></div>
-  <di-loadout-object-details></di-loadout-object-details>
+  <di-effect-details></di-effect-details>
 </div>
 `
 
@@ -21,7 +21,7 @@ export default class SkillCard extends DIElement{
   }
 
   get loadoutObjectDetails(){
-    return this.querySelector('di-loadout-object-details')
+    return this.querySelector('di-effect-details')
   }
 
   setSkill(adventurerSkill, showTooltips = true){

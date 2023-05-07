@@ -3,7 +3,7 @@ import { wrapContent } from '../../../../game/utilFunctions.js'
 import tippy from 'tippy.js'
 import { StatsDisplayStyle } from '../../displayInfo/statsDisplayInfo.js'
 import { advLevelToXp, advXpToLevel } from '../../../../game/adventurer.js'
-import LoadoutObjectDetails from '../loadoutObjectDetails.js'
+import EffectDetails from '../effectDetails.js'
 
 const HTML = `
 <div class="flex-rows">

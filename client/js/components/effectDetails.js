@@ -1,5 +1,5 @@
 import DIElement from './diElement.js'
-import { wrapContent } from '../../../game/utilFunctions.js'
+import { roundToFixed, roundToNearestIntervalOf, wrapContent, wrapText } from '../../../game/utilFunctions.js'
 import { attachedItem, attachedSkill, orbEntries } from './common.js'
 import AdventurerItem from '../../../game/items/adventurerItem.js'
 import Stats from '../../../game/stats/stats.js'
@@ -8,7 +8,7 @@ import AbilityDescription from './abilityDescription.js'
 import { StatsDisplayStyle } from '../displayInfo/statsDisplayInfo.js'
 import { getAbilityDisplayInfoForObj } from '../displayInfo/abilityDisplayInfo.js'
 
-export default class LoadoutObjectDetails extends DIElement{
+export default class EffectDetails extends DIElement{
 
   get defaultOptions(){
     return {
@@ -36,6 +36,8 @@ export default class LoadoutObjectDetails extends DIElement{
     // this._addDescription()
     this._addStats()
     this._addLoadoutModifiers()
+    this._addDuration()
+    // this._addUsesRemaining()
   }
 
   _addMeta(){
@@ -88,6 +90,14 @@ export default class LoadoutObjectDetails extends DIElement{
     }
   }
 
+  _addDuration(){
+    const duration = this._obj.duration
+    if(!duration){
+      return
+    }
+    this.appendChild(wrapText(roundToNearestIntervalOf(duration/1000, 0.01) + 's'))
+  }
+
   //
   // _addDescription(){
   //   const description = parseDescriptionString(this._effectInstance.description ?? '')
@@ -104,7 +114,7 @@ export default class LoadoutObjectDetails extends DIElement{
 
 }
 
-customElements.define('di-loadout-object-details', LoadoutObjectDetails)
+customElements.define('di-effect-details', EffectDetails)
 
 function loadoutModifierToEl(subjectKey, modifierKey, value, isItem){
 
