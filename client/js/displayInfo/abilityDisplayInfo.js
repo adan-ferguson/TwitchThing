@@ -38,8 +38,8 @@ export function getAbilityDisplayInfo(ability){
 function abilityDescription(ability){
   const chunks = []
   const abilityInstance = ability instanceof AbilityInstance ? ability : null
-  if(abilityInstance.trigger.combatTime){
-    chunks.push(combatTimePrefix(abilityInstance.trigger.combatTime))
+  if(ability.trigger.combatTime){
+    chunks.push(combatTimePrefix(ability.trigger.combatTime))
   }
   ability.actions?.forEach(actionDef => {
     actionDef = expandActionDef(actionDef)

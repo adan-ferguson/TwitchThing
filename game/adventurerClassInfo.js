@@ -8,7 +8,9 @@ const fighter = {
   items: [
     [
       Items.shortSword,
-      Items.sprintingShoes
+      Items.sprintingShoes,
+      Items.heavyAxe,
+      Items.leatherArmor
     ],
     [],
     []

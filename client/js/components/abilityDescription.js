@@ -33,7 +33,7 @@ function makeBotRow(displayInfo){
     class: ['bot-row', 'flex-centered', 'flex-columns', 'flex-spaced']
   })
 
-  let botLeftText = displayInfo.type === 'active' ? 'Active' : ''
+  let botLeftText = displayInfo.type === 'active' ? 'Active Ability' : ''
   if(displayInfo.ability.uses){
     botLeftText += (botLeftText.length ? ', ' : '')
     botLeftText += `${displayInfo.ability.uses} use${displayInfo.ability.uses > 1 ? 's' : ''}`
