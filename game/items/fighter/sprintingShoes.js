@@ -5,9 +5,11 @@ export default {
     return {
       effect: {
         abilities: [{
-          trigger: 'startOfCombat',
+          trigger: {
+            combatTime: 1
+          },
           actions: [{
-            addStatusEffect: {
+            applyStatusEffect: {
               affects: 'self',
               statusEffect: {
                 duration,

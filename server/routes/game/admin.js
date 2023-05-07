@@ -69,6 +69,7 @@ router.post('/runcommand', async(req, res) => {
       userDoc.inventory.items.basic = { ...newItems }
       Users.save(userDoc)
     })
+    result = 'items given'
   }
   res.status(200).send({ result })
 })

@@ -2,6 +2,7 @@ import Items from './combined.js'
 import _ from 'lodash'
 import UpgradeData from '../upgradeData.js'
 import AdventurerLoadoutObject from '../adventurerLoadoutObject.js'
+import { toDisplayName } from '../utilFunctions.js'
 
 export default class AdventurerItem extends AdventurerLoadoutObject{
 
@@ -35,7 +36,7 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
 
   get displayName(){
     let txt = this.level > 1 ? `L${this.level} ` : ''
-    return txt + super.displayName
+    return txt + (this.data.displayName ?? toDisplayName(this._baseItem.id))
   }
 
   get isBasic(){

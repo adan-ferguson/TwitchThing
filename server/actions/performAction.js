@@ -11,7 +11,7 @@ export function performAction(combat, actor, ability, actionDef){
   }
   results.forEach(r => {
     if(!r.subject){
-      throw 'Action result missing object.'
+      throw 'Action result missing subject.'
     }
   })
   return {

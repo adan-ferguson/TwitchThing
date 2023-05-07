@@ -1,3 +1,5 @@
+import _ from 'lodash'
+
 export default class AbilityInstance{
 
   constructor(abilityDef, state, parentEffect, index){
@@ -32,6 +34,9 @@ export default class AbilityInstance{
   }
 
   get trigger(){
+    if(_.isString(this.abilityDef.trigger)){
+      return { [this.abilityDef.trigger]: true }
+    }
     return this.abilityDef.trigger
   }
 
@@ -95,12 +100,13 @@ export default class AbilityInstance{
     return !this.cooldownRemaining // && this.enabled
   }
 
-  // get enabled(){
-  //   if(this.uses && this._state.timesUsed >= this.uses){
-  //     return false
-  //   }
-  //   return this.fighterInstance.meetsConditions(this.conditions)
-  // }
+  get enabled(){
+    return true
+    // if(this.uses && this._state.timesUsed >= this.uses){
+    //   return false
+    // }
+    // return this.fighterInstance.meetsConditions(this.conditions)
+  }
 
   get cooldownRefreshing(){
     return this.cooldown && (!this.uses || this.timesUsed < this.uses)

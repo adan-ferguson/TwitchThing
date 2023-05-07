@@ -5,6 +5,7 @@ import { takeCombatTurn } from './takeCombatTurn.js'
 import { processAbilityEvents } from '../mechanics/abilities.js'
 import { useAbility } from '../actions/performAction.js'
 import { wait } from '../../game/utilFunctions.js'
+import Mods from '../../game/mods/combined.js'
 
 const MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS = 30
 const MAX_TRIGGER_LOOPS = 30
@@ -62,8 +63,9 @@ class Combat{
 
   constructor(fighterInstance1, fighterInstance2, params){
     this.params = params
-    fighterInstance1.startCombat(this)
-    fighterInstance2.startCombat(this)
+    this.fighterInstance1 = fighterInstance1
+    this.fighterInstance2 = fighterInstance2
+    this.fighters.forEach(fi => fi.startCombat())
     this.fighterStartState1 = {
       ...fighterInstance1.state,
       inCombat: true
@@ -72,13 +74,10 @@ class Combat{
       ...fighterInstance2.state,
       inCombat: true
     }
-    this.fighterInstance1 = fighterInstance1
-    this.fighterInstance2 = fighterInstance2
     this.timeline = []
-    this._startCombat()
+    this._addTimelineEntry()
     this._run()
-    fighterInstance1.endCombat()
-    fighterInstance2.endCombat()
+    this.fighters.forEach(fi => fi.endCombat())
     this.fighterEndState1 = { ...fighterInstance1.state }
     this.fighterEndState2 = { ...fighterInstance2.state }
     this.duration = this._currentTime
@@ -108,6 +107,10 @@ class Combat{
     return this.params.boss ?? false
   }
 
+  get fighters(){
+    return [this.fighterInstance1, this.fighterInstance2]
+  }
+
   addPendingTriggers(pendingTriggers){
     this._pendingTriggers.push(...pendingTriggers)
     if(this._pendingTriggers.length > MAX_TRIGGER_COUNTER){
@@ -124,17 +127,12 @@ class Combat{
     while(!this.finished){
       this._advanceTime()
       const actions = this._doActions()
-
-      // this.fighterInstance1.cleanupState()
-      // this.fighterInstance2.cleanupState()
-
       if(!this.fighterInstance1.hp){
         processAbilityEvents(this, 'defeated', this.fighterInstance1)
       }
       if(!this.fighterInstance2.hp){
         processAbilityEvents(this, 'defeated', this.fighterInstance2)
       }
-
       this._addTimelineEntry({
         actions
       })
@@ -143,10 +141,11 @@ class Combat{
 
   _advanceTime(){
     const timeToAdvance = Math.ceil(
-      Math.max(0, Math.min(
-        this.fighterInstance1.timeUntilNextUpdate,
-        this.fighterInstance2.timeUntilNextUpdate
-      )))
+      Math.max(
+        0,
+        Math.min(...this.fighters.map(fi => fi.timeUntilNextUpdate))
+      )
+    )
     if(!timeToAdvance){
       this._consecutiveZeroTimeAdvancements++
       if(this._consecutiveZeroTimeAdvancements >= MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS){
@@ -157,9 +156,7 @@ class Combat{
     }
     this._currentTime += timeToAdvance
     if(timeToAdvance){
-      this.fighterInstance1.advanceTime(timeToAdvance)
-      this.fighterInstance2.advanceTime(timeToAdvance)
-      // TODO: performCombatTicks
+      this.fighters.forEach(fi => fi.advanceTime(timeToAdvance))
     }
     this._resolveTriggers()
   }
@@ -174,7 +171,7 @@ class Combat{
     while(this._pendingTriggers.length && loops < MAX_TRIGGER_LOOPS){
       const triggers = this._pendingTriggers
       this._pendingTriggers = []
-      this._triggerUpdates.push(...triggers.map(resolveTrigger))
+      this._triggerUpdates.push(...triggers.map(resolveTrigger).flat())
       loops++
       if(this.finished){
         return
@@ -192,15 +189,10 @@ class Combat{
 
     shuffle([this.fighterInstance1, this.fighterInstance2]).forEach(actor => {
       actions.push(...takeCombatTurn(this, actor))
+      actor.nextTurn()
     })
 
     return actions
-  }
-
-  _startCombat(){
-    processAbilityEvents(this, 'startOfCombat', this.fighterInstance1)
-    processAbilityEvents(this, 'startOfCombat', this.fighterInstance2)
-    this._addTimelineEntry()
   }
 
   _addTimelineEntry(options = {}){

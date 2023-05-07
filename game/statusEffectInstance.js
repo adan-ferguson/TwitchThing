@@ -1,6 +1,6 @@
 import Effects from './statusEffects/combined.js'
 import Stats from './stats/stats.js'
-import { roundToFixed, toDisplayName, uniqueID } from './utilFunctions.js'
+import { roundToFixed, toDisplayName } from './utilFunctions.js'
 import EffectInstance from './effectInstance.js'
 
 export default class StatusEffectInstance extends EffectInstance{
@@ -8,7 +8,6 @@ export default class StatusEffectInstance extends EffectInstance{
   constructor(data, owner, state = {}, ){
     super(owner, state)
     this._data = data
-    this.uniqueID = state.uniqueID ?? 'statusEffect-' + uniqueID()
   }
 
   get phantom(){
@@ -69,6 +68,9 @@ export default class StatusEffectInstance extends EffectInstance{
   }
 
   get expired(){
+    if(!this.fighterInstance.inCombat && !this.persisting){
+      return false
+    }
     if(Number.isFinite(this.duration) && !this.durationRemaining){
       return true
     }
@@ -86,13 +88,6 @@ export default class StatusEffectInstance extends EffectInstance{
 
   get time(){
     return this._state.time ?? 0
-  }
-
-  get state(){
-    const state = super.state
-    state.data = this._data
-    state.uniqueID = this.uniqueID
-    return state
   }
 
   get barrier(){

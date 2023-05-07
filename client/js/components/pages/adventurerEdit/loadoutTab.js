@@ -38,6 +38,8 @@ export default class LoadoutTab extends DIElement{
       orbsStyle: OrbsDisplayStyle.REMAINING,
       hideXpBar: true
     })
+    this._setupItemEdit()
+    this._setupSkillEdit()
   }
 
   get adventurerPaneEl(){
@@ -65,8 +67,6 @@ export default class LoadoutTab extends DIElement{
     this.inventoryEl.setup(items, adventurer)
     this.adventurerPaneEl.setAdventurer(adventurer)
     this.skillsEl.setup(adventurer)
-    this._setupItemEdit(adventurer)
-    this._setupSkillEdit(adventurer)
     this._updateSaveButton()
 
     this.saveButton.addEventListener('click', async (e) => {
@@ -99,12 +99,12 @@ export default class LoadoutTab extends DIElement{
     this.saveButton.toggleAttribute('disabled', !orbsValid || !loadoutValid || this._saving)
   }
 
-  _setupItemEdit(adventurer){
+  _setupItemEdit(){
 
     setupEditable(this.inventoryEl.listEl, this.adventurerPaneEl.querySelector('.adv-items'), {
       rowSelector: 'di-adventurer-item-row',
       suggestChange: change => {
-        const loadout = adventurer.loadout
+        const loadout = this._adventurer.loadout
         if(change.type === 'add'){
           const item = change.row.item
           const slot = change.row2 ?
@@ -141,12 +141,12 @@ export default class LoadoutTab extends DIElement{
     }
   }
 
-  _setupSkillEdit(adventurer){
+  _setupSkillEdit(){
 
     setupEditable(this.skillsEl.listEl, this.adventurerPaneEl.querySelector('.adv-skills'), {
       rowSelector: 'di-adventurer-skill-row',
       suggestChange: change => {
-        const loadout = adventurer.loadout
+        const loadout = this._adventurer.loadout
         if(change.type === 'add'){
           const skill = change.row.skill
           const slot = change.row2 ?

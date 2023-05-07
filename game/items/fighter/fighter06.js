@@ -5,20 +5,24 @@ export default {
       displayName: 'Serrated Blade',
       effect: {
         abilities: [{
-          trigger: 'physAttackHit',
+          trigger: {
+            attackHit: {
+              damageType: 'phys'
+            }
+          },
           abilityId: 'serratedBladeTrigger',
           conditions: {
             source: 'attached'
           },
           actions: [
-            {
-              addStatusEffect: {
-                // actionId: 'serratedBladeBleed',
-                // vars: {
-                //   physScaling
-                // }
-              }
-            }
+            // {
+            //   applyStatusEffect: {
+            //     // actionId: 'serratedBladeBleed',
+            //     // vars: {
+            //     //   physScaling
+            //     // }
+            //   }
+            // }
           ]
         }]
       },

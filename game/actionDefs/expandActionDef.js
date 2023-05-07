@@ -7,7 +7,7 @@ export function expandActionDef(actionDef){
     if(!Actions[actionKey]){
       throw 'Invalid action key: ' + actionKey
     }
-    const defaults = { actionId: null, vars: {}, ...Actions[actionKey].def }
+    const defaults = { actionId: null, ...Actions[actionKey].def }
     ret[actionKey] = cleanupObject(mergeOptionsObjects(defaults, actionDef[actionKey]))
   }
   return ret

@@ -57,7 +57,9 @@ export default class CombatEnactment extends EventEmitter{
     this._prevEntryIndex = this._timeline.currentEntryIndex
     this._applyEntries(this._timeline.entries[0], false)
     this._timeline.on('timechange', ({ before, after, jumped }) => {
-      console.log(before, after, jumped)
+      if(jumped){
+        console.log('j')
+      }
       if(jumped || this._prevEntryIndex > this._timeline.currentEntryIndex){
         this._updatePanes(true)
       }else if(this._prevEntryIndex !== this._timeline.currentEntryIndex){
@@ -84,8 +86,9 @@ export default class CombatEnactment extends EventEmitter{
       entry.actions.forEach(action => {
         this._performAction(action)
       })
-      entry.triggers.forEach(tickUpdate => {
-        this._performTickUpdate(tickUpdate)
+      entry.triggers.forEach(action => {
+        debugger
+        this._performAction(action)
       })
     })
     this._updatePanes()
@@ -136,13 +139,13 @@ export default class CombatEnactment extends EventEmitter{
     throw 'Tried to get pane from fighter id, but there was none.'
   }
 
-  _performTickUpdate(tickUpdate){
-    if(tickUpdate.results){
-      this._performAction(tickUpdate)
-    }else{
-      this._getPane(tickUpdate.owner ?? tickUpdate.subject).displayResult(tickUpdate)
-    }
-  }
+  // _performTickUpdate(tickUpdate){
+  //   if(tickUpdate.results){
+  //     this._performAction(tickUpdate)
+  //   }else{
+  //     this._getPane(tickUpdate.owner ?? tickUpdate.subject).displayResult(tickUpdate)
+  //   }
+  // }
 
   _showRefereeTime(){
     // TODO: referee time

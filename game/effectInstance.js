@@ -1,6 +1,7 @@
 import { uniqueID } from './utilFunctions.js'
 import Stats  from './stats/stats.js'
 import AbilityInstance from './abilityInstance.js'
+import _ from 'lodash'
 
 // Stupid
 new Stats()
@@ -80,10 +81,13 @@ export default class EffectInstance{
 
   getAbilities(type, trigger){
     return this.abilities.filter(ai => {
-      if(ai.type !== type || ai.trigger !== trigger){
+      if(ai.type !== type){
         return false
+      }else if(_.isString(ai.trigger)){
+        return ai.trigger === trigger
+      }else{
+        return ai.trigger[trigger]
       }
-      return true
     })
   }
 

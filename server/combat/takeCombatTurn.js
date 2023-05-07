@@ -21,7 +21,6 @@ export function takeCombatTurn(combat, actor){
       actionResults.push(performAction(combat, actor, null, basicAttackDef(actor)))
     }
   }
-  actor.nextTurn()
   return actionResults
 }
 
