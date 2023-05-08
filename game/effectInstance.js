@@ -83,8 +83,6 @@ export default class EffectInstance{
     return this.abilities.filter(ai => {
       if(ai.type !== type){
         return false
-      }else if(_.isString(ai.trigger)){
-        return ai.trigger === trigger
       }else{
         return ai.trigger[trigger]
       }

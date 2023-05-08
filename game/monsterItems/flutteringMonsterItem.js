@@ -3,7 +3,7 @@ export default {
   effect: {
     abilities: [{
       abilityId: 'flutteringDodge',
-      trigger: 'attacked',
+      trigger: { attacked: true },
       cooldown: 10000,
       replacements: {
         dataMerge: {

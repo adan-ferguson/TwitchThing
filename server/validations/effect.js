@@ -22,6 +22,9 @@ const ACTION_SCHEMA = Joi.object({
   attack: Joi.object({
     damageType: DAMAGE_TYPE_SCHEMA,
     scaling: SCALED_NUMBER_SCHEMA,
+  }),
+  gainHealth: Joi.object({
+    scaling: SCALED_NUMBER_SCHEMA
   })
 })
 
@@ -31,23 +34,28 @@ const REPLACEMENT_SCHEMA = Joi.object({
   })
 })
 
-const TRIGGER_NAMES = ['active','attackHit','attacked']
 const TRIGGERS_SCHEMA = Joi.object({
   combatTime: Joi.number().integer(),
-  attackHit: Joi.object({
-    damageType: DAMAGE_TYPE_SCHEMA
-  })
+  attackHit: Joi.alternatives().try(
+    Joi.object({
+      damageType: DAMAGE_TYPE_SCHEMA
+    }),
+    Joi.bool().truthy()),
+  active: Joi.bool().truthy(),
+  attacked: Joi.bool().truthy()
 })
 
 const ABILITY_SCHEMA = Joi.object({
   conditions: Joi.object({
-    source: Joi.string().valid(...SUBJECT_KEYS)
+    source: Joi.string().valid(...SUBJECT_KEYS),
+    hpPctBelow: Joi.number()
   }),
   cooldown: Joi.number().integer(),
   replacements: REPLACEMENT_SCHEMA,
   abilityId: Joi.string(),
   actions: Joi.array().items(ACTION_SCHEMA),
-  trigger: Joi.alternatives().try(Joi.string().valid(...TRIGGER_NAMES), TRIGGERS_SCHEMA).required()
+  uses: Joi.number().integer(),
+  trigger: TRIGGERS_SCHEMA.required()
 }).xor('replacements', 'actions')
 
 export const EFFECT_SCHEMA = Joi.object({

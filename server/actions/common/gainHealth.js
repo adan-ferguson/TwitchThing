@@ -1,17 +1,14 @@
-export default function(combat, attacker, effect = null, actionDef = {}){
-  // gainHealthDef = gainHealthAction(gainHealthDef)
-  // const subject = gainHealthDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
-  // const gain = Math.ceil(scaledNumber(subject, gainHealthDef.scaling))
-  // if(gain <= 0){
-  //   return
-  // }
-  // const hpBefore = subject.hp
-  // subject.hp += gain
-  // return {
-  //   subject: subject.uniqueID,
-  //   type: 'gainHealth',
-  //   data: {
-  //     amount: subject.hp - hpBefore
-  //   }
-  // }
+import { scaledNumberFromAbilityInstance } from '../../../game/scaledNumber.js'
+
+export default function(combat, actor, abilityInstance = null, actionDef = {}){
+  const gain = Math.ceil(scaledNumberFromAbilityInstance(abilityInstance, actionDef.scaling))
+  if(gain <= 0){
+    return
+  }
+  const hpBefore = actor.hp
+  actor.hp += gain
+  return {
+    subject: actor.uniqueID,
+    healthGained: actor.hp - hpBefore
+  }
 }

@@ -102,6 +102,10 @@ export default class AdventurerItemRow extends DIElement{
     }
   }
 
+  flash(){
+    this.stateEl?.flash()
+  }
+
   _update(){
 
     if(this._options.item instanceof LoadoutObjectInstance){
@@ -114,6 +118,8 @@ export default class AdventurerItemRow extends DIElement{
 
     this.classList.toggle('invalid', !(this._options.valid ?? true))
     this.classList.toggle('idle', this._options.showState ? false : true)
+    this.classList.toggle('effect-instance', this._adventurerItemInstance ? true : false)
+    this.setAttribute('effect-id', this._adventurerItemInstance?.uniqueID ?? null)
     this.setTooltip(this.tooltip)
 
     if(!this.adventurerItem){
@@ -132,7 +138,7 @@ export default class AdventurerItemRow extends DIElement{
 
     this.stateEl.setOptions({
       loadoutEffectInstance: this._options.showState ? this.adventurerItemInstance : false
-    })
+    }).update()
 
     return this
   }

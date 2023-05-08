@@ -64,6 +64,10 @@ export default class MonsterItemRow extends DIElement{
     return this.querySelector('di-loadout-row-state')
   }
 
+  flash(){
+    this.stateEl?.flash()
+  }
+
   _update(){
 
     if(this._options.item instanceof LoadoutObjectInstance){
@@ -75,6 +79,8 @@ export default class MonsterItemRow extends DIElement{
     }
 
     this.setTooltip(this.tooltip)
+    this.classList.toggle('effect-instance', this._monsterItemInstance ? true : false)
+    this.setAttribute('effect-id', this._monsterItemInstance?.uniqueID ?? null)
 
     if(!this.monsterItem){
       this._blank()
@@ -85,7 +91,7 @@ export default class MonsterItemRow extends DIElement{
 
     this.stateEl.setOptions({
       loadoutEffectInstance: this._monsterItemInstance
-    })
+    }).update()
 
     return this
   }

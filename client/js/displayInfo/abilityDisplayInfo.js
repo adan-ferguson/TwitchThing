@@ -1,11 +1,8 @@
-import LoadoutObject from '../../../game/loadoutObject.js'
-import EffectInstance from '../../../game/effectInstance.js'
 import { expandActionDef } from '../../../game/actionDefs/expandActionDef.js'
-import { scalingWrap, scalingWrapPct } from '../components/common.js'
 import AbilityInstance from '../../../game/abilityInstance.js'
-import _ from 'lodash'
 import { derivedAttackDescription } from './derived/actions/attack.js'
 import { derivedApplyStatusEffectDescription } from './derived/actions/applyStatusEffect.js'
+import { derivedGainHealthDescription } from './derived/actions/gainHealth.js'
 
 const abilityDefinitions = {
   flutteringDodge: () => {
@@ -31,7 +28,7 @@ export function getAbilityDisplayInfo(ability){
   return {
     ability,
     descriptionHTML: definition.description ?? abilityDescription(ability),
-    type: ability.trigger === 'active' ? 'active' : 'nonactive'
+    type: ability.trigger.active ? 'active' : 'nonactive'
   }
 }
 
@@ -49,20 +46,25 @@ function abilityDescription(ability){
     if(actionDef.applyStatusEffect){
       chunks.push(...derivedApplyStatusEffectDescription(actionDef.applyStatusEffect, abilityInstance))
     }
+    if(actionDef.gainHealth){
+      chunks.push(...derivedGainHealthDescription(actionDef.gainHealth, abilityInstance))
+    }
   })
+  if(ability.conditions){
+    chunks.push(...conditionsDescription(ability.conditions))
+  }
   return chunks.join(' ')
 }
-
-// function toGainHealthString(action){
-//   if(action.scaling.magicPower){
-//     return `Recover [magicScaling${action.scaling.magicPower}] health.`
-//   }
-//   return 'Recover <BUGGED AMOUNT LOL> health.'
-// }
 
 function combatTimePrefix(val){
   if(val === 1){
     return 'Start of Combat:'
   }
   throw 'Not implemented combatTimePrefix'
+}
+
+function conditionsDescription(conditions){
+  if(conditions.hpPctBelow){
+    return [`Only use when health is below ${conditions.hpPctBelow * 100}%.`]
+  }
 }

@@ -263,18 +263,23 @@ export default class FighterInstance{
     if(!conditions){
       return true
     }
-    return Object.keys(conditions).every(conditionName => {
-      if(conditionName === 'hpPctBelow'){
-        return this.hpPct <= conditions[conditionName]
-      }else if(conditionName === 'debuffed'){
-        // return this.statusEffectsData.instances.some(sei => {
-        //   return !sei.isBuff && !sei.expired && !sei.phantom
-        // })
-      }else if(conditionName === 'combatTimeAbove'){
-        return this._state.combatTime >= conditions[conditionName]
-      }
-      throw `Undefined condition: ${conditionName}`
-    })
+    if(conditions.hpPctBelow && this.hpPct > conditions.hpPctBelow){
+      return false
+    }
+    return true
+
+    // return Object.keys(conditions).every(conditionName => {
+    //   if(conditionName === 'hpPctBelow'){
+    //     return this.hpPct <= conditions.hpPctBelow
+    //   }else if(conditionName === 'debuffed'){
+    //     // return this.statusEffectsData.instances.some(sei => {
+    //     //   return !sei.isBuff && !sei.expired && !sei.phantom
+    //     // })
+    //   }else if(conditionName === 'combatTimeAbove'){
+    //     return this._state.combatTime >= conditions[conditionName]
+    //   }
+    //   throw `Undefined condition: ${conditionName}`
+    // })
   }
 
   isEffectDisabled(effect){

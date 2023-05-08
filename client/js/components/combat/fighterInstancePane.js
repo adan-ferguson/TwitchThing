@@ -103,6 +103,8 @@ export default class FighterInstancePane extends HTMLElement{
         flash(this.basicAttackEl, color)
       }
     }
+    const effectEl = this._getEffectEl(action.effect)
+    effectEl?.flash?.()
     // if(action.basicAttack){
     //   const color = DAMAGE_COLORS[this.fighterInstance.basicAttackType]
     //   flash(this.basicAttackEl, color)
@@ -264,19 +266,10 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   _getEffectEl(effectId, eventName){
-    // if(!effectId){
-    //   return null
-    // }
-    // const loadoutRow = this.loadoutEl._rows.find(el => {
-    //   // TODO: eventName should have to be the main event for the effect
-    //   return el.loadoutItem?.obj.effectId === effectId
-    // })
-    // if(loadoutRow){
-    //   return loadoutRow
-    // }
-    // return [...this._effectsListEl.querySelectorAll('di-effect-row')].find(el => {
-    //   return el.effect.effectId === effectId
-    // })
+    if(!effectId){
+      return null
+    }
+    return this.querySelector(`.effect-instance[effect-id="${effectId}"]`)
   }
 
   _displayCancellation(cancelReason){

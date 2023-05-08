@@ -62,13 +62,15 @@ di-loadout-row-state
     //.bar-border
     //  border: none !important
 
-  &[ability-state=ready]
+  &[ability-state="not-ready"]
     border-width: 2rem
 
+  &[ability-state=ready]
+    border-width: 2rem
     &[ability-type=active]
       border-color: #74d5d9
     &[ability-type=nonactive]
       border-color: #ffa227
 
-  &[ability-state=disabled]
-    opacity: 0.4
+  //&[ability-cooldown-state=disabled]
+  //  opacity: 0.4

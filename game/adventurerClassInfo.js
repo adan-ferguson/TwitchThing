@@ -10,7 +10,8 @@ const fighter = {
       Items.shortSword,
       Items.sprintingShoes,
       Items.heavyAxe,
-      Items.leatherArmor
+      Items.leatherArmor,
+      Items.healingPotion
     ],
     [],
     []

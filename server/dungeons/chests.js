@@ -1,6 +1,6 @@
 import { chooseRandomBasicItem, getItemRarity } from '../items/generator.js'
 import { toNumberOfDigits } from '../../game/utilFunctions.js'
-import { geometricProgession } from '../../game/growthFunctions.js'
+import { geometricProgression } from '../../game/growthFunctions.js'
 
 const GOLD_BASE = 20
 const GOLD_GROWTH = 10
@@ -88,7 +88,7 @@ export function applyChestToUser(userDoc, chest){
 
 function addGold(valueRemaining){
   valueRemaining = Math.ceil(Math.random() * valueRemaining)
-  const gold = GOLD_BASE + Math.ceil(geometricProgession(GOLD_GROWTH_PCT, valueRemaining, GOLD_GROWTH))
+  const gold = GOLD_BASE + Math.ceil(geometricProgression(GOLD_GROWTH_PCT, valueRemaining, GOLD_GROWTH))
   return toNumberOfDigits(gold,2)
 }
 

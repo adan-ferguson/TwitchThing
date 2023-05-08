@@ -13,7 +13,7 @@ export function growthFunctions(growthPct, iterations, base = 1){
  * @param roundToNearest
  * @returns {number}
  */
-export function geometricProgession(growthPct, iterations, base = 1, roundToNearest = null){
+export function geometricProgression(growthPct, iterations, base = 1, roundToNearest = null){
   iterations = Math.round(iterations)
   if(iterations <= 0){
     return 0

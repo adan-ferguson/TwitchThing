@@ -1,6 +1,6 @@
 import FighterInstance  from './fighterInstance.js'
 import Monsters from './monsters/combined.js'
-import { geometricProgession } from './growthFunctions.js'
+import { geometricProgression } from './growthFunctions.js'
 import OrbsData from './orbsData.js'
 import { deepClone, toDisplayName, toNumberOfDigits } from './utilFunctions.js'
 import Mods from './mods/combined.js'
@@ -26,7 +26,7 @@ const XP_ZONE_BONUS = 1.75
 export function levelToXpReward(lvl){
   const zoneBonuses = Math.floor((lvl - 1) / 10)
   const adjustedLevel = adjustedDifficultyLevel(lvl)
-  const val = Math.ceil(geometricProgession(XP_GROWTH_PCT, adjustedLevel - 1, XP_GROWTH))
+  const val = Math.ceil(geometricProgression(XP_GROWTH_PCT, adjustedLevel - 1, XP_GROWTH))
   return toNumberOfDigits(
     XP_BASE + val * Math.pow(XP_ZONE_BONUS, zoneBonuses),
     3
@@ -36,7 +36,7 @@ export function levelToXpReward(lvl){
 export function monsterLevelToHp(lvl){
   const adjustedLevel = adjustedDifficultyLevel(lvl)
   return toNumberOfDigits(
-    HP_BASE + Math.ceil(geometricProgession(HP_GROWTH_PCT, adjustedLevel - 1, HP_GROWTH)),
+    HP_BASE + Math.ceil(geometricProgression(HP_GROWTH_PCT, adjustedLevel - 1, HP_GROWTH)),
     2
   )
 }
@@ -44,7 +44,7 @@ export function monsterLevelToHp(lvl){
 export function monsterLevelToPower(lvl){
   const adjustedLevel = adjustedDifficultyLevel(lvl)
   return toNumberOfDigits(
-    POWER_BASE + Math.ceil(geometricProgession(POWER_GROWTH_PCT, adjustedLevel - 1, POWER_GROWTH)),
+    POWER_BASE + Math.ceil(geometricProgression(POWER_GROWTH_PCT, adjustedLevel - 1, POWER_GROWTH)),
     2
   )
 }

@@ -1,6 +1,6 @@
 import DIElement from './diElement.js'
 import { effectInstanceState } from '../effectInstanceState.js'
-import { FLASH_COLORS } from '../colors.js'
+import { FLASH_COLORS, ITEM_ROW_COLORS } from '../colors.js'
 import { flash } from '../animations/simple.js'
 
 export default class LoadoutRowState extends DIElement{
@@ -13,7 +13,7 @@ export default class LoadoutRowState extends DIElement{
       showValue: false,
       color: '#AAAAAA'
     })
-    this._update()
+    this.update()
   }
 
   get initialHTML(){
@@ -27,7 +27,7 @@ export default class LoadoutRowState extends DIElement{
   get defaultOptions(){
     return {
       loadoutEffectInstance: null,
-      displayStyle: null
+      displayStyle: 'standard'
     }
   }
 
@@ -35,9 +35,15 @@ export default class LoadoutRowState extends DIElement{
     return this.querySelector('di-bar.cooldown')
   }
 
-  _update(){
+  flash(){
+    if(this._stateInfo){
+      flash(this, FLASH_COLORS[this._stateInfo.abilityType])
+    }
+  }
 
-    const prevStateInfo = this._stateInfo
+  update(){
+
+    // const prevStateInfo = this._stateInfo
     this._stateInfo = effectInstanceState(this._options.loadoutEffectInstance)
 
     if(!this._stateInfo){
@@ -50,17 +56,16 @@ export default class LoadoutRowState extends DIElement{
     this.setAttribute('ability-type', this._stateInfo.abilityType)
     this.setAttribute('ability-state', this._stateInfo.abilityState)
     this.setAttribute('display-style', this._options.displayStyle)
+
+    const barColor = this._stateInfo.abilityState === 'ready' ?
+      ITEM_ROW_COLORS[this._stateInfo.abilityType] :
+      ITEM_ROW_COLORS.disabled
     this.cooldownBar
       .setOptions({
-        max: this._stateInfo.abilityBarMax
+        max: this._stateInfo.abilityBarMax,
+        color: barColor
       })
-      .setValue(this._stateInfo.abilityBarValue === this._stateInfo.abilityBarMax ? 0 : this._stateInfo.abilityBarValue)
-
-    // Flash if we just used the ability
-    // TODO: probably false positives here?
-    if(prevStateInfo?.abilityState === 'ready' && this._stateInfo.abilityState === 'recharging'){
-      flash(this, FLASH_COLORS[this._stateInfo.abilityType])
-    }
+      .setValue(this._stateInfo.abilityBarValue)
   }
 
   advanceTime(ms){

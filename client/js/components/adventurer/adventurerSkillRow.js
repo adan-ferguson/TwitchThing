@@ -100,6 +100,10 @@ export default class AdventurerSkillRow extends DIElement{
     return tooltip
   }
 
+  flash(){
+    this.stateEl?.flash()
+  }
+
   _update(){
 
     if(this._options.skill instanceof LoadoutObjectInstance){
@@ -116,6 +120,8 @@ export default class AdventurerSkillRow extends DIElement{
     this.classList.toggle('clickable', false)
     this.classList.toggle('locked', this._options.status !== AdventurerSkillRowStatus.UNLOCKED)
     this.classList.toggle('invalid', !(this._options.valid ?? true))
+    this.classList.toggle('effect-instance', this._adventurerSkillInstance ? true : false)
+    this.setAttribute('effect-id', this._adventurerSkillInstance?.uniqueID ?? null)
     this.setTooltip(this.tooltip)
 
     if(!skill){
@@ -135,7 +141,7 @@ export default class AdventurerSkillRow extends DIElement{
     this.stateEl.setOptions({
       loadoutEffectInstance: this._options.showState ? this.adventurerSkillInstance : false,
       displayStyle: 'skill'
-    })
+    }).update()
 
     return this
   }

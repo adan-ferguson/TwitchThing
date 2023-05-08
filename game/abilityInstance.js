@@ -96,16 +96,19 @@ export default class AbilityInstance{
     return this._state.timesUsed ?? 0
   }
 
+  get usesRemaining(){
+    return this.uses ? this.uses - this.timesUsed : 99999999
+  }
+
   get ready(){
-    return !this.cooldownRemaining // && this.enabled
+    return !this.cooldownRemaining && this.enabled
   }
 
   get enabled(){
-    return true
-    // if(this.uses && this._state.timesUsed >= this.uses){
-    //   return false
-    // }
-    // return this.fighterInstance.meetsConditions(this.conditions)
+    if(!this.usesRemaining){
+      return false
+    }
+    return this.fighterInstance.meetsConditions(this.conditions)
   }
 
   get cooldownRefreshing(){
@@ -114,6 +117,10 @@ export default class AbilityInstance{
 
   get exclusiveStats(){
     return this.parentEffect.exclusiveStats
+  }
+
+  get conditions(){
+    return this.abilityDef.conditions ?? null
   }
 
   tryUse(data = {}){
@@ -140,10 +147,6 @@ export default class AbilityInstance{
       this.cooldownRemaining = Math.max(0, this.cooldownRemaining - ms)
     }
   }
-
-  // get conditions(){
-  //   return this._abilityDef.conditions ?? null
-  // }
   //
   // get nextTurnOffset(){
   //   return this._abilityDef.nextTurnOffset

@@ -4,7 +4,7 @@ export default {
     return {
       effect: {
         abilities: [{
-          trigger: 'active',
+          trigger: { active: true },
           cooldown: 10000,
           actions: [{
             attack: {

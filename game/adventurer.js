@@ -1,4 +1,4 @@
-import { geometricProgession, inverseGeometricProgression } from './growthFunctions.js'
+import { geometricProgression, inverseGeometricProgression } from './growthFunctions.js'
 import { toNumberOfDigits } from './utilFunctions.js'
 import _ from 'lodash'
 import AdventurerLoadout from './adventurerLoadout.js'
@@ -30,17 +30,17 @@ export function advLevelToXp(lvl){
     return 0
   }
   return toNumberOfDigits(
-    Math.round(geometricProgession(XP_GROWTH_PCT, lvl - 2, XP_GROWTH)) + XP_BASE,
+    Math.round(geometricProgression(XP_GROWTH_PCT, lvl - 2, XP_GROWTH)) + XP_BASE,
     3
   )
 }
 
 export function adventurerLevelToHp(lvl){
-  return HP_BASE + Math.ceil(geometricProgession(HP_GROWTH_PCT, lvl - 1, HP_GROWTH))
+  return HP_BASE + Math.ceil(geometricProgression(HP_GROWTH_PCT, lvl - 1, HP_GROWTH))
 }
 
 export function adventurerLevelToPower(lvl){
-  return POWER_BASE + Math.ceil(geometricProgession(POWER_GROWTH_PCT, lvl - 1, POWER_GROWTH))
+  return POWER_BASE + Math.ceil(geometricProgression(POWER_GROWTH_PCT, lvl - 1, POWER_GROWTH))
 }
 
 export default class Adventurer{

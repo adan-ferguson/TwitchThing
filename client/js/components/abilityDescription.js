@@ -1,4 +1,4 @@
-import { makeEl, roundToFixed } from '../../../game/utilFunctions.js'
+import { makeEl, roundToFixed, wrapContent } from '../../../game/utilFunctions.js'
 import tippy from 'tippy.js'
 import { ABILITY_DESCRIPTION_COLORS, ITEM_ROW_COLORS } from '../colors.js'
 import DIElement from './diElement.js'
@@ -13,7 +13,7 @@ export default class AbilityDescription extends DIElement{
     this.style.backgroundColor = ABILITY_DESCRIPTION_COLORS[displayInfo.type]
     this.setAttribute('ability-type', displayInfo.type)
 
-    this.innerHTML += displayInfo.descriptionHTML
+    this.appendChild(wrapContent(displayInfo.descriptionHTML))
     this.appendChild(makeBotRow(displayInfo))
 
     if(!this.inTooltip){
@@ -33,9 +33,9 @@ function makeBotRow(displayInfo){
     class: ['bot-row', 'flex-centered', 'flex-columns', 'flex-spaced']
   })
 
-  let botLeftText = displayInfo.type === 'active' ? 'Active Ability' : ''
+  let botLeftText = displayInfo.type === 'active' ? 'Active' : ''
   if(displayInfo.ability.uses){
-    botLeftText += (botLeftText.length ? ', ' : '')
+    botLeftText += (botLeftText.length ? ' - ' : '')
     botLeftText += `${displayInfo.ability.uses} use${displayInfo.ability.uses > 1 ? 's' : ''}`
   }
   row.appendChild(makeEl({ text: botLeftText }))
