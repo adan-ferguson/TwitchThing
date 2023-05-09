@@ -112,7 +112,7 @@ export default class AbilityInstance{
   }
 
   get cooldownRefreshing(){
-    return this.cooldown && (!this.uses || this.timesUsed < this.uses)
+    return this.cooldownRemaining && (!this.uses || this.timesUsed < this.uses)
   }
 
   get exclusiveStats(){

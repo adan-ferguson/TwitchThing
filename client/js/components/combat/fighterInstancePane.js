@@ -123,26 +123,20 @@ export default class FighterInstancePane extends HTMLElement{
       this._queueHpChange(() => this._displayDamageResult(result))
     }else if(result.cancelled){
       this._displayCancellation(result.cancelled)
+    }else if(result.healthGained){
+      this._queueHpChange(() => this._displayLifeGained(result.healthGained))
     }
-    // if(result.type === 'attack'){
-    // }else if(result.type === 'damage'){
-    //   this._queueHpChange(() => this._displayDamageResult(result))
-    // }else if(result.type === 'gainHealth'){
-    //   this._queueHpChange(() => this._displayLifeGained(result.data.amount))
-    // }else if(result.type === 'cancel'){
-    //   this._displayCancellation(result, effect)
-    // }
   }
 
   _displayLifeGained(amount){
-    // if(!amount){
-    //   return
-    // }
-    // new FlyingTextEffect(this.hpBarEl, amount, {
-    //   fontSize: TEXT_EFFECT_MIN + Math.min(0.5, amount / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX,
-    //   clearExistingForSource: true
-    // })
-    // this.hpBarEl.setValue(amount, { relative: true, animate: true })
+    if(amount <= 0){
+      return
+    }
+    new FlyingTextEffect(this.hpBarEl, amount, {
+      fontSize: TEXT_EFFECT_MIN + Math.min(0.5, amount / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX,
+      clearExistingForSource: true
+    })
+    this.hpBarEl.setValue(amount, { relative: true, animate: true })
   }
 
   _queueHpChange(fn){

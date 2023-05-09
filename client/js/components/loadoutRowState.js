@@ -72,10 +72,11 @@ export default class LoadoutRowState extends DIElement{
     if(this.idle || !this._stateInfo || this.getAttribute('ability-state') === 'ready'){
       return
     }
-    if(this._stateInfo.cooldownRefreshing){
+    if(this._stateInfo.abilityState === 'cooldown-refreshing'){
       this.cooldownBar.setValue(ms, { relative: true })
       if(this.cooldownBar.pct === 1){
-        this.setAttribute('ability-state', 'ready')
+        this._stateInfo.abilityInstance.cooldownRemaining = 0
+        this.update()
       }
     }
   }

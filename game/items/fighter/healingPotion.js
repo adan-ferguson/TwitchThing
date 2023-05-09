@@ -6,7 +6,7 @@ export default {
           trigger: { active: true },
           uses: level + 1,
           conditions: {
-            hpPctBelow: 0.999
+            hpPctBelow: 0.5
           },
           actions: [{
             gainHealth: {
@@ -20,5 +20,5 @@ export default {
       displayName: 'Health Potion'
     }
   },
-  orbs: [2, 3, '...']
+  orbs: [2, '...']
 }

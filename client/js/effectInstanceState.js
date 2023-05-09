@@ -5,6 +5,7 @@ export function effectInstanceState(ei){
   const ai = ei.abilities[0]
   return {
     disabled: ei.disabled,
+    abilityInstance: ai,
     abilityType: type(ai),
     abilityState: state(ai),
     abilityUsable: usable(ai),
@@ -31,7 +32,6 @@ function state(ai){
   }else if(ai.cooldownRefreshing){
     return 'cooldown-refreshing'
   }else if(!ai.ready){
-    console.log('nr')
     return 'not-ready'
   }
   return 'ready'
