@@ -53,6 +53,7 @@ export default class CombatEnactment extends EventEmitter{
   }
 
   _setupTimeline(combat){
+    console.log(combat.timeline)
     this._timeline = new Timeline(combat.timeline)
     this._prevEntryIndex = this._timeline.currentEntryIndex
     this._applyEntries(this._timeline.entries[0], false)

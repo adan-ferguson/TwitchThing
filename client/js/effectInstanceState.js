@@ -11,6 +11,7 @@ export function effectInstanceState(ei){
     abilityUsable: usable(ai),
     abilityBarValue: barValue(ai),
     abilityBarMax: barMax(ai),
+    next: isNext(ai)
   }
 }
 
@@ -63,4 +64,11 @@ function barMax(ai){
     }
   }
   return 1
+}
+
+function isNext(ai){
+  if(!ai){
+    return false
+  }
+  return ai === ai.fighterInstance.getNextActiveAbility()
 }

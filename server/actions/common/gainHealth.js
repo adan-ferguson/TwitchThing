@@ -6,5 +6,5 @@ export default function(combat, actor, abilityInstance = null, actionDef = {}){
   if(gain <= 0){
     return
   }
-  return gainHealth(actor, gain)
+  return gainHealth(combat, actor, gain)
 }

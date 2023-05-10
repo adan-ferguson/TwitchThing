@@ -4,8 +4,6 @@ import { shuffle } from '../../game/rando.js'
 import { takeCombatTurn } from './takeCombatTurn.js'
 import { processAbilityEvents } from '../mechanics/abilities.js'
 import { useAbility } from '../actions/performAction.js'
-import { wait } from '../../game/utilFunctions.js'
-import Mods from '../../game/mods/combined.js'
 
 const MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS = 30
 const MAX_TRIGGER_LOOPS = 30
@@ -199,7 +197,6 @@ class Combat{
 
     shuffle([this.fighterInstance1, this.fighterInstance2]).forEach(actor => {
       actions.push(...takeCombatTurn(this, actor))
-      actor.nextTurn()
     })
 
     return actions
