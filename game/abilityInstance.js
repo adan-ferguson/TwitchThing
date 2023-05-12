@@ -88,11 +88,11 @@ export default class AbilityInstance{
   }
 
   get cooldown(){
-    return this.cooldownMultiplier * this._abilityDef.cooldown || this.initialCooldown
+    return this.cooldownReduction * this._abilityDef.cooldown || this.initialCooldown
   }
 
   get initialCooldown(){
-    return (this._abilityDef.initialCooldown ?? 0) * (1 - this._parentEffect.exclusiveStats.get('cooldownReduction').value)
+    return (this._abilityDef.initialCooldown ?? 0) * this.cooldownReduction
   }
 
   get uses(){

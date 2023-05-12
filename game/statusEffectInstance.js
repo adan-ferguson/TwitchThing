@@ -1,4 +1,3 @@
-import Effects from './statusEffects/combined.js'
 import Stats from './stats/stats.js'
 import { roundToFixed, toDisplayName } from './utilFunctions.js'
 import EffectInstance from './effectInstance.js'
@@ -12,6 +11,14 @@ export default class StatusEffectInstance extends EffectInstance{
 
   get data(){
     return this._data
+  }
+
+  get stackingId(){
+    return this.effectData.stackingId ?? null
+  }
+
+  get sourceEffectId(){
+    return this._state.sourceEffectId
   }
 
   get name(){
@@ -141,6 +148,7 @@ export default class StatusEffectInstance extends EffectInstance{
   addStack(){
     if(this.effectData.stacking){
       this._state.stacks = this.stacks + 1
+      this.fighterInstance.uncache()
     }
     return this
   }

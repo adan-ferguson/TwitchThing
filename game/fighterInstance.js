@@ -134,7 +134,7 @@ export default class FighterInstance{
     this._state.statusEffects?.forEach(({ data, state }) => {
       this.addStatusEffect(data, state)
     })
-    this._cachedStats = null
+    this.uncache()
   }
 
   get turnTime(){
@@ -323,7 +323,7 @@ export default class FighterInstance{
     if(this.inCombat){
       this._state.combatTime += ms
     }
-    this._cachedStats = null
+    this.uncache()
   }
 
   // getSlotEffectsFor(slotIndex){
@@ -359,15 +359,24 @@ export default class FighterInstance{
 
   addStatusEffect = (data, state = {}) => {
     this.statusEffectInstances.push(new StatusEffectInstance(data, this, state))
+    this.uncache()
   }
 
   nextTurn(){
     this._state.timeSinceLastAction = this._state.nextTurnOffset ?? 0
     delete this._state.nextTurnOffset
+    this.uncache()
+  }
+
+  uncache(){
     this._cachedStats = null
   }
 
   _cleanupExpiredStatusEffects(){
+    const len = this._statusEffectInstances.length
     this._statusEffectInstances = this._statusEffectInstances.filter(sei => !sei.expired)
+    if(this._statusEffectInstances.length !== len){
+      this.uncache()
+    }
   }
 }

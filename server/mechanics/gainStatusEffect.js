@@ -3,28 +3,32 @@
  * @param combat
  * @param subject
  * @param sourceInstance
- * @param statusEffect
+ * @param statusEffectData
  */
-export function gainStatusEffect(combat, subject, sourceInstance, statusEffect){
-  // const existing = subject.statusEffectInstances.find(sei => {
-  //     if(effectData.stackingId && effectData.stackingId === statusEffectInstance.effectData.stackingId){
-  //       return true
-  //     }
-  //     return effectData.sourceEffectId === statusEffectInstance.data.sourceEffectId
-  //   return matches(sei)
-  // })
-  // if(existing){
-  //   if(existing.stacking === 'replace'){
-  //     const instance = new StatusEffectInstance(statusEffectData, this._fighterInstance)
-  //     this._instances[index] = instance
-  //     return instance
-  //   }else if(existing.stacking === 'extend'){
-  //     return existing.extend(new StatusEffectInstance(statusEffectData, this._fighterInstance).duration)
-  //   }else if(existing.stacking === true){
-  //     return existing.addStack().refresh()
-  //   }
-  // }
-  subject.addStatusEffect(statusEffect)
+export function gainStatusEffect(combat, subject, sourceAbilityInstance, statusEffectData){
+  const state = {
+    sourceEffectId: sourceAbilityInstance.parentEffect.uniqueID
+  }
+  const existing = subject.statusEffectInstances.find(sei => {
+    if(statusEffectData.stackingId && statusEffectData.stackingId === sei.stackingId){
+      return true
+    }
+    return state.sourceEffectId === sei.sourceEffectId
+  })
+  if(existing){
+    // if(existing.stacking === 'replace'){
+    //   const instance = new StatusEffectInstance(statusEffectData, this._fighterInstance)
+    //   this._instances[index] = instance
+    //   return instance
+    // }else if(existing.stacking === 'extend'){
+    //   return existing.extend(new StatusEffectInstance(statusEffectData, this._fighterInstance).duration)
+    // }else
+    if(existing.stacking === 'stack'){
+      existing.addStack().refresh()
+    }
+  }else{
+    subject.addStatusEffect(statusEffectData, state)
+  }
 }
 
 //   add(statusEffectData){

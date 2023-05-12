@@ -53,7 +53,8 @@ export default class LoadoutRowState extends DIElement{
 
     this.classList.remove('displaynone')
     this.parentElement.classList.toggle('disabled', this._stateInfo.disabled)
-    this.classList.toggle('next', this._stateInfo.next)
+    // TODO: better next effect
+    // this.classList.toggle('next', this._stateInfo.next)
     this.setAttribute('ability-type', this._stateInfo.abilityType)
     this.setAttribute('ability-state', this._stateInfo.abilityState)
     this.setAttribute('display-style', this._options.displayStyle)
