@@ -80,8 +80,15 @@ export default class AbilityInstance{
     this._state.cooldownElapsedPct = Math.min(val, 1)
   }
 
+  get cooldownReduction(){
+    if(this.trigger.active){
+      return 1 - this._parentEffect.exclusiveStats.get('cooldownReduction').value
+    }
+    return 1
+  }
+
   get cooldown(){
-    return (1 - this._parentEffect.exclusiveStats.get('cooldownReduction').value) * this._abilityDef.cooldown || this.initialCooldown
+    return this.cooldownMultiplier * this._abilityDef.cooldown || this.initialCooldown
   }
 
   get initialCooldown(){

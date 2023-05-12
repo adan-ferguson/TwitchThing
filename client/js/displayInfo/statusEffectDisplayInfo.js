@@ -50,6 +50,8 @@ export function statusEffectDescription(statusEffectDef){
   }
   if(statusEffectDef.duration){
     chunks.push(`for ${toSeconds(statusEffectDef.duration)}`)
+  }else if(!statusEffectDef.persisting){
+    chunks.push('until end of combat')
   }
   return { chunks }
 }

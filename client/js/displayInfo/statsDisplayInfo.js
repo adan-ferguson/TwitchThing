@@ -125,7 +125,7 @@ export function getStatDisplayInfo(stat, options = {}){
     delete info.displayedValueFn
   }
   if(info.displayedValue === undefined){
-    info.displayedValue = toText(stat, options.style)
+    info.displayedValue = toText(stat, options)
   }
   if(info.descriptionFn){
     info.description = info.descriptionFn(stat.value, options)

@@ -113,10 +113,6 @@ export default class DungeonRunInstance extends EventEmitter{
       return
     }
 
-    // Reset this each advancement to make sure that everything is synced up.
-    // If we just let this roll, then it's possible the doc state is wrong but
-    // we would never notice unless the server reloaded.
-    this._adventurerInstance = null
     await this._nextEvent()
   }
 
@@ -196,7 +192,12 @@ export default class DungeonRunInstance extends EventEmitter{
    * @param event
    */
   _updateState(event){
-    event.adventurerState = this.adventurerInstance.state
-    this.doc.adventurerState = this.adventurerInstance.state
+    const state = {
+      ...this.adventurerInstance.state,
+      currentFloor: this.floor
+    }
+    event.adventurerState = state
+    this.doc.adventurerState = state
+    this._adventurerInstance = null
   }
 }

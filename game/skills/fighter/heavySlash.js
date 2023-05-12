@@ -1,11 +1,11 @@
 export default {
-  levelFn(level){
-    const physPower = 1.2 + 0.3 * level
+  levelFn: level => {
+    const physPower = 2 + 1 * level
     return {
       effect: {
         abilities: [{
           trigger: { active: true },
-          cooldown: 10000,
+          initialCooldown: 15000 + level * 5000,
           actions: [{
             attack: {
               scaling: {

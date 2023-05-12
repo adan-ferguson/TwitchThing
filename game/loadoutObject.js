@@ -23,6 +23,10 @@ export default class LoadoutObject{
     return this._data
   }
 
+  get conditions(){
+    return this.effect.conditions ?? null
+  }
+
   get abilities(){
     return this.effect.abilities ?? []
   }

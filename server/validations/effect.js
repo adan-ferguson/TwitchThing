@@ -50,6 +50,7 @@ const ABILITY_SCHEMA = Joi.object({
     source: Joi.string().valid(...SUBJECT_KEYS),
     hpPctBelow: Joi.number()
   }),
+  initialCooldown: Joi.number().integer(),
   cooldown: Joi.number().integer(),
   replacements: REPLACEMENT_SCHEMA,
   abilityId: Joi.string(),
@@ -60,7 +61,10 @@ const ABILITY_SCHEMA = Joi.object({
 
 export const EFFECT_SCHEMA = Joi.object({
   abilities: Joi.array().items(ABILITY_SCHEMA),
-  stats: STATS_SCHEMA
+  stats: STATS_SCHEMA,
+  conditions: Joi.object({
+    deepestFloor: Joi.boolean()
+  })
 })
 
 export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({

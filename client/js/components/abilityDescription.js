@@ -40,14 +40,14 @@ function makeBotRow(displayInfo){
   }
   row.appendChild(makeEl({ text: botLeftText }))
 
-  if(displayInfo.ability.cooldown){
+  if(displayInfo.cooldown){
     let str = ''
-    if(displayInfo.ability.initialCooldown){
-      str += d2(displayInfo.ability.cooldown - displayInfo.ability.initialCooldown) + '/'
+    if(displayInfo.initialCooldown){
+      str += d2(displayInfo.cooldown - displayInfo.initialCooldown) + '/'
     }
-    str += d2(displayInfo.ability.cooldown)
+    str += d2(displayInfo.cooldown)
     row.appendChild(makeEl({
-      class: displayInfo.ability.initialCooldown ? 'initial-cooldown' : 'cooldown',
+      class: displayInfo.initialCooldown ? 'initial-cooldown' : 'cooldown',
       content: '<i class="fa-solid fa-hourglass"></i>' + str
     }))
   }else if(!botLeftText){

@@ -10,12 +10,12 @@ const XP_GROWTH = 200
 const XP_GROWTH_PCT = 0.18
 
 const HP_BASE = 40
-const HP_GROWTH = 18
-const HP_GROWTH_PCT = 0.04
+const HP_GROWTH = 10
+const HP_GROWTH_PCT = 0.05
 
 const POWER_BASE = 10
-const POWER_GROWTH = 3
-const POWER_GROWTH_PCT = 0.04
+const POWER_GROWTH = 2
+const POWER_GROWTH_PCT = 0.05
 
 export function advXpToLevel(xp){
   if(xp < XP_BASE){
@@ -123,6 +123,10 @@ export default class Adventurer{
 
   set xp(val){
     this._doc.xp = val
+  }
+
+  get deepestFloor(){
+    return this._doc.accomplishments.deepestFloor
   }
 
   /**

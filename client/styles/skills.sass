@@ -3,6 +3,9 @@ di-adventurer-skill-row, di-adventurer-item-row, di-monster-item-row
   color: #222
   background-color: white
 
+  &.disabled
+    opacity: 0.4
+
   &.clickable
     cursor: pointer
     filter: drop-shadow(1.75rem 1.75rem 1.75rem #999)
@@ -38,7 +41,7 @@ di-adventurer-skill-row
   &.locked
     border: 0.4rem solid #BBB
     .content
-      color: #444
+      color: #999
 
   .content
     i.skill-point

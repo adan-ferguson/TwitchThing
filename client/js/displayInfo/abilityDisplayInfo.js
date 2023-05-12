@@ -28,7 +28,9 @@ export function getAbilityDisplayInfo(ability){
   return {
     ability,
     descriptionHTML: definition.description ?? abilityDescription(ability),
-    type: ability.trigger.active ? 'active' : 'nonactive'
+    type: ability.trigger.active ? 'active' : 'nonactive',
+    cooldown: ability.cooldown ?? ability.initialCooldown ?? null,
+    initialCooldown: ability.initialCooldown ?? null
   }
 }
 
@@ -37,6 +39,9 @@ function abilityDescription(ability){
   const abilityInstance = ability instanceof AbilityInstance ? ability : null
   if(ability.trigger.combatTime){
     chunks.push(combatTimePrefix(ability.trigger.combatTime))
+  }
+  if(ability.trigger.attackHit){
+    chunks.push('After landing an attack:')
   }
   ability.actions?.forEach(actionDef => {
     actionDef = expandActionDef(actionDef)

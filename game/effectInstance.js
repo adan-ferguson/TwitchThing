@@ -31,6 +31,10 @@ export default class EffectInstance{
     throw 'effectData getter not defined'
   }
 
+  get conditions(){
+    return this.effectData.conditions ?? null
+  }
+
   get disabled(){
     // if(!this.owner){
     //   return false
@@ -38,7 +42,20 @@ export default class EffectInstance{
     // if(this.owner.isEffectDisabled(this)){
     //   return true
     // }
+    if(!this.meetsConditions){
+      return true
+    }
     return false
+  }
+
+  get meetsConditions(){
+    if(!this.conditions){
+      return true
+    }
+    if(this.conditions.deepestFloor && !this.fighterInstance.onDeepestFloor){
+      return false
+    }
+    return true
   }
 
   /**

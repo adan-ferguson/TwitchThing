@@ -125,7 +125,8 @@ export default class ClassDisplay extends DIElement{
       const row = new AdventurerSkillRow().setOptions({
         status: skillStatus(this._adventurer, skill),
         skill: skills[i],
-        clickable: true
+        clickable: true,
+        showTooltip: false
       })
       row.addEventListener('click', () => {
         this._showUnlockModal(skill)

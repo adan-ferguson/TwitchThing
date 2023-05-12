@@ -97,6 +97,13 @@ export default class AdventurerInstance extends FighterInstance{
     }
   }
 
+  get onDeepestFloor(){
+    if(!this._state.currentFloor){
+      return false
+    }
+    return this._state.currentFloor >= this.adventurer.deepestFloor
+  }
+
   getSlotInfo(col, row){
     // TODO: check for temporary item
     const slotInfo = this._adventurer.loadout.getSlotInfo(col, row)

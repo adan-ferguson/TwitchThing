@@ -41,7 +41,7 @@ export default class AdventurerSkillRow extends DIElement{
     this.innerHTML = HTML
     this._update()
     this.addEventListener('contextmenu', e => {
-      if(this.adventurerSkill){
+      if(this.adventurerSkill && this._options.showTooltip){
         e.preventDefault()
         const details = new SkillCard().setSkill(this.adventurerSkill)
         new SimpleModal(details).show()
@@ -80,13 +80,14 @@ export default class AdventurerSkillRow extends DIElement{
       showSkillPoints: true,
       skill: null,
       valid: null,
-      showState: false
+      showState: false,
+      showTooltip: true
     }
   }
 
   get tooltip(){
 
-    if (!this._options.skill){
+    if(!this._options.skill || !this._options.showTooltip){
       return null
     }
 

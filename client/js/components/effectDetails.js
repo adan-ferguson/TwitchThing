@@ -31,6 +31,7 @@ export default class EffectDetails extends DIElement{
     if(!this._obj){
       return
     }
+    this._addConditions()
     this._addMeta()
     this._addAbilities()
     // this._addDescription()
@@ -38,6 +39,16 @@ export default class EffectDetails extends DIElement{
     this._addLoadoutModifiers()
     this._addDuration()
     // this._addUsesRemaining()
+  }
+
+  _addConditions(){
+    const conditions = this._obj.conditions
+    if(!conditions){
+      return
+    }
+    if(conditions.deepestFloor){
+      this.appendChild(wrapText('While exploring this Adventurer\'s deepest floor:'))
+    }
   }
 
   _addMeta(){

@@ -132,6 +132,10 @@ class Combat{
         processAbilityEvents(this, 'defeated', this.fighterInstance2)
       }
       this._resolveTriggers()
+      if(this._currentTime >= 120000){
+        // TODO: max time
+        this.fighterInstance1.hp = 0
+      }
       this._addTimelineEntry({
         actions
       })
