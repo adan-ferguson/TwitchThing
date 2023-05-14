@@ -24,8 +24,8 @@ export default {
                 name: 'poisoned',
                 duration: 10000,
                 persisting: true,
-                $params: {
-                  $damage: {
+                Xparams: {
+                  Xdamage: {
                     physPower: 0.1
                   }
                 }

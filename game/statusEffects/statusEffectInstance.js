@@ -1,6 +1,8 @@
 import Stats from '../stats/stats.js'
 import { roundToFixed, toDisplayName } from '../utilFunctions.js'
 import EffectInstance from '../effectInstance.js'
+import StatusEffects from './combined.js'
+import _ from 'lodash'
 
 export default class StatusEffectInstance extends EffectInstance{
 
@@ -30,27 +32,20 @@ export default class StatusEffectInstance extends EffectInstance{
   }
 
   get effectData(){
-    return this.data
-    //  TODO: baseEffect not name
-    // if(!this._data.name){
-    //   return this.data
-    // }
-    // let effectData
-    // const baseDef = Effects[this._data.name]
-    // if(baseDef.defFn){
-    //   effectData = {
-    //     name: baseDef.name,
-    //     group: baseDef.group,
-    //     displayName: toDisplayName(baseDef.name),
-    //     ...baseDef.defFn(this._data.params, this._state)
-    //   }
-    // }else{
-    //   effectData = baseDef
-    // }
-    // return {
-    //   ...effectData,
-    //   ...this.data
-    // }
+    if(!this.data.base){
+      return this.data
+    }
+    let effectData
+    const baseDef = StatusEffects[this.data.base].def
+    if(_.isFunction(baseDef)){
+      effectData = baseDef(this.data.params, this.state)
+    }else{
+      effectData = baseDef
+    }
+    return {
+      ...effectData,
+      ...this.data
+    }
   }
 
   /**

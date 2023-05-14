@@ -28,9 +28,6 @@ export function performAction(combat, actor, ability, actionDef){
 }
 
 export function useAbility(combat, ability, triggerData = null){
-  if(!ability.tryUse()){
-    throw 'Can not use ability, it is not ready.'
-  }
   const owner = ability.fighterInstance
   const results = []
   iterateActions(ability.actions)

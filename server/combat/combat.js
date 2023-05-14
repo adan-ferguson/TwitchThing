@@ -180,7 +180,7 @@ class Combat{
     if(timeToAdvance){
       this.fighters.forEach(fi => {
         fi.advanceTime(timeToAdvance)
-        processAbilityEvents(this, 'tick', fi)
+        processAbilityEvents(this, 'instant', fi)
         processAbilityEvents(this, 'combatTime', fi, {
           combatTime: {
             before: this._currentTime - timeToAdvance,

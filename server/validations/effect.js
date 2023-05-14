@@ -4,6 +4,7 @@ import { STATS_SCHEMA } from './stats.js'
 import { DAMAGE_TYPE_SCHEMA } from './damage.js'
 import { STATICS_SCHEMA } from './statics.js'
 import StatusEffects from '../../game/statusEffects/combined.js'
+import _ from 'lodash'
 
 
 const SCALED_NUMBER_SCHEMA = Joi.object({
@@ -87,7 +88,7 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
   isBuff: Joi.boolean(),
   name: Joi.string(),
   persisting: Joi.boolean().truthy(),
-  $params: Joi.object()
+  Xparams: Joi.object()
 }).or('base', 'isBuff')
 
 export function validateAllStatusEffects(){
@@ -101,5 +102,9 @@ export function validateAllStatusEffects(){
 }
 
 function validateStatusEffect(id){
-  Joi.assert(StatusEffects[id].def, STATUS_EFFECT_SCHEMA)
+  let def = StatusEffects[id].def
+  if(_.isFunction(def)){
+    def = def({},{})
+  }
+  Joi.assert(def, STATUS_EFFECT_SCHEMA)
 }

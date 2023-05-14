@@ -5,9 +5,9 @@ import { scaledNumberFromAbilityInstance } from '../../../game/scaledNumber.js'
 export default function(combat, actor, abilityInstance, actionDef = {}){
   const subject = actionDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
   const statusEffect = deepClone(actionDef.statusEffect)
-  if(statusEffect.$params){
-    statusEffect.params = extractParams(statusEffect.$params, abilityInstance)
-    delete statusEffect.$params
+  if(statusEffect.Xparams){
+    statusEffect.params = extractParams(statusEffect.Xparams, abilityInstance)
+    delete statusEffect.Xparams
   }
   const ret = {
     subject: subject.uniqueID,
@@ -17,13 +17,13 @@ export default function(combat, actor, abilityInstance, actionDef = {}){
   return ret
 }
 
-function extractParams($params, abilityInstance){
+function extractParams(Xparams, abilityInstance){
   const params = {}
-  for(let key in $params){
-    if(key[0] === '$'){
-      params[key.substring(1)] = scaledNumberFromAbilityInstance(abilityInstance, $params[key])
+  for(let key in Xparams){
+    if(key[0] === 'X'){
+      params[key.substring(1)] = scaledNumberFromAbilityInstance(abilityInstance, Xparams[key])
     }else{
-      params[key] = $params[key]
+      params[key] = Xparams[key]
     }
   }
   return params

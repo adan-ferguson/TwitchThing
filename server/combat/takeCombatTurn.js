@@ -10,6 +10,9 @@ export function takeCombatTurn(combat, actor){
   const ability = actor.getNextActiveAbility()
   const actionResults = []
   if(ability){
+    if(!ability.tryUse()){
+      throw 'Can not use ability, it is not ready, this should not have been returnd from getNextActiveAbility.'
+    }
     actionResults.push(...useAbility(combat, ability))
   }else if(actor.hasStatic('noBasicAttack')){
     actionResults.push(performAction(combat, actor, null, {
