@@ -1,7 +1,9 @@
 import { EventEmitter } from 'events'
 import { toFighterInstance } from '../../game/toFighterInstance.js'
 import Timeline from '../../game/timeline.js'
-import { arrayize } from '../../game/utilFunctions.js'
+import { arrayize, roundToFixed } from '../../game/utilFunctions.js'
+import { betterDateFormat } from './components/timer.js'
+import { overtimeDamageBonus } from '../../game/combatMechanics.js'
 
 export default class CombatEnactment extends EventEmitter{
 
@@ -10,11 +12,13 @@ export default class CombatEnactment extends EventEmitter{
   _combat
   _timeline
   _destroyed = false
+  _topThing
 
-  constructor(fighterPane1, fighterPane2){
+  constructor(fighterPane1, fighterPane2, topThing){
     super()
     this._fighterPane1 = fighterPane1
     this._fighterPane2 = fighterPane2
+    this._topThing = topThing
   }
 
   get fighterInstance1(){
@@ -72,6 +76,7 @@ export default class CombatEnactment extends EventEmitter{
         this.emit('finished')
       }
       this._prevEntryIndex = this._timeline.currentEntryIndex
+      this._updateTopThing()
     })
   }
 
@@ -97,7 +102,6 @@ export default class CombatEnactment extends EventEmitter{
     }
     const currentEntry = this._timeline.currentEntry
     if(!currentEntry){
-      debugger
       this._showRefereeTime()
     }else{
       this._hideRefereeTime()
@@ -150,5 +154,24 @@ export default class CombatEnactment extends EventEmitter{
 
   _hideRefereeTime(){
     // TODO: referee time
+  }
+
+  _updateTopThing(){
+    if(!this._topThing){
+      return
+    }
+    let color = null
+    const currentEntry = this._timeline.currentEntry
+    const chunks = ['Combat ' + betterDateFormat(Math.max(0, this._timeline.time))]
+    if(currentEntry.overtime){
+      const bonus = overtimeDamageBonus(currentEntry.overtime + this._timeline.timeSinceLastEntry)
+      chunks.push(`Overtime! All damage x${roundToFixed(bonus, 2, true)}`)
+      color = '#2569c0'
+    }
+    if(currentEntry.suddenDeath){
+      chunks.push('Hurry up already!')
+      color = '#b20a0a'
+    }
+    this._topThing.update(chunks.join(' - '), color)
   }
 }

@@ -66,7 +66,7 @@ export function betterDateFormat(ms, options = {}){
     ...options
   }
 
-  const negative = ms > 0 ? false : true
+  const negative = ms >= 0 ? false : true
   ms = Math.abs(ms)
 
   const minutes = clean((ms / 60000))
@@ -78,12 +78,12 @@ export function betterDateFormat(ms, options = {}){
   textContent += ':' + seconds.toString().padStart(2, '0')
 
   if(options.milliseconds){
-    textContent += '.' + milliseconds.toString().padStart(2, '0')
+    textContent += '.' + milliseconds.toString().padStart(3, '0')
   }
 
   return textContent
 
   function clean(num){
-    return Math.floor(Math.round(num))
+    return Math.floor(num)
   }
 }

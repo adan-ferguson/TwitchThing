@@ -2,7 +2,6 @@ import Page from '../page.js'
 import { getSocket, joinSocketRoom, leaveSocketRoom } from '../../../socketClient.js'
 import Zones, { floorToZone, floorToZoneName } from '../../../../../game/zones.js'
 import Timeline from '../../../../../game/timeline.js'
-import Adventurer from '../../../../../game/adventurer.js'
 import fizzetch from '../../../fizzetch.js'
 import FighterInstancePane from '../../combat/fighterInstancePane.js'
 import CombatEnactment from '../../../combatEnactment.js'
@@ -11,22 +10,25 @@ import AdventurerPage from '../adventurer/adventurerPage.js'
 import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 
 const HTML = `
-<div class='content-columns'>
-  <div class='content-rows'>
-    <div class="content-well fill-contents">
-      <di-fighter-instance-pane class="adventurer"></di-fighter-instance-pane>
-      <di-adventurer-pane class="displaynone"></di-adventurer-pane>
+<div class="content-rows">
+  <di-top-thing></di-top-thing>
+  <div class='content-columns'>
+    <div class='content-rows'>
+      <div class="content-well fill-contents">
+        <di-fighter-instance-pane class="adventurer"></di-fighter-instance-pane>
+        <di-adventurer-pane class="displaynone"></di-adventurer-pane>
+      </div>
+      <div class="bot-row content-well">
+        <di-dungeon-timeline-controls></di-dungeon-timeline-controls>
+      </div>
     </div>
-    <div class="bot-row content-well">
-      <di-dungeon-timeline-controls></di-dungeon-timeline-controls>
-    </div>
-  </div>
-  <div class="content-rows">
-    <div class="content-well">
-      <di-dungeon-event></di-dungeon-event>
-    </div>
-    <div class="state bot-row content-well">
-      <di-dungeon-state></di-dungeon-state>
+    <div class="content-rows">
+      <div class="content-well">
+        <di-dungeon-event></di-dungeon-event>
+      </div>
+      <div class="state bot-row content-well">
+        <di-dungeon-state></di-dungeon-state>
+      </div>
     </div>
   </div>
 </div>
@@ -98,6 +100,10 @@ export default class DungeonPage extends Page{
 
   get isReplay(){
     return this.dungeonRun.finished ? true : false
+  }
+
+  get topThingEl(){
+    return this.querySelector('di-top-thing')
   }
 
   async load(){
@@ -196,6 +202,7 @@ export default class DungeonPage extends Page{
     if(this.currentEvent.roomType === 'combat'){
       this._enactCombat(animate)
     }else{
+      this.topThingEl.updateEvent(this.currentEvent)
       this._eventEl.update(this.currentEvent, animate)
       this._adventurerPane.setState(this.currentEvent.adventurerState ?? {}, animate)
     }
@@ -209,6 +216,7 @@ export default class DungeonPage extends Page{
       return
     }
     const results = new EventContentsResults()
+    this.topThingEl.update('Results')
     this._eventEl.setContents(results, true)
     this._timelineEl.pause()
     this._adventurerResultsPane.classList.remove('displaynone')
@@ -226,7 +234,7 @@ export default class DungeonPage extends Page{
     const combat = await this._getCombat(this.currentEvent.combatID)
     const enemyPane = new FighterInstancePane()
     this._eventEl.setContents(enemyPane, animate)
-    const ce = new CombatEnactment(this._adventurerPane, enemyPane)
+    const ce = new CombatEnactment(this._adventurerPane, enemyPane, this.topThingEl)
     if(combat){
       ce.setCombat(combat)
       ce.timeline.setTime(this._timeline.timeSinceLastEntry - (this.currentEvent.refereeTime ?? 0), true)

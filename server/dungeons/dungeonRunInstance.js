@@ -139,9 +139,13 @@ export default class DungeonRunInstance extends EventEmitter{
   }
 
   resumePending(){
-    if(this.newestEvent.pending){
+    if(this.newestEvent?.pending){
       resumeCombatEvent(this)
     }
+  }
+
+  addPendingTriggers(huh){
+    // TODO: this for coffee carafe
   }
 
   async _nextEvent(){

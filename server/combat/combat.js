@@ -3,11 +3,15 @@ import { CombatResult } from '../../game/combatResult.js'
 import { shuffle } from '../../game/rando.js'
 import { takeCombatTurn } from './takeCombatTurn.js'
 import { processAbilityEvents } from '../mechanics/abilities.js'
-import { useAbility } from '../actions/performAction.js'
+import { performAction, useAbility } from '../actions/performAction.js'
+import { overtimeDamageBonus } from '../../game/combatMechanics.js'
 
 const MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS = 30
 const MAX_TRIGGER_LOOPS = 30
 const MAX_TRIGGER_COUNTER = 500
+
+const OVERTIME = 30000
+const SUDDEN_DEATH = 90000
 
 export async function runCombat(data){
   data = {
@@ -109,6 +113,20 @@ class Combat{
     return [this.fighterInstance1, this.fighterInstance2]
   }
 
+  get msOvertime(){
+    return Math.max(0, this._currentTime - OVERTIME)
+  }
+
+  get overtimeDamageBonus(){
+    return overtimeDamageBonus(this.msOvertime)
+  }
+
+  get nextSuddenDeathTick(){
+    const nextSecond = 1000 * Math.ceil((1 + this._currentTime) / 1000)
+    const nextTickTime = Math.max(SUDDEN_DEATH, nextSecond)
+    return nextTickTime - this._currentTime
+  }
+
   addPendingTriggers(pendingTriggers){
     this._pendingTriggers.push(...pendingTriggers)
     if(this._pendingTriggers.length > MAX_TRIGGER_COUNTER){
@@ -125,12 +143,13 @@ class Combat{
     while(!this.finished){
       this._advanceTime()
       const actions = this._doActions()
-      if(!this.fighterInstance1.hp){
-        processAbilityEvents(this, 'defeated', this.fighterInstance1)
-      }
-      if(!this.fighterInstance2.hp){
-        processAbilityEvents(this, 'defeated', this.fighterInstance2)
-      }
+      // if(!this.fighterInstance1.hp){
+      //   processAbilityEvents(this, 'defeated', this.fighterInstance1)
+      // }
+      // if(!this.fighterInstance2.hp){
+      //   processAbilityEvents(this, 'defeated', this.fighterInstance2)
+      // }
+      this._triggerSuddenDeath()
       this._resolveTriggers()
       if(this._currentTime >= 120000){
         // TODO: max time
@@ -146,7 +165,7 @@ class Combat{
     const timeToAdvance = Math.ceil(
       Math.max(
         0,
-        Math.min(...this.fighters.map(fi => fi.timeUntilNextUpdate))
+        Math.min(...this.fighters.map(fi => fi.timeUntilNextUpdate), this.nextSuddenDeathTick)
       )
     )
     if(!timeToAdvance){
@@ -176,7 +195,11 @@ class Combat{
   _resolveTriggers(){
 
     const resolveTrigger = trigger => {
-      return useAbility(this, trigger.ability, trigger.data)
+      if(trigger.performAction){
+        return performAction(this, trigger.actor, null, trigger.def)
+      }else{
+        return useAbility(this, trigger.ability, trigger.data)
+      }
     }
 
     let loops = 0
@@ -213,8 +236,32 @@ class Combat{
       triggers: this._triggerUpdates,
       fighterState1: this.fighterInstance1.state,
       fighterState2: this.fighterInstance2.state,
+      overtime: this.msOvertime,
+      suddenDeath: this._currentTime > SUDDEN_DEATH ? true : false,
       ...options
     })
     this._triggerUpdates = []
+  }
+
+  _triggerSuddenDeath(){
+    const diff = (this._currentTime / 1000) - 60
+    if(diff % 1 === 0 && diff > 0){
+      this.addPendingTriggers(this.fighters.map(fi => {
+        return {
+          performAction: true,
+          actor: fi,
+          def: {
+            takeDamage: {
+              scaling: {
+                hpMax: 0.03 + diff / 300
+              },
+              damageType: diff % 2 ? 'phys' : 'magic',
+              ignoreDefense: true,
+              ignoreOvertime: true
+            },
+          }
+        }
+      }))
+    }
   }
 }

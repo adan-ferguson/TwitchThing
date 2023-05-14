@@ -1,11 +1,13 @@
-export default function(combat, attacker, effect = null, actionDef = {}){
-  // damageDef = takeDamageAction(damageDef)
-  // let damage = Math.ceil(scaledNumber(actor, damageDef.scaling))
-  // if(damage <= 0){
-  //   return
-  // }
-  // return takeDamage(combat, actor, {
-  //   ...damageDef,
-  //   damage
-  // })
+import { takeDamage } from '../../mechanics/takeDamage.js'
+import { scaledNumberFromInstance } from '../../../game/scaledNumber.js'
+
+export default function(combat, actor, abilityInstance = null, actionDef = {}){
+  const damage = Math.ceil(scaledNumberFromInstance(abilityInstance ?? actor, actionDef.scaling))
+  return {
+    damageInfo: takeDamage(combat, actor, {
+      ...actionDef,
+      damage
+    }),
+    subject: actor.uniqueID
+  }
 }

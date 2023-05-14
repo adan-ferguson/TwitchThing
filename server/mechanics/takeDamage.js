@@ -8,6 +8,7 @@ export function takeDamage(combat, subject, damageInfo){
     damageType: 'phys',
     ignoreDefense: false,
     range: null,
+    ignoreOvertime: false,
     ...damageInfo
   }
 
@@ -27,6 +28,10 @@ export function takeDamage(combat, subject, damageInfo){
     const blocked = Math.floor(damage * subject.stats.get(damageInfo.damageType + 'Def').value)
     damage = damage - blocked
     result.blocked = blocked
+  }
+
+  if(!damageInfo.ignoreOvertime){
+    damage *= combat.overtimeDamageBonus
   }
 
   damage = Math.ceil(damage)

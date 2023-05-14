@@ -4,11 +4,11 @@ import CombatEnactment from '../../../combatEnactment.js'
 
 const HTML = `
 <div class='content-rows'>
+  <di-top-thing></di-top-thing>
   <div class='content-columns'>
     <div class="content-well fill-contents">
       <di-fighter-instance-pane class="fighter1"></di-fighter-instance-pane>
     </div>
-    <div class="mid-thing"><span>VS</span></div>
     <div class="content-well fill-contents">
       <di-fighter-instance-pane class="fighter2"></di-fighter-instance-pane>
     </div>
@@ -72,7 +72,7 @@ export default class CombatPage extends Page{
       this.app.setBackground(zone.color, zone.texture)
     }
 
-    this._ce = new CombatEnactment(this._fighterPane1, this._fighterPane2)
+    this._ce = new CombatEnactment(this._fighterPane1, this._fighterPane2, this.querySelector('di-top-thing'))
     this._ce.setCombat(combat)
     this._timeControlsEl.setup(this.timeline.time, this.timeline.duration)
 

@@ -41,11 +41,20 @@ export function toDisplayName(str){
   return displayName
 }
 
-export function roundToFixed(val, digits){
+export function roundToFixed(val, digits, padEnd = false){
   const multi = Math.pow(10, digits)
   val *= multi
   val = Math.round(val)
-  return val / multi
+  val /= multi
+
+  if(padEnd){
+    const singles = Math.floor(val)
+    if(singles !== val){
+      val = val.toString().padEnd(1 + singles.toString().length + digits, '0')
+    }
+  }
+
+  return val
 }
 
 export function roundToNearestIntervalOf(val, interval){
@@ -173,14 +182,14 @@ export function suffixedNumber(val, digits = 5){
 
 /**
  * Cleanup common issues with objects.
- * 1) Numbers are rounded to nearest 0.01 (fix floating point nonsense)
+ * 1) Numbers are rounded to nearest 0.0001 (fix floating point nonsense)
  * @param obj
  */
 export function cleanupObject(obj){
   const newObj = _.isArray(obj) ? [] : {}
   for(let key in obj){
     if(_.isNumber(obj[key])){
-      newObj[key] = roundToFixed(obj[key], 2)
+      newObj[key] = roundToFixed(obj[key], 4)
     }else if(_.isObject(obj[key])){
       newObj[key] = cleanupObject(obj[key])
     }else{

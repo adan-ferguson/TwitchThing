@@ -16,14 +16,11 @@ export function gainStatusEffect(combat, subject, sourceAbilityInstance, statusE
     return state.sourceEffectId === sei.sourceEffectId
   })
   if(existing){
-    // if(existing.stacking === 'replace'){
-    //   const instance = new StatusEffectInstance(statusEffectData, this._fighterInstance)
-    //   this._instances[index] = instance
-    //   return instance
-    // }else if(existing.stacking === 'extend'){
-    //   return existing.extend(new StatusEffectInstance(statusEffectData, this._fighterInstance).duration)
-    // }else
-    if(existing.stacking === 'stack'){
+    if(existing.stacking === 'replace'){
+      existing.replace()
+    }else if(existing.stacking === 'extend'){
+      existing.extend()
+    }else if(existing.stacking === 'stack'){
       existing.addStack().refresh()
     }
   }else{
