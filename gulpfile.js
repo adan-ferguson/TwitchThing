@@ -8,7 +8,7 @@ import VinylFile from 'vinyl'
 import path from 'path'
 
 const S = gulpSass(sass)
-const REGISTRIES = ['items', 'monsters', 'mods', 'skills', 'statusEffects', 'stats', 'actionDefs']
+const REGISTRIES = ['items', 'monsters', 'skills', 'statusEffects', 'stats', 'actionDefs']
 const SERVER_REGISTRIES = ['actions']
 
 function buildStyles(){

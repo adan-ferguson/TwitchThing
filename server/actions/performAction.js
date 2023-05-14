@@ -7,7 +7,11 @@ export function performAction(combat, actor, ability, actionDef){
   const expandedActionDef = expandActionDef(actionDef)
   let results = []
   for(let key in expandedActionDef){
-    results.push(...arrayize(Actions[key].def(combat, actor, ability, expandedActionDef[key])))
+    const result = arrayize(Actions[key].def(combat, actor, ability, expandedActionDef[key]))
+    results.push(...result)
+    if(result.at(-1).cancelled){
+      break
+    }
   }
   results.forEach(r => {
     if(!r.subject){

@@ -2,6 +2,9 @@ import { SUBJECT_KEYS } from './subjectKeys.js'
 import Joi from 'joi'
 import { STATS_SCHEMA } from './stats.js'
 import { DAMAGE_TYPE_SCHEMA } from './damage.js'
+import { STATICS_SCHEMA } from './statics.js'
+import StatusEffects from '../../game/statusEffects/combined.js'
+
 
 const SCALED_NUMBER_SCHEMA = Joi.object({
   hpMax: Joi.number(),
@@ -9,12 +12,13 @@ const SCALED_NUMBER_SCHEMA = Joi.object({
   hp: Joi.number(),
   magicPower: Joi.number(),
   physPower: Joi.number(),
-  flat: Joi.number()
+  flat: Joi.number(),
+  parentEffectParam: Joi.object()
 })
 
 const ACTION_SCHEMA = Joi.object({
   applyStatusEffect: Joi.object({
-    affects: Joi.string().valid('self', 'enemy'),
+    affects: Joi.string().valid('self', 'enemy', 'target'),
     statusEffect: Joi.custom(val => {
       return Joi.attempt(val, STATUS_EFFECT_SCHEMA)
     }).required()
@@ -22,9 +26,16 @@ const ACTION_SCHEMA = Joi.object({
   attack: Joi.object({
     damageType: DAMAGE_TYPE_SCHEMA,
     scaling: SCALED_NUMBER_SCHEMA,
+    range: Joi.array().length(2).items(Joi.number())
   }),
   gainHealth: Joi.object({
     scaling: SCALED_NUMBER_SCHEMA
+  }),
+  takeDamage: Joi.object({
+    scaling: SCALED_NUMBER_SCHEMA,
+    damageType: DAMAGE_TYPE_SCHEMA,
+    ignoreDefense: Joi.bool().truthy(),
+    ignoreOvertime: Joi.bool().truthy()
   })
 })
 
@@ -42,7 +53,8 @@ const TRIGGERS_SCHEMA = Joi.object({
     }),
     Joi.bool().truthy()),
   active: Joi.bool().truthy(),
-  attacked: Joi.bool().truthy()
+  attacked: Joi.bool().truthy(),
+  instant: Joi.bool().truthy()
 })
 
 const ABILITY_SCHEMA = Joi.object({
@@ -64,12 +76,30 @@ export const EFFECT_SCHEMA = Joi.object({
   stats: STATS_SCHEMA,
   conditions: Joi.object({
     deepestFloor: Joi.boolean()
-  })
+  }),
+  statics: STATICS_SCHEMA
 })
 
 export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
+  base: Joi.string().valid(...Object.keys(StatusEffects)),
   duration: Joi.number().integer(),
   stacking: Joi.string(),
-  isBuff: Joi.boolean().required(),
-  name: Joi.string()
-})
+  isBuff: Joi.boolean(),
+  name: Joi.string(),
+  persisting: Joi.boolean().truthy(),
+  $params: Joi.object()
+}).or('base', 'isBuff')
+
+export function validateAllStatusEffects(){
+  for(let id in StatusEffects){
+    try {
+      validateStatusEffect(id)
+    }catch(ex){
+      throw `StatusEffect "${id}" failed validation: ` + ex.message
+    }
+  }
+}
+
+function validateStatusEffect(id){
+  Joi.assert(StatusEffects[id].def, STATUS_EFFECT_SCHEMA)
+}

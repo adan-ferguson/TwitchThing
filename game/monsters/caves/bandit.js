@@ -1,5 +1,3 @@
-import { sneakAttackMod } from '../../mods/combined.js'
-
 export default {
   baseStats: {
     speed: 5,
@@ -9,7 +7,11 @@ export default {
   items: [
     {
       name: 'Ambush',
-      mods: [sneakAttackMod]
+      effect: {
+        statics: [{
+          sneakAttack: true
+        }]
+      }
     }
   ]
 }

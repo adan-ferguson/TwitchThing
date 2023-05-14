@@ -2,7 +2,7 @@
  *
  * @param combat
  * @param subject
- * @param sourceInstance
+ * @param sourceAbilityInstance
  * @param statusEffectData
  */
 export function gainStatusEffect(combat, subject, sourceAbilityInstance, statusEffectData){

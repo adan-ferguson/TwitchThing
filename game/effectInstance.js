@@ -1,7 +1,6 @@
 import { uniqueID } from './utilFunctions.js'
 import Stats  from './stats/stats.js'
 import AbilityInstance from './abilityInstance.js'
-import _ from 'lodash'
 
 // Stupid
 new Stats()
@@ -96,6 +95,13 @@ export default class EffectInstance{
     return this._abilities
   }
 
+  get statics(){
+    if(this.disabled){
+      return []
+    }
+    return this.effectData.statics ?? []
+  }
+
   getAbilities(type, trigger){
     return this.abilities.filter(ai => {
       if(ai.type !== type){
@@ -111,78 +117,6 @@ export default class EffectInstance{
       ai.advanceTime(ms)
     })
   }
-
-  // /**
-  //  * @return {ModsCollection}
-  //  */
-  // get mods(){
-  //   if(this.disabled){
-  //     return new ModsCollection()
-  //   }
-  //   return new ModsCollection(this.effectData.mods || [])
-  // }
-
-  // get hasAbilities(){
-  //   return Object.keys(this.effectData.abilities ?? {}).length > 0
-  // }
-
-  // get abilities(){
-  //   return this.generateAbilitiesData().instances
-  // }
-
-  // get enabledAbilities(){
-  //   if(this.disabled){
-  //     return {}
-  //   }
-  //   return this.abilities
-  // }
-
-  // get isValid(){
-  //   return this.effectData ? true : false
-  // }
-
-  // generateAbilitiesData(){
-  //   return new AbilitiesData(this.effectData.abilities, this._state?.abilities ?? {}, this)
-  // }
-  //
-  // /**
-  //  * @param eventName {string}
-  //  */
-  // getAbility(eventName){
-  //   return this.generateAbilitiesData().instances[eventName]
-  // }
-
-  // useAbility(eventName){
-  //   const ad = this.generateAbilitiesData()
-  //   const inst = ad.instances[eventName]
-  //   inst.use()
-  //   this._state.abilities = ad.stateVal
-  //
-  //   if(inst.nextTurnOffset){
-  //     let offset = 0
-  //     if(inst.nextTurnOffset.pct){
-  //       offset += this.owner.turnTime * inst.nextTurnOffset.pct
-  //     }
-  //     this.owner.nextTurnOffset += offset
-  //   }
-  // }
-  //
-  // shouldTrigger(triggerName){
-  //   if(this.disabled){
-  //     return false
-  //   }
-  //   const abilityInstance = this.getAbility(triggerName)
-  //   if(!abilityInstance?.shouldTrigger()){
-  //     return false
-  //   }
-  //   return true
-  // }
-  //
-  // refreshCooldown(def = null){
-  //   const ad = this.generateAbilitiesData()
-  //   ad.refreshCooldowns(def)
-  //   this._state.abilities = ad.stateVal
-  // }
 }
 
 function makeAbilities(abilitiesDef, abilitiesStateVal, parent){

@@ -11,7 +11,7 @@ export function takeCombatTurn(combat, actor){
   const actionResults = []
   if(ability){
     actionResults.push(...useAbility(combat, ability))
-  }else if(actor.mods.contains('noBasicAttack')){
+  }else if(actor.hasStatic('noBasicAttack')){
     actionResults.push(performAction(combat, actor, null, {
       type: 'idle',
       reason: 'Can\'t attack',

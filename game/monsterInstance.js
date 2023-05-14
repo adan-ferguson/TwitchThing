@@ -3,7 +3,6 @@ import Monsters from './monsters/combined.js'
 import { geometricProgression } from './growthFunctions.js'
 import OrbsData from './orbsData.js'
 import { deepClone, toDisplayName, toNumberOfDigits } from './utilFunctions.js'
-import Mods from './mods/combined.js'
 import { floorToZone } from './zones.js'
 import LoadoutObjectInstance from './loadoutObjectInstance.js'
 import MonsterItem from './monsterItem.js'
@@ -100,7 +99,7 @@ export default class MonsterInstance extends FighterInstance{
   }
 
   get level(){
-    return this.monsterData.level ?? 1
+    return this.monsterDef.level ?? 1
   }
 
   get baseHp(){
@@ -124,7 +123,9 @@ export default class MonsterInstance extends FighterInstance{
   }
 
   get isBoss(){
-    return this.mods.contains(Mods.boss)
+    return false
+    // TODO: isBoss should be from the def not the mods
+    // return this.hasStatic(Mods.boss)
   }
 
   get rewards(){

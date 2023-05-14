@@ -1,8 +1,6 @@
 import Stats from './stats/stats.js'
-import Mods from './mods/combined.js'
-import ModsCollection from './modsCollection.js'
 import { deepClone, minMax } from './utilFunctions.js'
-import StatusEffectInstance from './statusEffectInstance.js'
+import StatusEffectInstance from './statusEffects/statusEffectInstance.js'
 
 // Stupid
 new Stats()
@@ -101,11 +99,8 @@ export default class FighterInstance{
     return [...this.loadoutEffectInstances, ...this.statusEffectInstances]
   }
 
-  /**
-   * @returns {ModsCollection}
-   */
-  get mods(){
-    return new ModsCollection(this.effectInstances.map(ei => ei.mods).filter(m => m))
+  get statics(){
+    return this.effectInstances.map(ei => ei.statics).flat()
   }
 
   get state(){
@@ -216,7 +211,7 @@ export default class FighterInstance{
   }
 
   get basicAttackType(){
-    return this.mods.contains(Mods.magicAttack) ? 'magic' : 'phys'
+    return this.hasStatic('magicAttack') ? 'magic' : 'phys'
   }
 
   get magicPower(){
@@ -240,7 +235,7 @@ export default class FighterInstance{
   }
 
   getNextActiveAbility(){
-    if(this.mods.contains(Mods.silenced)){
+    if(this.hasStatic('silenced')){
       return null
     }
     for(let ai of this.getAbilities('action', 'active')){
@@ -299,7 +294,7 @@ export default class FighterInstance{
 
   startCombat(){
     this._state.combatTime = 0
-    this._state.timeSinceLastAction = this.mods.contains(Mods.sneakAttack) ? this.nextActionTime - 1 : 0
+    this._state.timeSinceLastAction = this.hasStatic('sneakAttack') ? this.nextActionTime - 1 : 0
   }
 
   endCombat(){
@@ -308,10 +303,10 @@ export default class FighterInstance{
   }
 
   advanceTime(ms){
-    if(!this.mods.contains(Mods.freezeActionBar) && this.inCombat){
+    if(!this.hasStatic('freezeActionBar') && this.inCombat){
       this._state.timeSinceLastAction += ms
     }
-    if(!this.mods.contains(Mods.freezeCooldowns)){
+    if(!this.hasStatic('freezeCooldowns')){
       this.loadoutEffectInstances.forEach(itemInstance => {
         if(itemInstance){
           itemInstance.advanceTime(ms)
@@ -326,35 +321,13 @@ export default class FighterInstance{
     this.uncache()
   }
 
-  // getSlotEffectsFor(slotIndex){
-  //
-  //   const item = this.itemInstances[slotIndex]
-  //
-  //   if(!item){
-  //     // TODO: not necessarily correct
-  //     return []
-  //   }
-  //
-  //   const slotEffects = []
-  //   this.effectInstances.forEach(ei => {
-  //     if(ei.slotEffect){
-  //       if(ei.slotEffect.slotIndex === slotIndex || item.slotTags.indexOf(ei.slotEffect.slotTag) >= 0){
-  //         slotEffects.push(ei.slotEffect)
-  //       }
-  //     }
-  //   })
-  //
-  //   return slotEffects
-  // }
+  hasStatic(str){
+    return this.statics.find(m => m[str])
+  }
 
   statsForEffect(effect){
     // TODO: metaEffects for this effect
     return this.stats
-    // // TODO: stupid
-    // if(!effect || !effect.applicableSlotEffects){
-    //   return this.stats
-    // }
-    // return new Stats([this.stats, ...effect.applicableSlotEffects.map(se => se.stats ?? {})])
   }
 
   addStatusEffect = (data, state = {}) => {

@@ -1,6 +1,6 @@
-import Stats from './stats/stats.js'
-import { roundToFixed, toDisplayName } from './utilFunctions.js'
-import EffectInstance from './effectInstance.js'
+import Stats from '../stats/stats.js'
+import { roundToFixed, toDisplayName } from '../utilFunctions.js'
+import EffectInstance from '../effectInstance.js'
 
 export default class StatusEffectInstance extends EffectInstance{
 

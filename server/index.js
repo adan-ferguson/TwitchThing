@@ -6,6 +6,7 @@ import { startCombatWorker } from './combat/interop.js'
 import { validateAllMonsters } from './validations/monster.js'
 import { validateAllItems } from './validations/adventurerItem.js'
 import { validateAllSkills } from './validations/adventurerSkill.js'
+import { validateAllStatusEffects } from './validations/effect.js'
 
 init().catch(ex => {
   console.error(ex)
@@ -27,5 +28,6 @@ function validateEverything(){
   validateAllItems()
   validateAllSkills()
   validateAllMonsters()
+  validateAllStatusEffects()
 }
 
