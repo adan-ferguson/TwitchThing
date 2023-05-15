@@ -1,13 +1,5 @@
 import { gainStatusEffect } from '../../gainStatusEffect.js'
-import ParamFns from '../../statusEffectParams/combined.js'
-
-// base: {
-//   damageOverTime: {
-//   }
-// },
-// name: 'poisoned',
-//   duration: 10000,
-//   persisting: true,
+import { scaledNumberFromAbilityInstance } from '../../../../game/scaledNumber.js'
 
 export default function(combat, actor, abilityInstance, actionDef = {}){
   const subject = actionDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
@@ -22,14 +14,13 @@ export default function(combat, actor, abilityInstance, actionDef = {}){
 
 function convertStatusEffectParams(statusEffect, abilityInstance){
   if(statusEffect.base){
-    const baseName = Object.keys(statusEffect.base)[0]
-    if(ParamFns[baseName]){
-      const newVal = ParamFns[baseName].def(statusEffect.base[baseName], abilityInstance)
-      return {
-        ...statusEffect,
-        base: {
-          [baseName]: newVal
-        }
+    const base = Object.values(statusEffect.base)[0]
+    if(!base){
+      return
+    }
+    for(let key in base){
+      if(base[key].scaledNumber){
+        base[key] = scaledNumberFromAbilityInstance(abilityInstance, base[key].scaledNumber)
       }
     }
   }

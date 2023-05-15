@@ -9,7 +9,7 @@ import path from 'path'
 
 const S = gulpSass(sass)
 const REGISTRIES = ['items', 'monsters', 'skills', 'baseEffects', 'stats', 'actionDefs']
-const SERVER_REGISTRIES = ['actions','statusEffectParams']
+const SERVER_REGISTRIES = ['actions']
 
 function buildStyles(){
   return gulp.src('./client/styles/**/*.*ss')

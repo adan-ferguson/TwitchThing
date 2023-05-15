@@ -16,7 +16,11 @@ export default {
               attackAppliesStatusEffect: {
                 base: {
                   damageOverTime: {
-                    physPower: 0.1
+                    damage: {
+                      scaledNumber: {
+                        physPower: 0.1
+                      }
+                    }
                   }
                 },
                 name: 'poisoned',

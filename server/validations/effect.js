@@ -19,6 +19,11 @@ const SCALED_NUMBER_SCHEMA = Joi.object({
   parentEffectParam: Joi.object()
 })
 
+const OPTIONAL_SCALED_NUMBER_SCHEMA = Joi.alternatives().try(
+  Joi.object({ scaledNumber: SCALED_NUMBER_SCHEMA }),
+  Joi.number()
+)
+
 const ACTION_SCHEMA = Joi.object({
   applyStatusEffect: Joi.object({
     affects: Joi.string().valid('self', 'enemy', 'target'),
@@ -88,7 +93,9 @@ export const EFFECT_SCHEMA = Joi.object({
 
 export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
   base: Joi.object({
-    damageOverTime: SCALED_NUMBER_SCHEMA
+    damageOverTime: Joi.object({
+      damage: OPTIONAL_SCALED_NUMBER_SCHEMA
+    })
   }),
   duration: Joi.number().integer(),
   stacking: Joi.string(),

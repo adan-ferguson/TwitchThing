@@ -1,4 +1,4 @@
-export default function(damage = 0){
+export default function({ damage = 0 } = {}){
   return {
     polarity: 'debuff',
     stacking: 'stack',
