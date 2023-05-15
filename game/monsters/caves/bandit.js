@@ -8,7 +8,7 @@ export default {
     {
       name: 'Ambush',
       effect: {
-        statics: [{
+        mods: [{
           sneakAttack: true
         }]
       }

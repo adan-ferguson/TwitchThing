@@ -2,7 +2,7 @@ import { SUBJECT_KEYS } from './subjectKeys.js'
 import Joi from 'joi'
 import { STATS_SCHEMA } from './stats.js'
 import { DAMAGE_TYPE_SCHEMA } from './damage.js'
-import { STATICS_SCHEMA } from './statics.js'
+import { MODS_SCHEMA } from './mods.js'
 import { status as StatusEffects, phantom as PhantomEffects } from '../../game/baseEffects/combined.js'
 import _ from 'lodash'
 import StatusEffectInstance from '../../game/baseEffects/statusEffectInstance.js'
@@ -88,7 +88,7 @@ export const EFFECT_SCHEMA = Joi.object({
   conditions: Joi.object({
     deepestFloor: Joi.boolean()
   }),
-  statics: STATICS_SCHEMA
+  mods: MODS_SCHEMA
 })
 
 export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({

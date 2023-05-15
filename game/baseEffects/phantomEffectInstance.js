@@ -1,12 +1,17 @@
 import EffectInstance from '../effectInstance.js'
-import { phantom as PhantomEffects, status as StatusEffects } from './combined.js'
+import { phantom as PhantomEffects } from './combined.js'
 import _ from 'lodash'
 
 export default class PhantomEffectInstance extends EffectInstance{
 
-  constructor(data, owner){
+  constructor(data, owner, parentEffect = null){
     super(owner)
     this._data = data
+    this._parentEffect = parentEffect
+  }
+
+  get uniqueID(){
+    return this._parentEffect.uniqueID
   }
 
   get data(){

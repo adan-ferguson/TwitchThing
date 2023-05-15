@@ -101,8 +101,8 @@ export default class FighterInstance{
     return [...this.loadoutEffectInstances, ...this.statusEffectInstances, ...this._phantomEffectInstances]
   }
 
-  get statics(){
-    return this.effectInstances.map(ei => ei.statics).flat()
+  get mods(){
+    return this.effectInstances.map(ei => ei.mods).flat()
   }
 
   get state(){
@@ -213,7 +213,7 @@ export default class FighterInstance{
   }
 
   get basicAttackType(){
-    return this.hasStatic('magicAttack') ? 'magic' : 'phys'
+    return this.hasMod('magicAttack') ? 'magic' : 'phys'
   }
 
   get magicPower(){
@@ -237,7 +237,7 @@ export default class FighterInstance{
   }
 
   getNextActiveAbility(){
-    if(this.hasStatic('silenced')){
+    if(this.hasMod('silenced')){
       return null
     }
     for(let ai of this.getAbilities('action', 'active')){
@@ -296,7 +296,7 @@ export default class FighterInstance{
 
   startCombat(){
     this._state.combatTime = 0
-    this._state.timeSinceLastAction = this.hasStatic('sneakAttack') ? this.nextActionTime - 1 : 0
+    this._state.timeSinceLastAction = this.hasMod('sneakAttack') ? this.nextActionTime - 1 : 0
   }
 
   endCombat(){
@@ -305,10 +305,10 @@ export default class FighterInstance{
   }
 
   advanceTime(ms){
-    if(!this.hasStatic('freezeActionBar') && this.inCombat){
+    if(!this.hasMod('freezeActionBar') && this.inCombat){
       this._state.timeSinceLastAction += ms
     }
-    if(!this.hasStatic('freezeCooldowns')){
+    if(!this.hasMod('freezeCooldowns')){
       this.loadoutEffectInstances.forEach(itemInstance => {
         if(itemInstance){
           itemInstance.advanceTime(ms)
@@ -323,8 +323,8 @@ export default class FighterInstance{
     this.uncache()
   }
 
-  hasStatic(str){
-    return this.statics.find(m => m[str])
+  hasMod(str){
+    return this.mods.find(m => m[str])
   }
 
   statsForEffect(effect){
@@ -347,8 +347,8 @@ export default class FighterInstance{
     this._cachedStats = null
   }
 
-  addPhantomEffect(phantomEffectData){
-    const pe = new PhantomEffectInstance(phantomEffectData, this)
+  addPhantomEffect(phantomEffectData, parentEffect){
+    const pe = new PhantomEffectInstance(phantomEffectData, this, parentEffect)
     this._phantomEffectInstances.push(pe)
     this.uncache()
     return pe

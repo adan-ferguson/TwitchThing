@@ -37,7 +37,7 @@ export default class StatusEffectInstance extends EffectInstance{
       const baseName = Object.keys(this.data.base)[0]
       const baseDef = StatusEffects[baseName].def
       if(_.isFunction(baseDef)){
-        effectData = baseDef(this.data.base[baseName])
+        effectData = baseDef(this.data.base[baseName], this.state)
       }else{
         effectData = baseDef
       }

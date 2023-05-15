@@ -29,7 +29,7 @@ export function performAction(combat, actor, ability, actionDef){
 
 export function useAbility(combat, ability, triggerData = null){
   const owner = ability.fighterInstance
-  ability.phantomEffect ? owner.addPhantomEffect(ability.phantomEffect) : null
+  ability.phantomEffect ? owner.addPhantomEffect(ability.phantomEffect, ability.parentEffect) : null
   const results = []
   iterateActions(ability.actions)
   owner.clearPhantomEffects()

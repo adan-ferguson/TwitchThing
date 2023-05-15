@@ -95,11 +95,11 @@ export default class EffectInstance{
     return this._abilities
   }
 
-  get statics(){
+  get mods(){
     if(this.disabled){
       return []
     }
-    return this.effectData.statics ?? []
+    return this.effectData.mods ?? []
   }
 
   getAbilities(type, trigger){

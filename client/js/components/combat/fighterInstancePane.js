@@ -87,10 +87,10 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   advanceTime(ms){
-    if(this.fighterInstance.inCombat && !this.fighterInstance.hasStatic('freezeActionBar')){
+    if(this.fighterInstance.inCombat && !this.fighterInstance.hasMod('freezeActionBar')){
       this._actionBarEl.advanceTime(ms)
     }
-    if(!this.fighterInstance.hasStatic('freezeCooldown')){
+    if(!this.fighterInstance.hasMod('freezeCooldown')){
       this.loadoutEl.advanceTime(ms)
     }
     this.effectsListEl.advanceTime(ms)
@@ -244,10 +244,10 @@ export default class FighterInstancePane extends HTMLElement{
 
   _excluded(){
     const excluded = ['hpMax','speed']
-    const magicAttack = this.fighterInstance.hasStatic('magicAttack')
-    const showPhys = this.fighterInstance.hasStatic('physScaling') ||
+    const magicAttack = this.fighterInstance.hasMod('magicAttack')
+    const showPhys = this.fighterInstance.hasMod('physScaling') ||
       this.fighterInstance.physPower !== this.fighterInstance.basePower
-    const showMagic = this.fighterInstance.hasStatic('magicScaling') ||
+    const showMagic = this.fighterInstance.hasMod('magicScaling') ||
       this.fighterInstance.magicPower !== this.fighterInstance.basePower
 
     if((showPhys || !magicAttack) && showMagic){
