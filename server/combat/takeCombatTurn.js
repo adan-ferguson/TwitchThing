@@ -1,4 +1,4 @@
-import { performAction, useAbility } from '../actions/performAction.js'
+import { performAction, useAbility } from '../mechanics/actions/performAction.js'
 
 export function takeCombatTurn(combat, actor){
   if(!actor.inCombat){

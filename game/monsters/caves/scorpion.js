@@ -1,6 +1,6 @@
 export default {
   baseStats: {
-    hpMax: '+30%',
+    hpMax: '+300%',
     speed: -30,
     physPower: '-10%'
   },
@@ -11,24 +11,24 @@ export default {
         abilities: [{
           trigger: { active: true },
           cooldown: 12000,
+          phantomEffect: {
+            base: {
+              attackAppliesStatusEffect: {
+                base: {
+                  damageOverTime: {
+                    physPower: 0.1
+                  }
+                },
+                name: 'poisoned',
+                duration: 30000,
+                persisting: true,
+              }
+            }
+          },
           actions: [{
             attack: {
               scaling: {
                 physPower: 1
-              }
-            },
-            applyStatusEffect: {
-              affects: 'target',
-              statusEffect: {
-                base: 'damageOverTime',
-                name: 'poisoned',
-                duration: 10000,
-                persisting: true,
-                Xparams: {
-                  Xdamage: {
-                    physPower: 0.1
-                  }
-                }
               }
             }
           }]

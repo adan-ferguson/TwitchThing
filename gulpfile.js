@@ -8,8 +8,8 @@ import VinylFile from 'vinyl'
 import path from 'path'
 
 const S = gulpSass(sass)
-const REGISTRIES = ['items', 'monsters', 'skills', 'statusEffects', 'stats', 'actionDefs']
-const SERVER_REGISTRIES = ['actions']
+const REGISTRIES = ['items', 'monsters', 'skills', 'baseEffects', 'stats', 'actionDefs']
+const SERVER_REGISTRIES = ['actions','statusEffectParams']
 
 function buildStyles(){
   return gulp.src('./client/styles/**/*.*ss')
@@ -30,8 +30,8 @@ function generateRegistries(){
       .pipe(gulp.dest('.'))
   })
   const serverPipes = SERVER_REGISTRIES.map(t => {
-    return gulp.src('./server/' + t + '/*/**/*.js')
-      .pipe(exporterConcater(t, './server/' + t + '/combined.js'))
+    return gulp.src('./server/mechanics/' + t + '/*/**/*.js')
+      .pipe(exporterConcater(t, './server/mechanics/' + t + '/combined.js'))
       .pipe(gulp.dest('.'))
   })
   return merge(...pipes, ...serverPipes)
@@ -70,11 +70,20 @@ function exporterConcater(itemType, targetFile){
   function combinedFileContents(){
     let str = ''
     const exportStrings = []
+    const groupedExportStrings = {}
     files.forEach(({ name, path, group }) => {
       str += `import ${name} from './${path}'\n`
-      exportStrings.push(`${name}: { def: ${name}, id: '${name}', group: '${group}' }`)
+      const exportString = `${name}: { def: ${name}, id: '${name}', group: '${group}' }`
+      exportStrings.push(exportString)
+      if(!groupedExportStrings[group]){
+        groupedExportStrings[group] = []
+      }
+      groupedExportStrings[group].push(exportString)
     })
     str += `export default { ${exportStrings.join(',')} }\n`
+    for(let key in groupedExportStrings){
+      str += `export const ${key} = { ${groupedExportStrings[key].join(',')} }\n`
+    }
     return str
   }
 }

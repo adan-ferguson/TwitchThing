@@ -1,7 +1,7 @@
 import Stats from '../stats/stats.js'
 import { roundToFixed, toDisplayName } from '../utilFunctions.js'
 import EffectInstance from '../effectInstance.js'
-import StatusEffects from './combined.js'
+import { phantom as PhantomEffects, status as StatusEffects } from './combined.js'
 import _ from 'lodash'
 
 export default class StatusEffectInstance extends EffectInstance{
@@ -32,19 +32,20 @@ export default class StatusEffectInstance extends EffectInstance{
   }
 
   get effectData(){
-    if(!this.data.base){
-      return this.data
-    }
-    let effectData
-    const baseDef = StatusEffects[this.data.base].def
-    if(_.isFunction(baseDef)){
-      effectData = baseDef(this.data.params, this.state)
+    if(this.data.base){
+      let effectData = {}
+      const baseName = Object.keys(this.data.base)[0]
+      const baseDef = StatusEffects[baseName].def
+      if(_.isFunction(baseDef)){
+        effectData = baseDef(this.data.base[baseName])
+      }else{
+        effectData = baseDef
+      }
+      effectData = { ...effectData, ...this.data }
+      delete effectData.base
+      return effectData
     }else{
-      effectData = baseDef
-    }
-    return {
-      ...effectData,
-      ...this.data
+      return this.data
     }
   }
 
@@ -55,8 +56,8 @@ export default class StatusEffectInstance extends EffectInstance{
     return this.effectData.stacking ?? false
   }
 
-  get isBuff(){
-    return this.effectData.isBuff ?? false
+  get polarity(){
+    return this.effectData.polarity ?? 'neutral'
   }
 
   get stacks(){

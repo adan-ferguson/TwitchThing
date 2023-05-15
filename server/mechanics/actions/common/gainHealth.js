@@ -1,5 +1,5 @@
-import { scaledNumberFromAbilityInstance } from '../../../game/scaledNumber.js'
-import { gainHealth } from '../../mechanics/gainHealth.js'
+import { scaledNumberFromAbilityInstance } from '../../../../game/scaledNumber.js'
+import { gainHealth } from '../../gainHealth.js'
 
 export default function(combat, actor, abilityInstance = null, actionDef = {}){
   const gain = Math.ceil(scaledNumberFromAbilityInstance(abilityInstance, actionDef.scaling))

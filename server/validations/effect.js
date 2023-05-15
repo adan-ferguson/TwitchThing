@@ -3,8 +3,10 @@ import Joi from 'joi'
 import { STATS_SCHEMA } from './stats.js'
 import { DAMAGE_TYPE_SCHEMA } from './damage.js'
 import { STATICS_SCHEMA } from './statics.js'
-import StatusEffects from '../../game/statusEffects/combined.js'
+import { status as StatusEffects, phantom as PhantomEffects } from '../../game/baseEffects/combined.js'
 import _ from 'lodash'
+import StatusEffectInstance from '../../game/baseEffects/statusEffectInstance.js'
+import PhantomEffectInstance from '../../game/baseEffects/phantomEffectInstance.js'
 
 
 const SCALED_NUMBER_SCHEMA = Joi.object({
@@ -69,7 +71,10 @@ const ABILITY_SCHEMA = Joi.object({
   abilityId: Joi.string(),
   actions: Joi.array().items(ACTION_SCHEMA),
   uses: Joi.number().integer(),
-  trigger: TRIGGERS_SCHEMA.required()
+  trigger: TRIGGERS_SCHEMA.required(),
+  phantomEffect: Joi.custom(val => {
+    return Joi.attempt(val, PHANTOM_EFFECT_SCHEMA)
+  })
 }).xor('replacements', 'actions')
 
 export const EFFECT_SCHEMA = Joi.object({
@@ -82,16 +87,23 @@ export const EFFECT_SCHEMA = Joi.object({
 })
 
 export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
-  base: Joi.string().valid(...Object.keys(StatusEffects)),
+  base: Joi.object({
+    damageOverTime: SCALED_NUMBER_SCHEMA
+  }),
   duration: Joi.number().integer(),
   stacking: Joi.string(),
-  isBuff: Joi.boolean(),
+  polarity: Joi.string().valid('buff','debuff','negativity'),
   name: Joi.string(),
-  persisting: Joi.boolean().truthy(),
-  Xparams: Joi.object()
-}).or('base', 'isBuff')
+  persisting: Joi.boolean().truthy()
+})
 
-export function validateAllStatusEffects(){
+export const PHANTOM_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
+  base: Joi.object({
+    attackAppliesStatusEffect: STATUS_EFFECT_SCHEMA
+  })
+})
+
+export function validateAllBaseEffects(){
   for(let id in StatusEffects){
     try {
       validateStatusEffect(id)
@@ -99,12 +111,21 @@ export function validateAllStatusEffects(){
       throw `StatusEffect "${id}" failed validation: ` + ex.message
     }
   }
+  for(let id in PhantomEffects){
+    try {
+      validatePhantomEffect(id)
+    }catch(ex){
+      throw `PhantomEffect "${id}" failed validation: ` + ex.message
+    }
+  }
 }
 
 function validateStatusEffect(id){
-  let def = StatusEffects[id].def
-  if(_.isFunction(def)){
-    def = def({},{})
-  }
-  Joi.assert(def, STATUS_EFFECT_SCHEMA)
+  const sei = new StatusEffectInstance({ base: { [id]: undefined } }, {})
+  Joi.assert(sei.effectData, STATUS_EFFECT_SCHEMA)
+}
+
+function validatePhantomEffect(id){
+  const pei = new PhantomEffectInstance({ base: { [id]: undefined } }, {})
+  Joi.assert(pei.effectData, EFFECT_SCHEMA)
 }

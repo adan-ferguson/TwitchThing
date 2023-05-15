@@ -13,7 +13,7 @@ export default {
               affects: 'self',
               statusEffect: {
                 name: 'berserk',
-                isBuff: true,
+                polarity: 'buff',
                 stacking: 'stack',
                 stats: {
                   physPower: wrappedPct(4 + level * 8)

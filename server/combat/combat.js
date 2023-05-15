@@ -3,7 +3,7 @@ import { CombatResult } from '../../game/combatResult.js'
 import { shuffle } from '../../game/rando.js'
 import { takeCombatTurn } from './takeCombatTurn.js'
 import { processAbilityEvents } from '../mechanics/abilities.js'
-import { performAction, useAbility } from '../actions/performAction.js'
+import { performAction, useAbility } from '../mechanics/actions/performAction.js'
 import { overtimeDamageBonus } from '../../game/combatMechanics.js'
 
 const MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS = 30

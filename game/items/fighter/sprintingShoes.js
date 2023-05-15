@@ -13,7 +13,7 @@ export default {
               affects: 'self',
               statusEffect: {
                 name: 'sprinting',
-                isBuff: true,
+                polarity: 'buff',
                 duration,
                 stats: {
                   speed

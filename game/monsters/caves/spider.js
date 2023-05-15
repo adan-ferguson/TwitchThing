@@ -18,7 +18,7 @@ export default {
                 stacking: 'stack',
                 persisting: true,
                 duration: 10000,
-                isBuff: false,
+                polarity: 'debuff',
                 stats: {
                   speed: -25
                 }

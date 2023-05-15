@@ -13,6 +13,10 @@ export default class AbilityInstance{
     return this._index
   }
 
+  get phantomEffect(){
+    return this.abilityDef.phantomEffect
+  }
+
   get replacements(){
     return this.abilityDef.replacements
   }

@@ -1,6 +1,6 @@
-import { processAbilityEvents } from '../../mechanics/abilities.js'
-import { dealDamage } from '../../mechanics/dealDamage.js'
-import { scaledNumberFromAbilityInstance } from '../../../game/scaledNumber.js'
+import { processAbilityEvents } from '../../abilities.js'
+import { dealDamage } from '../../dealDamage.js'
+import { scaledNumberFromAbilityInstance } from '../../../../game/scaledNumber.js'
 
 export default function(combat, attacker, abilityInstance = null, actionDef = {}){
 

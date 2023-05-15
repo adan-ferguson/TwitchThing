@@ -60,7 +60,7 @@ function getColors(effectInstance){
   if(effectInstance.barrier){
     return STATUSEFFECT_COLORS.barrier
   }
-  return STATUSEFFECT_COLORS[effectInstance.isBuff ? 'buff' : 'debuff']
+  return STATUSEFFECT_COLORS[effectInstance.polarity]
 }
 
 const DEFS = {

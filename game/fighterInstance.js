@@ -1,6 +1,7 @@
 import Stats from './stats/stats.js'
 import { deepClone, minMax } from './utilFunctions.js'
-import StatusEffectInstance from './statusEffects/statusEffectInstance.js'
+import StatusEffectInstance from './baseEffects/statusEffectInstance.js'
+import PhantomEffectInstance from './baseEffects/phantomEffectInstance.js'
 
 // Stupid
 new Stats()
@@ -20,6 +21,7 @@ export const COMBAT_BASE_TURN_TIME = 3000
 export default class FighterInstance{
 
   _statusEffectInstances
+  _phantomEffectInstances = []
   _state
 
   /**
@@ -96,7 +98,7 @@ export default class FighterInstance{
   }
 
   get effectInstances(){
-    return [...this.loadoutEffectInstances, ...this.statusEffectInstances]
+    return [...this.loadoutEffectInstances, ...this.statusEffectInstances, ...this._phantomEffectInstances]
   }
 
   get statics(){
@@ -343,6 +345,18 @@ export default class FighterInstance{
 
   uncache(){
     this._cachedStats = null
+  }
+
+  addPhantomEffect(phantomEffectData){
+    const pe = new PhantomEffectInstance(phantomEffectData, this)
+    this._phantomEffectInstances.push(pe)
+    this.uncache()
+    return pe
+  }
+
+  clearPhantomEffects(){
+    this._phantomEffectInstances = []
+    this.uncache()
   }
 
   _cleanupExpiredStatusEffects(){

@@ -28,6 +28,10 @@ export const STATUSEFFECT_COLORS = {
     bar: '#ffc0c0',
     flash: '#ff0000'
   },
+  neutral: {
+    bar: '#fff0b6',
+    flash: '#fff21c'
+  },
   barrier: {
     bar: '#ddd',
     flash: '#fff'

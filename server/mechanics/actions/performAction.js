@@ -1,7 +1,7 @@
 import _ from 'lodash'
 import Actions from './combined.js'
-import { expandActionDef } from '../../game/actionDefs/expandActionDef.js'
-import { arrayize } from '../../game/utilFunctions.js'
+import { expandActionDef } from '../../../game/actionDefs/expandActionDef.js'
+import { arrayize } from '../../../game/utilFunctions.js'
 
 export function performAction(combat, actor, ability, actionDef){
   const expandedActionDef = expandActionDef(actionDef)
@@ -29,8 +29,10 @@ export function performAction(combat, actor, ability, actionDef){
 
 export function useAbility(combat, ability, triggerData = null){
   const owner = ability.fighterInstance
+  ability.phantomEffect ? owner.addPhantomEffect(ability.phantomEffect) : null
   const results = []
   iterateActions(ability.actions)
+  owner.clearPhantomEffects()
   return results
 
   function iterateActions(actions){

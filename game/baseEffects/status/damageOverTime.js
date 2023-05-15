@@ -1,15 +1,13 @@
-export default function({ damage = 0 }, { stacks = 1 }){
+export default function(damage = 0){
   return {
-    isBuff: false,
+    polarity: 'debuff',
     stacking: 'stack',
     abilities: [{
       trigger: { instant: true },
       initialCooldown: 1000,
       actions: [{
         takeDamage: {
-          scaling: {
-            flat: damage * stacks
-          },
+          scaling: { flat: damage },
           damageType: 'phys'
         }
       }]
