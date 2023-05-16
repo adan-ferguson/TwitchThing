@@ -152,12 +152,12 @@ export default class FighterInstance{
   get timeUntilNextUpdate(){
     const vals = [this.timeUntilNextAction]
     this.effectInstances.forEach(ei => {
-      ei.getAbilities('action', 'instant').forEach(tickAbility => {
-        if(tickAbility.enabled){
-          vals.push(tickAbility.cooldownRemaining)
-        }
-      })
       if(this.inCombat){
+        ei.getAbilities('action', 'instant').forEach(tickAbility => {
+          if(tickAbility.enabled){
+            vals.push(tickAbility.cooldownRemaining)
+          }
+        })
         ei.getAbilities('action', 'combatTime').forEach(combatTimeAbility => {
           const targetTime = combatTimeAbility.trigger.combatTime
           if(combatTimeAbility.enabled && targetTime > this._state.combatTime){

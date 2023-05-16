@@ -164,7 +164,7 @@ class Combat{
   _advanceTime(){
     const timeToAdvance = Math.ceil(
       Math.max(
-        0,
+        1,
         Math.min(...this.fighters.map(fi => fi.timeUntilNextUpdate), this.nextSuddenDeathTick)
       )
     )

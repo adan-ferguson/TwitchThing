@@ -102,11 +102,16 @@ export default class EffectDetails extends DIElement{
   }
 
   _addDuration(){
-    const duration = this._obj.duration
-    if(!duration){
-      return
+    const chunks = []
+    if(this._obj.duration){
+      chunks.push(roundToNearestIntervalOf(this._obj.duration/1000, 0.01) + 's')
     }
-    this.appendChild(wrapText(roundToNearestIntervalOf(duration/1000, 0.01) + 's'))
+    if(this._obj.persisting){
+      chunks.push('Persisting')
+    }
+    if(chunks.length){
+      this.appendChild(wrapText(chunks.join(', ')))
+    }
   }
 
   //

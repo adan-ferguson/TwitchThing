@@ -68,10 +68,10 @@ export default class EffectRow extends DIElement{
     }
 
     if(info.abilityInfo){
-      this._timedMiniBar = info.abilityInfo.cooldownRefreshing ? true : false
+      this._timedMiniBar = info.abilityInfo.abilityState === 'cooldown-refreshing' ? true : false
       this._miniBarEl
-        .setOptions({ max: info.abilityInfo.barMax })
-        .setValue(info.abilityInfo.barValue)
+        .setOptions({ max: info.abilityInfo.abilityBarMax })
+        .setValue(info.abilityInfo.abilityBarValue)
     }
 
     this.setTooltip(this.tooltip)

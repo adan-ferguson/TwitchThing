@@ -37,7 +37,7 @@ export default class StatusEffectInstance extends EffectInstance{
       const baseName = Object.keys(this.data.base)[0]
       const baseDef = StatusEffects[baseName].def
       if(_.isFunction(baseDef)){
-        effectData = baseDef(this.data.base[baseName], this.state)
+        effectData = baseDef(this.data.base[baseName], this.stacks)
       }else{
         effectData = baseDef
       }
@@ -152,6 +152,7 @@ export default class StatusEffectInstance extends EffectInstance{
   removeStack(){
     if(this.effectData.stacking){
       this._state.stacks = Math.max(0, this.stacks - 1)
+      this.fighterInstance.uncache()
     }
     return this
   }

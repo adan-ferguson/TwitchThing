@@ -12,6 +12,12 @@ const abilityDefinitions = {
   },
   serratedBladeTrigger: () => {
 
+  },
+  damageOverTime: ability => {
+    const action = ability.actions[0].takeDamage
+    return {
+      description: `Take ${action.scaling.flat} ${action.damageType} damage.`
+    }
   }
 }
 
