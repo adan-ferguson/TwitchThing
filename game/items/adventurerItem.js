@@ -4,6 +4,24 @@ import UpgradeData from '../upgradeData.js'
 import AdventurerLoadoutObject from '../adventurerLoadoutObject.js'
 import { toDisplayName } from '../utilFunctions.js'
 
+export const ITEM_RARITIES = [
+  {
+    name: 'common',
+    weight: 90,
+    value: 3
+  },
+  {
+    name: 'uncommon',
+    weight: 30,
+    value: 8
+  },
+  {
+    name: 'rare',
+    weight: 10,
+    value: 19
+  }
+]
+
 export default class AdventurerItem extends AdventurerLoadoutObject{
 
   _def
@@ -24,6 +42,18 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
 
   get advClass(){
     return this._baseItem.group
+  }
+
+  get id(){
+    return this._baseItem.id
+  }
+
+  get name(){
+    return this.id
+  }
+
+  get classes(){
+    return [this._baseItem.group]
   }
 
   get def(){
@@ -49,8 +79,41 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
     }
   }
 
+  get rarity(){
+    return this._baseItem.rarity ?? 0
+  }
+
+  get rarityInfo(){
+    return ITEM_RARITIES[this.rarity]
+  }
+
+  get scrapValue(){
+    const scrapVal = this.rarityInfo.value
+    return scrapVal * (1 + this.level * (this.level - 1) / 2)
+  }
+
   sameItem(adventurerItem){
     return this.isBasic && adventurerItem.isBasic && this.def === adventurerItem.def
+  }
+
+  upgradeInfo(){
+    // TODO: this
+    // const upgradedItemDef = {
+    //   id: uniqueID(),
+    //   ...this.itemDef,
+    //   level: this.level + 1
+    // }
+    //
+    // const upgradedItem = new AdventurerItem(upgradedItemDef)
+    //
+    // const components = []
+    // components.push({ type: 'scrap', count: upgradedItem.scrapValue - this.scrapValue })
+    //
+    // if(this.level > 1){
+    //   components.push({ type: 'item', group: this.itemDef.group, name: this.itemDef.name, count: this.level - 1 })
+    // }
+    //
+    // return { upgradedItemDef, components }
   }
 }
 

@@ -1,9 +1,9 @@
 import { fillArray, makeEl, wait } from '../../../../../game/utilFunctions.js'
-import FighterItemLoadoutItem from '../../../fighterItemLoadoutItem.js'
-import AdventurerItemInstance from '../../../../../game/adventurerSlotInstance.js'
 import { getChestDisplayInfo } from '../../../displayInfo/chestDisplayInfo.js'
 import DIElement from '../../diElement.js'
 import { ICON_SVGS } from '../../../assetLoader.js'
+import AdventurerItem from '../../../../../game/items/adventurerItem.js'
+import AdventurerItemRow from '../../adventurer/adventurerItemRow.js'
 
 const UNOPENED_HTML = `
 <span class="unopened">
@@ -71,12 +71,9 @@ export default class ChestOpenage extends DIElement{
     }
 
     const basicItems = arrayOfItems(this._chest.contents.items.basic)
-    basicItems.forEach(({ itemDef, count }) => {
-      const info = new FighterItemLoadoutItem(new AdventurerItemInstance(itemDef))
-      const row = new LoadoutRow().setItem(info)
-      if(count > 1){
-        row.setCount(count)
-      }
+    basicItems.forEach(({ name, count }) => {
+      const item = new AdventurerItem(name)
+      const row = new AdventurerItemRow().setOptions({ item, count })
       contents.appendChild(row)
     })
 
@@ -102,7 +99,7 @@ function arrayOfItems(obj){
   for(let group in obj){
     for(let name in obj[group]){
       arr.push({
-        itemDef: { group, name },
+        name,
         count: obj[group][name]
       })
     }

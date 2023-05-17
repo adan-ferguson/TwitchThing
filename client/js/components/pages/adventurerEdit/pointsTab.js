@@ -14,7 +14,7 @@ const HTML = `
     <di-adventurer-edit-class-display></di-adventurer-edit-class-display>
   </div>
 </div>
-<div style="flex: 0 1; display: flex; align-items: center; align-self: center;">Gain ${skillPointEntry(1)} every 5 levels</div>
+<div style="flex: 0 1; align-self: center;">Gain ${skillPointEntry(1)} every 5 levels</div>
 `
 
 export default class PointsTab extends DIElement{

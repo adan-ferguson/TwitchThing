@@ -1,6 +1,7 @@
-import { chooseRandomBasicItem, getItemRarity } from '../items/generator.js'
+import { chooseRandomBasicItem } from '../items/generator.js'
 import { toNumberOfDigits } from '../../game/utilFunctions.js'
 import { geometricProgression } from '../../game/growthFunctions.js'
+import AdventurerItem from '../../game/items/adventurerItem.js'
 
 const GOLD_BASE = 20
 const GOLD_GROWTH = 10
@@ -50,9 +51,9 @@ export function generateRandomChest(options = {}){
   while(valueRemaining > 0){
     // tutorial chests drop more fighter items
     const chestClasses = chest.type === 'tutorial' && Math.random() > 0.75 ? ['fighter'] : chest.classes
-    const baseType = chooseRandomBasicItem(valueRemaining, chestClasses)
-    items.push(baseType)
-    valueRemaining -= getItemRarity(baseType.rarity).value
+    const item = new AdventurerItem(chooseRandomBasicItem(valueRemaining, chestClasses).id)
+    items.push(item)
+    valueRemaining -= item.rarityInfo.value
   }
 
   if(items.length > chest.itemLimit){
@@ -61,8 +62,8 @@ export function generateRandomChest(options = {}){
 
   let leftoverValue = totalValue
   items.forEach(item => {
-    addItem(chest.contents.items.basic, item.group, item.name)
-    leftoverValue -= getItemRarity(item.rarity).value
+    addItem(chest.contents.items.basic, item.advClass, item.id)
+    leftoverValue -= item.rarityInfo.value
   })
 
   if(leftoverValue > 0 && !chest.noGold){

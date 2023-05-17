@@ -55,21 +55,19 @@ verifiedRouter.post('/edit', validateIdle, async (req, res) => {
     items: user.inventory.items
   })
 
-  // Clear the accomplishment
-  // let updated = false
-  // if(user.features.editLoadout === 1){
-  //   updated = true
-  //   req.user.features.editLoadout = 2
-  // }
-  // Object.values(req.user.inventory.items).forEach(item => {
-  //   if(item.isNew){
-  //     item.isNew = false
-  //     updated = true
-  //   }
-  // })
-  // if(updated){
-  //   Users.save(req.user)
-  // }
+  // Clear flags
+  let updated = false
+  if(user.features.editLoadout === 1){
+    updated = true
+    req.user.features.editLoadout = 2
+  }
+  if(user.features.spendPoints === 1){
+    updated = true
+    req.user.features.spendPoints = 2
+  }
+  if(updated){
+    Users.save(req.user)
+  }
 })
 
 verifiedRouter.post('/edit/spendorb', validateIdle, async(req, res) => {

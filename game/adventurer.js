@@ -7,14 +7,14 @@ import OrbsData from './orbsData.js'
 
 const XP_BASE = 100
 const XP_GROWTH = 200
-const XP_GROWTH_PCT = 0.18
+const XP_GROWTH_PCT = 0.2
 
-const HP_BASE = 40
-const HP_GROWTH = 10
+const HP_BASE = 30
+const HP_GROWTH = 5
 const HP_GROWTH_PCT = 0.05
 
-const POWER_BASE = 10
-const POWER_GROWTH = 2
+const POWER_BASE = 5
+const POWER_GROWTH = 1
 const POWER_GROWTH_PCT = 0.05
 
 export function advXpToLevel(xp){
@@ -114,7 +114,7 @@ export default class Adventurer{
       const skill = new AdventurerSkill(skillId, this.doc.unlockedSkills[skillId])
       usedPoints += skill.skillPointsCumulative
     })
-    return Math.max(0, 1 + Math.floor(this.level / 5) - usedPoints)
+    return Math.max(0, Math.floor(this.level / 5) - usedPoints)
   }
 
   get xp(){

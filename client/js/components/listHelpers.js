@@ -1,4 +1,3 @@
-import FighterItemLoadoutItem from '../fighterItemLoadoutItem.js'
 import AdventurerItem from '../../../game/items/adventurerItem.js'
 import AdventurerItemRow from './adventurer/adventurerItemRow.js'
 import { ADVENTURER_CLASS_LIST } from '../displayInfo/classDisplayInfo.js'

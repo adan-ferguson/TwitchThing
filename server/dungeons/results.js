@@ -50,7 +50,7 @@ export async function finalize(dungeonRunDoc){
   const lastEvent = dungeonRunDoc.events.at(-1)
   const deepestFloor = dungeonRunDoc.floor + ((lastEvent.roomType === 'cleared' || lastEvent.roomType === 'outOfOrder') ? 1 : 0)
 
-  await saveAdventurer()
+  const adventurerDoc = await saveAdventurer()
   await saveUser()
   await saveDungeonRun()
   await purgeOldRuns(dungeonRunDoc.adventurer._id)
@@ -66,6 +66,7 @@ export async function finalize(dungeonRunDoc){
       adventurerDoc.accomplishments.superMonster = Math.max(dungeonRunDoc.room - 1, adventurerDoc.accomplishments.superMonster ?? 0)
     }
     await Adventurers.save(adventurerDoc)
+    return adventurerDoc
   }
 
   async function saveUser(){
@@ -84,11 +85,26 @@ export async function finalize(dungeonRunDoc){
       userDoc.accomplishments.firstRunFinished = 1
       userDoc.features.editLoadout = 1
       emit(userDoc._id, 'show popup', {
-        title: 'You fool!',
+        title: 'Augh!',
         message: `You got crushed! What were you thinking? You didn't even have a weapon!
         
         I just hooked you up with an item. Go to your adventurer's inventory to equip it.`
       })
+    }
+
+    if(adventurerDoc.level > 1 && !userDoc.features.spendPoints){
+      adjustInventoryBasics(userDoc, { shortSword: 1 })
+      userDoc.features.spendPoints = 1
+      emit(userDoc._id, 'show popup', {
+        title: 'That Went Better',
+        message: `Your adventurer leveled up! Go to the Edit Adventurer page to assign orbs (or not, whatever).
+        
+        Orbs let you equip more items and unlock skills.`
+      })
+    }
+
+    if(adventurerDoc.level >= 5 && !userDoc.features.skills){
+      userDoc.features.skills = 1
     }
 
     const cfBefore = userDoc.accomplishments.chestsFound ?? 0

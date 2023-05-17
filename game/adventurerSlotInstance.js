@@ -1,7 +1,5 @@
 import Items from './items/combined.js'
 import OrbsData from './orbsData.js'
-import { uniqueID } from './utilFunctions.js'
-import { ITEM_RARITIES } from '../server/items/generator.js'
 import _  from 'lodash'
 import FighterSlotInstance from './fighterSlotInstance.js'
 
@@ -72,37 +70,8 @@ export default class AdventurerSlotInstance extends FighterSlotInstance{
     return this.itemDef.level ?? 1
   }
 
-  get rarityInfo(){
-    return ITEM_RARITIES[this.baseItem.rarity ?? 0]
-  }
-
-  get scrapValue(){
-    const scrapVal = this.rarityInfo.value
-    return scrapVal * (1 + this.level * (this.level - 1) / 2)
-  }
-
   get isMulticlass(){
     return this.orbs.classes.length > 1
-  }
-
-  upgradeInfo(){
-
-    const upgradedItemDef = {
-      id: uniqueID(),
-      ...this.itemDef,
-      level: this.level + 1
-    }
-
-    const upgradedItem = new AdventurerItemInstance(upgradedItemDef)
-
-    const components = []
-    components.push({ type: 'scrap', count: upgradedItem.scrapValue - this.scrapValue })
-
-    if(this.level > 1){
-      components.push({ type: 'item', group: this.itemDef.group, name: this.itemDef.name, count: this.level - 1 })
-    }
-
-    return { upgradedItemDef, components }
   }
 }
 

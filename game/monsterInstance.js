@@ -9,17 +9,17 @@ import MonsterItem from './monsterItem.js'
 
 const ADJUSTED_DIFFICULTY_PER_ZONE = 2.25
 
-const HP_BASE = 24
-const HP_GROWTH = 10
+const HP_BASE = 12
+const HP_GROWTH = 5
 const HP_GROWTH_PCT = 0.12
 
-const POWER_BASE = 8
-const POWER_GROWTH = 2
+const POWER_BASE = 5
+const POWER_GROWTH = 1
 const POWER_GROWTH_PCT = 0.1
 
 const XP_BASE = 50
 const XP_GROWTH = 20
-const XP_GROWTH_PCT = 0.2
+const XP_GROWTH_PCT = 0.15
 const XP_ZONE_BONUS = 1
 
 export function levelToXpReward(lvl){

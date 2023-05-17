@@ -52,13 +52,21 @@ const INFO = {
 
 for(let advClass in INFO){
   INFO[advClass].skills.forEach((s, i) => s.index = i)
-  INFO[advClass].items.forEach((tier, i) => {
-    tier.forEach(item => item.tier = i)
+  INFO[advClass].items.forEach((rarity, i) => {
+    rarity.forEach(item => item.rarity = i)
   })
 }
 
 export function getClassInfo(className){
   return INFO[className]
+}
+
+export function getAllItemsByClass(){
+  const items = {}
+  for(let className in INFO){
+    items[className] = INFO[className].items.flat()
+  }
+  return items
 }
 
 export function getAllItemKeys(){

@@ -14,6 +14,10 @@ export function skillPointIcon(){
   return coloredIcon('star', '#92eac6', 'skill-point')
 }
 
+export function orbPointEntry(count){
+  return `<span class="orb-point-entry icon-and-value">${count}${orbPointIcon()}</span>`
+}
+
 export function skillPointEntry(count){
   return `<span class="skill-point-entry icon-and-value">${count}${skillPointIcon()}</span>`
 }

@@ -5,8 +5,8 @@ export default {
     return {
       effect: {
         stats: {
-          physPower: wrappedPct(15 + 15 * level),
-          hpMax: wrappedPct(15 + 15 * level)
+          physPower: wrappedPct(10 + 15 * level),
+          hpMax: wrappedPct(10 + 15 * level)
         }
       }
     }

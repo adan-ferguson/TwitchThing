@@ -1,7 +1,8 @@
 import Page from '../page.js'
 import { hideLoader, showLoader } from '../../../loader.js'
 import Adventurer from '../../../../../game/adventurer.js'
-import { orbPointIcon, skillPointIcon } from '../../common.js'
+import { orbPointEntry, skillPointEntry } from '../../common.js'
+import tippyCallout from '../../visualEffects/tippyCallout.js'
 
 const HTML = `
 <di-tabz>
@@ -56,16 +57,25 @@ export default class AdventurerEditPage extends Page{
   }
 
   updatePoints(){
+    const tab = this.tabzEl.querySelector('.tab[data-tab-name="Spend Points"]')
+    if(!this.user.features.spendPoints){
+      tab.classList.add('displaynone')
+      return
+    }
+    if(this.user.features.spendPoints === 1){
+      tab.classList.add('glow')
+      tippyCallout(tab, 'Assign orbs here')
+    }
     const unspentOrbs = this.adventurer.unspentOrbs
     const unspentSkillPoints = this.adventurer.unspentSkillPoints
-    let prefixHtml = ''
+    let prefixHtml = ' '
     if(unspentOrbs > 0){
-      prefixHtml += `<span class="unspent-points">${unspentOrbs}${orbPointIcon()}</span>`
+      prefixHtml += orbPointEntry(unspentOrbs)
     }
     if(unspentSkillPoints > 0){
-      prefixHtml += `<span class="unspent-points">${unspentSkillPoints}${skillPointIcon()}</span>`
+      prefixHtml += skillPointEntry(unspentSkillPoints)
     }
-    this.tabzEl.querySelector('.tab[data-tab-name="Spend Points"]').innerHTML = 'Spend Points' + prefixHtml
+    tab.innerHTML = 'Spend Points' + prefixHtml
   }
 }
 

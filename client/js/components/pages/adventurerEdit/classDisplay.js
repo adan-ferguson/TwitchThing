@@ -8,15 +8,17 @@ import SimpleModal from '../../simpleModal.js'
 import { makeEl, wrapContent } from '../../../../../game/utilFunctions.js'
 import SkillCard from '../../skillCard.js'
 import { ICON_SVGS } from '../../../assetLoader.js'
+import tippyCallout from '../../visualEffects/tippyCallout.js'
 
 const HTML = `
 <div class="unset">
   <div class="supertitle align-center">Add a Class</div>
   <di-adventurer-edit-class-selector></di-adventurer-edit-class-selector>
+  <div class="click-preview" style="text-align: center;">^ Choose one to preview</div>
   <div class="class-info displaynone">
     <div class="class-name supertitle"></div>
     <div class="description"></div>
-    <button class="unlock">Unlock ${ICON_SVGS.orbAdd}</button>
+    <button class="unlock">Unlock for 1${ICON_SVGS.orbAdd}</button>
   </div>
 </div>
 <div class="set flex-rows">
@@ -36,6 +38,7 @@ export default class ClassDisplay extends DIElement{
     this.classList.add('fill-contents')
     this.innerHTML = HTML
     this.classSelectorEl.events.on('select', cdi => {
+      this.querySelector('.click-preview')?.remove()
       const ci = this.classInfoEl
       ci.classList.remove('displaynone')
       ci.querySelector('.class-name').textContent = cdi.displayName
@@ -79,6 +82,11 @@ export default class ClassDisplay extends DIElement{
     this._adventurer = adventurer
     this._index = index
     this.update()
+    console.log('sp', user.features.spendPoints)
+    if(user.features.spendPoints === 1){
+      tippyCallout(this.adderButton, 'Click me to gain more fighter orbs so you can equip both swords')
+      user.features.spendPoints = 2
+    }
     return this
   }
 

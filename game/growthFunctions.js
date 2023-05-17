@@ -13,13 +13,13 @@ export function growthFunctions(growthPct, iterations, base = 1){
  * @param roundToNearest
  * @returns {number}
  */
-export function geometricProgression(growthPct, iterations, base = 1, roundToNearest = null){
+export function geometricProgression(growthPct, iterations, base = 1, roundToNearest = 0.0001){
   iterations = Math.round(iterations)
   if(iterations <= 0){
     return 0
   }
   const val =  base * (Math.pow(1 + growthPct, iterations) - 1) / growthPct
-  return roundToNearest ? roundToNearestIntervalOf(val, roundToNearest) : val
+  return roundToNearestIntervalOf(val, roundToNearest)
 }
 
 /**

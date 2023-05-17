@@ -51,7 +51,6 @@ export default class AdventurerPane extends DIElement{
 
   setAdventurer(adventurer){
     this.adventurer = adventurer
-    this.querySelector('.name').textContent = `${adventurer.level} - ${adventurer.name}`
     this.update()
   }
 
@@ -106,6 +105,7 @@ export default class AdventurerPane extends DIElement{
         owner: adventurerInstance
       })
       .setStats(adventurerInstance.stats, showChangeEffect)
+    this.querySelector('.name').textContent = `Lv.${this.adventurer.level} - ${this.adventurer.name}`
   }
 }
 

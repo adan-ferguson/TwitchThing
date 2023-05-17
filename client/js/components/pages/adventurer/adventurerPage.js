@@ -9,6 +9,7 @@ import DungeonPage from '../dungeon/dungeonPage.js'
 import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
 import Adventurer from '../../../../../game/adventurer.js'
 import AdventurerEditPage from '../adventurerEdit/adventurerEditPage.js'
+import { orbPointEntry, skillPointEntry } from '../../common.js'
 
 const HTML = `
 <div class="content-columns">
@@ -16,7 +17,7 @@ const HTML = `
     <div class="content-well">
       <di-adventurer-pane></di-adventurer-pane>
     </div>
-    <button class="edit content-no-grow">Edit Equipment</button>
+    <button class="edit content-no-grow">Edit Adventurer</button>
   </div>
   <div class="content-rows dungeons">
     <div class="top-right content-well center-contents clickable"></div>
@@ -94,14 +95,28 @@ export default class AdventurerPage extends Page{
 
     const btn = this.querySelector('button.edit')
     const featureStatus = user.features.editLoadout
+
     if(!featureStatus){
       btn.classList.add('displaynone')
       return
     }else if(featureStatus === 1){
       btn.classList.add('glow')
-      btn.classList.remove('displaynone')
-      tippyCallout(btn, 'Click here to edit your items')
+      tippyCallout(btn, 'Edit your items here')
+    }else if(user.features.spendPoints === 1){
+      btn.classList.add('glow')
+      tippyCallout(btn, 'Assign orbs here')
     }
+
+    const unspentOrbs = this.adventurer.unspentOrbs
+    const unspentSkillPoints = this.adventurer.unspentSkillPoints
+    let points = ' '
+    if(unspentOrbs > 0){
+      points += orbPointEntry(unspentOrbs)
+    }
+    if(unspentSkillPoints > 0){
+      points += skillPointEntry(unspentSkillPoints)
+    }
+    btn.innerHTML += points
 
     btn.addEventListener('click', () => {
       this.redirectTo(AdventurerEditPage.path(this.adventurerID))
