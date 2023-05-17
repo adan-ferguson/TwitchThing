@@ -25,9 +25,9 @@ export function takeDamage(combat, subject, damageInfo){
   }
 
   if(!damageInfo.ignoreDefense){
-    const blocked = Math.floor(damage * subject.stats.get(damageInfo.damageType + 'Def').value)
-    damage = damage - blocked
-    result.blocked = blocked
+    const mitigated = Math.floor(damage * subject.stats.get(damageInfo.damageType + 'Def').value)
+    damage = damage - mitigated
+    result.mitigated = mitigated
   }
 
   if(!damageInfo.ignoreOvertime){

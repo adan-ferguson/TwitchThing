@@ -7,6 +7,7 @@ import StatsList from './stats/statsList.js'
 import AbilityDescription from './abilityDescription.js'
 import { StatsDisplayStyle } from '../displayInfo/statsDisplayInfo.js'
 import { getAbilityDisplayInfoForObj } from '../displayInfo/abilityDisplayInfo.js'
+import { modDisplayInfo } from '../displayInfo/modDisplayInfo.js'
 
 export default class EffectDetails extends DIElement{
 
@@ -34,11 +35,10 @@ export default class EffectDetails extends DIElement{
     this._addConditions()
     this._addMeta()
     this._addAbilities()
-    // this._addDescription()
     this._addStats()
+    this._addMods()
     this._addLoadoutModifiers()
     this._addDuration()
-    // this._addUsesRemaining()
   }
 
   _addConditions(){
@@ -114,20 +114,14 @@ export default class EffectDetails extends DIElement{
     }
   }
 
-  //
-  // _addDescription(){
-  //   const description = parseDescriptionString(this._effectInstance.description ?? '')
-  //   description.classList.add('effect-description')
-  //   this._effectInstance.mods.list.forEach(mod => {
-  //     if(mod.description){
-  //       description.append(wrapContent(mod.description))
-  //     }
-  //   })
-  //   if(description.innerHTML.length){
-  //     this.appendChild(description)
-  //   }
-  // }
-
+  _addMods(){
+    this._obj.mods.forEach(mod => {
+      const mdi = modDisplayInfo(mod)
+      if(mdi){
+        this.appendChild(wrapText(mdi))
+      }
+    })
+  }
 }
 
 customElements.define('di-effect-details', EffectDetails)

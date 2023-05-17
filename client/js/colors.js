@@ -5,7 +5,9 @@ export const DAMAGE_COLORS = {
 export const FLASH_COLORS = {
   attack: '#9fff9f',
   active: '#74d5d9',
-  nonactive: '#ffa227'
+  nonactive: '#ffa227',
+  good: '#b5f580',
+  bad: '#ee7b7b'
 }
 
 export const ITEM_ROW_COLORS = {

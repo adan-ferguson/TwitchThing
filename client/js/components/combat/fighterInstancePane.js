@@ -220,9 +220,9 @@ export default class FighterInstancePane extends HTMLElement{
       excluded: this._excluded()
     })
 
-    this.statsList.setStats(this.fighterInstance.stats, this.fighterInstance)
+    this.statsList.setStats(this.fighterInstance.stats)
     this.effectsListEl.update(cancelAnimations)
-    this._updateActionBar()
+    this._updateActionBar(cancelAnimations)
     this.loadoutEl.updateAllRows()
     this.classList.toggle('boss', this.fighterInstance.isBoss ? true : false)
 
@@ -295,14 +295,15 @@ export default class FighterInstancePane extends HTMLElement{
     this.querySelector('.standard-contents').style.opacity = '1'
   }
 
-  _updateActionBar(){
+  _updateActionBar(cancelAnimations = false){
     const type = this.fighterInstance.basicAttackType
     if(!this._actionBarEl.querySelector('.basic-attack-type-' + type)){
       this._actionBarEl.setBadge(`${ICON_SVGS[type + 'Power']}`)
     }
     this._actionBarEl.setTime(
       this.fighterInstance._state.timeSinceLastAction ?? 0,
-      this.fighterInstance.timeUntilNextAction
+      this.fighterInstance.timeUntilNextAction,
+      cancelAnimations
     )
   }
 

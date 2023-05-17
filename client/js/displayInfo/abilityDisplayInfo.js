@@ -3,6 +3,8 @@ import AbilityInstance from '../../../game/abilityInstance.js'
 import { derivedAttackDescription } from './derived/actions/attack.js'
 import { derivedApplyStatusEffectDescription } from './derived/actions/applyStatusEffect.js'
 import { derivedGainHealthDescription } from './derived/actions/gainHealth.js'
+import { roundToFixed } from '../../../game/utilFunctions.js'
+import { statusEffectApplicationDescription } from './statusEffectDisplayInfo.js'
 
 const abilityDefinitions = {
   flutteringDodge: () => {
@@ -16,8 +18,17 @@ const abilityDefinitions = {
   damageOverTime: ability => {
     const action = ability.actions[0].takeDamage
     return {
-      description: `Take ${action.scaling.flat} ${action.damageType} damage.`
+      description: `Taking ${Math.ceil(action.scaling.flat)} ${action.damageType} damage.`
     }
+  }
+}
+
+const phantomEffectDefinitions = {
+  attackAppliesStatusEffect: (def, abilityInstance) => {
+    const chunks = ['On hit,']
+    chunks.push(statusEffectApplicationDescription(def, abilityInstance))
+    chunks.push(`for ${roundToFixed(def.duration / 1000, 2)} seconds.`)
+    return chunks
   }
 }
 
@@ -61,6 +72,10 @@ function abilityDescription(ability){
       chunks.push(...derivedGainHealthDescription(actionDef.gainHealth, abilityInstance))
     }
   })
+  if(ability.phantomEffect){
+    const type = Object.keys(ability.phantomEffect.base)[0]
+    chunks.push(...phantomEffectDefinitions[type](ability.phantomEffect.base[type], abilityInstance))
+  }
   if(ability.conditions){
     chunks.push(...conditionsDescription(ability.conditions))
   }

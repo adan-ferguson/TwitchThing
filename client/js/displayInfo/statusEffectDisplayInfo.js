@@ -1,6 +1,6 @@
 import { STATUSEFFECT_COLORS } from '../colors.js'
 import { effectInstanceState } from '../effectInstanceState.js'
-import { toSeconds, wrapStat } from '../components/common.js'
+import { statScaling, toSeconds, wrapStat } from '../components/common.js'
 
 export function statusEffectDisplayInfo(effectInstance){
 
@@ -56,6 +56,11 @@ export function statusEffectDescription(statusEffectDef){
   return { chunks }
 }
 
+export function statusEffectApplicationDescription(statusEffectDef, abilityInstance){
+  const abilityId = Object.keys(statusEffectDef.base)[0]
+  return APPLICATION_DEFS[abilityId](statusEffectDef.base[abilityId], abilityInstance)
+}
+
 function getColors(effectInstance){
   if(effectInstance.barrier){
     return STATUSEFFECT_COLORS.barrier
@@ -65,4 +70,15 @@ function getColors(effectInstance){
 
 const DEFS = {
 
+}
+
+const APPLICATION_DEFS = {
+  damageOverTime: (def, abilityInstance) => {
+    const chunks = ['they take']
+    if(def.damage.scaledNumber){
+      chunks.push(statScaling(def.damage.scaledNumber, abilityInstance))
+    }
+    chunks.push(`${def.damageType ?? 'phys'} damage per second`)
+    return chunks.join(' ')
+  }
 }

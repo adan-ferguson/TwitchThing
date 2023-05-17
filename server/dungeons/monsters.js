@@ -105,9 +105,10 @@ export function generateSuperMonster(dungeonRun){
 
 export async function generateMonster(dungeonRun, boss){
 
-  const level = boss ? dungeonRun.floor : floorToLevel(dungeonRun.floor)
-  const monsterDefinition = getMonsterDefinition(level)
-  monsterDefinition.level = level
+  const index = boss ? dungeonRun.floor : floorToLevel(dungeonRun.floor)
+  const monsterDefinition = getMonsterDefinition(index)
+  monsterDefinition.level = index
+  monsterDefinition.boss = boss
 
   return {
     ...monsterDefinition,

@@ -38,4 +38,8 @@ export default class LoadoutObject{
   get effectData(){
     return this.effect
   }
+
+  get mods(){
+    return this.effect.mods ?? []
+  }
 }

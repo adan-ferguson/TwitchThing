@@ -1,5 +1,6 @@
 import Bar from './bar.js'
-import { ACTION_COLOR } from '../../colors.js'
+import { ACTION_COLOR, FLASH_COLORS } from '../../colors.js'
+import { flash } from '../../animations/simple.js'
 
 export default class ActionBar extends Bar{
 
@@ -19,7 +20,12 @@ export default class ActionBar extends Bar{
     })
   }
 
-  setTime(elapsed, remaining){
+  setTime(elapsed, remaining, dontFlash = false){
+    if(!dontFlash){
+      if(this.options.max !== elapsed + remaining){
+        flash(this._barBorder, FLASH_COLORS[elapsed + remaining > this.options.max ? 'bad' : 'good'], 120)
+      }
+    }
     this.setOptions({
       max: elapsed + remaining
     })

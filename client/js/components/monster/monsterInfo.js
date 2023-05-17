@@ -25,7 +25,7 @@ export default class MonsterInfo extends HTMLElement{
         statsDisplayStyle: StatsDisplayStyle.CUMULATIVE,
         forced: ['physPower','speed','hpMax']
       })
-      .setStats(monsterInstance.stats, monsterInstance)
+      .setStats(monsterInstance.stats)
   }
 }
 

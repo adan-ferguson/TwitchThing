@@ -66,3 +66,33 @@ export function scalingWrap(scalingType, valStr){
 export function toSeconds(ms){
   return roundToNearestIntervalOf(ms / 1000, 0.01) + 's'
 }
+
+export function statScaling(scaling, abilityInstance, range = null){
+  const chunks = []
+  for(let scalingType in scaling){
+    if(['physPower', 'magicPower'].includes(scalingType)){
+      const val = scaling[scalingType]
+      let str = ''
+      if(abilityInstance){
+        const statVal = val * abilityInstance.exclusiveStats.get(scalingType).value
+        if(range){
+          const val1 = Math.ceil(statVal * range[0])
+          const val2 = Math.ceil(statVal * range[1])
+          str = val1 + ' to ' + val2
+        }else{
+          str = Math.ceil(statVal)
+        }
+      }else{
+        if(range){
+          const val1 = Math.ceil(range[0] * val * 100)
+          const val2 = Math.ceil(range[1] * val * 100)
+          str = `${val1}% to ${val2}%`
+        }else{
+          str = `${val * 100}%`
+        }
+      }
+      chunks.push(scalingWrap(scalingType, str))
+    }
+  }
+  return chunks.join(' + ')
+}

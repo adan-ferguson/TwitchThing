@@ -42,8 +42,8 @@ export default function(combat, attacker, abilityInstance = null, actionDef = {}
 
   let damageInfo = {
     damageType: actionDef.damageType,
-    damage: damage // * attacker.stats.get('damageDealt').value,
-    // range: actionDef.range,
+    damage: damage, // * attacker.stats.get('damageDealt').value,
+    range: actionDef.range,
   }
 
   // if(attemptCrit(attacker, enemy, actionDef.extraCritChance)){

@@ -2,6 +2,9 @@ import DIElement from '../diElement.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
 import LoadoutObjectInstance from '../../../../game/loadoutObjectInstance.js'
 import EffectDetails from '../effectDetails.js'
+import ItemCard from '../itemCard.js'
+import SimpleModal from '../simpleModal.js'
+import MonsterItemCard from './monsterItemCard.js'
 
 const HTML = `
 <di-loadout-row-state></di-loadout-row-state>
@@ -20,6 +23,13 @@ export default class MonsterItemRow extends DIElement{
     super()
     this.innerHTML = HTML
     this._blank()
+    this.addEventListener('contextmenu', e => {
+      if(this.monsterItem){
+        e.preventDefault()
+        const details = new MonsterItemCard().setItem(this.monsterItem)
+        new SimpleModal(details).show()
+      }
+    })
   }
 
   get nameEl(){

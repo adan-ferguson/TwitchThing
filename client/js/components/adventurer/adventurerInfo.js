@@ -32,7 +32,7 @@ export default class AdventurerInfo extends HTMLElement{
         statsDisplayStyle: StatsDisplayStyle.CUMULATIVE,
         forced: ['physPower','speed','hpMax']
       })
-      .setStats(adventurerInstance.stats, adventurerInstance)
+      .setStats(adventurerInstance.stats)
 
     this.querySelector('di-xp-bar')
       .setLevelFunctions(advXpToLevel, advLevelToXp)

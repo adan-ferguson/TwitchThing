@@ -123,9 +123,7 @@ export default class MonsterInstance extends FighterInstance{
   }
 
   get isBoss(){
-    return false
-    // TODO: isBoss should be from the def not the mods
-    // return this.hasStatic(Mods.boss)
+    return this.monsterDef.boss
   }
 
   get rewards(){
