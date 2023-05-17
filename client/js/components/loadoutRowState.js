@@ -2,6 +2,7 @@ import DIElement from './diElement.js'
 import { effectInstanceState } from '../effectInstanceState.js'
 import { FLASH_COLORS, ITEM_ROW_COLORS } from '../colors.js'
 import { flash } from '../animations/simple.js'
+import { makeEl } from '../../../game/utilFunctions.js'
 
 export default class LoadoutRowState extends DIElement{
 
@@ -17,7 +18,10 @@ export default class LoadoutRowState extends DIElement{
   }
 
   get initialHTML(){
-    return '<di-bar class="cooldown"></di-bar>'
+    return `
+<di-bar class="cooldown"></di-bar>
+<div class="dots"></div>
+`
   }
 
   get idle(){
@@ -68,6 +72,7 @@ export default class LoadoutRowState extends DIElement{
         color: barColor
       })
       .setValue(this._stateInfo.abilityBarValue)
+    this._updateDots(this._stateInfo.abilityUses)
   }
 
   advanceTime(ms){
@@ -80,6 +85,15 @@ export default class LoadoutRowState extends DIElement{
         this._stateInfo.abilityInstance.cooldownRemaining = 0
         this.update()
       }
+    }
+  }
+
+  _updateDots(num = 0){
+    const dotsEl = this.querySelector('.dots')
+    dotsEl.innerHTML = ''
+    for(let i = 0; i < num; i++){
+      const dot = makeEl({ class: 'dot' })
+      dotsEl.append(dot)
     }
   }
 }

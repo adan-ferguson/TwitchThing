@@ -17,11 +17,10 @@ di-loadout-row-state
   left: 0
   bottom: 0
 
-  border: 1rem solid #888
   box-sizing: border-box
   overflow: hidden
 
-  &[display-style="skill"]
+  &[display-style="skill"] .cooldown
     border-radius: 20rem
   .di-bar
     background-color: transparent
@@ -56,24 +55,37 @@ di-loadout-row-state
     left: 0
     right: 0
     height: 100%
+    border: 1rem solid #888
+    box-sizing: border-box
 
     .bar-foreground
       opacity: 0.22
-
-    //.bar-border
-    //  border: none !important
 
   &[ability-state="not-ready"]
     border-width: 2rem
 
   &[ability-state=ready]
-    border-width: 2rem
-    &[ability-type=active]
+    .cooldown
+      border-width: 2rem
+    &[ability-type=active] .cooldown
       border-color: #74d5d9
-    &[ability-type=nonactive]
+    &[ability-type=nonactive] .cooldown
       border-color: #ffa227
     &.next
       filter: drop-shadow(1rem 1rem 0.75rem #74d5d9)
 
   //&[ability-cooldown-state=disabled]
   //  opacity: 0.4
+
+  .dots
+    position: absolute
+    bottom: -1rem
+    left: 6rem
+    .dot
+      border-radius: 50%
+      background-color: white
+      display: inline-block
+      width: 5rem
+      height: 5rem
+      border: 1rem solid black
+      margin-right: 2rem

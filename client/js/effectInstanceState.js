@@ -8,7 +8,7 @@ export function effectInstanceState(ei){
     abilityInstance: ai,
     abilityType: type(ai),
     abilityState: state(ai),
-    abilityUsable: usable(ai),
+    abilityUses: uses(ai),
     abilityBarValue: barValue(ai),
     abilityBarMax: barMax(ai),
     next: isNext(ai)
@@ -38,17 +38,14 @@ function state(ai){
   return 'ready'
 }
 
-function usable(ai){
-
+function uses(ai){
+  return ai?.usesRemaining ?? 0
 }
 
 function barValue(ai){
   if(ai){
     if(ai.cooldown){
       return ai.cooldown - ai.cooldownRemaining
-    }
-    if(ai.uses){
-      return ai.uses - ai.timesUsed
     }
   }
   return 0
@@ -58,9 +55,6 @@ function barMax(ai){
   if(ai){
     if(ai.cooldown){
       return ai.cooldown
-    }
-    if(ai.uses){
-      return ai.uses
     }
   }
   return 1
