@@ -1,6 +1,6 @@
 export default {
   baseStats: {
-    hpMax: '+300%',
+    hpMax: '+30%',
     speed: -30,
     physPower: '-10%'
   },

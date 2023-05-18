@@ -190,7 +190,7 @@ async function purgeReplays(drDocs){
     doc.purged = true
     await DungeonRuns.save(doc)
   }
-  console.log('Deleting combats')
+  console.log('Purging combat timelines')
   const result = await Combats.collection.deleteMany({
     _id: { $in: combatIDs }
   })

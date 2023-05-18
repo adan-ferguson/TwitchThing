@@ -1,11 +1,10 @@
 import RELICS from '../../../relicDisplayInfo.js'
 import { suffixedNumber } from '../../../../../game/utilFunctions.js'
 import { ROOM_IMAGES } from '../../../assetLoader.js'
+import MonsterInstance from '../../../../../game/monsterInstance.js'
 
 const HTML = `
-<div class="room-image">
-    <img src="">
-</div>
+<div class="room-image"></div>
 <div class="middle-part">
   <div class="description subtitle"></div>
   <div class="room-contents">
@@ -30,7 +29,7 @@ export default class EventContentsNormal extends HTMLElement{
     super()
     this.innerHTML = HTML
     this.dungeonEvent = dungeonEvent
-    this._imageEl = this.querySelector('.room-image img')
+    this._imageEl = this.querySelector('.room-image')
     this._contents = this.querySelector('.room-contents')
     this._description = this.querySelector('.description')
     this._rewards = this.querySelector('.rewards')
@@ -90,13 +89,17 @@ export default class EventContentsNormal extends HTMLElement{
 
   _setImage(dungeonEvent){
     const roomType = dungeonEvent.roomType ?? 'wandering'
-    this._imageEl.setAttribute('src', ROOM_IMAGES[roomType])
+    this._imageEl.style.backgroundImage = `url(${ROOM_IMAGES[roomType]})`
   }
 }
 
 function getDescription(dungeonEvent){
   if(dungeonEvent.relic){
     return `${RELICS[dungeonEvent.relic.tier].displayName} ${dungeonEvent.relic.type} relic`
+  }
+  if(dungeonEvent.roomType === 'combatResult' && dungeonEvent.result === 1){
+    const name = new MonsterInstance(dungeonEvent.monster).displayName
+    return `${name} defeated`
   }
 }
 

@@ -41,6 +41,10 @@ export default class Inventory extends DIElement{
   }
 
   setup(items, adventurer){
+    if(this._beenSetup){
+      return
+    }
+    this._beenSetup = true
     this.adventurer = adventurer
     // this.querySelector('.inventory-options').classList.toggle('displaynone', adventurer ? false : true)
     this._updateSortAndFilter()

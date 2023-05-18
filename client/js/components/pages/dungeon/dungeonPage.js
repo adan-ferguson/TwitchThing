@@ -114,6 +114,8 @@ export default class DungeonPage extends Page{
     }
     this.dungeonRun = dungeonRun
 
+    console.log(dungeonRun.events)
+
     if(!this.isReplay){
       joinSocketRoom(this.dungeonRun._id)
       getSocket().on('dungeon run update', this._socketUpdate)
@@ -179,6 +181,12 @@ export default class DungeonPage extends Page{
     if(this._ce){
       this._ce.destroy()
     }
+
+    // if(this._lastTime && this._timeline.time < this._lastTime){
+    //   debugger
+    // }
+    // this._lastTime = this._timeline.time
+    // console.log('update', this.currentEvent, this._timeline.time)
 
     const animate = options.animate
 

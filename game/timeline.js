@@ -74,7 +74,16 @@ export default class Timeline extends EventEmitter{
   }
 
   addEntry(entry){
-    this._entries.push(entry)
+    if(entry.time === this.duration){
+      this._entries.push(entry)
+    }else{
+      const i = this._entries.findIndex(e => e.time === entry.time)
+      if(i === -1){
+        debugger
+      }
+      console.log('updated')
+      this._entries[i] = entry
+    }
     this.emit('entry_added', entry)
   }
 

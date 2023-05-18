@@ -35,11 +35,15 @@ export default class LoadoutTab extends DIElement{
     super()
     this.innerHTML = HTML
     this.adventurerPaneEl.setOptions({
-      orbsStyle: OrbsDisplayStyle.REMAINING,
       hideXpBar: true
     })
     this._setupItemEdit()
     this._setupSkillEdit()
+    this.saveButton.addEventListener('click', async (e) => {
+      if(await this._save()){
+        this.parentPage.redirectTo(AdventurerPage.path(this._adventurer.id))
+      }
+    })
   }
 
   get adventurerPaneEl(){
@@ -68,12 +72,6 @@ export default class LoadoutTab extends DIElement{
     this.adventurerPaneEl.setAdventurer(adventurer)
     this.skillsEl.setup(adventurer)
     this._updateSaveButton()
-
-    this.saveButton.addEventListener('click', async (e) => {
-      if(await this._save()){
-        this.parentPage.redirectTo(AdventurerPage.path(this._adventurer.id))
-      }
-    })
   }
 
   async _save(){

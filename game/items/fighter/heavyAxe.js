@@ -5,8 +5,8 @@ export default {
     return {
       effect: {
         stats: {
-          physPower: wrappedPct(20 + geometricProgression(0.2, level, 40, 5)),
-          speed: -20 - 20 * level
+          physPower: wrappedPct(50 + geometricProgression(0.2, level, 50, 5)),
+          speed: -25 - 25 * level
         }
       },
     }

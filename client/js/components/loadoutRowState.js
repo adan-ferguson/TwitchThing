@@ -91,6 +91,9 @@ export default class LoadoutRowState extends DIElement{
   _updateDots(num = 0){
     const dotsEl = this.querySelector('.dots')
     dotsEl.innerHTML = ''
+    if(!num){
+      return
+    }
     for(let i = 0; i < num; i++){
       const dot = makeEl({ class: 'dot' })
       dotsEl.append(dot)

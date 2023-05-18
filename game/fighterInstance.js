@@ -333,7 +333,11 @@ export default class FighterInstance{
   }
 
   addStatusEffect = (data, state = {}) => {
-    this.statusEffectInstances.push(new StatusEffectInstance(data, this, state))
+    const sei = new StatusEffectInstance(data, this, state)
+    if(!this.inCombat && !sei.persisting){
+      return
+    }
+    this.statusEffectInstances.push(sei)
     this.uncache()
   }
 

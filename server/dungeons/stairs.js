@@ -1,16 +1,11 @@
 import { floorSize } from '../../game/zones.js'
 
-const MIN_FLOOR_TRAVERSAL_PCT = 0.40
-const DEEPEST_FLOOR_SIZE = 50
+const MIN_FLOOR_TRAVERSAL_PCT = 0.25
 
 export function foundStairs(dungeonRun){
   const floor = dungeonRun.floor
   const room = dungeonRun.room
   const pace = dungeonRun.pace ?? 'Brisk'
-
-  if(floor === 50){
-    return room >= DEEPEST_FLOOR_SIZE ? true : false
-  }
 
   if(room <= 2){
     return false

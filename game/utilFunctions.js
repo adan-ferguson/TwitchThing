@@ -172,11 +172,9 @@ export function toTimerFormat(ms){
 }
 
 export function suffixedNumber(val, digits = 5){
-  // TODO: make this for real
-  // if(val > 10000000){
-  //   return Math.round(val / 1000000) + 'M'
-  // }
-  // return val + ''
+  if(!Number.isFinite(val)){
+    debugger
+  }
   return val.toLocaleString()
 }
 

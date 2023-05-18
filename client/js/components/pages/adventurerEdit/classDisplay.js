@@ -82,7 +82,6 @@ export default class ClassDisplay extends DIElement{
     this._adventurer = adventurer
     this._index = index
     this.update()
-    console.log('sp', user.features.spendPoints)
     if(user.features.spendPoints === 1){
       tippyCallout(this.adderButton, 'Click me to gain more fighter orbs so you can equip both swords')
       user.features.spendPoints = 2

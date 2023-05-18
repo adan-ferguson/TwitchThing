@@ -92,17 +92,15 @@ export default class ChestOpenage extends DIElement{
   }
 }
 
-customElements.define('di-chest-openage', ChestOpenage )
+customElements.define('di-chest-openage', ChestOpenage)
 
 function arrayOfItems(obj){
   const arr = []
-  for(let group in obj){
-    for(let name in obj[group]){
-      arr.push({
-        name,
-        count: obj[group][name]
-      })
-    }
+  for(let name in obj){
+    arr.push({
+      name,
+      count: obj[name]
+    })
   }
   return arr.sort((a, b) => a.orbs - b.orbs)
 }

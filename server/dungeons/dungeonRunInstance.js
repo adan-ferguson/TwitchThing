@@ -188,6 +188,7 @@ export default class DungeonRunInstance extends EventEmitter{
       this._updateState(nextEvent)
     })
 
+    this._fixTimeline()
     this.doc.elapsedTime = Math.min(this.doc.elapsedTime, this.nextEventTime)
   }
 
@@ -203,5 +204,17 @@ export default class DungeonRunInstance extends EventEmitter{
     event.adventurerState = state
     this.doc.adventurerState = state
     this._adventurerInstance = null
+  }
+
+  _fixTimeline(){
+    if(!this.events.length){
+      return
+    }
+    let time = this.events[0].time
+    for(let i in this.events){
+      const entry = this.events[i]
+      entry.time = time
+      time += entry.duration
+    }
   }
 }

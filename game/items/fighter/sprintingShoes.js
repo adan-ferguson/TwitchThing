@@ -1,7 +1,7 @@
 export default {
   levelFn: function(level){
-    const speed = 25 + level * 15
-    const duration = 8000
+    const speed = 30 + level * 10
+    const duration = 4000 + level * 1000
     return {
       effect: {
         abilities: [{

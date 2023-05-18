@@ -96,8 +96,8 @@ class OrbEntry extends DIElement{
     let text
     let err = false
     if(style === OrbsDisplayStyle.SHOW_MAX){
-      text = `${used}/${max}`
-      this.classList.toggle('error', used > max)
+      text = `${max-used}/${max}`
+      err = used > max
     }else if(style === OrbsDisplayStyle.MAX_ADDITIVE){
       text = (max >= 0 ? '+' : '') + max
     }else if(style === OrbsDisplayStyle.MAX_ONLY){

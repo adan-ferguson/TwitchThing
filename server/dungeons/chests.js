@@ -62,7 +62,7 @@ export function generateRandomChest(options = {}){
 
   let leftoverValue = totalValue
   items.forEach(item => {
-    addItem(chest.contents.items.basic, item.advClass, item.id)
+    addItem(chest.contents.items.basic, item.id)
     leftoverValue -= item.rarityInfo.value
   })
 
@@ -75,15 +75,14 @@ export function generateRandomChest(options = {}){
 
 export function applyChestToUser(userDoc, chest){
   mergeBasicItems(chest.contents.items.basic, userDoc.inventory.items.basic)
-  if(chest.contents.gold){
+  if (chest.contents.gold){
     userDoc.inventory.gold += chest.contents.gold
   }
-  function mergeBasicItems(source, target){
-    for(let group in source){
-      for(let name in source[group]){
-        addItem(target, group, name, source[group][name])
-      }
-    }
+}
+
+function mergeBasicItems(source, target){
+  for(let name in source){
+    addItem(target, name, source[name])
   }
 }
 
@@ -93,12 +92,9 @@ function addGold(valueRemaining){
   return toNumberOfDigits(gold,2)
 }
 
-function addItem(obj, group, name){
-  if(!obj[group]){
-    obj[group] = {}
+function addItem(obj, name, count){
+  if(!obj[name]){
+    obj[name] = 0
   }
-  if(!obj[group][name]){
-    obj[group][name] = 0
-  }
-  obj[group][name] += 1
+  obj[name] += count
 }

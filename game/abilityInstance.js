@@ -108,7 +108,7 @@ export default class AbilityInstance{
   }
 
   get usesRemaining(){
-    return this.uses ? this.uses - this.timesUsed : 99999999
+    return this.uses ? this.uses - this.timesUsed : null
   }
 
   get ready(){
@@ -116,7 +116,7 @@ export default class AbilityInstance{
   }
 
   get enabled(){
-    if(!this.usesRemaining){
+    if(this.uses && !this.usesRemaining){
       return false
     }
     return this.fighterInstance.meetsConditions(this.conditions)

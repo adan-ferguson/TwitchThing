@@ -47,7 +47,7 @@ export default class EffectDetails extends DIElement{
       return
     }
     if(conditions.deepestFloor){
-      this.appendChild(wrapText('While exploring this Adventurer\'s deepest floor:'))
+      this.appendChild(wrapText('While on this adventurer\'s deepest explored floor:'))
     }
   }
 
