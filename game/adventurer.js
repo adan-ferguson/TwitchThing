@@ -5,8 +5,8 @@ import AdventurerLoadout from './adventurerLoadout.js'
 import AdventurerSkill from './skills/adventurerSkill.js'
 import OrbsData from './orbsData.js'
 
-const XP_BASE = 100
-const XP_GROWTH = 300
+const XP_BASE = 6
+const XP_GROWTH = 12
 const XP_GROWTH_PCT = 0.2
 
 const HP_BASE = 30

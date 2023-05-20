@@ -6,6 +6,7 @@ import { derivedGainHealthDescription } from './derived/actions/gainHealth.js'
 import { roundToFixed } from '../../../game/utilFunctions.js'
 import { statusEffectApplicationDescription } from './statusEffectDisplayInfo.js'
 import { attachedSkill } from '../components/common.js'
+import { takeDamageActionCalcDamage } from '../../../game/mechanicsFns.js'
 
 const abilityDefinitions = {
   flutteringDodge: () => {
@@ -23,8 +24,9 @@ const abilityDefinitions = {
   },
   damageOverTime: ability => {
     const action = ability.actions[0].takeDamage
+    const damage = takeDamageActionCalcDamage(ability, action.scaling)
     return {
-      description: `Taking ${Math.ceil(action.scaling.flat)} ${action.damageType} damage.`
+      description: `Taking ${damage} ${action.damageType} damage.`
     }
   }
 }

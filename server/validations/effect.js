@@ -61,7 +61,8 @@ const TRIGGERS_SCHEMA = Joi.object({
   active: Joi.bool().truthy(),
   attacked: Joi.bool().truthy(),
   attack: Joi.bool().truthy(),
-  instant: Joi.bool().truthy()
+  instant: Joi.bool().truthy(),
+  rest: Joi.bool().truthy()
 })
 
 const ABILITY_SCHEMA = Joi.object({
@@ -69,7 +70,6 @@ const ABILITY_SCHEMA = Joi.object({
     source: Joi.string().valid(...SUBJECT_KEYS),
     hpPctBelow: Joi.number()
   }),
-  source: Joi.alternatives().try('attached'),
   initialCooldown: Joi.number().integer(),
   cooldown: Joi.number().integer(),
   replacements: REPLACEMENT_SCHEMA,

@@ -134,6 +134,10 @@ export default class AbilityInstance{
     return this.abilityDef.conditions ?? null
   }
 
+  get stacks(){
+    return this.parentEffect?.stacks || 1
+  }
+
   tryUse(data = {}){
     if(!this.ready){
       return false

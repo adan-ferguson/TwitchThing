@@ -52,10 +52,10 @@ export default class AdventurerSkill extends AdventurerLoadoutObject{
   }
 
   get isMaxLevel(){
-    return this.skillPoints.maxLevel ? this.skillPoints.maxLevel <= this.level : false
+    return this.data.maxLevel === this.level
   }
 
   get skillPointsToUpgrade(){
-    return new AdventurerSkill(this.baseSkill.id, this.level + 1).skillPoints - this.skillPoints
+    return new AdventurerSkill(this.id, this.level + 1).skillPoints - this.skillPoints
   }
 }

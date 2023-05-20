@@ -18,7 +18,10 @@ const fighter = {
       Items.healingPotion
     ],
     [
-      Items.spear
+      Items.spear,
+      Items.serratedBlade,
+      Items.coffeeCarafe,
+      Items.plateMail,
     ],
     []
   ]

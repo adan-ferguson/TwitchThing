@@ -14,7 +14,7 @@ export default function(level){
         }
       },
     },
-    orbs: 2 + level * 3,
+    orbs: 1 + level * 3,
     vars: {
       affects: 'attached',
       physPower

@@ -1,8 +1,8 @@
 import { takeDamage } from '../../takeDamage.js'
-import { scaledNumberFromInstance } from '../../../../game/scaledNumber.js'
+import { takeDamageActionCalcDamage } from '../../../../game/mechanicsFns.js'
 
 export default function(combat, actor, abilityInstance = null, actionDef = {}){
-  const damage = Math.ceil(scaledNumberFromInstance(abilityInstance ?? actor, actionDef.scaling))
+  const damage = takeDamageActionCalcDamage(abilityInstance ?? actor, actionDef.scaling)
   return {
     damageInfo: takeDamage(combat, actor, {
       ...actionDef,

@@ -2,7 +2,7 @@ import { makeEl, suffixedNumber, toDisplayName, wait, wrapContent } from '../../
 import ChestOpenage from './chestOpenage.js'
 import MonsterInstance from '../../../../../game/monsterInstance.js'
 import Adventurer from '../../../../../game/adventurer.js'
-import { skillPointEntry } from '../../common.js'
+import { orbPointEntry, skillPointEntry } from '../../common.js'
 
 const WAIT_TIME = 500
 
@@ -74,7 +74,7 @@ export default class EventContentsResults extends HTMLElement{
     await adventurerPane.addXp(dungeonRunResults.xp, {
       onLevelup: level => {
         const sp = level % 5 === 0 ? `  ${skillPointEntry('+1')}` : ''
-        this._addRow(el, wrapContent(`${advName} has reached level ${level}${sp}`))
+        this._addRow(el, wrapContent(`${advName} has reached level ${level} ${orbPointEntry('+1')}${sp}`))
       },
       skipAnimation: this._skipAnimations
     })

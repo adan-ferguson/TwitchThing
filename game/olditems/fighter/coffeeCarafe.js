@@ -10,7 +10,6 @@ export default {
       },
       abilities: {
         rest: {
-          description: `After resting, gain [Sspeed${speed}] for 20 seconds.`,
           actions: [
             statusEffectAction({
               effect: {
