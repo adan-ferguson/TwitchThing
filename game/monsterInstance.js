@@ -148,7 +148,8 @@ export default class MonsterInstance extends FighterInstance{
         this._itemInstances[i] = new LoadoutObjectInstance({
           obj: new MonsterItem(this.monsterData.items[i]),
           owner: this,
-          state: stateDef[i]
+          state: stateDef[i],
+          slotInfo: [0, i]
         })
       }
     }

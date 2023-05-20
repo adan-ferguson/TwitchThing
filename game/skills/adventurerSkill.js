@@ -1,5 +1,4 @@
 import Skills from './combined.js'
-import UpgradeData from '../upgradeData.js'
 import AdventurerLoadoutObject from '../adventurerLoadoutObject.js'
 import { getClassInfo } from '../adventurerClassInfo.js'
 import { toDisplayName } from '../utilFunctions.js'
@@ -16,15 +15,11 @@ export default class AdventurerSkill extends AdventurerLoadoutObject{
     if(!baseSkill){
       throw 'Invalid skillId: ' + skillId
     }
-    if(!baseSkill.def.levelFn){
-      throw 'Skill is missing its levelFn: ' + skillId
-    }
 
-    super(baseSkill.def.levelFn(level))
+    super(baseSkill.def(level))
 
     this._level = level
     this._baseSkill = baseSkill
-    this._skillPoints = new UpgradeData(baseSkill.def.skillPoints ?? [1, '...'])
   }
 
   get level(){
@@ -53,7 +48,7 @@ export default class AdventurerSkill extends AdventurerLoadoutObject{
   }
 
   get skillPoints(){
-    return this._skillPoints
+    return this.data.skillPoints ?? this.level
   }
 
   get isMaxLevel(){
@@ -61,10 +56,6 @@ export default class AdventurerSkill extends AdventurerLoadoutObject{
   }
 
   get skillPointsToUpgrade(){
-    return this.skillPoints.get(this.level + 1)
-  }
-
-  get skillPointsCumulative(){
-    return this.skillPoints.total(this.level)
+    return new AdventurerSkill(this.baseSkill.id, this.level + 1).skillPoints - this.skillPoints
   }
 }

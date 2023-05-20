@@ -1,6 +1,6 @@
 import DIElement from './diElement.js'
-import { roundToFixed, roundToNearestIntervalOf, wrapContent, wrapText } from '../../../game/utilFunctions.js'
-import { attachedItem, attachedSkill, orbEntries } from './common.js'
+import { roundToNearestIntervalOf, wrapContent, wrapText } from '../../../game/utilFunctions.js'
+import { attachedItem, attachedSkill, neighbouringIcons, orbEntries, wrapStat } from './common.js'
 import AdventurerItem from '../../../game/items/adventurerItem.js'
 import Stats from '../../../game/stats/stats.js'
 import StatsList from './stats/statsList.js'
@@ -32,6 +32,7 @@ export default class EffectDetails extends DIElement{
     if(!this._obj){
       return
     }
+    console.log('ed')
     this._addConditions()
     this._addMeta()
     this._addAbilities()
@@ -57,11 +58,9 @@ export default class EffectDetails extends DIElement{
       return
     }
     for(let subjectKey in metaEffect){
-      for(let modifierKey in metaEffect[subjectKey]){
-        const el = loadoutModifierToEl(subjectKey, modifierKey, metaEffect[subjectKey][modifierKey], this.isItem)
-        if(el){
-          this.appendChild(el)
-        }
+      const el = metaToEl(subjectKey, metaEffect[subjectKey], this.isItem)
+      if(el){
+        this.appendChild(el)
       }
     }
   }
@@ -90,7 +89,7 @@ export default class EffectDetails extends DIElement{
   }
 
   _addStats(){
-    const stats = this._obj.effectData.stats
+    const stats = this._obj.stats
     if(stats){
       this.appendChild(
         new StatsList().setOptions({
@@ -117,7 +116,7 @@ export default class EffectDetails extends DIElement{
   _addMods(){
     this._obj.mods.forEach(mod => {
       const mdi = modDisplayInfo(mod)
-      if(mdi){
+      if(mdi.description){
         this.appendChild(wrapText(mdi))
       }
     })
@@ -129,17 +128,7 @@ customElements.define('di-effect-details', EffectDetails)
 function loadoutModifierToEl(subjectKey, modifierKey, value, isItem){
 
   const placeholders = []
-  let html = ''
-  if(subjectKey === 'self'){
-    html += 'This '
-  }else if(subjectKey === 'allItems'){
-    html += 'Each equipped item '
-  }else if(subjectKey === 'attached'){
-    html += isItem ? attachedSkill() : attachedItem()
-    html += `Attached ${isItem ? 'item' : 'skill'} `
-  }else if(subjectKey === 'neighbouring'){
-    html += `Neighbouring ${isItem ? 'items' : 'skills'} `
-  }
+  let html = subjectDescription(subjectKey, isItem)
 
   if(modifierKey === 'orbs'){
     const key = Object.keys(value)[0]
@@ -170,4 +159,45 @@ function loadoutModifierToEl(subjectKey, modifierKey, value, isItem){
     })
     return el
   }
+}
+
+function metaToEl(subjectKey, metaEffect, isItem){
+  const chunks = []
+  chunks.push(subjectDescription(subjectKey, isItem))
+
+  const subchunks = []
+  if(metaEffect.exclusiveStats){
+    let statHtml = 'Benefits from '
+    for(let statKey in metaEffect.exclusiveStats){
+      statHtml += wrapStat(statKey, metaEffect.exclusiveStats[statKey])
+    }
+    subchunks.push(statHtml)
+  }
+  if(metaEffect.mods){
+    metaEffect.mods.forEach(mod => {
+      const mdi = modDisplayInfo(mod)
+      if(mdi.metaDescription){
+        subchunks.push(mdi.metaDescription)
+      }
+    })
+  }
+  if(subchunks.length){
+    chunks.push(subchunks.join(' and '))
+  }
+
+  return chunks.length ? wrapContent(chunks.join(' ')) : null
+}
+
+function subjectDescription(subjectKey, isItem){
+  if(subjectKey === 'self'){
+    return 'This '
+  }else if(subjectKey === 'allItems'){
+    return 'Each equipped item '
+  }else if(subjectKey === 'attached'){
+    const icon = isItem ? attachedSkill() : attachedItem()
+    return `Attached ${isItem ? 'Skill' : 'Item'} ${icon}</br>`
+  }else if(subjectKey === 'neighbouring'){
+    return`Neighbouring ${isItem ? 'Items' : 'Skills'} ${neighbouringIcons}</br>`
+  }
+  return ''
 }

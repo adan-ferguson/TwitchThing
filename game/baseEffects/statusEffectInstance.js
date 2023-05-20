@@ -1,13 +1,13 @@
 import Stats from '../stats/stats.js'
 import { roundToFixed, toDisplayName } from '../utilFunctions.js'
 import EffectInstance from '../effectInstance.js'
-import { phantom as PhantomEffects, status as StatusEffects } from './combined.js'
+import { status as StatusEffects } from './combined.js'
 import _ from 'lodash'
 
 export default class StatusEffectInstance extends EffectInstance{
 
   constructor(data, owner, state = {}, ){
-    super(owner, state)
+    super(explodeEffect(data), owner, state)
     this._data = data
   }
 
@@ -31,24 +31,6 @@ export default class StatusEffectInstance extends EffectInstance{
     return this.effectData.displayName ?? toDisplayName(this.effectData.name) ?? null
   }
 
-  get effectData(){
-    if(this.data.base){
-      let effectData = {}
-      const baseName = Object.keys(this.data.base)[0]
-      const baseDef = StatusEffects[baseName].def
-      if(_.isFunction(baseDef)){
-        effectData = baseDef(this.data.base[baseName], this.stacks)
-      }else{
-        effectData = baseDef
-      }
-      effectData = { ...effectData, ...this.data }
-      delete effectData.base
-      return effectData
-    }else{
-      return this.data
-    }
-  }
-
   /**
    * @returns {'replace'|boolean}
    */
@@ -62,6 +44,10 @@ export default class StatusEffectInstance extends EffectInstance{
 
   get stacks(){
     return this._state.stacks ?? 1
+  }
+
+  get maxStacks(){
+    return this.effectData.maxStacks ?? null
   }
 
   get stats(){
@@ -143,7 +129,7 @@ export default class StatusEffectInstance extends EffectInstance{
 
   addStack(){
     if(this.effectData.stacking){
-      this._state.stacks = this.stacks + 1
+      this._state.stacks = Math.min(this.maxStacks ?? Number.POSITIVE_INFINITY, this.stacks + 1)
       this.fighterInstance.uncache()
     }
     return this
@@ -180,4 +166,21 @@ export default class StatusEffectInstance extends EffectInstance{
     this._state.barrierDamage = roundToFixed(this.barrierDamage + barrierDamage, 2)
     return barrierDamage
   }
+}
+
+function explodeEffect(data){
+  if(data.base){
+    let effectData = {}
+    const baseName = Object.keys(data.base)[0]
+    const baseDef = StatusEffects[baseName].def
+    if(_.isFunction(baseDef)){
+      effectData = baseDef(data.base[baseName])
+    }else{
+      effectData = baseDef
+    }
+    effectData = { ...effectData, ...data }
+    delete effectData.base
+    return effectData
+  }
+  return data
 }

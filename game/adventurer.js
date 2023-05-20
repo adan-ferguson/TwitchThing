@@ -112,7 +112,7 @@ export default class Adventurer{
     let usedPoints = 0
     Object.keys(this.doc.unlockedSkills).forEach(skillId => {
       const skill = new AdventurerSkill(skillId, this.doc.unlockedSkills[skillId])
-      usedPoints += skill.skillPointsCumulative
+      usedPoints += skill.skillPoints
     })
     return Math.max(0, Math.floor(this.level / 5) - usedPoints)
   }

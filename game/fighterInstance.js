@@ -2,6 +2,7 @@ import Stats from './stats/stats.js'
 import { deepClone, minMax } from './utilFunctions.js'
 import StatusEffectInstance from './baseEffects/statusEffectInstance.js'
 import PhantomEffectInstance from './baseEffects/phantomEffectInstance.js'
+import MetaEffectCollection from './metaEffects.js'
 
 // Stupid
 new Stats()
@@ -23,6 +24,7 @@ export default class FighterInstance{
   _statusEffectInstances
   _phantomEffectInstances = []
   _state
+  _metaEffectCollection
 
   /**
    * @return {string}
@@ -127,11 +129,11 @@ export default class FighterInstance{
       ...state
     }
     this.loadoutState = this._state.loadout ?? {}
+    this.uncache()
     this._statusEffectInstances = []
     this._state.statusEffects?.forEach(({ data, state }) => {
       this.addStatusEffect(data, state)
     })
-    this.uncache()
   }
 
   get turnTime(){
@@ -236,6 +238,13 @@ export default class FighterInstance{
     this._state.nextTurnOffset = val
   }
 
+  get metaEffectCollection(){
+    if(!this._metaEffectCollection){
+      this._metaEffectCollection = new MetaEffectCollection(this)
+    }
+    return this._metaEffectCollection
+  }
+
   getNextActiveAbility(){
     if(this.hasMod('silenced')){
       return null
@@ -327,11 +336,6 @@ export default class FighterInstance{
     return this.mods.find(m => m[str])
   }
 
-  statsForEffect(effect){
-    // TODO: metaEffects for this effect
-    return this.stats
-  }
-
   addStatusEffect = (data, state = {}) => {
     const sei = new StatusEffectInstance(data, this, state)
     if(!this.inCombat && !sei.persisting){
@@ -349,6 +353,7 @@ export default class FighterInstance{
 
   uncache(){
     this._cachedStats = null
+    this._metaEffectCollection = null
   }
 
   addPhantomEffect(phantomEffectData, parentEffect){

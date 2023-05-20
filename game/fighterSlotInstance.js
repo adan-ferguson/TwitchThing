@@ -2,13 +2,8 @@ import EffectInstance from './effectInstance.js'
 
 export default class FighterSlotInstance extends EffectInstance{
 
-  constructor(effectData, state = {}, owner = null){
-    super(owner, state)
-    this._effectData = effectData
-  }
-
-  get effectData(){
-    return this._effectData
+  constructor(baseEffectData, state = {}, owner = null){
+    super(baseEffectData, owner, state)
   }
 
   get slot(){

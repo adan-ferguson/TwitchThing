@@ -33,8 +33,7 @@ function doReplacements(owner, eventName, actionData = {}){
   actionData = JSON.parse(JSON.stringify(actionData))
   const replacementAbilities = getFighterInstanceAbilities(owner, 'replacement', eventName)
   for(let replacementAbility of replacementAbilities){
-    // TODO: check if conditions met, ability is ready
-    if(replacementAbility.tryUse()){
+    if(replacementAbility.tryUse(actionData)){
       actionData = performReplacement(replacementAbility, actionData)
     }
   }

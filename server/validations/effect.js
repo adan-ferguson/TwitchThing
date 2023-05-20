@@ -48,9 +48,7 @@ const ACTION_SCHEMA = Joi.object({
 })
 
 const REPLACEMENT_SCHEMA = Joi.object({
-  dataMerge: Joi.object({
-    forceDodge: Joi.boolean()
-  })
+  dataMerge: Joi.object()
 })
 
 const TRIGGERS_SCHEMA = Joi.object({
@@ -62,6 +60,7 @@ const TRIGGERS_SCHEMA = Joi.object({
     Joi.bool().truthy()),
   active: Joi.bool().truthy(),
   attacked: Joi.bool().truthy(),
+  attack: Joi.bool().truthy(),
   instant: Joi.bool().truthy()
 })
 
@@ -70,6 +69,7 @@ const ABILITY_SCHEMA = Joi.object({
     source: Joi.string().valid(...SUBJECT_KEYS),
     hpPctBelow: Joi.number()
   }),
+  source: Joi.alternatives().try('attached'),
   initialCooldown: Joi.number().integer(),
   cooldown: Joi.number().integer(),
   replacements: REPLACEMENT_SCHEMA,
@@ -82,13 +82,27 @@ const ABILITY_SCHEMA = Joi.object({
   })
 }).xor('replacements', 'actions')
 
-export const EFFECT_SCHEMA = Joi.object({
+const es = Joi.object({
   abilities: Joi.array().items(ABILITY_SCHEMA),
   stats: STATS_SCHEMA,
   conditions: Joi.object({
     deepestFloor: Joi.boolean()
   }),
-  mods: MODS_SCHEMA
+  mods: MODS_SCHEMA,
+  exclusiveStats: STATS_SCHEMA
+})
+
+const ms = {}
+SUBJECT_KEYS.forEach(sk => {
+  ms[sk] = es.append({
+    metaEffectId: Joi.string()
+  })
+})
+
+export const META_EFFECT_SCHEMA = Joi.object(ms)
+
+export const EFFECT_SCHEMA = es.append({
+  metaEffect: META_EFFECT_SCHEMA
 })
 
 export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
@@ -99,6 +113,7 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
   }),
   duration: Joi.number().integer(),
   stacking: Joi.string(),
+  maxStacks: Joi.number().integer(),
   polarity: Joi.string().valid('buff','debuff','negativity'),
   name: Joi.string(),
   persisting: Joi.boolean().truthy()
@@ -129,10 +144,10 @@ export function validateAllBaseEffects(){
 
 function validateStatusEffect(id){
   const sei = new StatusEffectInstance({ base: { [id]: undefined } }, {})
-  Joi.assert(sei.effectData, STATUS_EFFECT_SCHEMA)
+  Joi.assert(sei.baseEffectData, STATUS_EFFECT_SCHEMA)
 }
 
 function validatePhantomEffect(id){
   const pei = new PhantomEffectInstance({ base: { [id]: undefined } }, {})
-  Joi.assert(pei.effectData, EFFECT_SCHEMA)
+  Joi.assert(pei.baseEffectData, EFFECT_SCHEMA)
 }

@@ -84,14 +84,16 @@ export default class AdventurerInstance extends FighterInstance{
         this._itemInstances[i] = new LoadoutObjectInstance({
           obj: loadout.items[i],
           owner: this,
-          state: items[i]
+          state: items[i],
+          slotInfo: [0,i]
         })
       }
       if(loadout.skills[i]){
         this._skillInstances[i] = new LoadoutObjectInstance({
           obj: loadout.skills[i],
           owner: this,
-          state: skills[i]
+          state: skills[i],
+          slotInfo: [1,i]
         })
       }
     }

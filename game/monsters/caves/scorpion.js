@@ -1,6 +1,6 @@
 export default {
   baseStats: {
-    hpMax: '+30%',
+    hpMax: '+300%',
     speed: -30,
     physPower: '-10%'
   },
@@ -10,7 +10,7 @@ export default {
       effect: {
         abilities: [{
           trigger: { active: true },
-          cooldown: 12000,
+          cooldown: 1200,
           phantomEffect: {
             base: {
               attackAppliesStatusEffect: {

@@ -15,7 +15,8 @@ const DEFAULTS = {
   unlockedSkills: {},
   dungeonRunID: null,
   accomplishments: {
-    deepestFloor: 1
+    deepestFloor: 1,
+    deepestSuperFloor: 0
   }
 }
 

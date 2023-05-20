@@ -1,5 +1,23 @@
+import _ from 'lodash'
+
+const DEFS = {
+  sneakAttack: mod => {
+    return {
+      description: 'Act immediately at start of combat.'
+    }
+  },
+  ignoreDef: mod => {
+    const type = _.isString(mod.ignoreDef) ? mod.ignoreDef : ''
+    return {
+      description: ['This ignores', type, 'defense with its abilities.'].filter(c => c).join(' '),
+      metaDescription: ['ignores', type, 'defense with its abilities.'].filter(c => c).join(' ')
+    }
+  }
+}
 export function modDisplayInfo(mod){
-  if(mod.sneakAttack){
-    return 'Act immediately at start of combat.'
+  for(let key in mod){
+    if(DEFS[key]){
+      return DEFS[key](mod)
+    }
   }
 }

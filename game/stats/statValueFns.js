@@ -103,6 +103,7 @@ function multiplierValue(values, defaultValue = 1){
   }
 
   if(mods.all.multi.length){
+    debugger
     throw 'Multiplier stats can not have multiplier values (lol)'
   }
 

@@ -45,7 +45,7 @@ function calcOutgoing(obj, col, row, propName){
   return mtx
 }
 
-function getSubjects(subjectKey, col, row){
+export function getSubjects(subjectKey, col, row){
   const subjects = []
   if(subjectKey === 'self'){
     subjects.push({ col, row })

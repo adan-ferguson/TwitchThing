@@ -6,6 +6,7 @@ import EffectDetails from '../effectDetails.js'
 import SkillCard from '../skillCard.js'
 import SimpleModal from '../simpleModal.js'
 import ItemCard from '../itemCard.js'
+import { attachedSkill } from '../common.js'
 
 const HTML = `
 <di-loadout-row-state></di-loadout-row-state>
@@ -38,6 +39,18 @@ export default class AdventurerItemRow extends DIElement{
         new SimpleModal(details).show()
       }
     })
+  }
+
+  get name(){
+    if(!this.adventurerItem){
+      return ''
+    }
+    let affectsArrows = ''
+    const affects = this.adventurerItem.vars.affects
+    if(affects === 'attached'){
+      affectsArrows = attachedSkill()
+    }
+    return `${this.adventurerItem.displayName} ${affectsArrows}`
   }
 
   get countEl(){
@@ -130,7 +143,7 @@ export default class AdventurerItemRow extends DIElement{
       this.countEl.textContent = 'x' + count
       this.count = count
 
-      this.nameEl.textContent = this.adventurerItem.displayName
+      this.nameEl.innerHTML = this.name
       this.orbRow.setData(this._options.orbs ?? this.adventurerItem.orbs)
       this._setTexture(this.adventurerItem.isBasic ? null : 'maze-white')
       this.classList.remove('blank')

@@ -1,4 +1,4 @@
-export default function({ damage = 0 } = {}, stacks = 1){
+export default function({ damage = 0 } = {}){
   return {
     polarity: 'debuff',
     stacking: 'stack',
@@ -8,7 +8,7 @@ export default function({ damage = 0 } = {}, stacks = 1){
       cooldown: 1000,
       actions: [{
         takeDamage: {
-          scaling: { flat: damage * stacks },
+          scaling: { flat: damage },
           damageType: 'phys'
         }
       }]

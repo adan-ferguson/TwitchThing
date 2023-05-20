@@ -51,7 +51,10 @@ export function statusEffectDescription(statusEffectDef){
   if(statusEffectDef.duration){
     chunks.push(`for ${toSeconds(statusEffectDef.duration)}`)
   }else if(!statusEffectDef.persisting){
-    chunks.push('until end of combat')
+    chunks.push('until end of combat.')
+  }
+  if(statusEffectDef.maxStacks){
+    chunks.push(`Stacks up to ${statusEffectDef.maxStacks} times`)
   }
   return { chunks }
 }

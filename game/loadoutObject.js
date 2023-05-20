@@ -42,4 +42,12 @@ export default class LoadoutObject{
   get mods(){
     return this.effect.mods ?? []
   }
+
+  get vars(){
+    return this.data.vars ?? {}
+  }
+
+  get stats(){
+    return this.effect.stats ?? {}
+  }
 }

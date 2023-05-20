@@ -6,6 +6,7 @@ import LoadoutObjectInstance from '../../../../game/loadoutObjectInstance.js'
 import ItemDetails from '../itemDetails.js'
 import SimpleModal from '../simpleModal.js'
 import SkillCard from '../skillCard.js'
+import { attachedItem, attachedSkill } from '../common.js'
 
 const HTML = `
 <di-loadout-row-state></di-loadout-row-state>
@@ -47,6 +48,18 @@ export default class AdventurerSkillRow extends DIElement{
         new SimpleModal(details).show()
       }
     })
+  }
+
+  get name(){
+    if(!this.adventurerSkill){
+      return ''
+    }
+    let affectsArrows = ''
+    const affects = this.adventurerSkill.vars.affects
+    if(affects === 'attached'){
+      affectsArrows = attachedItem()
+    }
+    return `${this.adventurerSkill.displayName} ${affectsArrows}`.trim()
   }
 
   get stateEl(){
@@ -135,7 +148,7 @@ export default class AdventurerSkillRow extends DIElement{
       }
       const icon = this._options.status === AdventurerSkillRowStatus.UNLOCKED ? info.icon : info.colorlessIcon
       const spd = '' //this._options.showSkillPoints ? skillPointEntry(skill.skillPointsCumulative) : ''
-      this.contentEl.innerHTML = SKILL_HTML(skill.displayName, spd, icon)
+      this.contentEl.innerHTML = SKILL_HTML(this.name, spd, icon)
       this.classList.toggle('clickable', this._options.clickable)
     }
 

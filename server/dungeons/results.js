@@ -48,9 +48,10 @@ export async function finalize(dungeonRunDoc){
   }
 
   const lastEvent = dungeonRunDoc.events.at(-1)
-  const deepestFloor = dungeonRunDoc.floor + ((lastEvent.roomType === 'cleared' || lastEvent.roomType === 'outOfOrder') ? 1 : 0)
+  const deepestFloor = dungeonRunDoc.floor + (lastEvent.roomType === 'cleared' ? 1 : 0)
 
   const adventurerDoc = await saveAdventurer()
+  const userDoc = await Users.findByID(dungeonRunDoc.adventurer.userID)
   await saveUser()
   await saveDungeonRun()
   await purgeOldRuns(dungeonRunDoc.adventurer._id)
@@ -61,9 +62,13 @@ export async function finalize(dungeonRunDoc){
     adventurerDoc.dungeonRunID = null
     adventurerDoc.xp = xpAfter
     adventurerDoc.level = advXpToLevel(xpAfter)
-    adventurerDoc.accomplishments.deepestFloor = Math.max(deepestFloor, adventurerDoc.accomplishments.deepestFloor)
-    if(dungeonRunDoc.floor === 51){
-      adventurerDoc.accomplishments.superMonster = Math.max(dungeonRunDoc.room - 1, adventurerDoc.accomplishments.superMonster ?? 0)
+    adventurerDoc.accomplishments.deepestFloor = Math.min(60, Math.max(deepestFloor, adventurerDoc.accomplishments.deepestFloor))
+    if(deepestFloor === 60 && lastEvent.roomType === 'cleared' && !adventurerDoc.accomplishments.deepestSuperFloor){
+      adventurerDoc.accomplishments.deepestSuperFloor = 1
+      emit(userDoc._id, 'show popup', {
+        title: 'Wow!',
+        message: `${adventurerDoc.name} cleared the whole dungeon, now try the unfair and gigantic waste of time SUPER dungeon!`
+      })
     }
     await Adventurers.save(adventurerDoc)
     return adventurerDoc
@@ -71,7 +76,6 @@ export async function finalize(dungeonRunDoc){
 
   async function saveUser(){
 
-    const userDoc = await Users.findByID(dungeonRunDoc.adventurer.userID)
     dungeonRunDoc.rewards.chests?.forEach(chest => {
       applyChestToUser(userDoc, chest)
     })

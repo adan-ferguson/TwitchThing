@@ -1,6 +1,5 @@
 import Items from './combined.js'
 import _ from 'lodash'
-import UpgradeData from '../upgradeData.js'
 import AdventurerLoadoutObject from '../adventurerLoadoutObject.js'
 import { toDisplayName } from '../utilFunctions.js'
 
@@ -37,7 +36,6 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
     this._def = itemDef
     this._level = level
     this._baseItem = baseItem
-    this._orbs = new UpgradeData(baseItem.def.orbs ?? [0])
   }
 
   get advClass(){
@@ -75,7 +73,7 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
 
   get orbs(){
     return {
-      [this.advClass]: this._orbs.total(this.level)
+      [this.advClass]: this.data.orbs
     }
   }
 
@@ -130,12 +128,8 @@ function basicItem(baseItemId){
   if(!baseItem){
     throw 'Invalid baseItemId: ' + baseItemId
   }
-  if(!baseItem.def.levelFn){
-    throw 'Item is missing its levelFn: ' + baseItemId
-  }
-
   return {
-    data: baseItem.def.levelFn(1),
+    data: baseItem.def(1),
     level: 1,
     baseItem
   }

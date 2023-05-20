@@ -10,11 +10,12 @@ export default class EffectInstance{
   _fighterInstance
   _state = {}
 
-  constructor(owner, state = {}){
+  constructor(baseEffectData, owner, state = {}){
     this._fighterInstance = owner
     if(!state.uniqueID){
       state.uniqueID = uniqueID()
     }
+    this._baseEffectData = baseEffectData
     this.state = state
   }
 
@@ -27,7 +28,15 @@ export default class EffectInstance{
   }
 
   get effectData(){
-    throw 'effectData getter not defined'
+    return this.fighterInstance.metaEffectCollection.apply(this)
+  }
+
+  get effect(){
+    return this.effectData
+  }
+
+  get baseEffectData(){
+    return this._baseEffectData
   }
 
   get conditions(){

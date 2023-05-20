@@ -163,13 +163,14 @@ function flatValuePercentageDisplay(value, { style }){
 }
 
 function toCompositeText(mods, style){
-  // TODO: support multipliers
-  if(!mods.all.pct.length){
-    return '0'
+  if(mods.all.multi.length){
+    // contrived situation for this to not work
+    return mods.all.multi[0] + 'x'
+  }else if(mods.all.pct.length){
+    const pctValue = statValueFns[StatType.MULTIPLIER](mods.all.pct.map(v => v + '%'))
+    pctValue.type = StatType.MULTIPLIER
+    return toText(pctValue, style)
   }
-  const multiValue = statValueFns[StatType.MULTIPLIER](mods.all.pct.map(v => v + '%'))
-  multiValue.type = StatType.MULTIPLIER
-  return toText(multiValue, style)
 }
 
 function plusSign(style, value){

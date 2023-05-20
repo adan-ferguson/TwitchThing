@@ -14,9 +14,8 @@ export function validateAllItems(){
 }
 
 function validateItem(baseItemId){
-  Joi.assert(Items[baseItemId].def, Joi.object({
-    levelFn: Joi.function().required(),
-    orbs: Joi.array() //.required()
+  Joi.assert(Items[baseItemId].def, Joi.function())
+  Joi.assert(new AdventurerItem(baseItemId).data, LOADOUT_OBJECT_SCHEMA.append({
+    orbs: Joi.number().integer().required()
   }))
-  Joi.assert(new AdventurerItem(baseItemId).data, LOADOUT_OBJECT_SCHEMA)
 }

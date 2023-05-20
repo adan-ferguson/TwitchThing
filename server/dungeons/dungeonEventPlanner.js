@@ -16,7 +16,7 @@ export async function generateEvent(dungeonRun){
   const bossFloor = floor % 10 === 0
   const previousEvent = dungeonRun.events.at(-1)
 
-  if(previousEvent.boss){
+  if(previousEvent.monster?.boss){
     const runEndEvent = runEnd(dungeonRun)
     if(runEndEvent){
       return runEndEvent

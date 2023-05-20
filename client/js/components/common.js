@@ -42,6 +42,10 @@ export function attachedSkill(){
   return '<i class="fa-solid fa-arrow-right attached-skill"></i>'
 }
 
+export function neighbouringIcons(){
+  return '<i class="fa-solid fa-arrows-up-down attached-skill"></i>'
+}
+
 export function wrapStat(statType, val){
   const stats = new Stats({ [statType]: val })
   const info = getStatDisplayInfo(stats.get(statType), {

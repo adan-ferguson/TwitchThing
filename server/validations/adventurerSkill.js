@@ -14,9 +14,8 @@ export function validateAllSkills(){
 }
 
 function validateSkill(id){
-  Joi.assert(Skills[id].def, Joi.object({
-    levelFn: Joi.function().required(),
-    skillPoints: Joi.array()
+  Joi.assert(Skills[id].def, Joi.function())
+  Joi.assert(new AdventurerSkill(id).data, LOADOUT_OBJECT_SCHEMA.append({
+    skillPoints: Joi.number().integer()
   }))
-  Joi.assert(new AdventurerSkill(id).data, LOADOUT_OBJECT_SCHEMA)
 }

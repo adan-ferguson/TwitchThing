@@ -11,7 +11,8 @@ export function rest(dungeonRun){
   ai.food--
 
   processAbilityEvents(dungeonRun, 'rest', ai)
-  const result = gainHealth(null, ai, { hpMissingPct: 1 })
+
+  const result = gainHealth(null, ai, ai.hpMax)
 
   return {
     roomType: 'rest',
@@ -19,7 +20,7 @@ export function rest(dungeonRun){
       food: -1
     },
     rewards: {
-      health: result.amount
+      health: result.healthGained
     },
     message: `${dungeonRun.adventurerInstance.displayName} takes a break.`
   }

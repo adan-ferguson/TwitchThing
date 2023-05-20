@@ -17,7 +17,9 @@ const fighter = {
       Items.leatherArmor,
       Items.healingPotion
     ],
-    [],
+    [
+      Items.spear
+    ],
     []
   ]
 }

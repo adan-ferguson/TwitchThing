@@ -1,15 +1,13 @@
 import { wrappedPct } from '../../growthFunctions.js'
 
-export default {
-  levelFn: function(level){
-    return {
-      effect: {
-        stats: {
-          physPower: wrappedPct(10 + 10 * level),
-        }
-      },
-      displayName: 'Short Sword'
-    }
-  },
-  orbs: [1, '...']
+export default function(level){
+  return {
+    effect: {
+      stats: {
+        physPower: wrappedPct(10 + 10 * level),
+      }
+    },
+    displayName: 'Short Sword',
+    orbs: level * 1
+  }
 }

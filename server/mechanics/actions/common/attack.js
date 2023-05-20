@@ -7,6 +7,7 @@ export default function(combat, attacker, abilityInstance = null, actionDef = {}
   const enemy = combat.getEnemyOf(attacker)
   const ret = { subject: enemy.uniqueID }
 
+  actionDef = processAbilityEvents(combat, ['attack'], attacker, actionDef)
   actionDef = processAbilityEvents(combat, ['attacked', actionDef.damageType + 'Attacked'], enemy, actionDef)
 
   if(actionDef.forceDodge || dodgeAttack(enemy)){
@@ -44,6 +45,7 @@ export default function(combat, attacker, abilityInstance = null, actionDef = {}
     damageType: actionDef.damageType,
     damage: damage, // * attacker.stats.get('damageDealt').value,
     range: actionDef.range,
+    ignoreDefense: actionDef.ignoreDefense
   }
 
   // if(attemptCrit(attacker, enemy, actionDef.extraCritChance)){

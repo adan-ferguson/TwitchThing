@@ -5,6 +5,7 @@ import { derivedApplyStatusEffectDescription } from './derived/actions/applyStat
 import { derivedGainHealthDescription } from './derived/actions/gainHealth.js'
 import { roundToFixed } from '../../../game/utilFunctions.js'
 import { statusEffectApplicationDescription } from './statusEffectDisplayInfo.js'
+import { attachedSkill } from '../components/common.js'
 
 const abilityDefinitions = {
   flutteringDodge: () => {
@@ -14,6 +15,11 @@ const abilityDefinitions = {
   },
   serratedBladeTrigger: () => {
 
+  },
+  spearPiercing: () => {
+    return {
+      description: attachedSkill() + ' Attached active ignores defense.'
+    }
   },
   damageOverTime: ability => {
     const action = ability.actions[0].takeDamage
@@ -84,7 +90,7 @@ function abilityDescription(ability){
 
 function combatTimePrefix(val){
   if(val === 1){
-    return 'Start of Combat:'
+    return 'Start of Combat:<br/>'
   }
   throw 'Not implemented combatTimePrefix'
 }
