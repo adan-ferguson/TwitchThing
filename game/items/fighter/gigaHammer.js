@@ -2,7 +2,7 @@ export default function(level){
   return {
     effect: {
       stats: {
-        physPower: (level + 2) + 'x',
+        physPower: (level + 3) + 'x',
         speed: -80 - 20 * level
       }
     },
@@ -13,6 +13,9 @@ export default function(level){
           empty: true
         }
       }
+    },
+    vars: {
+      affects: 'neighbouring'
     }
   }
 }

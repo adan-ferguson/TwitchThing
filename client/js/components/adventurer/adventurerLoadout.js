@@ -61,7 +61,8 @@ export default class AdventurerLoadout extends DIElement{
         item: slotInfo.loadoutItem,
         valid: !slotInfo.restrictionsFailed,
         orbs: slotInfo.modifiedOrbsData,
-        showState: this._options.showState
+        showState: this._options.showState,
+        shouldBeEmpty: slotInfo.shouldBeEmpty
       })
     })
     this.skillSlots.forEach((row, i) => {
@@ -69,7 +70,8 @@ export default class AdventurerLoadout extends DIElement{
       row.setOptions({
         skill: slotInfo.loadoutItem,
         valid: !slotInfo.restrictionsFailed,
-        showState: this._options.showState
+        showState: this._options.showState,
+        shouldBeEmpty: slotInfo.shouldBeEmpty
       })
     })
     return this

@@ -87,6 +87,9 @@ export default class AdventurerLoadout{
 
     const sourceRestrictions = this.modifiers.get(col, slot, 'restrictions')
     ret.causedRestrictionFailure = sourceRestrictions.find(restriction => {
+      if(restriction.empty){
+        ret.shouldBeEmpty = true
+      }
       return restrictionFailed(loadoutItem, restriction, col, slot)
     }) ? true : false
 

@@ -6,7 +6,7 @@ import LoadoutObjectInstance from '../../../../game/loadoutObjectInstance.js'
 import ItemDetails from '../itemDetails.js'
 import SimpleModal from '../simpleModal.js'
 import SkillCard from '../skillCard.js'
-import { attachedItem, attachedSkill } from '../common.js'
+import { affectsIcon, attachedItem, attachedSkill } from '../common.js'
 
 const HTML = `
 <di-loadout-row-state></di-loadout-row-state>
@@ -54,12 +54,7 @@ export default class AdventurerSkillRow extends DIElement{
     if(!this.adventurerSkill){
       return ''
     }
-    let affectsArrows = ''
-    const affects = this.adventurerSkill.vars.affects
-    if(affects === 'attached'){
-      affectsArrows = attachedItem()
-    }
-    return `${this.adventurerSkill.displayName} ${affectsArrows}`.trim()
+    return `${this.adventurerSkill.displayName} ${affectsIcon(this.adventurerSkill.vars.affects)}`.trim()
   }
 
   get stateEl(){
@@ -94,7 +89,8 @@ export default class AdventurerSkillRow extends DIElement{
       skill: null,
       valid: null,
       showState: false,
-      showTooltip: true
+      showTooltip: true,
+      shouldBeEmpty: false,
     }
   }
 
@@ -129,6 +125,7 @@ export default class AdventurerSkillRow extends DIElement{
     }
 
     const skill = this.adventurerSkill
+    this.classList.toggle('should-be-empty', this._options.shouldBeEmpty ? true : false)
     this.classList.toggle('blank', skill ? false : true)
     this.classList.toggle('idle', this._options.showState ? false : true)
     this.classList.toggle('clickable', false)

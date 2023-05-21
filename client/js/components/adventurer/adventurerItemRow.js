@@ -6,7 +6,7 @@ import EffectDetails from '../effectDetails.js'
 import SkillCard from '../skillCard.js'
 import SimpleModal from '../simpleModal.js'
 import ItemCard from '../itemCard.js'
-import { attachedSkill } from '../common.js'
+import { affectsIcon, attachedSkill, neighbouring } from '../common.js'
 
 const HTML = `
 <di-loadout-row-state></di-loadout-row-state>
@@ -45,12 +45,7 @@ export default class AdventurerItemRow extends DIElement{
     if(!this.adventurerItem){
       return ''
     }
-    let affectsArrows = ''
-    const affects = this.adventurerItem.vars.affects
-    if(affects === 'attached'){
-      affectsArrows = attachedSkill()
-    }
-    return `${this.adventurerItem.displayName} ${affectsArrows}`
+    return `${this.adventurerItem.displayName} ${affectsIcon(this.adventurerItem.vars.affects)}`.trim()
   }
 
   get countEl(){
@@ -111,7 +106,8 @@ export default class AdventurerItemRow extends DIElement{
       count: null,
       valid: null,
       orbs: null,
-      showState: false
+      showState: false,
+      shouldBeEmpty: false,
     }
   }
 
@@ -129,6 +125,7 @@ export default class AdventurerItemRow extends DIElement{
       this._adventurerItem = this._options.item
     }
 
+    this.classList.toggle('should-be-empty', this._options.shouldBeEmpty ? true : false)
     this.classList.toggle('invalid', !(this._options.valid ?? true))
     this.classList.toggle('idle', this._options.showState ? false : true)
     this.classList.toggle('effect-instance', this._adventurerItemInstance ? true : false)

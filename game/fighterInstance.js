@@ -58,7 +58,7 @@ export default class FighterInstance{
    * @returns {array}
    */
   get baseStats(){
-    throw 'Not implemented'
+    return []
   }
 
   get loadoutEffectInstances(){

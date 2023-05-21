@@ -1,6 +1,6 @@
 import DIElement from './diElement.js'
 import { roundToNearestIntervalOf, wrapContent, wrapText } from '../../../game/utilFunctions.js'
-import { attachedItem, attachedSkill, neighbouringIcons, orbEntries, wrapStat } from './common.js'
+import { attachedItem, attachedSkill, neighbouring, orbEntries, wrapStat } from './common.js'
 import AdventurerItem from '../../../game/items/adventurerItem.js'
 import Stats from '../../../game/stats/stats.js'
 import StatsList from './stats/statsList.js'
@@ -65,7 +65,8 @@ export default class EffectDetails extends DIElement{
   }
 
   _addLoadoutModifiers(){
-    const loadoutModifiers = this._obj.loadoutModifiers
+    const baseObj = this._obj.obj ?? this._obj
+    const loadoutModifiers = baseObj.loadoutModifiers
     if (!loadoutModifiers){
       return
     }
@@ -196,7 +197,7 @@ function subjectDescription(subjectKey, isItem){
     const icon = isItem ? attachedSkill() : attachedItem()
     return `${icon} Attached ${isItem ? 'skill' : 'item'} `
   }else if(subjectKey === 'neighbouring'){
-    return`${neighbouringIcons} Neighbouring ${isItem ? 'Items' : 'Skills'}:<br/>`
+    return`${neighbouring()} Neighbouring ${isItem ? 'Items' : 'Skills'} `
   }
   return ''
 }

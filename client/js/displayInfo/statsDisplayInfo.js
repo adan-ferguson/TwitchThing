@@ -101,6 +101,9 @@ const statDefinitionsInfo = {
   chestLevel: {
     text: 'Increased Chest Level',
     description: 'Chests you find are higher level.'
+  },
+  basicAttacks: {
+    text: 'Basic Attacks'
   }
 }
 
@@ -141,7 +144,7 @@ export function getStatDisplayInfo(stat, options = {}){
 }
 
 function toText(stat, style){
-  const value = stat.value
+  const value = stat.value - (style === StatsDisplayStyle.ADDITIONAL ? stat.defaultValue : 0)
   const statType = stat.type
   if(!value && statType === StatType.COMPOSITE){
     return toCompositeText(stat.mods, style)

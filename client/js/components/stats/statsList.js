@@ -112,7 +112,7 @@ export default class StatsList extends DIElement{
     }
     if(showStatChangeEffect){
       rows.forEach(r => flash(r, STAT_DECREASE_COLOR, STAT_EFFECT_TIME))
-      await wait(STAT_EFFECT_TIME / 2)
+      await wait(STAT_EFFECT_TIME / 3)
     }
     rows.forEach(r => r.remove())
   }

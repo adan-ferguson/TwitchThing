@@ -42,7 +42,7 @@ export function attachedSkill(){
   return '<i class="fa-solid fa-arrow-right attached-skill"></i>'
 }
 
-export function neighbouringIcons(){
+export function neighbouring(){
   return '<i class="fa-solid fa-arrows-up-down attached-skill"></i>'
 }
 
@@ -103,4 +103,13 @@ export function statScaling(scaling, abilityInstance, range = null){
     }
   }
   return chunks.join(' + ')
+}
+
+export function affectsIcon(affects){
+  if(affects === 'attached'){
+    return attachedItem()
+  }else if(affects === 'neighbouring'){
+    return neighbouring()
+  }
+  return ''
 }
