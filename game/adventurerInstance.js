@@ -85,7 +85,7 @@ export default class AdventurerInstance extends FighterInstance{
           obj: loadout.items[i],
           owner: this,
           state: items[i],
-          slotInfo: [0,i]
+          slotInfo: { col: 0, row: i }
         })
       }
       if(loadout.skills[i]){
@@ -93,7 +93,7 @@ export default class AdventurerInstance extends FighterInstance{
           obj: loadout.skills[i],
           owner: this,
           state: skills[i],
-          slotInfo: [1,i]
+          slotInfo: { col: 1, row: i }
         })
       }
     }

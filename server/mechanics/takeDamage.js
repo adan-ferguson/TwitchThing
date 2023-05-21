@@ -43,7 +43,7 @@ export function takeDamage(combat, subject, damageInfo){
   subject.hp -= result.damageDistribution.hp
 
   if(damage > 0){
-    result = processAbilityEvents(combat, 'takeDamage', subject, result)
+    result = processAbilityEvents(combat, 'takeDamage', subject, null, result)
   }
 
   return result

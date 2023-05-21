@@ -14,7 +14,7 @@ export default class MetaEffectCollection{
       }
       for(let subjectKey in me){
         if(subjectKey === 'attached' && ei.slotInfo){
-          add(this.categories.slots, ei.slotInfo[0] + 1 % 2, ei.slotInfo[1], me[subjectKey])
+          add(this.categories.slots, ei.slotInfo.col + 1 % 2, ei.slotInfo.row, me[subjectKey])
         }
       }
     })
@@ -26,7 +26,7 @@ export default class MetaEffectCollection{
     }
     const toApply = []
     if(effectInstance.slotInfo){
-      toApply.push(...get(this.categories.slots, ...effectInstance.slotInfo))
+      toApply.push(...get(this.categories.slots, effectInstance.slotInfo.col, effectInstance.slotInfo.row))
     }
     return merge(effectInstance.baseEffectData, toApply)
   }

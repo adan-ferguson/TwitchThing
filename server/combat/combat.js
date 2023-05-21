@@ -181,7 +181,7 @@ class Combat{
       this.fighters.forEach(fi => {
         fi.advanceTime(timeToAdvance)
         processAbilityEvents(this, 'instant', fi)
-        processAbilityEvents(this, 'combatTime', fi, {
+        processAbilityEvents(this, 'combatTime', fi, null, {
           combatTime: {
             before: this._currentTime - timeToAdvance,
             after: this._currentTime

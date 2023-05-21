@@ -8,8 +8,8 @@ export default function(combat, attacker, abilityInstance = null, actionDef = {}
   const enemy = combat.getEnemyOf(attacker)
   const ret = { subject: enemy.uniqueID }
 
-  actionDef = processAbilityEvents(combat, ['attack'], attacker, actionDef)
-  actionDef = processAbilityEvents(combat, ['attacked', actionDef.damageType + 'Attacked'], enemy, actionDef)
+  actionDef = processAbilityEvents(combat, ['attack'], attacker, abilityInstance, actionDef)
+  actionDef = processAbilityEvents(combat, ['attacked', actionDef.damageType + 'Attacked'], enemy, abilityInstance, actionDef)
 
   if(actionDef.forceDodge || dodgeAttack(enemy)){
     return {
@@ -19,11 +19,11 @@ export default function(combat, attacker, abilityInstance = null, actionDef = {}
   }
 
   if(missAttack(attacker)){
-    processAbilityEvents('miss', attacker)
-    return {
-      ...ret,
-      cancelled: 'miss'
-    }
+    // processAbilityEvents('miss', attacker)
+    // return {
+    //   ...ret,
+    //   cancelled: 'miss'
+    // }
   }
 
   if(!abilityInstance){
@@ -57,8 +57,8 @@ export default function(combat, attacker, abilityInstance = null, actionDef = {}
   // }
 
   damageInfo = dealDamage(combat, attacker, enemy, damageInfo)
-  damageInfo = processAbilityEvents(combat, ['attackHit', damageInfo.damageType + 'AttackHit'], attacker, damageInfo)
-  damageInfo = processAbilityEvents(combat, 'hitByAttack', enemy, damageInfo)
+  damageInfo = processAbilityEvents(combat, ['attackHit', damageInfo.damageType + 'AttackHit'], attacker, abilityInstance, damageInfo)
+  damageInfo = processAbilityEvents(combat, 'hitByAttack', enemy, abilityInstance, damageInfo)
 
   // if(damageInfo.crit){
   //   damageInfo = processAbilityEvents(combat, 'crit', attacker, damageInfo)

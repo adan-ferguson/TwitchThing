@@ -149,7 +149,7 @@ export default class MonsterInstance extends FighterInstance{
           obj: new MonsterItem(this.monsterData.items[i]),
           owner: this,
           state: stateDef[i],
-          slotInfo: [0, i]
+          slotInfo: { col: 0, row: i }
         })
       }
     }
