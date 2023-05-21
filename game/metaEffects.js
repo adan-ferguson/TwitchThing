@@ -1,4 +1,4 @@
-import { deepClone } from './utilFunctions.js'
+import { arrayize, deepClone, pushOrCreate } from './utilFunctions.js'
 
 export default class MetaEffectCollection{
   constructor(fighterInstance){
@@ -46,7 +46,20 @@ function get(slots, x, y){
 function merge(baseEffect, metaEffects){
   baseEffect = deepClone(baseEffect)
   metaEffects.forEach(metaEffect => {
-    debugger
+    for(let key in metaEffect){
+      if(key === 'metaEffectId'){
+        continue
+      }
+      if(key === 'stats'){
+        baseEffect.stats = [...arrayize(baseEffect.stats), metaEffect.stats]
+      }
+      if(key === 'exclusiveStats'){
+        baseEffect.exclusiveStats = [...arrayize(baseEffect.exclusiveStats), metaEffect.exclusiveStats]
+      }
+      if(key === 'exclusiveMods'){
+        pushOrCreate(baseEffect, 'exclusiveMods', metaEffect.exclusiveMods)
+      }
+    }
   })
   return baseEffect
 }

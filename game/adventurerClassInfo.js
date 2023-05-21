@@ -23,7 +23,11 @@ const fighter = {
       Items.coffeeCarafe,
       Items.plateMail,
     ],
-    []
+    [
+      Items.gigaHammer,
+      Items.twinBlades,
+      Items.swordOfFables
+    ]
   ]
 }
 

@@ -18,8 +18,8 @@ export function scaledNumberFromAbilityInstance(abilityInstance, scalingOptions)
     hpMax: () => fighterInstance.hpMax,
     hpMissing:  () => fighterInstance.hpMax - fighterInstance.hp,
     hp: () => fighterInstance.hp,
-    magicPower: () => abilityInstance.exclusiveStats.get('magicPower').value,
-    physPower: () => abilityInstance.exclusiveStats.get('physPower').value,
+    magicPower: () => abilityInstance.totalStats.get('magicPower').value,
+    physPower: () => abilityInstance.totalStats.get('physPower').value,
   })
 }
 

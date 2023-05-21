@@ -8,7 +8,7 @@ export default function(level){
           exclusiveStats: {
             physPower
           },
-          mods: [{
+          exclusiveMods: [{
             ignoreDef: 'phys'
           }]
         }

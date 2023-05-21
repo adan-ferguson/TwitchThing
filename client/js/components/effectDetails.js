@@ -18,7 +18,7 @@ export default class EffectDetails extends DIElement{
   }
 
   get isItem(){
-    return this._obj instanceof AdventurerItem
+    return this._obj instanceof AdventurerItem || this._obj?.obj instanceof AdventurerItem
   }
 
   setObject(obj){
@@ -32,7 +32,6 @@ export default class EffectDetails extends DIElement{
     if(!this._obj){
       return
     }
-    console.log('ed')
     this._addConditions()
     this._addMeta()
     this._addAbilities()
@@ -89,8 +88,8 @@ export default class EffectDetails extends DIElement{
   }
 
   _addStats(){
-    const stats = this._obj.stats
-    if(stats){
+    const stats = new Stats(this._obj.stats)
+    if(!stats.isEmpty){
       this.appendChild(
         new StatsList().setOptions({
           statsDisplayStyle: StatsDisplayStyle.ADDITIONAL,
@@ -114,10 +113,10 @@ export default class EffectDetails extends DIElement{
   }
 
   _addMods(){
-    this._obj.mods.forEach(mod => {
+    this._obj.totalMods.forEach(mod => {
       const mdi = modDisplayInfo(mod)
       if(mdi.description){
-        this.appendChild(wrapText(mdi))
+        this.appendChild(wrapText(mdi.description))
       }
     })
   }
@@ -167,14 +166,14 @@ function metaToEl(subjectKey, metaEffect, isItem){
 
   const subchunks = []
   if(metaEffect.exclusiveStats){
-    let statHtml = 'Benefits from '
+    let statHtml = 'benefits from '
     for(let statKey in metaEffect.exclusiveStats){
       statHtml += wrapStat(statKey, metaEffect.exclusiveStats[statKey])
     }
     subchunks.push(statHtml)
   }
-  if(metaEffect.mods){
-    metaEffect.mods.forEach(mod => {
+  if(metaEffect.exclusiveMods){
+    metaEffect.exclusiveMods.forEach(mod => {
       const mdi = modDisplayInfo(mod)
       if(mdi.metaDescription){
         subchunks.push(mdi.metaDescription)
@@ -195,9 +194,9 @@ function subjectDescription(subjectKey, isItem){
     return 'Each equipped item '
   }else if(subjectKey === 'attached'){
     const icon = isItem ? attachedSkill() : attachedItem()
-    return `Attached ${isItem ? 'Skill' : 'Item'} ${icon}</br>`
+    return `${icon} Attached ${isItem ? 'skill' : 'item'} `
   }else if(subjectKey === 'neighbouring'){
-    return`Neighbouring ${isItem ? 'Items' : 'Skills'} ${neighbouringIcons}</br>`
+    return`${neighbouringIcons} Neighbouring ${isItem ? 'Items' : 'Skills'}:<br/>`
   }
   return ''
 }

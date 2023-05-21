@@ -10,7 +10,7 @@ const MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS = 30
 const MAX_TRIGGER_LOOPS = 30
 const MAX_TRIGGER_COUNTER = 500
 
-const OVERTIME = 30000
+const OVERTIME = 45000
 const SUDDEN_DEATH = 90000
 
 export async function runCombat(data){

@@ -1,6 +1,7 @@
 import { processAbilityEvents } from '../../abilities.js'
 import { dealDamage } from '../../dealDamage.js'
 import { scaledNumberFromAbilityInstance } from '../../../../game/scaledNumber.js'
+import { ignoresDefenseMatchesDamageType } from '../../../../game/mechanicsFns.js'
 
 export default function(combat, attacker, abilityInstance = null, actionDef = {}){
 
@@ -44,9 +45,11 @@ export default function(combat, attacker, abilityInstance = null, actionDef = {}
   let damageInfo = {
     damageType: actionDef.damageType,
     damage: damage, // * attacker.stats.get('damageDealt').value,
-    range: actionDef.range,
-    ignoreDefense: actionDef.ignoreDefense
+    range: actionDef.range
   }
+
+  const mods = (abilityInstance?.parentEffect ?? attacker).modsOfType('ignoreDef')
+  damageInfo.ignoreDefense = ignoresDefenseMatchesDamageType(mods, actionDef.damageType)
 
   // if(attemptCrit(attacker, enemy, actionDef.extraCritChance)){
   //   damageInfo.damage *= (1 + attacker.stats.get('critDamage').value + actionDef.extraCritDamage)
@@ -83,7 +86,7 @@ function missAttack(actor){
 
 function fakeBasicAttackAbilityInstance(attacker){
   return {
-    exclusiveStats: attacker.stats,
+    totalStats: attacker.stats,
     fighterInstance: attacker
   }
 }

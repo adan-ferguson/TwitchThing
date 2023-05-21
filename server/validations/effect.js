@@ -86,10 +86,12 @@ const es = Joi.object({
   abilities: Joi.array().items(ABILITY_SCHEMA),
   stats: STATS_SCHEMA,
   conditions: Joi.object({
-    deepestFloor: Joi.boolean()
+    deepestFloor: Joi.boolean(),
+    bossFight: Joi.boolean()
   }),
   mods: MODS_SCHEMA,
-  exclusiveStats: STATS_SCHEMA
+  exclusiveStats: STATS_SCHEMA,
+  exclusiveMods: MODS_SCHEMA,
 })
 
 const ms = {}

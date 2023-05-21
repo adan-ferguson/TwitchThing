@@ -86,7 +86,7 @@ export default class AbilityInstance{
 
   get cooldownReduction(){
     if(this.trigger.active){
-      return 1 - this._parentEffect.exclusiveStats.get('cooldownReduction').value
+      return 1 - this._parentEffect.totalStats.get('cooldownReduction').value
     }
     return 1
   }
@@ -126,8 +126,8 @@ export default class AbilityInstance{
     return this.cooldownRemaining && (!this.uses || this.timesUsed < this.uses)
   }
 
-  get exclusiveStats(){
-    return this.parentEffect.exclusiveStats
+  get totalStats(){
+    return this.parentEffect.totalStats
   }
 
   get conditions(){
@@ -162,6 +162,7 @@ export default class AbilityInstance{
       this.cooldownRemaining = Math.max(0, this.cooldownRemaining - ms)
     }
   }
+
   //
   // get nextTurnOffset(){
   //   return this._abilityDef.nextTurnOffset

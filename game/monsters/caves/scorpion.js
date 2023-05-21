@@ -24,7 +24,7 @@ export default {
                   }
                 },
                 name: 'poisoned',
-                duration: 30000,
+                duration: 15000,
                 persisting: true,
               }
             }

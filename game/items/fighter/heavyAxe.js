@@ -8,6 +8,6 @@ export default function(level){
         speed: -25 - 25 * level
       }
     },
-    orbs: 3 * level + 1
+    orbs: 1 * level + 2
   }
 }

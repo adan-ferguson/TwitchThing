@@ -82,7 +82,7 @@ export function statScaling(scaling, abilityInstance, range = null){
       const val = scaling[scalingType]
       let str = ''
       if(abilityInstance){
-        const statVal = val * abilityInstance.exclusiveStats.get(scalingType).value
+        const statVal = val * abilityInstance.totalStats.get(scalingType).value
         if(range){
           const val1 = Math.ceil(statVal * range[0])
           const val2 = Math.ceil(statVal * range[1])

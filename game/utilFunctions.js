@@ -3,6 +3,9 @@ import _ from 'lodash'
 import Joi from 'joi'
 
 export function arrayize(arrayOrVal){
+  if(!arrayOrVal){
+    return []
+  }
   return Array.isArray(arrayOrVal) ? arrayOrVal : [arrayOrVal]
 }
 
@@ -213,4 +216,11 @@ export function deepClone(obj){
 
 export function keyedObject(keyList, defaultValue = null){
   return keyList.reduce((val, key) => { return { ...val, [key]: defaultValue } }, {})
+}
+
+export function pushOrCreate(obj, key, toPush){
+  if(!obj[key]){
+    obj[key] = []
+  }
+  obj[key].push(...toPush)
 }

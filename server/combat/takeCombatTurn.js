@@ -20,7 +20,7 @@ export function takeCombatTurn(combat, actor){
       reason: 'Can\'t attack',
     }))
   }else{
-    for(let i = 0; i < actor.stats.get('attacks').value; i++){
+    for(let i = 0; i < actor.stats.get('basicAttacks').value; i++){
       actionResults.push(performAction(combat, actor, null, basicAttackDef(actor)))
     }
   }

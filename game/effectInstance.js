@@ -77,8 +77,11 @@ export default class EffectInstance{
   }
 
   get exclusiveStats(){
-    // TODO: this
-    return this.fighterInstance.stats
+    return this.effectData.exclusiveStats
+  }
+
+  get totalStats(){
+    return new Stats([this.fighterInstance.stats, this.exclusiveStats])
   }
 
   get state(){
@@ -111,6 +114,14 @@ export default class EffectInstance{
     return this.effectData.mods ?? []
   }
 
+  get exclusiveMods(){
+    return this.effectData.exclusiveMods ?? []
+  }
+
+  get totalMods(){
+    return [...this.fighterInstance.mods, ...this.exclusiveMods]
+  }
+
   getAbilities(type, trigger){
     return this.abilities.filter(ai => {
       if(ai.type !== type){
@@ -125,6 +136,10 @@ export default class EffectInstance{
     this.abilities.forEach(ai => {
       ai.advanceTime(ms)
     })
+  }
+
+  modsOfType(type){
+    return this.totalMods.map(m => m[type]).filter(m => m)
   }
 }
 

@@ -99,6 +99,10 @@ export default class FighterInstance{
     return this._cachedStats
   }
 
+  get totalStats(){
+    return this.stats
+  }
+
   get effectInstances(){
     return [...this.loadoutEffectInstances, ...this.statusEffectInstances, ...this._phantomEffectInstances]
   }
@@ -332,8 +336,12 @@ export default class FighterInstance{
     this.uncache()
   }
 
-  hasMod(str){
-    return this.mods.find(m => m[str])
+  hasMod(modType){
+    return this.modsOfType(modType).length > 0
+  }
+
+  modsOfType(modType){
+    return this.mods.map(m => m[type]).filter(m => m)
   }
 
   addStatusEffect = (data, state = {}) => {

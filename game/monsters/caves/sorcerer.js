@@ -1,8 +1,8 @@
 export default {
   baseStats: {
-    hpMax: '-20%',
+    hpMax: '-10%',
     magicPower: '+110%',
-    physPower: '-40%'
+    physPower: '-30%'
   },
   items: [
     {

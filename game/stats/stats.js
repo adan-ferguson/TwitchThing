@@ -19,6 +19,10 @@ export default class Stats{
     this.additionalAffectors = toAffectorsArray(additionalStats)
   }
 
+  get isEmpty(){
+    return this.affectors.find(a => Object.keys(a).length) ? false : true
+  }
+
   get affectors(){
     return this.baseAffectors.concat(this.additionalAffectors)
   }
@@ -125,9 +129,11 @@ function toAffectorsArray(val){
   arr.forEach(value => {
     if(value instanceof Stats){
       affectors.push(...value.affectors)
+    }else if(Array.isArray(value)){
+      affectors.push(...toAffectorsArray(value))
     }else{
       affectors.push(value)
     }
   })
-  return affectors
+  return affectors.filter(a => a)
 }

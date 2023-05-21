@@ -9,8 +9,8 @@ const DEFS = {
   ignoreDef: mod => {
     const type = _.isString(mod.ignoreDef) ? mod.ignoreDef : ''
     return {
-      description: ['This ignores', type, 'defense with its abilities.'].filter(c => c).join(' '),
-      metaDescription: ['ignores', type, 'defense with its abilities.'].filter(c => c).join(' ')
+      description: ['This ignores', type, 'defense.'].filter(c => c).join(' '),
+      metaDescription: ['ignores', type, 'defense.'].filter(c => c).join(' ')
     }
   }
 }

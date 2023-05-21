@@ -101,4 +101,8 @@ function conditionsDescription(conditions){
   if(conditions.hpPctBelow){
     return [`Only use when health is below ${conditions.hpPctBelow * 100}%.`]
   }
+  if(conditions.source){
+
+  }
+  return []
 }

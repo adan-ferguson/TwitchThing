@@ -43,6 +43,10 @@ export default class LoadoutObject{
     return this.effect.mods ?? []
   }
 
+  get totalMods(){
+    return this.mods
+  }
+
   get vars(){
     return this.data.vars ?? {}
   }
