@@ -14,7 +14,7 @@ export default function(level){
         magicDef: def
       },
       exclusiveMods: [{
-        bossFightStatMultiplier: 4
+        bossFightStatMultiplier: 3
       }]
     },
     orbs: level * 12

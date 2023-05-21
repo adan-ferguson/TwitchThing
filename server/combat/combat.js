@@ -13,13 +13,13 @@ const MAX_TRIGGER_COUNTER = 500
 const OVERTIME = 45000
 const SUDDEN_DEATH = 90000
 
-export async function runCombat(data){
+export async function runCombat(data, params = {}){
   data = {
     fighterDef1: null,
     fighterDef2: null,
     fighterState1: {},
     fighterState2: {},
-    params: {},
+    params,
     ...data
   }
 
@@ -67,7 +67,11 @@ class Combat{
     this.params = params
     this.fighterInstance1 = fighterInstance1
     this.fighterInstance2 = fighterInstance2
-    this.fighters.forEach(fi => fi.startCombat())
+    this.fighters.forEach(fi => {
+      fi.startCombat({
+        bossFight: this.getEnemyOf(fi).isBoss
+      })
+    })
     this.fighterStartState1 = {
       ...fighterInstance1.state,
       inCombat: true

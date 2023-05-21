@@ -307,13 +307,15 @@ export default class FighterInstance{
     return false
   }
 
-  startCombat(){
+  startCombat(combatParams){
     this._state.combatTime = 0
+    this._state.combatParams = combatParams
     this._state.timeSinceLastAction = this.hasMod('sneakAttack') ? this.nextActionTime - 1 : 0
   }
 
   endCombat(){
     delete this._state.combatTime
+    delete this._state.combatParams
     delete this._state.timeSinceLastAction
   }
 

@@ -174,7 +174,13 @@ export function generateFloorChoices(floor, range = 1, skew = 0){
  * @return {[object]}
  */
 export function getAllMonsters(){
-  return monstersByFloor.slice(1).map((_, floor) => getBasicMonsterDefinition(floor + 1))
+  return monstersByFloor.slice(1).map((_, floor) => {
+    const def = getBasicMonsterDefinition(floor + 1)
+    if((floor + 1) % 10 === 0){
+      def.boss = true
+    }
+    return def
+  })
 }
 
 /**

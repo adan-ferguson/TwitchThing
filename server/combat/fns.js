@@ -85,8 +85,7 @@ export async function generateSimulatedCombat(fighterDef1, fighterDef2){
     fighterDef1,
     fighterDef2,
     params: {
-      sim: true,
-      boss: true
+      sim: true
     }
   })
 }

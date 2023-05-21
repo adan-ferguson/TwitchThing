@@ -1,4 +1,4 @@
-import { uniqueID } from './utilFunctions.js'
+import { fillArray, uniqueID } from './utilFunctions.js'
 import Stats  from './stats/stats.js'
 import AbilityInstance from './abilityInstance.js'
 
@@ -70,18 +70,28 @@ export default class EffectInstance{
     if(this.disabled){
       return new Stats()
     }
-    return this.effectData.stats
+    return new Stats(fillArray(() => this.effectData.stats, this.statMultiplier))
   }
 
   get exclusiveStats(){
     if(this.disabled){
       return new Stats()
     }
-    return this.effectData.exclusiveStats
+    return new Stats(this.effectData.exclusiveStats)
   }
 
   get totalStats(){
     return new Stats([this.fighterInstance.stats, this.exclusiveStats])
+  }
+
+  get statMultiplier(){
+    let multi = 1
+    if(this.fighterInstance.state.combatParams?.bossFight){
+      this.exclusiveMods.forEach(m => {
+        multi *= m.bossFightStatMultiplier ?? 1
+      })
+    }
+    return multi
   }
 
   get state(){
