@@ -62,11 +62,10 @@ export function getAbilityDisplayInfo(ability){
 function abilityDescription(ability){
   const chunks = []
   const abilityInstance = ability instanceof AbilityInstance ? ability : null
-  if(ability.trigger.combatTime){
-    chunks.push(combatTimePrefix(ability.trigger.combatTime))
-  }
-  if(ability.trigger.attackHit){
-    chunks.push('After landing an attack:')
+  chunks.push(...triggerPrefix(ability.trigger))
+  chunks.push(...conditions(ability.conditions))
+  if(chunks.length){
+    chunks[chunks.length - 1] += ','
   }
   ability.actions?.forEach(actionDef => {
     actionDef = expandActionDef(actionDef)
@@ -92,7 +91,7 @@ function abilityDescription(ability){
 
 function combatTimePrefix(val){
   if(val === 1){
-    return 'Start of Combat:<br/>'
+    return ['At the start of combat']
   }
   throw 'Not implemented combatTimePrefix'
 }
@@ -103,6 +102,32 @@ function conditionsDescription(conditions){
   }
   if(conditions.source){
 
+  }
+  return []
+}
+
+function triggerPrefix(trigger){
+  if(!trigger){
+    return []
+  }
+  if(trigger.combatTime){
+    return [...combatTimePrefix(trigger.combatTime)]
+  }
+  if(trigger.attackHit){
+    return ['After landing an attack']
+  }
+  if(trigger.rest){
+    return['After resting']
+  }
+  return []
+}
+
+function conditions(conditions){
+  if(!conditions){
+    return []
+  }
+  if(conditions.source === 'attached'){
+    return [`with attached skill ${attachedSkill()}`]
   }
   return []
 }

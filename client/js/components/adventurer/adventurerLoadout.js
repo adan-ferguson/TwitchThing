@@ -49,7 +49,7 @@ export default class AdventurerLoadout extends DIElement{
   }
 
   setAdventurer(adventurer){
-    this._adventurerInstance = adventurer instanceof AdventurerInstance ? adventurer : new AdventurerInstance(adventurer)
+    this._adventurerInstance = adventurer instanceof AdventurerInstance ? adventurer : new AdventurerInstance(adventurer, { idle: true })
     this.updateAllRows()
     return this
   }

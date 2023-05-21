@@ -148,14 +148,13 @@ export function getStatDisplayInfo(stat, options = {}){
 }
 
 function toText(stat, style){
-  const value = stat.value - (style === StatsDisplayStyle.ADDITIONAL ? stat.defaultValue : 0)
-  const statType = stat.type
-  if(!value && statType === StatType.COMPOSITE){
+  if(!stat.value && stat.type === StatType.COMPOSITE){
     return toCompositeText(stat.mods, style)
   }
-  if(statType === StatType.MULTIPLIER){
+  const value = stat.value - (style === StatsDisplayStyle.ADDITIONAL ? (stat.defaultValue ?? 0) : 0)
+  if(stat.type === StatType.MULTIPLIER){
     return `${value > 1 ? '+' : ''}${Math.round((value - 1) * 100)}%`
-  }else if(statType === StatType.PERCENTAGE){
+  }else if(stat.type === StatType.PERCENTAGE){
     return `${plusSign(style, value)}${roundToFixed(value * 100, 1)}%`
   }
   return `${plusSign(style, value)}${value}`

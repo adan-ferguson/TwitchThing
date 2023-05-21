@@ -96,7 +96,7 @@ export function statScaling(scaling, abilityInstance, range = null){
           const val2 = Math.ceil(range[1] * val * 100)
           str = `${val1}% to ${val2}%`
         }else{
-          str = `${val * 100}%`
+          str = `${Math.ceil(val * 100)}%`
         }
       }
       chunks.push(scalingWrap(scalingType, str))
@@ -105,9 +105,9 @@ export function statScaling(scaling, abilityInstance, range = null){
   return chunks.join(' + ')
 }
 
-export function affectsIcon(affects){
+export function affectsIcon(affects, isItem = false){
   if(affects === 'attached'){
-    return attachedItem()
+    return isItem ? attachedSkill() : attachedItem()
   }else if(affects === 'neighbouring'){
     return neighbouring()
   }

@@ -45,7 +45,7 @@ export default class AdventurerItemRow extends DIElement{
     if(!this.adventurerItem){
       return ''
     }
-    return `${this.adventurerItem.displayName} ${affectsIcon(this.adventurerItem.vars.affects)}`.trim()
+    return `${this.adventurerItem.displayName} ${affectsIcon(this.adventurerItem.vars.affects, true)}`.trim()
   }
 
   get countEl(){

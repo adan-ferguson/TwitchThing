@@ -43,8 +43,12 @@ export default class LoadoutObject{
     return this.effect.mods ?? []
   }
 
+  get exclusiveMods(){
+    return this.effect.exclusiveMods ?? []
+  }
+
   get totalMods(){
-    return this.mods
+    return [...this.mods, ...this.exclusiveMods]
   }
 
   get vars(){

@@ -48,6 +48,8 @@ export default class EffectDetails extends DIElement{
     }
     if(conditions.deepestFloor){
       this.appendChild(wrapText('While on this adventurer\'s deepest explored floor:'))
+    }else if(conditions.bossFight){
+      this.appendChild(wrapText('During boss fights:'))
     }
   }
 

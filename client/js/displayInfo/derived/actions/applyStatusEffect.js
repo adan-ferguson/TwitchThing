@@ -1,9 +1,11 @@
-import { statusEffectDescription } from '../../statusEffectDisplayInfo.js'
+import { statusEffectApplicationDescription } from '../../statusEffectDisplayInfo.js'
 
 export function derivedApplyStatusEffectDescription(actionDef, abilityInstance){
-  const sed = statusEffectDescription(actionDef.statusEffect)
-  const chunks = [actionDef.affects === 'self' ? 'Get' : 'Enemy gets']
-  chunks.push(...sed.chunks)
+  const chunks = []
+  if(actionDef.affects !== 'self'){
+    chunks.push('they')
+  }
+  chunks.push(...statusEffectApplicationDescription(actionDef.statusEffect, abilityInstance))
   chunks[chunks.length - 1] += '.'
   return chunks
 }

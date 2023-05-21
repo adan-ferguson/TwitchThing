@@ -95,7 +95,7 @@ export default class AdventurerPane extends DIElement{
         style: this._options.orbsStyle
       })
       .setData(this.adventurer.orbsData, showChangeEffect)
-    const adventurerInstance = new AdventurerInstance(this.adventurer)
+    const adventurerInstance = new AdventurerInstance(this.adventurer, { idle: true })
     this.xpBar
       .setLevelFunctions(advXpToLevel, advLevelToXp)
       .setValue(this.adventurer.doc.xp)

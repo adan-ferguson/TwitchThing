@@ -19,7 +19,8 @@ export default function(level){
                   }
                 }
               },
-              name: 'bleeding'
+              name: 'bleeding',
+              persisting: false
             }
           }
         }]

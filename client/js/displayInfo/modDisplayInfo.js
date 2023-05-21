@@ -7,17 +7,23 @@ const DEFS = {
     }
   },
   ignoreDef: mod => {
-    const type = _.isString(mod.ignoreDef) ? mod.ignoreDef : ''
+    const type = _.isString(mod) ? mod : ''
     return {
-      description: ['This ignores', type, 'defense.'].filter(c => c).join(' '),
+      abilityDescription: ['This ignores', type, 'defense.'].filter(c => c).join(' '),
       metaDescription: ['ignores', type, 'defense.'].filter(c => c).join(' ')
+    }
+  },
+  bossFightStatMultiplier: mod => {
+    return {
+      description: `These stats are increased ${mod}x during boss fights.`
     }
   }
 }
 export function modDisplayInfo(mod){
   for(let key in mod){
     if(DEFS[key]){
-      return DEFS[key](mod)
+      return DEFS[key](mod[key])
     }
   }
+  return null
 }

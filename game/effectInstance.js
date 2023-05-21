@@ -44,12 +44,9 @@ export default class EffectInstance{
   }
 
   get disabled(){
-    // if(!this.owner){
-    //   return false
-    // }
-    // if(this.owner.isEffectDisabled(this)){
-    //   return true
-    // }
+    if(this.fighterInstance.idle){
+      return false
+    }
     if(!this.meetsConditions){
       return true
     }
@@ -73,10 +70,13 @@ export default class EffectInstance{
     if(this.disabled){
       return new Stats()
     }
-    return new Stats(this.effectData.stats)
+    return this.effectData.stats
   }
 
   get exclusiveStats(){
+    if(this.disabled){
+      return new Stats()
+    }
     return this.effectData.exclusiveStats
   }
 

@@ -41,9 +41,14 @@ export function statusEffectDisplayInfo(effectInstance){
   }
 }
 
-export function statusEffectDescription(statusEffectDef){
+export function statusEffectApplicationDescription(statusEffectDef, abilityInstance){
   const chunks = []
-  if(statusEffectDef.stats){
+  const base = statusEffectDef.base ?? null
+  const abilityId = base ? Object.keys(base)[0] : null
+  if(base && APPLICATION_DEFS[abilityId]){
+    chunks.push(...APPLICATION_DEFS[abilityId](base[abilityId], abilityInstance))
+  }else if(statusEffectDef.stats){
+    chunks.push('gain')
     for(let key in statusEffectDef.stats){
       chunks.push(wrapStat(key, statusEffectDef.stats[key]))
     }
@@ -51,17 +56,12 @@ export function statusEffectDescription(statusEffectDef){
   if(statusEffectDef.duration){
     chunks.push(`for ${toSeconds(statusEffectDef.duration)}`)
   }else if(!statusEffectDef.persisting){
-    chunks.push('until end of combat.')
+    chunks.push('until end of combat')
   }
   if(statusEffectDef.maxStacks){
     chunks.push(`Stacks up to ${statusEffectDef.maxStacks} times`)
   }
-  return { chunks }
-}
-
-export function statusEffectApplicationDescription(statusEffectDef, abilityInstance){
-  const abilityId = Object.keys(statusEffectDef.base)[0]
-  return APPLICATION_DEFS[abilityId](statusEffectDef.base[abilityId], abilityInstance)
+  return chunks
 }
 
 function getColors(effectInstance){
@@ -77,11 +77,11 @@ const DEFS = {
 
 const APPLICATION_DEFS = {
   damageOverTime: (def, abilityInstance) => {
-    const chunks = ['they take']
+    const chunks = ['take']
     if(def.damage.scaledNumber){
       chunks.push(statScaling(def.damage.scaledNumber, abilityInstance))
     }
     chunks.push(`${def.damageType ?? 'phys'} damage per second`)
-    return chunks.join(' ')
+    return chunks
   }
 }

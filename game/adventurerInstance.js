@@ -16,6 +16,10 @@ export default class AdventurerInstance extends FighterInstance{
     this.state = initialState
   }
 
+  get idle(){
+    return this._state.idle
+  }
+
   get uniqueID(){
     return this.adventurer.id
   }
