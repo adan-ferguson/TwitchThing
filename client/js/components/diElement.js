@@ -2,6 +2,7 @@ import { mergeOptionsObjects } from '../../../game/utilFunctions.js'
 import _ from 'lodash'
 import { EventEmitter } from 'events'
 import tippy from 'tippy.js'
+import { getTooltipForStatType } from '../displayInfo/statsDisplayInfo.js'
 
 export default class DIElement extends HTMLElement{
 
@@ -56,6 +57,18 @@ export default class DIElement extends HTMLElement{
     }else{
       this._tippy.disable()
     }
+  }
+
+  addTooltipsToStats(){
+    this.querySelectorAll('.stat-wrap').forEach(el => {
+      const content = getTooltipForStatType(el.getAttribute('stat-type'))
+      if(content){
+        tippy(el, {
+          theme: 'light',
+          content
+        })
+      }
+    })
   }
 
   _update(){

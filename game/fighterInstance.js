@@ -341,7 +341,7 @@ export default class FighterInstance{
   }
 
   modsOfType(modType){
-    return this.mods.map(m => m[type]).filter(m => m)
+    return this.mods.map(m => m[modType]).filter(m => m)
   }
 
   addStatusEffect = (data, state = {}) => {

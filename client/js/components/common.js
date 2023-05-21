@@ -53,9 +53,9 @@ export function wrapStat(statType, val){
   })
   let content = info.displayedValue
   if(info.icon){
-    return `<span class="stat-wrap icon-and-value">${content}${info.icon}</span>`
+    return `<span class="stat-wrap icon-and-value" stat-type="${statType}">${content}${info.icon}</span>`
   }else{
-    return `<span class="stat-wrap icon-and-value">${content} ${info.text}</span>`
+    return `<span class="stat-wrap icon-and-value" stat-type="${statType}">${content} ${info.text}</span>`
   }
 }
 

@@ -1,4 +1,5 @@
 import { OrbsDisplayStyle, OrbsTooltip } from './orbRow.js'
+import DIElement from './diElement.js'
 
 const HTML = `
 <div class="obj-border">
@@ -8,7 +9,7 @@ const HTML = `
 </div>
 `
 
-export default class ItemCard extends HTMLElement{
+export default class ItemCard extends DIElement{
 
   get orbEl(){
     return this.querySelector('.item-orbs')
@@ -35,6 +36,7 @@ export default class ItemCard extends HTMLElement{
       })
       .setData(adventurerItem.orbs)
     this.loadoutObjectDetails.setObject(adventurerItem)
+    this.addTooltipsToStats()
     return this
   }
 }

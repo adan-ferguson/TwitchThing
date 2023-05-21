@@ -6,6 +6,7 @@ import calculateResults from '../../game/dungeonRunResults.js'
 import { arrayize } from '../../game/utilFunctions.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 import { resumeCombatEvent } from '../combat/fns.js'
+import { useAbility } from '../mechanics/actions/performAction.js'
 
 export default class DungeonRunInstance extends EventEmitter{
 
@@ -144,8 +145,11 @@ export default class DungeonRunInstance extends EventEmitter{
     }
   }
 
-  addPendingTriggers(huh){
-    // TODO: this for coffee carafe
+  addPendingTriggers(triggers){
+    // Just resolve them immediately, there's nothing in between triggering and resolving in a dungeon run.
+    triggers.forEach(trigger => {
+      useAbility(this, trigger.ability, trigger.data)
+    })
   }
 
   async _nextEvent(){

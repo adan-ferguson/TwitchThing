@@ -112,7 +112,7 @@ const DESCRIPTION_FNS = {
   unknown: () => '',
   stairs: event => 'Stairs',
   entrance: event => 'Entrance',
-  rest: evemt => 'Rest',
+  rest: event => 'Rest',
   combat: event => `vs. ${new MonsterInstance(event.monster).displayName}`
 }
 

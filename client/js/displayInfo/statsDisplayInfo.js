@@ -113,6 +113,10 @@ const DEFAULTS = {
   icon: null
 }
 
+export function getTooltipForStatType(statType){
+  return statDefinitionsInfo[statType]?.description
+}
+
 export function getStatDisplayInfo(stat, options = {}){
   options = {
     style: StatsDisplayStyle.CUMULATIVE,
