@@ -2,11 +2,12 @@ import { expandActionDef } from '../../../game/actionDefs/expandActionDef.js'
 import AbilityInstance from '../../../game/abilityInstance.js'
 import { derivedAttackDescription } from './derived/actions/attack.js'
 import { derivedApplyStatusEffectDescription } from './derived/actions/applyStatusEffect.js'
-import { derivedGainHealthDescription } from './derived/actions/gainHealth.js'
 import { roundToFixed } from '../../../game/utilFunctions.js'
 import { statusEffectApplicationDescription } from './statusEffectDisplayInfo.js'
-import { attachedSkill } from '../components/common.js'
+import { attachedSkill, scalingWrap } from '../components/common.js'
 import { takeDamageActionCalcDamage } from '../../../game/mechanicsFns.js'
+import { derivedGainHealthDescription } from './derived/actions/gainHealth.js'
+import { wrappedPct } from '../../../game/growthFunctions.js'
 
 const abilityDefinitions = {
   flutteringDodge: () => {
@@ -20,6 +21,13 @@ const abilityDefinitions = {
   spearPiercing: () => {
     return {
       description: attachedSkill() + ' Attached active ignores defense.'
+    }
+  },
+  shrugOff: ability => {
+    const hp = ability.actions[0].gainHealth.scaling.physPower * 100
+    const hpString = scalingWrap('physPower', wrappedPct(hp))
+    return {
+      description: `The next time you get debuffed, shrug it off and recover ${hpString} health.`
     }
   },
   damageOverTime: ability => {

@@ -1,3 +1,5 @@
+import { processAbilityEvents } from './abilities.js'
+
 /**
  *
  * @param combat

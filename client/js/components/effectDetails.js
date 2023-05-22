@@ -1,7 +1,6 @@
 import DIElement from './diElement.js'
 import { roundToNearestIntervalOf, wrapContent, wrapText } from '../../../game/utilFunctions.js'
 import { isAdventurerItem, orbEntries } from './common.js'
-import AdventurerItem from '../../../game/items/adventurerItem.js'
 import Stats from '../../../game/stats/stats.js'
 import StatsList from './stats/statsList.js'
 import AbilityDescription from './abilityDescription.js'
@@ -9,7 +8,7 @@ import { StatsDisplayStyle } from '../displayInfo/statsDisplayInfo.js'
 import { getAbilityDisplayInfoForObj } from '../displayInfo/abilityDisplayInfo.js'
 import { modDisplayInfo } from '../displayInfo/modDisplayInfo.js'
 import { metaEffectDisplayInfo } from '../displayInfo/metaEffectDisplayInfo.js'
-import { subjectDescription } from '../../../game/subjectFns.js'
+import { subjectDescription } from '../subjectClientFns.js'
 
 export default class EffectDetails extends DIElement{
 

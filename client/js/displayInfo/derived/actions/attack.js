@@ -4,7 +4,8 @@ import { modDisplayInfo } from '../../modDisplayInfo.js'
 export function derivedAttackDescription(attack, abilityInstance){
   const damageType = attack.damageType
   const scalingStr = statScaling(attack.scaling, abilityInstance, attack.range)
-  const chunks = [`Attack for ${scalingStr} ${damageType} damage.`]
+  const times = attack.hits > 1 ?  attack.hits + ' times' : ''
+  const chunks = ['Attack', times ,`for ${scalingStr} ${damageType} damage.`]
 
   abilityInstance?.parentEffect.exclusiveMods.forEach(mod => {
     const mdi = modDisplayInfo(mod)

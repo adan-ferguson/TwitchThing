@@ -34,7 +34,8 @@ const ACTION_SCHEMA = Joi.object({
   attack: Joi.object({
     damageType: DAMAGE_TYPE_SCHEMA,
     scaling: SCALED_NUMBER_SCHEMA,
-    range: Joi.array().length(2).items(Joi.number())
+    range: Joi.array().length(2).items(Joi.number()),
+    hits: Joi.number().integer()
   }),
   gainHealth: Joi.object({
     scaling: SCALED_NUMBER_SCHEMA
@@ -62,7 +63,8 @@ const TRIGGERS_SCHEMA = Joi.object({
   attacked: Joi.bool().truthy(),
   attack: Joi.bool().truthy(),
   instant: Joi.bool().truthy(),
-  rest: Joi.bool().truthy()
+  rest: Joi.bool().truthy(),
+  gainingDebuff: Joi.bool().truthy(),
 })
 
 const CONDITIONS_SCHEMA = Joi.object({
@@ -84,7 +86,7 @@ const ABILITY_SCHEMA = Joi.object({
   phantomEffect: Joi.custom(val => {
     return Joi.attempt(val, PHANTOM_EFFECT_SCHEMA)
   })
-}).xor('replacements', 'actions')
+})
 
 const es = Joi.object({
   abilities: Joi.array().items(ABILITY_SCHEMA),

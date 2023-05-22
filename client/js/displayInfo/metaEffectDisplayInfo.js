@@ -1,7 +1,7 @@
 import { isAdventurerItem, wrapStat } from '../components/common.js'
 import { modDisplayInfo } from './modDisplayInfo.js'
 import { wrapContent } from '../../../game/utilFunctions.js'
-import { subjectDescription } from '../../../game/subjectFns.js'
+import { subjectDescription } from '../subjectClientFns.js'
 
 const DEFS = {
   swordOfFablesMultiplier: (metaEffect, obj) => {

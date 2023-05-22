@@ -18,7 +18,7 @@ export default class AbilityInstance{
   }
 
   get replacements(){
-    return this.abilityDef.replacements
+    return this.abilityDef.replacements || {}
   }
 
   get abilityId(){

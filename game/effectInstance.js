@@ -123,9 +123,9 @@ export default class EffectInstance{
     return [...this.fighterInstance.mods, ...this.exclusiveMods]
   }
 
-  getAbilities(type, trigger){
+  getAbilities(trigger, type = 'either'){
     return this.abilities.filter(ai => {
-      if(ai.type !== type){
+      if(ai.type !== type && type !== 'either'){
         return false
       }else{
         return ai.trigger[trigger]

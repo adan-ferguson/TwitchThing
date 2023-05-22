@@ -20,9 +20,7 @@ export function takeCombatTurn(combat, actor){
       reason: 'Can\'t attack',
     }))
   }else{
-    for(let i = 0; i < actor.stats.get('basicAttacks').value; i++){
-      actionResults.push(performAction(combat, actor, null, basicAttackDef(actor)))
-    }
+    actionResults.push(performAction(combat, actor, null, basicAttackDef(actor)))
   }
   actor.nextTurn()
   return actionResults
@@ -36,6 +34,7 @@ function basicAttackDef(actor){
       scaling: {
         [actor.basicAttackType + 'Power']: 1,
       },
+      hits: actor.stats.get('basicAttacks').value
     },
   }
 }

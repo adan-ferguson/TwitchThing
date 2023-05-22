@@ -8,6 +8,9 @@ const fighter = {
     Skills.trailblazer,
     Skills.heavySlash,
     Skills.berserker,
+    Skills.hamstring,
+    Skills.shrugOff,
+    Skills.swiftStrikes,
   ],
   items: [
     [

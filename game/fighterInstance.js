@@ -159,12 +159,12 @@ export default class FighterInstance{
     const vals = [this.timeUntilNextAction]
     this.effectInstances.forEach(ei => {
       if(this.inCombat){
-        ei.getAbilities('action', 'instant').forEach(tickAbility => {
+        ei.getAbilities('instant', 'action').forEach(tickAbility => {
           if(tickAbility.enabled){
             vals.push(tickAbility.cooldownRemaining)
           }
         })
-        ei.getAbilities('action', 'combatTime').forEach(combatTimeAbility => {
+        ei.getAbilities('combatTime', 'action').forEach(combatTimeAbility => {
           const targetTime = combatTimeAbility.trigger.combatTime
           if(combatTimeAbility.enabled && targetTime > this._state.combatTime){
             vals.push(targetTime - this._state.combatTime)
@@ -253,7 +253,7 @@ export default class FighterInstance{
     if(this.hasMod('silenced')){
       return null
     }
-    for(let ai of this.getAbilities('action', 'active')){
+    for(let ai of this.getAbilities('active', 'action')){
       if(ai.ready){
         return ai
       }
@@ -261,10 +261,10 @@ export default class FighterInstance{
     return null
   }
 
-  getAbilities(type, eventName){
+  getAbilities(eventName, type = 'either'){
     const abilities = []
     this.effectInstances.forEach(effectInstance => {
-      abilities.push(...effectInstance.getAbilities(type, eventName))
+      abilities.push(...effectInstance.getAbilities(eventName, type))
     })
     return abilities
   }

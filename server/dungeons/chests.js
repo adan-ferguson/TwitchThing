@@ -92,7 +92,7 @@ function addGold(valueRemaining){
   return toNumberOfDigits(gold,2)
 }
 
-function addItem(obj, name, count){
+function addItem(obj, name, count = 1){
   if(!obj[name]){
     obj[name] = 0
   }

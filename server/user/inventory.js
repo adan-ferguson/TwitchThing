@@ -8,6 +8,9 @@ export function adjustInventoryBasics(userDoc, diff, inverted = false){
     }
   }
   for(let baseItemId in invBasics){
+    if(isNaN(invBasics[baseItemId])){
+      debugger
+    }
     if(invBasics[baseItemId] === 0){
       delete invBasics[baseItemId]
     }
