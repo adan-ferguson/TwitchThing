@@ -12,6 +12,7 @@ const fighter = {
     Skills.shrugOff,
     Skills.swiftStrikes,
     Skills.tetheredManeuver,
+    Skills.recklessAttack,
   ],
   items: [
     [

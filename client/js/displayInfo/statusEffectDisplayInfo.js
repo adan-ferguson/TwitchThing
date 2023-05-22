@@ -1,6 +1,7 @@
 import { STATUSEFFECT_COLORS } from '../colors.js'
 import { effectInstanceState } from '../effectInstanceState.js'
 import { statScaling, toSeconds, wrapStat } from '../components/common.js'
+import { explodeEffect } from '../../../game/baseEffects/statusEffectInstance.js'
 
 export function statusEffectDisplayInfo(effectInstance){
 
@@ -43,10 +44,10 @@ export function statusEffectDisplayInfo(effectInstance){
 
 export function statusEffectApplicationDescription(statusEffectDef, abilityInstance){
   const chunks = []
-  const base = statusEffectDef.base ?? null
-  const abilityId = base ? Object.keys(base)[0] : null
-  if(base && APPLICATION_DEFS[abilityId]){
-    chunks.push(...APPLICATION_DEFS[abilityId](base[abilityId], abilityInstance))
+  statusEffectDef = explodeEffect(statusEffectDef)
+  const statusEffectId = statusEffectDef.statusEffectId ?? statusEffectDef.name
+  if(APPLICATION_DEFS[statusEffectId]){
+    chunks.push(...APPLICATION_DEFS[statusEffectId](statusEffectDef, abilityInstance))
   }else if(statusEffectDef.stats){
     chunks.push('gain')
     for(let key in statusEffectDef.stats){
@@ -55,6 +56,8 @@ export function statusEffectApplicationDescription(statusEffectDef, abilityInsta
   }
   if(statusEffectDef.duration){
     chunks.push(`for ${toSeconds(statusEffectDef.duration)}`)
+  }else if(statusEffectDef.turns){
+    chunks.push(`for ${statusEffectDef.turns} turn${statusEffectDef.turns === 1 ? '' : 's'}`)
   }else if(!statusEffectDef.persisting){
     chunks.push('until end of combat')
   }
@@ -78,10 +81,14 @@ const DEFS = {
 const APPLICATION_DEFS = {
   damageOverTime: (def, abilityInstance) => {
     const chunks = ['take']
-    if(def.damage.scaledNumber){
-      chunks.push(statScaling(def.damage.scaledNumber, abilityInstance))
+    const params = def.vars.params
+    if(params.damage.scaledNumber){
+      chunks.push(statScaling(params.damage.scaledNumber, abilityInstance))
     }
-    chunks.push(`${def.damageType ?? 'phys'} damage per second`)
+    chunks.push(`${params.damageType ?? 'phys'} damage per second`)
     return chunks
+  },
+  wideOpen: (def, abilityInstance) => {
+    return ['Attacks against you always crit']
   }
 }

@@ -48,10 +48,10 @@ export default function(combat, attacker, abilityInstance = null, actionDef = {}
     const mods = (abilityInstance?.parentEffect ?? attacker).modsOfType('ignoreDef')
     damageInfo.ignoreDefense = ignoresDefenseMatchesDamageType(mods, actionDef.damageType)
 
-    // if(attemptCrit(attacker, enemy, actionDef.extraCritChance)){
-    //   damageInfo.damage *= (1 + attacker.stats.get('critDamage').value + actionDef.extraCritDamage)
-    //   damageInfo.crit = true
-    // }
+    if(attemptCrit(attacker, enemy)){
+      damageInfo.damage *= (1 + attacker.stats.get('critDamage').value)
+      damageInfo.crit = true
+    }
 
     damageInfo = dealDamage(combat, attacker, enemy, damageInfo)
     damageInfo = processAbilityEvents(combat, ['attackHit', damageInfo.damageType + 'AttackHit'], attacker, abilityInstance, damageInfo)
@@ -68,6 +68,9 @@ export default function(combat, attacker, abilityInstance = null, actionDef = {}
 }
 
 function attemptCrit(actor, target, bonusCritChance){
+  if(target.hasMod('autoCritAgainst')){
+    return true
+  }
   return Math.random() +
     target.stats.get('enemyCritChance').value +
     actor.stats.get('critChance').value +

@@ -149,7 +149,7 @@ export default class StatusEffectInstance extends EffectInstance{
   }
 
   nextTurn(){
-    if(this.turns){
+    if(this.turns && this.time > 0){
       this._state.turnsTaken = this.turnsTaken + 1
     }
   }
@@ -174,11 +174,13 @@ export function explodeEffect(data){
     const baseName = Object.keys(data.base)[0]
     const baseDef = StatusEffects[baseName].def
     if(_.isFunction(baseDef)){
-      effectData = baseDef(data.base[baseName])
+      const params = data.base[baseName]
+      effectData = baseDef(params)
+      effectData.vars = { ...(effectData.vars ?? {}), params }
     }else{
       effectData = baseDef
     }
-    effectData = { ...effectData, ...data }
+    effectData = { statusEffectId: baseName, ...effectData, ...data }
     delete effectData.base
     return effectData
   }

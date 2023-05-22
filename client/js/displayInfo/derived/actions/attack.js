@@ -9,7 +9,7 @@ export function derivedAttackDescription(attack, abilityInstance){
 
   abilityInstance?.parentEffect.exclusiveMods.forEach(mod => {
     const mdi = modDisplayInfo(mod)
-    if(mdi?.abilityDescription){
+    if(mdi.abilityDescription){
       chunks.push(mdi.abilityDescription)
     }
   })

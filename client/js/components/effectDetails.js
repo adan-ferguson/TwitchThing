@@ -39,7 +39,7 @@ export default class EffectDetails extends DIElement{
     this._addMeta()
     this._addMods()
     this._addLoadoutModifiers()
-    this._addDuration()
+    // this._addDuration()
   }
 
   _addConditions(){
@@ -117,7 +117,7 @@ export default class EffectDetails extends DIElement{
   }
 
   _addMods(){
-    this._obj.totalMods.forEach(mod => {
+    [...this._obj.exclusiveMods, ...this._obj.mods].forEach(mod => {
       const mdi = modDisplayInfo(mod)
       if(mdi.description){
         this.appendChild(wrapText(mdi.description))

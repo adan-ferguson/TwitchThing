@@ -4,7 +4,6 @@ import { STATS_SCHEMA } from './stats.js'
 import { DAMAGE_TYPE_SCHEMA } from './damage.js'
 import { MODS_SCHEMA } from './mods.js'
 import { status as StatusEffects, phantom as PhantomEffects } from '../../game/baseEffects/combined.js'
-import _ from 'lodash'
 import StatusEffectInstance from '../../game/baseEffects/statusEffectInstance.js'
 import PhantomEffectInstance from '../../game/baseEffects/phantomEffectInstance.js'
 
@@ -123,6 +122,8 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
       damage: OPTIONAL_SCALED_NUMBER_SCHEMA
     })
   }),
+  statusEffectId: Joi.string(),
+  turns: Joi.number().integer(),
   duration: Joi.number().integer(),
   stacking: Joi.string(),
   maxStacks: Joi.number().integer(),

@@ -133,11 +133,11 @@ export default class FighterInstance{
       ...state
     }
     this.loadoutState = this._state.loadout ?? {}
-    this.uncache()
     this._statusEffectInstances = []
     this._state.statusEffects?.forEach(({ data, state }) => {
-      this.addStatusEffect(data, state)
+      this._addStatusEffect(data, state)
     })
+    this.uncache()
   }
 
   get turnTime(){
@@ -324,7 +324,6 @@ export default class FighterInstance{
       })
     }
     this.statusEffectInstances.forEach(sei => sei.advanceTime(ms))
-    this._cleanupExpiredStatusEffects()
     if(this.inCombat){
       this._state.combatTime += ms
     }
@@ -340,21 +339,19 @@ export default class FighterInstance{
   }
 
   addStatusEffect = (data, state = {}) => {
-    const sei = new StatusEffectInstance(data, this, state)
-    if(!this.inCombat && !sei.persisting){
-      return
-    }
-    this.statusEffectInstances.push(sei)
+    this._addStatusEffect(data, state)
     this.uncache()
   }
 
   nextTurn(){
     this._state.timeSinceLastAction = this._state.nextTurnOffset ?? 0
     delete this._state.nextTurnOffset
+    this.statusEffectInstances.forEach(sei => sei.nextTurn())
     this.uncache()
   }
 
   uncache(){
+    this._cleanupExpiredStatusEffects()
     this._cachedStats = null
     this._metaEffectCollection = null
   }
@@ -372,10 +369,17 @@ export default class FighterInstance{
   }
 
   _cleanupExpiredStatusEffects(){
-    const len = this._statusEffectInstances.length
     this._statusEffectInstances = this._statusEffectInstances.filter(sei => !sei.expired)
-    if(this._statusEffectInstances.length !== len){
-      this.uncache()
+  }
+
+  _addStatusEffect(data, state = {}){
+    const sei = new StatusEffectInstance(data, this, state)
+    if(!this.inCombat && !sei.persisting){
+      return
     }
+    if(sei.expired){
+      return
+    }
+    this.statusEffectInstances.push(sei)
   }
 }

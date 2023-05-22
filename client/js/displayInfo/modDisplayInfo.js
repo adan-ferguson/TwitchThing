@@ -17,6 +17,11 @@ const DEFS = {
     return {
       description: `These stats are increased ${mod}x during boss fights.`
     }
+  },
+  autoCritAgainst: () => {
+    return {
+      description: 'Attacks against you always crit.'
+    }
   }
 }
 export function modDisplayInfo(mod){
@@ -25,5 +30,5 @@ export function modDisplayInfo(mod){
       return DEFS[key](mod[key])
     }
   }
-  return null
+  throw { message: 'Mod undefined', mod }
 }
