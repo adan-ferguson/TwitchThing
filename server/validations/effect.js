@@ -65,11 +65,15 @@ const TRIGGERS_SCHEMA = Joi.object({
   rest: Joi.bool().truthy()
 })
 
+const CONDITIONS_SCHEMA = Joi.object({
+  source: Joi.string().valid(...SUBJECT_KEYS),
+  hpPctBelow: Joi.number(),
+  bossFight: Joi.bool(),
+  deepestFloor: Joi.bool()
+})
+
 const ABILITY_SCHEMA = Joi.object({
-  conditions: Joi.object({
-    source: Joi.string().valid(...SUBJECT_KEYS),
-    hpPctBelow: Joi.number()
-  }),
+  conditions: CONDITIONS_SCHEMA,
   initialCooldown: Joi.number().integer(),
   cooldown: Joi.number().integer(),
   replacements: REPLACEMENT_SCHEMA,
@@ -85,19 +89,18 @@ const ABILITY_SCHEMA = Joi.object({
 const es = Joi.object({
   abilities: Joi.array().items(ABILITY_SCHEMA),
   stats: STATS_SCHEMA,
-  conditions: Joi.object({
-    deepestFloor: Joi.boolean(),
-    bossFight: Joi.boolean()
-  }),
+  conditions: CONDITIONS_SCHEMA,
   mods: MODS_SCHEMA,
   exclusiveStats: STATS_SCHEMA,
   exclusiveMods: MODS_SCHEMA,
+  statMultiplier: Joi.number().min(0)
 })
 
 const ms = {}
 SUBJECT_KEYS.forEach(sk => {
   ms[sk] = es.append({
-    metaEffectId: Joi.string()
+    metaEffectId: Joi.string(),
+    metaEffectConditions: CONDITIONS_SCHEMA
   })
 })
 

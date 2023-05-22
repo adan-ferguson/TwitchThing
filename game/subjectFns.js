@@ -1,3 +1,5 @@
+import { attachedItem, attachedSkill, neighbouring } from '../client/js/components/common.js'
+
 export function subjectKeyMatchesEffectInstances(sourceEffectInstance, subjectEffectInstance, subjectKey){
   if(!subjectKey){
     return true
@@ -18,4 +20,18 @@ export function subjectKeyMatchesSlotInfos(sourceSlotInfo, subjectSlotInfo, subj
   if(subjectKey === 'attached'){
     return subjectSlotInfo.col !== sourceSlotInfo.col && sourceSlotInfo.row === subjectSlotInfo.row
   }
+}
+
+export function subjectDescription(subjectKey, isItem){
+  if(subjectKey === 'self'){
+    return 'This '
+  }else if(subjectKey === 'allItems'){
+    return 'Each equipped item '
+  }else if(subjectKey === 'attached'){
+    const icon = isItem ? attachedSkill() : attachedItem()
+    return `${icon} Attached ${isItem ? 'skill' : 'item'} `
+  }else if(subjectKey === 'neighbouring'){
+    return`${neighbouring()} Neighbouring ${isItem ? 'Items' : 'Skills'} `
+  }
+  return ''
 }

@@ -276,20 +276,13 @@ export default class FighterInstance{
     if(conditions.hpPctBelow && this.hpPct > conditions.hpPctBelow){
       return false
     }
+    if(conditions.deepestFloor && !this.onDeepestFloor){
+      return false
+    }
+    if(conditions.bossFight && !this._state.combatParams?.bossFight){
+      return false
+    }
     return true
-
-    // return Object.keys(conditions).every(conditionName => {
-    //   if(conditionName === 'hpPctBelow'){
-    //     return this.hpPct <= conditions.hpPctBelow
-    //   }else if(conditionName === 'debuffed'){
-    //     // return this.statusEffectsData.instances.some(sei => {
-    //     //   return !sei.isBuff && !sei.expired && !sei.phantom
-    //     // })
-    //   }else if(conditionName === 'combatTimeAbove'){
-    //     return this._state.combatTime >= conditions[conditionName]
-    //   }
-    //   throw `Undefined condition: ${conditionName}`
-    // })
   }
 
   isEffectDisabled(effect){

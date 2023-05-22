@@ -11,6 +11,7 @@ export function effectInstanceState(ei){
     abilityUses: uses(ai),
     abilityBarValue: barValue(ai),
     abilityBarMax: barMax(ai),
+    extreme: izExtreme(ei),
     next: isNext(ai)
   }
 }
@@ -65,4 +66,14 @@ function isNext(ai){
     return false
   }
   return ai === ai.fighterInstance.getNextActiveAbility()
+}
+
+function izExtreme(ei){
+  for(let ame of (ei.effect?.appliedMetaEffects ?? [])){
+    // TODO: maybe not sufficient
+    if(ame.subjectKey === 'self'){
+      return true
+    }
+  }
+  return false
 }

@@ -5,6 +5,7 @@ import healthIcon from '../../assets/icons/health.svg'
 import physPower from '../../assets/icons/physPower.svg'
 import magicPower from '../../assets/icons/magicPower.svg'
 import _ from 'lodash'
+import AdventurerItem from '../../../game/items/adventurerItem.js'
 
 export function orbPointIcon(){
   return coloredIcon('circle', '#f3d472')
@@ -112,4 +113,8 @@ export function affectsIcon(affects, isItem = false){
     return neighbouring()
   }
   return ''
+}
+
+export function isAdventurerItem(obj){
+  return obj instanceof AdventurerItem || obj?.obj instanceof AdventurerItem
 }

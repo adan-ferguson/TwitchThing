@@ -57,10 +57,7 @@ export default class EffectInstance{
     if(!this.conditions){
       return true
     }
-    if(this.conditions.deepestFloor && !this.fighterInstance.onDeepestFloor){
-      return false
-    }
-    return true
+    return this.fighterInstance.meetsConditions(this.conditions)
   }
 
   /**
@@ -85,13 +82,7 @@ export default class EffectInstance{
   }
 
   get statMultiplier(){
-    let multi = 1
-    if(this.fighterInstance.state.combatParams?.bossFight){
-      this.exclusiveMods.forEach(m => {
-        multi *= m.bossFightStatMultiplier ?? 1
-      })
-    }
-    return multi
+    return this.effect.statMultiplier ?? 1
   }
 
   get state(){

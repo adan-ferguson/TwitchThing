@@ -13,9 +13,15 @@ export default function(level){
         physDef: def,
         magicDef: def
       },
-      exclusiveMods: [{
-        bossFightStatMultiplier: 3
-      }]
+      metaEffect: {
+        self: {
+          metaEffectId: 'swordOfFablesMultiplier',
+          metaEffectConditions: {
+            bossFight: true
+          },
+          statMultiplier: 3,
+        }
+      }
     },
     orbs: level * 12
   }

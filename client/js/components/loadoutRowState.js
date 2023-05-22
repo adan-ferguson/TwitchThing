@@ -59,6 +59,7 @@ export default class LoadoutRowState extends DIElement{
     this.parentElement.classList.toggle('disabled', this._stateInfo.disabled)
     // TODO: better next effect
     // this.classList.toggle('next', this._stateInfo.next)
+    this.classList.toggle('extreme', this._stateInfo.extreme)
     this.setAttribute('ability-type', this._stateInfo.abilityType)
     this.setAttribute('ability-state', this._stateInfo.abilityState)
     this.setAttribute('display-style', this._options.displayStyle)

@@ -222,5 +222,5 @@ export function pushOrCreate(obj, key, toPush){
   if(!obj[key]){
     obj[key] = []
   }
-  obj[key].push(...toPush)
+  obj[key].push(...arrayize(toPush))
 }
