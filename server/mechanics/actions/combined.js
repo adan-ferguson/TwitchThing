@@ -1,12 +1,7 @@
 import applyStatusEffect from './common/applyStatusEffect.js'
 import attack from './common/attack.js'
 import dealDamage from './common/dealDamage.js'
-import editCooldowns from './common/editCooldowns.js'
-import editStatusEffect from './common/editStatusEffect.js'
-import editTurnTime from './common/editTurnTime.js'
 import gainHealth from './common/gainHealth.js'
-import idle from './common/idle.js'
-import removeStatusEffect from './common/removeStatusEffect.js'
-import takeDamage from './common/takeDamage.js'
-export default { applyStatusEffect: { def: applyStatusEffect, id: 'applyStatusEffect', group: 'common' },attack: { def: attack, id: 'attack', group: 'common' },dealDamage: { def: dealDamage, id: 'dealDamage', group: 'common' },editCooldowns: { def: editCooldowns, id: 'editCooldowns', group: 'common' },editStatusEffect: { def: editStatusEffect, id: 'editStatusEffect', group: 'common' },editTurnTime: { def: editTurnTime, id: 'editTurnTime', group: 'common' },gainHealth: { def: gainHealth, id: 'gainHealth', group: 'common' },idle: { def: idle, id: 'idle', group: 'common' },removeStatusEffect: { def: removeStatusEffect, id: 'removeStatusEffect', group: 'common' },takeDamage: { def: takeDamage, id: 'takeDamage', group: 'common' } }
-export const common = { applyStatusEffect: { def: applyStatusEffect, id: 'applyStatusEffect', group: 'common' },attack: { def: attack, id: 'attack', group: 'common' },dealDamage: { def: dealDamage, id: 'dealDamage', group: 'common' },editCooldowns: { def: editCooldowns, id: 'editCooldowns', group: 'common' },editStatusEffect: { def: editStatusEffect, id: 'editStatusEffect', group: 'common' },editTurnTime: { def: editTurnTime, id: 'editTurnTime', group: 'common' },gainHealth: { def: gainHealth, id: 'gainHealth', group: 'common' },idle: { def: idle, id: 'idle', group: 'common' },removeStatusEffect: { def: removeStatusEffect, id: 'removeStatusEffect', group: 'common' },takeDamage: { def: takeDamage, id: 'takeDamage', group: 'common' } }
+import useEffectAbility from './common/useEffectAbility.js'
+export default { applyStatusEffect: { def: applyStatusEffect, id: 'applyStatusEffect', group: 'common' },attack: { def: attack, id: 'attack', group: 'common' },dealDamage: { def: dealDamage, id: 'dealDamage', group: 'common' },gainHealth: { def: gainHealth, id: 'gainHealth', group: 'common' },useEffectAbility: { def: useEffectAbility, id: 'useEffectAbility', group: 'common' } }
+export const common = { applyStatusEffect: { def: applyStatusEffect, id: 'applyStatusEffect', group: 'common' },attack: { def: attack, id: 'attack', group: 'common' },dealDamage: { def: dealDamage, id: 'dealDamage', group: 'common' },gainHealth: { def: gainHealth, id: 'gainHealth', group: 'common' },useEffectAbility: { def: useEffectAbility, id: 'useEffectAbility', group: 'common' } }

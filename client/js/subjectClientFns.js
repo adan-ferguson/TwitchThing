@@ -1,4 +1,4 @@
-import { attachedItem, attachedSkill, neighbouring } from './components/common.js'
+import { attachedItem, attachedSkill, neighbouringIcon } from './components/common.js'
 
 
 export function subjectDescription(subjectKey, isItem){
@@ -10,7 +10,7 @@ export function subjectDescription(subjectKey, isItem){
     const icon = isItem ? attachedSkill() : attachedItem()
     return `${icon} Attached ${isItem ? 'skill' : 'item'} `
   }else if(subjectKey === 'neighbouring'){
-    return`${neighbouring()} Neighbouring ${isItem ? 'Items' : 'Skills'} `
+    return`${neighbouringIcon()} Neighbouring ${isItem ? 'Items' : 'Skills'} `
   }
   return ''
 }

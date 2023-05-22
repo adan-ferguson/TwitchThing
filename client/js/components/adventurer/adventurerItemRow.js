@@ -6,7 +6,7 @@ import EffectDetails from '../effectDetails.js'
 import SkillCard from '../skillCard.js'
 import SimpleModal from '../simpleModal.js'
 import ItemCard from '../itemCard.js'
-import { affectsIcon, attachedSkill, neighbouring } from '../common.js'
+import { affectsIcon, attachedSkill, neighbouringIcon } from '../common.js'
 
 const HTML = `
 <di-loadout-row-state></di-loadout-row-state>

@@ -11,6 +11,10 @@ export default class LoadoutObjectInstance extends EffectInstance{
     return this._obj
   }
 
+  get name(){
+    return this.obj.name
+  }
+
   get displayName(){
     return this.obj.displayName
   }

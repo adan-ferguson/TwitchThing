@@ -11,7 +11,7 @@ const XP_GROWTH_PCT = 0.2
 
 const HP_BASE = 30
 const HP_GROWTH = 5
-const HP_GROWTH_PCT = 0.05
+const HP_GROWTH_PCT = 0.06
 
 const POWER_BASE = 5
 const POWER_GROWTH = 1
@@ -156,7 +156,6 @@ export default class Adventurer{
     if(!this.canUpgradeSkill(skill)){
       throw 'Can not upgrade skill'
     }
-    const currentLevel = this.doc.unlockedSkills[skill.id] ?? 0
-    this.doc.unlockedSkills[skill.id] = currentLevel + 1
+    this.doc.unlockedSkills[skill.id] = skill.level + 1
   }
 }

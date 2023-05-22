@@ -6,6 +6,7 @@ import physPower from '../../assets/icons/physPower.svg'
 import magicPower from '../../assets/icons/magicPower.svg'
 import _ from 'lodash'
 import AdventurerItem from '../../../game/items/adventurerItem.js'
+import AbilityInstance from '../../../game/abilityInstance.js'
 
 export function orbPointIcon(){
   return coloredIcon('circle', '#f3d472')
@@ -43,8 +44,16 @@ export function attachedSkill(){
   return '<i class="fa-solid fa-arrow-right attached-skill"></i>'
 }
 
-export function neighbouring(){
+export function neighbouringIcon(){
   return '<i class="fa-solid fa-arrows-up-down attached-skill"></i>'
+}
+
+export function aboveIcon(){
+  return '<i class="fa-solid fa-arrow-up attached-skill"></i>'
+}
+
+export function belowIcon(){
+  return '<i class="fa-solid fa-arrow-down attached-skill"></i>'
 }
 
 export function wrapStat(statType, val){
@@ -82,7 +91,7 @@ export function statScaling(scaling, abilityInstance, range = null){
     if(['physPower', 'magicPower'].includes(scalingType)){
       const val = scaling[scalingType]
       let str = ''
-      if(abilityInstance){
+      if(abilityInstance instanceof AbilityInstance){
         const statVal = val * abilityInstance.totalStats.get(scalingType).value
         if(range){
           const val1 = Math.ceil(statVal * range[0])
@@ -110,7 +119,7 @@ export function affectsIcon(affects, isItem = false){
   if(affects === 'attached'){
     return isItem ? attachedSkill() : attachedItem()
   }else if(affects === 'neighbouring'){
-    return neighbouring()
+    return neighbouringIcon()
   }
   return ''
 }

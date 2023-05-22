@@ -24,6 +24,22 @@ const OPTIONAL_SCALED_NUMBER_SCHEMA = Joi.alternatives().try(
   Joi.number()
 )
 
+const TRIGGERS_SCHEMA = Joi.object({
+  combatTime: Joi.number().integer(),
+  attackHit: Joi.alternatives().try(
+    Joi.object({
+      damageType: DAMAGE_TYPE_SCHEMA
+    }),
+    Joi.bool().truthy()),
+  active: Joi.bool().truthy(),
+  attacked: Joi.bool().truthy(),
+  attack: Joi.bool().truthy(),
+  instant: Joi.bool().truthy(),
+  rest: Joi.bool().truthy(),
+  gainingDebuff: Joi.bool().truthy(),
+  useAbility: Joi.bool().truthy()
+})
+
 const ACTION_SCHEMA = Joi.object({
   applyStatusEffect: Joi.object({
     affects: Joi.string().valid('self', 'enemy', 'target'),
@@ -45,26 +61,15 @@ const ACTION_SCHEMA = Joi.object({
     damageType: DAMAGE_TYPE_SCHEMA,
     ignoreDefense: Joi.bool().truthy(),
     ignoreOvertime: Joi.bool().truthy()
+  }),
+  useEffectAbility: Joi.object({
+    subject: Joi.string().valid(...SUBJECT_KEYS),
+    trigger: Joi.string().valid(...Object.keys(TRIGGERS_SCHEMA.describe().keys))
   })
 })
 
 const REPLACEMENT_SCHEMA = Joi.object({
   dataMerge: Joi.object()
-})
-
-const TRIGGERS_SCHEMA = Joi.object({
-  combatTime: Joi.number().integer(),
-  attackHit: Joi.alternatives().try(
-    Joi.object({
-      damageType: DAMAGE_TYPE_SCHEMA
-    }),
-    Joi.bool().truthy()),
-  active: Joi.bool().truthy(),
-  attacked: Joi.bool().truthy(),
-  attack: Joi.bool().truthy(),
-  instant: Joi.bool().truthy(),
-  rest: Joi.bool().truthy(),
-  gainingDebuff: Joi.bool().truthy(),
 })
 
 const CONDITIONS_SCHEMA = Joi.object({

@@ -21,7 +21,7 @@ export function spendAdventurerOrb(advDoc, userDoc, advClass){
 
 export function spendAdventurerSkillPoint(advDoc, skillId){
   const adv = new Adventurer(advDoc)
-  const skill = new AdventurerSkill(skillId)
+  const skill = new AdventurerSkill(skillId, advDoc.unlockedSkills[skillId] ?? 0)
   adv.upgradeSkill(skill)
   advDoc.unlockedSkills = adv.doc.unlockedSkills
 }

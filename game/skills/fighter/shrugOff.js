@@ -1,6 +1,6 @@
 export default function(level){
-  const cooldown = Math.ceil(60000 * Math.pow(0.8, level - 1))
-  const heal = 0.2 + level * 0.05
+  const cooldown = Math.ceil(40000 * Math.pow(0.8, level - 1))
+  const heal = 0.4 + level * 0.1
   return {
     effect: {
       abilities: [{

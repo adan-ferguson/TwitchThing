@@ -1,16 +1,17 @@
 import { gainStatusEffect } from '../../gainStatusEffect.js'
 import { scaledNumberFromAbilityInstance } from '../../../../game/scaledNumber.js'
 import { processAbilityEvents } from '../../abilities.js'
+import { explodeEffect } from '../../../../game/baseEffects/statusEffectInstance.js'
 
 export default function(combat, actor, abilityInstance, actionDef = {}){
   const subject = actionDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
   const statusEffect = convertStatusEffectParams(actionDef.statusEffect, abilityInstance)
+  const exploded = explodeEffect(statusEffect)
   let ret = {
     subject: subject.uniqueID,
     statusEffect
   }
-  if(statusEffect.polarity === 'debuff'){
-    debugger
+  if(exploded.polarity === 'debuff'){
     ret = processAbilityEvents(combat, 'gainingDebuff', subject, abilityInstance, ret)
   }
   if(!ret.cancelled){

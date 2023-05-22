@@ -168,7 +168,7 @@ export default class StatusEffectInstance extends EffectInstance{
   }
 }
 
-function explodeEffect(data){
+export function explodeEffect(data){
   if(data.base){
     let effectData = {}
     const baseName = Object.keys(data.base)[0]

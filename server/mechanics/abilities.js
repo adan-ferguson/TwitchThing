@@ -37,7 +37,7 @@ export function getFighterInstanceAbilities(fighterInstance, type, sourceAbility
         }
       }
       if(sourceAbility && subjectAbility){
-        if(!subjectKeyMatchesEffectInstances(sourceAbility.parentEffect, subjectAbility.parentEffect, subjectAbility.conditions?.source)){
+        if(!subjectKeyMatchesEffectInstances(subjectAbility.parentEffect, sourceAbility.parentEffect, subjectAbility.conditions?.source)){
           return false
         }
       }
