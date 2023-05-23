@@ -3,24 +3,24 @@ import { ORB_SVGS, modifySvgString } from '../assetLoader.js'
 
 const ADV_CLASSES = {
   fighter: {
-    description: 'Some description',
+    description: 'The starter class that loves to fight. High physical damage output, but also some survivability.',
     color: '#BB3300'
   },
   mage: {
-    description: 'Some description',
+    description: 'A magical spell caster. Use gems to modify spell and create combos.',
     color: '#4779da'
   },
   paladin: {
-    description: 'Some description',
+    description: 'A defense-oriented class. Specializes in shields and the "block" mechanic.',
     color: '#d2a200'
   },
   rogue: {
-    description: 'Some description',
+    description: 'A sneaky jerk who specializes in treasure-finding, but has some fighting abilities',
     color: '#7a7a7a'
   },
   chimera: {
-    description: 'Some description',
-    color: '#7a7a7a'
+    description: 'A humanoid with beastly tendencies. And beastly body-parts. Has a hodgepodge of abilities.',
+    color: '#98ab65'
   }
 }
 

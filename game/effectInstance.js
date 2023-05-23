@@ -142,6 +142,12 @@ export default class EffectInstance{
   modsOfType(type){
     return this.totalMods.map(m => m[type]).filter(m => m)
   }
+
+  endCombat(){
+    this.abilities.forEach(ai => {
+      ai.endCombat()
+    })
+  }
 }
 
 function makeAbilities(abilitiesDef, abilitiesStateVal, parent){

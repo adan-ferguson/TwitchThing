@@ -36,12 +36,12 @@ export function coloredIcon(iconName, color, cls = null){
   return `<i style="color:${color};" class="fa-solid fa-${iconName} ${cls}"></i>`
 }
 
-export function attachedItem(){
-  return '<i class="fa-solid fa-arrow-left attached-item"></i>'
+export function attachedItem(text = false){
+  return `<i class="fa-solid fa-arrow-left attached-item"></i>${text ? ' <b>Attached Skill</b>' : ''}`
 }
 
-export function attachedSkill(){
-  return '<i class="fa-solid fa-arrow-right attached-skill"></i>'
+export function attachedSkill(text = false){
+  return `<i class="fa-solid fa-arrow-right attached-skill"></i>${text ? ' <b>Attached Item</b>' : ''}`
 }
 
 export function neighbouringIcon(){

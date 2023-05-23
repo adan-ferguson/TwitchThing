@@ -16,10 +16,11 @@ export default class AdventurerEditPage extends Page{
 
   _saved = false
 
-  constructor(adventurerID){
+  constructor(adventurerID, { tab = null } = {}){
     super()
     this.innerHTML = HTML
     this.adventurerID = adventurerID
+    this.tabzEl.setTab(tab)
     this.tabzEl.events.on('changed', () => {
       this._loadTab()
     })
@@ -62,20 +63,16 @@ export default class AdventurerEditPage extends Page{
       tab.classList.add('displaynone')
       return
     }
-    if(this.user.features.spendPoints === 1){
-      tab.classList.add('glow')
-      tippyCallout(tab, 'Assign orbs here')
-    }
     const unspentOrbs = this.adventurer.unspentOrbs
     const unspentSkillPoints = this.adventurer.unspentSkillPoints
-    let prefixHtml = ' '
+    const chunks = []
     if(unspentOrbs > 0){
-      prefixHtml += orbPointEntry(unspentOrbs)
+      chunks.push(orbPointEntry(unspentOrbs))
     }
     if(unspentSkillPoints > 0){
-      prefixHtml += skillPointEntry(unspentSkillPoints)
+      chunks.push(skillPointEntry(unspentSkillPoints))
     }
-    tab.innerHTML = 'Spend Points' + prefixHtml
+    tab.innerHTML = 'Spend Points' + chunks.length ? chunks.join(' ') : ''
   }
 }
 

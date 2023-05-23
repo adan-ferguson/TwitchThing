@@ -7,8 +7,7 @@ export function subjectDescription(subjectKey, isItem){
   }else if(subjectKey === 'allItems'){
     return 'Each equipped item '
   }else if(subjectKey === 'attached'){
-    const icon = isItem ? attachedSkill() : attachedItem()
-    return `${icon} Attached ${isItem ? 'skill' : 'item'} `
+    return isItem ? attachedSkill(true) : attachedItem(true)
   }else if(subjectKey === 'neighbouring'){
     return`${neighbouringIcon()} Neighbouring ${isItem ? 'Items' : 'Skills'} `
   }

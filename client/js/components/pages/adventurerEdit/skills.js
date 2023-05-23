@@ -17,7 +17,7 @@ export default class Skills extends DIElement{
     this.innerHTML = HTML
     this.list = this.querySelector('di-list')
     this.list.setOptions({
-      pageSize: 15,
+      pageSize: 14,
       blankFn: () => new AdventurerSkillRow(),
       sortFn: (rowA, rowB) => {
         const skillA = rowA.skill

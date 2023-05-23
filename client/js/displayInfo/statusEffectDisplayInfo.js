@@ -49,7 +49,7 @@ export function statusEffectApplicationDescription(statusEffectDef, abilityInsta
   if(APPLICATION_DEFS[statusEffectId]){
     chunks.push(...APPLICATION_DEFS[statusEffectId](statusEffectDef, abilityInstance))
   }else if(statusEffectDef.stats){
-    chunks.push('gain')
+    chunks.push('get')
     for(let key in statusEffectDef.stats){
       chunks.push(wrapStat(key, statusEffectDef.stats[key]))
     }

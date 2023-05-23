@@ -83,6 +83,7 @@ const ABILITY_SCHEMA = Joi.object({
   initialCooldown: Joi.number().integer(),
   cooldown: Joi.number().integer(),
   replacements: REPLACEMENT_SCHEMA,
+  resetCooldownAfterCombat: Joi.bool(),
   abilityId: Joi.string(),
   actions: Joi.array().items(ACTION_SCHEMA),
   uses: Joi.number().integer(),
@@ -129,7 +130,8 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
   maxStacks: Joi.number().integer(),
   polarity: Joi.string().valid('buff','debuff','negativity'),
   name: Joi.string(),
-  persisting: Joi.boolean().truthy()
+  persisting: Joi.boolean().truthy(),
+  vars: Joi.object()
 })
 
 export const PHANTOM_EFFECT_SCHEMA = EFFECT_SCHEMA.append({

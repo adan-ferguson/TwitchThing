@@ -56,6 +56,10 @@ export default class AbilityInstance{
     return { ...this._state }
   }
 
+  get resetCooldownAfterCombat(){
+    return this.abilityDef.resetCooldownAfterCombat ?? false
+  }
+
   get cooldownRemaining(){
     if(!this.cooldown){
       return 0
@@ -158,12 +162,12 @@ export default class AbilityInstance{
     }
   }
 
-  //
+  endCombat(){
+    if(this.resetCooldownAfterCombat){
+      delete this._state.cooldownElapsedPct
+    }
+  }
   // get nextTurnOffset(){
   //   return this._abilityDef.nextTurnOffset
-  // }
-  //
-  // get phantom(){
-  //   return this._abilityDef.phantom ?? false
   // }
 }

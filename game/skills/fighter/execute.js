@@ -1,20 +1,22 @@
+import { wrappedPct } from '../../growthFunctions.js'
+
 export default function(level){
-  const physPower = 0.5 * Math.pow(0.8, level - 1)
-  const hits = 1 + level * 2
+  const physPower = 8 + 2 * level
+  const initialCooldown = Math.ceil(30000 * Math.pow(0.9, level - 1))
   return {
     effect: {
       abilities: [{
         trigger: { active: true },
-        cooldown: 12000,
+        initialCooldown,
+        resetCooldownAfterCombat: true,
         actions: [{
           attack: {
-            hits,
             scaling: {
               physPower
             }
           }
         }]
       }]
-    }
+    },
   }
 }

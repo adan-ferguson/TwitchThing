@@ -23,7 +23,7 @@ export default class Inventory extends DIElement{
     super()
     this.innerHTML = HTML
     this.listEl.setOptions({
-      pageSize: 15,
+      pageSize: 14,
       blankFn: () => new AdventurerItemRow()
     })
   }

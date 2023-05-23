@@ -41,9 +41,8 @@ const abilityDefinitions = {
 
 const phantomEffectDefinitions = {
   attackAppliesStatusEffect: (def, abilityInstance) => {
-    const chunks = ['On hit,']
-    chunks.push(statusEffectApplicationDescription(def, abilityInstance))
-    chunks.push(`for ${roundToFixed(def.duration / 1000, 2)} seconds.`)
+    const chunks = ['On hit, they']
+    chunks.push(...statusEffectApplicationDescription(def, abilityInstance))
     return chunks
   }
 }
@@ -94,6 +93,9 @@ function abilityDescription(ability){
   if(ability.conditions){
     chunks.push(...conditionsDescription(ability.conditions))
   }
+  if(ability.resetCooldownAfterCombat){
+    chunks.push('Resets to initial cooldown after combat.')
+  }
   return chunks.join(' ')
 }
 
@@ -135,7 +137,7 @@ function conditions(conditions){
     return []
   }
   if(conditions.source === 'attached'){
-    return [`with attached skill ${attachedSkill()}`]
+    return [`with ${attachedSkill(true)}`]
   }
   return []
 }

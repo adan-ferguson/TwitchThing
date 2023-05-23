@@ -17,7 +17,10 @@ const HTML = `
     <div class="content-well">
       <di-adventurer-pane></di-adventurer-pane>
     </div>
-    <button class="edit content-no-grow">Edit Adventurer</button>
+    <div class="content-no-grow content-columns">
+      <button class="edit">Edit Adventurer</button>
+      <button class="spend-points content-no-grow displaynone"></button>
+    </div>
   </div>
   <div class="content-rows dungeons">
     <div class="top-right content-well center-contents clickable"></div>
@@ -94,7 +97,22 @@ export default class AdventurerPage extends Page{
   _setupEditEquipmentButton(user){
 
     const btn = this.querySelector('button.edit')
+    const pointsBtn = this.querySelector('button.spend-points')
     const featureStatus = user.features.editLoadout
+
+    let points = ''
+    const unspentOrbs = this.adventurer.unspentOrbs
+    const unspentSkillPoints = this.adventurer.unspentSkillPoints
+    if(unspentOrbs > 0){
+      points += orbPointEntry(unspentOrbs)
+    }
+    if(unspentSkillPoints > 0){
+      points += skillPointEntry(unspentSkillPoints)
+    }
+    if(points){
+      pointsBtn.classList.remove('displaynone')
+      pointsBtn.innerHTML = points
+    }
 
     if(!featureStatus){
       btn.classList.add('displaynone')
@@ -103,23 +121,15 @@ export default class AdventurerPage extends Page{
       btn.classList.add('glow')
       tippyCallout(btn, 'Edit your items here')
     }else if(user.features.spendPoints === 1){
-      btn.classList.add('glow')
-      tippyCallout(btn, 'Assign orbs here')
+      pointsBtn.classList.add('glow')
+      tippyCallout(pointsBtn, 'Spent points here')
     }
-
-    const unspentOrbs = this.adventurer.unspentOrbs
-    const unspentSkillPoints = this.adventurer.unspentSkillPoints
-    let points = ' '
-    if(unspentOrbs > 0){
-      points += orbPointEntry(unspentOrbs)
-    }
-    if(unspentSkillPoints > 0){
-      points += skillPointEntry(unspentSkillPoints)
-    }
-    btn.innerHTML += points
 
     btn.addEventListener('click', () => {
       this.redirectTo(AdventurerEditPage.path(this.adventurerID))
+    })
+    pointsBtn.addEventListener('click', () => {
+      this.redirectTo(AdventurerEditPage.path(this.adventurerID), { tab: 'Spend Points' })
     })
   }
 

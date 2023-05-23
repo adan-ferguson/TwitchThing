@@ -19,14 +19,14 @@ export default class Tabz extends DIElement{
       const name = diTab.getAttribute('data-tab-name')
       const tab = makeTab(name)
       tab.addEventListener('click', () => {
-        this._setTab(name)
+        this.setTab(name)
       })
       list.appendChild(tab)
       if(!first){
         first = name
       }
     })
-    this._setTab(first)
+    this.setTab(first)
   }
 
   get currentTab(){
@@ -37,7 +37,10 @@ export default class Tabz extends DIElement{
     return this.querySelector(`.tabz-content [data-tab-name=${name}]`)
   }
 
-  _setTab(name){
+  setTab(name){
+    if(!name){
+      return
+    }
     this.querySelectorAll('.tabz-list .tab').forEach(tab => {
       tab.classList.toggle('active', tab.getAttribute('data-tab-name') === name)
       tab.classList.remove('glow')

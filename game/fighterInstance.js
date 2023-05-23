@@ -310,6 +310,7 @@ export default class FighterInstance{
     delete this._state.combatTime
     delete this._state.combatParams
     delete this._state.timeSinceLastAction
+    this.effectInstances.forEach(ei => ei.endCombat())
   }
 
   advanceTime(ms){

@@ -13,6 +13,7 @@ import fighter from '../assets/icons/orbs/fighter.svg'
 import mage from '../assets/icons/orbs/mage.svg'
 import paladin from '../assets/icons/orbs/paladin.svg'
 import rogue from '../assets/icons/orbs/rogue.svg'
+import chimera from '../assets/icons/orbs/chimera.svg'
 
 import cleared from '../assets/rooms/cleared.png'
 import combatResult from '../assets/rooms/combatResult.png'
@@ -45,7 +46,7 @@ export const ORB_SVGS = {
   mage,
   paladin,
   rogue,
-  chimera: rogue
+  chimera
 }
 
 export const ROOM_IMAGES = {

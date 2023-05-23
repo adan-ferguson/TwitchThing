@@ -7,12 +7,14 @@ const fighter = {
     Skills.strength,
     Skills.trailblazer,
     Skills.heavySlash,
-    Skills.berserker,
+    Skills.resistance,
     Skills.hamstring,
-    Skills.shrugOff,
+    Skills.berserker,
     Skills.swiftStrikes,
-    Skills.tetheredManeuver,
+    Skills.shrugOff,
     Skills.recklessAttack,
+    Skills.tetheredManeuver,
+    Skills.execute,
   ],
   items: [
     [

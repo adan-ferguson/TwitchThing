@@ -168,13 +168,14 @@ export default class ClassDisplay extends DIElement{
         buttonHTML = 'Upgrade'
         content.appendChild(new SkillCard().setSkill(skill))
         content.appendChild(wrapContent('<i class="fa-solid fa-arrow-down"></i>'))
+
+        const nextSkill = new AdventurerSkill(skill.id, skill.level + 1)
+        content.appendChild(new SkillCard().setSkill(nextSkill))
       }else{
         buttonHTML = 'Unlock'
       }
       buttonHTML += ' ' + skillPointEntry(skill.skillPointsToUpgrade)
     }
-    const nextSkill = new AdventurerSkill(skill.id, skill.level + 1)
-    content.appendChild(new SkillCard().setSkill(nextSkill))
     const buttons = [{
       content: buttonHTML,
       fn: () => {

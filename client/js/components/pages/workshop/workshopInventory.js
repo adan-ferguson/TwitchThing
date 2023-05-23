@@ -36,7 +36,7 @@ export default class WorkshopInventory extends DIElement{
     this.innerHTML = HTML
     this.listEl.setOptions({
       showFiltered: true,
-      pageSize: 15,
+      pageSize: 14,
       clickableRows: true
     })
     this.querySelector('.supertitle').textContent = title
