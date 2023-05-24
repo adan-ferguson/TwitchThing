@@ -6,7 +6,9 @@ import LoadoutObjectInstance from '../../../../game/loadoutObjectInstance.js'
 import ItemDetails from '../itemDetails.js'
 import SimpleModal from '../simpleModal.js'
 import SkillCard from '../skillCard.js'
-import { affectsIcon, attachedItem, attachedSkill } from '../common.js'
+import { affectsIcon } from '../common.js'
+import { getAbilityDisplayInfoForObj } from '../../displayInfo/abilityDisplayInfo.js'
+import { ITEM_ROW_COLORS } from '../../colors.js'
 
 const HTML = `
 <di-loadout-row-state></di-loadout-row-state>
@@ -153,6 +155,15 @@ export default class AdventurerSkillRow extends DIElement{
       loadoutEffectInstance: this._options.showState ? this.adventurerSkillInstance : false,
       displayStyle: 'skill'
     }).update()
+
+    const ado = getAbilityDisplayInfoForObj(this.adventurerSkill)
+    if(ado[0]?.type === 'active'){
+      this.style.borderColor = ITEM_ROW_COLORS.active
+      this.style.borderWidth = '2rem'
+    }else{
+      this.style.borderColor = null
+      this.style.borderWidth = null
+    }
 
     return this
   }

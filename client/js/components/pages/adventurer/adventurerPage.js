@@ -17,7 +17,7 @@ const HTML = `
     <div class="content-well">
       <di-adventurer-pane></di-adventurer-pane>
     </div>
-    <div class="content-no-grow content-columns">
+    <div class="content-no-grow edit-row content-columns">
       <button class="edit">Edit Adventurer</button>
       <button class="spend-points content-no-grow displaynone"></button>
     </div>
@@ -115,7 +115,7 @@ export default class AdventurerPage extends Page{
     }
 
     if(!featureStatus){
-      btn.classList.add('displaynone')
+      this.querySelector('.edit-row').classList.add('displaynone')
       return
     }else if(featureStatus === 1){
       btn.classList.add('glow')

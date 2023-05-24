@@ -1,5 +1,5 @@
 import DIElement from '../../diElement.js'
-import { skillPointEntry } from '../../common.js'
+import { featureLocked, skillPointEntry } from '../../common.js'
 import classDisplayInfo, { ADVENTURER_CLASS_LIST } from '../../../displayInfo/classDisplayInfo.js'
 import AdventurerSkillRow, { AdventurerSkillRowStatus } from '../../adventurer/adventurerSkillRow.js'
 import AdventurerSkill, { getSkillsForClass } from '../../../../../game/skills/adventurerSkill.js'
@@ -139,6 +139,10 @@ export default class ClassDisplay extends DIElement{
         this._showUnlockModal(skill)
       })
       list.appendChild(row)
+    }
+
+    if(!this._user.features.skills){
+      featureLocked(list, 'Level 5')
     }
   }
 

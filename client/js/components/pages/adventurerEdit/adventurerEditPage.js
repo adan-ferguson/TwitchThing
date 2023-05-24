@@ -44,6 +44,7 @@ export default class AdventurerEditPage extends Page{
 
   async load(){
     const { adventurer, items } = await this.fetchData()
+    this.hideSkills = this.user.features.skills ? false : true
     this.adventurer = new Adventurer(adventurer)
     this.items = items
     this.updatePoints()
@@ -72,7 +73,7 @@ export default class AdventurerEditPage extends Page{
     if(unspentSkillPoints > 0){
       chunks.push(skillPointEntry(unspentSkillPoints))
     }
-    tab.innerHTML = 'Spend Points' + chunks.length ? chunks.join(' ') : ''
+    tab.innerHTML = 'Spend Points' + (chunks.length ? chunks.join(' ') : '')
   }
 }
 

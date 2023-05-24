@@ -2,11 +2,13 @@ import DIElement from '../../diElement.js'
 import AdventurerSkillRow from '../../adventurer/adventurerSkillRow.js'
 import AdventurerSkill from '../../../../../game/skills/adventurerSkill.js'
 import { advClassIndex } from '../../listHelpers.js'
+import { featureLocked } from '../../common.js'
+import tippyCallout from '../../visualEffects/tippyCallout.js'
 
 const HTML = `
 <div class="content-rows">
   <div class="inset-title">Skills</div>
-  <di-list advClass="skill-style-list"></di-list>
+  <di-list class="skill-style-list"></di-list>
 </div>
 `
 
@@ -46,16 +48,24 @@ export default class Skills extends DIElement{
     return this.querySelector('di-list')
   }
 
-  setup(adventurer){
+  setup(adventurer, featureStatus = 2){
     this.adventurer = adventurer
-
     const unlocked = adventurer.doc.unlockedSkills
     const rows = []
+    let hasSkillUnlocked = false
     for(let id in unlocked){
+      hasSkillUnlocked = true
       const skill = new AdventurerSkill(id, unlocked[id])
       rows.push(new AdventurerSkillRow().setOptions({ skill }))
     }
     this.listEl.setRows(rows)
+    if(!featureStatus){
+      featureLocked(this.listEl, 'Level 5')
+    }else if(hasSkillUnlocked && !localStorage.getItem('equipped-skill-callout')){
+      debugger
+      tippyCallout(this.listEl.querySelector('di-adventurer-skill-row'), 'Make sure to equip your skills!')
+      localStorage.setItem('equipped-skill-callout', true)
+    }
   }
 }
 

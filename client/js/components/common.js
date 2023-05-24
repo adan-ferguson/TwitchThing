@@ -32,8 +32,13 @@ export function orbEntry(cls, count){
   return `<di-orb-entry orb-class="${cls}" orb-used="${count}"></di-orb-entry>`
 }
 
-export function coloredIcon(iconName, color, cls = null){
-  return `<i style="color:${color};" class="fa-solid fa-${iconName} ${cls}"></i>`
+export function faIcon(iconName){
+  return coloredIcon(iconName)
+}
+
+export function coloredIcon(iconName, color = null, cls = null){
+  const s = color ? `style="color:${color};"` : ''
+  return `<i ${s} class="fa-solid fa-${iconName} ${cls}"></i>`
 }
 
 export function attachedItem(text = false){
@@ -126,4 +131,12 @@ export function affectsIcon(affects, isItem = false){
 
 export function isAdventurerItem(obj){
   return obj instanceof AdventurerItem || obj?.obj instanceof AdventurerItem
+}
+
+export function featureLocked(target, msg){
+  if(target.querySelector('.feature-locked')){
+    return
+  }
+  const cover = makeEl({ class: 'feature-locked', content: `${faIcon('lock')} <span>${msg}</span>` })
+  target.appendChild(cover)
 }

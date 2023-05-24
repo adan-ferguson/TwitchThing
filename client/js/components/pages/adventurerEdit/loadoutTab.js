@@ -70,7 +70,7 @@ export default class LoadoutTab extends DIElement{
 
     this.inventoryEl.setup(items, adventurer)
     this.adventurerPaneEl.setAdventurer(adventurer)
-    this.skillsEl.setup(adventurer)
+    this.skillsEl.setup(adventurer, parentPage.user.features.skills)
     this._updateSaveButton()
   }
 

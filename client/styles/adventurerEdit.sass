@@ -143,6 +143,8 @@ di-adventurer-edit-points-tab
     .orb-adder
       justify-content: center
       align-items: center
+      border-bottom: 0.5rem solid #CCC
+      padding-bottom: 7rem
       di-orb-row
         font-size: 2em
       button
@@ -158,10 +160,14 @@ di-adventurer-edit-points-tab
         padding: 0
         filter: drop-shadow(1.75rem 1.75rem 1.75rem #999)
     .skills-list
+      position: relative
       flex-grow: 1
       display: flex
       flex-direction: column
       gap: 10rem
+      .feature-locked
+        left: -5rem
+        right: -5rem
       > *
         flex: 0 1 8%
 
@@ -217,3 +223,6 @@ di-inventory
 
 di-adventurer-edit-skills
   padding-top: 8rem
+
+  di-list
+    position: relative

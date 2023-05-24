@@ -29,6 +29,7 @@ export default class AdventurerPane extends DIElement{
   get defaultOptions(){
     return {
       hideXpBar: false,
+      hideLoadout: false,
       orbsStyle: OrbsDisplayStyle.SHOW_MAX
     }
   }

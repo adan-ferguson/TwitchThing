@@ -52,6 +52,9 @@ const phantomEffectDefinitions = {
  * @returns {*[]|*}
  */
 export function getAbilityDisplayInfoForObj(obj){
+  if(!obj){
+    return []
+  }
   return obj.abilities.map(getAbilityDisplayInfo)
 }
 
