@@ -1,5 +1,7 @@
-export default {
-  baseStats: {
-    speed: 5
+export default function(){
+  return {
+    baseStats: {
+      speed: 5
+    }
   }
 }

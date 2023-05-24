@@ -3,6 +3,7 @@ export default {
   basic: false,
   range: null,
   ignoreDefense: false,
+  undodgeable: false,
   hits: 1,
   scaling: {}
 }

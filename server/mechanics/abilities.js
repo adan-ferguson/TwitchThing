@@ -41,6 +41,9 @@ export function getFighterInstanceAbilities(fighterInstance, type, sourceAbility
           return false
         }
       }
+      if(subjectAbility.conditions?.attackDodgeable && data.undodgeable){
+        return false
+      }
       return true
     })
 }

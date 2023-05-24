@@ -64,7 +64,7 @@ export default class MonsterInstance extends FighterInstance{
 
     const baseInfo = Monsters[monsterDef.baseType]
     this._monsterData = {
-      ...baseInfo.def
+      ...baseInfo.def()
     }
     this._monsterDef = monsterDef
     this.state = initialState

@@ -19,7 +19,7 @@ export default function(combat, attacker, abilityInstance = null, actionDef = {}
     actionDef = processAbilityEvents(combat, ['attack'], attacker, abilityInstance, actionDef)
     actionDef = processAbilityEvents(combat, ['attacked', actionDef.damageType + 'Attacked'], enemy, abilityInstance, actionDef)
 
-    if (actionDef.forceDodge || dodgeAttack(enemy)){
+    if(!actionDef.undodgeable && (actionDef.forceDodge || dodgeAttack(enemy))){
       return {
         ...ret,
         cancelled: 'dodge'

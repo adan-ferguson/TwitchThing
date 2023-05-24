@@ -20,7 +20,7 @@ const monstersByFloor = [
   Monsters.rockGolem,
   Monsters.minotaur,
   // // Forest
-  // Monsters.woodElf,
+  Monsters.woodElf,
   // Monsters.sprite,
   // Monsters.boar,
   // Monsters.badger,

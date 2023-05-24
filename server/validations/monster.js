@@ -19,5 +19,5 @@ export function validateAllMonsters(){
 }
 
 function validateMonster(id){
-  Joi.assert(Monsters[id].def, MONSTER_SCHEMA)
+  Joi.assert(Monsters[id].def(), MONSTER_SCHEMA)
 }

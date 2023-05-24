@@ -50,7 +50,8 @@ const ACTION_SCHEMA = Joi.object({
     damageType: DAMAGE_TYPE_SCHEMA,
     scaling: SCALED_NUMBER_SCHEMA,
     range: Joi.array().length(2).items(Joi.number()),
-    hits: Joi.number().integer()
+    hits: Joi.number().integer(),
+    undodgeable: Joi.bool()
   }),
   gainHealth: Joi.object({
     scaling: SCALED_NUMBER_SCHEMA
@@ -72,10 +73,11 @@ const REPLACEMENT_SCHEMA = Joi.object({
 })
 
 const CONDITIONS_SCHEMA = Joi.object({
-  source: Joi.string().valid(...SUBJECT_KEYS),
-  hpPctBelow: Joi.number(),
-  bossFight: Joi.bool(),
-  deepestFloor: Joi.bool()
+  source: Joi.string().valid(...SUBJECT_KEYS), // Are we a subject of source + subjectKey combination?
+  hpPctBelow: Joi.number(),   // Is our hpPct below this number?
+  bossFight: Joi.bool(),      // Are we in a boss fight?
+  deepestFloor: Joi.bool(),   // Are we on the adventurer's deepest floor?
+  attackDodgeable: Joi.bool() // Are we being attacked by a dodgeable attack?
 })
 
 const ABILITY_SCHEMA = Joi.object({
