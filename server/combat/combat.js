@@ -155,10 +155,6 @@ class Combat{
       // }
       this._triggerSuddenDeath()
       this._resolveTriggers()
-      if(this._currentTime >= 120000){
-        // TODO: max time
-        this.fighterInstance1.hp = 0
-      }
       this._addTimelineEntry({
         actions
       })
@@ -166,13 +162,13 @@ class Combat{
   }
 
   _advanceTime(){
-    const timeToAdvance = Math.ceil(
-      Math.max(
-        1,
-        Math.min(...this.fighters.map(fi => fi.timeUntilNextUpdate), this.nextSuddenDeathTick)
-      )
-    )
-    if(!timeToAdvance){
+    const nexts = [
+      ...this.fighters.map(fi => fi.timeUntilNextUpdate),
+      OVERTIME - this.time > 0 ? OVERTIME - this.time : Number.MAX_VALUE,
+      this.nextSuddenDeathTick
+    ]
+    const timeToAdvance = Math.ceil(Math.max(1, Math.min(...nexts)))
+    if(timeToAdvance === 1){
       this._consecutiveZeroTimeAdvancements++
       if(this._consecutiveZeroTimeAdvancements >= MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS){
         throw 'Combat was no longer advancing time, probably infinite loop.'
@@ -234,7 +230,7 @@ class Combat{
   }
 
   _addTimelineEntry(options = {}){
-    this.timeline.push({
+    const next = {
       time: this._currentTime,
       actions: [],
       triggers: this._triggerUpdates,
@@ -243,12 +239,13 @@ class Combat{
       overtime: this.msOvertime,
       suddenDeath: this._currentTime > SUDDEN_DEATH ? true : false,
       ...options
-    })
+    }
+    this.timeline.push(next)
     this._triggerUpdates = []
   }
 
   _triggerSuddenDeath(){
-    const diff = (this._currentTime / 1000) - 60
+    const diff = (this._currentTime - SUDDEN_DEATH) / 1000
     if(diff % 1 === 0 && diff > 0){
       this.addPendingTriggers(this.fighters.map(fi => {
         return {
@@ -257,7 +254,7 @@ class Combat{
           def: {
             takeDamage: {
               scaling: {
-                hpMax: 0.03 + diff / 300
+                hpMax: 0.02 + diff / 300
               },
               damageType: diff % 2 ? 'phys' : 'magic',
               ignoreDefense: true,

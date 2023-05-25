@@ -93,7 +93,7 @@ const statDefinitionsInfo = {
     text: 'XP Gain'
   },
   startingFood: {
-    text: 'Starting Food'
+    text: 'Starting Food (3 plus 1 per 10 levels)'
   },
   cooldownReduction: {
     text: 'Cooldown Reduction'

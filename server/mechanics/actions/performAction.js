@@ -3,17 +3,16 @@ import Actions from './combined.js'
 import { expandActionDef } from '../../../game/actionDefs/expandActionDef.js'
 import { arrayize } from '../../../game/utilFunctions.js'
 import { processAbilityEvents } from '../abilities.js'
+import { chooseOne } from '../../../game/rando.js'
 
 export function performAction(combat, actor, ability, actionDef){
   const expandedActionDef = expandActionDef(actionDef)
-  let results = []
-  for(let key in expandedActionDef){
-    const result = arrayize(Actions[key].def(combat, actor, ability, expandedActionDef[key]))
-    results.push(...result)
-    if(result.length && result.at(-1).cancelled){
-      break
-    }
+  const key = Object.keys(expandedActionDef)[0]
+  if(key === 'random'){
+    const randomDef = chooseOne(expandedActionDef.random.options)
+    return performAction(combat, actor, ability, randomDef)
   }
+  const results = arrayize(Actions[key].def(combat, actor, ability, expandedActionDef[key]))
   results.forEach(r => {
     if(!r.subject){
       throw 'Action result missing subject.'

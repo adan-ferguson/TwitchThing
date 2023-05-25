@@ -85,7 +85,7 @@ const APPLICATION_DEFS = {
     if(params.damage.scaledNumber){
       chunks.push(statScaling(params.damage.scaledNumber, abilityInstance))
     }
-    chunks.push(`${params.damageType ?? 'phys'} damage per second`)
+    chunks.push(`${params.damageType ?? 'phys'} damage every 5 seconds`)
     return chunks
   },
   wideOpen: (def, abilityInstance) => {

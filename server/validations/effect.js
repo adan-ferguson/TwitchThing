@@ -36,10 +36,11 @@ const TRIGGERS_SCHEMA = Joi.object({
   instant: Joi.bool().truthy(),
   rest: Joi.bool().truthy(),
   gainingDebuff: Joi.bool().truthy(),
-  useAbility: Joi.bool().truthy()
+  useAbility: Joi.bool().truthy(),
+  hitByAttack: Joi.bool().truthy()
 })
 
-const ACTION_SCHEMA = Joi.object({
+const as = Joi.object({
   applyStatusEffect: Joi.object({
     affects: Joi.string().valid('self', 'enemy', 'target'),
     statusEffect: Joi.custom(val => {
@@ -65,7 +66,16 @@ const ACTION_SCHEMA = Joi.object({
   useEffectAbility: Joi.object({
     subject: Joi.string().valid(...SUBJECT_KEYS),
     trigger: Joi.string().valid(...Object.keys(TRIGGERS_SCHEMA.describe().keys))
-  })
+  }),
+})
+
+const ACTION_SCHEMA = as.append({
+  random: {
+    options: Joi.array().items(Joi.object({
+      weight: Joi.number().required(),
+      value: as.required()
+    }))
+  }
 })
 
 const REPLACEMENT_SCHEMA = Joi.object({

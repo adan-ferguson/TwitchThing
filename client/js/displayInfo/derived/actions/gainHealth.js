@@ -7,6 +7,8 @@ export function derivedGainHealthDescription(healingDef, abilityInstance){
     return [`Recover ${scaling.hpMax * 100}% max health.`]
   }else if(scaling.physPower){
     return [`Recover ${scalingWrap('physPower', wrappedPct(scaling.physPower * 100))} health.`]
+  }else if(scaling.magicPower){
+    return [`Recover ${scalingWrap('magicPower', wrappedPct(scaling.magicPower * 100))} health.`]
   }
   throw 'Missing gain health description'
 }

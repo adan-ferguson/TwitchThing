@@ -52,6 +52,12 @@ export default class AdventurerInstance extends FighterInstance{
     return adventurerLevelToPower(this.adventurer.level)
   }
 
+  get baseStats(){
+    return {
+      startingFood: 3 + Math.floor(this.level / 10)
+    }
+  }
+
   get maxFood(){
     return this.stats.get('startingFood').value
   }

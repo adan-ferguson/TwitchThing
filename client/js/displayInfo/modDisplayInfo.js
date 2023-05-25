@@ -22,6 +22,11 @@ const DEFS = {
     return {
       description: 'Attacks against you always crit.'
     }
+  },
+  freezeActionBar: () => {
+    return {
+      description: 'Action bar does not fill.'
+    }
   }
 }
 export function modDisplayInfo(mod){
