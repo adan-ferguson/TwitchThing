@@ -1,7 +1,7 @@
 const statusEffect = function(def){
   return {
     applyStatusEffect: {
-      target: 'enemy',
+      targets: 'enemy',
       statusEffect: {
         polarity: 'debuff',
         persisting: true,

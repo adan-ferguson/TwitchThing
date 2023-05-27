@@ -8,7 +8,7 @@ export default function(level){
         },
         actions: [{
           applyStatusEffect: {
-            target: 'target',
+            targets: 'target',
             statusEffect: {
               base: {
                 damageOverTime: {

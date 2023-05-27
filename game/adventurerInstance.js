@@ -54,7 +54,7 @@ export default class AdventurerInstance extends FighterInstance{
 
   get baseStats(){
     return [{
-      startingFood: 3 + Math.floor(this.level / 10)
+      startingFood: 3 + Math.floor(this.adventurer.level / 10)
     }]
   }
 

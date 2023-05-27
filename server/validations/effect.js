@@ -43,7 +43,7 @@ const TRIGGERS_SCHEMA = Joi.object({
 
 const as = Joi.object({
   applyStatusEffect: Joi.object({
-    target: Joi.string().valid('self', 'enemy', 'target'),
+    targets: Joi.string().valid('self', 'enemy', 'target'),
     statusEffect: Joi.custom(val => {
       return Joi.attempt(val, STATUS_EFFECT_SCHEMA)
     }).required()

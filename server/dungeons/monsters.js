@@ -146,6 +146,9 @@ function generateRewards(dungeonRun, monsterDefinition){
       })
     }
   }
+  if(monsterInstance.rewards.length){
+    debugger
+  }
   return addRewards(rewards, monsterInstance.rewards)
 }
 

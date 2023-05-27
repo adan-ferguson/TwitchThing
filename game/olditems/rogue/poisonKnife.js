@@ -14,7 +14,7 @@ export default {
           actions: [
             statusEffectAction({
               base: poisonedStatusEffect,
-              target: 'enemy',
+              targets: 'enemy',
               effect: {
                 params: {
                   damage,

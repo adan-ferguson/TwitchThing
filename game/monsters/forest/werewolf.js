@@ -12,7 +12,7 @@ export default function(){
             trigger: { attackHit: true },
             actions: [{
               applyStatusEffect: {
-                target: 'self',
+                targets: 'self',
                 statusEffect: {
                   name: 'frenzy',
                   polarity: 'buff',

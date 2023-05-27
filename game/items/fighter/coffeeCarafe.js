@@ -7,7 +7,7 @@ export default function(level){
         trigger: { rest: true },
         actions:[{
           applyStatusEffect: {
-            target: 'self',
+            targets: 'self',
             statusEffect: {
               name: 'caffeineRush',
               polarity: 'buff',

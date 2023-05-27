@@ -13,7 +13,7 @@ export default function(){
             cooldown: 9000,
             actions: [{
               applyStatusEffect: {
-                target: 'enemy',
+                targets: 'enemy',
                 statusEffect: {
                   name: 'webbed',
                   stacking: 'stack',

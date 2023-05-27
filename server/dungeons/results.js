@@ -109,6 +109,10 @@ export async function finalize(dungeonRunDoc){
 
     if(adventurerDoc.level >= 5 && !userDoc.features.skills){
       userDoc.features.skills = 1
+      emit(userDoc._id, 'show popup', {
+        title: 'That Went Better',
+        message: 'You got your first skill point, go spend it now! Now now now!'
+      })
     }
 
     const cfBefore = userDoc.accomplishments.chestsFound ?? 0
@@ -194,9 +198,10 @@ async function purgeReplays(drDocs){
     doc.purged = true
     await DungeonRuns.save(doc)
   }
-  console.log('Purging combat timelines')
-  const result = await Combats.collection.deleteMany({
+  const result = await Combats.collection.updateMany({
     _id: { $in: combatIDs }
-  })
+  }, [{
+    $unset: 'timeline'
+  }])
   return result.deletedCount
 }

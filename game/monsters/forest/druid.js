@@ -17,7 +17,7 @@ export default function(){
             uses: 1,
             actions: [{
               applyStatusEffect: {
-                target: 'self',
+                targets: 'self',
                 statusEffect: {
                   name: 'Bear Form',
                   mods: [{
