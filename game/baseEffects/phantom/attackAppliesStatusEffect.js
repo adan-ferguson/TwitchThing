@@ -4,7 +4,7 @@ export default function(statusEffect = {}){
       trigger: { attackHit: true },
       actions: [{
         applyStatusEffect: {
-          affects: 'target',
+          target: 'target',
           statusEffect
         }
       }]

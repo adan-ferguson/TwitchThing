@@ -16,6 +16,7 @@ export default class EffectRow extends DIElement{
 
   constructor(key, effect){
     super()
+    this.classList.add('effect-instance')
     this.innerHTML = HTML
     this.barEl = this.querySelector('di-bar')
     this._miniBarEl = this.querySelector('di-mini-bar')
@@ -38,7 +39,7 @@ export default class EffectRow extends DIElement{
   }
 
   setEffect(effect, key){
-    this.setAttribute('effect-key', key)
+    this.setAttribute('effect-id', key)
     return this.update(effect, true)
   }
 

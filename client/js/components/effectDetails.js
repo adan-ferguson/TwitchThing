@@ -1,5 +1,5 @@
 import DIElement from './diElement.js'
-import { roundToNearestIntervalOf, wrapContent, wrapText } from '../../../game/utilFunctions.js'
+import { roundToFixed, roundToNearestIntervalOf, wrapContent, wrapText } from '../../../game/utilFunctions.js'
 import { isAdventurerItem, orbEntries } from './common.js'
 import Stats from '../../../game/stats/stats.js'
 import StatsList from './stats/statsList.js'
@@ -9,6 +9,7 @@ import { getAbilityDisplayInfoForObj } from '../displayInfo/abilityDisplayInfo.j
 import { modDisplayInfo } from '../displayInfo/modDisplayInfo.js'
 import { metaEffectDisplayInfo } from '../displayInfo/metaEffectDisplayInfo.js'
 import { subjectDescription } from '../subjectClientFns.js'
+import { effectDisplayInfo, loadoutObjectDisplayInfo } from '../displayInfo/effectDisplayInfo.js'
 
 export default class EffectDetails extends DIElement{
 
@@ -39,7 +40,7 @@ export default class EffectDetails extends DIElement{
     this._addMeta()
     this._addMods()
     this._addLoadoutModifiers()
-    // this._addDuration()
+    this._addDescription()
   }
 
   _addConditions(){
@@ -51,6 +52,8 @@ export default class EffectDetails extends DIElement{
       this.appendChild(wrapText('While on this adventurer\'s deepest explored floor:'))
     }else if(conditions.bossFight){
       this.appendChild(wrapText('During boss fights:'))
+    }else if(conditions.hpPctBelow){
+      this.appendChild(wrapText(`While hp percentage is below ${roundToFixed(conditions.hpPctBelow * 100, 2)}%:`))
     }
   }
 
@@ -92,7 +95,7 @@ export default class EffectDetails extends DIElement{
   }
 
   _addStats(){
-    const stats = new Stats(this._obj.stats)
+    const stats = new Stats(this._obj.theoreticalStats ?? this._obj.stats)
     if(!stats.isEmpty){
       this.appendChild(
         new StatsList().setOptions({
@@ -123,6 +126,13 @@ export default class EffectDetails extends DIElement{
         this.appendChild(wrapText(mdi.description))
       }
     })
+  }
+
+  _addDescription(){
+    const edi = effectDisplayInfo(this._obj)
+    if(edi.description){
+      this.appendChild(wrapText(edi.description))
+    }
   }
 }
 

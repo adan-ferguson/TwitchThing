@@ -16,7 +16,7 @@ export default class EffectsList extends HTMLElement{
 
     const effectRows = {}
     this.querySelectorAll('di-effect-row').forEach(row => {
-      effectRows[row.getAttribute('effect-key')] = row
+      effectRows[row.getAttribute('effect-id')] = row
     })
     const expiredEffectRows = { ...effectRows }
 

@@ -7,7 +7,7 @@ export default function(def){
     effect.name = def.base.name
   }
   return {
-    affects: 'self',
+    target: 'self',
     effect,
     ...def,
     type: 'statusEffect'

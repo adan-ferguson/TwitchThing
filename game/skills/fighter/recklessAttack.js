@@ -14,7 +14,7 @@ export default function(level){
           }
         },{
           applyStatusEffect: {
-            affects: 'self',
+            target: 'self',
             statusEffect: {
               name: 'wideOpen',
               turns,

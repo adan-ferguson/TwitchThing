@@ -1,6 +1,6 @@
 import { getMatchingEffectInstances } from '../../../../game/subjectFns.js'
 
-export default function(combat, actor, abilityInstance = null, actionDef = {}){
+export default function(combat, actor, subject, abilityInstance = null, actionDef = {}){
   getMatchingEffectInstances(abilityInstance.parentEffect, actionDef.subject)
     .forEach(ei => {
       return ei.getAbilities(actionDef.trigger, 'action').forEach(ability => {

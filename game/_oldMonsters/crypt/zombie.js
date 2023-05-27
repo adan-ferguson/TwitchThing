@@ -17,7 +17,7 @@ export default {
           actions: [
             statusEffect({
               base: diseasedStatusEffect,
-              affects: 'enemy'
+              target: 'enemy'
             })
           ]
         }

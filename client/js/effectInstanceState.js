@@ -20,6 +20,9 @@ function type(ai){
   if(!ai){
     return 'none'
   }else if(ai.trigger.active){
+    if(ai.fighterInstance.hasMod('silenced')){
+      return 'none'
+    }
     return 'active'
   }else{
     return 'nonactive'
@@ -40,7 +43,10 @@ function state(ai){
 }
 
 function uses(ai){
-  return ai?.usesRemaining ?? 0
+  if(!ai){
+    return 0
+  }
+  return ai.uses > 1 ? ai?.usesRemaining : 0
 }
 
 function barValue(ai){
@@ -74,6 +80,9 @@ function izExtreme(ei){
     if(ame.subjectKey === 'self'){
       return true
     }
+  }
+  if(ei.meetsConditions && ei.conditions?.extreme){
+    return true
   }
   return false
 }

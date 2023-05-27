@@ -1,6 +1,6 @@
 export default function(def){
   return {
-    affects: 'enemy',
+    target: 'enemy',
     damageType: 'phys',
     scaling: {},
     range: null,

@@ -6,24 +6,45 @@ import { processAbilityEvents } from '../abilities.js'
 import { chooseOne } from '../../../game/rando.js'
 
 export function performAction(combat, actor, ability, actionDef){
-  const expandedActionDef = expandActionDef(actionDef)
-  const key = Object.keys(expandedActionDef)[0]
+  const key = Object.keys(actionDef)[0]
+  const expandedActionDef = expandActionDef(actionDef)[key]
   if(key === 'random'){
-    const randomDef = chooseOne(expandedActionDef.random.options)
+    const randomDef = chooseOne(expandedActionDef.options)
     return performAction(combat, actor, ability, randomDef)
   }
-  const results = arrayize(Actions[key].def(combat, actor, ability, expandedActionDef[key]))
-  results.forEach(r => {
-    if(!r.subject){
-      throw 'Action result missing subject.'
-    }
-  })
   return {
     actor: actor.uniqueID,
     effect: ability?.parentEffect.uniqueID,
     ability: ability?.index,
-    actionDef,
-    results,
+    actionDef: { [key]: expandedActionDef },
+    results: getResults()
+  }
+
+  function getResults(){
+    const target = getTarget()
+    const results = arrayize(performIt(target))
+    return arrayize(results).map(r => {
+      return {
+        ...r,
+        subject: target.uniqueID
+      }
+    })
+  }
+
+  function performIt(target){
+    if(target !== actor){
+      const targetResult = processAbilityEvents(combat, 'targeted', target, ability)
+      if(targetResult.cancelled){
+        return {
+          cancelled: targetResult.cancelled
+        }
+      }
+    }
+    return Actions[key].def(combat, actor, target, ability, expandedActionDef)
+  }
+
+  function getTarget(){
+    return (!expandedActionDef.targets || expandedActionDef.targets === 'self') ? actor : combat.getEnemyOf(actor)
   }
 }
 

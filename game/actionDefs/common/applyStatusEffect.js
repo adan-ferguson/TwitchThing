@@ -1,4 +1,4 @@
 export default {
-  affects: 'self',
+  target: 'self',
   statusEffect: null
 }

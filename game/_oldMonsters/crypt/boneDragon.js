@@ -21,7 +21,7 @@ export default {
           description: 'Fears the enemy, stopping them from basic attacking for 15 seconds.',
           actions: [
             statusEffectAction({
-              affects: 'enemy',
+              target: 'enemy',
               effect: {
                 duration: 15000,
                 description: 'Can\'t basic attack',

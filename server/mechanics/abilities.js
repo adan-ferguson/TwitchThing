@@ -10,7 +10,7 @@ export function processAbilityEvents(triggerHandler, eventNames, owner, sourceAb
     const abilities = getFighterInstanceAbilities(owner, eventName, sourceAbility, data)
     for(let ability of abilities){
       if(ability.tryUse()){
-        data = performReplacement(ability.replacements, data)
+        data = performReplacement(ability, data)
         if(ability.actions){
           pendingTriggers.push({ ability, data })
         }
@@ -23,8 +23,16 @@ export function processAbilityEvents(triggerHandler, eventNames, owner, sourceAb
   return data
 }
 
-function performReplacement(replacementAbility, actionData){
-  return { ...actionData, ...(replacementAbility.dataMerge ?? {}) }
+function performReplacement(replacerAbility, actionData){
+  const replacements = replacerAbility.replacements
+  const replacedData = { ...actionData, ...(replacements.dataMerge ?? {}) }
+  if(replacements.cancel){
+    replacedData.cancelled = {
+      cancelledBy: replacerAbility.parentEffect.uniqueID,
+      reason: replacements.cancel
+    }
+  }
+  return replacedData
 }
 
 export function getFighterInstanceAbilities(fighterInstance, type, sourceAbility, data){

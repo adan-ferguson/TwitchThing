@@ -1,27 +1,24 @@
 export default function(){
   return {
     baseStats: {
-      physPower: '+30%',
-      speed: -10
+      hpMax: '+10%',
+      physPower: '-25%'
     },
     items: [
       {
-        name: 'Web Shot',
+        name: 'Frenzy',
         effect: {
           abilities: [{
-            trigger: { active: true },
-            cooldown: 9000,
+            trigger: { attackHit: true },
             actions: [{
               applyStatusEffect: {
-                target: 'enemy',
+                target: 'self',
                 statusEffect: {
-                  name: 'webbed',
+                  name: 'frenzy',
+                  polarity: 'buff',
                   stacking: 'stack',
-                  persisting: true,
-                  duration: 10000,
-                  polarity: 'debuff',
                   stats: {
-                    speed: -25
+                    speed: 30
                   }
                 }
               }

@@ -19,7 +19,7 @@ export default {
             }),
             statusEffectAction({
               base: poisonedStatusEffect,
-              affects: 'enemy',
+              target: 'enemy',
               effect: {
                 displayName: 'Burned',
                 params: {

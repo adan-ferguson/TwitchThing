@@ -20,7 +20,7 @@ export default {
         actions: [
           statusEffectAction({
             base: poisonedStatusEffect,
-            affects: 'enemy',
+            target: 'enemy',
             effect: {
               persisting: true,
               duration: 30000,

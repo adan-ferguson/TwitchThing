@@ -118,7 +118,7 @@ export default class FighterInstancePane extends HTMLElement{
     // }
   }
 
-  displayResult(result, sourceEffect){
+  displayResult(result){
     if(result.damageInfo){
       this._queueHpChange(() => this._displayDamageResult(result))
     }else if(result.cancelled){
@@ -266,15 +266,17 @@ export default class FighterInstancePane extends HTMLElement{
     return this.querySelector(`.effect-instance[effect-id="${effectId}"]`)
   }
 
-  _displayCancellation(cancelReason){
-    const targetEl = this.hpBarEl
+  _displayCancellation(cancelled){
+    const reason = cancelled.reason || 'cancelled'
+    const targetEl = this._getEffectEl(cancelled.cancelledBy) ?? this.hpBarEl
     new FlyingTextEffect(
       targetEl,
-      toDisplayName(cancelReason),
+      toDisplayName(reason),
       {
         clearExistingForSource: true
       }
     )
+    flash(targetEl)
   }
 
   _showOnDefeat(){

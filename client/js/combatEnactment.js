@@ -117,7 +117,7 @@ export default class CombatEnactment extends EventEmitter{
       if(result.type === 'blank'){
         return
       }
-      this._getPane(result.subject).displayResult(result, action)
+      this._getPane(result.subject).displayResult(result)
     })
   }
 

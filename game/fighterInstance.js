@@ -128,10 +128,10 @@ export default class FighterInstance{
    * @param state
    */
   set state(state){
-    this._state = {
+    this._state = deepClone({
       ...STATE_DEFAULTS,
       ...state
-    }
+    })
     this.loadoutState = this._state.loadout ?? {}
     this._statusEffectInstances = []
     this._state.statusEffects?.forEach(({ data, state }) => {

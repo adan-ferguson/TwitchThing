@@ -5,6 +5,7 @@ import { takeCombatTurn } from './takeCombatTurn.js'
 import { processAbilityEvents } from '../mechanics/abilities.js'
 import { performAction, useAbility } from '../mechanics/actions/performAction.js'
 import { overtimeDamageBonus } from '../../game/combatMechanics.js'
+import { arrayize } from '../../game/utilFunctions.js'
 
 const MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS = 30
 const MAX_TRIGGER_LOOPS = 30
@@ -132,7 +133,7 @@ class Combat{
   }
 
   addPendingTriggers(pendingTriggers){
-    this._pendingTriggers.push(...pendingTriggers)
+    this._pendingTriggers.push(...arrayize(pendingTriggers))
     if(this._pendingTriggers.length > MAX_TRIGGER_COUNTER){
       throw 'Trigger counter excessively high, probably infinite loop.'
     }

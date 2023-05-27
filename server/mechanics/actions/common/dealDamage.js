@@ -1,4 +1,4 @@
-export default function(combat, attacker, effect = null, actionDef = {}){
+export default function(combat, attacker, target, effect = null, actionDef = {}){
   // TODO: ignoreDef check
   // damageDef = dealDamageAction(damageDef)
   // const subject = damageDef.affects === 'self' ? actor : combat.getEnemyOf(actor)

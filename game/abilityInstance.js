@@ -76,7 +76,7 @@ export default class AbilityInstance{
       return 1
     }
     if(this._state.cooldownElapsedPct === undefined){
-      this._state.cooldownElapsedPct =  1 - (this.initialCooldown) / this.cooldown
+      return 1 - (this.initialCooldown) / this.cooldown
     }
     return this._state.cooldownElapsedPct
   }

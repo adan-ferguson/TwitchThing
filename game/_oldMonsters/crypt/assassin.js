@@ -19,7 +19,7 @@ export default {
           actions: [
             statusEffectAction({
               base: disarmedStatusEffect,
-              affects: 'enemy',
+              target: 'enemy',
               effect: {
                 duration: 10000,
                 params: {

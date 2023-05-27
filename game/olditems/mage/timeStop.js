@@ -9,7 +9,7 @@ export default {
         description: `Stop time for the opponent for ${8 + level * 2}s.`,
         actions: [
           statusEffectAction({
-            affects: 'enemy',
+            target: 'enemy',
             effect: {
               displayName: 'Stopped',
               duration: 8000 + level * 2000,

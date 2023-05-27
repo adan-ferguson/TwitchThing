@@ -20,7 +20,7 @@ export default {
               damageMulti: 1.2
             }),
             statusEffectAction({
-              affects: 'enemy',
+              target: 'enemy',
               effect: {
                 displayName: 'Cursed',
                 stacking: true,

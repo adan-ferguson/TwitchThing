@@ -1,7 +1,7 @@
 export default function(def){
   return {
     scaling: {},
-    affects: 'self',
+    target: 'self',
     ...def,
     type: 'gainHealth'
   }

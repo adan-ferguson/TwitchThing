@@ -34,8 +34,8 @@ function makeBotRow(displayInfo){
   })
 
   let botLeftText = displayInfo.type === 'active' ? 'Active' : ''
-  if(displayInfo.ability.uses){
-    botLeftText += (botLeftText.length ? ' - ' : '')
+  if(displayInfo.ability.uses && !displayInfo.ability.trigger.combatTime){
+    botLeftText += (botLeftText.length ? ', ' : '')
     botLeftText += `${displayInfo.ability.uses} use${displayInfo.ability.uses > 1 ? 's' : ''}`
   }
   row.appendChild(makeEl({ text: botLeftText }))

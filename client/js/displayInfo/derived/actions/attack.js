@@ -1,5 +1,6 @@
 import { statScaling } from '../../../components/common.js'
 import { modDisplayInfo } from '../../modDisplayInfo.js'
+import { roundToFixed } from '../../../../../game/utilFunctions.js'
 
 export function derivedAttackDescription(attack, abilityInstance){
   const damageType = attack.damageType
@@ -9,6 +10,10 @@ export function derivedAttackDescription(attack, abilityInstance){
 
   if(attack.undodgeable){
     chunks.push('This can\'t be dodged.')
+  }
+
+  if(attack.lifesteal){
+    chunks.push(`${roundToFixed(attack.lifesteal * 100, 2)}% lifesteal.`)
   }
 
   abilityInstance?.parentEffect.exclusiveMods.forEach(mod => {

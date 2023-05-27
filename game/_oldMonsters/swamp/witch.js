@@ -11,7 +11,7 @@ const hex = {
 }
 
 const frogged = statusEffectAction({
-  affects: 'enemy',
+  target: 'enemy',
   effect: {
     ...hex,
     displayName: 'Hex: Frog',
@@ -22,7 +22,7 @@ const frogged = statusEffectAction({
 })
 
 const catted = statusEffectAction({
-  affects: 'enemy',
+  target: 'enemy',
   effect: {
     ...hex,
     displayName: 'Hex: Cat',
@@ -35,7 +35,7 @@ const catted = statusEffectAction({
 })
 
 const crowed = statusEffectAction({
-  affects: 'enemy',
+  target: 'enemy',
   effect: {
     ...hex,
     displayName: 'Hex: Crow',
@@ -61,7 +61,7 @@ const crowed = statusEffectAction({
 })
 
 const turtled = statusEffectAction({
-  affects: 'enemy',
+  target: 'enemy',
   effect: {
     ...hex,
     displayName: 'Hex: Turtle',

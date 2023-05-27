@@ -21,7 +21,7 @@ export default {
               damageMulti: 2
             }),
             statusEffectAction({
-              affects: 'enemy',
+              target: 'enemy',
               effect: {
                 stacking: true,
                 displayName: 'Iced',

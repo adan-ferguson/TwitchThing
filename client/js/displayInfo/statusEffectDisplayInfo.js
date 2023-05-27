@@ -11,8 +11,12 @@ export function statusEffectDisplayInfo(effectInstance){
     return null
   }
 
+  const abilityInfo = effectInstanceState(effectInstance)
+
   if(effectInstance.stacks >= 2){
     text += ` x${effectInstance.stacks}`
+  }else if(abilityInfo.abilityUses){
+    text += ` (${abilityInfo.abilityUses})`
   }
 
   const colors = getColors(effectInstance)
@@ -27,8 +31,6 @@ export function statusEffectDisplayInfo(effectInstance){
     barMax = effectInstance.barrier.points
     showValue = true
   }
-
-  const abilityInfo = effectInstanceState(effectInstance)
 
   return {
     text,
@@ -74,9 +76,7 @@ function getColors(effectInstance){
   return STATUSEFFECT_COLORS[effectInstance.polarity]
 }
 
-const DEFS = {
-
-}
+const DEFS = {}
 
 const APPLICATION_DEFS = {
   damageOverTime: (def, abilityInstance) => {

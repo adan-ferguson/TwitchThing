@@ -3,7 +3,7 @@ import { dealDamage } from '../../dealDamage.js'
 import { scaledNumberFromAbilityInstance } from '../../../../game/scaledNumber.js'
 import { ignoresDefenseMatchesDamageType } from '../../../../game/mechanicsFns.js'
 
-export default function(combat, attacker, abilityInstance = null, actionDef = {}){
+export default function(combat, attacker, enemy, abilityInstance = null, actionDef = {}){
 
   const results = []
   for(let i = 0; i < actionDef.hits; i++){
@@ -13,7 +13,6 @@ export default function(combat, attacker, abilityInstance = null, actionDef = {}
 
   function hit(){
     
-    const enemy = combat.getEnemyOf(attacker)
     const ret = { subject: enemy.uniqueID }
 
     actionDef = processAbilityEvents(combat, ['attack'], attacker, abilityInstance, actionDef)
@@ -22,7 +21,9 @@ export default function(combat, attacker, abilityInstance = null, actionDef = {}
     if(!actionDef.undodgeable && (actionDef.forceDodge || dodgeAttack(enemy))){
       return {
         ...ret,
-        cancelled: 'dodge'
+        cancelled: {
+          reason: 'dodged'
+        }
       }
     }
 
@@ -42,7 +43,8 @@ export default function(combat, attacker, abilityInstance = null, actionDef = {}
     let damageInfo = {
       damageType: actionDef.damageType,
       damage: damage, // * attacker.stats.get('damageDealt').value,
-      range: actionDef.range
+      range: actionDef.range,
+      lifesteal: actionDef.lifesteal
     }
 
     const mods = (abilityInstance?.parentEffect ?? attacker).modsOfType('ignoreDef')

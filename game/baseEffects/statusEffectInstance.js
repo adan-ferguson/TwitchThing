@@ -78,6 +78,9 @@ export default class StatusEffectInstance extends EffectInstance{
     if(this.turns && this.turnsTaken >= this.turns){
       return true
     }
+    if(this.abilities[0] && this.abilities[0].uses && !this.abilities[0].usesRemaining){
+      return true
+    }
     return false
   }
 

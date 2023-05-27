@@ -27,6 +27,11 @@ const DEFS = {
     return {
       description: 'Action bar does not fill.'
     }
+  },
+  silenced: () => {
+    return {
+      description: 'Silenced'
+    }
   }
 }
 export function modDisplayInfo(mod){

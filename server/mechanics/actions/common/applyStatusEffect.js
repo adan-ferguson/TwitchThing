@@ -3,8 +3,7 @@ import { scaledNumberFromAbilityInstance } from '../../../../game/scaledNumber.j
 import { processAbilityEvents } from '../../abilities.js'
 import { explodeEffect } from '../../../../game/baseEffects/statusEffectInstance.js'
 
-export default function(combat, actor, abilityInstance, actionDef = {}){
-  const subject = actionDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
+export default function(combat, actor, subject, abilityInstance, actionDef = {}){
   const statusEffect = convertStatusEffectParams(actionDef.statusEffect, abilityInstance)
   const exploded = explodeEffect(statusEffect)
   let ret = {

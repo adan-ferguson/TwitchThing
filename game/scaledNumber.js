@@ -2,22 +2,24 @@ import AbilityInstance from './abilityInstance.js'
 
 const VALID_KEYS = ['hpMax', 'hpMissingPct', 'hp', 'magicPower', 'physPower']
 
-export function scaledNumberFromFighterInstance(fighterInstance, scalingOptions){
-  return scaledNumber(scalingOptions, {
+const fighterFns = fighterInstance => {
+  return {
     hpMax: () => fighterInstance.hpMax,
     hpMissing:  () => fighterInstance.hpMax - fighterInstance.hp,
     hp: () => fighterInstance.hp,
     magicPower: () => fighterInstance.magicPower,
     physPower: () => fighterInstance.physPower,
-  })
+  }
+}
+
+export function scaledNumberFromFighterInstance(fighterInstance, scalingOptions){
+  return scaledNumber(scalingOptions, fighterFns)
 }
 
 export function scaledNumberFromAbilityInstance(abilityInstance, scalingOptions){
   const fighterInstance = abilityInstance.fighterInstance
   return scaledNumber(scalingOptions, {
-    hpMax: () => fighterInstance.hpMax,
-    hpMissing:  () => fighterInstance.hpMax - fighterInstance.hp,
-    hp: () => fighterInstance.hp,
+    ...fighterFns(fighterInstance),
     magicPower: () => abilityInstance.totalStats.get('magicPower').value,
     physPower: () => abilityInstance.totalStats.get('physPower').value,
   })

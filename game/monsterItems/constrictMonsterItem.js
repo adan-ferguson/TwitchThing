@@ -15,7 +15,7 @@ export default function(def){
             const duration = 5000
             owner.nextTurnOffset = -duration
             return statusEffectAction({
-              affects: 'enemy',
+              target: 'enemy',
               effect: {
                 duration,
                 displayName: 'Constricted',

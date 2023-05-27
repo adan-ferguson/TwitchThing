@@ -6,6 +6,7 @@ export const MODS_SCHEMA = Joi.array().items(
     ignoreDef: Joi.string().valid('phys', 'magic', 'all'),
     bossFightStatMultiplier: Joi.number(),
     autoCritAgainst: Joi.boolean(),
-    freezeActionBar: Joi.boolean()
+    freezeActionBar: Joi.boolean(),
+    silenced: Joi.boolean().truthy(),
   })
 )

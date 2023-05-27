@@ -2,7 +2,7 @@ import { statusEffectApplicationDescription } from '../../statusEffectDisplayInf
 
 export function derivedApplyStatusEffectDescription(actionDef, abilityInstance){
   const chunks = []
-  if(actionDef.affects !== 'self'){
+  if(actionDef.targets !== 'self'){
     chunks.push('they')
   }
   chunks.push(...statusEffectApplicationDescription(actionDef.statusEffect, abilityInstance))

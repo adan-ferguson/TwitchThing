@@ -37,12 +37,13 @@ const TRIGGERS_SCHEMA = Joi.object({
   rest: Joi.bool().truthy(),
   gainingDebuff: Joi.bool().truthy(),
   useAbility: Joi.bool().truthy(),
-  hitByAttack: Joi.bool().truthy()
+  hitByAttack: Joi.bool().truthy(),
+  targeted: Joi.bool().truthy()
 })
 
 const as = Joi.object({
   applyStatusEffect: Joi.object({
-    affects: Joi.string().valid('self', 'enemy', 'target'),
+    target: Joi.string().valid('self', 'enemy', 'target'),
     statusEffect: Joi.custom(val => {
       return Joi.attempt(val, STATUS_EFFECT_SCHEMA)
     }).required()
@@ -50,6 +51,7 @@ const as = Joi.object({
   attack: Joi.object({
     damageType: DAMAGE_TYPE_SCHEMA,
     scaling: SCALED_NUMBER_SCHEMA,
+    lifesteal: Joi.number().positive(),
     range: Joi.array().length(2).items(Joi.number()),
     hits: Joi.number().integer(),
     undodgeable: Joi.bool()
@@ -79,7 +81,8 @@ const ACTION_SCHEMA = as.append({
 })
 
 const REPLACEMENT_SCHEMA = Joi.object({
-  dataMerge: Joi.object()
+  dataMerge: Joi.object(),
+  cancel: Joi.string()
 })
 
 const CONDITIONS_SCHEMA = Joi.object({
@@ -106,6 +109,7 @@ const ABILITY_SCHEMA = Joi.object({
 })
 
 const es = Joi.object({
+  effectId: Joi.string(),
   abilities: Joi.array().items(ABILITY_SCHEMA),
   stats: STATS_SCHEMA,
   conditions: CONDITIONS_SCHEMA,

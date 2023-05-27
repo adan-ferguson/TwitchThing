@@ -5,7 +5,7 @@ export function dealDamage(combat, actor, target, damageInfo){
 
   const damageResult = takeDamage(combat, target, damageInfo)
 
-  let lifesteal = actor.stats.get('lifesteal').value
+  let lifesteal = actor.stats.get('lifesteal').value + damageInfo.lifesteal
   if(damageInfo.crit){
     lifesteal += actor.stats.get('critLifesteal').value
   }
@@ -15,8 +15,15 @@ export function dealDamage(combat, actor, target, damageInfo){
   )
 
   if(hpToGain){
-    const healthGainResult = gainHealth(combat, actor, hpToGain)
-    damageResult.lifesteal = healthGainResult.amount
+    combat.addPendingTriggers({
+      performAction: true,
+      actor,
+      def: {
+        gainHealth: {
+          scaling: { flat: hpToGain }
+        }
+      }
+    })
   }
 
   return damageResult

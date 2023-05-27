@@ -25,7 +25,7 @@ export default {
               damageType: 'magic'
             }),
             statusEffectAction({
-              affects: 'enemy',
+              target: 'enemy',
               effect: {
                 displayName: 'Acidified',
                 persisting: true,

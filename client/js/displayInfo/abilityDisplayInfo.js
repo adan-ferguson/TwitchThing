@@ -2,7 +2,6 @@ import { expandActionDef } from '../../../game/actionDefs/expandActionDef.js'
 import AbilityInstance from '../../../game/abilityInstance.js'
 import { derivedAttackDescription } from './derived/actions/attack.js'
 import { derivedApplyStatusEffectDescription } from './derived/actions/applyStatusEffect.js'
-import { roundToFixed } from '../../../game/utilFunctions.js'
 import { statusEffectApplicationDescription } from './statusEffectDisplayInfo.js'
 import { aboveIcon, attachedSkill, belowIcon, statScaling } from '../components/common.js'
 import { takeDamageActionCalcDamage } from '../../../game/mechanicsFns.js'
@@ -36,6 +35,26 @@ const abilityDefinitions = {
     return {
       description: `Taking ${damage} ${action.damageType} damage.`
     }
+  },
+  mushroomSpores: ability => {
+    return {
+      description: 'When attacked, release spores which give the attacker a random debuff.'
+    }
+  },
+  bearForm: () => {
+    return {
+      description: 'Turn into a bear!'
+    }
+  },
+  sproutSaplings: () => {
+    return {
+      description: 'At the start of combat,<br/>sprout 3 Saplings.'
+    }
+  },
+  saplingBlock: () => {
+    return {
+      hide: true
+    }
   }
 }
 
@@ -55,11 +74,14 @@ export function getAbilityDisplayInfoForObj(obj){
   if(!obj){
     return []
   }
-  return obj.abilities.map(getAbilityDisplayInfo)
+  return obj.abilities.map(getAbilityDisplayInfo).filter(a => a)
 }
 
 export function getAbilityDisplayInfo(ability){
   const definition = abilityDefinitions[ability.abilityId]?.(ability) ?? {}
+  if(definition.hide){
+    return null
+  }
   return {
     ability,
     descriptionHTML: definition.description ?? abilityDescription(ability),

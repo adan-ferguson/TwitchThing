@@ -20,7 +20,7 @@ const lightningStorm = {
             damageMulti: 0.7
           }),
           statusEffectAction({
-            affects: 'enemy',
+            target: 'enemy',
             base: stunnedStatusEffect,
             effect: {
               duration: 1000

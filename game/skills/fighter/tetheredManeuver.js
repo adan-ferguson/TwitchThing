@@ -16,7 +16,7 @@ export default function(level){
       }]
     },
     vars: {
-      affects: 'neighbouring'
+      target: 'neighbouring'
     },
     maxLevel: 1
   }

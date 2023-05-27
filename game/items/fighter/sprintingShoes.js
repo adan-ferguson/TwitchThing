@@ -9,7 +9,7 @@ export default function(level){
         },
         actions: [{
           applyStatusEffect: {
-            affects: 'self',
+            target: 'self',
             statusEffect: {
               name: 'sprinting',
               polarity: 'buff',

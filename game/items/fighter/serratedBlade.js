@@ -8,7 +8,7 @@ export default function(level){
         },
         actions: [{
           applyStatusEffect: {
-            affects: 'target',
+            target: 'target',
             statusEffect: {
               base: {
                 damageOverTime: {
@@ -28,7 +28,7 @@ export default function(level){
     },
     orbs: 2 + level * 3,
     vars: {
-      affects: 'attached'
+      target: 'attached'
     }
   }
 }

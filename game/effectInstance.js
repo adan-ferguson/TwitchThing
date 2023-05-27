@@ -67,6 +67,14 @@ export default class EffectInstance{
     if(this.disabled){
       return new Stats()
     }
+    return this.theoreticalStats
+  }
+
+  /**
+   * Stats that this would provide even if it weren't disabled
+   * @returns {Stats}
+   */
+  get theoreticalStats(){
     return new Stats(fillArray(() => this.effectData.stats, this.statMultiplier))
   }
 

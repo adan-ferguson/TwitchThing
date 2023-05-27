@@ -1,5 +1,3 @@
-import attackAction from '../actions/actionDefs/common/attack.js'
-import gainHealthAction from '../actions/actionDefs/common/gainHealthAction.js'
 
 export default function(def){
   return {
@@ -7,7 +5,6 @@ export default function(def){
     abilities: {
       active: {
         initialCooldown: 8000,
-        description: 'Attack for [physScaling1.5] damage. Heal for 50% of the damage dealt.',
         actions: [
           attackAction({
             damagePct: 1.5
