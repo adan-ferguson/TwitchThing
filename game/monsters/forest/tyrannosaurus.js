@@ -9,12 +9,16 @@ export default function(){
       {
         name: 'Enrage',
         effect: {
-          conditions: {
-            hpPctBelow: 0.5
-          },
-          stats: {
-            speed: 100,
-            physPower: '20%'
+          metaEffect: {
+            self: {
+              conditions: {
+                hpPctBelow: 0.5
+              },
+              stats: {
+                speed: 100,
+                physPower: '20%'
+              }
+            }
           }
         }
       },

@@ -19,7 +19,7 @@ export default function(){
                     damageOverTime: {
                       damage: {
                         scaledNumber: {
-                          physPower: 0.4
+                          physPower: 0.3
                         }
                       }
                     }

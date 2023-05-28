@@ -17,7 +17,7 @@ export default {
               damageScaling: 'magic'
             }),
             statusEffectAction({
-              target: 'enemy',
+              targets: 'enemy',
               effect: {
                 stacking: true,
                 displayName: 'Iced',

@@ -114,8 +114,6 @@ export default class DungeonPage extends Page{
     }
     this.dungeonRun = dungeonRun
 
-    console.log(dungeonRun.events)
-
     if(!this.isReplay){
       joinSocketRoom(this.dungeonRun._id)
       getSocket().on('dungeon run update', this._socketUpdate)

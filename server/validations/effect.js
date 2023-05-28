@@ -112,7 +112,6 @@ const es = Joi.object({
   effectId: Joi.string(),
   abilities: Joi.array().items(ABILITY_SCHEMA),
   stats: STATS_SCHEMA,
-  conditions: CONDITIONS_SCHEMA,
   mods: MODS_SCHEMA,
   exclusiveStats: STATS_SCHEMA,
   exclusiveMods: MODS_SCHEMA,
@@ -123,7 +122,7 @@ const ms = {}
 SUBJECT_KEYS.forEach(sk => {
   ms[sk] = es.append({
     metaEffectId: Joi.string(),
-    metaEffectConditions: CONDITIONS_SCHEMA
+    conditions: CONDITIONS_SCHEMA
   })
 })
 

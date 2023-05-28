@@ -183,7 +183,7 @@ export async function purgeOldRuns(adventurerID){
       startTime: 1
     }
   })
-  purgeReplays(runs.slice(5))
+  purgeReplays(runs.slice(-5))
 }
 
 async function purgeReplays(drDocs){

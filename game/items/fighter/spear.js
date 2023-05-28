@@ -16,7 +16,7 @@ export default function(level){
     },
     orbs: 1 + level * 3,
     vars: {
-      target: 'attached',
+      targets: 'attached',
       physPower
     }
   }

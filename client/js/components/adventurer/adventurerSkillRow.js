@@ -9,6 +9,7 @@ import SkillCard from '../skillCard.js'
 import { affectsIcon } from '../common.js'
 import { getAbilityDisplayInfoForObj } from '../../displayInfo/abilityDisplayInfo.js'
 import { ITEM_ROW_COLORS } from '../../colors.js'
+import AdventurerSkill from '../../../../game/skills/adventurerSkill.js'
 
 const HTML = `
 <di-loadout-row-state></di-loadout-row-state>
@@ -98,13 +99,18 @@ export default class AdventurerSkillRow extends DIElement{
 
   get tooltip(){
 
-    if(!this._options.skill || !this._options.showTooltip){
+    if(!this._options.skill || !this._options.showTooltip || this._options.status === AdventurerSkillRowStatus.HIDDEN){
       return null
+    }
+
+    let obj = this.adventurerSkillInstance ?? this.adventurerSkill
+    if(obj instanceof AdventurerSkill && obj.level === 0){
+      obj = new AdventurerSkill(obj.id, obj.level + 1)
     }
 
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
-    tooltip.appendChild(new EffectDetails().setObject(this.adventurerSkillInstance ?? this.adventurerSkill))
+    tooltip.appendChild(new EffectDetails().setObject(obj))
     tooltip.appendChild(wrapContent('Right-click for more info', {
       class: 'right-click subtitle'
     }))

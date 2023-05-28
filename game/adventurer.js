@@ -7,15 +7,15 @@ import OrbsData from './orbsData.js'
 
 const XP_BASE = 6
 const XP_GROWTH = 12
-const XP_GROWTH_PCT = 0.2
+const XP_GROWTH_PCT = 0.25
 
 const HP_BASE = 30
 const HP_GROWTH = 5
-const HP_GROWTH_PCT = 0.06
+const HP_GROWTH_PCT = 0.04
 
 const POWER_BASE = 5
 const POWER_GROWTH = 1
-const POWER_GROWTH_PCT = 0.05
+const POWER_GROWTH_PCT = 0.03
 
 export function advXpToLevel(xp){
   if(xp < XP_BASE){

@@ -1,6 +1,6 @@
 export function effectDisplayInfo(effectObj){
-  const obj = effectObj.effect ?? effectObj
-  return DEFS[obj.effectId ?? obj.name]?.(obj) ?? {}
+  const id = effectObj.effectId ?? effectObj.name
+  return DEFS[id]?.(effectObj) ?? {}
 }
 
 const DEFS = {

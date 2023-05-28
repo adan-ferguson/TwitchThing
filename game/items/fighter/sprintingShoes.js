@@ -7,6 +7,7 @@ export default function(level){
         trigger: {
           combatTime: 1
         },
+        abilityId: 'sprinting',
         actions: [{
           applyStatusEffect: {
             targets: 'self',
@@ -19,10 +20,10 @@ export default function(level){
               }
             }
           }
-        }]
+        }],
+        vars: { speed, duration }
       }]
     },
-    vars: { speed, duration },
     orbs: 3 * level
   }
 }

@@ -25,8 +25,8 @@ const HTML = `
 
 const RARITY_TO_TEXTURE = {
   0: null,
-  1: 'caves',
-  2: 'maze-white'
+  1: 'climpek',
+  2: 'brushed-alum',
 }
 
 export default class AdventurerItemRow extends DIElement{
@@ -52,7 +52,7 @@ export default class AdventurerItemRow extends DIElement{
     if(!this.adventurerItem){
       return ''
     }
-    return `${this.adventurerItem.displayName} ${affectsIcon(this.adventurerItem.vars.affects, true)}`.trim()
+    return `${this.adventurerItem.displayName} ${affectsIcon(this.adventurerItem.vars.targets, true)}`.trim()
   }
 
   get countEl(){

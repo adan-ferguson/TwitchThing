@@ -39,49 +39,19 @@ export default class EffectInstance{
     return this._baseEffectData
   }
 
-  get conditions(){
-    return this.effectData.conditions ?? null
-  }
-
   get disabled(){
-    if(this.fighterInstance.idle){
-      return false
-    }
-    if(!this.meetsConditions){
-      return true
-    }
+    // TODO: check fighter instance
     return false
-  }
-
-  get meetsConditions(){
-    if(!this.conditions){
-      return true
-    }
-    return this.fighterInstance.meetsConditions(this.conditions)
   }
 
   /**
    * @return {Stats}
    */
   get stats(){
-    if(this.disabled){
-      return new Stats()
-    }
-    return this.theoreticalStats
-  }
-
-  /**
-   * Stats that this would provide even if it weren't disabled
-   * @returns {Stats}
-   */
-  get theoreticalStats(){
     return new Stats(fillArray(() => this.effectData.stats, this.statMultiplier))
   }
 
   get exclusiveStats(){
-    if(this.disabled){
-      return new Stats()
-    }
     return new Stats(this.effectData.exclusiveStats)
   }
 
@@ -117,9 +87,6 @@ export default class EffectInstance{
   }
 
   get mods(){
-    if(this.disabled){
-      return []
-    }
     return this.effectData.mods ?? []
   }
 

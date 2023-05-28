@@ -5,7 +5,7 @@ export default function({ damage = 0, damageType = 'phys' } = {}){
     abilities: [{
       abilityId: 'damageOverTime',
       trigger: { instant: true },
-      cooldown: 5000,
+      initialCooldown: 3000,
       actions: [{
         takeDamage: {
           scaling: { flat: damage },

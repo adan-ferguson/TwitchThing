@@ -73,7 +73,7 @@ export default class AdventurerEditPage extends Page{
     if(unspentSkillPoints > 0){
       chunks.push(skillPointEntry(unspentSkillPoints))
     }
-    tab.innerHTML = 'Spend Points' + (chunks.length ? chunks.join(' ') : '')
+    tab.innerHTML = 'Spend Points' + (chunks.length ? ' ' + chunks.join(' ') : '')
   }
 }
 

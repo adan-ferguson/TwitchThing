@@ -132,8 +132,7 @@ export default class ClassDisplay extends DIElement{
       const row = new AdventurerSkillRow().setOptions({
         status: skillStatus(this._adventurer, skill),
         skill: skills[i],
-        clickable: true,
-        showTooltip: false
+        clickable: true
       })
       row.addEventListener('click', () => {
         this._showUnlockModal(skill)
@@ -168,16 +167,15 @@ export default class ClassDisplay extends DIElement{
       buttonHTML = 'Max Level'
     }else{
       const isUpgrade = skill.level > 0
+      const nextSkill = new AdventurerSkill(skill.id, skill.level + 1)
       if(isUpgrade){
         buttonHTML = 'Upgrade'
         content.appendChild(new SkillCard().setSkill(skill))
         content.appendChild(wrapContent('<i class="fa-solid fa-arrow-down"></i>'))
-
-        const nextSkill = new AdventurerSkill(skill.id, skill.level + 1)
-        content.appendChild(new SkillCard().setSkill(nextSkill))
       }else{
         buttonHTML = 'Unlock'
       }
+      content.appendChild(new SkillCard().setSkill(nextSkill))
       buttonHTML += ' ' + skillPointEntry(skill.skillPointsToUpgrade)
     }
     const buttons = [{

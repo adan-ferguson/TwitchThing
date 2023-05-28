@@ -1,7 +1,12 @@
 import { isAdventurerItem, wrapStat } from '../components/common.js'
 import { modDisplayInfo } from './modDisplayInfo.js'
-import { wrapContent } from '../../../game/utilFunctions.js'
+import { arrayize, makeEl, wrapContent } from '../../../game/utilFunctions.js'
 import { subjectDescription } from '../subjectClientFns.js'
+import { StatsDisplayStyle } from './statsDisplayInfo.js'
+import StatsList from '../components/stats/statsList.js'
+import Stats from '../../../game/stats/stats.js'
+import { conditionsDisplayInfo } from './conditionsDisplayInfo.js'
+import EffectDetails from '../components/effectDetails.js'
 
 const DEFS = {
   swordOfFablesMultiplier: (metaEffect, obj) => {
@@ -16,39 +21,25 @@ export function metaEffectDisplayInfo(subjectKey, metaEffect, obj){
   if(DEFS[metaEffect.metaEffectId]){
     return wrapContent(DEFS[metaEffect.metaEffectId](metaEffect, obj))
   }
-  const html = derived(subjectKey, metaEffect, obj)
-  if(!html){
-    return null
-  }
-  return wrapContent(html)
+  return derived(subjectKey, metaEffect, obj)
 }
 
 
 function derived(subjectKey, metaEffect, obj){
 
+  debugger
   const isItem = isAdventurerItem(obj)
-  const chunks = []
-  chunks.push(subjectDescription(subjectKey, isItem))
 
-  const subchunks = []
-  if(metaEffect.exclusiveStats){
-    let statHtml = 'benefits from '
-    for(let statKey in metaEffect.exclusiveStats){
-      statHtml += wrapStat(statKey, metaEffect.exclusiveStats[statKey])
-    }
-    subchunks.push(statHtml)
-  }
-  if(metaEffect.exclusiveMods){
-    metaEffect.exclusiveMods.forEach(mod => {
-      const mdi = modDisplayInfo(mod)
-      if(mdi.metaDescription){
-        subchunks.push(mdi.metaDescription)
-      }
-    })
-  }
-  if(subchunks.length){
-    chunks.push(subchunks.join(' and '))
+  const nodes = []
+  if(metaEffect.conditions){
+    nodes.push(...arrayize(conditionsDisplayInfo(metaEffect.conditions)))
   }
 
-  return chunks.length ? wrapContent(chunks.join(' ')) : null
+  nodes.push(new EffectDetails().setObject(metaEffect))
+
+  if(!nodes.length){
+    return
+  }
+
+  return makeEl({ nodes })
 }

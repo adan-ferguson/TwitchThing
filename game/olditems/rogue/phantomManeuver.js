@@ -18,7 +18,7 @@ export default {
               const crit = results[0]?.data?.crit
               if(crit){
                 return statusEffectAction({
-                  target: 'enemy',
+                  targets: 'enemy',
                   base: stunnedStatusEffect,
                   effect: {
                     duration: stun * 1000

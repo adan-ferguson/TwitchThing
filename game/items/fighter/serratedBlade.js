@@ -28,7 +28,7 @@ export default function(level){
     },
     orbs: 2 + level * 3,
     vars: {
-      target: 'attached'
+      targets: 'attached'
     }
   }
 }

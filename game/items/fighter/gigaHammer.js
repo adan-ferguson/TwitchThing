@@ -15,7 +15,7 @@ export default function(level){
       }
     },
     vars: {
-      target: 'neighbouring'
+      targets: 'neighbouring'
     }
   }
 }

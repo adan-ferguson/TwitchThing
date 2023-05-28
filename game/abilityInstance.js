@@ -9,6 +9,10 @@ export default class AbilityInstance{
     this._index = index
   }
 
+  get vars(){
+    return this.abilityDef.vars ?? {}
+  }
+
   get index(){
     return this._index
   }

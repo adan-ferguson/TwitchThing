@@ -38,7 +38,7 @@ export default class MetaEffectCollection{
     }
     toApply.push(...(this.categories.ids[effectInstance.uniqueID] ?? []))
     const filtered = toApply.filter((me => {
-      return effectInstance.fighterInstance.meetsConditions(me.metaEffectConditions)
+      return effectInstance.fighterInstance.meetsConditions(me.conditions)
     }))
     return merge(effectInstance.baseEffectData, filtered)
   }

@@ -94,7 +94,7 @@ const statDefinitionsInfo = {
   },
   startingFood: {
     text: 'Starting Food',
-    description: '3 + 1 per 10 levels'
+    description: '2 + 1 per 10 levels'
   },
   cooldownReduction: {
     text: 'Cooldown Reduction'
@@ -152,7 +152,8 @@ function toText(stat, style){
   if(!stat.value && stat.type === StatType.COMPOSITE){
     return toCompositeText(stat.mods, style)
   }
-  const value = stat.value - (style === StatsDisplayStyle.ADDITIONAL ? (stat.defaultValue ?? 0) : 0)
+  const subtractDefaultValue = style === StatsDisplayStyle.ADDITIONAL && [StatType.FLAT, StatType.COMPOSITE].includes(stat.type)
+  const value = stat.value - (subtractDefaultValue ? (stat.defaultValue ?? 0) : 0)
   if(stat.type === StatType.MULTIPLIER){
     return `${value > 1 ? '+' : ''}${Math.round((value - 1) * 100)}%`
   }else if(stat.type === StatType.PERCENTAGE){

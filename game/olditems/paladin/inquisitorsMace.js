@@ -18,7 +18,7 @@ export default {
           actions: [
             statusEffectAction({
               base: stunnedStatusEffect,
-              target: 'enemy',
+              targets: 'enemy',
               effect: {
                 stacking: 'extend',
                 stackingId: 'macestun',

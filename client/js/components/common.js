@@ -42,11 +42,11 @@ export function coloredIcon(iconName, color = null, cls = null){
 }
 
 export function attachedItem(text = false){
-  return `<i class="fa-solid fa-arrow-left attached-item"></i>${text ? ' <b>Attached Skill</b>' : ''}`
+  return `<i class="fa-solid fa-arrow-left attached-item"></i>${text ? ' <b>attached Sskill</b>' : ''}`
 }
 
 export function attachedSkill(text = false){
-  return `<i class="fa-solid fa-arrow-right attached-skill"></i>${text ? ' <b>Attached Item</b>' : ''}`
+  return `<i class="fa-solid fa-arrow-right attached-skill"></i>${text ? ' <b>attached item</b>' : ''}`
 }
 
 export function neighbouringIcon(){

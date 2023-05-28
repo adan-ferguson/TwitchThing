@@ -16,7 +16,7 @@ export default function(level){
       metaEffect: {
         self: {
           metaEffectId: 'swordOfFablesMultiplier',
-          metaEffectConditions: {
+          conditions: {
             bossFight: true
           },
           statMultiplier: 3,

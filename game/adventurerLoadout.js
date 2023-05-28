@@ -39,12 +39,20 @@ export default class AdventurerLoadout{
   }
 
   get isValid(){
+    const skillIds = {}
     for(let i = 0; i < 8; i++){
       if(this.getSlotInfo(0, i).restrictionsFailed){
         return false
       }
       if(this.getSlotInfo(1, i).restrictionsFailed){
         return false
+      }
+      const skillId = this.skills[i]?.id
+      if(skillId){
+        if(skillIds[skillId]){
+          return false
+        }
+        skillIds[skillId] = true
       }
     }
     return true

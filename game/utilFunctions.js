@@ -101,18 +101,21 @@ export function makeEl(options = {}){
     text: null,
     content: null,
     class: null,
+    nodes: null,
     ...options
   }
 
   const el = document.createElement(options.elementType)
   if (options.content){
-    if (options.content instanceof HTMLElement){
+    if(options.content instanceof HTMLElement){
       el.appendChild(options.content)
-    } else {
+    }else{
       el.innerHTML = options.content
     }
-  } else if (options.text){
+  }else if(options.text){
     el.textContent = options.text
+  }else if(options.nodes){
+    el.append(...options.nodes)
   }
 
   if (options.class){
@@ -223,4 +226,8 @@ export function pushOrCreate(obj, key, toPush){
     obj[key] = []
   }
   obj[key].push(...arrayize(toPush))
+}
+
+export function msToS(ms){
+  return roundToFixed(ms / 1000, 2)
 }

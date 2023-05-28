@@ -1,11 +1,11 @@
 import { expandActionDef } from '../../../game/actionDefs/expandActionDef.js'
 import AbilityInstance from '../../../game/abilityInstance.js'
 import { derivedAttackDescription } from './derived/actions/attack.js'
-import { derivedApplyStatusEffectDescription } from './derived/actions/applyStatusEffect.js'
 import { statusEffectApplicationDescription } from './statusEffectDisplayInfo.js'
-import { aboveIcon, attachedSkill, belowIcon, statScaling } from '../components/common.js'
+import { aboveIcon, attachedSkill, belowIcon, statScaling, wrapStat } from '../components/common.js'
 import { takeDamageActionCalcDamage } from '../../../game/mechanicsFns.js'
 import { derivedGainHealthDescription } from './derived/actions/gainHealth.js'
+import { msToS } from '../../../game/utilFunctions.js'
 
 const abilityDefinitions = {
   flutteringDodge: () => {
@@ -26,7 +26,7 @@ const abilityDefinitions = {
   shrugOff: ability => {
     const hpString = statScaling(ability.actions[0].gainHealth.scaling, ability)
     return {
-      description: `The next time you get debuffed, shrug it off and recover ${hpString} health.`
+      description: `The next time you get would get debuffed, prevent it and recover ${hpString} health.`
     }
   },
   damageOverTime: ability => {
@@ -55,14 +55,19 @@ const abilityDefinitions = {
     return {
       hide: true
     }
+  },
+  sprinting: ability => {
+    return {
+      description: `Get ${wrapStat('speed', ability.vars.speed)} for the first ${msToS(ability.vars.duration)}s of combat.`
+    }
   }
 }
 
 const phantomEffectDefinitions = {
   attackAppliesStatusEffect: (def, abilityInstance) => {
-    const chunks = ['On hit, they']
+    const chunks = ['On hit, the target gets']
     chunks.push(...statusEffectApplicationDescription(def, abilityInstance))
-    return chunks
+    return chunks.join(' ') + '.'
   }
 }
 
@@ -71,7 +76,7 @@ const phantomEffectDefinitions = {
  * @returns {*[]|*}
  */
 export function getAbilityDisplayInfoForObj(obj){
-  if(!obj){
+  if(!obj?.abilities){
     return []
   }
   return obj.abilities.map(getAbilityDisplayInfo).filter(a => a)
@@ -105,7 +110,7 @@ function abilityDescription(ability){
       chunks.push(...derivedAttackDescription(actionDef.attack, abilityInstance))
     }
     if(actionDef.applyStatusEffect){
-      chunks.push(...derivedApplyStatusEffectDescription(actionDef.applyStatusEffect, abilityInstance))
+      chunks.push(...statusEffectApplicationDescription(actionDef.applyStatusEffect, abilityInstance))
     }
     if(actionDef.gainHealth){
       chunks.push(...derivedGainHealthDescription(actionDef.gainHealth, abilityInstance))
@@ -113,7 +118,9 @@ function abilityDescription(ability){
   })
   if(ability.phantomEffect){
     const type = Object.keys(ability.phantomEffect.base)[0]
-    chunks.push(...phantomEffectDefinitions[type](ability.phantomEffect.base[type], abilityInstance))
+    if(phantomEffectDefinitions[type]){
+      chunks.push(phantomEffectDefinitions[type](ability.phantomEffect.base[type], abilityInstance))
+    }
   }
   if(ability.conditions){
     chunks.push(...conditionsDescription(ability.conditions))
@@ -149,7 +156,8 @@ function triggerPrefix(trigger){
     return [...combatTimePrefix(trigger.combatTime)]
   }
   if(trigger.attackHit){
-    return ['After landing an attack']
+    const type = trigger.attackHit.damageType ? 'a ' + trigger.attackHit.damageType : 'an'
+    return ['After landing', type, 'attack']
   }
   if(trigger.rest){
     return['After resting']
@@ -162,7 +170,7 @@ function conditions(conditions){
     return []
   }
   if(conditions.source === 'attached'){
-    return [`with ${attachedSkill(true)}`]
+    return [`with ${attachedSkill()}`]
   }
   return []
 }

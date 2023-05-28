@@ -81,7 +81,6 @@ export default class Timeline extends EventEmitter{
       if(i === -1){
         debugger
       }
-      console.log('updated')
       this._entries[i] = entry
     }
     this.emit('entry_added', entry)
