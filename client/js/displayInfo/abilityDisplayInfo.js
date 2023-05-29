@@ -6,6 +6,7 @@ import { aboveIcon, attachedSkill, belowIcon, statScaling, wrapStat } from '../c
 import { takeDamageActionCalcDamage } from '../../../game/mechanicsFns.js'
 import { derivedGainHealthDescription } from './derived/actions/gainHealth.js'
 import { msToS } from '../../../game/utilFunctions.js'
+import _ from 'lodash'
 
 const abilityDefinitions = {
   flutteringDodge: () => {
@@ -26,7 +27,7 @@ const abilityDefinitions = {
   shrugOff: ability => {
     const hpString = statScaling(ability.actions[0].gainHealth.scaling, ability)
     return {
-      description: `The next time you get would get debuffed, prevent it and recover ${hpString} health.`
+      description: `The next time you get would get debuffed, ignore it and recover ${hpString} health.`
     }
   },
   damageOverTime: ability => {
@@ -65,9 +66,12 @@ const abilityDefinitions = {
 
 const phantomEffectDefinitions = {
   attackAppliesStatusEffect: (def, abilityInstance) => {
-    const chunks = ['On hit, the target gets']
-    chunks.push(...statusEffectApplicationDescription(def, abilityInstance))
-    return chunks.join(' ') + '.'
+    const chunks = ['On hit,']
+    chunks.push(...statusEffectApplicationDescription({
+      statusEffect: def,
+      targets: 'target'
+    }, abilityInstance))
+    return chunks.join(' ')
   }
 }
 
@@ -101,20 +105,30 @@ function abilityDescription(ability){
   const abilityInstance = ability instanceof AbilityInstance ? ability : null
   chunks.push(...triggerPrefix(ability.trigger))
   chunks.push(...conditions(ability.conditions))
+
+  let capitalize = true
   if(chunks.length){
+    capitalize = false
     chunks[chunks.length - 1] += ','
   }
   ability.actions?.forEach(actionDef => {
     actionDef = expandActionDef(actionDef)
+    let toAdd
     if(actionDef.attack){
-      chunks.push(...derivedAttackDescription(actionDef.attack, abilityInstance))
+      toAdd = derivedAttackDescription(actionDef.attack, abilityInstance)
+    }else if(actionDef.applyStatusEffect){
+      toAdd = statusEffectApplicationDescription(actionDef.applyStatusEffect, abilityInstance)
+    }else if(actionDef.gainHealth){
+      toAdd = derivedGainHealthDescription(actionDef.gainHealth, abilityInstance)
     }
-    if(actionDef.applyStatusEffect){
-      chunks.push(...statusEffectApplicationDescription(actionDef.applyStatusEffect, abilityInstance))
+    if(!toAdd.length){
+      return
     }
-    if(actionDef.gainHealth){
-      chunks.push(...derivedGainHealthDescription(actionDef.gainHealth, abilityInstance))
+    if(capitalize){
+      toAdd[0] = _.capitalize(toAdd[0])
     }
+    chunks.push(...toAdd)
+    capitalize = true
   })
   if(ability.phantomEffect){
     const type = Object.keys(ability.phantomEffect.base)[0]
@@ -128,7 +142,7 @@ function abilityDescription(ability){
   if(ability.resetCooldownAfterCombat){
     chunks.push('Resets to initial cooldown after combat.')
   }
-  return chunks.join(' ')
+  return chunks.join(' ') //_.capitalize()
 }
 
 function combatTimePrefix(val){

@@ -45,7 +45,7 @@ export default class AdventurerSkillRow extends DIElement{
     this.innerHTML = HTML
     this._update()
     this.addEventListener('contextmenu', e => {
-      if(this.adventurerSkill && this._options.showTooltip){
+      if(this.adventurerSkill && this._options.showTooltip && !this._options.noRightClick){
         e.preventDefault()
         const details = new SkillCard().setSkill(this.adventurerSkill)
         new SimpleModal(details).show()
@@ -94,6 +94,7 @@ export default class AdventurerSkillRow extends DIElement{
       showState: false,
       showTooltip: true,
       shouldBeEmpty: false,
+      noRightClick: false
     }
   }
 
@@ -111,9 +112,12 @@ export default class AdventurerSkillRow extends DIElement{
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
     tooltip.appendChild(new EffectDetails().setObject(obj))
-    tooltip.appendChild(wrapContent('Right-click for more info', {
-      class: 'right-click subtitle'
-    }))
+
+    if(!this._options.noRightClick){
+      tooltip.appendChild(wrapContent('Right-click for more info', {
+        class: 'right-click subtitle'
+      }))
+    }
 
     return tooltip
   }
@@ -165,7 +169,7 @@ export default class AdventurerSkillRow extends DIElement{
     const ado = getAbilityDisplayInfoForObj(this.adventurerSkill)
     if(ado[0]?.type === 'active'){
       this.style.borderColor = ITEM_ROW_COLORS.active
-      this.style.borderWidth = '2rem'
+      this.style.borderWidth = '3rem'
     }else{
       this.style.borderColor = null
       this.style.borderWidth = null

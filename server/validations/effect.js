@@ -1,4 +1,4 @@
-import { SUBJECT_KEYS } from './subjectKeys.js'
+import { SUBJECT_KEYS, SUBJECT_KEYS_SCHEMA } from './subjectKeys.js'
 import Joi from 'joi'
 import { STATS_SCHEMA } from './stats.js'
 import { DAMAGE_TYPE_SCHEMA } from './damage.js'
@@ -105,7 +105,8 @@ const ABILITY_SCHEMA = Joi.object({
   trigger: TRIGGERS_SCHEMA.required(),
   phantomEffect: Joi.custom(val => {
     return Joi.attempt(val, PHANTOM_EFFECT_SCHEMA)
-  })
+  }),
+  vars: Joi.object()
 })
 
 const es = Joi.object({
@@ -118,18 +119,15 @@ const es = Joi.object({
   statMultiplier: Joi.number().min(0)
 })
 
-const ms = {}
-SUBJECT_KEYS.forEach(sk => {
-  ms[sk] = es.append({
-    metaEffectId: Joi.string(),
-    conditions: CONDITIONS_SCHEMA
-  })
+export const META_EFFECT_SCHEMA = Joi.object({
+  metaEffectId: Joi.string(),
+  conditions: CONDITIONS_SCHEMA,
+  subject: SUBJECT_KEYS_SCHEMA.required(),
+  effect: es.required()
 })
 
-export const META_EFFECT_SCHEMA = Joi.object(ms)
-
 export const EFFECT_SCHEMA = es.append({
-  metaEffect: META_EFFECT_SCHEMA
+  metaEffects: Joi.array().items(META_EFFECT_SCHEMA)
 })
 
 export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({

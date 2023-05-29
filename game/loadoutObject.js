@@ -39,6 +39,10 @@ export default class LoadoutObject{
     return this.effect
   }
 
+  get metaEffects(){
+    return this.effect.metaEffects ?? []
+  }
+
   get mods(){
     return this.effect.mods ?? []
   }

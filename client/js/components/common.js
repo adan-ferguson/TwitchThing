@@ -42,11 +42,11 @@ export function coloredIcon(iconName, color = null, cls = null){
 }
 
 export function attachedItem(text = false){
-  return `<i class="fa-solid fa-arrow-left attached-item"></i>${text ? ' <b>attached Sskill</b>' : ''}`
+  return `<i class="fa-solid fa-arrow-left attached-item"></i>${text ? ' <b>Attached Skill</b>' : ''}`
 }
 
 export function attachedSkill(text = false){
-  return `<i class="fa-solid fa-arrow-right attached-skill"></i>${text ? ' <b>attached item</b>' : ''}`
+  return `<i class="fa-solid fa-arrow-right attached-skill"></i>${text ? ' <b>Attached Item</b>' : ''}`
 }
 
 export function neighbouringIcon(){
@@ -61,16 +61,28 @@ export function belowIcon(){
   return '<i class="fa-solid fa-arrow-down attached-skill"></i>'
 }
 
+export function wrapStats(stats){
+  const chunks = []
+  const allStats = Object.values(stats.getAll())
+  for(let stat of allStats){
+    chunks.push(wrapStatObj(stat))
+  }
+  return chunks.join(', ')
+}
+
 export function wrapStat(statType, val){
-  const stats = new Stats({ [statType]: val })
-  const info = getStatDisplayInfo(stats.get(statType), {
+  return wrapStatObj(new Stats({ [statType]: val }).get(statType))
+}
+
+export function wrapStatObj(statObj){
+  const info = getStatDisplayInfo(statObj, {
     style: StatsDisplayStyle.ADDITIONAL
   })
   let content = info.displayedValue
   if(info.icon){
-    return `<span class="stat-wrap icon-and-value" stat-type="${statType}">${content}${info.icon}</span>`
+    return `<span class="stat-wrap icon-and-value" stat-type="${statObj.type}">${content}${info.icon}</span>`
   }else{
-    return `<span class="stat-wrap icon-and-value" stat-type="${statType}">${content} ${info.text}</span>`
+    return `<span class="stat-wrap icon-and-value" stat-type="${statObj.type}">${content} ${info.text}</span>`
   }
 }
 

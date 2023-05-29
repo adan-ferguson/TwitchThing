@@ -160,7 +160,7 @@ export default class AdventurerItemRow extends DIElement{
     const ado = getAbilityDisplayInfoForObj(this.adventurerItem)
     if(ado[0]?.type === 'active'){
       this.style.borderColor = ITEM_ROW_COLORS.active
-      this.style.borderWidth = '2rem'
+      this.style.borderWidth = '3rem'
     }else{
       this.style.borderColor = null
       this.style.borderWidth = null

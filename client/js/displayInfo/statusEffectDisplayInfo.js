@@ -63,8 +63,7 @@ function derivedPrefix(actionDef, abilityInstance){
 
 export function statusEffectApplicationDescription(applyStatusEffectDef, abilityInstance){
   const chunks = []
-  console.log('a')
-  chunks.push(derivedPrefix(applyStatusEffectDef, abilityInstance))
+  chunks.push(...derivedPrefix(applyStatusEffectDef, abilityInstance))
   chunks.push(...statusEffectDescription(applyStatusEffectDef.statusEffect, abilityInstance))
   return chunks
 }
@@ -72,8 +71,6 @@ export function statusEffectApplicationDescription(applyStatusEffectDef, ability
 export function statusEffectDescription(statusEffectDef, abilityInstance){
 
   statusEffectDef = explodeEffect(statusEffectDef)
-
-  console.log('a')
 
   const chunks = []
   const statusEffectId = statusEffectDef.statusEffectId ?? statusEffectDef.name
@@ -95,10 +92,12 @@ export function statusEffectDescription(statusEffectDef, abilityInstance){
     chunks.push(`for ${statusEffectDef.turns} turn${statusEffectDef.turns === 1 ? '' : 's'}.`)
   }else if(!statusEffectDef.persisting){
     chunks.push('until end of combat.')
+  }else{
+    chunks.push('.')
   }
 
   if(statusEffectDef.maxStacks){
-    chunks.push(`Stacks up to ${statusEffectDef.maxStacks} times`)
+    chunks.push(`Stacks up to ${statusEffectDef.maxStacks} times.`)
   }
 
   return chunks
@@ -126,7 +125,8 @@ const DEFS = {
   },
   wideOpen: (def, abilityInstance) => {
     return {
-      description: 'Attacks against you always crit'
+      description: '"Attacks against you always crit"',
+      grammatic: 'gain'
     }
   },
   sprinting: (def, abilityInstance) => {

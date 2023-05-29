@@ -3,16 +3,17 @@ import { wrappedPct } from '../../growthFunctions.js'
 export default function(level){
   return {
     effect: {
-      metaEffect: {
-        self: {
-          conditions: {
-            deepestFloor: true
-          },
+      metaEffects: [{
+        subject: 'self',
+        conditions: {
+          deepestFloor: true
+        },
+        effect: {
           stats: {
             combatXP: wrappedPct(50 * level)
           }
         }
-      }
+      }]
     }
   }
 }

@@ -10,7 +10,7 @@ const DEFS = {
     const type = _.isString(mod) ? mod : ''
     return {
       abilityDescription: ['This ignores', type, 'defense.'].filter(c => c).join(' '),
-      metaDescription: ['ignores', type, 'defense.'].filter(c => c).join(' ')
+      metaDescription: ['Ignores', type, 'defense'].filter(c => c).join(' ')
     }
   },
   bossFightStatMultiplier: mod => {

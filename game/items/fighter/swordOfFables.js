@@ -13,15 +13,16 @@ export default function(level){
         physDef: def,
         magicDef: def
       },
-      metaEffect: {
-        self: {
-          metaEffectId: 'swordOfFablesMultiplier',
-          conditions: {
-            bossFight: true
-          },
+      metaEffects: [{
+        metaEffectId: 'swordOfFablesMultiplier',
+        subject: 'self',
+        conditions: {
+          bossFight: true
+        },
+        effect: {
           statMultiplier: 3,
         }
-      }
+      }]
     },
     orbs: level * 12
   }

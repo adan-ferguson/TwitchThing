@@ -35,6 +35,10 @@ export default class EffectInstance{
     return this.effectData
   }
 
+  get metaEffects(){
+    return this.effect.metaEffects
+  }
+
   get baseEffectData(){
     return this._baseEffectData
   }

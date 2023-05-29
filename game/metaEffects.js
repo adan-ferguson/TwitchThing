@@ -9,20 +9,19 @@ export default class MetaEffectCollection{
     }
 
     fighterInstance.effectInstances.forEach(ei => {
-      const me = ei.baseEffectData.metaEffect
-      if(!me){
+      const metaEffects = ei.baseEffectData.metaEffects
+      if(!metaEffects){
         return
       }
-      for(let subjectKey in me){
-        const metaEffect = {
-          ...me[subjectKey],
-          source: ei.uniqueID,
-          subjectKey
+      for(let metaEffect of metaEffects){
+        const meDef = {
+          ...metaEffect,
+          source: ei.uniqueID
         }
-        if(subjectKey === 'attached' && ei.slotInfo){
-          add(this.categories.slots, ei.slotInfo.col + 1 % 2, ei.slotInfo.row, metaEffect)
-        }else if(subjectKey === 'self'){
-          pushOrCreate(this.categories.ids, ei.uniqueID, metaEffect)
+        if(meDef.subject === 'attached' && ei.slotInfo){
+          add(this.categories.slots, ei.slotInfo.col + 1 % 2, ei.slotInfo.row, meDef)
+        }else if(meDef.subject === 'self'){
+          pushOrCreate(this.categories.ids, ei.uniqueID, meDef)
         }
       }
     })
@@ -37,8 +36,8 @@ export default class MetaEffectCollection{
       toApply.push(...get(this.categories.slots, effectInstance.slotInfo.col, effectInstance.slotInfo.row))
     }
     toApply.push(...(this.categories.ids[effectInstance.uniqueID] ?? []))
-    const filtered = toApply.filter((me => {
-      return effectInstance.fighterInstance.meetsConditions(me.conditions)
+    const filtered = toApply.filter((meDef => {
+      return effectInstance.fighterInstance.meetsConditions(meDef.conditions)
     }))
     return merge(effectInstance.baseEffectData, filtered)
   }
@@ -58,21 +57,20 @@ function get(slots, x, y){
 function merge(baseEffect, metaEffects){
   baseEffect = deepClone(baseEffect)
   metaEffects.forEach(metaEffect => {
-    for(let key in metaEffect){
-      if(key === 'metaEffectId'){
-        pushOrCreate(baseEffect, 'appliedMetaEffects', metaEffect)
-      }
+    pushOrCreate(baseEffect, 'appliedMetaEffects', metaEffect)
+    const effect = metaEffect.effect
+    for(let key in effect){
       if(key === 'stats'){
-        baseEffect.stats = [...arrayize(baseEffect.stats), metaEffect.stats]
+        baseEffect.stats = [...arrayize(baseEffect.stats), effect.stats]
       }
       if(key === 'exclusiveStats'){
-        baseEffect.exclusiveStats = [...arrayize(baseEffect.exclusiveStats), metaEffect.exclusiveStats]
+        baseEffect.exclusiveStats = [...arrayize(baseEffect.exclusiveStats), effect.exclusiveStats]
       }
       if(key === 'exclusiveMods'){
-        pushOrCreate(baseEffect, 'exclusiveMods', metaEffect.exclusiveMods)
+        pushOrCreate(baseEffect, 'exclusiveMods', effect.exclusiveMods)
       }
       if(key === 'statMultiplier'){
-        baseEffect.statMultiplier = (baseEffect.statMultiplier ?? 1) * metaEffect.statMultiplier
+        baseEffect.statMultiplier = (baseEffect.statMultiplier ?? 1) * effect.statMultiplier
       }
     }
   })
