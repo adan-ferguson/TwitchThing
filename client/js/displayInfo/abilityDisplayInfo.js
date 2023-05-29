@@ -125,7 +125,7 @@ function abilityDescription(ability){
       return
     }
     if(capitalize){
-      toAdd[0] = _.capitalize(toAdd[0])
+      toAdd[0] = toAdd[0].charAt(0).toUpperCase() + toAdd[0].slice(1)
     }
     chunks.push(...toAdd)
     capitalize = true

@@ -76,13 +76,9 @@ function isNext(ai){
 
 function izExtreme(ei){
   for(let ame of (ei.effect?.appliedMetaEffects ?? [])){
-    // TODO: maybe not sufficient
-    if(ame.subjectKey === 'self'){
+    if(ame.subject === 'self'){
       return true
     }
-  }
-  if(ei.meetsConditions && ei.conditions?.extreme){
-    return true
   }
   return false
 }

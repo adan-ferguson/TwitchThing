@@ -13,7 +13,7 @@ const fighterFns = fighterInstance => {
 }
 
 export function scaledNumberFromFighterInstance(fighterInstance, scalingOptions){
-  return scaledNumber(scalingOptions, fighterFns)
+  return scaledNumber(scalingOptions, fighterFns(fighterInstance))
 }
 
 export function scaledNumberFromAbilityInstance(abilityInstance, scalingOptions){

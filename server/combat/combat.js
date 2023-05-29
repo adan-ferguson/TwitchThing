@@ -63,6 +63,7 @@ class Combat{
   _triggerUpdates = []
   _consecutiveZeroTimeAdvancements = 0
   _currentTime = 0
+  _lastTimestamp = Date.now()
 
   constructor(fighterInstance1, fighterInstance2, params){
     this.params = params
@@ -233,6 +234,7 @@ class Combat{
   _addTimelineEntry(options = {}){
     const next = {
       time: this._currentTime,
+      calculationTime: Date.now() - this._lastTimestamp,
       actions: [],
       triggers: this._triggerUpdates,
       fighterState1: this.fighterInstance1.state,
@@ -243,6 +245,7 @@ class Combat{
     }
     this.timeline.push(next)
     this._triggerUpdates = []
+    this._lastTimestamp = Date.now()
   }
 
   _triggerSuddenDeath(){

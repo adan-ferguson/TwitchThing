@@ -82,7 +82,7 @@ export default function(){
             actions: [{
               gainHealth: {
                 scaling: {
-                  magicPower: 0.28
+                  magicPower: 0.4
                 }
               }
             }]
