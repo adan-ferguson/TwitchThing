@@ -4,26 +4,38 @@ import { Worker } from 'node:worker_threads'
 import { uniqueID } from '../../game/utilFunctions.js'
 import Combats from '../collections/combats.js'
 
-let worker
+const WORKER_COUNT = 4
+const workers = []
+const queue = []
 let callbacks = {}
 
-export async function startCombatWorker(){
+export async function startCombatWorkers(){
   const workerPath = path.resolve(fileURLToPath(import.meta.url), '..', 'worker.js')
-  worker = new Worker(workerPath)
-  worker.on('message', obj => {
-    if(callbacks[obj.workerId]){
-      callbacks[obj.workerId](obj)
-      delete callbacks[obj.workerId]
-    }
-  })
-  worker.on('error', msg => {
-    console.error('Worker error: ', msg)
-  })
-  worker.on('exit', () => {
-    console.error('Worker stopped for some reason')
-    process.exit()
-  })
-  console.log('Worker connected')
+  for(let i = 0; i < WORKER_COUNT; i++){
+    const worker = new Worker(workerPath)
+    const workerDef = { worker, isBusy: false }
+    worker.on('message', obj => {
+      if(callbacks[obj.workerId]){
+        callbacks[obj.workerId](obj)
+        delete callbacks[obj.workerId]
+      }
+      console.log('unbusy')
+      if(queue.length){
+        queue.splice(0, 1)[0](worker)
+      }else{
+        workerDef.isBusy = false
+      }
+    })
+    worker.on('error', msg => {
+      console.error('Worker error: ', msg)
+    })
+    worker.on('exit', () => {
+      console.error('Worker stopped for some reason! Fatal error or something.')
+      process.exit()
+    })
+    workers.push(workerDef)
+  }
+  console.log('Workers connected')
 }
 
 export function generateCombat(data, combatID = null){
@@ -43,12 +55,26 @@ export function generateCombat(data, combatID = null){
         combatDoc._id = combatID
       }
       const doc = await Combats.save(combatDoc)
-      console.log(combatID, combatDoc.times.startup, combatDoc.times.calc)
+      console.log('combat ran', combatID, combatDoc.times.startup, combatDoc.times.calc)
       res(doc)
     }
-    worker.postMessage({
-      workerId: id,
-      data
+    getAvailableWorker().then(worker => {
+      console.log('Workers + Queue Length', ...workers.map(w => w.isBusy ? 1 : 0), queue.length)
+      worker.postMessage({
+        workerId: id,
+        data
+      })
     })
+  })
+}
+
+function getAvailableWorker(){
+  return new Promise(res => {
+    const nonBusy = workers.findIndex(w => !w.isBusy)
+    if(nonBusy > -1){
+      workers[nonBusy].isBusy = true
+      return res(workers[nonBusy].worker)
+    }
+    queue.push(res)
   })
 }

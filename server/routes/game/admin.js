@@ -85,6 +85,9 @@ router.post('/sim/run', async (req, res) => {
   const f2 = validateParam(req.body.fighter2)
   const combat = await generateSimulatedCombat(f1, f2)
   res.status(200).send({ combatID: combat._id })
+  // for(let i = 0; i < 100; i++){
+  //   generateSimulatedCombat(f1, f2)
+  // }
 })
 
 export default router

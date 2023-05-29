@@ -75,6 +75,14 @@ di-fighter-instance-pane
     flex-grow: 0 !important
     margin-bottom: 6rem
 
+    &[polarity="debuff"] .bar-border
+      outline: 1rem solid #ff0000
+      box-shadow: 0 0 3px 1px #ff0000
+
+    &[polarity="buff"] .bar-border
+      outline: 1rem solid #74e514
+      box-shadow: 0 0 3px 1px #74e514
+
   .defeated-text span
     transform: rotate(-1rad)
     font-size: 70rem

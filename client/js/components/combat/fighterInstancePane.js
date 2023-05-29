@@ -76,6 +76,7 @@ export default class FighterInstancePane extends HTMLElement{
 
     this.querySelector('.name').textContent = fighterInstance.displayName
     this.effectsListEl.setFighterInstance(fighterInstance)
+    this._actionBarEl.setBaseTime(this.fighterInstance.turnTime)
     this._update(false)
     return this
   }

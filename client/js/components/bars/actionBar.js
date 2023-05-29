@@ -20,16 +20,27 @@ export default class ActionBar extends Bar{
     })
   }
 
+  setBaseTime(baseTime){
+    this._baseTime = baseTime
+  }
+
   setTime(elapsed, remaining, dontFlash = false){
-    if(!dontFlash){
-      if(this.options.max !== elapsed + remaining){
-        flash(this._barBorder, FLASH_COLORS[elapsed + remaining > this.options.max ? 'bad' : 'good'], 120)
-      }
-    }
+    // if(!dontFlash){
+    //   if(this.options.max !== elapsed + remaining){
+    //     flash(this._barBorder, FLASH_COLORS[elapsed + remaining > this.options.max ? 'bad' : 'good'], 120)
+    //   }
+    // }
+    const max = elapsed + remaining
     this.setOptions({
-      max: elapsed + remaining
+      max
     })
     this._setTime(elapsed)
+
+    if(Math.abs(max - this._baseTime) > 1){
+      this.setAttribute('polarity', max > this._baseTime ? 'debuff' : 'buff')
+    }else{
+      this.removeAttribute('polarity')
+    }
   }
 
   advanceTime(ms){
