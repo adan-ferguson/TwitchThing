@@ -344,9 +344,8 @@ export default class FighterInstance{
     this.uncache()
   }
 
-  nextTurn(){
-    this._state.timeSinceLastAction = this._state.nextTurnOffset ?? 0
-    delete this._state.nextTurnOffset
+  nextTurn(nextTurnTime = 1){
+    this._state.timeSinceLastAction = this.turnTime * (1 - nextTurnTime)
     this.statusEffectInstances.forEach(sei => sei.nextTurn())
     this.uncache()
   }

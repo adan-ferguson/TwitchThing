@@ -41,6 +41,8 @@ const TRIGGERS_SCHEMA = Joi.object({
   targeted: Joi.bool().truthy()
 })
 
+const TRIGGER_NAMES_SCHEMA = Joi.string().valid(...Object.keys(TRIGGERS_SCHEMA.describe().keys))
+
 const as = Joi.object({
   applyStatusEffect: Joi.object({
     targets: Joi.string().valid('self', 'enemy', 'target'),
@@ -65,10 +67,17 @@ const as = Joi.object({
     ignoreDefense: Joi.bool().truthy(),
     ignoreOvertime: Joi.bool().truthy()
   }),
-  useEffectAbility: Joi.object({
-    subject: Joi.string().valid(...SUBJECT_KEYS),
-    trigger: Joi.string().valid(...Object.keys(TRIGGERS_SCHEMA.describe().keys))
+  useAbility: Joi.object({
+    subjectKey: Joi.string().valid(...SUBJECT_KEYS).required(),
+    trigger: TRIGGER_NAMES_SCHEMA.required()
   }),
+  modifyAbility: Joi.object({
+    subjectKey: Joi.string().valid(...SUBJECT_KEYS).required(),
+    trigger: TRIGGER_NAMES_SCHEMA.required(),
+    modification: Joi.object({
+      cooldownRemaining: Joi.number().integer()
+    }).required()
+  })
 })
 
 const ACTION_SCHEMA = as.append({
@@ -140,6 +149,7 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
   turns: Joi.number().integer(),
   duration: Joi.number().integer(),
   stacking: Joi.string(),
+  stackingId: Joi.string(),
   maxStacks: Joi.number().integer(),
   polarity: Joi.string().valid('buff','debuff','negativity'),
   name: Joi.string(),

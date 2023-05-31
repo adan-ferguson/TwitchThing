@@ -32,6 +32,11 @@ const DEFS = {
     return {
       description: 'Silenced'
     }
+  },
+  magicAttack: () => {
+    return {
+      description: 'Basic attacks use magic power.'
+    }
   }
 }
 export function modDisplayInfo(mod){

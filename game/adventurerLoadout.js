@@ -67,6 +67,11 @@ export default class AdventurerLoadout{
 
   getSlotInfo(col, slot){
 
+    const baseLoadoutItem = this._objs[col][slot]
+    const modifiedLevel = this.modifiers.get(col, slot, 'levelUp')
+      .reduce((prev, mod) => prev + mod, baseLoadoutItem?.level ?? 1)
+    const loadoutItem = baseLoadoutItem.withDifferentLevel(modifiedLevel)
+
     const restrictionsFailed = () => {
       const outgoing = this.modifiers.outgoingModifiers(col, slot)
       if(!outgoing){
@@ -85,7 +90,7 @@ export default class AdventurerLoadout{
       return false
     }
 
-    const loadoutItem = this._objs[col][slot]
+
     const ret = { loadoutItem }
 
     if(loadoutItem?.orbs){

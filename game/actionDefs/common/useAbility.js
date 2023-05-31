@@ -1,4 +1,4 @@
 export default {
-  subject: null,
+  subjectKey: null,
   trigger: null,
 }

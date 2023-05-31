@@ -31,4 +31,7 @@ export function subjectKeyMatchesSlotInfos(sourceSlotInfo, subjectSlotInfo, subj
   if(subjectKey === 'belowNeighbour'){
     return subjectSlotInfo.col === sourceSlotInfo.col && subjectSlotInfo.row === sourceSlotInfo.row + 1
   }
+  if(subjectKey === 'all'){
+    return true
+  }
 }

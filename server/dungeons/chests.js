@@ -5,7 +5,7 @@ import AdventurerItem from '../../game/items/adventurerItem.js'
 
 const GOLD_BASE = 20
 const GOLD_GROWTH = 10
-const GOLD_GROWTH_PCT = 0.01
+const GOLD_GROWTH_PCT = 0
 
 export function generateRandomChest(options = {}){
 

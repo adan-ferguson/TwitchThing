@@ -20,7 +20,8 @@ const LOADOUT_MODIFIERS = {}
 SUBJECT_KEYS.forEach(sk => {
   LOADOUT_MODIFIERS[sk] = Joi.object({
     orbs: ORB_MODIFIER_SCHEMA,
-    restrictions: RESTRICTION_SCHEMA
+    restrictions: RESTRICTION_SCHEMA,
+    levelUp: Joi.number().integer()
   })
 })
 

@@ -39,8 +39,36 @@ const fighter = {
 }
 
 const mage = {
-  skills: [],
-  items: [[],[],[]]
+  skills: [
+    Skills.shock,
+    Skills.barrier,
+    Skills.intelligence,
+    Skills.frostRay,
+    Skills.mirrorImage,
+    Skills.glassCannon,
+    Skills.counterspell,
+    Skills.haste,
+    Skills.fireball,
+    Skills.brilliance,
+    Skills.arcaneMastery,
+    Skills.unknown,
+  ],
+  items: [[
+    Items.wand,
+    Items.robes,
+    Items.miniatureScroll,
+    Items.powerScroll,
+    Items.spellbook,
+  ],[
+    Items.favoriteScroll,
+    Items.unstableScroll,
+    Items.manaSeasoning,
+    Items.magicRing,
+  ],[
+    Items.ascendedScroll,
+    Items.repeatingScroll,
+    Items.wizardHat,
+  ]]
 }
 
 const paladin = {

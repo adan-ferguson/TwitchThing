@@ -7,7 +7,7 @@ const ADV_CLASSES = {
     color: '#BB3300'
   },
   mage: {
-    description: 'A magical spell caster. Use gems to modify spell and create combos.',
+    description: 'A magical spell caster. Use scrolls to modify spell and create combos.',
     color: '#4779da'
   },
   paladin: {

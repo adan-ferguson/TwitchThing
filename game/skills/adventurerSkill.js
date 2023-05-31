@@ -58,4 +58,8 @@ export default class AdventurerSkill extends AdventurerLoadoutObject{
   get skillPointsToUpgrade(){
     return new AdventurerSkill(this.id, this.level + 1).skillPoints - this.skillPoints
   }
+
+  withDifferentLevel(level){
+    return new AdventurerSkill({ ...this.def, level })
+  }
 }

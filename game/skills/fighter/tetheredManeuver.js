@@ -8,7 +8,7 @@ export default function(level){
           source: 'aboveNeighbour'
         },
         actions: [{
-          useEffectAbility: {
+          useAbility: {
             subject: 'belowNeighbour',
             trigger: 'active',
           }

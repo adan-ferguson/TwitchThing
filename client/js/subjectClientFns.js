@@ -10,6 +10,8 @@ export function subjectDescription(subjectKey, isItem){
     return isItem ? attachedSkill(true) : attachedItem(true)
   }else if(subjectKey === 'neighbouring'){
     return`${neighbouringIcon()} Neighbouring ${isItem ? 'Items' : 'Skills'} `
+  }else if(subjectKey === 'all'){
+    return 'All '
   }
   return ''
 }

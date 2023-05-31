@@ -39,18 +39,28 @@ export function checkForRewards(userDoc){
   }
 
   if(shouldRewardZoneClear(3)){
-    userDoc.inventory.scrap += 100
-    userDoc.inventory.gold += 1000
+    userDoc.features.advClasses.chimera = 1
     popups.push(zoneCleared(3, {
-      message: 'Here, have some stuff',
-      items: { scrap: 100, gold: 1000, zone: 'Water World' }
+      items: {
+        class: 'chimera',
+        zone: 'Water World'
+      }
     }))
   }
 
   if(shouldRewardZoneClear(4)){
+    userDoc.inventory.scrap += 100
+    userDoc.inventory.gold += 1000
     popups.push(zoneCleared(4, {
-      message: 'You\'ve reached the end of the dungeon for now. Try the bonus floor 51 for wacky fun time wow!',
-      zone: 'SUPER Zone'
+      message: 'Here, have some stuff',
+      items: { scrap: 100, gold: 1000, zone: 'Heck' }
+    }))
+  }
+
+  if(shouldRewardZoneClear(5)){
+    popups.push(zoneCleared(5, {
+      message: 'You\'ve reached the end of the dungeon for now. Try the not-fair SUPER dungeon!',
+      zone: 'SUPER Dungeon'
     }))
   }
 

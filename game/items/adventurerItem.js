@@ -94,6 +94,10 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
     return this.isBasic && adventurerItem.isBasic && this.def === adventurerItem.def
   }
 
+  withDifferentLevel(level){
+    return new AdventurerItem({ ...this.def, level })
+  }
+
   upgradeInfo(){
     // TODO: this
     // const upgradedItemDef = {

@@ -8,5 +8,6 @@ export const MODS_SCHEMA = Joi.array().items(
     autoCritAgainst: Joi.boolean(),
     freezeActionBar: Joi.boolean(),
     silenced: Joi.boolean().truthy(),
+    magicAttack: Joi.boolean().truthy()
   })
 )

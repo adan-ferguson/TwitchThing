@@ -180,10 +180,10 @@ export async function purgeOldRuns(adventurerID){
       purged: { $ne: true }
     },
     sort: {
-      startTime: 1
+      startTime: -1
     }
   })
-  purgeReplays(runs.slice(-5))
+  purgeReplays(runs.slice(5))
 }
 
 async function purgeReplays(drDocs){
@@ -203,5 +203,5 @@ async function purgeReplays(drDocs){
   }, [{
     $unset: 'timeline'
   }])
-  return result.deletedCount
+  return result.modifiedCount
 }

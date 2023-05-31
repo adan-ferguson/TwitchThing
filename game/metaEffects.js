@@ -5,7 +5,8 @@ export default class MetaEffectCollection{
     this.fighterInstance = fighterInstance
     this.categories = {
       slots: [[],[]],
-      ids: {}
+      ids: {},
+      all: []
     }
 
     fighterInstance.effectInstances.forEach(ei => {
@@ -22,6 +23,8 @@ export default class MetaEffectCollection{
           add(this.categories.slots, ei.slotInfo.col + 1 % 2, ei.slotInfo.row, meDef)
         }else if(meDef.subject === 'self'){
           pushOrCreate(this.categories.ids, ei.uniqueID, meDef)
+        }else if(meDef.subject === 'all'){
+          this.categories.all.push(meDef)
         }
       }
     })
@@ -36,6 +39,7 @@ export default class MetaEffectCollection{
       toApply.push(...get(this.categories.slots, effectInstance.slotInfo.col, effectInstance.slotInfo.row))
     }
     toApply.push(...(this.categories.ids[effectInstance.uniqueID] ?? []))
+    toApply.push(...this.categories.all)
     const filtered = toApply.filter((meDef => {
       return effectInstance.fighterInstance.meetsConditions(meDef.conditions)
     }))

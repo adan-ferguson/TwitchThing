@@ -62,6 +62,11 @@ export function getSubjects(subjectKey, col, row){
     for(let i = 0; i < 8; i++){
       subjects.push({ col: 0, row: i })
     }
+  }else if(subjectKey === 'all'){
+    for(let i = 0; i < 8; i++){
+      subjects.push({ col: 0, row: i })
+      subjects.push({ col: 1, row: i })
+    }
   }
   return subjects
 }

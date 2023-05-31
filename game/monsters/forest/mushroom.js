@@ -6,6 +6,7 @@ const statusEffect = function(def){
         polarity: 'debuff',
         persisting: true,
         stacking: 'stack',
+        stackingId: 'mushroom_' + def.name,
         duration: 10000,
         ...def
       }
@@ -52,7 +53,7 @@ const sleepSpores = statusEffect({
 
 const options = [
   { weight: 30, value: burningSpores },
-  { weight: 20, value: slowingSpores },
+  { weight: 15, value: slowingSpores },
   { weight: 5, value: sleepSpores },
   { weight: 5, value: shrinkingSpores },
 ]

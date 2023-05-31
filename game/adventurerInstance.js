@@ -85,6 +85,7 @@ export default class AdventurerInstance extends FighterInstance{
     const loadout = this.adventurer.loadout
     for(let i = 0; i < 8; i++){
       if(loadout.items[i]){
+        const si = loadout.getSlotInfo(0, i)
         this._itemInstances[i] = new LoadoutObjectInstance({
           obj: loadout.items[i],
           owner: this,
@@ -93,6 +94,7 @@ export default class AdventurerInstance extends FighterInstance{
         })
       }
       if(loadout.skills[i]){
+        const si = loadout.getSlotInfo(i, i)
         this._skillInstances[i] = new LoadoutObjectInstance({
           obj: loadout.skills[i],
           owner: this,

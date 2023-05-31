@@ -92,19 +92,19 @@ export default class AbilityInstance{
     this._state.cooldownElapsedPct = Math.min(val, 1)
   }
 
-  get cooldownReduction(){
+  get cooldownTime(){
     if(this.trigger.active){
-      return 1 - this._parentEffect.totalStats.get('cooldownReduction').value
+      return 1 - this._parentEffect.totalStats.get('cooldownTime').value
     }
     return 1
   }
 
   get cooldown(){
-    return this.cooldownReduction * this._abilityDef.cooldown || this.initialCooldown
+    return this.cooldownTime * this._abilityDef.cooldown || this.initialCooldown
   }
 
   get initialCooldown(){
-    return (this._abilityDef.initialCooldown ?? 0) * this.cooldownReduction
+    return (this._abilityDef.initialCooldown ?? 0) * this.cooldownTime
   }
 
   get uses(){

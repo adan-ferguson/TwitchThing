@@ -10,8 +10,8 @@ export function gainStatusEffect(combat, subject, sourceAbilityInstance, statusE
     sourceEffectId: sourceAbilityInstance.parentEffect.uniqueID
   }
   const existing = subject.statusEffectInstances.find(sei => {
-    if(statusEffectData.stackingId && statusEffectData.stackingId === sei.stackingId){
-      return true
+    if(statusEffectData.stackingId){
+      return statusEffectData.stackingId === sei.stackingId
     }
     return state.sourceEffectId === sei.sourceEffectId
   })

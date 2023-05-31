@@ -142,7 +142,7 @@ function generateRewards(dungeonRun, monsterDefinition){
       rewards.chests = generateRandomChest({
         level: Math.floor(level * advStats.get('chestLevel').value),
         type,
-        classes: unlockedClasses(dungeonRun.user)
+        classes: dungeonRun.user.features.skills ? unlockedClasses(dungeonRun.user) : ['fighter']
       })
     }
   }
