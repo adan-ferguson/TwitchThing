@@ -13,9 +13,6 @@ export default function(level){
           }
         }]
       }]
-    },
-    vars: {
-      physPower
     }
   }
 }

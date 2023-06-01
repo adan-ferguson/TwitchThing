@@ -26,8 +26,8 @@ function derived(metaEffect, obj){
   let headerContent
   if(metaEffect.conditions){
     headerContent = conditionsDisplayInfo(metaEffect.conditions)
-  }else {
-    headerContent = subjectDescription(metaEffect.subject, isItem)
+  }else{
+    headerContent = subjectDescription(metaEffect.subjectKey, isItem)
   }
 
   nodes.push(wrapContent(headerContent, { class: 'meta-effect-header' }))

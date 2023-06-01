@@ -22,4 +22,8 @@ export default class LoadoutObjectInstance extends EffectInstance{
   get slotInfo(){
     return this._slotInfo
   }
+
+  get useCooldownMultiplier(){
+    return true
+  }
 }

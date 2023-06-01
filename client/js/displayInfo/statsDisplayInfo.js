@@ -96,7 +96,7 @@ const statDefinitionsInfo = {
     text: 'Starting Food',
     description: '2 + 1 per 10 levels'
   },
-  cooldownTime: {
+  cooldownMultiplier: {
     text: 'Cooldown Time (items only, I swear)'
   },
   chestLevel: {

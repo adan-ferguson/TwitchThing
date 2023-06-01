@@ -9,7 +9,7 @@ export default function(level){
             trigger: 'active',
             exclusiveStats: {
               magicPower,
-              cooldownTime: Math.pow(0.9, level - 1) * 0.8
+              cooldownMultiplier: Math.pow(0.9, level - 1) * 0.8
             },
           }
         }

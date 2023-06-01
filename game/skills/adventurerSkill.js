@@ -44,7 +44,7 @@ export default class AdventurerSkill extends AdventurerLoadoutObject{
   }
 
   get requiredOrbs(){
-    return Math.max(0, 5 * (this.index - 1))
+    return Math.max(0, 1 * (this.index - 1))
   }
 
   get skillPoints(){

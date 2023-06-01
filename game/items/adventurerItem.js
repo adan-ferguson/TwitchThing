@@ -33,7 +33,7 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
 
     super(data)
 
-    this._def = { level, baseItem: baseItem.id }
+    this._def = itemDef
     this._level = level
     this._baseItem = baseItem
   }
@@ -95,7 +95,11 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
   }
 
   withDifferentLevel(level){
-    return new AdventurerItem({ ...this.def, level })
+    if(_.isString(this.def)){
+      return new AdventurerItem({ baseItem: this.def, level })
+    }else{
+      return new AdventurerItem({ ...this.def, level })
+    }
   }
 
   upgradeInfo(){

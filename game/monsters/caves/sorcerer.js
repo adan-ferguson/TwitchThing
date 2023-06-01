@@ -9,6 +9,7 @@ export default function(){
       {
         name: 'Lightning Bolt',
         effect: {
+          tags: ['magic'],
           abilities: [{
             trigger: { active: true },
             initialCooldown: 4000,

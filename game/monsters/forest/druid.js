@@ -10,6 +10,7 @@ export default function(){
       {
         name: 'Bear Form',
         effect: {
+          tags: ['magic'],
           abilities: [{
             trigger: { active: true },
             initialCooldown: 11000,
@@ -37,6 +38,7 @@ export default function(){
       {
         name: 'Regrowth',
         effect: {
+          tags: ['magic'],
           abilities: [{
             trigger: { active: true },
             initialCooldown: 5000,

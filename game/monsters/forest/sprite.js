@@ -28,6 +28,7 @@ export default function(){
       {
         name: 'Magic Blast',
         effect: {
+          tags: ['magic'],
           abilities: [magicBlast]
         }
       }
