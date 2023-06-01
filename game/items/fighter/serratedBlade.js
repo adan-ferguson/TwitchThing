@@ -26,9 +26,6 @@ export default function(level){
         }]
       }]
     },
-    orbs: 2 + level * 3,
-    vars: {
-      targets: 'attached'
-    }
+    orbs: 2 + level * 3
   }
 }

@@ -17,6 +17,5 @@ function validateSkill(id){
   Joi.assert(Skills[id].def, Joi.function())
   Joi.assert(new AdventurerSkill(id).data, LOADOUT_OBJECT_SCHEMA.append({
     skillPoints: Joi.number().integer(),
-    maxLevel: Joi.number().integer().min(1)
   }))
 }

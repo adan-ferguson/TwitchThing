@@ -14,7 +14,7 @@ export default function(level){
         trigger: {
           targeted: {
             triggerType: 'active',
-            mod: 'magic'
+            hasTag: 'magic'
           }
         },
         cooldown,

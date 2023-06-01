@@ -43,12 +43,8 @@ const shrinkingSpores = statusEffect({
 })
 
 const sleepSpores = statusEffect({
+  base: { stunned: 5000 },
   name: 'sleepingSpores',
-  stacking: 'replace',
-  mods: [{
-    freezeActionBar: true
-  }],
-  duration: 5000
 })
 
 const options = [

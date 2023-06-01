@@ -2,6 +2,9 @@ export function subjectKeyMatchesEffectInstances(sourceEffectInstance, subjectEf
   if(!subjectKey){
     return true
   }
+  if(subjectKey === 'all'){
+    return true
+  }
   if(!sourceEffectInstance || !subjectEffectInstance){
     return subjectKey === 'basicAttack'
   }
@@ -30,8 +33,5 @@ export function subjectKeyMatchesSlotInfos(sourceSlotInfo, subjectSlotInfo, subj
   }
   if(subjectKey === 'belowNeighbour'){
     return subjectSlotInfo.col === sourceSlotInfo.col && subjectSlotInfo.row === sourceSlotInfo.row + 1
-  }
-  if(subjectKey === 'all'){
-    return true
   }
 }

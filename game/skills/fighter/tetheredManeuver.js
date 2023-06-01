@@ -1,4 +1,5 @@
 export default function(level){
+  // TODO: rankups w/ cooldown reduction for both
   return {
     effect: {
       abilities: [{
@@ -9,14 +10,11 @@ export default function(level){
         },
         actions: [{
           useAbility: {
-            subject: 'belowNeighbour',
+            subjectKey: 'belowNeighbour',
             trigger: 'active',
           }
         }]
       }]
-    },
-    vars: {
-      targets: 'neighbouring'
     },
     maxLevel: 1
   }

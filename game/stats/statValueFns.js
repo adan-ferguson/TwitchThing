@@ -98,27 +98,19 @@ function multiplierValue(values, defaultValue = 1){
 
   const mods = organizeMods(values)
 
-  if(mods.all.flat.length){
-    throw 'Multiplier stats can not have flat values'
-  }
-
   if(mods.all.multi.length){
-    debugger
     throw 'Multiplier stats can not have multiplier values (lol)'
   }
 
-  let value = mods.positive.pct.reduce((val, mod) => {
+  const decimalPositive = mods.all.flat.map(m => m >= 1 ? 100 * (m - 1) : 0)
+  const decimalNegative = mods.all.flat.map(m => m < 1 ? 100 * (m - 1) : 0)
+
+  let value = [...decimalPositive, ...mods.positive.pct].reduce((val, mod) => {
     return val + mod
   }, 100)
 
-  value = mods.negative.pct.sort().reduce((val, mod) => {
-    if(val + mod > 100){
-      return val += mod
-    }else if(val < 100){
-      return val * (1 + mod/100)
-    }else{
-      return val + mod
-    }
+  value = [...decimalNegative, ...mods.negative.pct].sort().reduce((val, mod) => {
+    return val * (1 + mod/100)
   }, value)
 
   value = defaultValue * value / 100
@@ -150,13 +142,14 @@ function compositeValue(values, defaultValue){
   }, 100)
 
   pcts = mods.negative.pct.sort().reduce((val, mod) => {
-    if(val + mod > 100){
-      return val += mod
-    }else if(val < 100){
-      return val * (1 + mod/100)
-    }else{
-      return val + mod
-    }
+    return val * (1 + mod/100)
+    // if(val + mod > 100){
+    //   return val = mod
+    // }else if(val < 100){
+    //   return val * (1 + mod/100)
+    // }else{
+    //   return val + mod
+    // }
   }, pcts)
 
   value *= pcts / 100

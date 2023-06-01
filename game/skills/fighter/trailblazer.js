@@ -4,11 +4,11 @@ export default function(level){
   return {
     effect: {
       metaEffects: [{
-        subject: 'self',
+        subjectKey: 'self',
         conditions: {
           deepestFloor: true
         },
-        effect: {
+        effectModification: {
           stats: {
             combatXP: wrappedPct(50 * level)
           }

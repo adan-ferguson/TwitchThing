@@ -6,7 +6,7 @@ import { isAdventurerItem } from '../components/common.js'
 
 const DEFS = {
   swordOfFablesMultiplier: (metaEffect, obj) => {
-    return `${metaEffect.effect.statMultiplier}x the above stats during boss fights.`
+    return `${metaEffect.effectModification.statMultiplier}x the above stats during boss fights.`
   }
 }
 
@@ -31,7 +31,7 @@ function derived(metaEffect, obj){
   }
 
   nodes.push(wrapContent(headerContent, { class: 'meta-effect-header' }))
-  nodes.push(new EffectDetails().setObject(metaEffect.effect, true))
+  nodes.push(new EffectDetails().setObject(metaEffect.effectModification, true))
 
   if(!nodes.length){
     return

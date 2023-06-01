@@ -1,16 +1,24 @@
 export default function(level){
   return {
+    loadoutModifiers: {
+      attached: {
+        restrictions: {
+          hasAbility: 'active'
+        }
+      }
+    },
     effect: {
       metaEffects: [{
-        subject: 'attached',
-        effect: {
-          repetitions: level
+        subjectKey: 'attached',
+        effectModification: {
+          abilityModification: {
+            trigger: 'active',
+            repetitions: level
+          }
         }
       }],
+      tags: ['scroll'],
     },
     orbs: level * 10,
-    vars: {
-      targets: 'attached'
-    }
   }
 }

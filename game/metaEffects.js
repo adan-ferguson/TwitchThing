@@ -62,21 +62,38 @@ function merge(baseEffect, metaEffects){
   baseEffect = deepClone(baseEffect)
   metaEffects.forEach(metaEffect => {
     pushOrCreate(baseEffect, 'appliedMetaEffects', metaEffect)
-    const effect = metaEffect.effect
-    for(let key in effect){
-      if(key === 'stats'){
-        baseEffect.stats = [...arrayize(baseEffect.stats), effect.stats]
-      }
-      if(key === 'exclusiveStats'){
-        baseEffect.exclusiveStats = [...arrayize(baseEffect.exclusiveStats), effect.exclusiveStats]
-      }
-      if(key === 'exclusiveMods'){
-        pushOrCreate(baseEffect, 'exclusiveMods', effect.exclusiveMods)
-      }
-      if(key === 'statMultiplier'){
-        baseEffect.statMultiplier = (baseEffect.statMultiplier ?? 1) * effect.statMultiplier
-      }
+    const modification = metaEffect.effectModification
+    if(modification.stats){
+      baseEffect.stats = [...arrayize(baseEffect.stats), modification.stats]
+    }
+    if(modification.exclusiveStats){
+      baseEffect.exclusiveStats = [...arrayize(baseEffect.exclusiveStats), modification.exclusiveStats]
+    }
+    if(modification.mods){
+      pushOrCreate(baseEffect, 'mods', modification.mods)
+    }
+    if(modification.exclusiveMods){
+      pushOrCreate(baseEffect, 'exclusiveMods', modification.exclusiveMods)
+    }
+    if(modification.statMultiplier){
+      baseEffect.statMultiplier = (baseEffect.statMultiplier ?? 1) * modification.statMultiplier
+    }
+    if(modification.abilityModification && baseEffect.abilities){
+      baseEffect.abilities = mergeAbilityModification(modification.abilityModification, baseEffect.abilities)
     }
   })
   return baseEffect
+}
+
+function mergeAbilityModification(amod, abilities){
+  return abilities.map(abilityDef => {
+    const newDef = deepClone(abilityDef)
+    if(amod.turnTime){
+      newDef.turnTime = (newDef.turnTime ?? 1) * amod.turnTime
+    }
+    if(amod.repetitions){
+      newDef.repetitions = (newDef.repetitions ?? 1) + amod.repetitions
+    }
+    return newDef
+  })
 }

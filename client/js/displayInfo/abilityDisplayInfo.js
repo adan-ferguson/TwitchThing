@@ -121,7 +121,7 @@ function abilityDescription(ability){
     }else if(actionDef.gainHealth){
       toAdd = derivedGainHealthDescription(actionDef.gainHealth, abilityInstance)
     }
-    if(!toAdd.length){
+    if(!toAdd?.length){
       return
     }
     if(capitalize){

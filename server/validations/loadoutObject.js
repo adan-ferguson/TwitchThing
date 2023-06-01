@@ -1,5 +1,5 @@
 import { SUBJECT_KEYS } from './subjectKeys.js'
-import { EFFECT_SCHEMA } from './effect.js'
+import { EFFECT_SCHEMA, TRIGGER_NAMES_SCHEMA } from './effect.js'
 import Joi from 'joi'
 
 const ORB_MODIFIER_SCHEMA = Joi.object({
@@ -13,7 +13,8 @@ const ORB_MODIFIER_SCHEMA = Joi.object({
 
 const RESTRICTION_SCHEMA = {
   empty: Joi.boolean(),
-  slot: Joi.number().integer().min(1).max(8)
+  slot: Joi.number().integer().min(1).max(8),
+  hasAbility: TRIGGER_NAMES_SCHEMA
 }
 
 const LOADOUT_MODIFIERS = {}
@@ -30,4 +31,5 @@ export const LOADOUT_OBJECT_SCHEMA = Joi.object({
   loadoutModifiers: Joi.object(LOADOUT_MODIFIERS),
   vars: Joi.object(),
   effect: EFFECT_SCHEMA,
+  maxLevel: Joi.number().integer().min(1)
 })

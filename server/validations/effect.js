@@ -6,6 +6,7 @@ import { MODS_SCHEMA } from './mods.js'
 import { status as StatusEffects, phantom as PhantomEffects } from '../../game/baseEffects/combined.js'
 import StatusEffectInstance from '../../game/baseEffects/statusEffectInstance.js'
 import PhantomEffectInstance from '../../game/baseEffects/phantomEffectInstance.js'
+import { TAG_NAME_SCHEMA, TAGS_LIST_SCHEMA } from './tagNames.js'
 
 
 const SCALED_NUMBER_SCHEMA = Joi.object({
@@ -23,7 +24,7 @@ const OPTIONAL_SCALED_NUMBER_SCHEMA = Joi.alternatives().try(
   Joi.number()
 )
 
-const TRIGGERS_SCHEMA = Joi.object({
+const ts = Joi.object({
   combatTime: Joi.number().integer(),
   attackHit: Joi.alternatives().try(
     Joi.object({
@@ -38,10 +39,19 @@ const TRIGGERS_SCHEMA = Joi.object({
   gainingDebuff: Joi.bool().truthy(),
   useAbility: Joi.bool().truthy(),
   hitByAttack: Joi.bool().truthy(),
-  targeted: Joi.bool().truthy()
 })
 
-const TRIGGER_NAMES_SCHEMA = Joi.string().valid(...Object.keys(TRIGGERS_SCHEMA.describe().keys))
+export const TRIGGER_NAMES_SCHEMA = Joi.string().valid('targeted', ...Object.keys(ts.describe().keys))
+
+const TRIGGERS_SCHEMA = ts.append({
+  targeted: Joi.alternatives().try(
+    Joi.bool().truthy(),
+    Joi.object({
+      triggerType: TRIGGER_NAMES_SCHEMA,
+      hasTag: TAG_NAME_SCHEMA
+    })
+  )
+})
 
 const as = Joi.object({
   applyStatusEffect: Joi.object({
@@ -69,11 +79,11 @@ const as = Joi.object({
   }),
   useAbility: Joi.object({
     subjectKey: Joi.string().valid(...SUBJECT_KEYS).required(),
-    trigger: TRIGGER_NAMES_SCHEMA.required()
+    trigger: TRIGGER_NAMES_SCHEMA
   }),
   modifyAbility: Joi.object({
     subjectKey: Joi.string().valid(...SUBJECT_KEYS).required(),
-    trigger: TRIGGER_NAMES_SCHEMA.required(),
+    trigger: TRIGGER_NAMES_SCHEMA,
     modification: Joi.object({
       cooldownRemaining: Joi.number().integer()
     }).required()
@@ -103,18 +113,21 @@ const CONDITIONS_SCHEMA = Joi.object({
 })
 
 const ABILITY_SCHEMA = Joi.object({
+  trigger: TRIGGERS_SCHEMA.required(),
   conditions: CONDITIONS_SCHEMA,
+  abilityId: Joi.string(),
   initialCooldown: Joi.number().integer(),
   cooldown: Joi.number().integer(),
-  replacements: REPLACEMENT_SCHEMA,
   resetCooldownAfterCombat: Joi.bool(),
-  abilityId: Joi.string(),
+  turnTime: Joi.number().min(0),
+  repetitions: Joi.number().integer().min(1),
+  replacements: REPLACEMENT_SCHEMA,
   actions: Joi.array().items(ACTION_SCHEMA),
   uses: Joi.number().integer(),
-  trigger: TRIGGERS_SCHEMA.required(),
   phantomEffect: Joi.custom(val => {
     return Joi.attempt(val, PHANTOM_EFFECT_SCHEMA)
   }),
+  tags: TAGS_LIST_SCHEMA,
   vars: Joi.object()
 })
 
@@ -125,14 +138,28 @@ const es = Joi.object({
   mods: MODS_SCHEMA,
   exclusiveStats: STATS_SCHEMA,
   exclusiveMods: MODS_SCHEMA,
-  statMultiplier: Joi.number().min(0)
+  statMultiplier: Joi.number().min(0),
+  tags: TAGS_LIST_SCHEMA
 })
 
 export const META_EFFECT_SCHEMA = Joi.object({
   metaEffectId: Joi.string(),
   conditions: CONDITIONS_SCHEMA,
-  subject: SUBJECT_KEYS_SCHEMA.required(),
-  effect: es.required()
+  subjectKey: SUBJECT_KEYS_SCHEMA.required(),
+  effectModification: {
+    stats: STATS_SCHEMA,
+    mods: MODS_SCHEMA,
+    exclusiveStats: STATS_SCHEMA,
+    exclusiveMods: MODS_SCHEMA,
+    statMultiplier: Joi.number().min(0),
+    abilityModification: Joi.object({
+      trigger: TRIGGER_NAMES_SCHEMA,
+      turnTime: Joi.number().min(0),
+      repetitions: Joi.number().integer().min(1),
+      exclusiveStats: STATS_SCHEMA,
+      addAction: ACTION_SCHEMA
+    })
+  }
 })
 
 export const EFFECT_SCHEMA = es.append({
@@ -143,7 +170,8 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
   base: Joi.object({
     damageOverTime: Joi.object({
       damage: OPTIONAL_SCALED_NUMBER_SCHEMA
-    })
+    }),
+    stunned: Joi.number().integer().positive()
   }),
   statusEffectId: Joi.string(),
   turns: Joi.number().integer(),

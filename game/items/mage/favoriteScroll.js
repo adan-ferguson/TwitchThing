@@ -3,25 +3,31 @@ export default function(level){
   return {
     effect: {
       metaEffects: [{
-        subject: 'attached',
-        effect: {
-          exclusiveStats: {
-            magicPower,
-            cooldownTime: Math.pow(0.9, level - 1) * 0.8
+        subjectKey: 'attached',
+        effectModification: {
+          abilityModification: {
+            trigger: 'active',
+            exclusiveStats: {
+              magicPower,
+              cooldownTime: Math.pow(0.9, level - 1) * 0.8
+            },
           }
         }
       }],
+      tags: ['scroll'],
     },
     loadoutModifiers: {
       self: {
         restrictions: {
           slot: 1
         }
+      },
+      attached: {
+        restrictions: {
+          hasAbility: 'active'
+        }
       }
     },
-    orbs: 1 + level * 4,
-    vars: {
-      targets: 'attached'
-    }
+    orbs: 1 + level * 4
   }
 }

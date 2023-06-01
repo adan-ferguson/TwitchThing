@@ -15,7 +15,7 @@ export function takeCombatTurn(combat, actor){
       throw 'Can not use ability, it is not ready, this should not have been returned from getNextActiveAbility.'
     }
     actionResults.push(...useAbility(combat, ability))
-    turnTime = ability.totalStats.get('nextTurnTime').value
+    turnTime = ability.turnTime
   }else if(actor.hasMod('noBasicAttack')){
     actionResults.push(performAction(combat, actor, null, {
       type: 'idle',

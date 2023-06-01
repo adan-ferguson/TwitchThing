@@ -33,7 +33,7 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
 
     super(data)
 
-    this._def = itemDef
+    this._def = { level, baseItem: baseItem.id }
     this._level = level
     this._baseItem = baseItem
   }
@@ -120,25 +120,22 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
 }
 
 function expandDef(itemDef){
+  let level
+  let baseItemId
   if(_.isString(itemDef)){
-    return basicItem(itemDef)
+    level = 1
+    baseItemId = itemDef
   }else{
-    return craftedItem(itemDef)
+    level = itemDef.level
+    baseItemId = itemDef.baseItem
   }
-}
-
-function basicItem(baseItemId){
   const baseItem = Items[baseItemId]
   if(!baseItem){
     throw 'Invalid baseItemId: ' + baseItemId
   }
   return {
-    data: baseItem.def(1),
-    level: 1,
+    data: baseItem.def(level),
+    level,
     baseItem
   }
-}
-
-function craftedItem(itemDef){
-  debugger
 }

@@ -67,10 +67,11 @@ export default class AdventurerLoadout{
 
   getSlotInfo(col, slot){
 
+    console.log('gsi')
     const baseLoadoutItem = this._objs[col][slot]
     const modifiedLevel = this.modifiers.get(col, slot, 'levelUp')
       .reduce((prev, mod) => prev + mod, baseLoadoutItem?.level ?? 1)
-    const loadoutItem = baseLoadoutItem.withDifferentLevel(modifiedLevel)
+    const loadoutItem = baseLoadoutItem?.withDifferentLevel(modifiedLevel)
 
     const restrictionsFailed = () => {
       const outgoing = this.modifiers.outgoingModifiers(col, slot)

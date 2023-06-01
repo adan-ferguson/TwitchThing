@@ -10,11 +10,11 @@ export default function(){
         name: 'Enrage',
         effect: {
           metaEffects: [{
-            subject: 'self',
+            subjectKey: 'self',
             conditions: {
               hpPctBelow: 0.5
             },
-            effect: {
+            effectModification: {
               stats: {
                 speed: 100,
                 physPower: '20%'

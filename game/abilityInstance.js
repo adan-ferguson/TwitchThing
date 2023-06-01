@@ -89,12 +89,12 @@ export default class AbilityInstance{
     if(!this.cooldown){
       return
     }
-    this._state.cooldownElapsedPct = Math.min(val, 1)
+    this._state.cooldownElapsedPct = Math.max(0, Math.min(val, 1))
   }
 
   get cooldownTime(){
     if(this.trigger.active){
-      return 1 - this._parentEffect.totalStats.get('cooldownTime').value
+      return 1 - this.totalStats.get('cooldownTime').value
     }
     return 1
   }
@@ -135,6 +135,8 @@ export default class AbilityInstance{
   }
 
   get totalStats(){
+    // TODO: abilities can also have exclusive stats
+    // eg. scrolls only affect active abilities
     return this.parentEffect.totalStats
   }
 
@@ -144,6 +146,10 @@ export default class AbilityInstance{
 
   get stacks(){
     return this.parentEffect?.stacks || 1
+  }
+
+  get turnTime(){
+
   }
 
   tryUse(){
