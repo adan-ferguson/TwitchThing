@@ -2,10 +2,10 @@ import { expandActionDef } from '../../../game/actionDefs/expandActionDef.js'
 import AbilityInstance from '../../../game/abilityInstance.js'
 import { derivedAttackDescription } from './derived/actions/attack.js'
 import { statusEffectApplicationDescription } from './statusEffectDisplayInfo.js'
-import { aboveIcon, attachedSkill, belowIcon, statScaling, wrapStat } from '../components/common.js'
+import { aboveIcon, attachedSkill, belowIcon, refundTime, statScaling, wrapStat } from '../components/common.js'
 import { takeDamageActionCalcDamage } from '../../../game/mechanicsFns.js'
 import { derivedGainHealthDescription } from './derived/actions/gainHealth.js'
-import { msToS } from '../../../game/utilFunctions.js'
+import { msToS, toPct } from '../../../game/utilFunctions.js'
 import _ from 'lodash'
 
 const abilityDefinitions = {
@@ -141,6 +141,10 @@ function abilityDescription(ability){
   }
   if(ability.resetCooldownAfterCombat){
     chunks.push('Resets to initial cooldown after combat.')
+  }
+  console.log(ability.turnRefund, 'tr')
+  if(ability.turnRefund > 0){
+    chunks.push(`Refunds ${refundTime(toPct(ability.turnRefund))}.`)
   }
   return chunks.join(' ') //_.capitalize()
 }

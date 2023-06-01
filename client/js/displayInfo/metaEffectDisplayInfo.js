@@ -12,7 +12,7 @@ const DEFS = {
 
 const ABILITY_MODIFICATION_DEFS = {
   miniatureScroll: metaEffect => {
-    const pct = toPct(1 - metaEffect.turnTime)
+    const pct = toPct(metaEffect.turnRefund)
     return wrapContent(`
     Attached active refunds ${refundTime(pct)}, 
     but the ability only benefits from ${scalingWrap('physPower', metaEffect.exclusiveStats.physPower)}
@@ -56,7 +56,6 @@ function derived(metaEffect, obj){
 }
 
 function derivedAbilityModification(abilityModification){
-  console.log('dam')
   const def = ABILITY_MODIFICATION_DEFS[abilityModification.abilityModificationId]?.(abilityModification)
   return arrayize(def ?? null)
 }

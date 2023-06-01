@@ -9,13 +9,13 @@ export function takeCombatTurn(combat, actor){
   }
   const ability = actor.getNextActiveAbility()
   const actionResults = []
-  let turnTime = 1
+  let turnRefund = 0
   if(ability){
     if(!ability.tryUse()){
       throw 'Can not use ability, it is not ready, this should not have been returned from getNextActiveAbility.'
     }
     actionResults.push(...useAbility(combat, ability))
-    turnTime = ability.turnTime
+    turnRefund = ability.turnRefund
   }else if(actor.hasMod('noBasicAttack')){
     actionResults.push(performAction(combat, actor, null, {
       type: 'idle',
@@ -24,7 +24,7 @@ export function takeCombatTurn(combat, actor){
   }else{
     actionResults.push(performAction(combat, actor, null, basicAttackDef(actor)))
   }
-  actor.nextTurn(turnTime)
+  actor.nextTurn(turnRefund)
   return actionResults
 }
 

@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import Stats from './stats/stats.js'
 
 export default class AbilityInstance{
 
@@ -135,9 +136,7 @@ export default class AbilityInstance{
   }
 
   get totalStats(){
-    // TODO: abilities can also have exclusive stats
-    // eg. scrolls only affect active abilities
-    return this.parentEffect.totalStats
+    return new Stats([this.parentEffect.totalStats, this.abilityDef.exclusiveStats ?? {}])
   }
 
   get conditions(){
@@ -148,8 +147,8 @@ export default class AbilityInstance{
     return this.parentEffect?.stacks || 1
   }
 
-  get turnTime(){
-
+  get turnRefund(){
+    return this.abilityDef.turnRefund ?? 0
   }
 
   tryUse(){

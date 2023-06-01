@@ -119,7 +119,7 @@ const ABILITY_SCHEMA = Joi.object({
   initialCooldown: Joi.number().integer(),
   cooldown: Joi.number().integer(),
   resetCooldownAfterCombat: Joi.bool(),
-  turnTime: Joi.number().min(0),
+  turnRefund: Joi.number().min(0),
   repetitions: Joi.number().integer().min(1),
   replacements: REPLACEMENT_SCHEMA,
   actions: Joi.array().items(ACTION_SCHEMA),
@@ -155,7 +155,7 @@ export const META_EFFECT_SCHEMA = Joi.object({
     abilityModification: Joi.object({
       abilityModificationId: Joi.string(),
       trigger: TRIGGER_NAMES_SCHEMA,
-      turnTime: Joi.number().min(0),
+      turnRefund: Joi.number().min(0),
       repetitions: Joi.number().integer().min(1),
       exclusiveStats: STATS_SCHEMA,
       addAction: ACTION_SCHEMA

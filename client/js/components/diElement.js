@@ -31,6 +31,10 @@ export default class DIElement extends HTMLElement{
     return this.closest('.tippy-content')
   }
 
+  get inModal(){
+    return this.closest('di-modal')
+  }
+
   setOptions(options = {}){
     const newOptions = mergeOptionsObjects(this._options, options)
     if(_.isEqual(newOptions, this._options)){

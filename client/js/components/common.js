@@ -24,7 +24,7 @@ export function skillPointEntry(count){
 }
 
 export function refundTime(str){
-  return `<span class="icon-and-value">${str}${faIcon('clock')}</span>`
+  return `<span class="icon-and-value" tooltip="Next turn time">${str}${faIcon('clock-rotate-left')}</span>`
 }
 
 export function orbEntries(obj){

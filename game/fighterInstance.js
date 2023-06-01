@@ -344,8 +344,8 @@ export default class FighterInstance{
     this.uncache()
   }
 
-  nextTurn(turnTime = 1){
-    this._state.timeSinceLastAction = this.turnTime * (1 - turnTime)
+  nextTurn(turnRefund = 0){
+    this._state.timeSinceLastAction = this.turnTime * turnRefund
     this.statusEffectInstances.forEach(sei => sei.nextTurn())
     this.uncache()
   }

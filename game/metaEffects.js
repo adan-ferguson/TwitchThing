@@ -19,7 +19,7 @@ export default class MetaEffectCollection{
           ...metaEffect,
           source: ei.uniqueID
         }
-        if(meDef.subject === 'attached' && ei.slotInfo){
+        if(meDef.subjectKey === 'attached' && ei.slotInfo){
           add(this.categories.slots, ei.slotInfo.col + 1 % 2, ei.slotInfo.row, meDef)
         }else if(meDef.subject === 'self'){
           pushOrCreate(this.categories.ids, ei.uniqueID, meDef)
@@ -88,11 +88,14 @@ function merge(baseEffect, metaEffects){
 function mergeAbilityModification(amod, abilities){
   return abilities.map(abilityDef => {
     const newDef = deepClone(abilityDef)
-    if(amod.turnTime){
-      newDef.turnTime = (newDef.turnTime ?? 1) * amod.turnTime
+    if(amod.turnRefund){
+      newDef.turnRefund = (newDef.turnTime ?? 0) + amod.turnRefund
     }
     if(amod.repetitions){
       newDef.repetitions = (newDef.repetitions ?? 1) + amod.repetitions
+    }
+    if(amod.exclusiveStats){
+      newDef.exclusiveStats = [...arrayize(newDef.exclusiveStats), amod.exclusiveStats]
     }
     return newDef
   })

@@ -10,12 +10,13 @@ import { modDisplayInfo } from '../displayInfo/modDisplayInfo.js'
 import { metaEffectDisplayInfo } from '../displayInfo/metaEffectDisplayInfo.js'
 import { subjectDescription } from '../subjectClientFns.js'
 import { effectDisplayInfo } from '../displayInfo/effectDisplayInfo.js'
+import tippy from 'tippy.js'
 
 export default class EffectDetails extends DIElement{
 
   get defaultOptions(){
     return {
-      showTooltips: false,
+      showTooltips: false
     }
   }
 
@@ -42,6 +43,7 @@ export default class EffectDetails extends DIElement{
     this._addMods()
     this._addLoadoutModifiers()
     this._addDescription()
+    this._addTooltips()
   }
 
   _addMeta(){
@@ -125,6 +127,21 @@ export default class EffectDetails extends DIElement{
     if(edi.description){
       this.appendChild(wrapText(edi.description))
     }
+  }
+
+  _addTooltips(){
+    requestAnimationFrame(() => {
+      if(this.inTooltip){
+        return
+      }
+      this.querySelectorAll('[tooltip]').forEach(el => {
+        tippy(el, {
+          theme: 'light',
+          content: el.getAttribute('tooltip')
+        })
+        el.removeAttribute('tooltip')
+      })
+    })
   }
 }
 
