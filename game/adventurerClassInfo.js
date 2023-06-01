@@ -56,14 +56,14 @@ const mage = {
   items: [[
     Items.wand,
     Items.robes,
-    Items.miniatureScroll,
     Items.powerScroll,
     Items.spellbook,
+    Items.magicRing,
   ],[
     Items.favoriteScroll,
     Items.unstableScroll,
+    Items.miniatureScroll,
     Items.manaSeasoning,
-    Items.magicRing,
   ],[
     Items.ascendedScroll,
     Items.repeatingScroll,

@@ -153,6 +153,7 @@ export const META_EFFECT_SCHEMA = Joi.object({
     exclusiveMods: MODS_SCHEMA,
     statMultiplier: Joi.number().min(0),
     abilityModification: Joi.object({
+      abilityModificationId: Joi.string(),
       trigger: TRIGGER_NAMES_SCHEMA,
       turnTime: Joi.number().min(0),
       repetitions: Joi.number().integer().min(1),

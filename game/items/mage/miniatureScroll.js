@@ -1,18 +1,12 @@
 export default function(level){
   const multi = 0.5 + 'x'
   return {
-    loadoutModifiers: {
-      attached: {
-        restrictions: {
-          hasAbility: 'active'
-        }
-      }
-    },
     effect: {
       metaEffects: [{
         subjectKey: 'attached',
         effectModification: {
           abilityModification: {
+            abilityModificationId: 'miniatureScroll',
             trigger: 'active',
             turnTime: 1 - level * 0.5,
             exclusiveStats: {

@@ -1,11 +1,11 @@
 export default function(level){
-  const magicPower = 2.4 + 0.35 * level
+  const magicPower = 2.5 + 0.5 * level
   return {
     effect: {
       tags: ['magic'],
       abilities: [{
         trigger: { active: true },
-        cooldown: Math.floor(7000 * Math.pow(0.9, level - 1)),
+        cooldown: 10000,
         actions: [{
           attack: {
             scaling: {

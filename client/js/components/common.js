@@ -4,7 +4,6 @@ import { makeEl, roundToNearestIntervalOf } from '../../../game/utilFunctions.js
 import healthIcon from '../../assets/icons/health.svg'
 import physPower from '../../assets/icons/physPower.svg'
 import magicPower from '../../assets/icons/magicPower.svg'
-import _ from 'lodash'
 import AdventurerItem from '../../../game/items/adventurerItem.js'
 import AbilityInstance from '../../../game/abilityInstance.js'
 
@@ -24,6 +23,10 @@ export function skillPointEntry(count){
   return `<span class="skill-point-entry icon-and-value">${count}${skillPointIcon()}</span>`
 }
 
+export function refundTime(str){
+  return `<span class="icon-and-value">${str}${faIcon('clock')}</span>`
+}
+
 export function orbEntries(obj){
   return Object.keys(obj).map(key => orbEntry(key, obj[key]))
 }
@@ -38,7 +41,7 @@ export function faIcon(iconName){
 
 export function coloredIcon(iconName, color = null, cls = null){
   const s = color ? `style="color:${color};"` : ''
-  return `<i ${s} class="fa-solid fa-${iconName} ${cls}"></i>`
+  return `<i ${s} class="fa-solid fa-${iconName} ${cls ?? ''}"></i>`
 }
 
 export function attachedItem(text = false){
@@ -86,7 +89,7 @@ export function wrapStatObj(statObj){
   }
 }
 
-export function scalingWrap(scalingType, valStr){
+export function scalingWrap(scalingType, valStr = ''){
   const ICONS = {
     magicPower: magicPower,
     physPower: physPower,
@@ -102,7 +105,7 @@ export function toSeconds(ms){
   return roundToNearestIntervalOf(ms / 1000, 0.01) + 's'
 }
 
-export function statScaling(scaling, abilityInstance, range = null){
+export function statScaling(scaling, abilityInstance = null, range = null){
   const chunks = []
   for(let scalingType in scaling){
     if(['physPower', 'magicPower'].includes(scalingType)){
@@ -151,4 +154,12 @@ export function featureLocked(target, msg){
   }
   const cover = makeEl({ class: 'feature-locked', content: `${faIcon('lock')} <span>${msg}</span>` })
   target.appendChild(cover)
+}
+
+export function activeAbility(){
+  return '<span class="active-ability-rect">Active</span>'
+}
+
+export function triggeredAbility(){
+  return '<span class="triggered-ability-rect">Trigger</span>'
 }

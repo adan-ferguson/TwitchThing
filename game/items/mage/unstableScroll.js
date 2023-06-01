@@ -4,13 +4,6 @@ export default function(level){
   const magicPower = (2 + geometricProgression(0.25, level, 1, 0.25)) + 'x'
   const stunDuration = 2 + level
   return {
-    loadoutModifiers: {
-      attached: {
-        restrictions: {
-          hasAbility: 'active'
-        }
-      }
-    },
     effect: {
       metaEffects: [{
         subjectKey: 'attached',

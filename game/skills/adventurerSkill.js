@@ -60,6 +60,6 @@ export default class AdventurerSkill extends AdventurerLoadoutObject{
   }
 
   withDifferentLevel(level){
-    return new AdventurerSkill(this.id, this.level + 1)
+    return new AdventurerSkill(this.id, this.level)
   }
 }

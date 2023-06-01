@@ -1,6 +1,6 @@
 import DIElement from './diElement.js'
 import { roundToNearestIntervalOf, wrapContent, wrapText } from '../../../game/utilFunctions.js'
-import { isAdventurerItem, orbEntries, wrapStats } from './common.js'
+import { activeAbility, isAdventurerItem, orbEntries, wrapStats } from './common.js'
 import Stats from '../../../game/stats/stats.js'
 import StatsList from './stats/statsList.js'
 import AbilityDescription from './abilityDescription.js'
@@ -148,6 +148,8 @@ function loadoutModifierToEl(subjectKey, modifierKey, value, isItem){
       html += `must be in slot ${value.slot}.`
     }else if(value.empty){
       html += ' must be empty.'
+    }else if(value.hasAbility === 'active'){
+      html += ` must have an ${activeAbility()}`
     }
   }
 

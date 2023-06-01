@@ -87,16 +87,16 @@ export default class AdventurerInstance extends FighterInstance{
       if(loadout.items[i]){
         const si = loadout.getSlotInfo(0, i)
         this._itemInstances[i] = new LoadoutObjectInstance({
-          obj: loadout.items[i],
+          obj: si.loadoutItem,
           owner: this,
           state: items[i],
           slotInfo: { col: 0, row: i }
         })
       }
       if(loadout.skills[i]){
-        const si = loadout.getSlotInfo(i, i)
+        const si = loadout.getSlotInfo(1, i)
         this._skillInstances[i] = new LoadoutObjectInstance({
-          obj: loadout.skills[i],
+          obj: si.loadoutItem,
           owner: this,
           state: skills[i],
           slotInfo: { col: 1, row: i }

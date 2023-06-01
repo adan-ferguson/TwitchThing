@@ -44,7 +44,7 @@ export function toDisplayName(str){
   return displayName
 }
 
-export function roundToFixed(val, digits, padEnd = false){
+export function roundToFixed(val, digits = 2, padEnd = false){
   const multi = Math.pow(10, digits)
   val *= multi
   val = Math.round(val)
@@ -230,4 +230,8 @@ export function pushOrCreate(obj, key, toPush){
 
 export function msToS(ms){
   return roundToFixed(ms / 1000, 2)
+}
+
+export function toPct(decimal, digits = 0){
+  return roundToFixed(decimal * 100, digits) + '%'
 }

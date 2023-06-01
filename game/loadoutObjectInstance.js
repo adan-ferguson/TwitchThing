@@ -26,4 +26,8 @@ export default class LoadoutObjectInstance extends EffectInstance{
   get useCooldownMultiplier(){
     return true
   }
+
+  get loadoutModifiers(){
+    return this._obj.loadoutModifiers
+  }
 }

@@ -21,11 +21,6 @@ export default function(level){
         restrictions: {
           slot: 1
         }
-      },
-      attached: {
-        restrictions: {
-          hasAbility: 'active'
-        }
       }
     },
     orbs: 1 + level * 4
