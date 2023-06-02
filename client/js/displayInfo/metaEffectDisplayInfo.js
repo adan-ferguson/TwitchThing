@@ -2,7 +2,12 @@ import { arrayize, makeEl, toPct, wrapContent } from '../../../game/utilFunction
 import { conditionsDisplayInfo } from './conditionsDisplayInfo.js'
 import EffectDetails from '../components/effectDetails.js'
 import { subjectDescription } from '../subjectClientFns.js'
-import { isAdventurerItem, refundTime, scalingWrap } from '../components/common.js'
+import {
+  activeAbility,
+  isAdventurerItem,
+  refundTime,
+  wrapStats
+} from '../components/common.js'
 
 const DEFS = {
   swordOfFablesMultiplier: (metaEffect, obj) => {
@@ -14,9 +19,8 @@ const ABILITY_MODIFICATION_DEFS = {
   miniatureScroll: metaEffect => {
     const pct = toPct(metaEffect.turnRefund)
     return wrapContent(`
-    Attached active refunds ${refundTime(pct)}, 
-    but the ability only benefits from ${scalingWrap('physPower', metaEffect.exclusiveStats.physPower)}
-    and ${scalingWrap('magicPower', metaEffect.exclusiveStats.magicPower)}.
+    ${activeAbility()} refunds ${refundTime(pct)}, 
+    but only benefits from ${wrapStats(metaEffect.exclusiveStats)}.
     `)
   }
 }
@@ -57,5 +61,22 @@ function derived(metaEffect, obj){
 
 function derivedAbilityModification(abilityModification){
   const def = ABILITY_MODIFICATION_DEFS[abilityModification.abilityModificationId]?.(abilityModification)
-  return arrayize(def ?? null)
+  if(def){
+    return arrayize(def)
+  }
+
+  const chunks = []
+
+  if(abilityModification.trigger === 'active'){
+    chunks.push(activeAbility(), 'ability')
+  }
+  if(abilityModification.exclusiveStats){
+    chunks.push('benefits from', wrapStats(abilityModification.exclusiveStats))
+  }
+
+  if(!chunks.length){
+    return []
+  }
+
+  return [wrapContent(chunks.join(' '))]
 }

@@ -57,7 +57,7 @@ export default class AdventurerSkillRow extends DIElement{
     if(!this.adventurerSkill){
       return ''
     }
-    return `${this.adventurerSkill.displayName} ${affectsIcon(this.adventurerSkill.vars.affects)}`.trim()
+    return `${this.adventurerSkill.displayName} ${affectsIcon(this.adventurerSkill)}`.trim()
   }
 
   get stateEl(){

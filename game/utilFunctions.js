@@ -115,7 +115,7 @@ export function makeEl(options = {}){
   }else if(options.text){
     el.textContent = options.text
   }else if(options.nodes){
-    el.append(...options.nodes.map(n => _.isString(n) ? wrapContent(n) : n))
+    el.append(...options.nodes.map(n => _.isString(n) ? wrapContent(n, { elementType: 'span' }) : n))
   }
 
   if (options.class){

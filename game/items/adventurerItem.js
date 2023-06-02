@@ -96,6 +96,9 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
 
   withDifferentLevel(level){
     if(_.isString(this.def)){
+      if(level === 1){
+        return new AdventurerItem(this.def)
+      }
       return new AdventurerItem({ baseItem: this.def, level })
     }else{
       return new AdventurerItem({ ...this.def, level })

@@ -142,7 +142,6 @@ function abilityDescription(ability){
   if(ability.resetCooldownAfterCombat){
     chunks.push('Resets to initial cooldown after combat.')
   }
-  console.log(ability.turnRefund, 'tr')
   if(ability.turnRefund > 0){
     chunks.push(`Refunds ${refundTime(toPct(ability.turnRefund))}.`)
   }

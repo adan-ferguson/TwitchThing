@@ -40,9 +40,6 @@ export function rowsToInventoryItems(rows){
   const crafted = []
 
   rows.forEach(row => {
-    if(!(row.loadoutItem instanceof FighterItemLoadoutItem)){
-      return
-    }
     const itemDef = row.loadoutItem.itemInstance.itemDef
     if(row.loadoutItem.isBasic){
       if(!basic[itemDef.group]){
@@ -102,6 +99,10 @@ export function standardItemSort(rowA, rowB){
     return -1
   }
 
+  if(itemA.rarity !== itemB.rarity){
+    return itemA.rarity - itemB.rarity
+  }
+
   const totalA = Object.values(orbsA).reduce((prev, val) => prev + val)
   const totalB = Object.values(orbsB).reduce((prev, val) => prev + val)
 
@@ -115,17 +116,17 @@ export function standardItemSort(rowA, rowB){
 }
 
 export function addInventoryItem(list, loadoutItem, count = 1){
-  const existingRow = list.findRow(row => row.loadoutItem.equals(loadoutItem))
-  if(existingRow){
-    if(loadoutItem.isBasic){
-      existingRow.count += count
-    }
-    return
-  }
-  loadoutItem.setOwner(null)
-  const row = new LoadoutRow()
-  row.setItem(loadoutItem).setCount(count)
-  list.addRow(row)
+  // const existingRow = list.findRow(row => row.loadoutItem.equals(loadoutItem))
+  // if(existingRow){
+  //   if(loadoutItem.isBasic){
+  //     existingRow.count += count
+  //   }
+  //   return
+  // }
+  // loadoutItem.setOwner(null)
+  // const row = new LoadoutRow()
+  // row.setItem(loadoutItem).setCount(count)
+  // list.addRow(row)
 }
 
 export function removeInventoryItem(list, loadoutItem, all = false){

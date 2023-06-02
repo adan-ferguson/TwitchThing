@@ -6,6 +6,7 @@ import physPower from '../../assets/icons/physPower.svg'
 import magicPower from '../../assets/icons/magicPower.svg'
 import AdventurerItem from '../../../game/items/adventurerItem.js'
 import AbilityInstance from '../../../game/abilityInstance.js'
+import { subjectKeyForLoadoutObject } from '../subjectClientFns.js'
 
 export function orbPointIcon(){
   return coloredIcon('circle', '#f3d472')
@@ -66,7 +67,7 @@ export function belowIcon(){
 
 export function wrapStats(stats){
   const chunks = []
-  const allStats = Object.values(stats.getAll())
+  const allStats = Object.values(new Stats(stats).getAll())
   for(let stat of allStats){
     chunks.push(wrapStatObj(stat))
   }
@@ -135,10 +136,12 @@ export function statScaling(scaling, abilityInstance = null, range = null){
   return chunks.join(' + ')
 }
 
-export function affectsIcon(affects, isItem = false){
-  if(affects === 'attached'){
+export function affectsIcon(obj){
+  const isItem = obj instanceof AdventurerItem
+  const subjectKey = subjectKeyForLoadoutObject(obj)
+  if(subjectKey === 'attached'){
     return isItem ? attachedSkill() : attachedItem()
-  }else if(affects === 'neighbouring'){
+  }else if(subjectKey === 'neighbouring'){
     return neighbouringIcon()
   }
   return ''
@@ -161,5 +164,5 @@ export function activeAbility(){
 }
 
 export function triggeredAbility(){
-  return '<span class="triggered-ability-rect">Trigger</span>'
+  return '<span class="triggered-ability-rect">Triggered</span>'
 }
