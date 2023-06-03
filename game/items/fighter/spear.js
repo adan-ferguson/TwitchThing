@@ -1,5 +1,5 @@
 export default function(level){
-  const physPower = (0.8 + level * 0.6) + 'x'
+  const physPower = (0.9 + level * 0.6) + 'x'
   return {
     effect: {
       metaEffects: [{

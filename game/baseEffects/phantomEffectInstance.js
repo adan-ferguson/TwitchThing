@@ -5,8 +5,13 @@ import _ from 'lodash'
 export default class PhantomEffectInstance extends EffectInstance{
 
   constructor(data, owner, parentEffect = null){
-    super(explodeEffect(data), owner)
+    super(owner)
     this._parentEffect = parentEffect
+    this._data = data
+  }
+
+  get calculateBaseEffectData(){
+    return explodeEffect(this._data)
   }
 
   get uniqueID(){

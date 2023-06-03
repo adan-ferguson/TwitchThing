@@ -2,9 +2,13 @@ import EffectInstance from './effectInstance.js'
 
 export default class LoadoutObjectInstance extends EffectInstance{
   constructor({ obj, owner, state, slotInfo }){
-    super(obj.effect, owner, state)
+    super(owner, state)
     this._obj = obj
     this._slotInfo = slotInfo
+  }
+
+  get calculateBaseEffectData(){
+    return this._obj.effect
   }
 
   get obj(){

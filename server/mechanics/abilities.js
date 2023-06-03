@@ -1,5 +1,6 @@
 import { arrayize } from '../../game/utilFunctions.js'
 import { subjectKeyMatchesEffectInstances } from '../../game/subjectFns.js'
+import _ from 'lodash'
 
 export function processAbilityEvents(triggerHandler, eventNames, owner, sourceAbility, data = {}){
 
@@ -51,6 +52,11 @@ export function getFighterInstanceAbilities(fighterInstance, type, sourceAbility
       }
       if(subjectAbility.conditions?.attackDodgeable && data.undodgeable){
         return false
+      }
+      if(_.isObject(subjectAbility.trigger.attackHit)){
+        if(subjectAbility.trigger.attackHit.damageType && subjectAbility.trigger.attackHit.damageType !== data.damageType){
+          return false
+        }
       }
       return true
     })

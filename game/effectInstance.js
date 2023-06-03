@@ -7,16 +7,20 @@ new Stats()
 
 export default class EffectInstance{
 
+  _baseEffectData
   _fighterInstance
   _state = {}
 
-  constructor(baseEffectData, owner, state = {}){
+  constructor(owner, state = {}){
     this._fighterInstance = owner
     if(!state.uniqueID){
       state.uniqueID = uniqueID()
     }
-    this._baseEffectData = baseEffectData
     this.state = state
+  }
+
+  get calculateBaseEffectData(){
+    throw 'calculateBaseEffectData not implemented'
   }
 
   get uniqueID(){
@@ -40,6 +44,9 @@ export default class EffectInstance{
   }
 
   get baseEffectData(){
+    if(!this._baseEffectData){
+      this._baseEffectData = this.calculateBaseEffectData
+    }
     return this._baseEffectData
   }
 
@@ -126,6 +133,10 @@ export default class EffectInstance{
     this.abilities.forEach(ai => {
       ai.endCombat()
     })
+  }
+
+  invalidate(){
+    this._baseEffectData = null
   }
 }
 

@@ -1,6 +1,6 @@
 import DIElement from './diElement.js'
-import { roundToNearestIntervalOf, wrapContent, wrapText } from '../../../game/utilFunctions.js'
-import { activeAbility, isAdventurerItem, orbEntries, wrapStats } from './common.js'
+import { makeEl, roundToNearestIntervalOf, wrapContent, wrapText } from '../../../game/utilFunctions.js'
+import { activeAbility, isAdventurerItem, orbEntries, pluralize, wrapStats } from './common.js'
 import Stats from '../../../game/stats/stats.js'
 import StatsList from './stats/statsList.js'
 import AbilityDescription from './abilityDescription.js'
@@ -11,6 +11,7 @@ import { metaEffectDisplayInfo } from '../displayInfo/metaEffectDisplayInfo.js'
 import { subjectDescription } from '../subjectClientFns.js'
 import { effectDisplayInfo } from '../displayInfo/effectDisplayInfo.js'
 import tippy from 'tippy.js'
+import { conditionsDisplayInfo } from '../displayInfo/conditionsDisplayInfo.js'
 
 export default class EffectDetails extends DIElement{
 
@@ -59,11 +60,9 @@ export default class EffectDetails extends DIElement{
   _addLoadoutModifiers(){
     const loadoutModifiers = this._obj.loadoutModifiers ?? {}
     for (let subjectKey in loadoutModifiers){
-      for (let modifierKey in loadoutModifiers[subjectKey]){
-        const el = loadoutModifierToEl(subjectKey, modifierKey, loadoutModifiers[subjectKey][modifierKey], this.isItem)
-        if(el){
-          this.appendChild(el)
-        }
+      const el = loadoutModifierToEl(subjectKey, loadoutModifiers[subjectKey], this.isItem)
+      if(el){
+        this.appendChild(el)
       }
     }
   }
@@ -147,30 +146,44 @@ export default class EffectDetails extends DIElement{
 
 customElements.define('di-effect-details', EffectDetails)
 
-function loadoutModifierToEl(subjectKey, modifierKey, value, isItem){
+function loadoutModifierToEl(subjectKey, modifiers, isItem){
 
-  let html = subjectDescription(subjectKey, isItem)
+  const nodes = []
+  const contentNodes = []
+  nodes.push(wrapContent(subjectDescription(subjectKey, isItem), { class: 'loadout-modifier-header' }))
 
-  if(modifierKey === 'orbs'){
-    const key = Object.keys(value)[0]
-    let moreOrLess = 'more'
-    value = { ...value }
-    if(value[key] < 0){
-      value[key] *= -1
-      moreOrLess = 'less'
+  for(let modifierKey in modifiers){
+    let value = modifiers[modifierKey]
+    let str
+    if(modifierKey === 'orbs'){
+      const key = Object.keys(value)[0]
+      let moreOrLess = 'more'
+      value = { ...value }
+      if(value[key] < 0){
+        value[key] *= -1
+        moreOrLess = 'less'
+      }
+      str = `Costs ${orbEntries(value)} ${moreOrLess}`
+    }else if(modifierKey === 'restrictions'){
+      if(value.slot){
+        str = `Can only be equipped in slot ${value.slot}`
+      }else if(value.empty){
+        str = 'Must be empty'
+      }else if(value.hasAbility === 'active'){
+        str = `Must have an ${activeAbility()}`
+      }
+    }else if(modifierKey === 'levelUp'){
+      str =`Is upgraded by ${pluralize('level', value)}`
     }
-    html += `cost ${orbEntries(value)} ${moreOrLess}.`
-  }else if(modifierKey === 'restrictions'){
-    if(value.slot){
-      html += `can only be equipped in slot ${value.slot}.`
-    }else if(value.empty){
-      html += ' must be empty.'
-    }else if(value.hasAbility === 'active'){
-      html += ` must have an ${activeAbility()}`
+    if(str){
+      contentNodes.push(wrapContent(str, { elementType: 'li' }))
     }
   }
 
-  if(html){
-    return wrapContent(html)
+  if(!contentNodes.length){
+    return
   }
+
+  nodes.push(makeEl({ nodes: contentNodes, class: 'loadout-modifier-content', elementType: 'ul' }))
+  return makeEl({ nodes, class: 'loadout-modifier' })
 }

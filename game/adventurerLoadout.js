@@ -147,5 +147,8 @@ function restrictionFailed(obj, restriction, col, row){
   if(restriction.slot){
     return row !== restriction.slot - 1
   }
+  if(restriction.hasAbility){
+    return obj?.abilities.every(ability => !ability.trigger[restriction.hasAbility])
+  }
   return false
 }

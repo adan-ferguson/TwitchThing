@@ -7,13 +7,23 @@ di-effect-details
   text-align: left // center
   font-family: 'Text Font', serif
 
-  .meta-effect
+  .meta-effect, .loadout-modifier
     border: 0.5rem solid #CCC
     padding: 10rem
-    .meta-effect-header
+
+    .meta-effect-header, .loadout-modifier-header
       border-bottom: 0.5rem solid #CCC
       margin-bottom: 10rem
       padding-bottom: 5rem
+      text-align: center
+
+    .loadout-modifier-content
+      padding-left: 15rem
+      margin: 0
+
+      li:not(:last-child)
+        margin-bottom: 4rem
+
 
   hr
     margin: 4rem 0

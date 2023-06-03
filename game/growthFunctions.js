@@ -18,7 +18,9 @@ export function geometricProgression(growthPct, iterations, base = 1, roundToNea
   if(iterations <= 0){
     return 0
   }
-  const val =  base * (Math.pow(1 + growthPct, iterations) - 1) / growthPct
+  const val =  !growthPct
+    ? base * iterations
+    : base * (Math.pow(1 + growthPct, iterations) - 1) / growthPct
   return roundToNearestIntervalOf(val, roundToNearest)
 }
 

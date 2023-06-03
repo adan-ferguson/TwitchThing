@@ -1,13 +1,16 @@
 export default function(level){
   return {
+    loadoutModifiers: {
+      attached: {
+        restrictions: {
+          hasAbility: 'active'
+        },
+        levelUp: level + 1
+      }
+    },
     effect: {
       tags: ['scroll']
     },
-    loadoutModifiers: {
-      attached: {
-        levelUp: 1 + level
-      }
-    },
-    orbs: 7 + 4 * level
+    orbs: 5 + 4 * level
   }
 }

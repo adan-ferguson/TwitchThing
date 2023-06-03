@@ -7,8 +7,12 @@ import _ from 'lodash'
 export default class StatusEffectInstance extends EffectInstance{
 
   constructor(data, owner, state = {}, ){
-    super(explodeEffect(data), owner, state)
+    super(owner, state)
     this._data = data
+  }
+
+  get calculateBaseEffectData(){
+    return explodeEffect(this._data)
   }
 
   get data(){
