@@ -53,7 +53,11 @@ export function useAbility(combat, ability, triggerData = null){
   processAbilityEvents(combat, 'useAbility', owner, ability)
   ability.phantomEffect ? owner.addPhantomEffect(ability.phantomEffect, ability.parentEffect) : null
   const results = []
-  iterateActions(ability.actions)
+
+  for(let i = 0; i < ability.repetitions; i++){
+    iterateActions(ability.actions)
+  }
+
   owner.clearPhantomEffects()
   return results
 

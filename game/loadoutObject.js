@@ -2,25 +2,23 @@ import { toDisplayName } from './utilFunctions.js'
 
 export default class LoadoutObject{
 
-  _data
-
-  constructor(data){
-    if(!data){
-      throw 'No data'
+  get data(){
+    if(!this._calculatedData){
+      this._calculatedData = this.calculateData
     }
-    this._data = data
+    return this._calculatedData
+  }
+
+  get calculateData(){
+    throw 'No calc data implement'
   }
 
   get name(){
-    return this._data.name
+    return this.data.name
   }
 
   get displayName(){
     return this.data.displayName ?? toDisplayName(this.data.name) ?? 'Unknown Name'
-  }
-
-  get data(){
-    return this._data
   }
 
   get conditions(){
@@ -61,5 +59,9 @@ export default class LoadoutObject{
 
   get stats(){
     return this.effect.stats ?? {}
+  }
+
+  invalidate(){
+    this._calculatedData = null
   }
 }

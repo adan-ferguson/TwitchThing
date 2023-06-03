@@ -136,7 +136,7 @@ function generateRewards(dungeonRun, monsterDefinition){
 
     if(dropChest){
       let type = monsterInstance.isBoss ? 'boss' :
-        userChests < BONUS_CHESTS_UNTIL ? 'tutorial' :
+        dungeonRun.user.deepestFloor < 11 ? 'tutorial' : // Have fighter-skewed chests until account beats zone 0
           'normal'
 
       rewards.chests = generateRandomChest({

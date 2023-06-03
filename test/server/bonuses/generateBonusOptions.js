@@ -1,19 +1,7 @@
-import { generateBonusOptions as gbo } from '../../../server/adventurer/skills.js'
+import { adjustedDifficultyLevel } from '../../../game/monsterInstance.js'
 
-// describe('generateBonusOptions function', () => {
-//
-//   it('Should debug test test test', () => {
-//     const options = gbo({}, {})
-//     console.log(options)
-//   })
-// })
+const adl = adjustedDifficultyLevel
 
-const options = gbo({
-  features: {
-    advClasses: {
-      fighter: 1
-    }
-  }
-}, {
-  items: []
-})
+for(let i = 1; i <= 60; i++){
+  console.log(i, adl(i))
+}

@@ -18,7 +18,7 @@ export default function(level){
       }],
       tags: ['scroll'],
     },
-    orbs: -7 + level * 10,
+    orbs: -4 + level * 7,
     maxLevel: 2
   }
 }

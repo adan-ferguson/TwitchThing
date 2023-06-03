@@ -5,10 +5,10 @@ export default function(level){
     effect: {
       stats: {
         physDef: exponentialPercentage(0.1, level - 1, 0.4),
-        hpMax: wrappedPct(40 + geometricProgression(0.2, level, 30, 5)),
+        hpMax: wrappedPct(10 + geometricProgression(0.2, level, 30, 5)),
         speed: -30 - level * 10
       }
     },
-    orbs: 2 + level * 5
+    orbs: 3 + level * 4
   }
 }

@@ -67,10 +67,11 @@ export default class AdventurerLoadout{
 
   getSlotInfo(col, slot){
 
-    const baseLoadoutItem = this._objs[col][slot]
-    const modifiedLevel = this.modifiers.get(col, slot, 'levelUp')
-      .reduce((prev, mod) => prev + mod, baseLoadoutItem?.level ?? 1)
-    const loadoutItem = baseLoadoutItem?.withDifferentLevel(modifiedLevel)
+    const loadoutItem = this._objs[col][slot]
+    const levelAdjust = this.modifiers
+      .get(col, slot, 'levelUp')
+      .reduce((prev, mod) => prev + mod, 0)
+    loadoutItem?.setLevelAdjust(levelAdjust)
 
     const restrictionsFailed = () => {
       const outgoing = this.modifiers.outgoingModifiers(col, slot)
@@ -89,7 +90,6 @@ export default class AdventurerLoadout{
       }
       return false
     }
-
 
     const ret = { loadoutItem }
 

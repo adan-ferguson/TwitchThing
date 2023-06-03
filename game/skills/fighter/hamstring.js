@@ -1,11 +1,11 @@
 export default function(level){
   const physPower = 1.3 + level * 0.1
-  const speed = -25 - level * 15
+  const speed = -20 - level * 15
   return {
     effect: {
       abilities: [{
         trigger: { active: true },
-        cooldown: 20000,
+        cooldown: 12000,
         phantomEffect: {
           base: {
             attackAppliesStatusEffect: {

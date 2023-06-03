@@ -7,7 +7,8 @@ import { floorToZone } from './zones.js'
 import LoadoutObjectInstance from './loadoutObjectInstance.js'
 import MonsterItem from './monsterItem.js'
 
-const ADJUSTED_DIFFICULTY_PER_ZONE = 2.25
+const ADJUSTED_DIFFICULTY_PER_ZONE = 1.5
+const ADJUSTED_DIFFICULTY_PER_FLOOR_PER_ZONE = 0.2
 
 const HP_BASE = 12
 const HP_GROWTH = 5
@@ -19,15 +20,15 @@ const POWER_GROWTH_PCT = 0.1
 
 const XP_BASE = 2
 const XP_GROWTH = 1
-const XP_GROWTH_PCT = 0.15
-const XP_ZONE_BONUS = 1
+const XP_GROWTH_PCT = 0.175
+// const XP_ZONE_BONUS = 1
 
-export function levelToXpReward(lvl){
-  const zoneBonuses = Math.floor((lvl - 1) / 10)
-  const adjustedLevel = adjustedDifficultyLevel(lvl)
-  const val = Math.ceil(geometricProgression(XP_GROWTH_PCT, adjustedLevel - 1, XP_GROWTH))
+export function monsterLevelToXpReward(lvl){
+  // const zoneBonuses = Math.floor((lvl - 1) / 10)
+  // const adjustedLevel = adjustedDifficultyLevel(lvl)
+  const val = Math.ceil(geometricProgression(XP_GROWTH_PCT, lvl - 1, XP_GROWTH))
   return toNumberOfDigits(
-    XP_BASE + val * Math.pow(XP_ZONE_BONUS, zoneBonuses),
+    XP_BASE + val, // * Math.pow(XP_ZONE_BONUS, zoneBonuses),
     3
   )
 }
@@ -48,9 +49,12 @@ export function monsterLevelToPower(lvl){
   )
 }
 
-function adjustedDifficultyLevel(lvl){
+export function adjustedDifficultyLevel(lvl){
   const zone = floorToZone(lvl)
-  return lvl + Math.max(0, zone - 1) * ADJUSTED_DIFFICULTY_PER_ZONE
+  const zoneFloor = lvl - zone * 10 - 1
+  return lvl +
+    Math.max(0, zone) * ADJUSTED_DIFFICULTY_PER_ZONE +
+    zoneFloor * zone * ADJUSTED_DIFFICULTY_PER_FLOOR_PER_ZONE
 }
 
 export default class MonsterInstance extends FighterInstance{
@@ -119,7 +123,7 @@ export default class MonsterInstance extends FighterInstance{
   }
 
   get xpReward(){
-    return levelToXpReward(this.level)
+    return monsterLevelToXpReward(this.level)
   }
 
   get isBoss(){

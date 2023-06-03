@@ -57,7 +57,9 @@ export default class StatsList extends DIElement{
       if(this._options.excluded.indexOf(key) > -1){
         continue
       }
-      if(this._options.hideIfDefaultValue && stat.value === stat.defaultValue){
+      if(this._options.hideIfDefaultValue &&
+        stat.value === stat.defaultValue &&
+        this._options.forced.indexOf(key) === -1){
         continue
       }
       this._updateStat(stat, this._options.owner, showStatChangeEffect)

@@ -158,7 +158,8 @@ export const META_EFFECT_SCHEMA = Joi.object({
       turnRefund: Joi.number().min(0),
       repetitions: Joi.number().integer().min(1),
       exclusiveStats: STATS_SCHEMA,
-      addAction: ACTION_SCHEMA
+      addAction: ACTION_SCHEMA,
+      vars: Joi.object()
     })
   }
 })
@@ -170,7 +171,8 @@ export const EFFECT_SCHEMA = es.append({
 export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
   base: Joi.object({
     damageOverTime: Joi.object({
-      damage: OPTIONAL_SCALED_NUMBER_SCHEMA
+      damage: OPTIONAL_SCALED_NUMBER_SCHEMA,
+      damageType: DAMAGE_TYPE_SCHEMA,
     }),
     stunned: Joi.number().integer().positive()
   }),

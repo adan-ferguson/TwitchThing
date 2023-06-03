@@ -179,19 +179,27 @@ export default class FighterInstance{
   }
 
   get timeSinceLastAction(){
-    return this._state.timeSinceLastAction ?? 0
+    return this.timeBarPct * this.turnTime
   }
 
   set timeSinceLastAction(val){
-    this._state.timeSinceLastAction = val
+    this.timeBarPct = val / this.turnTime
   }
 
   get timeUntilNextAction(){
-    return Math.ceil(Math.max(0, (this.nextActionTime - this.timeSinceLastAction)))
+    return this.turnTime - this.timeSinceLastAction
   }
 
   set timeUntilNextAction(val){
-    this._state.timeSinceLastAction = this.nextActionTime - Math.max(0, val)
+    this.timeSinceLastAction = this.turnTime - val
+  }
+
+  get timeBarPct(){
+    return this._state.timeBarPct ?? 0
+  }
+
+  set timeBarPct(val){
+    this._state.timeBarPct = minMax(0, val, 1)
   }
 
   get actionReady(){
@@ -303,19 +311,19 @@ export default class FighterInstance{
   startCombat(combatParams){
     this._state.combatTime = 0
     this._state.combatParams = combatParams
-    this._state.timeSinceLastAction = this.hasMod('sneakAttack') ? this.nextActionTime - 1 : 0
+    this._state.timeBarPct = this.hasMod('sneakAttack') ? 0.99 : 0
   }
 
   endCombat(){
     delete this._state.combatTime
     delete this._state.combatParams
-    delete this._state.timeSinceLastAction
+    delete this._state.timeBarPct
     this.effectInstances.forEach(ei => ei.endCombat())
   }
 
   advanceTime(ms){
     if(!this.hasMod('freezeActionBar') && this.inCombat){
-      this._state.timeSinceLastAction += ms
+      this.timeSinceLastAction += ms
     }
     if(!this.hasMod('freezeCooldowns')){
       this.loadoutEffectInstances.forEach(itemInstance => {
@@ -345,7 +353,7 @@ export default class FighterInstance{
   }
 
   nextTurn(turnRefund = 0){
-    this._state.timeSinceLastAction = this.turnTime * turnRefund
+    this.timeBarPct = turnRefund
     this.statusEffectInstances.forEach(sei => sei.nextTurn())
     this.uncache()
   }

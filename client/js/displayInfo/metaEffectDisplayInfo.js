@@ -1,10 +1,10 @@
-import { arrayize, makeEl, toPct, wrapContent } from '../../../game/utilFunctions.js'
+import { arrayize, makeEl, msToS, toPct, wrapContent } from '../../../game/utilFunctions.js'
 import { conditionsDisplayInfo } from './conditionsDisplayInfo.js'
 import EffectDetails from '../components/effectDetails.js'
 import { subjectDescription } from '../subjectClientFns.js'
 import {
   activeAbility,
-  isAdventurerItem,
+  isAdventurerItem, pluralize,
   refundTime,
   wrapStats
 } from '../components/common.js'
@@ -16,11 +16,16 @@ const DEFS = {
 }
 
 const ABILITY_MODIFICATION_DEFS = {
-  miniatureScroll: metaEffect => {
-    const pct = toPct(metaEffect.turnRefund)
+  miniatureScroll: amDef => {
+    const pct = toPct(amDef.turnRefund)
     return wrapContent(`
     ${activeAbility()} refunds ${refundTime(pct)}, 
-    but only benefits from ${wrapStats(metaEffect.exclusiveStats)}.
+    but only benefits from ${wrapStats(amDef.exclusiveStats)}.
+    `)
+  },
+  unstableScroll: amDef => {
+    return wrapContent(`
+    ${activeAbility()} benefits from ${wrapStats(amDef.exclusiveStats)}, but it stuns you for ${msToS(amDef.vars.stunDuration)}s.
     `)
   }
 }
@@ -73,6 +78,12 @@ function derivedAbilityModification(abilityModification){
   if(abilityModification.exclusiveStats){
     chunks.push('benefits from', wrapStats(abilityModification.exclusiveStats))
   }
+  if(abilityModification.repetitions){
+    chunks.push(`repeats ${pluralize('time', abilityModification.repetitions)}.`)
+  }
+  // if(abilityModification.addAction){
+  //
+  // }
 
   if(!chunks.length){
     return []

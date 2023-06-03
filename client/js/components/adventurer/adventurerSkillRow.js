@@ -166,7 +166,7 @@ export default class AdventurerSkillRow extends DIElement{
       displayStyle: 'skill'
     }).update()
 
-    const ado = getAbilityDisplayInfoForObj(this.adventurerSkill)
+    // const ado = getAbilityDisplayInfoForObj(this.adventurerSkill)
     // if(ado[0]?.type === 'active'){
     //   this.style.borderColor = ITEM_ROW_COLORS.active
     //   this.style.borderWidth = '3rem'

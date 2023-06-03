@@ -44,7 +44,7 @@ export default class FighterInstancePane extends HTMLElement{
     this._actionBarEl = this.querySelector('di-action-bar')
     this.statsList = this.querySelector('di-stats-list').setOptions({
       iconsOnly: true,
-      forced: ['physPower','magicPower'] // Excluded takes priority, so these might be hidden
+      forced: ['physPower','magicPower']
     })
     this._hpChangeQueue = new ResultQueue()
 
@@ -244,20 +244,20 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   _excluded(){
-    const excluded = ['hpMax','speed']
-    const magicAttack = this.fighterInstance.hasMod('magicAttack')
-    const showPhys = this.fighterInstance.hasMod('physScaling') ||
-      this.fighterInstance.physPower !== this.fighterInstance.basePower
-    const showMagic = this.fighterInstance.hasMod('magicScaling') ||
-      this.fighterInstance.magicPower !== this.fighterInstance.basePower
-
-    if((showPhys || !magicAttack) && showMagic){
-      return [...excluded]
-    }else if(magicAttack && !showPhys){
-      return [...excluded, 'physPower']
-    }else{
-      return [...excluded, 'magicPower']
-    }
+    return ['hpMax','speed']
+    // const magicAttack = this.fighterInstance.hasMod('magicAttack')
+    // const showPhys = this.fighterInstance.hasMod('physScaling') ||
+    //   this.fighterInstance.physPower !== this.fighterInstance.basePower
+    // const showMagic = this.fighterInstance.hasMod('magicScaling') ||
+    //   this.fighterInstance.magicPower !== this.fighterInstance.basePower
+    //
+    // if((showPhys || !magicAttack) && showMagic){
+    //   return [...excluded]
+    // }else if(magicAttack && !showPhys){
+    //   return [...excluded, 'physPower']
+    // }else{
+    //   return [...excluded, 'magicPower']
+    // }
   }
 
   _getEffectEl(effectId, eventName){
@@ -304,7 +304,7 @@ export default class FighterInstancePane extends HTMLElement{
       this._actionBarEl.setBadge(`${ICON_SVGS[type + 'Power']}`)
     }
     this._actionBarEl.setTime(
-      this.fighterInstance._state.timeSinceLastAction ?? 0,
+      this.fighterInstance.timeSinceLastAction,
       this.fighterInstance.timeUntilNextAction,
       cancelAnimations
     )

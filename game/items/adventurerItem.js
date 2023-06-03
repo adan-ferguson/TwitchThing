@@ -28,14 +28,15 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
   _baseItem
 
   constructor(itemDef){
-
-    const { data, level, baseItem } = expandDef(itemDef)
-
-    super(data)
-
+    super()
+    const { level, baseItem } = expandDef(itemDef)
     this._def = itemDef
     this._level = level
     this._baseItem = baseItem
+  }
+
+  get calculateData(){
+    return this._baseItem.def(this._level + this._levelAdjust)
   }
 
   get advClass(){
@@ -56,10 +57,6 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
 
   get def(){
     return this._def
-  }
-
-  get level(){
-    return this._level
   }
 
   get displayName(){
@@ -94,15 +91,19 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
     return this.isBasic && adventurerItem.isBasic && this.def === adventurerItem.def
   }
 
-  withDifferentLevel(level){
-    if(_.isString(this.def)){
-      if(level === 1){
-        return new AdventurerItem(this.def)
-      }
-      return new AdventurerItem({ baseItem: this.def, level })
-    }else{
-      return new AdventurerItem({ ...this.def, level })
-    }
+  withModifiedLevel(levelAdjust){
+    return this
+    // let ai
+    // if(_.isString(this.def)){
+    //   if(level === 1){
+    //     ai = new AdventurerItem(this.def)
+    //   }
+    //   ai = new AdventurerItem({ baseItem: this.def, level })
+    // }else{
+    //   ai = new AdventurerItem({ ...this.def, level })
+    // }
+    // ai.unmodifiedLevel = this.level
+    // return ai
   }
 
   upgradeInfo(){
@@ -141,7 +142,6 @@ function expandDef(itemDef){
     throw 'Invalid baseItemId: ' + baseItemId
   }
   return {
-    data: baseItem.def(level),
     level,
     baseItem
   }

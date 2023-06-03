@@ -7,6 +7,7 @@ import { takeDamageActionCalcDamage } from '../../../game/mechanicsFns.js'
 import { derivedGainHealthDescription } from './derived/actions/gainHealth.js'
 import { msToS, toPct } from '../../../game/utilFunctions.js'
 import _ from 'lodash'
+import { derivedModifyAbilityDescription } from './derived/actions/modifyAbility.js'
 
 const abilityDefinitions = {
   flutteringDodge: () => {
@@ -120,6 +121,8 @@ function abilityDescription(ability){
       toAdd = statusEffectApplicationDescription(actionDef.applyStatusEffect, abilityInstance)
     }else if(actionDef.gainHealth){
       toAdd = derivedGainHealthDescription(actionDef.gainHealth, abilityInstance)
+    }else if(actionDef.modifyAbility){
+      toAdd = derivedModifyAbilityDescription(actionDef.modifyAbility, abilityInstance)
     }
     if(!toAdd?.length){
       return

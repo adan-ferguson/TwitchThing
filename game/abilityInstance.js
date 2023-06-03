@@ -26,6 +26,10 @@ export default class AbilityInstance{
     return this.abilityDef.replacements || {}
   }
 
+  get repetitions(){
+    return this.abilityDef.repetitions ?? 1
+  }
+
   get abilityId(){
     return this.abilityDef.abilityId
   }

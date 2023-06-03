@@ -138,4 +138,10 @@ const DEFS = {
       description: `Gain ${chunks.join(' + ')} for the first ${msToS(chunks.duration)}s of combat.`
     }
   },
+  stunned: () => {
+    return {
+      description: 'stunned',
+      grammatic: 'become'
+    }
+  }
 }

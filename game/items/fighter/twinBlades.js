@@ -5,6 +5,6 @@ export default function(level){
         basicAttacks: level
       }
     },
-    orbs: -2 + level * 10
+    orbs: 3 + level * 7
   }
 }

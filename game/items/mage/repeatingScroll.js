@@ -1,12 +1,6 @@
 export default function(level){
   return {
-    loadoutModifiers: {
-      attached: {
-        restrictions: {
-          hasAbility: 'active'
-        }
-      }
-    },
+    displayName: 'Duplication Scroll',
     effect: {
       metaEffects: [{
         subjectKey: 'attached',
@@ -19,6 +13,6 @@ export default function(level){
       }],
       tags: ['scroll'],
     },
-    orbs: level * 10,
+    orbs: 3 + level * 7,
   }
 }

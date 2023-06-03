@@ -97,7 +97,7 @@ const statDefinitionsInfo = {
     description: '2 + 1 per 10 levels'
   },
   cooldownMultiplier: {
-    text: 'Cooldowns',
+    text: 'Cooldown Duration',
     description: 'Affects the cooldowns of your items (only items this time, I swear)'
   },
   chestLevel: {

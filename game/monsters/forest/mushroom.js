@@ -17,6 +17,7 @@ const statusEffect = function(def){
 const burningSpores = statusEffect({
   base: {
     damageOverTime: {
+      damageType: 'magic',
       damage: {
         scaledNumber: {
           magicPower: 0.06

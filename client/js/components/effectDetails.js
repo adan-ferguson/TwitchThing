@@ -162,7 +162,7 @@ function loadoutModifierToEl(subjectKey, modifierKey, value, isItem){
     html += `cost ${orbEntries(value)} ${moreOrLess}.`
   }else if(modifierKey === 'restrictions'){
     if(value.slot){
-      html += `must be in slot ${value.slot}.`
+      html += `can only be equipped in slot ${value.slot}.`
     }else if(value.empty){
       html += ' must be empty.'
     }else if(value.hasAbility === 'active'){

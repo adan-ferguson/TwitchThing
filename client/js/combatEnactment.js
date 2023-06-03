@@ -44,6 +44,7 @@ export default class CombatEnactment extends EventEmitter{
   }
 
   setCombat(combat){
+    console.log(combat.timeline)
     this._combat = combat
     this._combatID = combat._id
     this._fighterPane1.setFighter(toFighterInstance(combat.fighter1.def, combat.fighter1.startState))

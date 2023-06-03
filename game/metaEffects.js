@@ -21,9 +21,9 @@ export default class MetaEffectCollection{
         }
         if(meDef.subjectKey === 'attached' && ei.slotInfo){
           add(this.categories.slots, ei.slotInfo.col + 1 % 2, ei.slotInfo.row, meDef)
-        }else if(meDef.subject === 'self'){
+        }else if(meDef.subjectKey === 'self'){
           pushOrCreate(this.categories.ids, ei.uniqueID, meDef)
-        }else if(meDef.subject === 'all'){
+        }else if(meDef.subjectKey === 'all'){
           this.categories.all.push(meDef)
         }
       }
@@ -88,6 +88,9 @@ function merge(baseEffect, metaEffects){
 function mergeAbilityModification(amod, abilities){
   return abilities.map(abilityDef => {
     const newDef = deepClone(abilityDef)
+    if(amod.trigger && !abilityDef.trigger[amod.trigger]){
+      return newDef
+    }
     if(amod.turnRefund){
       newDef.turnRefund = (newDef.turnTime ?? 0) + amod.turnRefund
     }
@@ -96,6 +99,9 @@ function mergeAbilityModification(amod, abilities){
     }
     if(amod.exclusiveStats){
       newDef.exclusiveStats = [...arrayize(newDef.exclusiveStats), amod.exclusiveStats]
+    }
+    if(amod.addAction){
+      newDef.actions.push(amod.addAction)
     }
     return newDef
   })

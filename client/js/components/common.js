@@ -166,3 +166,7 @@ export function activeAbility(){
 export function triggeredAbility(){
   return '<span class="triggered-ability-rect">Triggered</span>'
 }
+
+export function pluralize(str, count){
+  return `${count} ${str + (count === 1 ? '' : 's')}`
+}

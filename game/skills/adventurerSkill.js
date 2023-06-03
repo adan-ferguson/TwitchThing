@@ -10,20 +10,22 @@ export function getSkillsForClass(className, levels){
 
 export default class AdventurerSkill extends AdventurerLoadoutObject{
 
+  _levelAdjust = 0
+
   constructor(skillId, level = 1){
+    super()
+
     const baseSkill = Skills[skillId]
     if(!baseSkill){
       throw 'Invalid skillId: ' + skillId
     }
 
-    super(baseSkill.def(level))
-
     this._level = level
     this._baseSkill = baseSkill
   }
 
-  get level(){
-    return this._level
+  get calculateData(){
+    return this._baseSkill.def(this._level + this._levelAdjust)
   }
 
   get displayName(){
@@ -57,9 +59,5 @@ export default class AdventurerSkill extends AdventurerLoadoutObject{
 
   get skillPointsToUpgrade(){
     return new AdventurerSkill(this.id, this.level + 1).skillPoints - this.skillPoints
-  }
-
-  withDifferentLevel(level){
-    return new AdventurerSkill(this.id, this.level)
   }
 }

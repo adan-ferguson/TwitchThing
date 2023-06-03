@@ -35,7 +35,8 @@ export default class LoadoutTab extends DIElement{
     super()
     this.innerHTML = HTML
     this.adventurerPaneEl.setOptions({
-      hideXpBar: true
+      hideXpBar: true,
+      orbsStyle: OrbsDisplayStyle.REMAINING
     })
     this._setupItemEdit()
     this._setupSkillEdit()

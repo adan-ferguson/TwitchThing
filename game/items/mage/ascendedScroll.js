@@ -3,6 +3,11 @@ export default function(level){
     effect: {
       tags: ['scroll']
     },
-    orbs: 9 * level
+    loadoutModifiers: {
+      attached: {
+        levelUp: 1 + level
+      }
+    },
+    orbs: 7 + 4 * level
   }
 }
