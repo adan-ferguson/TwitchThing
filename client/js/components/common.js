@@ -8,6 +8,14 @@ import AdventurerItem from '../../../game/items/adventurerItem.js'
 import AbilityInstance from '../../../game/abilityInstance.js'
 import { subjectKeyForLoadoutObject } from '../subjectClientFns.js'
 
+export function physPowerIcon(){
+  return physPower
+}
+
+export function magicPowerIcon(){
+  return magicPower
+}
+
 export function orbPointIcon(){
   return coloredIcon('circle', '#f3d472')
 }
@@ -71,7 +79,7 @@ export function wrapStats(stats){
   for(let stat of allStats){
     chunks.push(wrapStatObj(stat))
   }
-  return chunks.join(', ')
+  return chunks.join(' & ')
 }
 
 export function wrapStat(statType, val){

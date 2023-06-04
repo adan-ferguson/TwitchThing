@@ -48,9 +48,17 @@ export function performAction(combat, actor, ability, actionDef){
   }
 }
 
-export function useAbility(combat, ability, triggerData = null){
+export function useAbility(combat, ability, triggerData = {}){
   const owner = ability.fighterInstance
-  processAbilityEvents(combat, 'useAbility', owner, ability)
+  processAbilityEvents(combat, 'useAbility', owner, ability, triggerData)
+  processAbilityEvents(combat, 'enemyUseAbility', combat.getEnemyOf(owner), ability, triggerData)
+
+  if(triggerData.cancelled){
+    return [{
+      cancelled: triggerData.cancelled
+    }]
+  }
+
   ability.phantomEffect ? owner.addPhantomEffect(ability.phantomEffect, ability.parentEffect) : null
   const results = []
 

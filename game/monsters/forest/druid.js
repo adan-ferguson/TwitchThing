@@ -10,12 +10,12 @@ export default function(){
       {
         name: 'Bear Form',
         effect: {
-          tags: ['magic'],
           abilities: [{
-            trigger: { active: true },
+            trigger: 'active',
             initialCooldown: 11000,
             abilityId: 'bearForm',
             uses: 1,
+            tags: ['spell'],
             actions: [{
               applyStatusEffect: {
                 targets: 'self',
@@ -38,10 +38,10 @@ export default function(){
       {
         name: 'Regrowth',
         effect: {
-          tags: ['magic'],
           abilities: [{
-            trigger: { active: true },
+            trigger: 'active',
             initialCooldown: 5000,
+            tags: ['spell'],
             actions: [{
               gainHealth: {
                 scaling: {

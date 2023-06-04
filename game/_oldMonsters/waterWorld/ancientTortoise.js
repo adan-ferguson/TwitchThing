@@ -17,7 +17,9 @@ export default {
         uses: 1,
         description: 'Usable only when below 50% health. Hide in shell for 10 seconds to regain health.',
         conditions: {
-          hpPctBelow: 0.5
+          owner: {
+            hpPctBelow: 0.5
+          }
         },
         actions: [
           statusEffectAction({

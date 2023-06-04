@@ -9,9 +9,7 @@ export default function(){
       name: 'Sprout Saplings',
       effect: {
         abilities: [{
-          trigger: {
-            combatTime: 1
-          },
+          trigger: 'startOfCombat',
           abilityId: 'sproutSaplings',
           uses: 1,
           actions: [{
@@ -20,7 +18,7 @@ export default function(){
               statusEffect: {
                 name: 'Sapling',
                 abilities: [{
-                  trigger: { targeted: true },
+                  trigger: 'targeted',
                   uses: 3,
                   abilityId: 'saplingBlock',
                   replacements: {

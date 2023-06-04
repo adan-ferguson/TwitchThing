@@ -4,9 +4,7 @@ export default function(level){
   return {
     effect: {
       abilities: [{
-        trigger: {
-          attackHit: true
-        },
+        trigger: 'attackHit',
         actions: [{
           applyStatusEffect: {
             targets: 'self',

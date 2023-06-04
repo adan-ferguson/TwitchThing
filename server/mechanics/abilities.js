@@ -8,7 +8,7 @@ export function processAbilityEvents(triggerHandler, eventNames, owner, sourceAb
 
   const pendingTriggers = []
   for(let eventName of eventNames){
-    const abilities = getFighterInstanceAbilities(owner, eventName, sourceAbility, data)
+    const abilities = getFighterInstanceAbilities(triggerHandler, owner, eventName, sourceAbility, data)
     for(let ability of abilities){
       if(ability.tryUse()){
         data = performReplacement(ability, data)
@@ -36,28 +36,35 @@ function performReplacement(replacerAbility, actionData){
   return replacedData
 }
 
-export function getFighterInstanceAbilities(fighterInstance, type, sourceAbility, data){
+export function getFighterInstanceAbilities(triggerHandler, fighterInstance, type, sourceAbility, data){
   return fighterInstance
     .getAbilities(type)
     .filter(subjectAbility => {
-      if(data.combatTime && subjectAbility.trigger.combatTime){
-        if(data.combatTime.before >= subjectAbility.trigger.combatTime || subjectAbility.trigger.combatTime < data.combatTime.after){
-          return false
-        }
-      }
-      if(sourceAbility && subjectAbility){
-        if(!subjectKeyMatchesEffectInstances(subjectAbility.parentEffect, sourceAbility.parentEffect, subjectAbility.conditions?.source)){
-          return false
-        }
-      }
-      if(subjectAbility.conditions?.attackDodgeable && data.undodgeable){
-        return false
-      }
-      if(_.isObject(subjectAbility.trigger.attackHit)){
-        if(subjectAbility.trigger.attackHit.damageType && subjectAbility.trigger.attackHit.damageType !== data.damageType){
-          return false
-        }
+      if(subjectAbility.conditions){
+        return conditionsMatch(triggerHandler, subjectAbility.conditions, sourceAbility, subjectAbility, data)
       }
       return true
     })
+}
+
+function conditionsMatch(triggerHandler, conditions, sourceAbility, subjectAbility, data){
+  if(conditions.source?.subjectKey && sourceAbility && subjectAbility){
+    if(!subjectKeyMatchesEffectInstances(subjectAbility.parentEffect, sourceAbility.parentEffect, conditions.source.subjectKey)){
+      return false
+    }
+  }
+  if(conditions.source?.hasTag && !sourceAbility.tags.includes(conditions.source.hasTag)){
+    return false
+  }
+  if(conditions.data){
+    for(let key in conditions.data){
+      if(conditions.data[key] !== data[key]){
+        return
+      }
+    }
+  }
+  if(conditions.owner && !subjectAbility.fighterInstance.meetsConditions(conditions.owner)){
+    return false
+  }
+  return true
 }

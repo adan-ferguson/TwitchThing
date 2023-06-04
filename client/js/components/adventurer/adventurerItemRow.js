@@ -26,7 +26,7 @@ const HTML = `
 const RARITY_TO_TEXTURE = {
   0: null,
   1: 'climpek',
-  2: 'brushed-alum',
+  2: 'tree-bark',
 }
 
 export default class AdventurerItemRow extends DIElement{

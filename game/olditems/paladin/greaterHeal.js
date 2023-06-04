@@ -10,7 +10,9 @@ export default {
         initialCooldown: 40000,
         description: '{A0} Cleanse all debuffs. Only use this when health is below 50%.',
         conditions: {
-          hpPctBelow: 0.5
+          owner: {
+            hpPctBelow: 0.5
+          }
         },
         actions: [
           gainHealthAction({

@@ -12,7 +12,9 @@ export default function(){
           metaEffects: [{
             subjectKey: 'self',
             conditions: {
-              hpPctBelow: 0.5
+              owner: {
+                hpPctBelow: 0.5
+              }
             },
             effectModification: {
               stats: {
@@ -27,7 +29,7 @@ export default function(){
         name: 'Bite',
         effect: {
           abilities: [{
-            trigger: { active: true },
+            trigger: 'active',
             initialCooldown: 11000,
             actions: [{
               attack: {

@@ -1,4 +1,4 @@
-import flutteringMonsterItem from '../../monsterItems/flutteringMonsterItem.js'
+import flutteringMonsterItem from '../../commonTemplates/flutteringMonsterItem.js'
 
 export default function(){
   return {

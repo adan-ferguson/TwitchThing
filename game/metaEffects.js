@@ -41,7 +41,7 @@ export default class MetaEffectCollection{
     toApply.push(...(this.categories.ids[effectInstance.uniqueID] ?? []))
     toApply.push(...this.categories.all)
     const filtered = toApply.filter((meDef => {
-      return effectInstance.fighterInstance.meetsConditions(meDef.conditions)
+      return effectInstance.fighterInstance.meetsConditions(meDef.conditions?.owner)
     }))
     return merge(effectInstance.baseEffectData, filtered)
   }
@@ -88,7 +88,7 @@ function merge(baseEffect, metaEffects){
 function mergeAbilityModification(amod, abilities){
   return abilities.map(abilityDef => {
     const newDef = deepClone(abilityDef)
-    if(amod.trigger && !abilityDef.trigger[amod.trigger]){
+    if(amod.trigger && abilityDef.trigger !== amod.trigger){
       return newDef
     }
     if(amod.turnRefund){

@@ -164,6 +164,7 @@ class Combat{
   }
 
   _advanceTime(){
+    const startOfCombat = this._currentTime === 0 ? true : false
     const nexts = [
       ...this.fighters.map(fi => fi.timeUntilNextUpdate),
       OVERTIME - this.time > 0 ? OVERTIME - this.time : Number.MAX_VALUE,
@@ -183,12 +184,9 @@ class Combat{
       this.fighters.forEach(fi => {
         fi.advanceTime(timeToAdvance)
         processAbilityEvents(this, 'instant', fi)
-        processAbilityEvents(this, 'combatTime', fi, null, {
-          combatTime: {
-            before: this._currentTime - timeToAdvance,
-            after: this._currentTime
-          }
-        })
+        if(startOfCombat){
+          processAbilityEvents(this, 'startOfCombat', fi, null)
+        }
       })
     }
     this._resolveTriggers()

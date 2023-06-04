@@ -1,7 +1,7 @@
 export default function(){
 
   const aimedShot = {
-    trigger: { active: true },
+    trigger: 'active',
     cooldown: 5000,
     actions: [{
       attack: {

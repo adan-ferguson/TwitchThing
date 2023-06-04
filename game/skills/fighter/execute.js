@@ -6,7 +6,7 @@ export default function(level){
   return {
     effect: {
       abilities: [{
-        trigger: { active: true },
+        trigger: 'active',
         initialCooldown,
         resetCooldownAfterCombat: true,
         actions: [{

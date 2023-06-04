@@ -3,9 +3,11 @@ export default {
   effect: {
     abilities: [{
       abilityId: 'flutteringDodge',
-      trigger: { attacked: true },
+      trigger: 'attacked',
       conditions: {
-        attackDodgeable: true
+        data: {
+          undodgeable: false
+        }
       },
       cooldown: 10000,
       replacements: {

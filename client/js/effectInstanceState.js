@@ -19,7 +19,7 @@ export function effectInstanceState(ei){
 function type(ai){
   if(!ai){
     return 'none'
-  }else if(ai.trigger.active){
+  }else if(ai.trigger === 'active'){
     if(ai.fighterInstance.hasMod('silenced')){
       return 'none'
     }

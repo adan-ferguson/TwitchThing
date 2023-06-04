@@ -164,12 +164,6 @@ export default class FighterInstance{
             vals.push(tickAbility.cooldownRemaining)
           }
         })
-        ei.getAbilities('combatTime', 'action').forEach(combatTimeAbility => {
-          const targetTime = combatTimeAbility.trigger.combatTime
-          if(combatTimeAbility.enabled && targetTime > this._state.combatTime){
-            vals.push(targetTime - this._state.combatTime)
-          }
-        })
       }
       if(ei.durationRemaining){
         vals.push(ei.durationRemaining)

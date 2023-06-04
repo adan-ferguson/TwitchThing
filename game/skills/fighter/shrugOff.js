@@ -4,7 +4,7 @@ export default function(level){
   return {
     effect: {
       abilities: [{
-        trigger: { gainingDebuff: true },
+        trigger: 'gainingDebuff',
         abilityId: 'shrugOff',
         cooldown,
         replacements: {

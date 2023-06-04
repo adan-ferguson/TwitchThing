@@ -2,10 +2,12 @@ export default function(level){
   return {
     effect: {
       abilities: [{
-        trigger: { active: true },
+        trigger: 'active',
         uses: level + 1,
         conditions: {
-          hpPctBelow: 0.5
+          owner: {
+            hpPctBelow: 0.5
+          }
         },
         actions: [{
           gainHealth: {

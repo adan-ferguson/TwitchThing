@@ -6,7 +6,9 @@ export default function(level){
       metaEffects: [{
         subjectKey: 'self',
         conditions: {
-          deepestFloor: true
+          owner: {
+            deepestFloor: true
+          }
         },
         effectModification: {
           stats: {

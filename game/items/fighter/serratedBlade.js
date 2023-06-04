@@ -2,9 +2,14 @@ export default function(level){
   return {
     effect: {
       abilities: [{
-        trigger: { attackHit: { damageType: 'phys' } },
+        trigger: 'attackHit',
         conditions: {
-          source: 'attached'
+          source: {
+            subjectKey: 'attached'
+          },
+          data: {
+            damageType: 'phys'
+          }
         },
         actions: [{
           applyStatusEffect: {

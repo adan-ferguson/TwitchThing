@@ -29,8 +29,8 @@ export function subjectKeyForLoadoutObject(loadoutObject){
     subjectKeys[me.subjectKey] = true
   }
   for(let ability of loadoutObject.abilities){
-    if(ability.conditions?.source){
-      subjectKeys[ability.conditions.source] = true
+    if(ability.conditions?.source?.subjectKey){
+      subjectKeys[ability.conditions.source.subjectKey] = true
     }
   }
   for(let lm in loadoutObject.loadoutModifiers){

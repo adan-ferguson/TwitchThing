@@ -75,7 +75,7 @@ export default function(){
         name: 'Regeneration',
         effect: {
           abilities: [{
-            trigger: { instant: true },
+            trigger: 'instant',
             initialCooldown: 5000,
             actions: [{
               gainHealth: {
@@ -91,7 +91,7 @@ export default function(){
         name: 'Spores',
         effect: {
           abilities: [{
-            trigger: { hitByAttack: true },
+            trigger: 'hitByAttack',
             abilityId: 'mushroomSpores',
             actions: [{
               random: {

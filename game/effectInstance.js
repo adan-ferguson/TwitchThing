@@ -114,7 +114,7 @@ export default class EffectInstance{
       if(ai.type !== type && type !== 'either'){
         return false
       }else{
-        return !trigger || ai.trigger[trigger]
+        return !trigger || ai.trigger === trigger
       }
     })
   }

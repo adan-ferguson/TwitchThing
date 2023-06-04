@@ -2,7 +2,15 @@ import { expandActionDef } from '../../../game/actionDefs/expandActionDef.js'
 import AbilityInstance from '../../../game/abilityInstance.js'
 import { derivedAttackDescription } from './derived/actions/attack.js'
 import { statusEffectApplicationDescription } from './statusEffectDisplayInfo.js'
-import { aboveIcon, attachedSkill, belowIcon, refundTime, statScaling, wrapStat } from '../components/common.js'
+import {
+  aboveIcon,
+  attachedSkill,
+  belowIcon, magicPowerIcon,
+  physPowerIcon,
+  refundTime,
+  statScaling,
+  wrapStat
+} from '../components/common.js'
 import { takeDamageActionCalcDamage } from '../../../game/mechanicsFns.js'
 import { derivedGainHealthDescription } from './derived/actions/gainHealth.js'
 import { msToS, toPct } from '../../../game/utilFunctions.js'
@@ -62,6 +70,11 @@ const abilityDefinitions = {
     return {
       description: `Get ${wrapStat('speed', ability.vars.speed)} for the first ${msToS(ability.vars.duration)}s of combat.`
     }
+  },
+  counterspell: () => {
+    return {
+      description: 'When an enemy casts a spell: Counter it.'
+    }
   }
 }
 
@@ -95,7 +108,7 @@ export function getAbilityDisplayInfo(ability){
   return {
     ability,
     descriptionHTML: definition.description ?? abilityDescription(ability),
-    type: ability.trigger.active ? 'active' : 'nonactive',
+    type: ability.trigger === 'active' ? 'active' : 'nonactive',
     cooldown: ability.cooldown ?? ability.initialCooldown ?? null,
     initialCooldown: ability.initialCooldown ?? null
   }
@@ -151,11 +164,8 @@ function abilityDescription(ability){
   return chunks.join(' ') //_.capitalize()
 }
 
-function combatTimePrefix(val){
-  if(val === 1){
-    return ['At the start of combat']
-  }
-  throw 'Not implemented combatTimePrefix'
+function startOfCombatPrefix(){
+  return ['At the start of combat']
 }
 
 function conditionsDescription(conditions){
@@ -172,14 +182,14 @@ function triggerPrefix(trigger){
   if(!trigger){
     return []
   }
-  if(trigger.combatTime){
-    return [...combatTimePrefix(trigger.combatTime)]
+  if(trigger === 'startOfCombat' ){
+    return [...startOfCombatPrefix()]
   }
-  if(trigger.attackHit){
-    const type = trigger.attackHit.damageType ? 'a ' + trigger.attackHit.damageType : 'an'
+  if(trigger === 'attackHit'){
+    const type = trigger.conditions?.data?.damageType ? 'a ' + trigger.conditions.data.damageType : 'an'
     return ['After landing', type, 'attack']
   }
-  if(trigger.rest){
+  if(trigger === 'rest'){
     return['After resting']
   }
   return []

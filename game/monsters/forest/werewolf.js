@@ -9,7 +9,7 @@ export default function(){
         name: 'Frenzy',
         effect: {
           abilities: [{
-            trigger: { attackHit: true },
+            trigger: 'attackHit',
             actions: [{
               applyStatusEffect: {
                 targets: 'self',

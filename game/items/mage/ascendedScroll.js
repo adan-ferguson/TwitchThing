@@ -11,6 +11,7 @@ export default function(level){
     effect: {
       tags: ['scroll']
     },
-    orbs: 5 + 4 * level
+    orbs: 5 + 4 * level,
+    displayName: 'Ascension Scroll'
   }
 }

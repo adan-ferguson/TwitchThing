@@ -10,7 +10,7 @@ export default function(){
         name: 'Tail Sting',
         effect: {
           abilities: [{
-            trigger: { active: true },
+            trigger: 'active',
             cooldown: 12000,
             phantomEffect: {
               base: {

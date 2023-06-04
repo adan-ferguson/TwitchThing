@@ -10,7 +10,7 @@ export default function(){
         name: 'Execute',
         effect: {
           abilities: [{
-            trigger: { active: true },
+            trigger: 'active',
             initialCooldown: 30000,
             actions: [{
               attack: {

@@ -150,7 +150,9 @@ function loadoutModifierToEl(subjectKey, modifiers, isItem){
 
   const nodes = []
   const contentNodes = []
-  nodes.push(wrapContent(subjectDescription(subjectKey, isItem), { class: 'loadout-modifier-header' }))
+  if(subjectKey !== 'self'){
+    nodes.push(wrapContent(subjectDescription(subjectKey, isItem), { class: 'loadout-modifier-header' }))
+  }
 
   for(let modifierKey in modifiers){
     let value = modifiers[modifierKey]
@@ -185,5 +187,5 @@ function loadoutModifierToEl(subjectKey, modifiers, isItem){
   }
 
   nodes.push(makeEl({ nodes: contentNodes, class: 'loadout-modifier-content', elementType: 'ul' }))
-  return makeEl({ nodes, class: 'loadout-modifier' })
+  return makeEl({ nodes, class: subjectKey === 'self' ? '' : 'loadout-modifier' })
 }

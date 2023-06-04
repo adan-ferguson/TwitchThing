@@ -47,9 +47,6 @@ export default class AbilityInstance{
   }
 
   get trigger(){
-    if(_.isString(this.abilityDef.trigger)){
-      return { [this.abilityDef.trigger]: true }
-    }
     return this.abilityDef.trigger
   }
 
@@ -132,7 +129,7 @@ export default class AbilityInstance{
     if(this.uses && !this.usesRemaining){
       return false
     }
-    return this.fighterInstance.meetsConditions(this.conditions)
+    return this.fighterInstance.meetsConditions(this.conditions.owner)
   }
 
   get cooldownRefreshing(){
@@ -144,7 +141,7 @@ export default class AbilityInstance{
   }
 
   get conditions(){
-    return this.abilityDef.conditions ?? null
+    return this.abilityDef.conditions ?? {}
   }
 
   get stacks(){
@@ -153,6 +150,10 @@ export default class AbilityInstance{
 
   get turnRefund(){
     return this.abilityDef.turnRefund ?? 0
+  }
+
+  get tags(){
+    return this.abilityDef.tags ?? []
   }
 
   tryUse(){

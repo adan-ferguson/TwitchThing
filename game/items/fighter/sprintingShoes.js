@@ -4,9 +4,7 @@ export default function(level){
   return {
     effect: {
       abilities: [{
-        trigger: {
-          combatTime: 1
-        },
+        trigger: 'startOfCombat',
         abilityId: 'sprinting',
         actions: [{
           applyStatusEffect: {

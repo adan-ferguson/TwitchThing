@@ -1,11 +1,12 @@
-import flutteringMonsterItem from '../../monsterItems/flutteringMonsterItem.js'
+import flutteringMonsterItem from '../../commonTemplates/flutteringMonsterItem.js'
 
 export default function(){
 
   const magicBlast = {
-    trigger: { active: true },
+    trigger: 'active',
     initialCooldown: 4000,
     cooldown: 8000,
+    tags: ['spell'],
     actions: [{
       attack: {
         scaling: {
@@ -28,7 +29,6 @@ export default function(){
       {
         name: 'Magic Blast',
         effect: {
-          tags: ['magic'],
           abilities: [magicBlast]
         }
       }

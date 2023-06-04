@@ -4,7 +4,7 @@ export default function(level){
   return {
     effect: {
       abilities: [{
-        trigger: { rest: true },
+        trigger: 'rest',
         actions:[{
           applyStatusEffect: {
             targets: 'self',

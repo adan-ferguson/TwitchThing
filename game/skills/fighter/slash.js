@@ -3,7 +3,7 @@ export default function(level){
   return {
     effect: {
       abilities: [{
-        trigger: { active: true },
+        trigger: 'active',
         cooldown: Math.floor(7000 * Math.pow(0.9, level - 1)),
         actions: [{
           attack: {

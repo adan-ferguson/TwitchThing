@@ -4,7 +4,7 @@ export default function(level){
   return {
     effect: {
       abilities: [{
-        trigger: { active: true },
+        trigger: 'active',
         cooldown: 12000,
         actions: [{
           attack: {

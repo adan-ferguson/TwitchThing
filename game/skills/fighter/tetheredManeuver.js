@@ -4,9 +4,11 @@ export default function(level){
     effect: {
       abilities: [{
         abilityId: 'tetheredManeuver',
-        trigger: { useAbility: true },
+        trigger: 'useAbility',
         conditions: {
-          source: 'aboveNeighbour'
+          source: {
+            subjectKey: 'aboveNeighbour'
+          }
         },
         actions: [{
           useAbility: {

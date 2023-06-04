@@ -3,7 +3,7 @@ export default function(level){
   return {
     effect: {
       abilities: [{
-        trigger: { rest: true },
+        trigger: 'rest',
         actions:[{
           modifyAbility: {
             subjectKey: 'all',

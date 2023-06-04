@@ -10,7 +10,7 @@ export default function(){
         name: 'Web Shot',
         effect: {
           abilities: [{
-            trigger: { active: true },
+            trigger: 'active',
             cooldown: 9000,
             actions: [{
               applyStatusEffect: {

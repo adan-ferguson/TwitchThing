@@ -1,15 +1,15 @@
 import { exponentialPercentage, geometricProgression, wrappedPct } from '../../growthFunctions.js'
 
 export default function(level){
-  const pow = wrappedPct(15 + geometricProgression(0.2, level, 10, 5))
+  const pow = 15 + geometricProgression(0.2, level, 10, 5)
   const def = exponentialPercentage(0.05, level - 1, 0.1)
   return {
     effect: {
       stats: {
-        combatXP: pow * 2,
+        combatXP: wrappedPct(pow * 2),
         speed: level * 10,
-        physPower: pow,
-        magicPower: pow,
+        physPower: wrappedPct(pow),
+        magicPower: wrappedPct(pow),
         physDef: def,
         magicDef: def
       },
@@ -17,7 +17,9 @@ export default function(level){
         metaEffectId: 'swordOfFablesMultiplier',
         subjectKey: 'self',
         conditions: {
-          bossFight: true
+          owner: {
+            bossFight: true
+          }
         },
         effectModification: {
           statMultiplier: 3,

@@ -3,8 +3,8 @@ export default function({ damage = 0, damageType = 'phys' } = {}){
     polarity: 'debuff',
     stacking: 'stack',
     abilities: [{
+      trigger: 'instant',
       abilityId: 'damageOverTime',
-      trigger: { instant: true },
       initialCooldown: 3000,
       actions: [{
         takeDamage: {
