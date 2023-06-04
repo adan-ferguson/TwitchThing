@@ -2,6 +2,7 @@ import { makeEl, roundToFixed, wrapContent } from '../../../game/utilFunctions.j
 import tippy from 'tippy.js'
 import { ABILITY_DESCRIPTION_COLORS, ITEM_ROW_COLORS } from '../colors.js'
 import DIElement from './diElement.js'
+import { addTooltipToSvg, magicPowerIcon } from './common.js'
 
 export default class AbilityDescription extends DIElement{
 
@@ -33,12 +34,23 @@ function makeBotRow(displayInfo){
     class: ['bot-row', 'flex-centered', 'flex-columns', 'flex-spaced']
   })
 
-  let botLeftText = displayInfo.type === 'active' ? 'Active' : ''
-  if(displayInfo.ability.uses && !displayInfo.ability.trigger === 'startOfCombat'){
-    botLeftText += (botLeftText.length ? ', ' : '')
-    botLeftText += `${displayInfo.ability.uses} use${displayInfo.ability.uses > 1 ? 's' : ''}`
+
+  const botLeftChunks = []
+  if(displayInfo.type === 'active'){
+    botLeftChunks.push('Active')
   }
-  row.appendChild(makeEl({ text: botLeftText }))
+  if(displayInfo.ability.uses && !displayInfo.ability.trigger === 'startOfCombat'){
+    botLeftChunks.push(`${displayInfo.ability.uses} use${displayInfo.ability.uses > 1 ? 's' : ''}`)
+  }
+  if(displayInfo.ability.tags?.length){
+    const tagsEls = tagsToIcons(displayInfo.ability.tags)
+    if(tagsEls.length){
+      botLeftChunks.push(tagsEls.join(''))
+    }
+  }
+  if(botLeftChunks.length){
+    row.appendChild(wrapContent(botLeftChunks.join(' ')))
+  }
 
   if(displayInfo.cooldown){
     let str = ''
@@ -50,7 +62,7 @@ function makeBotRow(displayInfo){
       class: displayInfo.initialCooldown ? 'initial-cooldown' : 'cooldown',
       content: '<i class="fa-solid fa-hourglass"></i>' + str
     }))
-  }else if(!botLeftText){
+  }else if(!botLeftChunks.length){
     row.classList.add('displaynone')
   }
 
@@ -70,4 +82,14 @@ function tooltip(el, content){
     content
   })
   el.classList.add('clickable')
+}
+
+function tagsToIcons(tags){
+  const icons = []
+  tags.forEach(tag => {
+    if(tag === 'spell'){
+      icons.push(addTooltipToSvg(magicPowerIcon(), 'Spell'))
+    }
+  })
+  return icons
 }

@@ -1,6 +1,6 @@
 import DIElement from '../../diElement.js'
-import AdventurerItemInstance from '../../../../../game/adventurerSlotInstance.js'
 import classDisplayInfo from '../../../displayInfo/classDisplayInfo.js'
+import AdventurerItem from '../../../../../game/items/adventurerItem.js'
 
 const HTML = (iconEl, name, have = null, required = null) => {
 
@@ -29,9 +29,9 @@ export default class ComponentRow extends DIElement{
       this.setValue(have, required)
       this.setTooltip('Acquire scrap by scrapping items in the scrapyard tab (scrap btw)')
     }else if(component.type === 'item'){
-      const instance = new AdventurerItemInstance({ group: component.group, name: component.name })
-      const classInfo = classDisplayInfo(component.group)
-      const have = inventory ? (inventory.items.basic[component.group]?.[component.name] ?? 0) : component.count
+      const instance = new AdventurerItem(component.baseItemId)
+      const classInfo = classDisplayInfo(component.advClass)
+      const have = inventory ? (inventory.items.basic[component.baseItemId] ?? 0) : component.count
       const required = inventory ? component.count : null
       this.innerHTML = HTML(classInfo.icon, instance.displayName + ' (Basic)')
       this.setValue(have, required)

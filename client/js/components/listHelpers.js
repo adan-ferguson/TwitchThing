@@ -34,22 +34,21 @@ export function inventoryItemsToRows(items){
   return rows
 }
 
-export function rowsToInventoryItems(rows){
+export function rowsToInventoryItems(adventurerItemRows){
 
   const basic = {}
   const crafted = []
 
-  rows.forEach(row => {
-    const itemDef = row.loadoutItem.itemInstance.itemDef
-    if(row.loadoutItem.isBasic){
-      if(!basic[itemDef.group]){
-        basic[itemDef.group] = {}
-      }
-      basic[itemDef.group][itemDef.name] = row.count ?? 1
+  adventurerItemRows.forEach(row => {
+    const item = row.adventurerItem
+    if(item.isBasic){
+      basic[item.baseItemId] = row.count ?? 1
     }else{
-      crafted.push(itemDef.id)
+      crafted.push(item.id)
     }
   })
+
+  debugger
 
   return {
     basic,
@@ -115,22 +114,20 @@ export function standardItemSort(rowA, rowB){
   return itemA.displayName - itemB.displayName
 }
 
-export function addInventoryItem(list, loadoutItem, count = 1){
-  // const existingRow = list.findRow(row => row.loadoutItem.equals(loadoutItem))
-  // if(existingRow){
-  //   if(loadoutItem.isBasic){
-  //     existingRow.count += count
-  //   }
-  //   return
-  // }
-  // loadoutItem.setOwner(null)
-  // const row = new LoadoutRow()
-  // row.setItem(loadoutItem).setCount(count)
-  // list.addRow(row)
+export function addInventoryItem(list, adventurerItem, count = 1){
+  const existingRow = list.findRow(row => row.adventurerItem.equals(adventurerItem))
+  if(existingRow){
+    if(adventurerItem.isBasic){
+      existingRow.count += count
+    }
+    return
+  }
+  const row = new AdventurerItemRow().setOptions({ item: adventurerItem, count })
+  list.addRow(row)
 }
 
-export function removeInventoryItem(list, loadoutItem, all = false){
-  const existingRow = list.findRow(row => row.loadoutItem === loadoutItem)
+export function removeInventoryItem(list, adventurerItem, all = false){
+  const existingRow = list.findRow(row => row.adventurerItem.equals(adventurerItem))
   if(!existingRow){
     return
   }

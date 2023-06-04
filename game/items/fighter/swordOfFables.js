@@ -22,7 +22,7 @@ export default function(level){
           }
         },
         effectModification: {
-          statMultiplier: 3,
+          statMultiplier: 2 + level,
         }
       }]
     },

@@ -62,10 +62,6 @@ export default class AdventurerSlotInstance extends FighterSlotInstance{
     return this.slotBonus?.tags ?? []
   }
 
-  get isBasic(){
-    return this.id ? false : true
-  }
-
   get level(){
     return this.itemDef.level ?? 1
   }

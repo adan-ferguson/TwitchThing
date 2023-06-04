@@ -1,6 +1,6 @@
 import Stats from '../../../game/stats/stats.js'
 import { getStatDisplayInfo, StatsDisplayStyle } from '../displayInfo/statsDisplayInfo.js'
-import { makeEl, roundToNearestIntervalOf } from '../../../game/utilFunctions.js'
+import { makeEl, roundToNearestIntervalOf, wrapContent } from '../../../game/utilFunctions.js'
 import healthIcon from '../../assets/icons/health.svg'
 import physPower from '../../assets/icons/physPower.svg'
 import magicPower from '../../assets/icons/magicPower.svg'
@@ -177,4 +177,10 @@ export function triggeredAbility(){
 
 export function pluralize(str, count){
   return `${count} ${str + (count === 1 ? '' : 's')}`
+}
+
+export function addTooltipToSvg(svg, tooltip){
+  const el = wrapContent(svg)
+  el.querySelector('svg').setAttribute('tooltip', tooltip)
+  return el.innerHTML
 }

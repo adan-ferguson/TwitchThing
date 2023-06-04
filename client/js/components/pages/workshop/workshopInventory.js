@@ -64,7 +64,7 @@ export default class WorkshopInventory extends DIElement{
       return
     }
     const row = this.listEl.allRows.find(row => {
-      return row.loadoutItem?.itemInstance?.id === itemDef.id
+      return row.adventurerItem?.id === itemDef.id
     })
     if(row){
       this.listEl.showRow(row)
@@ -94,7 +94,7 @@ export default class WorkshopInventory extends DIElement{
           filterFn: () => adv.dungeonRunID ? false : true,
           sortFn: null
         })
-        .setRows(adventurerItemsToRows(adv.items))
+        .setRows(adventurerItemsToRows(adv.loadout.items))
     }else{
       this.listEl
         .setOptions({

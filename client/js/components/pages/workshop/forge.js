@@ -1,8 +1,8 @@
 import DIElement from '../../diElement.js'
-import AdventurerItemInstance from '../../../../../game/adventurerSlotInstance.js'
 import ComponentRow from './componentRow.js'
 import { hideLoader, showLoader } from '../../../loader.js'
 import fizzetch from '../../../fizzetch.js'
+import AdventurerItem from '../../../../../game/items/adventurerItem.js'
 
 const HTML = `
 <div class="content-columns">
@@ -56,7 +56,7 @@ export default class Forge extends DIElement{
     }).listEl.setOptions({
       selectableRows: true
     }).events.on('selectrow', row => {
-      this._itemSelected(row.loadoutItem.itemInstance)
+      this._itemSelected(row.adventurerItem)
     })
 
     this.workshopInventoryEl.adventurerDropdownEl.addEventListener('change', () => {
@@ -71,7 +71,7 @@ export default class Forge extends DIElement{
         data.itemSlot = row.__slotIndex
         data.adventurerID = this.workshopInventoryEl.selectedAdventurer?._id
       }else{
-        data.itemDef = this._selectedItem.itemDef
+        data.itemDef = this._selectedItem.def
       }
       const { upgradedItemDef } = await fizzetch('/game/workshop/forge/upgrade', data)
       if(!upgradedItemDef){
@@ -105,15 +105,16 @@ export default class Forge extends DIElement{
     this.upgradeButton.toggleAttribute('disabled', true)
   }
 
-  _itemSelected(itemInstance){
-    if(!itemInstance){
+  _itemSelected(adventurerItem){
+    if(!adventurerItem){
       return this._deselectItem()
     }
-    this._selectedItem = itemInstance
-    const { upgradedItemDef, components } = itemInstance.upgradeInfo()
+    this._selectedItem = adventurerItem
 
-    this.querySelector('.item-before').setItem(itemInstance)
-    this.querySelector('.item-after').setItem(new AdventurerItemInstance(upgradedItemDef))
+    const { upgradedItemDef, components } = adventurerItem.upgradeInfo()
+
+    this.querySelector('.item-before').setItem(adventurerItem)
+    this.querySelector('.item-after').setItem(new AdventurerItem(upgradedItemDef))
     this.querySelector('.right-column').classList.remove('hidden')
 
     const componentsEl = this.querySelector('.item-components')

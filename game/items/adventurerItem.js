@@ -1,7 +1,7 @@
 import Items from './combined.js'
 import _ from 'lodash'
 import AdventurerLoadoutObject from '../adventurerLoadoutObject.js'
-import { toDisplayName } from '../utilFunctions.js'
+import { toDisplayName, uniqueID } from '../utilFunctions.js'
 
 export const ITEM_RARITIES = [
   {
@@ -12,12 +12,12 @@ export const ITEM_RARITIES = [
   {
     name: 'uncommon',
     weight: 30,
-    value: 8
+    value: 10
   },
   {
     name: 'rare',
     weight: 10,
-    value: 19
+    value: 30
   }
 ]
 
@@ -44,11 +44,11 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
   }
 
   get id(){
-    return this._baseItem.id
+    return this._def.id ?? null
   }
 
-  get name(){
-    return this.id
+  get baseItemId(){
+    return this._baseItem.id
   }
 
   get classes(){
@@ -61,11 +61,11 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
 
   get displayName(){
     let txt = this.level > 1 ? `L${this.level} ` : ''
-    return txt + (this.data.displayName ?? toDisplayName(this._baseItem.id))
+    return txt + (this._def.displayName ?? this.data.displayName ?? toDisplayName(this._baseItem.id))
   }
 
   get isBasic(){
-    return true // this._itemDef.id ? false : true
+    return this._def.id ? false : true
   }
 
   get orbs(){
@@ -107,23 +107,33 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
   }
 
   upgradeInfo(){
-    // TODO: this
-    // const upgradedItemDef = {
-    //   id: uniqueID(),
-    //   ...this.itemDef,
-    //   level: this.level + 1
-    // }
-    //
-    // const upgradedItem = new AdventurerItem(upgradedItemDef)
-    //
-    // const components = []
-    // components.push({ type: 'scrap', count: upgradedItem.scrapValue - this.scrapValue })
-    //
-    // if(this.level > 1){
-    //   components.push({ type: 'item', group: this.itemDef.group, name: this.itemDef.name, count: this.level - 1 })
-    // }
-    //
-    // return { upgradedItemDef, components }
+    const upgradedItemDef = {
+      id: uniqueID(),
+      ...(_.isString(this.def) ? {} : this.def),
+      baseItem: this.baseItemId,
+      level: this.level + 1
+    }
+
+    const upgradedItem = new AdventurerItem(upgradedItemDef)
+
+    const components = []
+    components.push({ type: 'scrap', count: 2 * (upgradedItem.scrapValue - this.scrapValue) })
+    components.push({ type: 'item', baseItemId: this.baseItemId, advClass: this.advClass, count: Math.max(2, this.level) })
+
+    return { upgradedItemDef, components }
+  }
+
+  equals(otherAdventurerItem){
+    if(otherAdventurerItem instanceof AdventurerItem){
+      if(this.isBasic){
+        if(otherAdventurerItem.isBasic && this.baseItemId === otherAdventurerItem.baseItemId){
+          return true
+        }
+      }else if(this.id === otherAdventurerItem.id){
+        return true
+      }
+    }
+    return false
   }
 }
 

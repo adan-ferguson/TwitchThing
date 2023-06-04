@@ -79,7 +79,7 @@ function derivedAbilityModification(abilityModification){
     chunks.push('benefits from', wrapStats(abilityModification.exclusiveStats))
   }
   if(abilityModification.repetitions){
-    chunks.push(`repeats ${pluralize('time', abilityModification.repetitions)} after using it.`)
+    chunks.push(`is copied ${pluralize('time', abilityModification.repetitions)}.`)
   }
   // if(abilityModification.addAction){
   //

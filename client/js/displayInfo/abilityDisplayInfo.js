@@ -73,7 +73,7 @@ const abilityDefinitions = {
   },
   counterspell: () => {
     return {
-      description: 'When an enemy casts a spell: Counter it.'
+      description: 'When an enemy casts a spell, counter it.'
     }
   }
 }

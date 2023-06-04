@@ -118,7 +118,7 @@ export function getAllItemKeys(){
   for(let className in INFO){
     INFO[className].items.forEach(arr => {
       arr.forEach(item => {
-        keys.push(item.id)
+        keys.push(item.baseItemId)
       })
     })
   }

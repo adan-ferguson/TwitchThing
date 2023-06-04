@@ -1,7 +1,7 @@
 import Adventurers from '../collections/adventurers.js'
 import { adjustInventoryBasics, spendInventoryBasics, spendScrap } from '../user/inventory.js'
 import Users from '../collections/users.js'
-import AdventurerItemInstance from '../../game/adventurerSlotInstance.js'
+import AdventurerItem from '../../game/items/adventurerItem.js'
 
 export async function getUserWorkshop(userDoc){
   return {
@@ -16,12 +16,12 @@ export async function scrapItems(userDoc, { basic, crafted }){
     if(!userDoc.inventory.items.crafted[id]){
       throw 'Item not found: ' + id
     }
-    userDoc.inventory.scrap += new AdventurerItemInstance(userDoc.inventory.items.crafted[id]).scrapValue
+    userDoc.inventory.scrap += new AdventurerItem(userDoc.inventory.items.crafted[id]).scrapValue
     delete userDoc.inventory.items.crafted[id]
   })
   Object.keys(basic).forEach(group => {
     Object.keys(basic[group]).forEach(name => {
-      userDoc.inventory.scrap += new AdventurerItemInstance({ group, name }).scrapValue * basic[group][name]
+      userDoc.inventory.scrap += new AdventurerItem({ group, name }).scrapValue * basic[group][name]
     })
   })
   await Users.saveAndEmit(userDoc)
@@ -31,9 +31,6 @@ export async function upgradeInventoryItem(userDoc, itemDef){
   if(itemDef.id){
     // Crafted
     itemDef = userDoc.inventory.items.crafted[itemDef.id]
-  }else{
-    // Basic
-    spendInventoryBasics(userDoc, itemDef.group, itemDef.name, 1)
   }
   const upgradedItemDef = await upgradeItem(userDoc, itemDef)
   userDoc.inventory.items.crafted[upgradedItemDef.id] = upgradedItemDef
@@ -61,14 +58,14 @@ export async function upgradeAdventurerItem(userDoc, slotIndex, adventurerID){
 }
 
 async function upgradeItem(userDoc, itemDef){
-  const aii = new AdventurerItemInstance(itemDef)
+  const aii = new AdventurerItem(itemDef)
   const upgradeInfo = aii.upgradeInfo()
 
   upgradeInfo.components.forEach(component => {
     if(component.type === 'scrap'){
       spendScrap(userDoc, component.count)
     }else if(component.type === 'item'){
-      spendInventoryBasics(userDoc, component.group, component.name, component.count)
+      spendInventoryBasics(userDoc, component.baseItemId, component.count)
     }
   })
 

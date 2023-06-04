@@ -6,11 +6,15 @@ import _ from 'lodash'
  * Validate a query parameter.
  * @param val
  * @param type
+ * @param required
  * @returns {*}
  */
-export function validateParam(val, type = 'any'){
+export function validateParam(val, type = 'any', required = true){
   try {
-    type = _.isString(type) ? type : type.type
+    type = _.isString(type) ? type : type
+    if(!required){
+      return Joi.attempt(val, Joi[type]())
+    }
     return Joi.attempt(val, Joi[type]().required())
   }catch(ex){
     throw { code: 400, message: ex }
