@@ -106,17 +106,6 @@ export default class FighterInstancePane extends HTMLElement{
     }
     const effectEl = this._getEffectEl(action.effect)
     effectEl?.flash?.()
-    // if(action.basicAttack){
-    //   const color = DAMAGE_COLORS[this.fighterInstance.basicAttackType]
-    //   flash(this.basicAttackEl, color)
-    // }else if(action.effect){
-    //   const effectEl = this._getEffectEl(action.effect)
-    //   if(effectEl instanceof LoadoutRow){
-    //     flash(effectEl, FLASH_COLORS[effectEl.loadoutItem.abilityDisplayInfo.type], 500)
-    //   }else if(effectEl instanceof EffectRow){
-    //     effectEl.flash()
-    //   }
-    // }
   }
 
   displayResult(result){
@@ -269,7 +258,7 @@ export default class FighterInstancePane extends HTMLElement{
 
   _displayCancellation(cancelled){
     const reason = cancelled.reason || 'cancelled'
-    const targetEl = this._getEffectEl(cancelled.cancelledBy) ?? this.hpBarEl
+    const targetEl = this._getEffectEl(cancelled.cancelledByEffect) ?? this.hpBarEl
     new FlyingTextEffect(
       targetEl,
       toDisplayName(reason),

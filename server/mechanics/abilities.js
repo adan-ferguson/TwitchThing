@@ -29,7 +29,8 @@ function performReplacement(replacerAbility, actionData){
   const replacedData = { ...actionData, ...(replacements.dataMerge ?? {}) }
   if(replacements.cancel){
     replacedData.cancelled = {
-      cancelledBy: replacerAbility.parentEffect.uniqueID,
+      cancelledByEffect: replacerAbility.parentEffect.uniqueID,
+      cancelledByFighter: replacerAbility.fighterInstance.uniqueID,
       reason: replacements.cancel
     }
   }

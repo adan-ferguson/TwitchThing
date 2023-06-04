@@ -50,12 +50,19 @@ export function performAction(combat, actor, ability, actionDef){
 
 export function useAbility(combat, ability, triggerData = {}){
   const owner = ability.fighterInstance
-  processAbilityEvents(combat, 'useAbility', owner, ability, triggerData)
-  processAbilityEvents(combat, 'enemyUseAbility', combat.getEnemyOf(owner), ability, triggerData)
+  triggerData = processAbilityEvents(combat, 'useAbility', owner, ability, triggerData)
+  triggerData = processAbilityEvents(combat, 'enemyUseAbility', combat.getEnemyOf(owner), ability, triggerData)
 
   if(triggerData.cancelled){
     return [{
-      cancelled: triggerData.cancelled
+      actor: owner.uniqueID,
+      effect: ability?.parentEffect.uniqueID,
+      ability: ability?.index,
+      actionDef: { cancelled: true },
+      results: [{
+        subject: triggerData.cancelled.cancelledByFighter,
+        cancelled: triggerData.cancelled
+      }]
     }]
   }
 
