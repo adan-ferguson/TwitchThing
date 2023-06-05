@@ -5,8 +5,7 @@ import { statusEffectApplicationDescription } from './statusEffectDisplayInfo.js
 import {
   aboveIcon,
   attachedSkill,
-  belowIcon, magicPowerIcon,
-  physPowerIcon,
+  belowIcon,
   refundTime,
   statScaling,
   wrapStat
@@ -14,10 +13,9 @@ import {
 import { takeDamageActionCalcDamage } from '../../../game/mechanicsFns.js'
 import { derivedGainHealthDescription } from './derived/actions/gainHealth.js'
 import { msToS, toPct } from '../../../game/utilFunctions.js'
-import _ from 'lodash'
 import { derivedModifyAbilityDescription } from './derived/actions/modifyAbility.js'
 
-const abilityDefinitions = {
+const DEFS = {
   flutteringDodge: () => {
     return {
       description: 'Automatically dodge an attack.'
@@ -61,6 +59,12 @@ const abilityDefinitions = {
       description: 'At the start of combat,<br/>sprout 3 Saplings.'
     }
   },
+  mirrorImage: ability => {
+    return {
+      description: `Conjure ${ability.vars.clones} illusions.
+      Enemy abilities have a ${toPct(ability.vars.chance)}% to hit a clone instead.`
+    }
+  },
   saplingBlock: () => {
     return {
       hide: true
@@ -101,7 +105,7 @@ export function getAbilityDisplayInfoForObj(obj){
 }
 
 export function getAbilityDisplayInfo(ability){
-  const definition = abilityDefinitions[ability.abilityId]?.(ability) ?? {}
+  const definition = DEFS[ability.abilityId]?.(ability) ?? {}
   if(definition.hide){
     return null
   }

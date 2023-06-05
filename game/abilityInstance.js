@@ -110,7 +110,7 @@ export default class AbilityInstance{
   }
 
   get uses(){
-    return this._abilityDef.uses ?? 0
+    return (this._abilityDef.uses ?? 0) * (this.parentEffect.stacks ?? 1)
   }
 
   get timesUsed(){

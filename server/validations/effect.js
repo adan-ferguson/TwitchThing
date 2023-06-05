@@ -156,7 +156,7 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
     stunned: Joi.number().integer().positive(),
     barrier: Joi.object({
       hp: OPTIONAL_SCALED_NUMBER_SCHEMA
-    })
+    }),
   }),
   barrier: Joi.object({
     hp: Joi.number().integer()
@@ -164,7 +164,7 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
   statusEffectId: Joi.string(),
   turns: Joi.number().integer(),
   duration: Joi.number().integer(),
-  stacking: Joi.string(),
+  stacking: Joi.string().valid('stack', 'replace', 'extend'),
   stackingId: Joi.string(),
   maxStacks: Joi.number().integer(),
   polarity: Joi.string().valid('buff','debuff','negativity'),

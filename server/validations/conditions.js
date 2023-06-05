@@ -19,6 +19,7 @@ export const ABILITY_CONDITIONS_SCHEMA = Joi.object({
     undodgeable: Joi.bool() // Are we being attacked by a dodgeable attack?
   }),
   owner: FIGHTER_INSTANCE_CONDITIONS_SCHEMA,
+  random: Joi.number().min(0).max(1)
   // combat: Joi.object({
   //   bossFight: Joi.bool(),      // Are we in a boss fight?
   // })

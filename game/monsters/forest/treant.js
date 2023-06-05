@@ -17,6 +17,7 @@ export default function(){
               targets: 'self',
               statusEffect: {
                 name: 'Sapling',
+                polarity: 'buff',
                 abilities: [{
                   trigger: 'targeted',
                   uses: 3,

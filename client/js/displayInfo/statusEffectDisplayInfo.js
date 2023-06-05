@@ -14,10 +14,10 @@ export function statusEffectDisplayInfo(effectInstance){
 
   const abilityInfo = effectInstanceState(effectInstance)
 
-  if(effectInstance.stacks >= 2){
-    text += ` x${effectInstance.stacks}`
-  }else if(abilityInfo.abilityUses){
+  if(abilityInfo.abilityUses){
     text += ` (${abilityInfo.abilityUses})`
+  }else if(effectInstance.stacks >= 2){
+    text += ` x${effectInstance.stacks}`
   }
 
   const colors = getColors(effectInstance)
@@ -92,8 +92,8 @@ export function statusEffectDescription(statusEffectDef, abilityInstance){
     chunks.push(`for ${statusEffectDef.turns} turn${statusEffectDef.turns === 1 ? '' : 's'}.`)
   }else if(!statusEffectDef.persisting){
     chunks.push('until end of combat.')
-  }else{
-    chunks.push('.')
+  }else if(chunks.length){
+    chunks[chunks.length - 1] += '.'
   }
 
   if(statusEffectDef.maxStacks){
@@ -121,6 +121,18 @@ const DEFS = {
     return {
       description: chunks.join(' '),
       grammatic: 'take'
+    }
+  },
+  barrier: (def, abilityInstance) => {
+    const chunks = ['a barrier that blocks']
+    const params = def.vars.params
+    if(params.hp.scaledNumber){
+      chunks.push(statScaling(params.hp.scaledNumber, abilityInstance))
+    }
+    chunks.push('damage')
+    return {
+      grammatic: 'gain',
+      description: chunks.join(' ')
     }
   },
   wideOpen: (def, abilityInstance) => {

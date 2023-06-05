@@ -1,5 +1,5 @@
 import Stats from '../stats/stats.js'
-import { minMax, roundToFixed, toDisplayName } from '../utilFunctions.js'
+import { minMax, toDisplayName } from '../utilFunctions.js'
 import EffectInstance from '../effectInstance.js'
 import { status as StatusEffects } from './combined.js'
 import _ from 'lodash'

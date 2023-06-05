@@ -67,5 +67,8 @@ function conditionsMatch(triggerHandler, conditions, sourceAbility, subjectAbili
   if(conditions.owner && !subjectAbility.fighterInstance.meetsConditions(conditions.owner)){
     return false
   }
+  if(conditions.random && Math.random() > conditions.random){
+    return false
+  }
   return true
 }

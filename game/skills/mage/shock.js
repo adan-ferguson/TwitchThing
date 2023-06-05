@@ -1,11 +1,11 @@
 export default function(level){
-  const magicPower = 2.5 + 0.5 * level
+  const magicPower = 2.4 + 0.6 * level
   return {
     effect: {
       abilities: [{
         tags: ['spell'],
         trigger: 'active',
-        cooldown: 10000,
+        cooldown: 7000 + level * 1000,
         actions: [{
           attack: {
             scaling: {
