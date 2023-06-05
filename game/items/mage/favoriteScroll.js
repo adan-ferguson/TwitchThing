@@ -1,7 +1,7 @@
 import { roundToFixed } from '../../utilFunctions.js'
 
 export default function(level){
-  const magicPower = roundToFixed(0.8 + level * 0.4, 2) + 'x'
+  const magicPower = roundToFixed(0.75 + level * 0.5, 2) + 'x'
   return {
     effect: {
       metaEffects: [{
@@ -25,6 +25,6 @@ export default function(level){
         }
       }
     },
-    orbs: 1 + level * 4
+    orbs: 2 + level * 4
   }
 }

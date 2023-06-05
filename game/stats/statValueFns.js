@@ -102,15 +102,22 @@ function multiplierValue(values, defaultValue = 1){
     throw 'Multiplier stats can not have multiplier values (lol)'
   }
 
-  const decimalPositive = mods.all.flat.map(m => m >= 1 ? 100 * (m - 1) : 0)
-  const decimalNegative = mods.all.flat.map(m => m < 1 ? 100 * (m - 1) : 0)
+  const decimalPositive = mods.all.flat.map(m => m >= 1 ? 100 * (m - 1) : null).filter(m => m !== null)
+  const decimalNegative = mods.all.flat.map(m => m < 1 ? 100 * (m - 1) : null).filter(m => m !== null)
 
   let value = [...decimalPositive, ...mods.positive.pct].reduce((val, mod) => {
     return val + mod
   }, 100)
 
   value = [...decimalNegative, ...mods.negative.pct].sort().reduce((val, mod) => {
-    return val * (1 + mod/100)
+    // return val * (1 + mod/100)
+    if(val + mod > 100){
+      return val + mod
+    }else if(val < 100){
+      return val * (1 + mod/100)
+    }else{
+      return val + mod
+    }
   }, value)
 
   value = defaultValue * value / 100
