@@ -50,8 +50,8 @@ const mage = {
     Skills.fireball,
     Skills.imbueWeapons,
     Skills.overload,
-    Skills.lightningStorm,
     Skills.higherLearning,
+    Skills.lightningStorm,
   ],
   items: [[
     Items.wand,

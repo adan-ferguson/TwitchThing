@@ -54,7 +54,10 @@ const as = Joi.object({
     lifesteal: Joi.number().positive(),
     range: Joi.array().length(2).items(Joi.number()),
     hits: Joi.number().integer(),
-    undodgeable: Joi.bool()
+    undodgeable: Joi.bool(),
+    onHit: Joi.custom(val => {
+      return Joi.attempt(val, ACTION_SCHEMA)
+    })
   }),
   gainHealth: Joi.object({
     scaling: SCALED_NUMBER_SCHEMA.required(),
@@ -89,6 +92,10 @@ const ACTION_SCHEMA = as.append({
       weight: Joi.number().required(),
       value: as.required()
     }))
+  },
+  maybe: {
+    chance: Joi.number().min(0).max(1).required(),
+    action: as.required()
   }
 })
 
@@ -185,9 +192,7 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
 })
 
 export const PHANTOM_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
-  base: Joi.object({
-    attackAppliesStatusEffect: STATUS_EFFECT_SCHEMA
-  })
+  base: Joi.object()
 })
 
 export function validateAllBaseEffects(){

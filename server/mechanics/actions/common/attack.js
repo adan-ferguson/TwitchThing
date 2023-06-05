@@ -65,6 +65,15 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
 
     ret.damageInfo = damageInfo
 
+    if(actionDef.onHit){
+      combat.addPendingTriggers([{
+        performAction: true,
+        actor: attacker,
+        ability: abilityInstance,
+        def: actionDef.onHit
+      }])
+    }
+
     return ret
   }
 }

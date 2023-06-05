@@ -8,24 +8,25 @@ export default function(level){
         tags: ['spell'],
         trigger: 'active',
         cooldown,
-        phantomEffect: {
-          base: {
-            attackAppliesStatusEffect: {
-              stats: {
-                speed
-              },
-              polarity: 'debuff',
-              name: 'chilled',
-              stacking: 'stack',
-            }
-          }
-        },
         actions: [{
           attack: {
             scaling: {
               magicPower
             },
-            damageType: 'magic'
+            damageType: 'magic',
+            onHit: {
+              applyStatusEffect: {
+                targets: 'target',
+                statusEffect: {
+                  stats: {
+                    speed
+                  },
+                  polarity: 'debuff',
+                  name: 'chilled',
+                  stacking: 'stack',
+                }
+              }
+            }
           }
         }]
       }]

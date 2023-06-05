@@ -7,5 +7,6 @@ export default {
   ignoreDefense: false,
   undodgeable: false,
   hits: 1,
+  onHit: null,
   scaling: {}
 }

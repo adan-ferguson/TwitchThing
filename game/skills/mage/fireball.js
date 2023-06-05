@@ -8,29 +8,30 @@ export default function(level){
         tags: ['spell'],
         trigger: 'active',
         cooldown,
-        phantomEffect: {
-          base: {
-            attackAppliesStatusEffect: {
-              base: {
-                damageOverTime: {
-                  damage: {
-                    scaledNumber: {
-                      magicPower: dotPower
-                    }
-                  },
-                  damageType: 'magic'
-                }
-              },
-              name: 'burned'
-            }
-          }
-        },
         actions: [{
           attack: {
             scaling: {
               magicPower
             },
-            damageType: 'magic'
+            damageType: 'magic',
+            onHit: {
+              applyStatusEffect: {
+                targets: 'target',
+                statusEffect: {
+                  base: {
+                    damageOverTime: {
+                      damage: {
+                        scaledNumber: {
+                          magicPower: dotPower
+                        }
+                      },
+                      damageType: 'magic'
+                    }
+                  },
+                  name: 'burned'
+                }
+              }
+            }
           }
         }]
       }]

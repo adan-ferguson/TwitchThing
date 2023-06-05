@@ -11,6 +11,18 @@ export function performAction(combat, actor, ability, actionDef){
   if(key === 'random'){
     const randomDef = chooseOne(expandedActionDef.options)
     return performAction(combat, actor, ability, randomDef)
+  }else if(key === 'maybe'){
+    if(expandedActionDef.chance < Math.random()){
+      return {
+        actor: actor.uniqueID,
+        effect: ability?.parentEffect.uniqueID,
+        ability: ability?.index,
+        actionDef: { [key]: expandedActionDef },
+        results: []
+      }
+    }else{
+      return performAction(combat, actor, ability, expandedActionDef.action)
+    }
   }
   return {
     actor: actor.uniqueID,

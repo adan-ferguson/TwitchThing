@@ -6,22 +6,23 @@ export default function(level){
       abilities: [{
         trigger: 'active',
         cooldown: 12000,
-        phantomEffect: {
-          base: {
-            attackAppliesStatusEffect: {
-              polarity: 'debuff',
-              name: 'hamstrung',
-              stacking: 'stack',
-              stats: {
-                speed
-              }
-            }
-          }
-        },
         actions: [{
           attack: {
             scaling: {
               physPower
+            },
+            onHit: {
+              applyStatusEffect: {
+                targets: 'target',
+                statusEffect: {
+                  polarity: 'debuff',
+                  name: 'hamstrung',
+                  stacking: 'stack',
+                  stats: {
+                    speed
+                  }
+                }
+              }
             }
           }
         }]

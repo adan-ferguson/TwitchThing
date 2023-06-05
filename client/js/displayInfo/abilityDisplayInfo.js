@@ -6,7 +6,7 @@ import {
   aboveIcon,
   attachedSkill,
   belowIcon,
-  refundTime,
+  refundTime, scalingWrap,
   statScaling,
   wrapStat
 } from '../components/common.js'
@@ -80,18 +80,24 @@ const DEFS = {
     return {
       description: 'When an enemy casts a spell, counter it.'
     }
+  },
+  lightningStorm: ability => {
+    return {
+      description: `Conjure a storm which lasts ${msToS(ability.vars.duration)}s.
+      Every 3s, it shoots a bolt which deals ${statScaling({ magicPower: ability.vars.magicPower }, ability, [0,1] )} magic damage and has 1/3 chance to stun the target for 3s.`
+    }
   }
 }
 
 const phantomEffectDefinitions = {
-  attackAppliesStatusEffect: (def, abilityInstance) => {
-    const chunks = ['On hit,']
-    chunks.push(...statusEffectApplicationDescription({
-      statusEffect: def,
-      targets: 'target'
-    }, abilityInstance))
-    return chunks.join(' ')
-  }
+  // attackAppliesStatusEffect: (def, abilityInstance) => {
+  //   const chunks = ['On hit,']
+  //   chunks.push(...statusEffectApplicationDescription({
+  //     statusEffect: def,
+  //     targets: 'target'
+  //   }, abilityInstance))
+  //   return chunks.join(' ')
+  // }
 }
 
 /**
