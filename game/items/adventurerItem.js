@@ -47,6 +47,10 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
     return this._def.id ?? null
   }
 
+  get name(){
+    return this._baseItem.id
+  }
+
   get baseItemId(){
     return this._baseItem.id
   }

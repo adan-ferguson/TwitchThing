@@ -124,7 +124,7 @@ export default class EffectDetails extends DIElement{
   _addDescription(){
     const edi = effectDisplayInfo(this._obj)
     if(edi.description){
-      this.appendChild(wrapText(edi.description))
+      this.appendChild(wrapContent(edi.description))
     }
   }
 

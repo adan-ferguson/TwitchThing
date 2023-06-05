@@ -70,6 +70,10 @@ export default class EffectInstance{
     return new Stats([this.fighterInstance.stats, this.exclusiveStats])
   }
 
+  get transStats(){
+    return this.effectData.transStats ?? []
+  }
+
   get statMultiplier(){
     return this.effect.statMultiplier ?? 1
   }

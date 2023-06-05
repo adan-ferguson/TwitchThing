@@ -3,6 +3,7 @@ import { calcStatDiff } from './statDiff.js'
 import { roundToFixed } from '../utilFunctions.js'
 import { makeStatObject } from './statObject.js'
 import _ from 'lodash'
+import { wrappedPct } from '../growthFunctions.js'
 
 export default class Stats{
 
@@ -13,10 +14,18 @@ export default class Stats{
   /**
    * @param baseStats {[object],object,Stats}
    * @param additionalStats {[object],object,Stats}
+   * @param transStats
    */
-  constructor(baseStats = null, additionalStats = null){
+  constructor(baseStats = null, additionalStats = null, transStats = []){
     this.baseAffectors = toAffectorsArray(baseStats)
     this.additionalAffectors = toAffectorsArray(additionalStats)
+    transStats.forEach(ts => {
+      // TODO: this only works with multiplier type
+      const value = (this.get(ts.from, false).value - 1)
+      this.baseAffectors.push({
+        [ts.to]: wrappedPct(100 * value * (ts.ratio ?? 1))
+      })
+    })
   }
 
   get isEmpty(){
@@ -27,11 +36,15 @@ export default class Stats{
     return this.baseAffectors.concat(this.additionalAffectors)
   }
 
-  get(nameOrStat){
+  set transStats(val){
+    this._transStats = val
+  }
+
+  get(nameOrStat, useCache = true){
 
     const name = nameOrStat.name ?? nameOrStat
 
-    if(this._cache[name]){
+    if(this._cache[name] && useCache){
       return this._cache[name]
     }
 
@@ -53,7 +66,9 @@ export default class Stats{
 
     statObj.diff = calcStatDiff(statObj)
 
-    this._cache[name] = statObj
+    if(useCache){
+      this._cache[name] = statObj
+    }
 
     return statObj
 
@@ -84,11 +99,7 @@ export default class Stats{
     })
     const allStats = {}
     Object.keys(all).forEach(type => {
-      const stat = this.get(type)
-      // if(stat.defaultValue === stat.value && forced.indexOf(type) === -1){
-      //   return
-      // }
-      allStats[type] = stat
+      allStats[type] = this.get(type)
     })
     return allStats
   }

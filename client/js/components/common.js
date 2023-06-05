@@ -1,5 +1,5 @@
 import Stats from '../../../game/stats/stats.js'
-import { getStatDisplayInfo, StatsDisplayStyle } from '../displayInfo/statsDisplayInfo.js'
+import { getStatDisplayInfo, statDefinitionsInfo, StatsDisplayStyle } from '../displayInfo/statsDisplayInfo.js'
 import { makeEl, roundToNearestIntervalOf, wrapContent } from '../../../game/utilFunctions.js'
 import healthIcon from '../../assets/icons/health.svg'
 import physPower from '../../assets/icons/physPower.svg'
@@ -95,6 +95,15 @@ export function wrapStatObj(statObj){
     return `<span class="stat-wrap icon-and-value" stat-type="${statObj.type}">${content}${info.icon}</span>`
   }else{
     return `<span class="stat-wrap icon-and-value" stat-type="${statObj.type}">${content} ${info.text}</span>`
+  }
+}
+
+export function describeStat(statType){
+  const info = statDefinitionsInfo[statType]
+  if(info.icon){
+    return `<span class="stat-wrap icon-and-value" stat-type="${statType}">${info.text}${info.icon}</span>`
+  }else{
+    return `<span class="stat-wrap icon-and-value" stat-type="${statType}">${info.text}</span>`
   }
 }
 

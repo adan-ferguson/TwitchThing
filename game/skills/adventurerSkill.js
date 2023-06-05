@@ -45,6 +45,10 @@ export default class AdventurerSkill extends AdventurerLoadoutObject{
     return this._baseSkill.id
   }
 
+  get name(){
+    return this._baseSkill.id
+  }
+
   get requiredOrbs(){
     return Math.max(0, 5 * (this.index - 1))
   }

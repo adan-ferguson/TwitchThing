@@ -8,7 +8,7 @@ export const StatsDisplayStyle = {
   ADDITIONAL: 1, // Eg. "+50%", i.e. we're adding 50%
 }
 
-const statDefinitionsInfo = {
+export const statDefinitionsInfo = {
   hpMax: {
     text: 'Max Health',
     icon: ICON_SVGS.health,

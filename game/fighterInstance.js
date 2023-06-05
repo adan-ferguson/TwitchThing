@@ -94,7 +94,8 @@ export default class FighterInstance{
     const statusEffectAffectors = this.statusEffectInstances.map(sei => sei.stats)
     this._cachedStats = new Stats(
       [derivedStats, ...baseStatAffectors, ...loadoutStatAffectors],
-      statusEffectAffectors
+      statusEffectAffectors,
+      this.effectInstances.map(ei => ei.transStats).flat().filter(t => t)
     )
     return this._cachedStats
   }

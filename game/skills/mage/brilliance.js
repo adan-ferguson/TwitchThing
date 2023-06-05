@@ -1,5 +1,11 @@
 export default function(level){
   return {
-    effect: {}
+    effect: {
+      transStats: [{
+        from: 'combatXP',
+        to: 'magicPower'
+      }]
+    },
+    maxLevel: 1,
   }
 }

@@ -8,3 +8,4 @@ for(let key in Stats){
 }
 
 export const STATS_SCHEMA = Joi.object(TYPES)
+export const STATS_NAME_SCHEMA = Joi.string().valid(...Object.keys(Stats))

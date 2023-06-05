@@ -1,3 +1,5 @@
+import { describeStat } from '../components/common.js'
+
 export function effectDisplayInfo(effectObj){
   const id = effectObj.effectId ?? effectObj.name
   return DEFS[id]?.(effectObj) ?? {}
@@ -9,5 +11,10 @@ const DEFS = {
   },
   Sapling: () => {
     return { description: 'Block an incoming attack/ability.' }
+  },
+  brilliance: effectObj => {
+    return {
+      description: `Gain ${describeStat('magicPower')} equal to your ${describeStat('combatXP')}`
+    }
   }
 }

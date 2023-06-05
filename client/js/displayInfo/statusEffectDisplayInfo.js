@@ -1,6 +1,6 @@
 import { STATUSEFFECT_COLORS } from '../colors.js'
 import { effectInstanceState } from '../effectInstanceState.js'
-import { statScaling, toSeconds, wrapStat } from '../components/common.js'
+import { statScaling, toSeconds, wrapStat, wrapStats } from '../components/common.js'
 import { explodeEffect } from '../../../game/baseEffects/statusEffectInstance.js'
 import { msToS } from '../../../game/utilFunctions.js'
 
@@ -81,9 +81,7 @@ export function statusEffectDescription(statusEffectDef, abilityInstance){
   }
 
   if(statusEffectDef.stats){
-    for(let key in statusEffectDef.stats){
-      chunks.push(wrapStat(key, statusEffectDef.stats[key]))
-    }
+    chunks.push(wrapStats(statusEffectDef.stats))
   }
 
   if(statusEffectDef.duration){

@@ -1,6 +1,6 @@
 import { SUBJECT_KEYS, SUBJECT_KEYS_SCHEMA } from './subjectKeys.js'
 import Joi from 'joi'
-import { STATS_SCHEMA } from './stats.js'
+import { STATS_NAME_SCHEMA, STATS_SCHEMA } from './stats.js'
 import { DAMAGE_TYPE_SCHEMA } from './damage.js'
 import { MODS_SCHEMA } from './mods.js'
 import { status as StatusEffects, phantom as PhantomEffects } from '../../game/baseEffects/combined.js'
@@ -117,6 +117,11 @@ const es = Joi.object({
   mods: MODS_SCHEMA,
   exclusiveStats: STATS_SCHEMA,
   exclusiveMods: MODS_SCHEMA,
+  transStats: Joi.array().items(Joi.object({
+    from: STATS_NAME_SCHEMA.required(),
+    to: STATS_NAME_SCHEMA.required(),
+    ratio: Joi.number()
+  })),
   statMultiplier: Joi.number().min(0),
   tags: TAGS_LIST_SCHEMA
 })
