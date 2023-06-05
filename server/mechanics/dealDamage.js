@@ -1,5 +1,4 @@
 import { takeDamage } from './takeDamage.js'
-import { gainHealth } from './gainHealth.js'
 
 export function dealDamage(combat, actor, target, damageInfo){
 

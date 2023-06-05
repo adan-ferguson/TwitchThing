@@ -107,6 +107,11 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
   }
 
   upgradeInfo(){
+
+    if(this.level === this.data.maxLevel){
+      return {}
+    }
+
     const upgradedItemDef = {
       id: uniqueID(),
       ...(_.isString(this.def) ? {} : this.def),

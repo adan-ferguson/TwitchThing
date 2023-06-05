@@ -169,8 +169,8 @@ function startOfCombatPrefix(){
 }
 
 function conditionsDescription(conditions){
-  if(conditions.hpPctBelow){
-    return [`Only use when health is below ${conditions.hpPctBelow * 100}%.`]
+  if(conditions.owner?.hpPctBelow){
+    return [`Only use when health is below ${conditions.owner.hpPctBelow * 100}%.`]
   }
   if(conditions.source){
 

@@ -28,8 +28,8 @@ export function statusEffectDisplayInfo(effectInstance){
     barMax = effectInstance.duration
     timed = true
   }else if(effectInstance.barrier){
-    barValue = effectInstance.barrierPointsRemaining
-    barMax = effectInstance.barrier.points
+    barValue = effectInstance.barrierHp
+    barMax = effectInstance.barrierHpMax
     showValue = true
   }
 

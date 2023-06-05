@@ -8,7 +8,7 @@ export default function(level){
           abilityModification: {
             abilityModificationId: 'miniatureScroll',
             trigger: 'active',
-            turnRefund: 1 - level * 0.5,
+            turnRefund: level * 0.5,
             exclusiveStats: {
               magicPower: multi,
               physPower: multi,

@@ -27,7 +27,7 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
       }
     }
 
-    if (missAttack(attacker)){
+    if(missAttack(attacker)){
       // processAbilityEvents('miss', attacker)
       // return {
       //   ...ret,

@@ -10,9 +10,10 @@ const HTML = `
 
 export default class WorkshopPage extends Page{
 
-  constructor(){
+  constructor({ initialAdventurerID }){
     super()
     this.innerHTML = HTML
+    this._initialAdventurerID = initialAdventurerID
     this.tabz.events.on('changed', () => {
       this._loadTab()
     })
@@ -30,19 +31,15 @@ export default class WorkshopPage extends Page{
   }
 
   async load(){
-    this._loadTab()
+    this._loadTab(true)
   }
 
-  async _loadTab(){
+  async _loadTab(first = false){
     showLoader()
     const tab = this.tabz.currentTab
     tab.innerHTML = ''
-    await tab.load()
+    await tab.load(first ? this._initialAdventurerID : null)
     hideLoader()
-
-    // if(firstTime){
-    //   // show something?
-    // }
   }
 }
 customElements.define('di-workshop-page', WorkshopPage)

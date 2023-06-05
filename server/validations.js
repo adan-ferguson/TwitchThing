@@ -11,7 +11,7 @@ import _ from 'lodash'
  */
 export function validateParam(val, type = 'any', required = true){
   try {
-    type = _.isString(type) ? type : type
+    type = _.isString(type) ? type : type.type
     if(!required){
       return Joi.attempt(val, Joi[type]())
     }

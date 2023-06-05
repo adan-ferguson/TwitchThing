@@ -1,7 +1,10 @@
-import { mergeOptionsObjects } from '../../../game/utilFunctions.js'
+import { mergeOptionsObjects, wrapContent } from '../../../game/utilFunctions.js'
 import DIElement from './diElement.js'
 import { inventoryItemsToRows, makeAdventurerItemRow, standardItemSort } from './listHelpers.js'
 import AdventurerItemRow from './adventurer/adventurerItemRow.js'
+import { faIcon } from './common.js'
+import tippy from 'tippy.js'
+import WorkshopPage from './pages/workshop/workshopPage.js'
 
 const HTML = `
 <div class="content-rows">
@@ -41,9 +44,9 @@ export default class Inventory extends DIElement{
   }
 
   setup(items, adventurer){
-    if(this._beenSetup){
-      return
-    }
+    // if(this._beenSetup){
+    //   return this
+    // }
     this._beenSetup = true
     this.adventurer = adventurer
     // this.querySelector('.inventory-options').classList.toggle('displaynone', adventurer ? false : true)
@@ -76,6 +79,24 @@ export default class Inventory extends DIElement{
     }else{
       this.listEl.removeRow(row)
     }
+  }
+
+  showScrapLink(){
+    if(this.querySelector('.scrap-link')){
+      return
+    }
+    const scrapLink = wrapContent(faIcon('recycle'), {
+      class: ['inset-title-right', 'clickable']
+    })
+    scrapLink.style.lineHeight = '0px'
+    tippy(scrapLink, {
+      theme: 'light',
+      content: 'Go to upgrader page'
+    })
+    scrapLink.addEventListener('click', () => {
+      this.parentPage.redirectTo(WorkshopPage.path(), { initialAdventurerID: this.adventurer.id })
+    })
+    this.querySelector('.content-rows').appendChild(scrapLink)
   }
 
   _setupFilteringOptions(){

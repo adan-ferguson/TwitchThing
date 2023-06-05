@@ -45,7 +45,7 @@ export default class Forge extends DIElement{
     return this.querySelector('.upgrade-button')
   }
 
-  async load(){
+  async load(showAdventurerID = null){
 
     await this._fetchData()
 
@@ -80,6 +80,10 @@ export default class Forge extends DIElement{
       this._reloadAfterUpgrade(upgradedItemDef)
       hideLoader()
     })
+
+    if(showAdventurerID){
+      this.workshopInventoryEl.setAdventurer(showAdventurerID)
+    }
   }
 
   async _fetchData(){
@@ -114,19 +118,28 @@ export default class Forge extends DIElement{
     const { upgradedItemDef, components } = adventurerItem.upgradeInfo()
 
     this.querySelector('.item-before').setItem(adventurerItem)
-    this.querySelector('.item-after').setItem(new AdventurerItem(upgradedItemDef))
-    this.querySelector('.right-column').classList.remove('hidden')
 
+    const rightCol = this.querySelector('.right-column')
+    rightCol.classList.remove('hidden')
     const componentsEl = this.querySelector('.item-components')
     componentsEl.innerHTML = ''
-    components.map(component => {
-      componentsEl.append(new ComponentRow().setData(component, this._inventory))
-    })
+
+    const maxLevel = upgradedItemDef ? false : true
+    if(maxLevel){
+      rightCol.classList.add('max-level')
+    }else{
+      rightCol.classList.remove('max-level')
+      this.querySelector('.item-after').setItem(new AdventurerItem(upgradedItemDef))
+      components.map(component => {
+        componentsEl.append(new ComponentRow().setData(component, this._inventory))
+      })
+    }
 
     this.upgradeButton.toggleAttribute(
       'disabled',
-      componentsEl.querySelector('.not-enough') ? true : false
+      maxLevel || componentsEl.querySelector('.not-enough') ? true : false
     )
+    this.upgradeButton.textContent = maxLevel ? 'Max Level' : 'Upgrade'
   }
 }
 customElements.define('di-workshop-forge', Forge)

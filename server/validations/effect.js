@@ -153,7 +153,13 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
       damage: OPTIONAL_SCALED_NUMBER_SCHEMA,
       damageType: DAMAGE_TYPE_SCHEMA,
     }),
-    stunned: Joi.number().integer().positive()
+    stunned: Joi.number().integer().positive(),
+    barrier: Joi.object({
+      hp: OPTIONAL_SCALED_NUMBER_SCHEMA
+    })
+  }),
+  barrier: Joi.object({
+    hp: Joi.number().integer()
   }),
   statusEffectId: Joi.string(),
   turns: Joi.number().integer(),

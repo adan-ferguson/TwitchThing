@@ -13,7 +13,7 @@ export function takeDamage(combat, subject, damageInfo){
   }
 
   let result = {
-    baseDamage:  damageInfo.damage,
+    baseDamage: damageInfo.damage,
     blocked: 0,
     damageType: damageInfo.damageType
   }
@@ -34,17 +34,32 @@ export function takeDamage(combat, subject, damageInfo){
     damage *= combat.overtimeDamageBonus
   }
 
-  damage = Math.ceil(damage)
-
-  // TODO: iterate over damage replacements
-
-  result.damageDistribution = { hp: damage }
+  result.damageDistribution = distributeDamage(subject, Math.ceil(damage))
   result.totalDamage = Object.values(result.damageDistribution).reduce((prev, val) => prev + val)
-  subject.hp -= result.damageDistribution.hp
 
   if(damage > 0){
     result = processAbilityEvents(combat, 'takeDamage', subject, null, result)
   }
 
   return result
+}
+
+function distributeDamage(subject, damageLeft){
+  const distribution = {}
+
+  subject.effectInstances.forEach(ei => {
+    if(!damageLeft){
+      return
+    }
+    if(ei.barrier){
+      const toReduce = Math.min(damageLeft, ei.barrierHp)
+      damageLeft -= toReduce
+      ei.barrierHp -= toReduce
+      distribution[ei.uniqueID] = toReduce
+    }
+  })
+
+  subject.hp -= damageLeft
+  distribution.hp = damageLeft
+  return distribution
 }

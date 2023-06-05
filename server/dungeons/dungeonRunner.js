@@ -159,7 +159,7 @@ function validateNew(adventurerDoc, userDoc, { startingFloor }){
     throw 'Adventurer already in dungeon'
   }
   const adventurer = new Adventurer(adventurerDoc)
-  if(!adventurer.loadout.isValid){
+  if(!adventurer.isValid){
     throw 'Adventurer has invalid loadout.'
   }
 }

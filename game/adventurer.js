@@ -121,6 +121,10 @@ export default class Adventurer{
     return this._doc.accomplishments.deepestFloor
   }
 
+  get isValid(){
+    return this.orbsData.isValid && this.loadout.isValid
+  }
+
   /**
    * @param skill {AdventurerSkill}
    */

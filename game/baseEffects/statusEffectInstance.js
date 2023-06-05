@@ -1,5 +1,5 @@
 import Stats from '../stats/stats.js'
-import { roundToFixed, toDisplayName } from '../utilFunctions.js'
+import { minMax, roundToFixed, toDisplayName } from '../utilFunctions.js'
 import EffectInstance from '../effectInstance.js'
 import { status as StatusEffects } from './combined.js'
 import _ from 'lodash'
@@ -73,7 +73,7 @@ export default class StatusEffectInstance extends EffectInstance{
     if(Number.isFinite(this.duration) && !this.durationRemaining){
       return true
     }
-    if(this.barrier && !this.barrierPointsRemaining){
+    if(this.barrier && !this.barrierHp){
       return true
     }
     if(this.stacks === 0){
@@ -96,15 +96,16 @@ export default class StatusEffectInstance extends EffectInstance{
     return this.effectData.barrier ?? null
   }
 
-  get barrierDamage(){
-    return this._state.barrierDamage ?? 0
+  get barrierHpMax(){
+    return this.barrier?.hp ?? 0
   }
 
-  get barrierPointsRemaining(){
-    if(!this.barrier){
-      return 0
-    }
-    return this.barrier.points - this.barrierDamage
+  get barrierHp(){
+    return this._state.barrierHp ?? this.barrierHpMax
+  }
+
+  set barrierHp(val){
+    this._state.barrierHp = minMax(0, val, this.barrierHpMax)
   }
 
   get turns(){
@@ -127,10 +128,8 @@ export default class StatusEffectInstance extends EffectInstance{
   }
 
   refresh(){
-    if(this.barrier){
-      this._state.barrierDamage = 0
-    }
-    this._state.time = 0
+    delete this._state.barrierHp
+    delete this._state.time
     return this
   }
 
@@ -159,19 +158,6 @@ export default class StatusEffectInstance extends EffectInstance{
     if(this.turns && this.time > 0){
       this._state.turnsTaken = this.turnsTaken + 1
     }
-  }
-
-  /**
-   * @param amount {number}
-   * @return {number} Amount reduced
-   */
-  reduceBarrierPoints(amount){
-    if(!this.barrier){
-      return 0
-    }
-    const barrierDamage = Math.min(amount, this.barrierPointsRemaining)
-    this._state.barrierDamage = roundToFixed(this.barrierDamage + barrierDamage, 2)
-    return barrierDamage
   }
 }
 

@@ -61,6 +61,10 @@ async function upgradeItem(userDoc, itemDef){
   const aii = new AdventurerItem(itemDef)
   const upgradeInfo = aii.upgradeInfo()
 
+  if(!upgradeInfo.upgradedItemDef){
+    throw 'Can not upgrade item for some reason'
+  }
+
   upgradeInfo.components.forEach(component => {
     if(component.type === 'scrap'){
       spendScrap(userDoc, component.count)

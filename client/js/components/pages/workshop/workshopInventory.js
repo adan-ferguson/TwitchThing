@@ -72,6 +72,11 @@ export default class WorkshopInventory extends DIElement{
     }
   }
 
+  setAdventurer(id){
+    this.adventurerDropdownEl.value = id
+    this._updateList()
+  }
+
   _setupDropdown(adventurers){
     const el = this.adventurerDropdownEl
     adventurers.forEach(adv => {

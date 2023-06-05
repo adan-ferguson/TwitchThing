@@ -39,7 +39,7 @@ function makeBotRow(displayInfo){
   if(displayInfo.type === 'active'){
     botLeftChunks.push('Active')
   }
-  if(displayInfo.ability.uses && !displayInfo.ability.trigger === 'startOfCombat'){
+  if(displayInfo.ability.uses && displayInfo.ability.trigger !== 'startOfCombat'){
     botLeftChunks.push(`${displayInfo.ability.uses} use${displayInfo.ability.uses > 1 ? 's' : ''}`)
   }
   if(displayInfo.ability.tags?.length){

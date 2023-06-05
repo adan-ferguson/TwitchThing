@@ -69,7 +69,7 @@ export default class LoadoutTab extends DIElement{
 
     this._adventurer = adventurer
 
-    this.inventoryEl.setup(items, adventurer)
+    this.inventoryEl.setup(items, adventurer).showScrapLink()
     this.adventurerPaneEl.setAdventurer(adventurer)
     this.skillsEl.setup(adventurer, parentPage.user.features.skills)
     this._updateSaveButton()
@@ -93,9 +93,8 @@ export default class LoadoutTab extends DIElement{
   }
 
   _updateSaveButton(){
-    const orbsValid = this._adventurer.orbsData.isValid
-    const loadoutValid = this._adventurer.loadout.isValid
-    this.saveButton.toggleAttribute('disabled', !orbsValid || !loadoutValid || this._saving)
+    const valid = this._adventurer.isValid
+    this.saveButton.toggleAttribute('disabled', !valid || this._saving)
   }
 
   _setupItemEdit(){

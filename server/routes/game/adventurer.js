@@ -80,7 +80,7 @@ verifiedRouter.post('/edit/spendorb', validateIdle, async(req, res) => {
 
 verifiedRouter.post('/edit/spendskillpoint', validateIdle, async(req, res) => {
   requireOwnsAdventurer(req)
-  const skillId = validateParam(req.body.skillId, { type: 'string' })
+  const skillId = validateParam(req.body.skillId, 'string')
   spendAdventurerSkillPoint(req.adventurerDoc, skillId)
   await Adventurers.save(req.adventurerDoc)
   res.status(200).send({ success: 1 })
@@ -88,8 +88,8 @@ verifiedRouter.post('/edit/spendskillpoint', validateIdle, async(req, res) => {
 
 verifiedRouter.post('/edit/save', validateIdle, async (req, res) => {
   requireOwnsAdventurer(req)
-  validateParam(req.body.items, { type: 'array' })
-  validateParam(req.body.skills, { type: 'array' })
+  validateParam(req.body.items, 'array')
+  validateParam(req.body.skills, 'array')
   await commitAdventurerLoadout(req.adventurerDoc, req.user, req.body.items, req.body.skills)
   await Adventurers.save(req.adventurerDoc)
   await Users.save(req.user)
