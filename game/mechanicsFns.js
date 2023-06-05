@@ -1,6 +1,6 @@
 import { scaledNumberFromInstance } from './scaledNumber.js'
 
-export function takeDamageActionCalcDamage(instance, scaling){
+export function damageActionCalcDamage(instance, scaling){
   let damage = Math.ceil(scaledNumberFromInstance(instance, scaling))
   damage *= instance.stacks || 1
   return damage

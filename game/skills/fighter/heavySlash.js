@@ -4,7 +4,7 @@ export default function(level){
     effect: {
       abilities: [{
         trigger: 'active',
-        initialCooldown: 15000 + level * 5000,
+        cooldown: 15000 + level * 5000,
         actions: [{
           attack: {
             scaling: {

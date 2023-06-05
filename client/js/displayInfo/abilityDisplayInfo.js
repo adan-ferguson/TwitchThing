@@ -10,10 +10,11 @@ import {
   statScaling,
   wrapStat
 } from '../components/common.js'
-import { takeDamageActionCalcDamage } from '../../../game/mechanicsFns.js'
+import { damageActionCalcDamage } from '../../../game/mechanicsFns.js'
 import { derivedGainHealthDescription } from './derived/actions/gainHealth.js'
 import { msToS, toPct } from '../../../game/utilFunctions.js'
 import { derivedModifyAbilityDescription } from './derived/actions/modifyAbility.js'
+import { derivedDealDamageDescription } from './derived/actions/dealDamage.js'
 
 const DEFS = {
   flutteringDodge: () => {
@@ -39,7 +40,7 @@ const DEFS = {
   },
   damageOverTime: ability => {
     const action = ability.actions[0].takeDamage
-    const damage = takeDamageActionCalcDamage(ability, action.scaling)
+    const damage = damageActionCalcDamage(ability, action.scaling)
     return {
       description: `Taking ${damage} ${action.damageType} damage.`
     }
@@ -121,8 +122,7 @@ export function getAbilityDisplayInfo(ability){
 function abilityDescription(ability){
   const chunks = []
   const abilityInstance = ability instanceof AbilityInstance ? ability : null
-  chunks.push(...triggerPrefix(ability.trigger))
-  chunks.push(...conditions(ability.conditions))
+  chunks.push(...prefix(ability.trigger, ability.conditions ?? {}))
 
   let capitalize = true
   if(chunks.length){
@@ -140,6 +140,8 @@ function abilityDescription(ability){
       toAdd = derivedGainHealthDescription(actionDef.gainHealth, abilityInstance)
     }else if(actionDef.modifyAbility){
       toAdd = derivedModifyAbilityDescription(actionDef.modifyAbility, abilityInstance)
+    }else if(actionDef.dealDamage){
+      toAdd = derivedDealDamageDescription(actionDef.dealDamage, abilityInstance)
     }
     if(!toAdd?.length){
       return
@@ -182,29 +184,20 @@ function conditionsDescription(conditions){
   return []
 }
 
-function triggerPrefix(trigger){
-  if(!trigger){
-    return []
-  }
+function prefix(trigger, conditions){
+  const chunks = []
   if(trigger === 'startOfCombat' ){
-    return [...startOfCombatPrefix()]
+    chunks.push(...startOfCombatPrefix())
   }
   if(trigger === 'attackHit'){
-    const type = trigger.conditions?.data?.damageType ? 'a ' + trigger.conditions.data.damageType : 'an'
-    return ['After landing', type, 'attack']
+    const type = conditions.data?.damageType ? 'a ' + conditions.data.damageType : 'an'
+    chunks.push('After landing', type, 'attack')
+    if(conditions.source?.subjectKey === 'attached'){
+      chunks.push(`with ${attachedSkill()}`)
+    }
   }
   if(trigger === 'rest'){
-    return['After resting']
+    chunks.push('After resting')
   }
-  return []
-}
-
-function conditions(conditions){
-  if(!conditions){
-    return []
-  }
-  if(conditions.source === 'attached'){
-    return [`with ${attachedSkill()}`]
-  }
-  return []
+  return chunks
 }

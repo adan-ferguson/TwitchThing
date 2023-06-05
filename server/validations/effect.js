@@ -40,26 +40,32 @@ export const TRIGGER_NAME_SCHEMA = Joi.string().valid(
   'useAbility',
 )
 
+const TARGETS_SCHEMA = Joi.string().valid('self', 'enemy', 'target')
 const as = Joi.object({
   applyStatusEffect: Joi.object({
-    targets: Joi.string().valid('self', 'enemy', 'target'),
+    targets: TARGETS_SCHEMA.required(),
     statusEffect: Joi.custom(val => {
       return Joi.attempt(val, STATUS_EFFECT_SCHEMA)
     }).required()
   }),
   attack: Joi.object({
     damageType: DAMAGE_TYPE_SCHEMA,
-    scaling: SCALED_NUMBER_SCHEMA,
+    scaling: SCALED_NUMBER_SCHEMA.required(),
     lifesteal: Joi.number().positive(),
     range: Joi.array().length(2).items(Joi.number()),
     hits: Joi.number().integer(),
     undodgeable: Joi.bool()
   }),
   gainHealth: Joi.object({
-    scaling: SCALED_NUMBER_SCHEMA
+    scaling: SCALED_NUMBER_SCHEMA.required(),
+  }),
+  dealDamage: Joi.object({
+    scaling: SCALED_NUMBER_SCHEMA.required(),
+    targets: TARGETS_SCHEMA.required(),
+    damageType: DAMAGE_TYPE_SCHEMA,
   }),
   takeDamage: Joi.object({
-    scaling: SCALED_NUMBER_SCHEMA,
+    scaling: SCALED_NUMBER_SCHEMA.required(),
     damageType: DAMAGE_TYPE_SCHEMA,
     ignoreDefense: Joi.bool().truthy(),
     ignoreOvertime: Joi.bool().truthy()

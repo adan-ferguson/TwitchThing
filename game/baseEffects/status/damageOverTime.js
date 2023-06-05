@@ -2,6 +2,7 @@ export default function({ damage = 0, damageType = 'phys' } = {}){
   return {
     polarity: 'debuff',
     stacking: 'stack',
+    name: 'damageOverTime',
     abilities: [{
       trigger: 'instant',
       abilityId: 'damageOverTime',

@@ -40,7 +40,7 @@ const fighter = {
 
 const mage = {
   skills: [
-    Skills.shock,
+    Skills.magicMissile,
     Skills.barrier,
     Skills.intelligence,
     Skills.frostRay,

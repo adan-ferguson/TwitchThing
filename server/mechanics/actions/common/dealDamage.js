@@ -1,13 +1,13 @@
-export default function(combat, attacker, target, effect = null, actionDef = {}){
-  // TODO: ignoreDef check
-  // damageDef = dealDamageAction(damageDef)
-  // const subject = damageDef.affects === 'self' ? actor : combat.getEnemyOf(actor)
-  // let damage = Math.ceil(scaledNumber(actor, damageDef.scaling))
-  // if(damage <= 0){
-  //   return
-  // }
-  // return dealDamage(combat, actor, subject, {
-  //   ...damageDef,
-  //   damage
-  // })
+import { damageActionCalcDamage } from '../../../../game/mechanicsFns.js'
+import { dealDamage } from '../../dealDamage.js'
+
+export default function(combat, actor, subject, abilityInstance = null, actionDef = {}){
+  const damage = damageActionCalcDamage(abilityInstance ?? actor, actionDef.scaling)
+  return {
+    damageInfo: dealDamage(combat, actor, subject, {
+      ...actionDef,
+      damage
+    }),
+    subject: subject.uniqueID
+  }
 }
