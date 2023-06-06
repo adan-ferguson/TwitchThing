@@ -1,6 +1,6 @@
 import DIElement from './diElement.js'
-import { makeEl, roundToNearestIntervalOf, wrapContent, wrapText } from '../../../game/utilFunctions.js'
-import { activeAbility, isAdventurerItem, orbEntries, pluralize, wrapStats } from './common.js'
+import { roundToNearestIntervalOf, wrapContent, wrapText } from '../../../game/utilFunctions.js'
+import { isAdventurerItem, wrapStats } from './common.js'
 import Stats from '../../../game/stats/stats.js'
 import StatsList from './stats/statsList.js'
 import AbilityDescription from './abilityDescription.js'
@@ -8,10 +8,9 @@ import { StatsDisplayStyle } from '../displayInfo/statsDisplayInfo.js'
 import { getAbilityDisplayInfoForObj } from '../displayInfo/abilityDisplayInfo.js'
 import { modDisplayInfo } from '../displayInfo/modDisplayInfo.js'
 import { metaEffectDisplayInfo } from '../displayInfo/metaEffectDisplayInfo.js'
-import { subjectDescription } from '../subjectClientFns.js'
 import { effectDisplayInfo } from '../displayInfo/effectDisplayInfo.js'
 import tippy from 'tippy.js'
-import { conditionsDisplayInfo } from '../displayInfo/conditionsDisplayInfo.js'
+import { loadoutModifierToEl } from '../displayInfo/loadoutModifierDisplayInfo.js'
 
 export default class EffectDetails extends DIElement{
 
@@ -58,9 +57,9 @@ export default class EffectDetails extends DIElement{
   }
 
   _addLoadoutModifiers(){
-    const loadoutModifiers = this._obj.loadoutModifiers ?? {}
-    for (let subjectKey in loadoutModifiers){
-      const el = loadoutModifierToEl(subjectKey, loadoutModifiers[subjectKey], this.isItem)
+    const loadoutModifiers = this._obj.loadoutModifiers ?? []
+    for (let modifier of loadoutModifiers){
+      const el = loadoutModifierToEl(modifier, this.isItem)
       if(el){
         this.appendChild(el)
       }
@@ -145,47 +144,3 @@ export default class EffectDetails extends DIElement{
 }
 
 customElements.define('di-effect-details', EffectDetails)
-
-function loadoutModifierToEl(subjectKey, modifiers, isItem){
-
-  const nodes = []
-  const contentNodes = []
-  if(subjectKey !== 'self'){
-    nodes.push(wrapContent(subjectDescription(subjectKey, isItem), { class: 'loadout-modifier-header' }))
-  }
-
-  for(let modifierKey in modifiers){
-    let value = modifiers[modifierKey]
-    let str
-    if(modifierKey === 'orbs'){
-      const key = Object.keys(value)[0]
-      let moreOrLess = 'more'
-      value = { ...value }
-      if(value[key] < 0){
-        value[key] *= -1
-        moreOrLess = 'less'
-      }
-      str = `Costs ${orbEntries(value)} ${moreOrLess}`
-    }else if(modifierKey === 'restrictions'){
-      if(value.slot){
-        str = `Can only be equipped in slot ${value.slot}`
-      }else if(value.empty){
-        str = 'Must be empty'
-      }else if(value.hasAbility === 'active'){
-        str = `Must have an ${activeAbility()}`
-      }
-    }else if(modifierKey === 'levelUp'){
-      str =`Is upgraded by ${pluralize('level', value)}`
-    }
-    if(str){
-      contentNodes.push(wrapContent(str, { elementType: 'li' }))
-    }
-  }
-
-  if(!contentNodes.length){
-    return
-  }
-
-  nodes.push(makeEl({ nodes: contentNodes, class: 'loadout-modifier-content', elementType: 'ul' }))
-  return makeEl({ nodes, class: subjectKey === 'self' ? '' : 'loadout-modifier' })
-}

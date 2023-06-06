@@ -7,12 +7,12 @@ export default function(level){
       }
     },
     orbs: 4 * level + 6,
-    loadoutModifiers: {
-      neighbouring: {
-        restrictions: {
-          empty: true
-        }
+    loadoutModifiers: [{
+      loadoutModifierId: 'big',
+      subjectKey: 'neighbouring',
+      restrictions: {
+        empty: true
       }
-    }
+    }]
   }
 }

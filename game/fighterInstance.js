@@ -2,7 +2,7 @@ import Stats from './stats/stats.js'
 import { deepClone, minMax } from './utilFunctions.js'
 import StatusEffectInstance from './baseEffects/statusEffectInstance.js'
 import PhantomEffectInstance from './baseEffects/phantomEffectInstance.js'
-import MetaEffectCollection from './metaEffects.js'
+import MetaEffectCollection from './metaEffectCollection.js'
 
 // Stupid
 new Stats()

@@ -1,4 +1,4 @@
-import { fillArray, isolate } from './utilFunctions.js'
+import { fillArray } from './utilFunctions.js'
 
 export default class SlotModifierCollection{
 
@@ -17,8 +17,8 @@ export default class SlotModifierCollection{
     this._modifiers = mergeMatrices(matrices.filter(m => m))
   }
 
-  get(col, row, prop){
-    return isolate(this._modifiers[col][row]?? [], prop)
+  get(col, row, prop, loadoutObject = null){
+    return isolate(this._modifiers[col][row] ?? [], prop, loadoutObject)
   }
 
   outgoingModifiers(col, row){
@@ -36,10 +36,9 @@ function calcOutgoing(obj, col, row, propName){
   if(!obj?.[propName]){
     return false
   }
-  for(let subjectKey in obj[propName]){
-    const val = obj[propName][subjectKey]
-    getSubjects(subjectKey, col, row).forEach(subj => {
-      mtx[subj.col][subj.row].push(val)
+  for(let modifier of obj[propName]){
+    getSubjects(modifier.subjectKey, col, row).forEach(subj => {
+      mtx[subj.col][subj.row].push(modifier)
     })
   }
   return mtx
@@ -84,4 +83,26 @@ function mergeMatrices(mtcs){
       }
     }
   }
+}
+function isolate(arrayOfObjs, propName, loadoutObject){
+  const arr = []
+  arrayOfObjs.forEach(obj => {
+    if(obj[propName]){
+      if(conditionsMatch(obj.conditions, loadoutObject)){
+        arr.push(obj[propName])
+      }
+    }
+  })
+  return arr
+}
+
+function conditionsMatch(conditions, loadoutObject){
+  if(!conditions || !loadoutObject){
+    return true
+  }
+  debugger
+  if(conditions.hasTag && !loadoutObject.tags[conditions.hasTag]){
+    return false
+  }
+  return true
 }

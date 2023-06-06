@@ -1,13 +1,13 @@
 export default function(level){
   return {
-    loadoutModifiers: {
-      attached: {
-        restrictions: {
-          hasAbility: 'active'
-        },
-        levelUp: level + 1
-      }
-    },
+    loadoutModifiers: [{
+      loadoutModifierId: 'attachedActive',
+      subjectKey: 'attached',
+      restrictions: {
+        hasAbility: 'active'
+      },
+      levelUp: level + 1
+    }],
     effect: {
       tags: ['scroll']
     },

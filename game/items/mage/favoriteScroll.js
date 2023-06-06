@@ -18,13 +18,12 @@ export default function(level){
       }],
       tags: ['scroll'],
     },
-    loadoutModifiers: {
-      self: {
-        restrictions: {
-          slot: 1
-        }
+    loadoutModifiers: [{
+      subjectKey: 'self',
+      restrictions: {
+        slot: 1
       }
-    },
+    }],
     orbs: 2 + level * 4
   }
 }

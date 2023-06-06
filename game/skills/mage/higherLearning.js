@@ -1,5 +1,15 @@
 export default function(level){
   return {
-    effect: {}
+    loadoutModifiers: [{
+      loadoutModifierId: 'higherLearning',
+      subjectKey: 'all',
+      conditions: {
+        hasTag: 'scroll'
+      },
+      orbs: {
+        mage: level * -3
+      }
+    }],
+    skillPoints: 2 * level
   }
 }
