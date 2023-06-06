@@ -12,9 +12,9 @@ export default function(level){
               name: 'berserk',
               polarity: 'buff',
               stacking: 'stack',
-              maxStacks: 4 + level,
+              maxStacks: 3 + level * 2,
               stats: {
-                physPower: wrappedPct(10 + level * 10)
+                physPower: wrappedPct(15 + level * 5)
               }
             }
           }

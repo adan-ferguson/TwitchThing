@@ -30,20 +30,20 @@ export default class ShopPage extends Page{
 
   _showModal(shopItemDef){
     const modal = new Modal()
-    const canBuy = this.user.inventory.gold >= shopItemDef.price.gold
-    const details = new ShopItemDetails().setItem(shopItemDef, canBuy)
-    details.events.on('purchased', () => {
+    const details = new ShopItemDetails().setItem(shopItemDef, this.user.inventory.gold)
+    details.events.on('purchased', count => {
       modal.setOptions({
         closeOnUnderlayClick: false
       })
-      buy()
+      buy(count)
     })
     modal.innerContent.append(details)
     modal.show()
 
-    const buy = async () => {
+    const buy = async (count) => {
       const { result, newShop } = await fizzetch('shop/buy', {
-        id: shopItemDef.id
+        id: shopItemDef.id,
+        count
       })
       if(result.chest){
         const openage = new ChestOpenage(result.chest)

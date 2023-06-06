@@ -1,6 +1,6 @@
 import CustomAnimation from '../../../animations/customAnimation.js'
 import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
-import { suffixedNumber } from '../../../../../game/utilFunctions.js'
+import { minMax, suffixedNumber } from '../../../../../game/utilFunctions.js'
 
 const innerHTML = `
 <div class="content">
@@ -12,7 +12,7 @@ const innerHTML = `
     Rest when HP below <span class="rest-threshold"></span>%
   </div>
   <div class="resting-yes">
-    Food: <span class="food">0</span>/<span class="max-food"></span>
+    Food: <span class="food">0</span>/<span class="max-food">0</span>
   </div>
   <div>
     XP: <span class="xp-reward">0</span>
@@ -66,7 +66,13 @@ export default class State extends HTMLElement{
 
     this._setXP(results.xp, animate)
     this._updateChests(results.chests, animate)
-    this._setFoodRemaining(adventurerInstance.food, adventurerInstance.maxFood)
+
+    if(animate){
+      this._setFoodRemaining((currentEvent.penalty?.food ?? 0) + this._lastFood)
+      this._setFoodRemaining((currentEvent.rewards?.food ?? 0) + this._lastFood)
+    }else{
+      this._setFoodRemaining(adventurerInstance.food, adventurerInstance.maxFood)
+    }
 
     this._contentEl.classList.remove('displaynone')
   }
@@ -111,9 +117,12 @@ export default class State extends HTMLElement{
     this._chests.textContent = (chests?.length || 0) + ''
   }
 
-  _setFoodRemaining(food, max){
+  _setFoodRemaining(food, max = this._lastFoodMax){
+    food = minMax(0, food, max)
     this._food.textContent = food
     this.maxFoodEl.textContent = max
+    this._lastFood = food
+    this._lastFoodMax = max
   }
 }
 

@@ -106,7 +106,7 @@ export default class Adventurer{
       const skill = new AdventurerSkill(skillId, this.doc.unlockedSkills[skillId])
       usedPoints += skill.skillPoints
     })
-    return Math.max(0, Math.floor(this.level / 1) - usedPoints)
+    return Math.max(0, Math.floor(this.level / 5) - usedPoints)
   }
 
   get xp(){

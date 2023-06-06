@@ -177,9 +177,6 @@ export default class DungeonRunInstance extends EventEmitter{
         if(nextEvent.rewards.xp){
           nextEvent.rewards.xp = Math.ceil(nextEvent.rewards.xp)
         }
-        if(nextEvent.rewards.food){
-          debugger
-        }
         this.doc.rewards = addRewards(this.doc.rewards, nextEvent.rewards)
       }
       if(i === events.length - 1){

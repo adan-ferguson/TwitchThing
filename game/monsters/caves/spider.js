@@ -22,7 +22,7 @@ export default function(){
                   duration: 10000,
                   polarity: 'debuff',
                   stats: {
-                    speed: -25
+                    speed: -35
                   }
                 }
               }

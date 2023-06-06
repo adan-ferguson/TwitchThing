@@ -45,11 +45,7 @@ export async function runCombat(dungeonRun, monsterDef){
   }, combatEvent.combatID)
 
   adventurerInstance.state = combatDoc.fighter1.endState
-
-  // TODO: if food rewards, give food reward
-  if(monsterDef.rewards?.food){
-    debugger
-  }
+  adventurerInstance.food += monsterDef.rewards?.food ?? 0
 
   const refereeTime = Math.max(0, combatDoc.times.total - ADVANCEMENT_INTERVAL)
   combatEvent.duration = combatDoc.duration + refereeTime + END_COMBAT_PADDING

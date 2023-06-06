@@ -17,15 +17,14 @@ export function gainStatusEffect(combat, subject, sourceAbilityInstance, statusE
   })
   if(existing){
     if(existing.stacking === 'replace'){
-      existing.replace()
+      existing.expire()
     }else if(existing.stacking === 'extend'){
-      existing.extend()
+      return existing.extend()
     }else if(existing.stacking === 'stack'){
-      existing.addStack().refresh()
+      return existing.addStack().refresh()
     }
-  }else{
-    subject.addStatusEffect(statusEffectData, state)
   }
+  subject.addStatusEffect(statusEffectData, state)
 }
 
 //   add(statusEffectData){

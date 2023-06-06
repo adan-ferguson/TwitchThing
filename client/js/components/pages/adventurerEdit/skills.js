@@ -62,7 +62,6 @@ export default class Skills extends DIElement{
     if(!featureStatus){
       featureLocked(this.listEl, 'Level 5')
     }else if(hasSkillUnlocked && !localStorage.getItem('equipped-skill-callout')){
-      debugger
       tippyCallout(this.listEl.querySelector('di-adventurer-skill-row'), 'Make sure to equip your skills!')
       localStorage.setItem('equipped-skill-callout', true)
     }

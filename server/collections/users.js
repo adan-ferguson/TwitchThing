@@ -39,6 +39,7 @@ const DEFAULTS = {
     adventurerSlots: 1,
     gold: 0,
     scrap: 0,
+    stashedXp: 0,
     items: {
       basic: {},
       crafted: {}

@@ -2,13 +2,12 @@ import DIElement from '../../diElement.js'
 import classDisplayInfo from '../../../displayInfo/classDisplayInfo.js'
 import { shopItemDisplayInfo } from './shopItemDisplayInfo.js'
 import { ICON_SVGS } from '../../../assetLoader.js'
+import { goldEntry } from '../../common.js'
 
 const HTML = `
 <div class="shop-item-image"></div>
 <div class="shop-item-name"></div>
-<div class="price-row">
-  ${ICON_SVGS.gold}<span class="price"></span>
-</div>
+<div class="price-row"></div>
 `
 
 export default class ShopItem extends DIElement{
@@ -19,12 +18,9 @@ export default class ShopItem extends DIElement{
     const info = shopItemDisplayInfo(shopItemDef)
     this.querySelector('.shop-item-image').innerHTML = info.imageHtml
     this.querySelector('.shop-item-name').textContent = info.name ?? ''
-    this.querySelector('.price').textContent = shopItemDef.price.gold ?? 0
+    this.querySelector('.price-row').innerHTML = goldEntry(shopItemDef.price.gold || 'Free')
 
-    if(shopItemDef.data?.className){
-      const classInfo = classDisplayInfo(shopItemDef.data.className)
-      this.style.color = classInfo.color
-    }
+    this.style.color = info.color
 
     return this
   }

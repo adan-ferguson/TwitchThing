@@ -4,6 +4,7 @@ import { makeEl, roundToNearestIntervalOf, wrapContent } from '../../../game/uti
 import healthIcon from '../../assets/icons/health.svg'
 import physPower from '../../assets/icons/physPower.svg'
 import magicPower from '../../assets/icons/magicPower.svg'
+import gold from '../../assets/icons/gold.svg'
 import AdventurerItem from '../../../game/items/adventurerItem.js'
 import AbilityInstance from '../../../game/abilityInstance.js'
 import { subjectKeyForLoadoutObject } from '../subjectClientFns.js'
@@ -28,8 +29,23 @@ export function orbPointEntry(count){
   return `<span class="orb-point-entry icon-and-value">${count}${orbPointIcon()}</span>`
 }
 
+export function xpIcon(){
+  return `<span class="scrunch" style="color: green;">
+<i class="fa-solid fa-x"></i>
+<i class="fa-solid fa-p"></i>
+</span>`
+}
+
 export function skillPointEntry(count){
   return `<span class="skill-point-entry icon-and-value">${count}${skillPointIcon()}</span>`
+}
+
+export function goldEntry(count){
+  return iconAndValue(gold, count)
+}
+
+export function iconAndValue(iconSvg, value){
+  return `<span class="icon-and-value">${value}${iconSvg}</span>`
 }
 
 export function refundTime(str){

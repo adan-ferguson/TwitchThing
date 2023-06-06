@@ -22,6 +22,6 @@ export default function(level){
         vars: { speed, duration }
       }]
     },
-    orbs: 3 * level
+    orbs: 1 + 3 * level
   }
 }

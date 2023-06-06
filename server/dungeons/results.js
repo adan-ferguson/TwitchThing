@@ -7,14 +7,18 @@ import { advXpToLevel } from '../../game/adventurer.js'
 import { applyChestToUser } from './chests.js'
 import Combats from '../collections/combats.js'
 import { adjustInventoryBasics } from '../user/inventory.js'
-import { checkForRewards } from '../user/rewards.js'
 
 const REWARDS_TYPES = {
   xp: 'int',
-  chests: 'array'
+  chests: 'array',
+  food: 'int'
 }
 
 export function addRewards(rewards, toAdd){
+  if(Array.isArray(toAdd)){
+    toAdd.forEach(r => rewards = addRewards(rewards, r))
+    return rewards
+  }
   const r = { ...rewards }
   for(let key in toAdd){
 

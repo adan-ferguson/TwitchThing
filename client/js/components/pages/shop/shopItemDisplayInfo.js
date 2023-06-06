@@ -1,33 +1,41 @@
 import classDisplayInfo from '../../../displayInfo/classDisplayInfo.js'
 import chestImage from '../../chestImage.js'
 import { ICON_SVGS } from '../../../assetLoader.js'
+import { xpIcon } from '../../common.js'
 
 export function shopItemDisplayInfo(shopItemDef){
 
-  const className = shopItemDef.data?.className
-  const classInfo = classDisplayInfo(className)
 
   let description
   let imageHtml
   let name
+  let color = null
   if(shopItemDef.type === 'adventurerSlot'){
     name = 'Adventurer Slot'
     description = 'Unlock a new adventurer slot.'
     imageHtml = ICON_SVGS.adventurerSlot
   }else if(shopItemDef.type === 'chest'){
+    const className = shopItemDef.data?.className
+    const classInfo = classDisplayInfo(className)
     name = `Lvl. ${shopItemDef.data.level} ${classInfo.displayName} Chest`
     description = `Contains about ${shopItemDef.data.level} scrap worth of items.`
     imageHtml = chestImage(className)
+    color = classInfo.color
   }else if(shopItemDef.type === 'scrap'){
-    name = 'Scrap x' + shopItemDef.data.scrap
+    name = 'Scrap'
     imageHtml = '<i class="fa-solid fa-recycle"></i>'
     description = 'Better value than chests if you just want scrap.'
+  }else if(shopItemDef.type === 'stashedXp'){
+    name = 'Stashed XP'
+    imageHtml = xpIcon()
+    description = 'Buy XP to give to an adventurer. Use this if you want a new adventurer to breeze though the boring first floors, or give your highest leveled dude like an extra 5%, whatever.'
+    color = 'green'
   }
 
   return {
     name,
     imageHtml,
     description,
-    color: classInfo ? classInfo.color : null
+    color
   }
 }

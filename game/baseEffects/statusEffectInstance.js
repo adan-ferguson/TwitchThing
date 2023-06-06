@@ -68,7 +68,7 @@ export default class StatusEffectInstance extends EffectInstance{
 
   get expired(){
     if(!this.fighterInstance.inCombat && !this.persisting){
-      return false
+      return true
     }
     if(Number.isFinite(this.duration) && !this.durationRemaining){
       return true
@@ -83,6 +83,9 @@ export default class StatusEffectInstance extends EffectInstance{
       return true
     }
     if(this.abilities[0] && this.abilities[0].uses && !this.abilities[0].usesRemaining){
+      return true
+    }
+    if(this._expired){
       return true
     }
     return false
@@ -131,6 +134,10 @@ export default class StatusEffectInstance extends EffectInstance{
     delete this._state.barrierHp
     delete this._state.time
     return this
+  }
+
+  expire(){
+    this._expired = true
   }
 
   addStack(){

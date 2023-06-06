@@ -131,7 +131,7 @@ export default class MonsterInstance extends FighterInstance{
   }
 
   get rewards(){
-    return this.effectInstances.map(ei => ei.rewards).filter(r => r)
+    return this.effectInstances.map(ei => ei.effect.rewards).filter(r => r)
   }
 
   get loadoutEffectInstances(){

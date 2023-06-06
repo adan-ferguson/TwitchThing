@@ -62,7 +62,7 @@ export function generateRandomChest(options = {}){
 
   let leftoverValue = totalValue
   items.forEach(item => {
-    addItem(chest.contents.items.basic, item.id)
+    addItem(chest.contents.items.basic, item.baseItemId)
     leftoverValue -= item.rarityInfo.value
   })
 
