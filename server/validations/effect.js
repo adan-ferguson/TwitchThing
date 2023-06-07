@@ -8,6 +8,7 @@ import StatusEffectInstance from '../../game/baseEffects/statusEffectInstance.js
 import PhantomEffectInstance from '../../game/baseEffects/phantomEffectInstance.js'
 import { TAGS_LIST_SCHEMA } from './tagNames.js'
 import { ABILITY_CONDITIONS_SCHEMA, FIGHTER_INSTANCE_CONDITIONS_SCHEMA } from './conditions.js'
+import { POLARITY_SCHEMA } from './polarity.js'
 
 
 const SCALED_NUMBER_SCHEMA = Joi.object({
@@ -47,6 +48,11 @@ const as = Joi.object({
     statusEffect: Joi.custom(val => {
       return Joi.attempt(val, STATUS_EFFECT_SCHEMA)
     }).required()
+  }),
+  removeStatusEffect: Joi.object({
+    targets: TARGETS_SCHEMA.required(),
+    polarity: POLARITY_SCHEMA,
+    count: Joi.number().integer().min(1)
   }),
   attack: Joi.object({
     damageType: DAMAGE_TYPE_SCHEMA,
@@ -191,7 +197,7 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
   stacking: Joi.string().valid('stack', 'replace', 'extend'),
   stackingId: Joi.string(),
   maxStacks: Joi.number().integer(),
-  polarity: Joi.string().valid('buff','debuff','negativity'),
+  polarity: POLARITY_SCHEMA,
   name: Joi.string(),
   persisting: Joi.boolean().truthy(),
   vars: Joi.object()

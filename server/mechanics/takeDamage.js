@@ -58,7 +58,7 @@ function distributeDamage(subject, damageLeft){
       return
     }
     if(ei.barrier){
-      const toReduce = Math.min(damageLeft, ei.barrierHp)
+      const toReduce = Math.ceil(Math.min(damageLeft, ei.barrierHp))
       damageLeft -= toReduce
       ei.barrierHp -= toReduce
       distribution[ei.uniqueID] = toReduce

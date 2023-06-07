@@ -100,7 +100,7 @@ export default class StatusEffectInstance extends EffectInstance{
   }
 
   get barrierHpMax(){
-    return this.barrier?.hp ?? 0
+    return Math.ceil(this.barrier?.hp ?? 0)
   }
 
   get barrierHp(){

@@ -7,7 +7,6 @@ export default function(combat, actor, subject, abilityInstance = null, actionDe
     damageInfo: takeDamage(combat, subject, {
       ...actionDef,
       damage
-    }),
-    subject: actor.uniqueID
+    })
   }
 }

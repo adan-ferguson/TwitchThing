@@ -37,8 +37,8 @@ const monstersByFloor = [
   Monsters.assassin,
   Monsters.banshee,
   Monsters.necromancer,
-  // Monsters.vampire,
-  // Monsters.deathKnight,
+  Monsters.vampire,
+  Monsters.deathKnight,
   // Monsters.lich,
   // Monsters.boneDragon,
   // // Swamp

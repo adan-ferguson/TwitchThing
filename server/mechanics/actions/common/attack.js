@@ -12,15 +12,12 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
   return results
 
   function hit(){
-    
-    const ret = { subject: enemy.uniqueID }
 
     actionDef = processAbilityEvents(combat, ['attack'], attacker, abilityInstance, actionDef)
     actionDef = processAbilityEvents(combat, ['attacked', actionDef.damageType + 'Attacked'], enemy, abilityInstance, actionDef)
 
     if(!actionDef.undodgeable && (actionDef.forceDodge || dodgeAttack(enemy))){
       return {
-        ...ret,
         cancelled: {
           reason: 'dodged'
         }
@@ -64,8 +61,6 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
     //   damageInfo = processAbilityEvents(combat, 'crit', attacker, damageInfo)
     // }
 
-    ret.damageInfo = damageInfo
-
     if(actionDef.onHit){
       combat.addPendingTriggers([{
         performAction: true,
@@ -75,7 +70,7 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
       }])
     }
 
-    return ret
+    return { damageInfo }
   }
 }
 

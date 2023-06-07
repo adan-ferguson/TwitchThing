@@ -101,6 +101,11 @@ const DEFS = {
     return {
       description: 'Attack for magic damage equal to 50% of the target\'s current health.'
     }
+  },
+  summonSkeleton: ability => {
+    return {
+      description: 'Summon a skeleton archer which shoots arrows.'
+    }
   }
 }
 

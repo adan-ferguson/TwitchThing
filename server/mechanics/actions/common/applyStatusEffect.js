@@ -9,7 +9,6 @@ export default function(combat, actor, subject, abilityInstance, actionDef = {})
   const statusEffect = convertStatusEffectParams(actionDef.statusEffect, abilityInstance, subject)
   const exploded = explodeEffect(statusEffect)
   let ret = {
-    subject: subject.uniqueID,
     statusEffect
   }
   if(exploded.polarity === 'debuff'){

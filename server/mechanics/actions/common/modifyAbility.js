@@ -10,7 +10,6 @@ export default function(combat, actor, subject, abilityInstance = null, actionDe
       })
     })
   return {
-    subject: subject.uniqueID,
     modifiedAbilities
   }
 }

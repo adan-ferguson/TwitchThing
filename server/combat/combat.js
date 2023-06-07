@@ -230,6 +230,7 @@ class Combat{
   }
 
   _addTimelineEntry(options = {}){
+    this.fighters.forEach(f => f.uncache())
     const next = {
       time: this._currentTime,
       calculationTime: Date.now() - this._lastTimestamp,
