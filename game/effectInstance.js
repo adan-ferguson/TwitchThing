@@ -50,11 +50,6 @@ export default class EffectInstance{
     return this._baseEffectData
   }
 
-  get disabled(){
-    // TODO: check fighter instance
-    return false
-  }
-
   /**
    * @return {Stats}
    */
@@ -103,6 +98,10 @@ export default class EffectInstance{
 
   get mods(){
     return this.effectData.mods ?? []
+  }
+
+  get disabled(){
+    return this.totalMods.some(m => m.disabled)
   }
 
   get exclusiveMods(){

@@ -129,6 +129,9 @@ export default class AbilityInstance{
     if(this.uses && !this.usesRemaining){
       return false
     }
+    if(this.parentEffect.disabled){
+      return false
+    }
     return this.fighterInstance.meetsConditions(this.conditions.owner)
   }
 

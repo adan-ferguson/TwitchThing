@@ -37,12 +37,15 @@ const DEFS = {
     return {
       description: 'Basic attacks use magic power.'
     }
+  },
+  disabled: () => {
+    return null
   }
 }
 export function modDisplayInfo(mod){
   for(let key in mod){
     if(DEFS[key]){
-      return DEFS[key](mod[key])
+      return DEFS[key](mod[key]) ?? {}
     }
   }
   throw { message: 'Mod undefined', mod }

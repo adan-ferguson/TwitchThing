@@ -173,8 +173,7 @@ function flatValuePercentageDisplay(value, { style }){
 
 function toCompositeText(mods, style){
   if(mods.all.multi.length){
-    // contrived situation for this to not work
-    return mods.all.multi[0] + 'x'
+    return roundToFixed(mods.all.multi.reduce((prev, val) => prev * val, 1), 2) + 'x'
   }else if(mods.all.pct.length){
     const pctValue = statValueFns[StatType.MULTIPLIER](mods.all.pct.map(v => v + '%'))
     pctValue.type = StatType.MULTIPLIER

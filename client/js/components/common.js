@@ -1,7 +1,7 @@
 import Stats from '../../../game/stats/stats.js'
 import { getStatDisplayInfo, statDefinitionsInfo, StatsDisplayStyle } from '../displayInfo/statsDisplayInfo.js'
 import { makeEl, roundToNearestIntervalOf, wrapContent } from '../../../game/utilFunctions.js'
-import healthIcon from '../../assets/icons/health.svg'
+import health from '../../assets/icons/health.svg'
 import physPower from '../../assets/icons/physPower.svg'
 import magicPower from '../../assets/icons/magicPower.svg'
 import gold from '../../assets/icons/gold.svg'
@@ -15,6 +15,10 @@ export function physPowerIcon(){
 
 export function magicPowerIcon(){
   return magicPower
+}
+
+export function healthIcon(){
+  return health
 }
 
 export function orbPointIcon(){
@@ -127,7 +131,7 @@ export function scalingWrap(scalingType, valStr = ''){
   const ICONS = {
     magicPower: magicPower,
     physPower: physPower,
-    health: healthIcon
+    health: health
   }
   return `
 <span class="icon-and-value" scaling-type="${scalingType}">

@@ -1,7 +1,7 @@
 export default function(){
   return {
     baseStats: {
-      physPower: '+20%',
+      physPower: '+30%',
       speed: -50,
       hpMax: '+200%'
     },
@@ -19,7 +19,7 @@ export default function(){
             effectModification: {
               stats: {
                 speed: 100,
-                physPower: '20%'
+                physPower: '+20%'
               }
             }
           }]

@@ -7,7 +7,7 @@ import { status as StatusEffects, phantom as PhantomEffects } from '../../game/b
 import StatusEffectInstance from '../../game/baseEffects/statusEffectInstance.js'
 import PhantomEffectInstance from '../../game/baseEffects/phantomEffectInstance.js'
 import { TAGS_LIST_SCHEMA } from './tagNames.js'
-import { ABILITY_CONDITIONS_SCHEMA } from './conditions.js'
+import { ABILITY_CONDITIONS_SCHEMA, FIGHTER_INSTANCE_CONDITIONS_SCHEMA } from './conditions.js'
 
 
 const SCALED_NUMBER_SCHEMA = Joi.object({
@@ -141,7 +141,9 @@ const es = Joi.object({
 
 export const META_EFFECT_SCHEMA = Joi.object({
   metaEffectId: Joi.string(),
-  conditions: ABILITY_CONDITIONS_SCHEMA,
+  conditions: Joi.object({
+    owner: FIGHTER_INSTANCE_CONDITIONS_SCHEMA
+  }),
   subjectKey: SUBJECT_KEYS_SCHEMA.required(),
   effectModification: {
     stats: STATS_SCHEMA,
@@ -175,6 +177,9 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
     barrier: Joi.object({
       hp: OPTIONAL_SCALED_NUMBER_SCHEMA
     }),
+    disarmed: Joi.object({
+      replaceMe: Joi.string().valid('randomItemSlotInfo')
+    })
   }),
   barrier: Joi.object({
     hp: Joi.number().integer()

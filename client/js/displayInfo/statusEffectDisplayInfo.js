@@ -153,5 +153,11 @@ const DEFS = {
       description: 'stunned',
       grammatic: 'become'
     }
+  },
+  disarmed: () => {
+    return {
+      description: 'disarmed, disabling one of their items',
+      grammatic: 'become'
+    }
   }
 }

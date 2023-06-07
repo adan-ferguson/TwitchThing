@@ -25,6 +25,8 @@ export default class MetaEffectCollection{
           pushOrCreate(this.categories.ids, ei.uniqueID, meDef)
         }else if(meDef.subjectKey === 'all'){
           this.categories.all.push(meDef)
+        }else if(meDef.subjectKey.row){
+          add(this.categories.slots, meDef.subjectKey.col ?? 0, meDef.subjectKey.row, meDef)
         }
       }
     })

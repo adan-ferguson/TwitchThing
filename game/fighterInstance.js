@@ -90,12 +90,12 @@ export default class FighterInstance{
       hpMax: this.baseHp
     }
     const baseStatAffectors = this.baseStats
-    const loadoutStatAffectors = this.loadoutEffectInstances.map(ii => ii.stats)
-    const statusEffectAffectors = this.statusEffectInstances.map(sei => sei.stats)
+    const loadoutStatAffectors = this.loadoutEffectInstances.filter(ei => !ei.disabled).map(ei => ei.stats)
+    const statusEffectAffectors = this.statusEffectInstances.filter(ei => !ei.disabled).map(ei => ei.stats)
     this._cachedStats = new Stats(
       [derivedStats, ...baseStatAffectors, ...loadoutStatAffectors],
       statusEffectAffectors,
-      this.effectInstances.map(ei => ei.transStats).flat().filter(t => t)
+      this.effectInstances.filter(ei => !ei.disabled).map(ei => ei.transStats).flat().filter(t => t)
     )
     return this._cachedStats
   }
@@ -286,21 +286,6 @@ export default class FighterInstance{
       return false
     }
     return true
-  }
-
-  isEffectDisabled(effect){
-    if(effect.effectData.conditions){
-      if(!this.meetsConditions(effect.effectData.conditions)){
-        return true
-      }
-    }
-    // Check for status effects which might be disabling this item
-    // if(effect instanceof FighterSlotInstance){
-    //   if(this.statusEffectsData.instances.find(sei => sei.effectData.disarmedItemSlot === effect.slot)){
-    //     return true
-    //   }
-    // }
-    return false
   }
 
   startCombat(combatParams){

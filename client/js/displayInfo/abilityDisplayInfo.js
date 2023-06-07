@@ -5,7 +5,7 @@ import { statusEffectApplicationDescription } from './statusEffectDisplayInfo.js
 import {
   aboveIcon,
   attachedSkill,
-  belowIcon,
+  belowIcon, healthIcon, physPowerIcon,
   refundTime, scalingWrap,
   statScaling,
   wrapStat
@@ -85,6 +85,16 @@ const DEFS = {
     return {
       description: `Conjure a storm which lasts ${msToS(ability.vars.duration)}s.
       Every 3s, it shoots a bolt which deals ${statScaling({ magicPower: ability.vars.magicPower }, ability, [0,1] )} magic damage and has 1/3 chance to stun the target for 3s.`
+    }
+  },
+  zombieDisease: ability => {
+    return {
+      description: `After landing an attack, ${toPct(ability.conditions.random)}% chance to infect with a disease, lowering ${physPowerIcon()} and max ${healthIcon()}.`
+    }
+  },
+  explode: ability => {
+    return {
+      description: `Explode, dealing magic damage equal to ${ability.vars.hpScaling}x remaining health. `
     }
   }
 }

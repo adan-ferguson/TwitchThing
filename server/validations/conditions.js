@@ -1,5 +1,5 @@
 import Joi from 'joi'
-import { SUBJECT_KEYS } from './subjectKeys.js'
+import { SUBJECT_KEYS_SCHEMA } from './subjectKeys.js'
 import { TAG_NAME_SCHEMA } from './tagNames.js'
 import { DAMAGE_TYPE_SCHEMA } from './damage.js'
 
@@ -11,7 +11,7 @@ export const FIGHTER_INSTANCE_CONDITIONS_SCHEMA = Joi.object({
 
 export const ABILITY_CONDITIONS_SCHEMA = Joi.object({
   source: Joi.object({
-    subjectKey: Joi.string().valid(...SUBJECT_KEYS),
+    subjectKey: SUBJECT_KEYS_SCHEMA,
     hasTag: TAG_NAME_SCHEMA
   }),
   data: Joi.object({

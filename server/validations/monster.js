@@ -2,6 +2,7 @@ import Monsters from '../../game/monsters/combined.js'
 import Joi from 'joi'
 import { STATS_SCHEMA } from './stats.js'
 import { MONSTER_ITEM_SCHEMA } from './monsterItem.js'
+import { getAllMonsters } from '../dungeons/monsters.js'
 
 const MONSTER_SCHEMA = Joi.object({
   baseStats: STATS_SCHEMA,
@@ -9,7 +10,8 @@ const MONSTER_SCHEMA = Joi.object({
 })
 
 export function validateAllMonsters(){
-  for(let id in Monsters){
+  for(let monster of getAllMonsters()){
+    const id = monster.baseType
     try {
       validateMonster(id)
     }catch(ex){

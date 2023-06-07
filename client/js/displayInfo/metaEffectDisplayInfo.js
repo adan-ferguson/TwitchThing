@@ -12,6 +12,10 @@ import {
 const DEFS = {
   swordOfFablesMultiplier: (metaEffect, obj) => {
     return `${metaEffect.effectModification.statMultiplier}x the above stats during boss fights.`
+  },
+  disabled: metaEffect => {
+    const type = metaEffect.subjectKey.col === 1 ? 'Skill' : 'Item'
+    return `${type} ${metaEffect.subjectKey.row + 1} is disabled.`
   }
 }
 
