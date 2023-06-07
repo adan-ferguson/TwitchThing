@@ -40,6 +40,11 @@ const DEFS = {
   },
   disabled: () => {
     return null
+  },
+  noBasicAttack: () => {
+    return {
+      description: 'Can\'t basic attack.'
+    }
   }
 }
 export function modDisplayInfo(mod){

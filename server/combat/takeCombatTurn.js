@@ -18,8 +18,7 @@ export function takeCombatTurn(combat, actor){
     turnRefund = ability.turnRefund
   }else if(actor.hasMod('noBasicAttack')){
     actionResults.push(performAction(combat, actor, null, {
-      type: 'idle',
-      reason: 'Can\'t attack',
+      pass: {}
     }))
   }else{
     actionResults.push(performAction(combat, actor, null, basicAttackDef(actor)))

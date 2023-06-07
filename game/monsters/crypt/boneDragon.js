@@ -4,31 +4,29 @@ export default function(){
       physPower: '+120%',
       physDef: '+30%',
       speed: -30,
-      hpMax: '+110%'
+      hpMax: '+120%'
     },
     items: [
       {
-        name: 'Boss',
-        mods: [bossMod]
-      },
-      {
         name: 'Screech',
-        abilities: {
-          active: {
+        effect: {
+          abilities: [{
+            trigger: 'active',
             cooldown: 30000,
-            description: 'Fears the enemy, stopping them from basic attacking for 15 seconds.',
-            actions: [
-              statusEffectAction({
-                target: 'enemy',
-                effect: {
+            actions: [{
+              applyStatusEffect: {
+                targets: 'enemy',
+                statusEffect: {
+                  statusEffectId: 'feared',
                   duration: 15000,
-                  description: 'Can\'t basic attack',
-                  mods: [noBasicAttackMod],
-                  displayName: 'Terror'
+                  mods: [{
+                    noBasicAttack: true
+                  }],
+                  name: 'Feared'
                 }
-              })
-            ]
-          }
+              }
+            }]
+          }]
         }
       }
     ]

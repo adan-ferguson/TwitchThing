@@ -50,13 +50,18 @@ function derivedPrefix(actionDef, abilityInstance){
   const statusEffectDef = explodeEffect(actionDef.statusEffect)
   const statusEffectId = statusEffectDef.statusEffectId ?? statusEffectDef.name
   const def = DEFS[statusEffectId]?.(statusEffectDef, abilityInstance) ?? {}
-  const grammatic = def.grammatic ?? 'get'
+  let grammatic = def.grammatic ?? 'get'
+  if(grammatic !== ''){
+    if(actionDef.targets !== 'self'){
+      grammatic += 's'
+    }
+  }
   if(actionDef.targets === 'self'){
     chunks.push(grammatic)
   }else if(actionDef.targets === 'target'){
-    chunks.push(`the target ${grammatic}s`)
+    chunks.push(`the target ${grammatic}`)
   }else if(actionDef.targets === 'enemy'){
-    chunks.push(`enemy ${grammatic}s`)
+    chunks.push(`enemy ${grammatic}`)
   }
   return chunks
 }
@@ -157,6 +162,12 @@ const DEFS = {
   disarmed: () => {
     return {
       description: 'disarmed, disabling one of their items',
+      grammatic: 'become'
+    }
+  },
+  feared: () => {
+    return {
+      description: 'feared and can\'t use basic attacks',
       grammatic: 'become'
     }
   }

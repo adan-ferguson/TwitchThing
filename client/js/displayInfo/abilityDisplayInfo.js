@@ -6,7 +6,7 @@ import {
   aboveIcon,
   attachedSkill,
   belowIcon, healthIcon, physPowerIcon,
-  refundTime, scalingWrap,
+  refundTime,
   statScaling,
   wrapStat
 } from '../components/common.js'
@@ -107,7 +107,7 @@ const DEFS = {
     return {
       description: 'Summon a skeleton archer which shoots arrows.'
     }
-  }
+  },
 }
 
 const phantomEffectDefinitions = {
