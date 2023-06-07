@@ -96,6 +96,11 @@ const DEFS = {
     return {
       description: `Explode, dealing magic damage equal to ${ability.vars.hpScaling}x remaining health. `
     }
+  },
+  bansheeWail: ability => {
+    return {
+      description: 'Attack for magic damage equal to 50% of the target\'s current health.'
+    }
   }
 }
 

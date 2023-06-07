@@ -1,6 +1,6 @@
 import { processAbilityEvents } from '../../abilities.js'
 import { dealDamage } from '../../dealDamage.js'
-import { scaledNumberFromAbilityInstance } from '../../../../game/scaledNumber.js'
+import { scaledNumberFromAbilityInstance, scaledNumberFromFighterInstance } from '../../../../game/scaledNumber.js'
 import { ignoresDefenseMatchesDamageType } from '../../../../game/mechanicsFns.js'
 
 export default function(combat, attacker, enemy, abilityInstance = null, actionDef = {}){
@@ -40,6 +40,7 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
     }
 
     let damage = scaledNumberFromAbilityInstance(abilityInstance, actionDef.scaling)
+    damage += scaledNumberFromFighterInstance(enemy, actionDef.targetScaling)
     let damageInfo = {
       damageType: actionDef.damageType,
       damage: damage, // * attacker.stats.get('damageDealt').value,

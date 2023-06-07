@@ -1,4 +1,4 @@
-import { roundToFixed, toDisplayName } from '../../../game/utilFunctions.js'
+import { roundToFixed, toDisplayName, toPct } from '../../../game/utilFunctions.js'
 import { StatType } from '../../../game/stats/statType.js'
 import statValueFns from '../../../game/stats/statValueFns.js'
 import { ICON_SVGS } from '../assetLoader.js'
@@ -106,6 +106,11 @@ export const statDefinitionsInfo = {
   },
   basicAttacks: {
     text: 'Basic Attacks'
+  },
+  damageCeiling: {
+    text: 'Damage Ceiling',
+    displayedValueFn: value => toPct(value),
+    description: 'Most damage they can take at once (percentage of max health)'
   }
 }
 
@@ -159,6 +164,8 @@ function toText(stat, style){
     return `${value > 1 ? '+' : ''}${Math.round((value - 1) * 100)}%`
   }else if(stat.type === StatType.PERCENTAGE){
     return `${plusSign(style, value)}${roundToFixed(value * 100, 1)}%`
+  }else if(stat.type === StatType.MINIMUM_ONLY){
+    return value
   }
   return `${plusSign(style, value)}${value}`
 }

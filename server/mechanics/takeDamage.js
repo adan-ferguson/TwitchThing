@@ -28,6 +28,12 @@ export function takeDamage(combat, subject, damageInfo){
     const mitigated = Math.floor(damage * subject.stats.get(damageInfo.damageType + 'Def').value)
     damage = damage - mitigated
     result.mitigated = mitigated
+
+    const maxDamage = Math.ceil(subject.hpMax * subject.stats.get('damageCeiling').value)
+    if(damage > maxDamage){
+      result.mitigated += damage - maxDamage
+      damage = maxDamage
+    }
   }
 
   if(!damageInfo.ignoreOvertime){

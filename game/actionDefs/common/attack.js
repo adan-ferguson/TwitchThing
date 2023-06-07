@@ -8,5 +8,6 @@ export default {
   undodgeable: false,
   hits: 1,
   onHit: null,
-  scaling: {}
+  scaling: {},
+  targetScaling: {}
 }

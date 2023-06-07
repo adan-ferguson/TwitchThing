@@ -1,31 +1,34 @@
 export default function(){
   return {
     baseStats: {
-      physPower: '-70%',
-      magicPower: '+30%',
-      hpMax: '-50%'
+      physPower: '-20%',
+      hpMax: '-20%'
     },
     items: [
       {
         name: 'Wail',
-        abilities: {
-          active: {
-            description: 'Deal 50% of enemy\'s remaining health as magic damage.',
+        effect: {
+          abilities: [{
+            abilityId: 'bansheeWail',
+            trigger: 'active',
             uses: 1,
-            actions: [
-              attackAction({
+            actions: [{
+              attack: {
                 damageType: 'magic',
-                damageMulti: 0,
-                targetHpPct: 0.5
-              })
-            ]
-          }
+                targetScaling: {
+                  hp: 0.5
+                }
+              }
+            }]
+          }]
         }
       },
       {
         name: 'Incorporeal',
-        stats: {
-          dodgeChance: '33%'
+        effect: {
+          stats: {
+            damageCeiling: 0.5
+          }
         }
       }
     ]

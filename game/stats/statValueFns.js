@@ -4,7 +4,8 @@ export default {
   [StatType.FLAT]: flatValue,
   [StatType.MULTIPLIER]: multiplierValue,
   [StatType.PERCENTAGE]: percentageValue,
-  [StatType.COMPOSITE]: compositeValue
+  [StatType.COMPOSITE]: compositeValue,
+  [StatType.MINIMUM_ONLY]: minimumOnlyValue
 }
 
 export function parseStatVal(val){
@@ -169,6 +170,24 @@ function compositeValue(values, defaultValue){
     value,
     mods
   }
+}
+
+function minimumOnlyValue(values, defaultValue){
+  const mods = organizeMods(values)
+
+  if(mods.all.pct.length){
+    throw 'Minimum-Only stats can not have percentage values'
+  }
+
+  if(mods.all.multi.length){
+    throw 'Minimum-Only stats can not have multiplier values'
+  }
+
+  const value = mods.all.flat.reduce((val, mod) => {
+    return Math.min(val, mod)
+  }, defaultValue)
+
+  return { value, mods }
 }
 
 /**

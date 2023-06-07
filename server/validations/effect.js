@@ -50,7 +50,8 @@ const as = Joi.object({
   }),
   attack: Joi.object({
     damageType: DAMAGE_TYPE_SCHEMA,
-    scaling: SCALED_NUMBER_SCHEMA.required(),
+    scaling: SCALED_NUMBER_SCHEMA,
+    targetScaling: SCALED_NUMBER_SCHEMA,
     lifesteal: Joi.number().positive(),
     range: Joi.array().length(2).items(Joi.number()),
     hits: Joi.number().integer(),
@@ -58,7 +59,7 @@ const as = Joi.object({
     onHit: Joi.custom(val => {
       return Joi.attempt(val, ACTION_SCHEMA)
     })
-  }),
+  }).or('scaling', 'targetScaling'),
   gainHealth: Joi.object({
     scaling: SCALED_NUMBER_SCHEMA.required(),
   }),
