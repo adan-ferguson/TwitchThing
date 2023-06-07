@@ -1,6 +1,4 @@
 import { statScaling } from '../../../components/common.js'
-import { modDisplayInfo } from '../../modDisplayInfo.js'
-import { roundToFixed } from '../../../../../game/utilFunctions.js'
 
 export function derivedDealDamageDescription(attack, abilityInstance){
   const damageType = attack.damageType

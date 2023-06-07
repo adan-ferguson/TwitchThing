@@ -12,9 +12,10 @@ import {
 } from '../components/common.js'
 import { damageActionCalcDamage } from '../../../game/mechanicsFns.js'
 import { derivedGainHealthDescription } from './derived/actions/gainHealth.js'
-import { msToS, toPct } from '../../../game/utilFunctions.js'
+import { arrayize, msToS, toPct } from '../../../game/utilFunctions.js'
 import { derivedModifyAbilityDescription } from './derived/actions/modifyAbility.js'
 import { derivedDealDamageDescription } from './derived/actions/dealDamage.js'
+import { derivedRemoveStatusEffectDescription } from './derived/actions/removeStatusEffect.js'
 
 const DEFS = {
   flutteringDodge: () => {
@@ -156,19 +157,8 @@ function abilityDescription(ability){
     chunks[chunks.length - 1] += ','
   }
   ability.actions?.forEach(actionDef => {
-    actionDef = expandActionDef(actionDef)
-    let toAdd
-    if(actionDef.attack){
-      toAdd = derivedAttackDescription(actionDef.attack, abilityInstance)
-    }else if(actionDef.applyStatusEffect){
-      toAdd = statusEffectApplicationDescription(actionDef.applyStatusEffect, abilityInstance)
-    }else if(actionDef.gainHealth){
-      toAdd = derivedGainHealthDescription(actionDef.gainHealth, abilityInstance)
-    }else if(actionDef.modifyAbility){
-      toAdd = derivedModifyAbilityDescription(actionDef.modifyAbility, abilityInstance)
-    }else if(actionDef.dealDamage){
-      toAdd = derivedDealDamageDescription(actionDef.dealDamage, abilityInstance)
-    }
+    let toAdd = []
+    toAdd.push(...arrayize(actionDefDescription(actionDef, abilityInstance)))
     if(!toAdd?.length){
       return
     }
@@ -226,4 +216,26 @@ function prefix(trigger, conditions){
     chunks.push('After resting')
   }
   return chunks
+}
+
+function actionDefDescription(actionDef, abilityInstance){
+  actionDef = expandActionDef(actionDef)
+  if(actionDef.attack){
+    const val = derivedAttackDescription(actionDef.attack, abilityInstance)
+    if(actionDef.attack.onHit){
+      val.push(...arrayize(actionDefDescription(actionDef.attack.onHit, abilityInstance)))
+    }
+    return val
+  }else if(actionDef.applyStatusEffect){
+    return statusEffectApplicationDescription(actionDef.applyStatusEffect, abilityInstance)
+  }else if(actionDef.gainHealth){
+    return derivedGainHealthDescription(actionDef.gainHealth, abilityInstance)
+  }else if(actionDef.modifyAbility){
+    return derivedModifyAbilityDescription(actionDef.modifyAbility, abilityInstance)
+  }else if(actionDef.dealDamage){
+    return derivedDealDamageDescription(actionDef.dealDamage, abilityInstance)
+  }else if(actionDef.removeStatusEffect){
+    return derivedRemoveStatusEffectDescription(actionDef.removeStatusEffect)
+  }
+  return null
 }

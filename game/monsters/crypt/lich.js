@@ -1,48 +1,52 @@
+import { barrierAction } from '../../commonTemplates/barrierAction.js'
+
 export default function(){
   return {
     baseStats: {
       magicDef: '40%',
       physPower: '-50%',
       magicPower: '+80%',
-      hpMax: '-30%',
-      speed: -80
+      hpMax: '-40%',
+      speed: -60
     },
     items: [
       {
         name: 'Magic Attack',
-        mods: [magicAttackMod]
+        effect: {
+          mods: [{
+            magicAttack: true
+          }]
+        }
       },
       {
         name: 'EVIL Barrier',
-        abilities: {
-          active: {
+        effect: {
+          abilities: [{
+            tags: ['spell'],
+            trigger: 'active',
             cooldown: 12000,
-            description: `Gain a barrier which absorbs [magicScaling${1.5}] damage.`,
-            actions: [
-              statusEffectAction({
-                base: barrierStatusEffect,
-                effect: {
-                  params: {
-                    magicPower: 1.5
-                  }
-                }
-              })
-            ]
-          }
+            actions: [barrierAction({
+              magicPower: 1.7
+            }, { name: 'EVIL Barrier' })]
+          }]
         }
       },
       {
         name: 'Death Kill Beam',
-        abilities: {
-          active: {
+        effect: {
+          abilities: [{
+            tags: ['spell'],
+            trigger: 'active',
             initialCooldown: 20000,
-            actions: [
-              attackAction({
+            actions: [{
+              attack: {
                 damageType: 'magic',
-                damageMulti: 3.5
-              })
-            ]
-          }
+                scaling: {
+                  magicPower: 3.5
+                }
+              }
+            }]
+          }]
         }
       }
     ]
