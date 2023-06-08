@@ -4,6 +4,7 @@ import OrbsData from './orbsData.js'
 import SlotModifierCollection from './slotModifierCollection.js'
 import { isolate } from './utilFunctions.js'
 import LoadoutObjectInstance from './loadoutObjectInstance.js'
+import Stats from './stats/stats.js'
 
 export default class AdventurerLoadout{
 
@@ -129,7 +130,7 @@ export default class AdventurerLoadout{
     this._objs = cachedObjs
     this._modifiers = cachedMods
 
-    return !slotInfo.causedRestrictionFailure
+    return !slotInfo.causedRestrictionFailure && !slotInfo.restrictionsFailed
   }
 
   setSlot(col, row, loadoutObject){
@@ -149,6 +150,9 @@ function restrictionFailed(obj, restriction, col, row){
   }
   if(restriction.hasAbility){
     return !obj || obj.abilities.every(ability => !ability.trigger === restriction.hasAbility)
+  }
+  if(restriction.hasStat){
+    return !obj || !new Stats(obj.stats).has(restriction.hasStat)
   }
   return false
 }

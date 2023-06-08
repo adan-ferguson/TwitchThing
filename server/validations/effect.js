@@ -18,7 +18,12 @@ const SCALED_NUMBER_SCHEMA = Joi.object({
   magicPower: Joi.number(),
   physPower: Joi.number(),
   flat: Joi.number(),
-  parentEffectParam: Joi.object()
+  parentEffectParam: Joi.object(),
+  effectStats: Joi.object({
+    base: Joi.number().required(),
+    stat: STATS_NAME_SCHEMA.required(),
+    subjectKey: SUBJECT_KEYS_SCHEMA,
+  })
 })
 
 const OPTIONAL_SCALED_NUMBER_SCHEMA = Joi.alternatives().try(
@@ -181,7 +186,10 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
       damage: OPTIONAL_SCALED_NUMBER_SCHEMA,
       damageType: DAMAGE_TYPE_SCHEMA,
     }),
-    stunned: Joi.number().integer().positive(),
+    stunned: Joi.object({
+      replaceMe: Joi.string().valid('shieldBashStun'),
+      duration: OPTIONAL_SCALED_NUMBER_SCHEMA
+    }),
     barrier: Joi.object({
       hp: OPTIONAL_SCALED_NUMBER_SCHEMA
     }),

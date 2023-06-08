@@ -34,7 +34,9 @@ export default function(level){
                             targets: 'target',
                             statusEffect: {
                               base: {
-                                stunned: 3000
+                                stunned: {
+                                  duration: 3000
+                                }
                               }
                             }
                           }

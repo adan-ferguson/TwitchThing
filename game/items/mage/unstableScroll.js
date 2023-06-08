@@ -19,7 +19,7 @@ export default function(level){
                 targets: 'self',
                 statusEffect: {
                   base: {
-                    stunned: stunDuration
+                    stunned: { duration: stunDuration }
                   },
                   persisting: true
                 }

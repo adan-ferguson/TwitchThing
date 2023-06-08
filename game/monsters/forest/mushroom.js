@@ -44,7 +44,7 @@ const shrinkingSpores = statusEffect({
 })
 
 const sleepSpores = statusEffect({
-  base: { stunned: 5000 },
+  base: { stunned: { duration: 5000 } },
   name: 'sleepingSpores',
 })
 

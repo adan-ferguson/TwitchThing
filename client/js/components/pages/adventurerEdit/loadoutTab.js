@@ -170,12 +170,22 @@ export default class LoadoutTab extends DIElement{
     })
 
     function getNextSlotIndex(loadout, skill){
+      let firstEmpty
+      let firstValid
       for(let i = 0; i < 8; i++){
-        if(!loadout.skills[i] && loadout.canFillSlot(1, i, skill)){
+        const empty = !loadout.skills[i]
+        const valid = loadout.canFillSlot(1, i, skill)
+        if(!empty && valid){
           return i
         }
+        if(empty){
+          firstEmpty = firstEmpty ?? i
+        }
+        if(valid){
+          firstValid = firstValid ?? i
+        }
       }
-      return -1
+      return firstValid ?? -1 // firstEmpty maybe?
     }
 
     function slotIndex(row){

@@ -40,6 +40,11 @@ export default class Stats{
     this._transStats = val
   }
 
+  has(nameOrStat){
+    const obj = this.get(nameOrStat)
+    return obj.value !== obj.defaultValue
+  }
+
   get(nameOrStat, useCache = true){
 
     const name = nameOrStat.name ?? nameOrStat

@@ -1,4 +1,4 @@
-export default function(duration){
+export default function({ duration } = {}){
   return {
     polarity: 'debuff',
     stacking: 'replace',

@@ -72,9 +72,19 @@ const mage = {
 }
 
 const paladin = {
-  skills: [],
+  skills: [
+    Skills.smite,
+    Skills.shieldBash,
+    Skills.ardent,
+    Skills.lesserHeal,
+    Skills.devotion,
+  ],
   items: [[
-    Items.buckler
+    Items.buckler,
+    Items.towerShield,
+    Items.mace,
+    Items.chainMail,
+    Items.holyBlade
   ],[],[]]
 }
 

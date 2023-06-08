@@ -2,6 +2,7 @@ import { SUBJECT_KEYS, SUBJECT_KEYS_SCHEMA } from './subjectKeys.js'
 import { EFFECT_SCHEMA, TRIGGER_NAME_SCHEMA } from './effect.js'
 import Joi from 'joi'
 import { TAG_NAME_SCHEMA } from './tagNames.js'
+import { STATS_NAME_SCHEMA } from './stats.js'
 
 const ORB_MODIFIER_SCHEMA = Joi.object({
   all: Joi.number().integer(),
@@ -15,7 +16,8 @@ const ORB_MODIFIER_SCHEMA = Joi.object({
 const RESTRICTION_SCHEMA = {
   empty: Joi.boolean(),
   slot: Joi.number().integer().min(1).max(8),
-  hasAbility: TRIGGER_NAME_SCHEMA
+  hasAbility: TRIGGER_NAME_SCHEMA,
+  hasStat: STATS_NAME_SCHEMA
 }
 
 const LOADOUT_MODIFIERS = Joi.array().items(Joi.object({

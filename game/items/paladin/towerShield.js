@@ -2,13 +2,12 @@ import { bigLoadoutModifier } from '../../commonTemplates/bigLoadoutModifier.js'
 
 export default function(level){
   return {
+    orbs: level * 3,
     effect: {
       stats: {
-        physPower: (level + 3) + 'x',
-        speed: -75 - 25 * level
+        block: 0.10 + 0.20 * level
       }
     },
-    orbs: 4 * level + 4,
     loadoutModifiers: [bigLoadoutModifier()]
   }
 }
