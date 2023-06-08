@@ -7,7 +7,7 @@
  */
 export function gainStatusEffect(combat, subject, sourceAbilityInstance, statusEffectData){
   const state = {
-    sourceEffectId: sourceAbilityInstance.parentEffect.uniqueID
+    sourceEffectId: sourceAbilityInstance?.parentEffect.uniqueID ?? null
   }
   const existing = subject.statusEffectInstances.find(sei => {
     if(statusEffectData.stackingId){
@@ -29,55 +29,17 @@ export function gainStatusEffect(combat, subject, sourceAbilityInstance, statusE
   subject.addStatusEffect(statusEffectData, state)
 }
 
-//   add(statusEffectData){
-//     const { existing, index } = this._getExisting(statusEffectData)
-//     const instance = new StatusEffectInstance(statusEffectData, this._fighterInstance)
-//     this._instances.push(instance)
-//     return instance
-//   }
-//
-//   remove(toRemove){
-//     toRemove = toArray(toRemove)
-//     this._instances = this._instances.filter(instance => {
-//       if(toRemove.indexOf(instance) > -1){
-//         return false
-//       }
-//       return true
-//     })
-//   }
-//
-//   /**
-//    * @param id
-//    * @returns {[object]}
-//    */
-//   getById(id){
-//     if(!id){
-//       return []
-//     }
-//     return this._instances.find(effect => effect.id === id)
-//   }
-//
-//   getByType(effectType){
-//     return this._instances.filter(effect => effect.type === effectType)
-//   }
-//
-//   hasType(effectType){
-//     return this._instances.find(effect => effect.type === effectType) ? true : false
-//   }
-//
-//   /**
-//    * @private
-//    */
-//   _getExisting(effectData){
-//     const index = this._instances.findIndex(statusEffectInstance => {
-//       if(effectData.stackingId && effectData.stackingId === statusEffectInstance.effectData.stackingId){
-//         return true
-//       }
-//       return effectData.sourceEffectId === statusEffectInstance.data.sourceEffectId
-//     })
-//     return {
-//       index,
-//       existing: this._instances[index]
-//     }
-//   }
-// }
+export function gainBlockBarrier(combat, subject){
+  const block = subject.stats.get('block').value
+  if(block){
+    gainStatusEffect(combat, subject, null, {
+      stackingId: 'block',
+      polarity: 'buff',
+      stacking: 'replace',
+      name: 'block',
+      barrier: {
+        hp: Math.ceil(subject.hpMax * block)
+      }
+    })
+  }
+}

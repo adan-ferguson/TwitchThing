@@ -93,7 +93,7 @@ export default class AdventurerPage extends Page{
     this.adventurer = new Adventurer(adventurer)
     this.adventurerPane.setAdventurer(this.adventurer)
 
-    if(user.features.shop){
+    if(user.features.shop || user.inventory.stashedXp){
       this._setupAdder(user, adventurer)
     }
 

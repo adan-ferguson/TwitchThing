@@ -8,6 +8,7 @@ import CombatEnactment from '../../../combatEnactment.js'
 import EventContentsResults from './eventContentsResults.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import AdventurerInstance from '../../../../../game/adventurerInstance.js'
+import { hideAll } from 'tippy.js'
 
 const HTML = `
 <div class="content-rows">
@@ -179,6 +180,8 @@ export default class DungeonPage extends Page{
     if(this._ce){
       this._ce.destroy()
     }
+
+    hideAll()
 
     // if(this._lastTime && this._timeline.time < this._lastTime){
     //   debugger

@@ -6,6 +6,7 @@ import { processAbilityEvents } from '../mechanics/abilities.js'
 import { performAction, useAbility } from '../mechanics/actions/performAction.js'
 import { overtimeDamageBonus } from '../../game/combatMechanics.js'
 import { arrayize } from '../../game/utilFunctions.js'
+import { gainBlockBarrier } from '../mechanics/gainStatusEffect.js'
 
 const MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS = 30
 const MAX_TRIGGER_LOOPS = 30
@@ -83,7 +84,7 @@ class Combat{
       inCombat: true
     }
     this.timeline = []
-    this._run()
+    this._startCombat()
     this.fighters.forEach(fi => fi.endCombat())
     this.fighterEndState1 = { ...fighterInstance1.state }
     this.fighterEndState2 = { ...fighterInstance2.state }
@@ -143,17 +144,21 @@ class Combat{
     return this.fighterInstance1 === fighterInstance ? this.fighterInstance2 : this.fighterInstance1
   }
 
-  _run(){
-
-    // Startup: Time = 0 before start-of-combat triggers
+  _startCombat(){
+    // Time = 0 before start-of-combat triggers
     // Time = 1 resolve start-of-combat triggers
-    // Then go
     this._addTimelineEntry()
     this._currentTime = 1
-    this.fighters.forEach(fi => processAbilityEvents(this, 'startOfCombat', fi, null))
+    this.fighters.forEach(fi => {
+      gainBlockBarrier(this, fi)
+      processAbilityEvents(this, 'startOfCombat', fi, null)
+    })
     this._resolveTriggers()
     this._addTimelineEntry()
+    this._run()
+  }
 
+  _run(){
     while(!this.finished){
       this._advanceTime()
       const actions = this._doActions()

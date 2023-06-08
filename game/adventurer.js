@@ -30,7 +30,7 @@ export function advLevelToXp(lvl){
     return 0
   }
   return toNumberOfDigits(
-    Math.round(geometricProgression(XP_GROWTH_PCT, lvl - 2, XP_GROWTH)) + XP_BASE,
+    Math.ceil(geometricProgression(XP_GROWTH_PCT, lvl - 2, XP_GROWTH)) + XP_BASE,
     3
   )
 }

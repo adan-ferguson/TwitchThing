@@ -34,6 +34,16 @@ export const statDefinitionsInfo = {
     icon: ICON_SVGS.magicDef,
     description: 'Blocks magical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
   },
+  block: {
+    text: 'Block',
+    description: 'At the start of combat, gain a barrier. Scales with max health.',
+    displayedValueFn: (value, { style }) => {
+      if(style === StatsDisplayStyle.CUMULATIVE){
+        return toPct(value)
+      }
+      return `+${toPct(value)}`
+    }
+  },
   missChance: {},
   speed: {
     text: 'Speed',
@@ -75,9 +85,9 @@ export const statDefinitionsInfo = {
     text: 'Lifesteal',
     displayedValueFn: (value, { style }) => {
       if(style === StatsDisplayStyle.CUMULATIVE){
-        return `${Math.round(value * 100)}%`
+        return toPct(value)
       }
-      return `+${Math.round(value * 100)}%`
+      return `+${toPct(value)}`
     }
   },
   critLifesteal: {

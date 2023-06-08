@@ -12,7 +12,7 @@ export default function(level){
               name: 'caffeineRush',
               polarity: 'buff',
               persisting: true,
-              stacking: 'extend',
+              stacking: 'replace',
               duration,
               stats: {
                 speed

@@ -59,7 +59,7 @@ router.post('/runcommand', async(req, res) => {
   }else if(cmd === 'purge'){
     const removed = await purgeAllOldRuns()
     result = `Old runs purged. ${removed} combats removed.`
-  }else if(cmd === 'give items'){
+  }else if(cmd === 'give stuff'){
     const users = await Users.find()
     const newItems = {}
     getAllItemKeys().forEach(key => {
@@ -67,6 +67,14 @@ router.post('/runcommand', async(req, res) => {
     })
     users.forEach(userDoc => {
       userDoc.inventory.items.basic = { ...newItems }
+      userDoc.inventory.stashedXp += 100000000
+      userDoc.inventory.gold += 100000000
+      userDoc.inventory.scrap += 100000000
+      userDoc.features.shop = 1
+      userDoc.features.workshop = 1
+      userDoc.features.skills = 1
+      userDoc.features.advClasses.rogue = 2
+      userDoc.features.advClasses.chimera = 2
       Users.save(userDoc)
     })
     result = 'items given'

@@ -3,7 +3,7 @@ export default function(level){
     effect: {
       abilities: [{
         trigger: 'active',
-        uses: level + 1,
+        uses: 1 + level * 2,
         conditions: {
           owner: {
             hpPctBelow: 0.5

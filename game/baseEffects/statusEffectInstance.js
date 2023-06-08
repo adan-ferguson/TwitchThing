@@ -123,9 +123,9 @@ export default class StatusEffectInstance extends EffectInstance{
     return this.effectData.persisting ?? false
   }
 
-  extend(time){
+  extend(){
     if(this.duration){
-      this._state.extendedDuration = (this._state.extendedDuration ?? 0) + time
+      this._state.extendedDuration = (this._state.extendedDuration ?? 0) + this.duration
     }
     return this
   }

@@ -73,7 +73,9 @@ const mage = {
 
 const paladin = {
   skills: [],
-  items: [[],[],[]]
+  items: [[
+    Items.buckler
+  ],[],[]]
 }
 
 const rogue = {
@@ -118,7 +120,7 @@ export function getAllItemKeys(){
   for(let className in INFO){
     INFO[className].items.forEach(arr => {
       arr.forEach(item => {
-        keys.push(item.baseItemId)
+        keys.push(item.id)
       })
     })
   }

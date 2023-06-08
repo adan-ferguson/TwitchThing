@@ -126,21 +126,6 @@ export default class MainPage extends Page{
       placeholder: 'Choose a name'
     })
 
-    if(this.user.accomplishments.firstRunFinished){
-      const optionsList = []
-      ADVENTURER_CLASS_LIST.forEach(advClass => {
-        if(!this.user.features.advClasses[advClass.className]){
-          return
-        }
-        optionsList.push({ value: advClass.className, name: advClass.displayName })
-      })
-      form.addSelect({
-        label: 'Starting Class',
-        name: 'class',
-        optionsList
-      })
-    }
-
     new FormModal(form).show()
   }
 
