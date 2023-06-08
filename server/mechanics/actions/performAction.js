@@ -63,7 +63,10 @@ export function performAction(combat, actor, ability, actionDef){
 export function useAbility(combat, ability, triggerData = {}){
   const owner = ability.fighterInstance
   triggerData = processAbilityEvents(combat, 'useAbility', owner, ability, triggerData)
-  triggerData = processAbilityEvents(combat, 'enemyUseAbility', combat.getEnemyOf(owner), ability, triggerData)
+
+  if(combat.getEnemyOf){
+    triggerData = processAbilityEvents(combat, 'enemyUseAbility', combat.getEnemyOf(owner), ability, triggerData)
+  }
 
   if(triggerData.cancelled){
     return [{

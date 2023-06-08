@@ -2,14 +2,15 @@ import Page from '../page.js'
 import '../../adventurer/adventurerPane.js'
 import fizzetch from '../../../fizzetch.js'
 import tippyCallout from '../../visualEffects/tippyCallout.js'
-import { showLoader } from '../../../loader.js'
+import { hideLoader, showLoader } from '../../../loader.js'
 import SimpleModal, { alertModal } from '../../simpleModal.js'
 import AdventurerPreviousRunsPage from '../adventurerPreviousRuns/adventurerPreviousRunsPage.js'
 import DungeonPage from '../dungeon/dungeonPage.js'
 import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
 import Adventurer from '../../../../../game/adventurer.js'
 import AdventurerEditPage from '../adventurerEdit/adventurerEditPage.js'
-import { orbPointEntry, skillPointEntry } from '../../common.js'
+import { orbPointEntry, skillPointEntry, xpIcon } from '../../common.js'
+import AddXpModalContent from './addXpModalContent.js'
 
 const HTML = `
 <div class="content-columns">
@@ -48,7 +49,12 @@ export default class AdventurerPage extends Page{
       this.redirectTo(AdventurerPreviousRunsPage.path(this.adventurerID))
     })
     this.querySelector('.dismiss').addEventListener('click', () => {
-      new SimpleModal(`Are you sure you want to dismiss ${this.adventurer.name}? Just to clarify I mean DELETE!\n\nEquipped items will be returned to your inventory.`, [{
+      new SimpleModal(`
+      Are you sure you want to dismiss ${escape(this.adventurer.name)}? Just to clarify I mean DELETE!
+      <br/><br/>
+      Equipped items will be returned to your inventory.
+      <br/><br/>
+      You'll gain ${Math.floor(this.adventurer.xp / 2)} ${xpIcon()}`, [{
         text: 'DELETE',
         style: 'scary',
         fn: () => {
@@ -86,6 +92,11 @@ export default class AdventurerPage extends Page{
 
     this.adventurer = new Adventurer(adventurer)
     this.adventurerPane.setAdventurer(this.adventurer)
+
+    if(user.features.shop){
+      this._setupAdder(user, adventurer)
+    }
+
     this._setupEditEquipmentButton(user)
     this._setupTopRightButton(user)
 
@@ -151,6 +162,28 @@ export default class AdventurerPage extends Page{
     showLoader('Entering Dungeon...')
     const { dungeonRun } = await fizzetch(`/game/adventurer/${this.adventurerID}/enterdungeon`)
     this.redirectTo(DungeonPage.path(dungeonRun._id))
+  }
+
+  _setupAdder(user, adventurer){
+    const adder = this.adventurerPane.showAdder()
+    adder.addEventListener('click', () => {
+      const content = new AddXpModalContent(user, adventurer)
+      new SimpleModal(content, {
+        text: 'Confirm',
+        style: 'good',
+        fn: () => {
+          if(content.val){
+            showLoader()
+            fizzetch(`/game/adventurer/${this.adventurerID}/addxp`, {
+              xp: content.val
+            }).then(() => {
+              hideLoader()
+              this.reload()
+            })
+          }
+        }
+      }, 'Stashed XP').show()
+    })
   }
 }
 

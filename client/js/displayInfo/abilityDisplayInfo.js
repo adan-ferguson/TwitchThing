@@ -64,7 +64,7 @@ const DEFS = {
   mirrorImage: ability => {
     return {
       description: `Conjure ${ability.vars.clones} illusions.
-      Enemy abilities have a ${toPct(ability.vars.chance)}% to hit a clone instead.`
+      Enemy abilities have a ${toPct(ability.vars.chance)} to hit a clone instead.`
     }
   },
   saplingBlock: () => {

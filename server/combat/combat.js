@@ -83,7 +83,6 @@ class Combat{
       inCombat: true
     }
     this.timeline = []
-    this._addTimelineEntry()
     this._run()
     this.fighters.forEach(fi => fi.endCombat())
     this.fighterEndState1 = { ...fighterInstance1.state }
@@ -146,6 +145,15 @@ class Combat{
 
   _run(){
 
+    // Startup: Time = 0 before start-of-combat triggers
+    // Time = 1 resolve start-of-combat triggers
+    // Then go
+    this._addTimelineEntry()
+    this._currentTime = 1
+    this.fighters.forEach(fi => processAbilityEvents(this, 'startOfCombat', fi, null))
+    this._resolveTriggers()
+    this._addTimelineEntry()
+
     while(!this.finished){
       this._advanceTime()
       const actions = this._doActions()
@@ -164,7 +172,6 @@ class Combat{
   }
 
   _advanceTime(){
-    const startOfCombat = this._currentTime === 0 ? true : false
     const nexts = [
       ...this.fighters.map(fi => fi.timeUntilNextUpdate),
       OVERTIME - this.time > 0 ? OVERTIME - this.time : Number.MAX_VALUE,
@@ -184,9 +191,6 @@ class Combat{
       this.fighters.forEach(fi => {
         fi.advanceTime(timeToAdvance)
         processAbilityEvents(this, 'instant', fi)
-        if(startOfCombat){
-          processAbilityEvents(this, 'startOfCombat', fi, null)
-        }
       })
     }
     this._resolveTriggers()

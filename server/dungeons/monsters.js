@@ -74,7 +74,7 @@ const CHEST_DROP_CHANCE_HARD_ENEMY = 0.12 // It's an enemy of level >= adventure
 const BOSS_XP_BONUS = 10
 
 // Monsters of level [currentFloor - FLOOR_RANGE] to [currentFloor] will spawn (both inclusive).
-const FLOOR_RANGE = 1
+const FLOOR_RANGE = 4
 
 // How much to skew RNG towards higher levels.
 const FLOOR_SKEW = -0.12

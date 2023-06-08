@@ -139,6 +139,7 @@ export default class EffectInstance{
   }
 
   invalidate(){
+    this.fighterInstance.uncache()
     this._baseEffectData = null
   }
 }

@@ -143,7 +143,8 @@ const es = Joi.object({
     ratio: Joi.number()
   })),
   statMultiplier: Joi.number().min(0),
-  tags: TAGS_LIST_SCHEMA
+  tags: TAGS_LIST_SCHEMA,
+  vars: Joi.object()
 })
 
 export const META_EFFECT_SCHEMA = Joi.object({
@@ -200,7 +201,6 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
   polarity: POLARITY_SCHEMA,
   name: Joi.string(),
   persisting: Joi.boolean().truthy(),
-  vars: Joi.object()
 })
 
 export const PHANTOM_EFFECT_SCHEMA = EFFECT_SCHEMA.append({

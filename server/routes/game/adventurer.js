@@ -5,9 +5,10 @@ import db  from '../../db.js'
 import Users from '../../collections/users.js'
 import { requireRegisteredUser, validateParam } from '../../validations.js'
 import DungeonRuns from '../../collections/dungeonRuns.js'
-import { spendAdventurerOrb, spendAdventurerSkillPoint } from '../../adventurer/edit.js'
+import { spendAdventurerOrb, spendAdventurerSkillPoint, spendStashedXp } from '../../adventurer/edit.js'
 import { commitAdventurerLoadout } from '../../adventurer/loadout.js'
 import Joi from 'joi'
+import { fillArray } from '../../../game/utilFunctions.js'
 
 const router = express.Router()
 const verifiedRouter = express.Router()
@@ -86,6 +87,15 @@ verifiedRouter.post('/edit/spendskillpoint', validateIdle, async(req, res) => {
   res.status(200).send({ success: 1 })
 })
 
+verifiedRouter.post('/addxp', async(req, res) => {
+  requireOwnsAdventurer(req)
+  const xp = Joi.attempt(req.body.xp, Joi.number().integer())
+  spendStashedXp(req.user, req.adventurerDoc, xp)
+  await Adventurers.save(req.adventurerDoc)
+  await Users.save(req.user)
+  res.status(200).send({ success: 1 })
+})
+
 verifiedRouter.post('/edit/save', validateIdle, async (req, res) => {
   requireOwnsAdventurer(req)
   validateParam(req.body.items, 'array')
@@ -106,12 +116,13 @@ verifiedRouter.post('/dismiss', async(req, res, next) => {
     throw 'Adventurer can not be dismissed, not in user\'s adventurer list'
   }
   req.user.adventurers.splice(index, 1)
-  req.adventurerDoc.loadout.items.forEach(i => {
-    if(!i){
-      return
-    }
-    req.user.inventory.loadout.items[i.id] = i
-  })
+  commitAdventurerLoadout(
+    req.adventurerDoc,
+    req.user,
+    fillArray(() => null, 8),
+    fillArray(() => null, 8)
+  )
+  req.user.inventory.stashedXp += Math.floor(req.adventurerDoc.xp / 2)
   await Users.save(req.user)
   res.status(200).send({ success: 1 })
 })

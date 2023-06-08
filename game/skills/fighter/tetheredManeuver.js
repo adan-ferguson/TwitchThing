@@ -1,5 +1,5 @@
 export default function(level){
-  // TODO: rankups w/ cooldown reduction for both
+  const cooldownMultiplier = 0.9 * Math.pow(0.8, level - 1)
   return {
     effect: {
       abilities: [{
@@ -16,8 +16,19 @@ export default function(level){
             trigger: 'active',
           }
         }]
-      }]
+      }],
+      metaEffects: [{
+        subjectKey: 'neighbouring',
+        effectModification: {
+          exclusiveStats: {
+            cooldownMultiplier
+          }
+        }
+      }],
+      vars: {
+        cooldownMultiplier
+      }
     },
-    maxLevel: 1
+    displayName: 'Tandem Maneuver'
   }
 }

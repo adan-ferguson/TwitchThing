@@ -29,6 +29,23 @@ di-adventurer-pane
     di-stat-row
       width: 50%
 
+  di-xp-bar
+    position: relative
+    .adder
+      position: absolute
+      right: 5rem
+      top: 50%
+      transform: translateY(-50%)
+      font-size: 2em
+      cursor: pointer
+      filter: drop-shadow(1.75rem 1.75rem 0.75rem #ccc)
+
+      .xp-icon
+        transition: background-color 0.2s ease
+
+      &:hover .xp-icon
+        background-color: #6cfc34
+
   .standard-contents
     padding: 20rem 8rem 8rem
 
@@ -98,6 +115,7 @@ di-fighter-instance-pane
 
     di-xp-bar
       margin: 2rem
+      position: relative
 
     &:hover
       background-color: #effaf8
@@ -133,3 +151,28 @@ di-fighter-instance-pane
       background-color: currentColor
       pointer-events: none
       z-index: -1
+
+di-add-xp-modal-content
+  display: flex
+  flex-direction: column
+  gap: 25rem
+  align-items: stretch
+  width: 400rem
+
+  .slider-controls
+    gap: 10rem
+
+  .xp-numbers
+    gap: 10rem
+    justify-content: space-evenly
+    align-items: center
+
+    > span
+      display: inline-flex
+      align-items: center
+      gap: 5rem
+      font-size: 1.5em
+
+      .number
+        padding-top: 3rem
+        letter-spacing: -1rem

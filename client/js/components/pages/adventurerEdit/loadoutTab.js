@@ -69,7 +69,10 @@ export default class LoadoutTab extends DIElement{
 
     this._adventurer = adventurer
 
-    this.inventoryEl.setup(items, adventurer).showScrapLink()
+    this.inventoryEl.setup(items, adventurer)
+    if(parentPage.user.features.workshop){
+      this.inventoryEl.showScrapLink()
+    }
     this.adventurerPaneEl.setAdventurer(adventurer)
     this.skillsEl.setup(adventurer, parentPage.user.features.skills)
     this._updateSaveButton()

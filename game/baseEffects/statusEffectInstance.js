@@ -140,19 +140,21 @@ export default class StatusEffectInstance extends EffectInstance{
     this._expired = true
   }
 
+  replaceData(data){
+    this._data = data
+    this.invalidate()
+    return this
+  }
+
   addStack(){
-    if(this.effectData.stacking){
-      this._state.stacks = Math.min(this.maxStacks ?? Number.POSITIVE_INFINITY, this.stacks + 1)
-      this.fighterInstance.uncache()
-    }
+    this._state.stacks = Math.min(this.maxStacks ?? Number.POSITIVE_INFINITY, this.stacks + 1)
+    this.invalidate()
     return this
   }
 
   removeStack(){
-    if(this.effectData.stacking){
-      this._state.stacks = Math.max(0, this.stacks - 1)
-      this.fighterInstance.uncache()
-    }
+    this._state.stacks = Math.max(0, this.stacks - 1)
+    this.invalidate()
     return this
   }
 

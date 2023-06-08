@@ -57,6 +57,10 @@ export default class Page extends HTMLElement{
     this.app.setPage(path, args)
   }
 
+  reload(){
+    this.app.reloadPage()
+  }
+
   async fetchData(args = {}){
     if(this.path === null){
       throw 'Could not fetch data with null path.'

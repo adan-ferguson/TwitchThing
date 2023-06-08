@@ -2,6 +2,8 @@ import DIElement from '../diElement.js'
 import { OrbsDisplayStyle } from '../orbRow.js'
 import AdventurerInstance from '../../../../game/adventurerInstance.js'
 import { advLevelToXp, advXpToLevel } from '../../../../game/adventurer.js'
+import { wrapContent } from '../../../../game/utilFunctions.js'
+import { xpIcon } from '../common.js'
 
 const HTML = `
 <div class="inset-title name"></div>
@@ -48,6 +50,14 @@ export default class AdventurerPane extends DIElement{
 
   get xpBar(){
     return this.querySelector('di-xp-bar')
+  }
+
+  showAdder(){
+    const adder = wrapContent(xpIcon(), {
+      class: ['adder']
+    })
+    this.xpBar.appendChild(adder)
+    return adder
   }
 
   setAdventurer(adventurer){

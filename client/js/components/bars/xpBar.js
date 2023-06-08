@@ -16,6 +16,10 @@ export default class XpBar extends Bar{
     return 1000
   }
 
+  get level(){
+    return this._level
+  }
+
   setBadge(){
     throw 'Do not call setBadge on levelBar, call setValue'
   }
@@ -61,7 +65,7 @@ export default class XpBar extends Bar{
     if(!options.animate){
       const level = this._xpToLevel(val)
       this._setLevel(level)
-      // super.setBadge(level)
+      super.setBadge(level)
       super.setValue(val)
     }else{
       await this._startAnimation({
@@ -110,6 +114,7 @@ export default class XpBar extends Bar{
   }
 
   _setLevel(level){
+    this._level = level
     super.setOptions({
       min: this._levelToXp(level),
       max: this._levelToXp(level + 1)

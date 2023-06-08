@@ -1,6 +1,6 @@
 export default function(level){
   const cooldown = 15000 + level * 15000
-  const clones = 1 + level * 2
+  const clones = 1 + level * 1
   const chance = clones / (clones + 1)
   return {
     effect: {

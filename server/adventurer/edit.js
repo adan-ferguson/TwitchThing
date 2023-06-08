@@ -25,3 +25,11 @@ export function spendAdventurerSkillPoint(advDoc, skillId){
   adv.upgradeSkill(skill)
   advDoc.unlockedSkills = adv.doc.unlockedSkills
 }
+
+export function spendStashedXp(userDoc, advDoc, xp){
+  if(xp > userDoc.inventory.stashedXp){
+    throw 'Too much!'
+  }
+  advDoc.xp += xp
+  userDoc.inventory.stashedXp -= xp
+}

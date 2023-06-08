@@ -34,9 +34,11 @@ export function orbPointEntry(count){
 }
 
 export function xpIcon(){
-  return `<span class="scrunch" style="color: green;">
-<i class="fa-solid fa-x"></i>
-<i class="fa-solid fa-p"></i>
+  return `
+<span class="xp-icon">
+  <i class="fa-solid fa-x"></i>
+  <i class="fa-solid fa-p"></i>
+  <i class="fa-solid fa-plus"></i>
 </span>`
 }
 
