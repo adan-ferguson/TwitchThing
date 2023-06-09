@@ -3,11 +3,11 @@ import AbilityInstance from '../../../game/abilityInstance.js'
 import { derivedAttackDescription } from './derived/actions/attack.js'
 import { statusEffectApplicationDescription } from './statusEffectDisplayInfo.js'
 import {
-  aboveIcon,
+  aboveIcon, attachedItem,
   attachedSkill,
-  belowIcon, healthIcon, physPowerIcon,
-  refundTime,
-  statScaling,
+  belowIcon, capitalizeFirstChunk, describeStat, healthIcon, physPowerIcon,
+  refundTime, scalingWrap,
+  statScaling, toSeconds,
   wrapStat
 } from '../components/common.js'
 import { damageActionCalcDamage } from '../../../game/mechanicsFns.js'
@@ -16,6 +16,7 @@ import { arrayize, msToS, toPct } from '../../../game/utilFunctions.js'
 import { derivedModifyAbilityDescription } from './derived/actions/modifyAbility.js'
 import { derivedDealDamageDescription } from './derived/actions/dealDamage.js'
 import { derivedRemoveStatusEffectDescription } from './derived/actions/removeStatusEffect.js'
+import { scaledNumberFromInstance } from '../../../game/scaledNumber.js'
 
 const DEFS = {
   flutteringDodge: () => {
@@ -108,6 +109,20 @@ const DEFS = {
       description: 'Summon a skeleton archer which shoots arrows.'
     }
   },
+  shieldBash: ability => {
+    let part2
+    if(ability instanceof AbilityInstance){
+      const block = toSeconds(scaledNumberFromInstance(ability, ability.vars.scaledNumber))
+      part2 = `<span style="font-weight:bold;">${block}</span>.`
+    }else{
+      part2 = `${toSeconds(ability.vars.stunBase)} (increases with the ${describeStat('block')} stat of the ${attachedItem(true)}).`
+    }
+    return {
+      description: `
+      Bash the enemy for ${statScaling(ability.vars, ability)} phys damage.
+      The target becomes stunned for ${part2}`
+    }
+  }
 }
 
 const phantomEffectDefinitions = {
@@ -163,7 +178,7 @@ function abilityDescription(ability){
       return
     }
     if(capitalize){
-      toAdd[0] = toAdd[0].charAt(0).toUpperCase() + toAdd[0].slice(1)
+      toAdd = capitalizeFirstChunk(toAdd)
     }
     chunks.push(...toAdd)
     capitalize = true

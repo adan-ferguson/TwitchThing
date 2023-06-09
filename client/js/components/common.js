@@ -1,6 +1,6 @@
 import Stats from '../../../game/stats/stats.js'
 import { getStatDisplayInfo, statDefinitionsInfo, StatsDisplayStyle } from '../displayInfo/statsDisplayInfo.js'
-import { makeEl, roundToNearestIntervalOf, wrapContent } from '../../../game/utilFunctions.js'
+import { deepClone, makeEl, roundToNearestIntervalOf, wrapContent } from '../../../game/utilFunctions.js'
 import health from '../../assets/icons/health.svg'
 import physPower from '../../assets/icons/physPower.svg'
 import magicPower from '../../assets/icons/magicPower.svg'
@@ -8,6 +8,7 @@ import gold from '../../assets/icons/gold.svg'
 import AdventurerItem from '../../../game/items/adventurerItem.js'
 import AbilityInstance from '../../../game/abilityInstance.js'
 import { subjectKeyForLoadoutObject } from '../subjectClientFns.js'
+import { scaledNumberFromInstance } from '../../../game/scaledNumber.js'
 
 export function physPowerIcon(){
   return physPower
@@ -76,11 +77,11 @@ export function coloredIcon(iconName, color = null, cls = null){
 }
 
 export function attachedItem(text = false){
-  return `<i class="fa-solid fa-arrow-left attached-item"></i>${text ? ' <b>Attached Skill</b>' : ''}`
+  return `<i class="fa-solid fa-arrow-left attached-item"></i>${text ? ' <b>Attached Item</b>' : ''}`
 }
 
 export function attachedSkill(text = false){
-  return `<i class="fa-solid fa-arrow-right attached-skill"></i>${text ? ' <b>Attached Item</b>' : ''}`
+  return `<i class="fa-solid fa-arrow-right attached-skill"></i>${text ? ' <b>Attached Skill</b>' : ''}`
 }
 
 export function neighbouringIcon(){
@@ -214,4 +215,23 @@ export function addTooltipToSvg(svg, tooltip){
   const el = wrapContent(svg)
   el.querySelector('svg').setAttribute('tooltip', tooltip)
   return el.innerHTML
+}
+
+export function optionalScaledNumber(osn, instance){
+  if(!osn.scaledNumber){
+    return osn
+  }
+  if(instance){
+    return scaledNumberFromInstance(instance, osn.scaledNumber)
+  }
+  return 'TODO: scaling wrap?'
+}
+
+export function capitalizeFirstChunk(chunks){
+  if(!chunks.length){
+    return chunks
+  }
+  chunks = deepClone(chunks)
+  chunks[0] = chunks[0].charAt(0).toUpperCase() + chunks[0].slice(1)
+  return chunks
 }

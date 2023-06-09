@@ -5,7 +5,7 @@ export default class AdventurerLoadoutObject extends LoadoutObject{
   _levelAdjust = 0
 
   get loadoutModifiers(){
-    return this.data.loadoutModifiers ?? null
+    return this.data.loadoutModifiers ?? []
   }
 
   get level(){

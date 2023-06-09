@@ -175,7 +175,7 @@ export default class LoadoutTab extends DIElement{
       for(let i = 0; i < 8; i++){
         const empty = !loadout.skills[i]
         const valid = loadout.canFillSlot(1, i, skill)
-        if(!empty && valid){
+        if(empty && valid){
           return i
         }
         if(empty){

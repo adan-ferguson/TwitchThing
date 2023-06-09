@@ -4,11 +4,11 @@ export default function(level){
       abilities: [{
         trigger: 'active',
         turnRefund: 0.5,
-        cooldown: 12000,
+        cooldown: 12000 * Math.pow(0.85, level - 1),
         actions: [{
           gainHealth: {
             scaling: {
-              magicPower: 0.4 + 0.4 * level
+              magicPower: 0.5 + 0.2 * level
             }
           }
         }]

@@ -1,8 +1,6 @@
 import AbilityInstance from './abilityInstance.js'
 import { getMatchingEffectInstances } from './subjectFns.js'
 
-const VALID_KEYS = ['hpMax', 'hpMissingPct', 'hp', 'magicPower', 'physPower']
-
 const fighterFns = fighterInstance => {
   return {
     hpMax: val => val * fighterInstance.hpMax,
@@ -51,11 +49,9 @@ export function scaledNumberFromInstance(instance, scalingOptions){
 
 function scaledNumber(scalingOptions, scalingFns){
   let number = 0
-  VALID_KEYS.forEach(key => {
-    if(scalingOptions[key]){
-      number += scalingFns[key](scalingOptions[key])
-    }
-  })
+  for(let key in scalingOptions){
+    number += scalingFns[key]?.(scalingOptions[key]) ?? 0
+  }
   number += scalingOptions.flat ?? 0
   return number
 }

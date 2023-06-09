@@ -32,6 +32,6 @@ export default class LoadoutObjectInstance extends EffectInstance{
   }
 
   get loadoutModifiers(){
-    return this._obj.loadoutModifiers
+    return this._obj.loadoutModifiers ?? []
   }
 }

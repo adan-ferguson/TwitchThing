@@ -1,10 +1,10 @@
 export default function(level){
-  const power = 0.4 + level * 0.4
+  const power = 0.5 + level * 0.3
   return {
     effect: {
       abilities: [{
         trigger: 'active',
-        cooldown: 7500,
+        cooldown: 8000,
         actions: [{
           attack: {
             damageType: 'phys',

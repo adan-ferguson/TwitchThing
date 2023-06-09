@@ -17,7 +17,8 @@ export function subjectDescription(subjectKey, isItem){
 
 
 const LOADOUT_OBJECT_HARDCODES = {
-  tetheredManeuver: 'neighbouring'
+  tetheredManeuver: 'neighbouring',
+  shieldBash: 'attached'
 }
 
 export function subjectKeyForLoadoutObject(loadoutObject){
@@ -33,8 +34,8 @@ export function subjectKeyForLoadoutObject(loadoutObject){
       subjectKeys[ability.conditions.source.subjectKey] = true
     }
   }
-  for(let lm in loadoutObject.loadoutModifiers){
-    subjectKeys[lm] = true
+  for(let lm of loadoutObject.loadoutModifiers){
+    subjectKeys[lm.subjectKey] = true
   }
   if(subjectKeys.attached){
     return 'attached'

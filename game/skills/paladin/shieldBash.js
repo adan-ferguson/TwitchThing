@@ -1,12 +1,25 @@
 export default function(level){
-  const physPower = 1
-  const stunBase = 1000
-  const stunScale = level * 1000
+  const physPower = 0.8 + level * 0.2
+  const stunBase = 500 + level * 500
+  const scaledNumber = {
+    flat: stunBase,
+    effectStats: {
+      subjectKey: 'attached',
+      stat: 'block',
+      base: stunBase * 2
+    }
+  }
   return {
     effect: {
       abilities: [{
+        abilityId: 'shieldBash',
         trigger: 'active',
-        cooldown: 10000 + 2000 * level,
+        cooldown: 8000 + 2000 * level,
+        vars: {
+          physPower,
+          stunBase,
+          scaledNumber
+        },
         actions: [{
           attack: {
             damageType: 'phys',
@@ -20,14 +33,7 @@ export default function(level){
                   base: {
                     stunned: {
                       duration: {
-                        scaledNumber: {
-                          flat: stunBase,
-                          effectStats: {
-                            subjectKey: 'attached',
-                            stat: 'block',
-                            base: stunScale
-                          }
-                        }
+                        scaledNumber
                       }
                     }
                   }
@@ -37,12 +43,6 @@ export default function(level){
           }
         }]
       }]
-    },
-    loadoutModifiers: [{
-      subjectKey: 'attached',
-      restrictions: {
-        hasStat: 'block'
-      }
-    }]
+    }
   }
 }

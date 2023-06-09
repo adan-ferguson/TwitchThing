@@ -1,6 +1,13 @@
 import { makeEl, wrapContent } from '../../../game/utilFunctions.js'
 import { subjectDescription } from '../subjectClientFns.js'
-import { activeAbility, attachedItem, neighbouringIcon, orbEntries, pluralize } from '../components/common.js'
+import {
+  activeAbility,
+  attachedItem,
+  describeStat,
+  neighbouringIcon,
+  orbEntries,
+  pluralize
+} from '../components/common.js'
 
 const DEFS = {
   higherLearning: lm => {
@@ -50,6 +57,8 @@ export function loadoutModifierToEl(modifier, isItem){
       str = 'Must be empty'
     }else if(value.hasAbility === 'active'){
       str = `Must have an ${activeAbility()}`
+    }else if(value.hasStat){
+      str = `Must have ${describeStat(value.hasStat)} stat`
     }
   }else if(modifier.levelUp){
     str =`Is upgraded by ${pluralize('level', modifier.levelUp)}`

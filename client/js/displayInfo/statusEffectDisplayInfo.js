@@ -1,6 +1,13 @@
 import { STATUSEFFECT_COLORS } from '../colors.js'
 import { effectInstanceState } from '../effectInstanceState.js'
-import { statScaling, toSeconds, wrapStat, wrapStats } from '../components/common.js'
+import {
+  capitalizeFirstChunk,
+  optionalScaledNumber,
+  statScaling,
+  toSeconds,
+  wrapStat,
+  wrapStats
+} from '../components/common.js'
 import { explodeEffect } from '../../../game/baseEffects/statusEffectInstance.js'
 import { msToS } from '../../../game/utilFunctions.js'
 
@@ -63,7 +70,7 @@ function derivedPrefix(actionDef, abilityInstance){
   }else if(actionDef.targets === 'enemy'){
     chunks.push(`enemy ${grammatic}`)
   }
-  return chunks
+  return capitalizeFirstChunk(chunks)
 }
 
 export function statusEffectApplicationDescription(applyStatusEffectDef, abilityInstance){
@@ -90,7 +97,7 @@ export function statusEffectDescription(statusEffectDef, abilityInstance){
   }
 
   if(statusEffectDef.duration){
-    chunks.push(`for ${toSeconds(statusEffectDef.duration)}.`)
+    chunks.push(`for ${toSeconds(optionalScaledNumber(statusEffectDef.duration, abilityInstance))}.`)
   }else if(statusEffectDef.turns){
     chunks.push(`for ${statusEffectDef.turns} turn${statusEffectDef.turns === 1 ? '' : 's'}.`)
   }else if(!statusEffectDef.persisting){
