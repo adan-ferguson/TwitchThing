@@ -79,6 +79,11 @@ export default class AdventurerLoadout{
       if(!outgoing){
         return false
       }
+      for(let lm of (loadoutItem?.loadoutModifiers ?? [])){
+        if(lm.subjectKey === 'neighbouring' && lm.restrictions && (slot === 0 || slot === 7)){
+          return true
+        }
+      }
       for(let i in outgoing){
         for(let j in outgoing[i]){
           const restrictions = isolate(outgoing[i][j], 'restrictions')
