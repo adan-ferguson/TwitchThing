@@ -29,7 +29,7 @@ export function gainStatusEffect(combat, subject, sourceAbilityInstance, statusE
   subject.addStatusEffect(statusEffectData, state)
 }
 
-export function gainBlockBarrier(combat, subject){
+export function gainBlockBarrier(combat, subject, multiplier = 1){
   const block = subject.stats.get('block').value
   if(block){
     gainStatusEffect(combat, subject, null, {
@@ -38,7 +38,7 @@ export function gainBlockBarrier(combat, subject){
       stacking: 'replace',
       name: 'block',
       barrier: {
-        hp: Math.ceil(subject.hpMax * block)
+        hp: Math.ceil(subject.hpMax * block) * multiplier
       }
     })
   }

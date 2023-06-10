@@ -2,7 +2,7 @@ import path from 'path'
 
 const isProduction = process.env.NODE_ENV === 'production'
 const ENTRY_POINTS_DIR = './client/js/entryPoints/'
-const ENTRY_POINTS = ['game', 'login', 'newuser', 'oauthredirect']
+const ENTRY_POINTS = ['game', 'login', 'newuser', 'oauthredirect', 'combatperf']
 
 export default {
   entry: makeEntryPoints(),

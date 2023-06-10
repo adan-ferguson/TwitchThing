@@ -6,7 +6,7 @@ import Combats from '../../collections/combats.js'
 import { cancelAllRuns, getActiveRunData } from '../../dungeons/dungeonRunner.js'
 import { validateParam } from '../../validations.js'
 import { getErrorLogTail, getOutputLogTail } from '../../logging.js'
-import { generateSimulatedCombat } from '../../combat/fns.js'
+import { generateSimulatedCombat, getCombatArgs } from '../../combat/fns.js'
 import { getAllMonsters } from '../../dungeons/monsters.js'
 import Purchases from '../../collections/purchases.js'
 import { purgeAllOldRuns } from '../../dungeons/results.js'
@@ -96,6 +96,12 @@ router.post('/sim/run', async (req, res) => {
   // for(let i = 0; i < 100; i++){
   //   generateSimulatedCombat(f1, f2)
   // }
+})
+
+router.get('/combatperf/:combatID', async (req, res) => {
+  res.render('combatperf', {
+    combatArgs: await getCombatArgs(req.params.combatID)
+  })
 })
 
 export default router

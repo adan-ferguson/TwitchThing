@@ -79,6 +79,10 @@ export default class CombatPage extends Page{
     setTimeout(() => {
       this._timeControlsEl.play()
     }, 100)
+
+    this.querySelector('button.diagnose').addEventListener('click', () => {
+      window.location = '/game/admin/combatperf/' + combat._id
+    })
   }
 
   async unload(){

@@ -8,6 +8,7 @@ export const FIGHTER_INSTANCE_CONDITIONS_SCHEMA = Joi.object({
   deepestFloor: Joi.bool(),   // Are we on the adventurer's deepest floor?
   bossFight: Joi.bool(),
   hasStatusEffectWithName: Joi.string(),
+  doesntHaveStatusEffectWithName: Joi.string(),
   hasDebuff: Joi.bool()
 })
 

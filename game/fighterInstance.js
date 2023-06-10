@@ -285,10 +285,11 @@ export default class FighterInstance{
     if(conditions.bossFight && !this._state.combatParams?.bossFight){
       return false
     }
-    if(conditions.hasStatusEffectWithName){
-      if(!this.statusEffectInstances.find(sei => sei.name === conditions.hasStatusEffectWithName)){
-        return false
-      }
+    if(conditions.hasStatusEffectWithName && !this.hasStatusEffectWithName(conditions.hasStatusEffectWithName)){
+      return false
+    }
+    if(conditions.doesntHaveStatusEffectWithName && this.hasStatusEffectWithName(conditions.doesntHaveStatusEffectWithName)){
+      return false
     }
     if(conditions.hasDebuff){
       if(!this.statusEffectInstances.find(sei => sei.polarity === 'debuff')){
@@ -296,6 +297,10 @@ export default class FighterInstance{
       }
     }
     return true
+  }
+
+  hasStatusEffectWithName(name){
+    return this.statusEffectInstances.some(sei => sei.name === name)
   }
 
   startCombat(combatParams){

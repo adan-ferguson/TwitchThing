@@ -98,6 +98,12 @@ const as = Joi.object({
     modification: Joi.object({
       cooldownRemaining: Joi.number().integer()
     }).required()
+  }),
+  balancedSmite: Joi.object({
+    power: Joi.number().required()
+  }),
+  shieldsUp: Joi.object({
+    multiplier: Joi.number().required()
   })
 })
 

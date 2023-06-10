@@ -90,3 +90,17 @@ export async function generateSimulatedCombat(fighterDef1, fighterDef2){
     }
   })
 }
+
+export async function getCombatArgs(combatID){
+  const combat = await Combats.findByID(combatID)
+  if(!combat){
+    return null
+  }
+  return {
+    fighterDef1: combat.fighter1.def,
+    fighterDef2: combat.fighter2.def,
+    fighterState1: {},
+    fighterState2: {},
+    params: combat.params,
+  }
+}

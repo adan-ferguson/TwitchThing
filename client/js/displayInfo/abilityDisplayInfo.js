@@ -127,6 +127,25 @@ const DEFS = {
     return {
       description: `Return <b>${toPct(ability.vars.pctReturn)}</b> of blocked phys damage back at the attacker.`
     }
+  },
+}
+
+const ACTION_DEFS = {
+  balancedSmite: (actionDef, ability) => {
+    const phys = statScaling({
+      physPower: actionDef.power
+    }, ability)
+    const magic = statScaling({
+      magicPower: actionDef.power
+    }, ability)
+    return {
+      description: `Attack for ${phys} phys damage or ${magic} magic damage, whichever is lower. (Phys if tie)`
+    }
+  },
+  shieldsUp: (actionDef, ability) => {
+    return {
+      description: `Refresh your block barrier at <b>${toPct(actionDef.multiplier)}</b> power. Only use when your block barrier is down.`
+    }
   }
 }
 
@@ -256,6 +275,11 @@ function actionDefDescription(actionDef, abilityInstance){
     return derivedDealDamageDescription(actionDef.dealDamage, abilityInstance)
   }else if(actionDef.removeStatusEffect){
     return derivedRemoveStatusEffectDescription(actionDef.removeStatusEffect)
+  }else{
+    const key = Object.keys(actionDef)[0]
+    if(ACTION_DEFS[key]){
+      return ACTION_DEFS[key](actionDef[key], abilityInstance).description
+    }
   }
   return null
 }
