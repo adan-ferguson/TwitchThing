@@ -46,7 +46,7 @@ export const TRIGGER_NAME_SCHEMA = Joi.string().valid(
   'useAbility',
 )
 
-const TARGETS_SCHEMA = Joi.string().valid('self', 'enemy', 'target')
+const TARGETS_SCHEMA = Joi.string().valid('self', 'enemy', 'target', 'source')
 const as = Joi.object({
   applyStatusEffect: Joi.object({
     targets: TARGETS_SCHEMA.required(),
@@ -75,7 +75,10 @@ const as = Joi.object({
     scaling: SCALED_NUMBER_SCHEMA.required(),
   }),
   dealDamage: Joi.object({
-    scaling: SCALED_NUMBER_SCHEMA.required(),
+    scaling: SCALED_NUMBER_SCHEMA,
+    miscScaling: {
+      blockedPhysDamage: Joi.number()
+    },
     targets: TARGETS_SCHEMA.required(),
     damageType: DAMAGE_TYPE_SCHEMA,
   }),

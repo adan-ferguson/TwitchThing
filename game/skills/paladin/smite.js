@@ -4,7 +4,7 @@ export default function(level){
     effect: {
       abilities: [{
         trigger: 'active',
-        cooldown: 8000,
+        cooldown: 9000,
         actions: [{
           attack: {
             damageType: 'phys',

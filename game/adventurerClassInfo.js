@@ -1,109 +1,15 @@
-import Items from './items/combined.js'
-import Skills from './skills/combined.js'
-
-const fighter = {
-  skills: [
-    Skills.slash,
-    Skills.strength,
-    Skills.trailblazer,
-    Skills.heavySlash,
-    Skills.berserker,
-    Skills.hamstring,
-    Skills.shrugOff,
-    Skills.swiftStrikes,
-    Skills.resistance,
-    Skills.recklessAttack,
-    Skills.tetheredManeuver,
-    Skills.execute,
-  ],
-  items: [
-    [
-      Items.shortSword,
-      Items.sprintingShoes,
-      Items.heavyAxe,
-      Items.leatherArmor,
-      Items.healingPotion
-    ],
-    [
-      Items.spear,
-      Items.serratedBlade,
-      Items.coffeeCarafe,
-      Items.heavyArmor,
-    ],
-    [
-      Items.gigaHammer,
-      Items.twinBlades,
-      Items.swordOfFables
-    ]
-  ]
-}
-
-const mage = {
-  skills: [
-    Skills.magicMissile,
-    Skills.barrier,
-    Skills.intelligence,
-    Skills.frostRay,
-    Skills.mirrorImage,
-    Skills.haste,
-    Skills.brilliance,
-    Skills.fireball,
-    Skills.imbueWeapons,
-    Skills.overload,
-    Skills.higherLearning,
-    Skills.lightningStorm,
-  ],
-  items: [[
-    Items.wand,
-    Items.robes,
-    Items.powerScroll,
-    Items.spellbook,
-    Items.magicRing,
-  ],[
-    Items.favoriteScroll,
-    Items.unstableScroll,
-    Items.miniatureScroll,
-    Items.manaSeasoning,
-  ],[
-    Items.ascendedScroll,
-    Items.repeatingScroll,
-    Items.wizardHat,
-  ]]
-}
-
-const paladin = {
-  skills: [
-    Skills.smite,
-    Skills.shieldBash,
-    Skills.ardent,
-    Skills.lesserHeal,
-    Skills.devotion,
-  ],
-  items: [[
-    Items.buckler,
-    Items.towerShield,
-    Items.mace,
-    Items.chainMail,
-    Items.holyBlade
-  ],[],[]]
-}
-
-const rogue = {
-  skills: [],
-  items: [[],[],[]]
-}
-
-const chimera = {
-  skills: [],
-  items: [[],[],[]]
-}
+import { FIGHTER_CLASS_INFO } from './adventurerClasses/fighter.js'
+import { MAGE_CLASS_INFO } from './adventurerClasses/mage.js'
+import { PALADIN_CLASS_INFO } from './adventurerClasses/paladin.js'
+import { ROGUE_CLASS_INFO } from './adventurerClasses/rogue.js'
+import { CHIMERA_CLASS_INFO } from './adventurerClasses/chimera.js'
 
 const INFO = {
-  fighter,
-  mage,
-  paladin,
-  rogue,
-  chimera
+  fighter: FIGHTER_CLASS_INFO,
+  mage: MAGE_CLASS_INFO,
+  paladin: PALADIN_CLASS_INFO,
+  rogue: ROGUE_CLASS_INFO,
+  chimera: CHIMERA_CLASS_INFO,
 }
 
 for(let advClass in INFO){

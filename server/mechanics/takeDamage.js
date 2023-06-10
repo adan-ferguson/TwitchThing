@@ -14,7 +14,6 @@ export function takeDamage(combat, subject, damageInfo){
 
   let result = {
     baseDamage: damageInfo.damage,
-    blocked: 0,
     damageType: damageInfo.damageType
   }
 
@@ -41,7 +40,7 @@ export function takeDamage(combat, subject, damageInfo){
   }
 
   result.damageDistribution = distributeDamage(subject, Math.ceil(damage))
-  result.totalDamage = Object.values(result.damageDistribution).reduce((prev, val) => prev + val)
+  result.totalDamage = Object.values(result.damageDistribution).reduce((prev, val) => prev + val.amount, 0)
 
   if(damage > 0){
     result = processAbilityEvents(combat, 'takeDamage', subject, null, result)
@@ -51,7 +50,7 @@ export function takeDamage(combat, subject, damageInfo){
 }
 
 function distributeDamage(subject, damageLeft){
-  const distribution = {}
+  const distribution = []
 
   subject.effectInstances.forEach(ei => {
     if(!damageLeft){
@@ -61,11 +60,11 @@ function distributeDamage(subject, damageLeft){
       const toReduce = Math.ceil(Math.min(damageLeft, ei.barrierHp))
       damageLeft -= toReduce
       ei.barrierHp -= toReduce
-      distribution[ei.uniqueID] = toReduce
+      distribution.push({ id: ei.uniqueID, type: 'barrier', name: ei.name, amount: toReduce })
     }
   })
 
   subject.hp -= damageLeft
-  distribution.hp = damageLeft
+  distribution.push({ id: 'hp', amount: damageLeft })
   return distribution
 }

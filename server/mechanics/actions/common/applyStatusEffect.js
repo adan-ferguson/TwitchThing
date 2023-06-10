@@ -15,7 +15,20 @@ export default function(combat, actor, subject, abilityInstance, actionDef = {})
     ret = processAbilityEvents(combat, 'gainingDebuff', subject, abilityInstance, ret)
   }
   if(!ret.cancelled){
+    if(statusEffect.base.stunned){
+      statusEffect.base.stunned.duration *= 1 - subject.totalStats.get('stunResist').value
+    }
     gainStatusEffect(combat, subject, abilityInstance, statusEffect)
+    if(statusEffect.base?.stunned){
+      gainStatusEffect(combat, subject, null, {
+        polarity: 'buff',
+        name: 'resistStun',
+        stacking: 'stack',
+        stats: {
+          stunResist: '25%'
+        }
+      })
+    }
   }
   return ret
 }

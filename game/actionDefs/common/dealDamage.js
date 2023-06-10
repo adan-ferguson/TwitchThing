@@ -1,6 +1,7 @@
 export default {
-  scaling: {},
-  damageType: 'phys',
   targets: null,
+  scaling: null,
+  miscScaling: null,
+  damageType: 'phys',
   range: null
 }

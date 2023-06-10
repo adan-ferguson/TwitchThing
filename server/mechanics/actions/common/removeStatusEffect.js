@@ -3,7 +3,7 @@ export default function(combat, actor, subject, abilityInstance, actionDef = {})
   const removed = []
   for(let sei of subject.statusEffectInstances){
     if(actionDef.polarity && sei.polarity !== actionDef.polarity){
-      return
+      continue
     }
     sei.expire()
     count--

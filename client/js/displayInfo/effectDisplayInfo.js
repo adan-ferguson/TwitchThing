@@ -16,5 +16,10 @@ const DEFS = {
     return {
       description: `Gain ${describeStat('magicPower')} equal to your ${describeStat('combatXP')}`
     }
+  },
+  resistStun: () => {
+    return {
+      description: 'Reduces effectiveness of repeated stuns.'
+    }
   }
 }

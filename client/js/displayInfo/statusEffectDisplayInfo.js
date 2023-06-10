@@ -70,7 +70,7 @@ function derivedPrefix(actionDef, abilityInstance){
   }else if(actionDef.targets === 'enemy'){
     chunks.push(`enemy ${grammatic}`)
   }
-  return capitalizeFirstChunk(chunks)
+  return chunks
 }
 
 export function statusEffectApplicationDescription(applyStatusEffectDef, abilityInstance){

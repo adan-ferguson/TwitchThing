@@ -14,7 +14,7 @@ export default function(level){
       abilities: [{
         abilityId: 'shieldBash',
         trigger: 'active',
-        cooldown: 8000 + 2000 * level,
+        cooldown: 10000 + 2000 * level,
         vars: {
           physPower,
           stunBase,

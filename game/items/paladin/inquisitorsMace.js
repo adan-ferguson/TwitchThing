@@ -1,10 +1,14 @@
 import { wrappedPct } from '../../growthFunctions.js'
 
 export default function(level){
+  const pct = wrappedPct(level * 20)
+  const duration = 1000 + level * 1000
   return {
+    orbs: 2 + level * 5,
     effect: {
       stats: {
-        physPower: wrappedPct(20 * level),
+        hpMax: pct,
+        physPower: pct
       },
       abilities: [{
         trigger: 'attackHit',
@@ -21,21 +25,14 @@ export default function(level){
             targets: 'target',
             statusEffect: {
               base: {
-                damageOverTime: {
-                  damage: {
-                    scaledNumber: {
-                      physPower: 0.14 + 0.14 * level
-                    }
-                  }
+                stunned: {
+                  duration
                 }
               },
-              name: 'bleeding',
-              persisting: false
             }
           }
         }]
       }]
-    },
-    orbs: 2 + level * 4
+    }
   }
 }

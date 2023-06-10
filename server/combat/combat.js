@@ -205,7 +205,7 @@ class Combat{
 
     const resolveTrigger = trigger => {
       if(trigger.performAction){
-        return performAction(this, trigger.actor, trigger.ability, trigger.def)
+        return performAction(this, trigger.actor, trigger.ability, trigger.def, trigger.data)
       }else{
         return useAbility(this, trigger.ability, trigger.data)
       }

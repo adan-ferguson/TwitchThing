@@ -121,6 +121,10 @@ export const statDefinitionsInfo = {
     text: 'Damage Ceiling',
     displayedValueFn: value => toPct(value),
     description: 'Most damage they can take at once (percentage of max health)'
+  },
+  stunResist: {
+    text: 'Stun Resist',
+    description: 'Reduces effectiveness of repeated stuns.'
   }
 }
 

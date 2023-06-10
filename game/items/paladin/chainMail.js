@@ -8,6 +8,7 @@ export default function(level){
         physDef: exponentialPercentage(0.1, level - 1, 0.30),
         speed: -20
       }
-    }
+    },
+    displayName: 'Plate Mail'
   }
 }

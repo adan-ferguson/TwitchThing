@@ -37,7 +37,7 @@ router.post('/forge', async(req, res, next) => {
 })
 
 router.post('/forge/upgrade', async(req, res, next) => {
-  const def = validateParam(req.body.itemDef, 'string', false)
+  const def = req.body.itemDef
   let upgradedItemDef
   if(def){
     upgradedItemDef = await upgradeInventoryItem(req.user, req.body.itemDef)

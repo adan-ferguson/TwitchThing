@@ -149,17 +149,18 @@ export default class FighterInstancePane extends HTMLElement{
       classes.push('magic')
     }
 
-    for(let key in data.damageDistribution){
-      if(data.damageDistribution[key] === 0){
+    for(let distribution of data.damageDistribution){
+      const amount = distribution.amount
+      if(amount === 0){
         continue
       }
-      let dmgStr = roundToFixed(data.damageDistribution[key], 2)
+      let dmgStr = roundToFixed(amount, 2)
       let html = `<span class="${classes.join(' ')}">-${dmgStr}${data.crit ? '!!' : ''}</span>`
-      let barEl = key === 'hp' ? this.hpBarEl : this._getEffectEl(key)?.barEl
+      let barEl = distribution.id === 'hp' ? this.hpBarEl : this._getEffectEl(distribution.id)?.barEl
       if(!barEl){
         continue
       }
-      barEl.setValue(-data.damageDistribution[key], { relative: true, animate: true })
+      barEl.setValue(-amount, { relative: true, animate: true })
       new FlyingTextEffect(barEl, html, {
         html: true,
         fontSize: TEXT_EFFECT_MIN + Math.min(0.5, dmgStr / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX,

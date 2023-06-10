@@ -5,12 +5,12 @@ import { arrayize } from '../../../game/utilFunctions.js'
 import { processAbilityEvents } from '../abilities.js'
 import { chooseOne } from '../../../game/rando.js'
 
-export function performAction(combat, actor, ability, actionDef){
+export function performAction(combat, actor, ability, actionDef, triggerData = {}){
   const key = Object.keys(actionDef)[0]
   const expandedActionDef = expandActionDef(actionDef)[key]
   if(key === 'random'){
     const randomDef = chooseOne(expandedActionDef.options)
-    return performAction(combat, actor, ability, randomDef)
+    return performAction(combat, actor, ability, randomDef, triggerData)
   }else if(key === 'maybe'){
     if(expandedActionDef.chance < Math.random()){
       return {
@@ -21,7 +21,7 @@ export function performAction(combat, actor, ability, actionDef){
         results: []
       }
     }else{
-      return performAction(combat, actor, ability, expandedActionDef.action)
+      return performAction(combat, actor, ability, expandedActionDef.action, triggerData)
     }
   }
   return {
@@ -52,7 +52,7 @@ export function performAction(combat, actor, ability, actionDef){
         }
       }
     }
-    return Actions[key].def(combat, actor, target, ability, expandedActionDef)
+    return Actions[key].def(combat, actor, target, ability, expandedActionDef, triggerData)
   }
 
   function getTarget(){
@@ -102,7 +102,7 @@ export function useAbility(combat, ability, triggerData = {}){
         // actions: [attackDef, attackDef, attackDef] would not
         iterateActions(actionDef)
       }else{
-        const actionResult = performAction(combat, owner, ability, actionDef)
+        const actionResult = performAction(combat, owner, ability, actionDef, triggerData)
         results.push(actionResult)
         if(actionResult.cancelled){
           return

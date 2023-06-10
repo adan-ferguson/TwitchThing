@@ -2,6 +2,7 @@ import Adventurers from '../collections/adventurers.js'
 import { adjustInventoryBasics, spendInventoryBasics, spendScrap } from '../user/inventory.js'
 import Users from '../collections/users.js'
 import AdventurerItem from '../../game/items/adventurerItem.js'
+import Craftings from '../collections/craftings.js'
 
 export async function getUserWorkshop(userDoc){
   return {
@@ -13,17 +14,40 @@ export async function getUserWorkshop(userDoc){
 export async function scrapItems(userDoc, { basic, crafted }){
   adjustInventoryBasics(userDoc, basic, true)
   crafted.forEach(id => {
-    if(!userDoc.inventory.items.crafted[id]){
+    const itemDef = userDoc.inventory.items.crafted[id]
+    if(!itemDef){
       throw 'Item not found: ' + id
     }
-    userDoc.inventory.scrap += new AdventurerItem(userDoc.inventory.items.crafted[id]).scrapValue
+    const scrap = new AdventurerItem(itemDef).scrapValue
+    userDoc.inventory.scrap += scrap
+    Craftings.save({
+      userID: userDoc._id,
+      timestamp: Date.now(),
+      type: 'scrap',
+      itemDef,
+      data: {
+        scrap,
+        baseItem: itemDef.baseItem
+      }
+    })
     delete userDoc.inventory.items.crafted[id]
   })
-  Object.keys(basic).forEach(group => {
-    Object.keys(basic[group]).forEach(name => {
-      userDoc.inventory.scrap += new AdventurerItem({ group, name }).scrapValue * basic[group][name]
+  for(let baseItemId in basic){
+    const count = basic[baseItemId]
+    const scrap = new AdventurerItem(baseItemId).scrapValue
+    userDoc.inventory.scrap += count * scrap
+    Craftings.save({
+      userID: userDoc._id,
+      timestamp: Date.now(),
+      type: 'scrap',
+      itemDef: baseItemId,
+      data: {
+        count,
+        scrap: count * scrap,
+        baseItem: baseItemId,
+      }
     })
-  })
+  }
   await Users.saveAndEmit(userDoc)
 }
 
@@ -71,6 +95,13 @@ async function upgradeItem(userDoc, itemDef){
     }else if(component.type === 'item'){
       spendInventoryBasics(userDoc, component.baseItemId, component.count)
     }
+  })
+
+  await Craftings.save({
+    userID: userDoc._id,
+    timestamp: Date.now(),
+    type: 'upgrade',
+    itemDef
   })
 
   upgradeInfo.upgradedItemDef.createdTimestamp = Date.now()

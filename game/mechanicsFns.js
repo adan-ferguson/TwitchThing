@@ -1,6 +1,9 @@
 import { scaledNumberFromInstance } from './scaledNumber.js'
 
 export function damageActionCalcDamage(instance, scaling){
+  if(!scaling){
+    return 0
+  }
   let damage = Math.ceil(scaledNumberFromInstance(instance, scaling))
   damage *= instance.stacks || 1
   return damage

@@ -7,6 +7,8 @@ export const FIGHTER_INSTANCE_CONDITIONS_SCHEMA = Joi.object({
   hpPctBelow: Joi.number(),   // Is our hpPct below this number?
   deepestFloor: Joi.bool(),   // Are we on the adventurer's deepest floor?
   bossFight: Joi.bool(),
+  hasStatusEffectWithName: Joi.string(),
+  hasDebuff: Joi.bool()
 })
 
 export const ABILITY_CONDITIONS_SCHEMA = Joi.object({

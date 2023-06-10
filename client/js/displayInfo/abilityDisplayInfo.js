@@ -122,6 +122,11 @@ const DEFS = {
       Bash the enemy for ${statScaling(ability.vars, ability)} phys damage.
       The target becomes stunned for ${part2}`
     }
+  },
+  spikedShield: ability => {
+    return {
+      description: `Return <b>${toPct(ability.vars.pctReturn)}</b> of blocked phys damage back at the attacker.`
+    }
   }
 }
 

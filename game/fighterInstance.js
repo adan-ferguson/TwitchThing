@@ -285,6 +285,16 @@ export default class FighterInstance{
     if(conditions.bossFight && !this._state.combatParams?.bossFight){
       return false
     }
+    if(conditions.hasStatusEffectWithName){
+      if(!this.statusEffectInstances.find(sei => sei.name === conditions.hasStatusEffectWithName)){
+        return false
+      }
+    }
+    if(conditions.hasDebuff){
+      if(!this.statusEffectInstances.find(sei => sei.polarity === 'debuff')){
+        return false
+      }
+    }
     return true
   }
 
