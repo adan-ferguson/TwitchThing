@@ -8,6 +8,7 @@ export default class MetaEffectCollection{
       ids: {},
       all: []
     }
+    this.cache = {}
 
     fighterInstance.effectInstances.forEach(ei => {
       const metaEffects = ei.baseEffectData.metaEffects
@@ -36,16 +37,20 @@ export default class MetaEffectCollection{
     if(effectInstance.fighterInstance !== this.fighterInstance){
       throw 'Huh?'
     }
-    const toApply = []
-    if(effectInstance.slotInfo){
-      toApply.push(...get(this.categories.slots, effectInstance.slotInfo.col, effectInstance.slotInfo.row))
+    if(!this.cache[effectInstance.uniqueID]){
+      const toApply = []
+      if(effectInstance.slotInfo){
+        toApply.push(...get(this.categories.slots, effectInstance.slotInfo.col, effectInstance.slotInfo.row))
+      }
+      toApply.push(...(this.categories.ids[effectInstance.uniqueID] ?? []))
+      toApply.push(...this.categories.all)
+      const filtered = toApply.filter((meDef => {
+        return effectInstance.fighterInstance.meetsConditions(meDef.conditions?.owner)
+      }))
+      this.cache[effectInstance.uniqueID] = merge(effectInstance.baseEffectData, filtered)
+      this.cache[effectInstance.uniqueID] = merge(effectInstance.baseEffectData, filtered)
     }
-    toApply.push(...(this.categories.ids[effectInstance.uniqueID] ?? []))
-    toApply.push(...this.categories.all)
-    const filtered = toApply.filter((meDef => {
-      return effectInstance.fighterInstance.meetsConditions(meDef.conditions?.owner)
-    }))
-    return merge(effectInstance.baseEffectData, filtered)
+    return this.cache[effectInstance.uniqueID]
   }
 }
 
