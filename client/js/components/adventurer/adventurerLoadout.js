@@ -63,7 +63,7 @@ export default class AdventurerLoadout extends DIElement{
         orbs: slotInfo.modifiedOrbsData,
         showState: this._options.showState,
         shouldBeEmpty: slotInfo.shouldBeEmpty
-      })
+      }, true)
     })
     this.skillSlots.forEach((row, i) => {
       const slotInfo = this._adventurerInstance.getSlotInfo(1, i)
@@ -72,7 +72,7 @@ export default class AdventurerLoadout extends DIElement{
         valid: !slotInfo.restrictionsFailed,
         showState: this._options.showState,
         shouldBeEmpty: slotInfo.shouldBeEmpty
-      })
+      }, true)
     })
     return this
   }

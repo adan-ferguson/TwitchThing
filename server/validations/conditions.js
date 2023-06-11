@@ -9,7 +9,8 @@ export const FIGHTER_INSTANCE_CONDITIONS_SCHEMA = Joi.object({
   bossFight: Joi.bool(),
   hasStatusEffectWithName: Joi.string(),
   doesntHaveStatusEffectWithName: Joi.string(),
-  hasDebuff: Joi.bool()
+  hasDebuff: Joi.bool(),
+  overtime: Joi.bool().truthy()
 })
 
 export const ABILITY_CONDITIONS_SCHEMA = Joi.object({
@@ -22,8 +23,5 @@ export const ABILITY_CONDITIONS_SCHEMA = Joi.object({
     undodgeable: Joi.bool() // Are we being attacked by a dodgeable attack?
   }),
   owner: FIGHTER_INSTANCE_CONDITIONS_SCHEMA,
-  random: Joi.number().min(0).max(1)
-  // combat: Joi.object({
-  //   bossFight: Joi.bool(),      // Are we in a boss fight?
-  // })
+  random: Joi.number().min(0).max(1),
 })

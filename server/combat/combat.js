@@ -179,7 +179,7 @@ class Combat{
   _advanceTime(){
     const nexts = [
       ...this.fighters.map(fi => fi.timeUntilNextUpdate),
-      OVERTIME - this.time > 0 ? OVERTIME - this.time : Number.MAX_VALUE,
+      OVERTIME - this.time > 0 ? OVERTIME - this.time + 1 : Number.MAX_VALUE,
       this.nextSuddenDeathTick
     ]
     const timeToAdvance = Math.ceil(Math.max(1, Math.min(...nexts)))
@@ -194,6 +194,10 @@ class Combat{
     this._currentTime += timeToAdvance
     if(timeToAdvance){
       this.fighters.forEach(fi => {
+        fi.updateCombat({
+          time: this._currentTime,
+          overtime: this._currentTime >= OVERTIME
+        })
         fi.advanceTime(timeToAdvance)
         processAbilityEvents(this, 'instant', fi)
       })

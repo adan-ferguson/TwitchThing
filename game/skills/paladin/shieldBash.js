@@ -1,6 +1,6 @@
 export default function(level){
   const physPower = 0.8 + level * 0.2
-  const stunBase = 500 + level * 500
+  const stunBase = 1000 + level * 1000
   const scaledNumber = {
     flat: stunBase,
     effectStats: {

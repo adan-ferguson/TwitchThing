@@ -35,9 +35,9 @@ export default class DIElement extends HTMLElement{
     return this.closest('di-modal')
   }
 
-  setOptions(options = {}){
+  setOptions(options = {}, forceUpdate = false){
     const newOptions = mergeOptionsObjects(this._options, options)
-    if(_.isEqual(newOptions, this._options)){
+    if(!forceUpdate && _.isEqual(newOptions, this._options)){
       return this
     }
     this._options = newOptions

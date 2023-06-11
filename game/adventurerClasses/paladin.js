@@ -10,8 +10,8 @@ export const PALADIN_CLASS_INFO = {
     Skills.devotion,
     Skills.balancedSmite,
     Skills.shieldsUp,
-    // Skills.endurance,
-    // Skills.greaterHeal,
+    Skills.patience,
+    Skills.greaterHeal,
   ],
   items: [[
     Items.buckler,

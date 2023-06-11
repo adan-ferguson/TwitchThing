@@ -3,22 +3,20 @@ export default function(level){
     effect: {
       abilities: [{
         trigger: 'active',
-        turnRefund: 0.5,
-        cooldown: 12000 * Math.pow(0.85, level - 1),
+        cooldown: 30000 * Math.pow(0.8, level - 1),
         conditions: {
           owner: {
-            hpPctBelow: 1
+            hpPctBelow: 0.5
           }
         },
         actions: [{
           gainHealth: {
             scaling: {
-              magicPower: 0.5 + 0.2 * level
+              magicPower: 2.4 + 0.6 * level
             }
           }
         }]
       }]
     },
-    displayName: 'Lesser Heal',
   }
 }

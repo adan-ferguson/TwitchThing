@@ -234,7 +234,7 @@ export default class FighterInstance{
   }
 
   get inCombat(){
-    return 'combatTime' in this._state
+    return this._state.combat ? true : false
   }
 
   get nextTurnOffset(){
@@ -282,7 +282,7 @@ export default class FighterInstance{
     if(conditions.deepestFloor && !this.onDeepestFloor){
       return false
     }
-    if(conditions.bossFight && !this._state.combatParams?.bossFight){
+    if(conditions.bossFight && !this._state.combat?.bossFight){
       return false
     }
     if(conditions.hasStatusEffectWithName && !this.hasStatusEffectWithName(conditions.hasStatusEffectWithName)){
@@ -296,6 +296,11 @@ export default class FighterInstance{
         return false
       }
     }
+    if(conditions.overtime){
+      if(!this._state.combat?.overtime){
+        return false
+      }
+    }
     return true
   }
 
@@ -304,14 +309,24 @@ export default class FighterInstance{
   }
 
   startCombat(combatParams){
-    this._state.combatTime = 0
-    this._state.combatParams = combatParams
+    this._state.combat = {
+      time: 0,
+      overtime: false,
+      bossFight: false,
+      ...combatParams
+    }
     this._state.timeBarPct = this.hasMod('sneakAttack') ? 0.99 : 0
   }
 
+  updateCombat(combatParams){
+    this._state.combat = {
+      ...this._state.combat,
+      ...combatParams
+    }
+  }
+
   endCombat(){
-    delete this._state.combatTime
-    delete this._state.combatParams
+    delete this._state.combat
     delete this._state.timeBarPct
     this.effectInstances.forEach(ei => ei.endCombat())
   }
@@ -328,9 +343,6 @@ export default class FighterInstance{
       })
     }
     this.statusEffectInstances.forEach(sei => sei.advanceTime(ms))
-    if(this.inCombat){
-      this._state.combatTime += ms
-    }
     this.uncache()
   }
 
