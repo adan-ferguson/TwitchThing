@@ -33,14 +33,18 @@ export function performAction(combat, actor, ability, actionDef, triggerData = {
   }
 
   function getResults(){
-    const target = getTarget()
-    const results = arrayize(performIt(target))
-    return arrayize(results).map(r => {
-      return {
-        ...r,
-        subject: target.uniqueID
-      }
+    const targets = getTargets()
+    const allResults = []
+    targets.forEach(target => {
+      const results = arrayize(performIt(target))
+      allResults.push(...arrayize(results).map(r => {
+        return {
+          ...r,
+          subject: target.uniqueID
+        }
+      }))
     })
+    return allResults
   }
 
   function performIt(target){
@@ -55,8 +59,15 @@ export function performAction(combat, actor, ability, actionDef, triggerData = {
     return Actions[key].def(combat, actor, target, ability, expandedActionDef, triggerData)
   }
 
-  function getTarget(){
-    return (!expandedActionDef.targets || expandedActionDef.targets === 'self') ? actor : combat.getEnemyOf(actor)
+  function getTargets(){
+    const targets = expandedActionDef.targets
+    if(!targets || targets === 'self'){
+      return [actor]
+    }else if(targets === 'all'){
+      return combat.fighters
+    }else{
+      return [combat.getEnemyOf(actor)]
+    }
   }
 }
 

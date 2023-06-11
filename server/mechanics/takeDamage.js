@@ -24,7 +24,11 @@ export function takeDamage(combat, subject, damageInfo){
   }
 
   if(!damageInfo.ignoreDefense){
-    const mitigated = Math.floor(damage * subject.stats.get(damageInfo.damageType + 'Def').value)
+    const mitigated = Math.floor(
+      damage *
+      subject.stats.get(damageInfo.damageType + 'Def').value *
+      subject.stats.get('damageTaken').value
+    )
     damage = damage - mitigated
     result.mitigated = mitigated
 

@@ -17,6 +17,13 @@ const DEFS = {
     }
     return `Your scrolls cost ${orbEntries(inverted)} less.`
   },
+  purity: lm => {
+    const inverted = { ...lm.orbs }
+    for(let key in inverted){
+      inverted[key] *= -1
+    }
+    return `Your items cost ${orbEntries(inverted)} less.`
+  },
   big: () => {
     return `${neighbouringIcon()} Neighbouring item slots must be empty.`
   },

@@ -39,14 +39,16 @@ export const TRIGGER_NAME_SCHEMA = Joi.string().valid(
   'attackHit',
   'enemyUseAbility',
   'gainingDebuff',
+  'gainedHealth',
   'hitByAttack',
   'instant',
   'rest',
+  'takeTurn',
   'targeted',
   'useAbility',
 )
 
-const TARGETS_SCHEMA = Joi.string().valid('self', 'enemy', 'target', 'source')
+const TARGETS_SCHEMA = Joi.string().valid('self', 'enemy', 'target', 'source', 'all')
 const as = Joi.object({
   applyStatusEffect: Joi.object({
     targets: TARGETS_SCHEMA.required(),
@@ -75,10 +77,7 @@ const as = Joi.object({
     scaling: SCALED_NUMBER_SCHEMA.required(),
   }),
   dealDamage: Joi.object({
-    scaling: SCALED_NUMBER_SCHEMA,
-    miscScaling: {
-      blockedPhysDamage: Joi.number()
-    },
+    scaling: SCALED_NUMBER_SCHEMA.required(),
     targets: TARGETS_SCHEMA.required(),
     damageType: DAMAGE_TYPE_SCHEMA,
   }),
@@ -104,6 +103,13 @@ const as = Joi.object({
   }),
   shieldsUp: Joi.object({
     multiplier: Joi.number().required()
+  }),
+  spikedShield: Joi.object({
+    pctReturn: Joi.number().required()
+  }),
+  penance: Joi.object({
+    targets: Joi.string().valid('enemy').required(),
+    pct: Joi.number().required()
   })
 })
 

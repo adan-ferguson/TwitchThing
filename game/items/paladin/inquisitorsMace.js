@@ -4,6 +4,7 @@ export default function(level){
   const pct = wrappedPct(level * 20)
   const duration = 1000 + level * 1000
   return {
+    displayName: 'Inquisitor\'s Mace',
     orbs: 2 + level * 5,
     effect: {
       stats: {

@@ -8,9 +8,7 @@ export default function(level){
         abilityId: 'shrugOff',
         cooldown,
         replacements: {
-          dataMerge: {
-            cancelled: true
-          }
+          cancel: 'Shrugged Off'
         },
         actions: [{
           gainHealth: {

@@ -1,6 +1,7 @@
 export default function(level){
   const multiplier = 1 + level * 0.5
   return {
+    displayName: 'Shields Up!',
     effect: {
       abilities: [{
         trigger: 'active',

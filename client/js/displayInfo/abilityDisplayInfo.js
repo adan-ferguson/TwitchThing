@@ -144,7 +144,7 @@ const ACTION_DEFS = {
   },
   shieldsUp: (actionDef, ability) => {
     return {
-      description: `Refresh your block barrier at <b>${toPct(actionDef.multiplier)}</b> power. Only use when your block barrier is down.`
+      description: `Restore your block barrier with an extra <b>${toPct(actionDef.multiplier - 1)}</b> strength. Only use when your block barrier is down.`
     }
   }
 }
@@ -233,8 +233,8 @@ function conditionsDescription(conditions){
   if(conditions.owner?.hpPctBelow){
     return [`Only use when health is below ${conditions.owner.hpPctBelow * 100}%.`]
   }
-  if(conditions.source){
-
+  if(conditions.owner?.hasDebuff){
+    return ['Only use if you have a debuff.']
   }
   return []
 }

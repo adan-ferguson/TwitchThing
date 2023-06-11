@@ -1,16 +1,15 @@
-import { exponentialPercentage, wrappedPct } from '../../growthFunctions.js'
+import { exponentialPercentage } from '../../growthFunctions.js'
 
 export default function(level){
   return {
-    orbs: level * 3 + 3,
+    orbs: level * 3 + 2,
     effect: {
       stats: {
-        physDef: exponentialPercentage(0.1, level - 1, 0.30),
-        magicDef: exponentialPercentage(0.1, level - 1, 0.30),
-        magicPower: wrappedPct(30 * level),
-        speed: -20 + level * -10
+        physDef: exponentialPercentage(0.1, level - 1, 0.20),
+        magicDef: exponentialPercentage(0.1, level - 1, 0.20),
+        speed: -10 + level * -10
       }
     },
-    displayName: 'Exalted Mail'
+    displayName: 'Exalted Plate Mail'
   }
 }

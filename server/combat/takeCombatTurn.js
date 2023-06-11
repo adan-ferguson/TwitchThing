@@ -1,4 +1,5 @@
 import { performAction, useAbility } from '../mechanics/actions/performAction.js'
+import { processAbilityEvents } from '../mechanics/abilities.js'
 
 export function takeCombatTurn(combat, actor){
   if(!actor.inCombat){
@@ -24,6 +25,7 @@ export function takeCombatTurn(combat, actor){
     actionResults.push(performAction(combat, actor, null, basicAttackDef(actor)))
   }
   actor.nextTurn(turnRefund)
+  processAbilityEvents(combat, 'takeTurn', actor)
   return actionResults
 }
 

@@ -1,5 +1,5 @@
 export default function(level){
-  const block = level * 0.2
+  const block = level * 0.05 + 0.1
   const pctReturn = 0.2 + level * 0.1
   return {
     orbs: level * 5,
@@ -16,15 +16,14 @@ export default function(level){
         conditions: {
           owner: {
             hasStatusEffectWithName: 'block'
+          },
+          data: {
+            damageType: 'phys'
           }
         },
         actions: [{
-          dealDamage: {
-            targets: 'source',
-            damageType: 'phys',
-            miscScaling: {
-              blockedPhysDamage: pctReturn
-            }
+          spikedShield: {
+            pctReturn
           }
         }]
       }]

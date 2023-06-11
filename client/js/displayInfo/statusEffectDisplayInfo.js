@@ -1,7 +1,6 @@
 import { STATUSEFFECT_COLORS } from '../colors.js'
 import { effectInstanceState } from '../effectInstanceState.js'
 import {
-  capitalizeFirstChunk,
   optionalScaledNumber,
   statScaling,
   toSeconds,
@@ -176,6 +175,12 @@ const DEFS = {
     return {
       description: 'feared and can\'t use basic attacks',
       grammatic: 'become'
+    }
+  },
+  cleansed: () => {
+    return {
+      description: 'You can\'t gain debuffs',
+      grammatic: ''
     }
   }
 }

@@ -172,16 +172,15 @@ export default class List extends DIElement{
     const filtered = (!this._options.showFiltered && this._options.filterFn) ?
       this._rowsCache.filter(this._options.filterFn) : [...this._rowsCache]
     this._sortedRows = this._options.sortFn ? filtered.sort((a, b) => {
-      // TODO: do this some other way
-      // if(this._options.showFiltered && this._options.filterFn){
-      //   const aFiltered = this._options.filterFn(a)
-      //   const bFiltered = this._options.filterFn(b)
-      //   if(aFiltered && !bFiltered){
-      //     return -1
-      //   }else if(bFiltered && !aFiltered){
-      //     return 1
-      //   }
-      // }
+      if(this._options.showFiltered && this._options.filterFn){
+        const aFiltered = this._options.filterFn(a)
+        const bFiltered = this._options.filterFn(b)
+        if(aFiltered && !bFiltered){
+          return -1
+        }else if(bFiltered && !aFiltered){
+          return 1
+        }
+      }
       return this._options.sortFn(a, b)
     }) : filtered
     this._update()

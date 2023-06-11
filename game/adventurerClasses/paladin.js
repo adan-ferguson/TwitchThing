@@ -12,6 +12,9 @@ export const PALADIN_CLASS_INFO = {
     Skills.shieldsUp,
     Skills.patience,
     Skills.greaterHeal,
+    Skills.purity,
+    Skills.penance,
+    Skills.divineIntervention
   ],
   items: [[
     Items.buckler,
@@ -24,5 +27,9 @@ export const PALADIN_CLASS_INFO = {
     Items.magicMail,
     Items.cleansingPotion,
     Items.inquisitorsMace
-  ],[]]
+  ],[
+    Items.immaculateShield,
+    Items.angelicMail,
+    Items.celestialGreatsword
+  ]]
 }
