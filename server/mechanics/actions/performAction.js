@@ -4,13 +4,14 @@ import { expandActionDef } from '../../../game/actionDefs/expandActionDef.js'
 import { arrayize } from '../../../game/utilFunctions.js'
 import { processAbilityEvents } from '../abilities.js'
 import { chooseOne } from '../../../game/rando.js'
+import DungeonRunInstance from '../../dungeons/dungeonRunInstance.js'
 
-export function performAction(combat, actor, ability, actionDef, triggerData = {}){
+export function performAction(triggerHandler, actor, ability, actionDef, triggerData = {}){
   const key = Object.keys(actionDef)[0]
   const expandedActionDef = expandActionDef(actionDef)[key]
   if(key === 'random'){
     const randomDef = chooseOne(expandedActionDef.options)
-    return performAction(combat, actor, ability, randomDef, triggerData)
+    return performAction(triggerHandler, actor, ability, randomDef, triggerData)
   }else if(key === 'maybe'){
     if(expandedActionDef.chance < Math.random()){
       return {
@@ -21,7 +22,7 @@ export function performAction(combat, actor, ability, actionDef, triggerData = {
         results: []
       }
     }else{
-      return performAction(combat, actor, ability, expandedActionDef.action, triggerData)
+      return performAction(triggerHandler, actor, ability, expandedActionDef.action, triggerData)
     }
   }
   return {
@@ -49,24 +50,26 @@ export function performAction(combat, actor, ability, actionDef, triggerData = {
 
   function performIt(target){
     if(target !== actor){
-      const targetResult = processAbilityEvents(combat, 'targeted', target, ability)
+      const targetResult = processAbilityEvents(triggerHandler, 'targeted', target, ability)
       if(targetResult.cancelled){
         return {
           cancelled: targetResult.cancelled
         }
       }
     }
-    return Actions[key].def(combat, actor, target, ability, expandedActionDef, triggerData)
+    return Actions[key].def(triggerHandler, actor, target, ability, expandedActionDef, triggerData)
   }
 
   function getTargets(){
     const targets = expandedActionDef.targets
     if(!targets || targets === 'self'){
       return [actor]
+    }else if(triggerHandler instanceof DungeonRunInstance){
+      return []
     }else if(targets === 'all'){
-      return combat.fighters
-    }else{
-      return [combat.getEnemyOf(actor)]
+      return triggerHandler.fighters
+    }else if(triggerHandler.getEnemyOf){
+      return [triggerHandler.getEnemyOf(actor)]
     }
   }
 }

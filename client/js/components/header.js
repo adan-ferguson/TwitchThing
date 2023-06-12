@@ -105,7 +105,7 @@ export default class Header extends HTMLElement{
   }
 
   _updateGold(){
-    let tip = 'Gold'
+    let tip = 'Shop'
     const goldButtonEl = this.querySelector('.gold-button')
     goldButtonEl.querySelector('.val').textContent = suffixedNumber(this.user.inventory.gold ?? 0, 5)
     if(!this.user.features?.shop){

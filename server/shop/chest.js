@@ -27,7 +27,7 @@ export async function shopChestPurchased(userDoc, chestData){
 async function countPurchases(purchases){
   const byType = {}
   purchases.forEach(purchase => {
-    if(purchase.shopItem.type !== 'chest'){
+    if(purchase.shopItem?.type !== 'chest'){
       return
     }
     const type = purchase.shopItem.data.className

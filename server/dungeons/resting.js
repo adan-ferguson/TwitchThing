@@ -12,7 +12,7 @@ export function rest(dungeonRun){
 
   processAbilityEvents(dungeonRun, 'rest', ai)
 
-  const result = gainHealth(null, ai, ai.hpMax)
+  const result = gainHealth(dungeonRun, ai, ai.hpMax)
 
   return {
     roomType: 'rest',

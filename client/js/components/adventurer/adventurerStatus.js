@@ -15,7 +15,7 @@ const HTML = `
 `
 
 const DUNGEON_HTML = ({ time, floor, room }) => `
-Floor ${floor} - Room ${room} - ${time}
+Floor ${floor} - Room ${room} - <span class="time">${time}</span>
 `
 
 export default class AdventurerStatus extends HTMLElement{
@@ -38,13 +38,12 @@ export default class AdventurerStatus extends HTMLElement{
         tooltip: OrbsTooltip.NONE
       })
       .setData(adventurer.orbsData)
-    // this.setDungeonRun(adventurer.dungeonRun)
+    this.setDungeonRun(adventurerDoc.dungeonRun)
     return this
   }
 
   setDungeonRun(dungeonRun){
-    return
-
+    this._stopTimer()
     const statusEl = this.querySelector('.status')
     const descriptionEl = this.querySelector('.description')
     if(!dungeonRun){
@@ -67,6 +66,8 @@ export default class AdventurerStatus extends HTMLElement{
     descriptionEl.style.color = '#000'
     descriptionEl.textContent = eventText()
 
+    this._startTimer(dungeonRun.virtualTime)
+
     function eventText(){
       const currentEvent = dungeonRun.currentEvent || dungeonRun.newEvents?.at(-1) || dungeonRun.events?.at(-1)
       if(currentEvent?.monster){
@@ -75,6 +76,21 @@ export default class AdventurerStatus extends HTMLElement{
       }
       return 'Exploring'
     }
+  }
+
+  _startTimer(virtualTime){
+    const startTime = Date.now()
+    let lastSecond = 1000
+    this._interval = setInterval(() => {
+      if(Date.now() - startTime > lastSecond){
+        this.querySelector('.time').textContent = betterDateFormat(virtualTime + lastSecond)
+        lastSecond += 1000
+      }
+    }, 50)
+  }
+
+  _stopTimer(){
+    clearInterval(this._interval)
   }
 }
 

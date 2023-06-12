@@ -29,7 +29,7 @@ export default class Skills extends DIElement{
         }
         return skillA.index - skillB.index
       },
-      showFiltered: true,
+      showFiltered: false,
       filterFn: row => {
         if(!this.adventurer || !row.skill){
           return true

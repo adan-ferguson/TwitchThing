@@ -1,11 +1,11 @@
 import { processAbilityEvents } from './abilities.js'
 
-export function gainHealth(combat, actor, amount){
+export function gainHealth(triggerHandler, actor, amount){
   const hpBefore = actor.hp
   actor.hp += amount
   const healthGained = actor.hp - hpBefore
   if(healthGained > 0){
-    processAbilityEvents(combat, 'gainedHealth', actor, null, {
+    processAbilityEvents(triggerHandler, 'gainedHealth', actor, null, {
       healthGained
     })
   }

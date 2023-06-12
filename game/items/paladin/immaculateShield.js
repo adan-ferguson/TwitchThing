@@ -8,6 +8,7 @@ export default function(level){
       },
       abilities: [{
         trigger: 'gainingDebuff',
+        abilityId: 'immaculateShield',
         replacements: {
           cancel: 'No Debuffs'
         },

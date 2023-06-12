@@ -36,7 +36,7 @@ export async function buyShopItem(userDoc, shopItemId, count){
     userDoc.inventory.adventurerSlots++
     returnValue.message = 'Adventurer Slot purchased successfully.'
   }else if(shopItem.type === 'chest'){
-    returnValue.chests = await shopChestPurchased(userDoc, shopItem.data)
+    returnValue.chest = await shopChestPurchased(userDoc, shopItem.data)
   }else if(shopItem.type === 'scrap'){
     userDoc.inventory.scrap += shopItem.data.scrap * count
     returnValue.message = 'Scrap purchased successfully.'

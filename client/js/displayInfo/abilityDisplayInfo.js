@@ -128,6 +128,11 @@ const DEFS = {
       description: `Return <b>${toPct(ability.vars.pctReturn)}</b> of blocked phys damage back at the attacker.`
     }
   },
+  immaculateShield: ability => {
+    return {
+      description: 'As long as your <b>Block</b> barrier is up, you can\'t be debuffed.'
+    }
+  },
 }
 
 const ACTION_DEFS = {
@@ -145,6 +150,11 @@ const ACTION_DEFS = {
   shieldsUp: (actionDef, ability) => {
     return {
       description: `Restore your block barrier with an extra <b>${toPct(actionDef.multiplier - 1)}</b> strength. Only use when your block barrier is down.`
+    }
+  },
+  penance: (actionDef, ability) => {
+    return {
+      description: `Whenever you heal, deal damage equal to <b>${toPct(actionDef.pct)}</b> of the amount healed.`
     }
   }
 }
@@ -253,6 +263,9 @@ function prefix(trigger, conditions){
   }
   if(trigger === 'rest'){
     chunks.push('After resting')
+  }
+  if(trigger === 'takeTurn'){
+    chunks.push('After your turn')
   }
   return chunks
 }
