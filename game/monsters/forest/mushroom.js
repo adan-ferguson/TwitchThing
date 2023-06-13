@@ -36,7 +36,7 @@ const slowingSpores = statusEffect({
 })
 
 const shrinkingSpores = statusEffect({
-  name: 'slowingSpores',
+  name: 'shrinkingSpores',
   stats: {
     physPower: '-20%',
     hpMax: '-20%'

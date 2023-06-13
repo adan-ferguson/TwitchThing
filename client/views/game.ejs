@@ -16,7 +16,8 @@
         </div>
     </div>
     <script>
-      window.STARTUP_PARAMS = <%- locals.startupParams ? JSON.stringify(locals.startupParams) : "null" %>
+        window.STARTUP_PARAMS = <%- locals.startupParams ? JSON.stringify(locals.startupParams) : "null" %>
+        window.MAGIC_PUBLISHABLE_KEY = "<%= locals.magicPublishableKey %>"
     </script>
     <script defer src="/scripts/game.js"></script>
 </body>

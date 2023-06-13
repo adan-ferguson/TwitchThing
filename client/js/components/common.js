@@ -9,6 +9,7 @@ import AdventurerItem from '../../../game/items/adventurerItem.js'
 import AbilityInstance from '../../../game/abilityInstance.js'
 import { subjectKeyForLoadoutObject } from '../subjectClientFns.js'
 import { scaledNumberFromInstance } from '../../../game/scaledNumber.js'
+import tippy from 'tippy.js'
 
 export function physPowerIcon(){
   return physPower
@@ -234,4 +235,11 @@ export function capitalizeFirstChunk(chunks){
   chunks = deepClone(chunks)
   chunks[0] = chunks[0].charAt(0).toUpperCase() + chunks[0].slice(1)
   return chunks
+}
+
+export function simpleTippy(el, content){
+  tippy(el, {
+    theme: 'light',
+    content
+  })
 }

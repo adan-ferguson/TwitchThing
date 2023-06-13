@@ -7,6 +7,7 @@ import { Strategy } from 'passport-magic'
 import CustomStrategy from 'passport-custom'
 import { OAuthExtension } from '@magic-ext/oauth'
 import { checkForRewards } from '../user/rewards.js'
+import Joi from 'joi'
 
 const router = express.Router()
 
@@ -29,6 +30,31 @@ passport.use(new Strategy(async function(magicUser, done){
   }
 }))
 
+passport.use('magic-linkexisting', new Strategy({
+  passReqToCallback: true
+}, async (req, magicUser, done) => {
+  try {
+    if(!req.user){
+      throw 'No user to link idk'
+    }
+    let user = await Users.loadFromMagicID(magicUser.issuer)
+    if(user){
+      throw 'User with this magicID already exists, uhhh'
+    }
+    const userMetadata = await magic.users.getMetadataByIssuer(magicUser.issuer)
+    req.user.magicID = magicUser.issuer
+    req.user.iat = magicUser.claim.iat
+    req.user.auth = {
+      email: userMetadata.email,
+      type: 'magiclink'
+    }
+    await Users.save(req.user)
+    return done(null, req.user)
+  }catch(err){
+    return done(err)
+  }
+}))
+
 passport.use('anonymous', new CustomStrategy(async (req, cb) => {
   const user = req.user ?? await Users.createAnonymous()
   cb(null, user)
@@ -43,6 +69,14 @@ passport.deserializeUser(async (obj, done) => {
 })
 
 router.post('/login', passport.authenticate('magic'), (req, res) => {
+  if(req.user){
+    res.status(200).end('User is logged in.')
+  }else{
+    res.status(401).end('Could not log user in.')
+  }
+})
+
+router.post('/linkexisting', passport.authenticate('magic-linkexisting'), (req, res) => {
   if(req.user){
     res.status(200).end('User is logged in.')
   }else{
@@ -88,6 +122,17 @@ router.post('/appfetch', async (req, res) => {
   const user = Users.gameData(req.user) || { anonymous: true }
   const popups = user.anonymous ? [] : checkForRewards(req.user)
   res.send({ user, popups })
+})
+
+router.post('/emailexists', async(req, res) => {
+  const email = Joi.attempt(req.body.email, Joi.string())
+  const exists = await Users.findOne({
+    query: {
+      'auth.type': 'magiclink',
+      'auth.email': email
+    }
+  }) ? true : false
+  res.send(exists)
 })
 
 export default router

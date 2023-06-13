@@ -1,6 +1,5 @@
 import Adventurers from './adventurers.js'
 import Collection from './collection.js'
-import db from '../db.js'
 import { emit } from '../socketServer.js'
 
 const DEFAULTS = {
@@ -144,6 +143,7 @@ Users.gameData = function(userDoc){
     gameData: true
   }
   filteredData.isAdmin = Users.isAdmin(userDoc)
+  filteredData.isRegistered = filteredData.magicID ? true : false
   delete filteredData.magicID
   delete filteredData.iat
   delete filteredData.auth

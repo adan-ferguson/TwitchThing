@@ -3,6 +3,9 @@ import SimpleModal from './simpleModal.js'
 import tippy from 'tippy.js'
 import { suffixedNumber } from '../../../game/utilFunctions.js'
 import goldIcon from '../../assets/icons/gold.svg'
+import { faIcon, simpleTippy } from './common.js'
+import Modal from './modal.js'
+import RegisterForm from './registerForm.js'
 
 const HTML = `
 <div class="left-side">
@@ -20,7 +23,9 @@ const HTML = `
   <div class="gold-button displaynone">
     ${goldIcon}
     <span class="val"></span>
-    <span class="val"></span>
+  </div>
+  <div class="register-button displaynone">
+    ${faIcon('circle-exclamation')}
   </div>
   <div class="user-info clickable">
     <span class="displayname"></span> <i class="fa-solid fa-caret-down"></i>
@@ -80,6 +85,8 @@ export default class Header extends HTMLElement{
       }
       return options
     })
+
+    this._setupRegisterButton()
   }
 
   set titleText(val){
@@ -101,6 +108,7 @@ export default class Header extends HTMLElement{
       this.querySelector('.displayname').textContent = this.user.displayname
       this._updateGold()
       this._updateScrap()
+      this._updateRegisterButton()
     }
   }
 
@@ -136,6 +144,22 @@ export default class Header extends HTMLElement{
     }
     scrapEl.classList.remove('displaynone')
     scrapEl._tippy.setContent(tip)
+  }
+
+  _setupRegisterButton(){
+    const btn = this.querySelector('.register-button')
+    simpleTippy(btn, 'Register account and get rid of annoying exclamation point')
+    btn.addEventListener('click', () => {
+      const modal = new Modal()
+      modal.innerContent.append(new RegisterForm({
+        linkExisting: true
+      }))
+      modal.show()
+    })
+  }
+
+  _updateRegisterButton(){
+    this.querySelector('.register-button').classList.toggle('displaynone', this.user.isRegistered ? true : false)
   }
 }
 
