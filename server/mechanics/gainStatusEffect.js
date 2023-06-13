@@ -16,11 +16,12 @@ export function gainStatusEffect(combat, subject, sourceAbilityInstance, statusE
     return state.sourceEffectId === sei.sourceEffectId
   })
   if(existing){
+    const durationRemainingBefore = existing.durationRemaining
     existing.replaceData(statusEffectData)
     if(existing.stacking === 'replace'){
       existing.refresh()
     }else if(existing.stacking === 'extend'){
-      existing.extend()
+      existing.extend(durationRemainingBefore)
     }else if(existing.stacking === 'stack'){
       existing.addStack()
     }

@@ -1,7 +1,7 @@
 export default function({ duration } = {}){
   return {
     polarity: 'debuff',
-    stacking: 'replace',
+    stacking: 'extend',
     name: 'stunned',
     duration,
     mods: [{

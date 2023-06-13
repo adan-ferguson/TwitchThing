@@ -24,8 +24,9 @@ export default function(combat, actor, subject, abilityInstance, actionDef = {})
         polarity: 'buff',
         name: 'resistStun',
         stacking: 'stack',
+        maxStacks: 5,
         stats: {
-          stunResist: '25%'
+          stunResist: '33%'
         }
       })
     }

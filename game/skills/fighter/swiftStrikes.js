@@ -1,11 +1,13 @@
+import { roundToFixed } from '../../utilFunctions.js'
+
 export default function(level){
-  const physPower = 0.5 * Math.pow(0.8, level - 1)
   const hits = 1 + level * 2
+  const physPower = Math.max(0.01, roundToFixed(1.5 / hits, 2))
   return {
     effect: {
       abilities: [{
         trigger: 'active',
-        cooldown: 12000,
+        cooldown: 15000,
         actions: [{
           attack: {
             hits,

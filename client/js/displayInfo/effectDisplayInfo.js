@@ -19,7 +19,7 @@ const DEFS = {
   },
   resistStun: () => {
     return {
-      description: 'Reduces effectiveness of repeated stuns.'
+      description: 'Repeated stuns have reduced duration.'
     }
   }
 }
