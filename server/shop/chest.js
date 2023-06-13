@@ -43,7 +43,7 @@ async function countPurchases(purchases){
 }
 
 function chestDef(className, purchaseCount){
-  const level = Math.min(100, 5 + purchaseCount * 5)
+  const level = Math.min(100, 10 + purchaseCount * 10)
   return {
     type: 'chest',
     id: className + 'Chest',
@@ -58,5 +58,5 @@ function chestDef(className, purchaseCount){
 }
 
 function toPrice(level){
-  return level * 20
+  return level * 10
 }

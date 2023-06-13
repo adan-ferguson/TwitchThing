@@ -68,8 +68,8 @@ const monstersByFloor = [
 const BONUS_CHESTS_UNTIL = 12
 const BONUS_CHEST_CHANCE = 0.15
 
-const CHEST_DROP_CHANCE = 0.04
-const CHEST_DROP_CHANCE_HARD_ENEMY = 0.12 // It's an enemy of level >= adventurer's deepest floor
+const CHEST_DROP_CHANCE = 0.03
+const CHEST_DROP_CHANCE_HARD_ENEMY = 0.10 // It's an enemy of level >= adventurer's deepest floor
 
 const BOSS_XP_BONUS = 10
 

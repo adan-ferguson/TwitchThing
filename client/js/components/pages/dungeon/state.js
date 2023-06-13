@@ -67,13 +67,13 @@ export default class State extends HTMLElement{
     this._setXP(results.xp, animate)
     this._updateChests(results.chests, animate)
 
-    if(animate){
-      this._setFoodRemaining((currentEvent.penalty?.food ?? 0) + this._lastFood)
-      this._setFoodRemaining((currentEvent.rewards?.food ?? 0) + this._lastFood)
-    }else{
-      this._setFoodRemaining(adventurerInstance.food, adventurerInstance.maxFood)
-    }
-
+    // TODO: this is sort of a weird fundamental problem
+    // if(animate){
+    //   this._setFoodRemaining((currentEvent.penalty?.food ?? 0) + this._lastFood)
+    //   this._setFoodRemaining((currentEvent.rewards?.food ?? 0) + this._lastFood)
+    // }else{
+    // }
+    this._setFoodRemaining(adventurerInstance.food, adventurerInstance.maxFood)
     this._contentEl.classList.remove('displaynone')
   }
 
@@ -82,7 +82,7 @@ export default class State extends HTMLElement{
     const prev = this._prevXpVal
     this._prevXpVal = xp
 
-    if(!animate){
+    if(!animate || prev === undefined){
       this.xp.textContent = suffixedNumber(xp)
       this._xpAnimation?.cancel()
       return

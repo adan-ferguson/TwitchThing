@@ -1,5 +1,7 @@
+import { roundToFixed } from '../../utilFunctions.js'
+
 export default function(level){
-  const power = 0.5 + level * 0.3
+  const power = roundToFixed(0.5 + level * 0.3, 1)
   return {
     effect: {
       abilities: [{

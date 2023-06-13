@@ -1,4 +1,11 @@
-import { makeEl, suffixedNumber, toDisplayName, wait, wrapContent } from '../../../../../game/utilFunctions.js'
+import {
+  deepClone,
+  makeEl,
+  suffixedNumber,
+  toDisplayName,
+  wait,
+  wrapContent
+} from '../../../../../game/utilFunctions.js'
 import ChestOpenage from './chestOpenage.js'
 import MonsterInstance from '../../../../../game/monsterInstance.js'
 import Adventurer from '../../../../../game/adventurer.js'
@@ -37,7 +44,7 @@ export default class EventContentsResults extends HTMLElement{
     this._linkedAdventurerPane = adventurerPane
 
     const tabz = this.querySelector('di-tabz')
-    adventurerPane.setAdventurer(new Adventurer(JSON.parse(JSON.stringify(dungeonRun.adventurer))))
+    adventurerPane.setAdventurer(new Adventurer(deepClone(dungeonRun.adventurer)))
 
     requestAnimationFrame(() => {
       this._skipAnimations = false
@@ -47,6 +54,10 @@ export default class EventContentsResults extends HTMLElement{
     })
 
     this._setupMonstersTab(tabz.getContentEl('Monsters'), dungeonRun.results.monstersKilled)
+  }
+
+  stop(){
+    this._linkedAdventurerPane.xpBar.skipToEndOfAnimation()
   }
 
   async _showMainResults(el, dungeonRun, adventurerPane, watching){

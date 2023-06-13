@@ -10,18 +10,18 @@ import MonsterItem from './monsterItem.js'
 const ADJUSTED_DIFFICULTY_PER_ZONE = 1.5
 const ADJUSTED_DIFFICULTY_PER_FLOOR_PER_ZONE = 0.2
 
+const STAT_GROWTH_PCT = 0.12
+
 const HP_BASE = 12
-const HP_GROWTH = 5
-const HP_GROWTH_PCT = 0.12
+const HP_GROWTH = 8
 
 const POWER_BASE = 5
 const POWER_GROWTH = 1
-const POWER_GROWTH_PCT = 0.1
 
 const XP_BASE = 2
 const XP_GROWTH = 1
-const XP_GROWTH_PCT = 0.17
-const XP_ZONE_BONUS = 1.7
+const XP_GROWTH_PCT = 0.18
+const XP_ZONE_BONUS = 2
 
 export function monsterLevelToXpReward(lvl){
   const zoneBonuses = Math.floor((lvl - 1) / 10)
@@ -35,7 +35,7 @@ export function monsterLevelToXpReward(lvl){
 export function monsterLevelToHp(lvl){
   const adjustedLevel = adjustedDifficultyLevel(lvl)
   return toNumberOfDigits(
-    HP_BASE + Math.ceil(geometricProgression(HP_GROWTH_PCT, adjustedLevel - 1, HP_GROWTH)),
+    HP_BASE + Math.ceil(geometricProgression(STAT_GROWTH_PCT, adjustedLevel - 1, HP_GROWTH)),
     2
   )
 }
@@ -43,7 +43,7 @@ export function monsterLevelToHp(lvl){
 export function monsterLevelToPower(lvl){
   const adjustedLevel = adjustedDifficultyLevel(lvl)
   return toNumberOfDigits(
-    POWER_BASE + Math.ceil(geometricProgression(POWER_GROWTH_PCT, adjustedLevel - 1, POWER_GROWTH)),
+    POWER_BASE + Math.ceil(geometricProgression(STAT_GROWTH_PCT, adjustedLevel - 1, POWER_GROWTH)),
     2
   )
 }

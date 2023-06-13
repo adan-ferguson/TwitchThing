@@ -114,7 +114,7 @@ export async function finalize(dungeonRunDoc){
     if(adventurerDoc.level >= 5 && !userDoc.features.skills){
       userDoc.features.skills = 1
       emit(userDoc._id, 'show popup', {
-        title: 'That Went Better',
+        title: 'Skill Point!',
         message: 'You got your first skill point, go spend it now! Now now now!'
       })
     }

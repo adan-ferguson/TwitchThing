@@ -77,7 +77,7 @@ export default class FighterInstancePane extends HTMLElement{
     this.querySelector('.name').textContent = fighterInstance.displayName
     this.effectsListEl.setFighterInstance(fighterInstance)
     this._actionBarEl.setBaseTime(this.fighterInstance.turnTime)
-    this._update(false)
+    this._update(true)
     return this
   }
 
@@ -200,11 +200,14 @@ export default class FighterInstancePane extends HTMLElement{
       cancelAnimations = true
     }
 
-    if(this.fighterInstance.hp !== this.hpBarEl.value){
-      if(cancelAnimations || (!this.hpBarEl.animating && this._hpChangeQueue.isEmpty)){
-        this._hpChangeQueue.clear()
-        this.hpBarEl.setValue(this.fighterInstance.hp)
-      }
+    if(cancelAnimations){
+      this._hpChangeQueue.clear()
+    }
+
+    if(this.fighterInstance.hp !== this.hpBarEl.value && this._hpChangeQueue.isEmpty){
+      this.hpBarEl.setValue(this.fighterInstance.hp, {
+        animate: !cancelAnimations
+      })
     }
 
     this.statsList.setOptions({

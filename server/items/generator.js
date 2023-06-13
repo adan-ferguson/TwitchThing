@@ -9,13 +9,13 @@ export function getItemPicker(value, validClasses){
     weightFormula: baseItem => {
       const item = new AdventurerItem(baseItem.id)
       const rarityInfo = item.rarityInfo
-      if(rarityInfo.name !== 'common' && value < rarityInfo.value){
-        return 0
-      }
       if(item.classes.find(cls => validClasses.indexOf(cls) === -1)){
         return 0
       }
-      return rarityInfo.weight
+      // If the value remaining is less than the rarity value, there's a chance
+      // but it is reduced.
+      const pct = Math.min(1, value / rarityInfo.value)
+      return rarityInfo.weight * pct
     }
   })
 }

@@ -3,9 +3,9 @@ import { toNumberOfDigits } from '../../game/utilFunctions.js'
 import { geometricProgression } from '../../game/growthFunctions.js'
 import AdventurerItem from '../../game/items/adventurerItem.js'
 
-const GOLD_BASE = 15
-const GOLD_GROWTH = 5
-const GOLD_GROWTH_PCT = 0
+const GOLD_BASE = 10
+const GOLD_GROWTH = 4
+const GOLD_GROWTH_PCT = 0.01
 
 export function generateRandomChest(options = {}){
 

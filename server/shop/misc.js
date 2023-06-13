@@ -1,5 +1,5 @@
 const BASE_PRICE = 100
-const BASE_AMOUNT = 7
+const BASE_AMOUNT = 15
 
 export function scrapShopItem(userDoc){
   if(!userDoc.features.workshop){

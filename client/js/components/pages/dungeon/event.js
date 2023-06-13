@@ -25,6 +25,7 @@ export default class Event extends HTMLElement{
   }
 
   async setContents(contents, animate = true){
+    this.currentContents?.stop?.()
     this.innerHTML = ''
     this.currentContents = contents
     this.appendChild(this.currentContents)

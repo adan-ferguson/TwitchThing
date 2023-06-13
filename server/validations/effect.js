@@ -105,6 +105,7 @@ const as = Joi.object({
     multiplier: Joi.number().required()
   }),
   spikedShield: Joi.object({
+    targets: Joi.string().valid('enemy').required(),
     pctReturn: Joi.number().required()
   }),
   penance: Joi.object({

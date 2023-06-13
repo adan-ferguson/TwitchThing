@@ -62,11 +62,9 @@ export async function runCombat(dungeonRun, monsterDef){
 
   if(combatDoc.result === CombatResult.F1_WIN){
     resultEvent.rewards = monsterDef.rewards
-  }else if(combatDoc.result === CombatResult.F2_WIN){
+  }else{
     combatEvent.runFinished = true
     return combatEvent
-  }else{
-    debugger
   }
 
   emit(dungeonRun.doc._id, 'dungeon run update', {

@@ -151,7 +151,6 @@ export default class DungeonPage extends Page{
 
     this.dungeonRun = dungeonRun
     this._timelineEl.addEvents(dungeonRun.newEvents)
-    this._timelineEl.play()
 
     if(dungeonRun.newEvents){
       dungeonRun.newEvents.forEach(ev => this._loadCombat(ev.combatID))
@@ -168,6 +167,8 @@ export default class DungeonPage extends Page{
         force: dungeonRun.finished ? true : false
       })
     }
+
+    this._timelineEl.play()
   }
 
   _update(options = {}){
@@ -177,17 +178,7 @@ export default class DungeonPage extends Page{
       ...options
     }
 
-    if(this._ce){
-      this._ce.destroy()
-    }
-
     hideAll()
-
-    // if(this._lastTime && this._timeline.time < this._lastTime){
-    //   debugger
-    // }
-    // this._lastTime = this._timeline.time
-    // console.log('update', this.currentEvent, this._timeline.time)
 
     const animate = options.animate
 
@@ -198,10 +189,11 @@ export default class DungeonPage extends Page{
     }
 
     this._updateBackground()
-    this._stateEl.update(this._timelineEl.elapsedEvents, this.adventurerInstance, animate)
+    this._stateEl.update(this._timelineEl.elapsedEvents, this.adventurerInstance, !animate)
 
     if(this.isReplay && this._timeline.finished){
       this._showResults()
+      this._ce?.destroy()
       return
     }
 
@@ -213,7 +205,8 @@ export default class DungeonPage extends Page{
     }else{
       this.topThingEl.updateEvent(this.currentEvent)
       this._eventEl.update(this.currentEvent, animate)
-      this._adventurerPane.setState(this.currentEvent.adventurerState ?? {}, animate)
+      this._adventurerPane.setState(this.currentEvent.adventurerState ?? {}, !animate)
+      this._ce?.destroy()
     }
   }
 
@@ -240,6 +233,15 @@ export default class DungeonPage extends Page{
   }
 
   async _enactCombat(animate){
+    if(this._ce){
+      if(this._ce.combatID === this.currentEvent.combatID){
+        this._ce.timeline.setTime(this._timeline.timeSinceLastEntry - (this.currentEvent.refereeTime ?? 0), true)
+        return
+      }else{
+        this._ce?.destroy()
+      }
+    }
+
     const combat = await this._getCombat(this.currentEvent.combatID)
     const enemyPane = new FighterInstancePane()
     this._eventEl.setContents(enemyPane, animate)

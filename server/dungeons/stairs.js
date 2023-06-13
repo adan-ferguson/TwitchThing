@@ -1,6 +1,6 @@
 import { floorSize } from '../../game/zones.js'
 
-const MIN_FLOOR_TRAVERSAL_PCT = 0.5
+const BRISK_STAIRS_TIME = 0.5
 
 export function foundStairs(dungeonRun){
   const floor = dungeonRun.floor
@@ -17,12 +17,6 @@ export function foundStairs(dungeonRun){
   }
 
   const size = floorSize(floor)
-  if(pace === 'Leisurely'){
-    return room >= size
-  }
-
-  const minTraversal = Math.floor(size * MIN_FLOOR_TRAVERSAL_PCT)
-  const fraction = 1 / (size - minTraversal)
-  const stairsChance = Math.max(0, Math.min(1, fraction * (room - minTraversal)))
-  return Math.random() < stairsChance
+  const factor = pace === 'Leisurely' ? 1 : BRISK_STAIRS_TIME
+  return room >= size * factor
 }

@@ -64,11 +64,29 @@ Users.loadFromMagicID = async function(magicID){
   return results[0]
 }
 
+Users.deserializeFromSession = async function(obj){
+  if(!obj){
+    return null
+  }else if(obj.userID){
+    // new
+    return await Users.findByID(obj.userID)
+  }else{
+    // old
+    return await Users.loadFromMagicID(obj)
+  }
+}
+
 Users.create = async function(magicID, iat, email, provider){
   return await Users.save({
     magicID,
     iat,
     auth: { type: provider, email }
+  })
+}
+
+Users.createAnonymous = async function(){
+  return await Users.save({
+    displayName: 'generic_user_with_underscores'
   })
 }
 
