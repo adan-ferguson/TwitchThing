@@ -17,7 +17,7 @@ export default function(combat, actor, subject, abilityInstance, actionDef = {})
   if(!ret.cancelled){
     const ccr = subject.totalStats.get('stunResist').value
     let addCcrStack = false
-    if(statusEffect.base?.stunned){
+    if(statusEffect.base?.stunned && actor !== subject){
       statusEffect.base.stunned.duration *= 1 - ccr
       addCcrStack = true
     }
