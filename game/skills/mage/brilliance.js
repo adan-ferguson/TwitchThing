@@ -3,9 +3,9 @@ export default function(level){
     effect: {
       transStats: [{
         from: 'combatXP',
-        to: 'magicPower'
+        to: 'magicPower',
+        ratio: 0.5 + level * 0.5
       }]
-    },
-    maxLevel: 1,
+    }
   }
 }

@@ -15,14 +15,17 @@ export default function(combat, actor, subject, abilityInstance, actionDef = {})
     ret = processAbilityEvents(combat, 'gainingDebuff', subject, abilityInstance, ret)
   }
   if(!ret.cancelled){
+    const ccr = subject.totalStats.get('stunResist').value
+    let addCcrStack = false
     if(statusEffect.base?.stunned){
-      statusEffect.base.stunned.duration *= 1 - subject.totalStats.get('stunResist').value
+      statusEffect.base.stunned.duration *= 1 - ccr
+      addCcrStack = true
     }
     gainStatusEffect(combat, subject, abilityInstance, statusEffect)
-    if(statusEffect.base?.stunned){
+    if(addCcrStack){
       gainStatusEffect(combat, subject, null, {
-        polarity: 'buff',
-        name: 'resistStun',
+        polarity: 'neutral',
+        name: 'CCR',
         stacking: 'stack',
         maxStacks: 5,
         stats: {

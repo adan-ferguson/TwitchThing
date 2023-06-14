@@ -7,7 +7,7 @@ import OrbsData from './orbsData.js'
 
 const XP_BASE = 6
 const XP_GROWTH = 12
-const XP_GROWTH_PCT = 0.22
+const XP_GROWTH_PCT = 0.23
 
 const HP_BASE = 30
 const HP_GROWTH = 5

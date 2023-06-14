@@ -16,14 +16,14 @@ export default function(){
               applyStatusEffect: {
                 targets: 'enemy',
                 statusEffect: {
+                  base: {
+                    slowed: {
+                      speed: -40
+                    }
+                  },
                   name: 'webbed',
-                  stacking: 'stack',
                   persisting: true,
-                  duration: 10000,
-                  polarity: 'debuff',
-                  stats: {
-                    speed: -35
-                  }
+                  duration: 10000
                 }
               }
             }]

@@ -18,12 +18,12 @@ export default function(level){
               applyStatusEffect: {
                 targets: 'target',
                 statusEffect: {
-                  stats: {
-                    speed
+                  base: {
+                    slowed: {
+                      speed
+                    }
                   },
-                  polarity: 'debuff',
-                  name: 'chilled',
-                  stacking: 'stack',
+                  name: 'chilled'
                 }
               }
             }

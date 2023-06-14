@@ -12,7 +12,7 @@ const DEFAULT_DEFINITION = {
 }
 
 export function makeStatObject(name){
-  const statDef = StatDefinitions[name].def
+  const statDef = StatDefinitions[name]?.def
   if(!statDef){
     throw 'Unknown stat name: ' + name
   }

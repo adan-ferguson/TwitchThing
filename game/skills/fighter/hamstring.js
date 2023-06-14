@@ -1,6 +1,6 @@
 export default function(level){
-  const physPower = 1.3 + level * 0.1
-  const speed = -30 - level * 10
+  const physPower = 1.2 + level * 0.2
+  const speed = -20 - level * 10
   return {
     effect: {
       abilities: [{
@@ -15,12 +15,12 @@ export default function(level){
               applyStatusEffect: {
                 targets: 'target',
                 statusEffect: {
-                  polarity: 'debuff',
+                  base: {
+                    slowed: {
+                      speed
+                    }
+                  },
                   name: 'hamstrung',
-                  stacking: 'stack',
-                  stats: {
-                    speed
-                  }
                 }
               }
             }

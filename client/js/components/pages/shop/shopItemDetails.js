@@ -8,7 +8,7 @@ const HTML = `
   <span class="shop-item-name"></span> <span class="displaynone shop-item-count"></span>
 </div>
 <div class="shop-item-description"></div>
-<input type="range" class="count-slider displaynone" value="1" min="1"/>
+<input type="range" class="count-slider displaynone" value="1" min="0"/>
 <button class="buy-button">
   <span>Buy</span>
   <span class="gold-value"></span>
@@ -81,6 +81,7 @@ export default class ShopItemDetails extends DIElement{
 
   _showSlider(){
     this.sliderEl.classList.remove('displaynone')
+    this.sliderEl.value = 0
     this.sliderEl.setAttribute('max', Math.floor(this._userGold / this._shopItemDef.price.gold))
     this.sliderEl.addEventListener('input', () => this._updateCount())
   }

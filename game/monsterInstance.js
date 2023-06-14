@@ -13,10 +13,10 @@ const ADJUSTED_DIFFICULTY_PER_FLOOR_PER_ZONE = 0.2
 const STAT_GROWTH_PCT = 0.12
 
 const HP_BASE = 12
-const HP_GROWTH = 8
+const HP_GROWTH = 7.2
 
 const POWER_BASE = 5
-const POWER_GROWTH = 1
+const POWER_GROWTH = 0.9
 
 const XP_BASE = 2
 const XP_GROWTH = 1

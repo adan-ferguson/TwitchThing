@@ -11,9 +11,9 @@ export function foundStairs(dungeonRun){
     return false
   }
 
-  if(floor === 1 && room === 4){
+  if(floor === 1){
     // Tutorial purposes
-    return true
+    return room >= 4
   }
 
   const size = floorSize(floor)

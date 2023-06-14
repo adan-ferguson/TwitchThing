@@ -17,9 +17,9 @@ const DEFS = {
       description: `Gain ${describeStat('magicPower')} equal to your ${describeStat('combatXP')}`
     }
   },
-  resistStun: () => {
+  CCR: () => {
     return {
-      description: 'Repeated stuns have reduced duration.'
+      description: 'Repeated stuns have diminishing returns.'
     }
   }
 }

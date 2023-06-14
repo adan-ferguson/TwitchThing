@@ -124,7 +124,7 @@ export const statDefinitionsInfo = {
   },
   stunResist: {
     text: 'Stun Resist',
-    description: 'Reduces effectiveness of repeated stuns.'
+    description: 'Reduces duration of repeated stuns'
   }
 }
 

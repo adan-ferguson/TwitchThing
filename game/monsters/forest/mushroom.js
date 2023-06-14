@@ -30,9 +30,7 @@ const burningSpores = statusEffect({
 
 const slowingSpores = statusEffect({
   name: 'slowingSpores',
-  stats: {
-    speed: -25
-  }
+  base: { slowed: { speed: -25 } }
 })
 
 const shrinkingSpores = statusEffect({
@@ -44,7 +42,7 @@ const shrinkingSpores = statusEffect({
 })
 
 const sleepSpores = statusEffect({
-  base: { stunned: { duration: 5000 } },
+  base: { asleep: { duration: 5000 } },
   name: 'sleepingSpores',
 })
 
