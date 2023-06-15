@@ -1,6 +1,6 @@
 import { magicAttackItem } from '../../commonTemplates/magicAttackItem.js'
 import { counterspellAbility } from '../../commonTemplates/counterspellAbility.js'
-import flutteringMonsterItem, { flutteringAbility } from '../../commonTemplates/flutteringMonsterItem.js'
+import { flutteringAbility } from '../../commonTemplates/flutteringMonsterItem.js'
 
 const hex = function(def){
   return {
@@ -39,8 +39,8 @@ const turtle = hex({
 const cat = hex({
   name: 'Hex: Cat',
   stats: {
-    physPower: '-25%',
-    magicPower: '-25%',
+    physPower: '-50%',
+    magicPower: '-50%',
     speed: 50
   }
 })
@@ -48,8 +48,8 @@ const cat = hex({
 const crow = hex({
   name: 'Hex: Crow',
   stats: {
-    physPower: '-25%',
-    magicPower: '-25%',
+    physPower: '-50%',
+    magicPower: '-50%',
     speed: 50
   },
   abilities: [flutteringAbility()]
@@ -64,7 +64,7 @@ const dragon = hex({
   },
   abilities: [{
     trigger: 'instant',
-    cooldown: 10000,
+    initialCooldown: 10000,
     actions: [{
       attack: {
         scaling: {
@@ -85,35 +85,37 @@ const options = [
   { weight: 0.5, value: dragon },
 ]
 
-export default {
-  baseStats: {
-    hpMax: '-30%',
-    speed: -20,
-    magicPower: '+20%',
-    magicDef: '+50%'
-  },
-  items: [
-    magicAttackItem(),
-    {
-      name: 'Counterspell',
-      effect: {
-        abilities: [counterspellAbility(15000)]
-      }
+export default function(){
+  return {
+    baseStats: {
+      hpMax: '-30%',
+      speed: -20,
+      magicPower: '+40%',
+      magicDef: '+50%'
     },
-    {
-      name: 'Hex',
-      effect: {
-        abilities: [{
-          trigger: 'active',
-          initialCooldown: 6000,
-          uses: 1,
-          actions: [{
-            random: {
-              options
-            }
+    items: [
+      magicAttackItem(),
+      {
+        name: 'Counterspell',
+        effect: {
+          abilities: [counterspellAbility(15000)]
+        }
+      },
+      {
+        name: 'Hex',
+        effect: {
+          abilities: [{
+            trigger: 'active',
+            initialCooldown: 6000,
+            uses: 1,
+            actions: [{
+              random: {
+                options
+              }
+            }]
           }]
-        }]
+        }
       }
-    }
-  ]
+    ]
+  }
 }
