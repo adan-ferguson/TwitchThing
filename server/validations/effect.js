@@ -9,11 +9,12 @@ import PhantomEffectInstance from '../../game/baseEffects/phantomEffectInstance.
 import { TAGS_LIST_SCHEMA } from './tagNames.js'
 import { ABILITY_CONDITIONS_SCHEMA, FIGHTER_INSTANCE_CONDITIONS_SCHEMA } from './conditions.js'
 import { POLARITY_SCHEMA } from './polarity.js'
+import { TRIGGER_NAME_SCHEMA } from './triggers.js'
 
 
 const SCALED_NUMBER_SCHEMA = Joi.object({
   hpMax: Joi.number(),
-  hpMissingPct: Joi.number(),
+  hpMissing: Joi.number(),
   hp: Joi.number(),
   magicPower: Joi.number(),
   physPower: Joi.number(),
@@ -29,23 +30,6 @@ const SCALED_NUMBER_SCHEMA = Joi.object({
 const OPTIONAL_SCALED_NUMBER_SCHEMA = Joi.alternatives().try(
   Joi.object({ scaledNumber: SCALED_NUMBER_SCHEMA }),
   Joi.number()
-)
-
-export const TRIGGER_NAME_SCHEMA = Joi.string().valid(
-  'startOfCombat',
-  'active',
-  'attack',
-  'attacked',
-  'attackHit',
-  'enemyUseAbility',
-  'gainingDebuff',
-  'gainedHealth',
-  'hitByAttack',
-  'instant',
-  'rest',
-  'takeTurn',
-  'targeted',
-  'useAbility',
 )
 
 const TARGETS_SCHEMA = Joi.string().valid('self', 'enemy', 'target', 'source', 'all')
@@ -96,6 +80,13 @@ const as = Joi.object({
     trigger: TRIGGER_NAME_SCHEMA,
     modification: Joi.object({
       cooldownRemaining: Joi.number().integer()
+    }).required()
+  }),
+  modifyEffect: Joi.object({
+    targets: TARGETS_SCHEMA,
+    name: Joi.string(),
+    modification: Joi.object({
+      addStacks: Joi.number().integer()
     }).required()
   }),
   balancedSmite: Joi.object({

@@ -3,7 +3,6 @@ export default function(level){
   return {
     effect: {
       abilities: [{
-        tags: ['spell'],
         trigger: 'active',
         cooldown: 6000 + level * 2000,
         actions: [{

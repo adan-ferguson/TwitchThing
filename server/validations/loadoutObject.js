@@ -1,8 +1,9 @@
-import { SUBJECT_KEYS, SUBJECT_KEYS_SCHEMA } from './subjectKeys.js'
-import { EFFECT_SCHEMA, TRIGGER_NAME_SCHEMA } from './effect.js'
+import { SUBJECT_KEYS_SCHEMA } from './subjectKeys.js'
+import { EFFECT_SCHEMA } from './effect.js'
 import Joi from 'joi'
 import { TAG_NAME_SCHEMA } from './tagNames.js'
 import { STATS_NAME_SCHEMA } from './stats.js'
+import { TRIGGER_NAME_SCHEMA } from './triggers.js'
 
 const ORB_MODIFIER_SCHEMA = Joi.object({
   all: Joi.number().integer(),

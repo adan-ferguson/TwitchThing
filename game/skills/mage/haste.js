@@ -6,7 +6,6 @@ export default function(level){
     effect: {
       abilities: [{
         trigger: 'active',
-        tags: ['spell'],
         cooldown,
         actions: [{
           applyStatusEffect: {

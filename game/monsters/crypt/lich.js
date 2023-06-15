@@ -1,4 +1,5 @@
 import { barrierAction } from '../../commonTemplates/barrierAction.js'
+import { magicAttackItem } from '../../commonTemplates/magicAttackItem.js'
 
 export default function(){
   return {
@@ -7,22 +8,14 @@ export default function(){
       physPower: '-50%',
       magicPower: '+80%',
       hpMax: '-40%',
-      speed: -60
+      speed: -40
     },
     items: [
-      {
-        name: 'Magic Attack',
-        effect: {
-          mods: [{
-            magicAttack: true
-          }]
-        }
-      },
+      magicAttackItem(),
       {
         name: 'EVIL Barrier',
         effect: {
           abilities: [{
-            tags: ['spell'],
             trigger: 'active',
             cooldown: 12000,
             actions: [barrierAction({
@@ -35,7 +28,6 @@ export default function(){
         name: 'Death Kill Beam',
         effect: {
           abilities: [{
-            tags: ['spell'],
             trigger: 'active',
             initialCooldown: 20000,
             actions: [{

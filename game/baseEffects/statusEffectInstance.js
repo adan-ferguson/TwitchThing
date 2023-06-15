@@ -144,8 +144,11 @@ export default class StatusEffectInstance extends EffectInstance{
     return this
   }
 
-  addStack(){
-    this._state.stacks = Math.min(this.maxStacks ?? Number.POSITIVE_INFINITY, this.stacks + 1)
+  addStack(count = 1){
+    if(count < 1){
+      return this
+    }
+    this._state.stacks = Math.min(this.maxStacks ?? Number.POSITIVE_INFINITY, this.stacks + count)
     this.refresh()
     this.invalidate()
     return this

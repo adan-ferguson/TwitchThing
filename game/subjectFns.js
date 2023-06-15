@@ -5,6 +5,9 @@ export function subjectKeyMatchesEffectInstances(sourceEffectInstance, subjectEf
   if(subjectKey === 'all'){
     return true
   }
+  if(subjectKey === 'self'){
+    return sourceEffectInstance.uniqueID === subjectEffectInstance.uniqueID
+  }
   if(!sourceEffectInstance || !subjectEffectInstance){
     return subjectKey === 'basicAttack'
   }

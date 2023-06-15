@@ -2,6 +2,7 @@ import Joi from 'joi'
 import { SUBJECT_KEYS_SCHEMA } from './subjectKeys.js'
 import { TAG_NAME_SCHEMA } from './tagNames.js'
 import { DAMAGE_TYPE_SCHEMA } from './damage.js'
+import { TRIGGER_NAME_SCHEMA } from './triggers.js'
 
 export const FIGHTER_INSTANCE_CONDITIONS_SCHEMA = Joi.object({
   hpPctBelow: Joi.number(),   // Is our hpPct below this number?
@@ -16,7 +17,8 @@ export const FIGHTER_INSTANCE_CONDITIONS_SCHEMA = Joi.object({
 export const ABILITY_CONDITIONS_SCHEMA = Joi.object({
   source: Joi.object({
     subjectKey: SUBJECT_KEYS_SCHEMA,
-    hasTag: TAG_NAME_SCHEMA
+    hasTag: TAG_NAME_SCHEMA,
+    trigger: TRIGGER_NAME_SCHEMA
   }),
   data: Joi.object({
     damageType: DAMAGE_TYPE_SCHEMA,

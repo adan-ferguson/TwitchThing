@@ -131,6 +131,10 @@ export default class Forge extends DIElement{
       rightCol.classList.remove('max-level')
       this.querySelector('.item-after').setItem(new AdventurerItem(upgradedItemDef))
       components.map(component => {
+        if(adventurerItem.isBasic && this.workshopInventoryEl.selectedAdventurer){
+          console.log('mm')
+          component.count--
+        }
         componentsEl.append(new ComponentRow().setData(component, this._inventory))
       })
     }

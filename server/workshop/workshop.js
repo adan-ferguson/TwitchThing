@@ -74,14 +74,14 @@ export async function upgradeAdventurerItem(userDoc, slotIndex, adventurerID){
   if(!itemDef){
     throw 'Could not find item.'
   }
-  const upgradedItemDef = await upgradeItem(userDoc, itemDef)
+  const upgradedItemDef = await upgradeItem(userDoc, itemDef, true)
   advDoc.loadout.items[slotIndex] = upgradedItemDef
   await Adventurers.save(advDoc)
   await Users.saveAndEmit(userDoc)
   return upgradedItemDef
 }
 
-async function upgradeItem(userDoc, itemDef){
+async function upgradeItem(userDoc, itemDef, countSelf = false){
   const aii = new AdventurerItem(itemDef)
   const upgradeInfo = aii.upgradeInfo()
 
@@ -93,7 +93,7 @@ async function upgradeItem(userDoc, itemDef){
     if(component.type === 'scrap'){
       spendScrap(userDoc, component.count)
     }else if(component.type === 'item'){
-      spendInventoryBasics(userDoc, component.baseItemId, component.count)
+      spendInventoryBasics(userDoc, component.baseItemId, component.count - (aii.isBasic && countSelf ? 1 : 0))
     }
   })
 

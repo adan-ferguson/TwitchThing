@@ -1,3 +1,5 @@
+import { biteMonsterItem } from '../../commonTemplates/biteMonsterItem.js'
+
 export default function(){
   return {
     baseStats: {
@@ -25,23 +27,7 @@ export default function(){
           }]
         }
       },
-      {
-        name: 'Bite',
-        effect: {
-          abilities: [{
-            trigger: 'active',
-            initialCooldown: 11000,
-            actions: [{
-              attack: {
-                scaling: {
-                  physPower: 1.4
-                },
-                lifesteal: 0.5
-              }
-            }]
-          }]
-        }
-      }
+      biteMonsterItem(11000, 1.4)
     ]
   }
 }

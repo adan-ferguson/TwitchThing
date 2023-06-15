@@ -182,5 +182,10 @@ const DEFS = {
       description: 'You can\'t gain debuffs',
       grammatic: ''
     }
+  },
+  constricted: () => {
+    return {
+      description: '?'
+    }
   }
 }

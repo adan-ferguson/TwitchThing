@@ -57,6 +57,9 @@ function conditionsMatch(triggerHandler, conditions, sourceAbility, subjectAbili
   if(conditions.source?.hasTag && !sourceAbility.tags.includes(conditions.source.hasTag)){
     return false
   }
+  if(conditions.source?.trigger && sourceAbility.trigger !== conditions.source.trigger){
+    return false
+  }
   if(conditions.data){
     for(let key in conditions.data){
       if(conditions.data[key] !== data[key]){

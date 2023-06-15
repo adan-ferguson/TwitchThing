@@ -15,7 +15,6 @@ export default function(){
             initialCooldown: 11000,
             abilityId: 'bearForm',
             uses: 1,
-            tags: ['spell'],
             actions: [{
               applyStatusEffect: {
                 targets: 'self',
@@ -41,7 +40,6 @@ export default function(){
           abilities: [{
             trigger: 'active',
             initialCooldown: 5000,
-            tags: ['spell'],
             actions: [{
               gainHealth: {
                 scaling: {

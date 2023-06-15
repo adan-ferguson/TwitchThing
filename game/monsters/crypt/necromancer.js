@@ -13,7 +13,6 @@ export default function(){
         name: 'Summon Skeleton Archer',
         effect: {
           abilities: [{
-            tags: ['spell'],
             trigger: 'active',
             cooldown: 6000,
             abilityId: 'summonSkeleton',
@@ -46,7 +45,6 @@ export default function(){
         name: 'Bone Shield',
         effect: {
           abilities: [{
-            tags: ['spell'],
             trigger: 'active',
             cooldown: 6000,
             actions: [barrierAction({

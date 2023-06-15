@@ -6,7 +6,6 @@ export default function(level){
   return {
     effect: {
       abilities: [{
-        tags: ['spell'],
         trigger: 'active',
         cooldown,
         actions: [barrierAction({

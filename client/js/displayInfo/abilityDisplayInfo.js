@@ -91,7 +91,12 @@ const DEFS = {
   },
   zombieDisease: ability => {
     return {
-      description: `After landing an attack, ${toPct(ability.conditions.random)}% chance to infect with a disease, lowering ${physPowerIcon()} and max ${healthIcon()}.`
+      description: `Attacks have ${toPct(ability.conditions.random)}% chance to infect with a disease.`
+    }
+  },
+  waspSting: ability => {
+    return {
+      description: `Attacks have ${toPct(ability.vars.chance)} chance to poison.`
     }
   },
   explode: ability => {
@@ -133,6 +138,21 @@ const DEFS = {
       description: 'As long as your <b>Block</b> barrier is up, you can\'t be debuffed.'
     }
   },
+  constrict: ability  => {
+    return {
+      description: `Wrap the enemy up, giving them ${wrapStat('speed', ability.vars.speed)} each second.`
+    }
+  },
+  constrictAddStack: ability => {
+    return {
+      hide: true
+    }
+  },
+  deadlyGaze: ability => {
+    return {
+      description:`${toPct(ability.vars.chance)} chance to deal 100% of the target's max health as magic damage.`
+    }
+  }
 }
 
 const ACTION_DEFS = {
@@ -156,7 +176,7 @@ const ACTION_DEFS = {
     return {
       description: `Whenever you heal, deal damage equal to <b>${toPct(actionDef.pct)}</b> of the amount healed.`
     }
-  }
+  },
 }
 
 const phantomEffectDefinitions = {

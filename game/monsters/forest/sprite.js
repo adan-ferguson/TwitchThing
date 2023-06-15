@@ -6,7 +6,6 @@ export default function(){
     trigger: 'active',
     initialCooldown: 4000,
     cooldown: 8000,
-    tags: ['spell'],
     actions: [{
       attack: {
         scaling: {
