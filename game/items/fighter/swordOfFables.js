@@ -15,7 +15,9 @@ export default function(level){
       },
       metaEffects: [{
         metaEffectId: 'swordOfFablesMultiplier',
-        subjectKey: 'self',
+        subject: {
+          key: 'self'
+        },
         conditions: {
           owner: {
             bossFight: true

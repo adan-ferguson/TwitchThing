@@ -4,7 +4,7 @@ export default function(level){
   return {
     effect: {
       metaEffects: [{
-        subjectKey: 'self',
+        subject: { key: 'self' },
         conditions: {
           owner: {
             overtime: true

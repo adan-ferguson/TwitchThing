@@ -13,9 +13,8 @@ const DEFS = {
   swordOfFablesMultiplier: (metaEffect, obj) => {
     return `${metaEffect.effectModification.statMultiplier}x the above stats during boss fights.`
   },
-  disabled: metaEffect => {
-    const type = metaEffect.subjectKey.col === 1 ? 'Skill' : 'Item'
-    return `${type} ${metaEffect.subjectKey.row + 1} is disabled.`
+  disabled: () => {
+    return null
   }
 }
 
@@ -36,7 +35,11 @@ const ABILITY_MODIFICATION_DEFS = {
 
 export function metaEffectDisplayInfo(metaEffect, obj){
   if(DEFS[metaEffect.metaEffectId]){
-    return wrapContent(DEFS[metaEffect.metaEffectId](metaEffect, obj))
+    const def = DEFS[metaEffect.metaEffectId](metaEffect, obj)
+    if(!def){
+      return null
+    }
+    return wrapContent(def)
   }
   return derived(metaEffect, obj)
 }
@@ -54,7 +57,10 @@ function derived(metaEffect, obj){
     headerContent = subjectDescription(metaEffect.subjectKey, isItem)
   }
 
-  nodes.push(wrapContent(headerContent, { class: 'meta-effect-header' }))
+  if(headerContent){
+    nodes.push(wrapContent(headerContent, { class: 'meta-effect-header' }))
+  }
+
   nodes.push(new EffectDetails().setObject(metaEffect.effectModification, true))
 
   if(metaEffect.effectModification.abilityModification){

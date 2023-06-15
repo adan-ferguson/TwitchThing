@@ -102,6 +102,12 @@ const as = Joi.object({
   penance: Joi.object({
     targets: Joi.string().valid('enemy').required(),
     pct: Joi.number().required()
+  }),
+  breakItem: Joi.object({
+    statusEffect: Joi.custom(val => {
+      return Joi.attempt(val, STATUS_EFFECT_SCHEMA)
+    }),
+    count: Joi.number().integer().min(1)
   })
 })
 
@@ -164,7 +170,10 @@ export const META_EFFECT_SCHEMA = Joi.object({
   conditions: Joi.object({
     owner: FIGHTER_INSTANCE_CONDITIONS_SCHEMA
   }),
-  subjectKey: SUBJECT_KEYS_SCHEMA.required(),
+  subject: Joi.object({
+    key: SUBJECT_KEYS_SCHEMA,
+    id: Joi.string()
+  }).required(),
   effectModification: {
     stats: STATS_SCHEMA,
     mods: MODS_SCHEMA,

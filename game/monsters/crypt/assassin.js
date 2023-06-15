@@ -21,16 +21,10 @@ export default function(){
             trigger: 'active',
             cooldown: 15000,
             actions: [{
-              applyStatusEffect: {
-                targets: 'enemy',
+              breakItem: {
                 statusEffect: {
-                  base: {
-                    disarmed: {
-                      replaceMe: 'randomItemSlotInfo'
-                    }
-                  },
                   duration: 15000,
-                  persisting: true
+                  persisting: false
                 }
               }
             }]

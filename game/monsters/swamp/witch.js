@@ -105,6 +105,7 @@ export default function(){
         name: 'Hex',
         effect: {
           abilities: [{
+            abilityId: 'hex',
             trigger: 'active',
             initialCooldown: 6000,
             uses: 1,

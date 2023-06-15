@@ -6,7 +6,7 @@ export default function(level){
   return {
     effect: {
       metaEffects: [{
-        subjectKey: 'attached',
+        subject: { key: 'attached' },
         effectModification: {
           abilityModification: {
             trigger: 'active',

@@ -18,7 +18,7 @@ export default function(level){
         }]
       }],
       metaEffects: [{
-        subjectKey: 'neighbouring',
+        subject: { key: 'neighbouring' },
         effectModification: {
           exclusiveStats: {
             cooldownMultiplier

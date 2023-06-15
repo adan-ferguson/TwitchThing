@@ -20,14 +20,20 @@ export default class MetaEffectCollection{
           ...metaEffect,
           source: ei.uniqueID
         }
-        if(meDef.subjectKey === 'attached' && ei.slotInfo){
-          add(this.categories.slots, ei.slotInfo.col + 1 % 2, ei.slotInfo.row, meDef)
-        }else if(meDef.subjectKey === 'self'){
-          pushOrCreate(this.categories.ids, ei.uniqueID, meDef)
-        }else if(meDef.subjectKey === 'all'){
-          this.categories.all.push(meDef)
-        }else if(meDef.subjectKey.row){
-          add(this.categories.slots, meDef.subjectKey.col ?? 0, meDef.subjectKey.row, meDef)
+        const key = meDef.subject.key
+        if(key){
+          if(key === 'attached' && ei.slotInfo){
+            add(this.categories.slots, ei.slotInfo.col + 1 % 2, ei.slotInfo.row, meDef)
+          }else if(key === 'self'){
+            pushOrCreate(this.categories.ids, ei.uniqueID, meDef)
+          }else if(key === 'all'){
+            this.categories.all.push(meDef)
+          }else if(key.row){
+            add(this.categories.slots, key.col ?? 0, key.row, meDef)
+          }
+        }
+        if(meDef.subject.id){
+          pushOrCreate(this.categories.ids, meDef.subject.id, meDef)
         }
       }
     })

@@ -12,7 +12,7 @@ export default function(){
         name: 'Enrage',
         effect: {
           metaEffects: [{
-            subjectKey: 'self',
+            subject: { key: 'self' },
             conditions: {
               owner: {
                 hpPctBelow: 0.5

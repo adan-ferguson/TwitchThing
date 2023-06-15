@@ -1,4 +1,4 @@
-import { describeStat } from '../components/common.js'
+import { describeStat, pluralize } from '../components/common.js'
 
 export function effectDisplayInfo(effectObj){
   const id = effectObj.effectId ?? effectObj.name
@@ -20,6 +20,11 @@ const DEFS = {
   CCR: () => {
     return {
       description: 'Repeated stuns have diminishing returns.'
+    }
+  },
+  disarmed: effectObj => {
+    return {
+      description: 'Item(s) disabled'
     }
   }
 }

@@ -3,7 +3,7 @@ export default function(level){
     displayName: 'Duplication Scroll',
     effect: {
       metaEffects: [{
-        subjectKey: 'attached',
+        subject: { key: 'attached' },
         effectModification: {
           abilityModification: {
             trigger: 'active',

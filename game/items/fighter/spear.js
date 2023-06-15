@@ -4,7 +4,7 @@ export default function(level){
     effect: {
       metaEffects: [{
         metaEffectId: 'spear',
-        subjectKey: 'attached',
+        subject: { key: 'attached' },
         effectModification: {
           exclusiveStats: {
             physPower

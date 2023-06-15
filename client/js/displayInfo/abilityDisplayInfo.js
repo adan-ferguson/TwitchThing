@@ -1,7 +1,7 @@
 import { expandActionDef } from '../../../game/actionDefs/expandActionDef.js'
 import AbilityInstance from '../../../game/abilityInstance.js'
 import { derivedAttackDescription } from './derived/actions/attack.js'
-import { statusEffectApplicationDescription } from './statusEffectDisplayInfo.js'
+import { statusEffectApplicationDescription, statusEffectDuration } from './statusEffectDisplayInfo.js'
 import {
   aboveIcon, attachedItem,
   attachedSkill,
@@ -152,6 +152,11 @@ const DEFS = {
     return {
       description:`${toPct(ability.vars.chance)} chance to deal 100% of the target's max health as magic damage.`
     }
+  },
+  hex: ability => {
+    return {
+      description: 'Turn the enemy into a random critter.'
+    }
   }
 }
 
@@ -177,6 +182,12 @@ const ACTION_DEFS = {
       description: `Whenever you heal, deal damage equal to <b>${toPct(actionDef.pct)}</b> of the amount healed.`
     }
   },
+  breakItem: (actionDef, ability) => {
+    const duration = statusEffectDuration(actionDef.statusEffect ?? {}, ability)
+    return {
+      description: `Break ${actionDef.count ?? 1} of the target's items${duration ? ' ' + duration : ''}.`
+    }
+  }
 }
 
 const phantomEffectDefinitions = {

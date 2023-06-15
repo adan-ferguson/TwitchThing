@@ -95,21 +95,24 @@ export function statusEffectDescription(statusEffectDef, abilityInstance){
     chunks.push(wrapStats(statusEffectDef.stats))
   }
 
-  if(statusEffectDef.duration){
-    chunks.push(`for ${toSeconds(optionalScaledNumber(statusEffectDef.duration, abilityInstance))}.`)
-  }else if(statusEffectDef.turns){
-    chunks.push(`for ${statusEffectDef.turns} turn${statusEffectDef.turns === 1 ? '' : 's'}.`)
-  }else if(!statusEffectDef.persisting){
-    chunks.push('until end of combat.')
-  }else if(chunks.length){
-    chunks[chunks.length - 1] += '.'
-  }
+  chunks.push(statusEffectDuration(statusEffectDef, abilityInstance))
+  chunks[chunks.length - 1] += '.'
 
   if(statusEffectDef.maxStacks){
     chunks.push(`Stacks up to ${statusEffectDef.maxStacks} times.`)
   }
 
   return chunks
+}
+
+export function statusEffectDuration(statusEffectDef, abilityInstance){
+  if(statusEffectDef.duration){
+    return `for ${toSeconds(optionalScaledNumber(statusEffectDef.duration, abilityInstance))}.`
+  }else if(statusEffectDef.turns){
+    return `for ${statusEffectDef.turns} turn${statusEffectDef.turns === 1 ? '' : 's'}.`
+  }else if(!statusEffectDef.persisting){
+    return 'until end of combat.'
+  }
 }
 
 function getColors(effectInstance){
@@ -181,11 +184,6 @@ const DEFS = {
     return {
       description: 'You can\'t gain debuffs',
       grammatic: ''
-    }
-  },
-  constricted: () => {
-    return {
-      description: '?'
     }
   }
 }
