@@ -51,7 +51,7 @@ const monstersByFloor = [
   Monsters.troll,
   Monsters.witch,
   Monsters.wyvern,
-  // Monsters.hydra,
+  Monsters.hydra,
   // // Water World
   // Monsters.legallyDistinctMurloc,
   // Monsters.crab,

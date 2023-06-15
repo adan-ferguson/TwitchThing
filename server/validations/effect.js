@@ -225,7 +225,7 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
   statusEffectId: Joi.string(),
   turns: Joi.number().integer(),
   duration: Joi.number().integer(),
-  stacking: Joi.string().valid('stack', 'replace', 'extend'),
+  stacking: Joi.string().valid('stack', 'replace', 'extend', null),
   stackingId: Joi.string(),
   maxStacks: Joi.number().integer(),
   polarity: POLARITY_SCHEMA,

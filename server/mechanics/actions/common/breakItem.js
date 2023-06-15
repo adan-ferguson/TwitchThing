@@ -22,7 +22,8 @@ export default function(combat, actor, subject, abilityInstance = null, actionDe
           }]
         }
       }
-    })
+    }),
+    ...actionDef.statusEffect
   }
   gainStatusEffect(combat, actor, subject, abilityInstance, statusEffectData)
 }

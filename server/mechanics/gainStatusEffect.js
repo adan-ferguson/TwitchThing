@@ -55,24 +55,28 @@ function applyStatusEffect(subject, statusEffectData, abilityInstance){
   const state = {
     sourceEffectId: abilityInstance?.parentEffect.uniqueID ?? null
   }
-  const existing = subject.statusEffectInstances.find(sei => {
-    if(statusEffectData.stackingId){
-      return statusEffectData.stackingId === sei.stackingId
+
+  if(statusEffectData.stacking){
+    const existing = subject.statusEffectInstances.find(sei => {
+      if(statusEffectData.stackingId){
+        return statusEffectData.stackingId === sei.stackingId
+      }
+      return state.sourceEffectId === sei.sourceEffectId
+    })
+    if(existing){
+      const durationRemainingBefore = existing.durationRemaining
+      existing.replaceData(statusEffectData)
+      if(existing.stacking === 'replace'){
+        existing.refresh()
+      }else if(existing.stacking === 'extend'){
+        existing.extend(durationRemainingBefore)
+      }else if(existing.stacking === 'stack'){
+        existing.addStack()
+      }
+      return
     }
-    return state.sourceEffectId === sei.sourceEffectId
-  })
-  if(existing){
-    const durationRemainingBefore = existing.durationRemaining
-    existing.replaceData(statusEffectData)
-    if(existing.stacking === 'replace'){
-      existing.refresh()
-    }else if(existing.stacking === 'extend'){
-      existing.extend(durationRemainingBefore)
-    }else if(existing.stacking === 'stack'){
-      existing.addStack()
-    }
-    return
   }
+
   subject.addStatusEffect(statusEffectData, state)
 }
 
