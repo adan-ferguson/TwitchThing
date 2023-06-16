@@ -115,6 +115,7 @@ export default class LoadoutTab extends DIElement{
             return
           }
           this.inventoryEl.removeItem(item)
+          this.inventoryEl.addItem(loadout.items[slot])
           loadout.setSlot(0,  slot, item)
         }else if(change.type === 'remove'){
           this.inventoryEl.addItem(change.row.item)
@@ -129,12 +130,18 @@ export default class LoadoutTab extends DIElement{
     })
 
     function getNextSlotIndex(loadout, item){
+      let lastValid
       for(let i = 0; i < 8; i++){
-        if(!loadout.items[i] && loadout.canFillSlot(0, i, item)){
+        const empty = !loadout.items[i]
+        const valid = loadout.canFillSlot(0, i, item)
+        if(empty && valid){
           return i
         }
+        if(valid){
+          lastValid = i
+        }
       }
-      return -1
+      return lastValid ?? -1
     }
 
     function slotIndex(row){
@@ -170,22 +177,18 @@ export default class LoadoutTab extends DIElement{
     })
 
     function getNextSlotIndex(loadout, skill){
-      let firstEmpty
-      let firstValid
+      let lastValid
       for(let i = 0; i < 8; i++){
         const empty = !loadout.skills[i]
         const valid = loadout.canFillSlot(1, i, skill)
         if(empty && valid){
           return i
         }
-        if(empty){
-          firstEmpty = firstEmpty ?? i
-        }
         if(valid){
-          firstValid = firstValid ?? i
+          lastValid = i
         }
       }
-      return firstValid ?? -1 // firstEmpty maybe?
+      return lastValid ?? -1
     }
 
     function slotIndex(row){

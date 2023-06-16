@@ -70,7 +70,7 @@ export default class AdventurerLoadout{
 
     const loadoutItem = this._objs[col][slot]
     const levelAdjust = this.modifiers
-      .get(col, slot, 'levelUp')
+      .get(col, slot, 'levelUp', loadoutItem)
       .reduce((prev, mod) => prev + mod, 0)
     loadoutItem?.setLevelAdjust(levelAdjust)
 

@@ -68,7 +68,7 @@ export default class ShopItemDetails extends DIElement{
     if(userGold >= shopItemDef.price.gold){
       this.buyButtonEl.addEventListener('click', () => {
         this.buyButtonEl.setAttribute('disabled', 'disabled')
-        this.events.emit('purchased', this.sliderEl.value)
+        this.events.emit('purchased', parseInt(this.sliderEl.value))
       })
     }else{
       this.buyButtonEl.setAttribute('disabled', 'disabled')

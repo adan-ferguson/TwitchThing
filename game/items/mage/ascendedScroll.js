@@ -3,7 +3,7 @@ export default function(level){
     loadoutModifiers: [{
       loadoutModifierId: 'attachedActive',
       subjectKey: 'attached',
-      restrictions: {
+      conditions: {
         hasAbility: 'active'
       },
       levelUp: level + 1

@@ -24,7 +24,8 @@ const RESTRICTION_SCHEMA = {
 const LOADOUT_MODIFIERS = Joi.array().items(Joi.object({
   subjectKey: SUBJECT_KEYS_SCHEMA,
   conditions: Joi.object({
-    hasTag: TAG_NAME_SCHEMA
+    hasTag: TAG_NAME_SCHEMA,
+    hasAbility: TRIGGER_NAME_SCHEMA
   }),
   orbs: ORB_MODIFIER_SCHEMA,
   restrictions: RESTRICTION_SCHEMA,

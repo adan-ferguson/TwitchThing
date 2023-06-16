@@ -44,14 +44,13 @@ export default class Inventory extends DIElement{
   }
 
   setup(items, adventurer){
-    // if(this._beenSetup){
-    //   return this
-    // }
+    if(!this._beenSetup){
+      this.listEl.setRows(inventoryItemsToRows(items))
+    }
     this._beenSetup = true
     this.adventurer = adventurer
-    // this.querySelector('.inventory-options').classList.toggle('displaynone', adventurer ? false : true)
     this._updateSortAndFilter()
-    this.listEl.setRows(inventoryItemsToRows(items))
+    this.listEl.fullUpdate()
     return this
   }
 
@@ -129,7 +128,7 @@ export default class Inventory extends DIElement{
     this.listEl.setOptions({
       sortFn: standardItemSort,
       filterFn: this.filterFn,
-      showFiltered: true //!this._filterSortOptions.hideOther
+      showFiltered: true
     })
   }
 }

@@ -6,6 +6,7 @@ export function checkForRewards(userDoc){
   const popups = []
 
   if(shouldRewardZoneClear(0)){
+    userDoc.inventory.gold += 100
     userDoc.features.shop = 1
     popups.push(zoneCleared(0, {
       message: 'Shop unlocked, visit it from the main page, or from the gold counter in the header.',

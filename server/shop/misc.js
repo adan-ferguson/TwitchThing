@@ -27,7 +27,7 @@ export function xpShopItem(){
       gold: 100
     },
     data: {
-      stashedXp: 500
+      stashedXp: 250
     }
   }
 }

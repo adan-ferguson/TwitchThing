@@ -23,6 +23,7 @@ export function generateRandomChest(options = {}){
     noGold: false,
     classes: null,
     itemLimit: 1,
+    rarities: null,
     ...options
   }
 
@@ -51,7 +52,7 @@ export function generateRandomChest(options = {}){
   while(valueRemaining > 0){
     // tutorial chests drop more fighter items
     const chestClasses = chest.type === 'tutorial' && Math.random() > 0.75 ? ['fighter'] : chest.classes
-    const item = new AdventurerItem(chooseRandomBasicItem(valueRemaining, chestClasses).id)
+    const item = new AdventurerItem(chooseRandomBasicItem(valueRemaining, chestClasses, options.rarities).id)
     items.push(item)
     valueRemaining -= item.rarityInfo.value
   }

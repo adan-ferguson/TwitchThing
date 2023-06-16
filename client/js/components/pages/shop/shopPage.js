@@ -32,6 +32,10 @@ export default class ShopPage extends Page{
     const modal = new Modal()
     const details = new ShopItemDetails().setItem(shopItemDef, this.user.inventory.gold)
     details.events.on('purchased', count => {
+      if(!count){
+        modal.hide()
+        return
+      }
       modal.setOptions({
         closeOnUnderlayClick: false
       })

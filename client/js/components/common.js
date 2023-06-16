@@ -233,8 +233,12 @@ export function capitalizeFirstChunk(chunks){
     return chunks
   }
   chunks = deepClone(chunks)
-  chunks[0] = chunks[0].charAt(0).toUpperCase() + chunks[0].slice(1)
+  chunks[0] = capitalize(chunks[0])
   return chunks
+}
+
+export function capitalize(str){
+  return str.charAt(0).toUpperCase() + str.slice(1)
 }
 
 export function simpleTippy(el, content){

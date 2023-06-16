@@ -100,8 +100,10 @@ function conditionsMatch(conditions, loadoutObject){
   if(!conditions || !loadoutObject){
     return true
   }
-  debugger
   if(conditions.hasTag && !loadoutObject.tags[conditions.hasTag]){
+    return false
+  }
+  if(conditions.hasAbility && !loadoutObject.abilities.find(a => a.trigger === conditions.hasAbility)){
     return false
   }
   return true
