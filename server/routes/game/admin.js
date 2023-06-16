@@ -1,16 +1,12 @@
 import express from 'express'
 import Users from '../../collections/users.js'
 import Adventurers from '../../collections/adventurers.js'
-import DungeonRuns from '../../collections/dungeonRuns.js'
-import Combats from '../../collections/combats.js'
-import { cancelAllRuns, getActiveRunData } from '../../dungeons/dungeonRunner.js'
+import { getActiveRunData } from '../../dungeons/dungeonRunner.js'
 import { validateParam } from '../../validations.js'
 import { getErrorLogTail, getOutputLogTail } from '../../logging.js'
 import { generateSimulatedCombat, getCombatArgs } from '../../combat/fns.js'
 import { getAllMonsters } from '../../dungeons/monsters.js'
-import Purchases from '../../collections/purchases.js'
-import { purgeAllOldRuns } from '../../dungeons/results.js'
-import { getAllItemKeys } from '../../../game/adventurerClassInfo.js'
+import { runCommand } from '../../admin/runCommand.js'
 
 const router = express.Router()
 
@@ -45,40 +41,7 @@ router.post('/logs', async(req, res) => {
 
 router.post('/runcommand', async(req, res) => {
   const cmd = validateParam(req.body.command)
-  let result = 'Command not found'
-  if(cmd === 'reset all'){
-    cancelAllRuns()
-    await Promise.all([
-      Users.resetAll(),
-      Adventurers.removeAll(),
-      DungeonRuns.removeAll(),
-      Combats.removeAll(),
-      Purchases.removeAll()
-    ])
-    result = 'Everything has been successfully reset.'
-  }else if(cmd === 'purge'){
-    const removed = await purgeAllOldRuns()
-    result = `Old runs purged. ${removed} combats removed.`
-  }else if(cmd === 'give stuff'){
-    const users = await Users.find()
-    const newItems = {}
-    getAllItemKeys().forEach(key => {
-      newItems[key] = 10
-    })
-    users.forEach(userDoc => {
-      userDoc.inventory.items.basic = { ...newItems }
-      userDoc.inventory.stashedXp += 100000000
-      userDoc.inventory.gold += 100000000
-      userDoc.inventory.scrap += 100000000
-      userDoc.features.shop = 1
-      userDoc.features.workshop = 1
-      userDoc.features.skills = 1
-      userDoc.features.advClasses.rogue = 2
-      userDoc.features.advClasses.chimera = 2
-      Users.save(userDoc)
-    })
-    result = 'items given'
-  }
+  const result = await runCommand(cmd)
   res.status(200).send({ result })
 })
 

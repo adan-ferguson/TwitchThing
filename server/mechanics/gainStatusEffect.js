@@ -34,7 +34,7 @@ export function gainStatusEffect(combat, source, subject, abilityInstance, statu
   }
 
   const appliedStunResist = applyStunResist(source, subject, statusEffectData)
-  applyStatusEffect(subject, convertedStatusEffect, abilityInstance)
+  applyStatusEffect(subject, statusEffectInstance, abilityInstance)
 
   if(appliedStunResist){
     gainStatusEffect(combat, subject, subject, null, STUN_RESIST_STATUS_EFFECT)
@@ -50,22 +50,20 @@ function applyStunResist(source, subject, statusEffect){
   return false
 }
 
-function applyStatusEffect(subject, statusEffectData, abilityInstance){
+function applyStatusEffect(subject, sei, abilityInstance){
 
-  const state = {
-    sourceEffectId: abilityInstance?.parentEffect.uniqueID ?? null
-  }
+  const sourceEffectId = abilityInstance?.parentEffect.uniqueID ?? null
 
-  if(statusEffectData.stacking){
-    const existing = subject.statusEffectInstances.find(sei => {
-      if(statusEffectData.stackingId){
-        return statusEffectData.stackingId === sei.stackingId
+  if(sei.stacking){
+    const existing = subject.statusEffectInstances.find(sei2 => {
+      if(sei.stackingId){
+        return sei.stackingId === sei2.stackingId
       }
-      return state.sourceEffectId === sei.sourceEffectId
+      return sourceEffectId && sourceEffectId === sei2.sourceEffectId
     })
     if(existing){
       const durationRemainingBefore = existing.durationRemaining
-      existing.replaceData(statusEffectData)
+      existing.replaceData(sei.data)
       if(existing.stacking === 'replace'){
         existing.refresh()
       }else if(existing.stacking === 'extend'){
@@ -77,13 +75,15 @@ function applyStatusEffect(subject, statusEffectData, abilityInstance){
     }
   }
 
-  subject.addStatusEffect(statusEffectData, state)
+  subject.addStatusEffect(sei.data, {
+    sourceEffectId
+  })
 }
 
 export function gainBlockBarrier(combat, subject, multiplier = 1){
   const block = subject.stats.get('block').value
   if(block){
-    gainStatusEffect(combat, subject, null, {
+    gainStatusEffect(combat, subject, subject,null, {
       stackingId: 'block',
       polarity: 'buff',
       stacking: 'replace',

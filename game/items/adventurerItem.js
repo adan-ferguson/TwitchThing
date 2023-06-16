@@ -6,12 +6,12 @@ import { toDisplayName, uniqueID } from '../utilFunctions.js'
 export const ITEM_RARITIES = [
   {
     name: 'common',
-    weight: 90,
+    weight: 120,
     value: 3
   },
   {
     name: 'uncommon',
-    weight: 30,
+    weight: 35,
     value: 10
   },
   {
