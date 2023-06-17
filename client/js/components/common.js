@@ -213,8 +213,7 @@ export function pluralize(str, count){
 }
 
 export function addTooltipToSvg(svg, tooltip){
-  const el = wrapContent(svg)
-  el.querySelector('svg').setAttribute('tooltip', tooltip)
+  const el = wrapContent(svg, { tooltip })
   return el.innerHTML
 }
 

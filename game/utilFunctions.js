@@ -102,6 +102,7 @@ export function makeEl(options = {}){
     content: null,
     class: null,
     nodes: null,
+    tooltip: null,
     ...options
   }
 
@@ -121,6 +122,10 @@ export function makeEl(options = {}){
   if (options.class){
     const classArray = Array.isArray(options.class) ? options.class : options.class.split(' ')
     el.classList.add(...classArray)
+  }
+
+  if(options.tooltip){
+    el.setAttribute('tooltip', options.tooltip)
   }
 
   return el

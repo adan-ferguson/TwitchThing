@@ -17,6 +17,7 @@ import { derivedModifyAbilityDescription } from './derived/actions/modifyAbility
 import { derivedDealDamageDescription } from './derived/actions/dealDamage.js'
 import { derivedRemoveStatusEffectDescription } from './derived/actions/removeStatusEffect.js'
 import { scaledNumberFromInstance } from '../../../game/scaledNumber.js'
+import { keyword } from './keywordDisplayInfo.js'
 
 const DEFS = {
   flutteringDodge: () => {
@@ -297,6 +298,9 @@ function prefix(trigger, conditions){
   }
   if(trigger === 'takeTurn'){
     chunks.push('After your turn')
+  }
+  if(trigger === 'thwart'){
+    chunks.push(`After ${keyword('thwart', 'Thwarting')} an attack`)
   }
   return chunks
 }
