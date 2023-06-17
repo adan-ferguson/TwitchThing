@@ -23,7 +23,7 @@ router.post('/', async (req, res, next) => {
 
 router.post('/buy', async(req, res, next) => {
   const itemId = validateParam(req.body.id)
-  const count = Joi.attempt(req.body.count, Joi.number().integer().min(1).default(1))
+  const count = req.body.count
   const result = await buyShopItem(req.user, itemId, count)
   res.send({
     result,

@@ -28,7 +28,7 @@ export function shopItemDisplayInfo(shopItemDef){
   }else if(shopItemDef.type === 'stashedXp'){
     name = 'Stashed XP'
     imageHtml = xpIcon()
-    description = 'Buy XP to give to an adventurer. Use this if you want a new adventurer to breeze though the boring first floors, or give your highest leveled dude like an extra 5%, whatever.'
+    description = 'Buy XP to give to an adventurer. Price improves the more you buy, and it doesn\'t even have to be all at once! Wow!'
     color = 'green'
   }
 

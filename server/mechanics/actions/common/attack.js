@@ -16,20 +16,26 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
     actionDef = processAbilityEvents(combat, ['attack'], attacker, abilityInstance, actionDef)
     actionDef = processAbilityEvents(combat, ['attacked', actionDef.damageType + 'Attacked'], enemy, abilityInstance, actionDef)
 
-    if(!actionDef.undodgeable && (actionDef.forceDodge || dodgeAttack(enemy))){
+    if(actionDef.cancelled){
+      return {
+        cancelled: actionDef.cancelled
+      }
+    }
+
+    if(!actionDef.cantDodge && (actionDef.forceDodge || dodgeAttack(enemy))){
       return {
         cancelled: {
-          reason: 'dodged'
+          reason: 'dodge'
         }
       }
     }
 
-    if(missAttack(attacker)){
-      // processAbilityEvents('miss', attacker)
-      // return {
-      //   ...ret,
-      //   cancelled: 'miss'
-      // }
+    if(!actionDef.cantMiss && (actionDef.forceMiss || missAttack(enemy))){
+      return {
+        cancelled: {
+          reason: 'miss'
+        }
+      }
     }
 
     if (!abilityInstance){

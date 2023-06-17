@@ -11,7 +11,7 @@ export function flutteringAbility(){
     trigger: 'attacked',
     conditions: {
       data: {
-        undodgeable: false
+        cantDodge: false
       }
     },
     cooldown: 10000,

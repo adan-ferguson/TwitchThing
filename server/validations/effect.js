@@ -52,7 +52,8 @@ const as = Joi.object({
     lifesteal: Joi.number().positive(),
     range: Joi.array().length(2).items(Joi.number()),
     hits: Joi.number().integer(),
-    undodgeable: Joi.bool(),
+    cantDodge: Joi.bool(),
+    cantMiss: Joi.bool(),
     onHit: Joi.custom(val => {
       return Joi.attempt(val, ACTION_SCHEMA)
     })
@@ -86,7 +87,7 @@ const as = Joi.object({
     targets: TARGETS_SCHEMA,
     name: Joi.string(),
     modification: Joi.object({
-      addStacks: Joi.number().integer()
+      stacks: Joi.number().integer()
     }).required()
   }),
   balancedSmite: Joi.object({
@@ -202,6 +203,9 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
       damage: OPTIONAL_SCALED_NUMBER_SCHEMA,
       damageType: DAMAGE_TYPE_SCHEMA,
     }),
+    blinded: Joi.object({
+      duration: OPTIONAL_SCALED_NUMBER_SCHEMA
+    }),
     stunned: Joi.object({
       replaceMe: Joi.string().valid('shieldBashStun'),
       duration: OPTIONAL_SCALED_NUMBER_SCHEMA
@@ -231,6 +235,7 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
   polarity: POLARITY_SCHEMA,
   name: Joi.string(),
   persisting: Joi.boolean().truthy(),
+  diminishingReturns: Joi.boolean()
 })
 
 export const PHANTOM_EFFECT_SCHEMA = EFFECT_SCHEMA.append({

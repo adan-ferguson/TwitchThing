@@ -68,8 +68,8 @@ const monstersByFloor = [
 const BONUS_CHESTS_UNTIL = 12
 const BONUS_CHEST_CHANCE = 0.15
 
-const CHEST_DROP_CHANCE = 0.03
-const CHEST_DROP_CHANCE_HARD_ENEMY = 0.10 // It's an enemy of level >= adventurer's deepest floor
+const CHEST_DROP_CHANCE = 0.024
+const CHEST_DROP_CHANCE_HARD_ENEMY = 0.09 // It's an enemy of level >= adventurer's deepest floor
 
 const BOSS_XP_BONUS = 10
 
@@ -138,6 +138,10 @@ function generateRewards(dungeonRun, monsterDefinition){
       let type = monsterInstance.isBoss ? 'boss' :
         dungeonRun.user.deepestFloor < 11 ? 'tutorial' : // Have fighter-skewed chests until account beats zone 0
           'normal'
+
+      if(type === 'boss' && dungeonRun.adventurer.accomplishments.deepestFloor <= dungeonRun.floor){
+        type = 'newBoss'
+      }
 
       rewards.chests = generateRandomChest({
         level,

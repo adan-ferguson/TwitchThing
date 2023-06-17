@@ -25,6 +25,7 @@ export function performAction(triggerHandler, actor, ability, actionDef, trigger
       return performAction(triggerHandler, actor, ability, expandedActionDef.action, triggerData)
     }
   }
+
   return {
     actor: actor.uniqueID,
     effect: ability?.parentEffect.uniqueID,
@@ -39,6 +40,9 @@ export function performAction(triggerHandler, actor, ability, actionDef, trigger
     targets.forEach(target => {
       const results = arrayize(performIt(target))
       allResults.push(...arrayize(results).map(r => {
+        if(actor !== target && r.cancelled){
+          processAbilityEvents(triggerHandler, 'thwart', target)
+        }
         return {
           ...r,
           subject: target.uniqueID

@@ -2,13 +2,12 @@ import { exponentialPercentage } from '../../growthFunctions.js'
 
 export default function(level){
   return {
-    orbs: level * 2 + 1,
     effect: {
       stats: {
-        physDef: exponentialPercentage(0.07, level - 1, 0.30),
-        speed: -20
+        speed: 20 * level,
+        dodgeChance: exponentialPercentage(0.05, level - 1, 0.05)
       }
     },
-    displayName: 'Plate Mail'
+    orbs: level * 3 + 1
   }
 }

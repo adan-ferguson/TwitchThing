@@ -3,7 +3,6 @@ import Adventurers from '../collections/adventurers.js'
 import Users from '../collections/users.js'
 import DungeonRunInstance from './dungeonRunInstance.js'
 import { emit } from '../socketServer.js'
-import { cancelRun } from './results.js'
 import Adventurer from '../../game/adventurer.js'
 
 let lastAdvancement = new Date()
@@ -148,6 +147,22 @@ export function getActiveRun(id){
   return activeRuns[id]
 }
 
+export async function cancelRun(dungeonRunDoc, ex){
+  if(!activeRuns[dungeonRunDoc._id]){
+    return
+  }
+  delete activeRuns[dungeonRunDoc._id]
+  console.log('run cancelled', dungeonRunDoc._id)
+  emit(dungeonRunDoc._id, 'dungeon run update', {
+    id: dungeonRunDoc._id,
+    error: ex?.message ?? ex
+  })
+  const adventurerDoc = await Adventurers.findByID(dungeonRunDoc.adventurer._id)
+  adventurerDoc.dungeonRunID = null
+  await Adventurers.save(adventurerDoc)
+  await DungeonRuns.delete(dungeonRunDoc)
+}
+
 function validateNew(adventurerDoc, userDoc, { startingFloor }){
   if(!adventurerDoc){
     throw 'Adventurer not found'
@@ -170,13 +185,7 @@ async function advanceRuns(){
     try {
       await run.advance()
     }catch(ex){
-      console.log('run canceled', run.doc._id, ex)
-      emit(run.doc._id, 'dungeon run update', {
-        id: run.doc._id,
-        error: ex.message ?? ex
-      })
-      cancelRun(run.doc)
-      delete activeRuns[id]
+      cancelRun(run.doc, ex)
     }
   }
 }

@@ -4,6 +4,7 @@ export default function({ duration } = {}){
     stacking: 'extend',
     name: 'stunned',
     duration,
+    diminishingReturns: true,
     mods: [{
       freezeActionBar: true
     }]

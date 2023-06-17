@@ -1,7 +1,7 @@
 import { applyChestToUser, generateRandomChest } from '../dungeons/chests.js'
 
-export async function chestShopItems(userDoc, purchases){
-  const purchasesByClass = await countPurchases(purchases)
+export function chestShopItems(userDoc, purchases){
+  const purchasesByClass = countPurchases(purchases)
 
   const chests = []
 
@@ -24,7 +24,7 @@ export async function shopChestPurchased(userDoc, chestData){
   return chest
 }
 
-async function countPurchases(purchases){
+function countPurchases(purchases){
   const byType = {}
   purchases.forEach(purchase => {
     if(purchase.shopItem?.type !== 'chest'){

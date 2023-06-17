@@ -1,7 +1,7 @@
 import { geometricProgression } from '../../growthFunctions.js'
 
 export default function(level){
-  const magicPower = (1.3 + geometricProgression(0.20, level, 0.7, 0.05)) + 'x'
+  const magicPower = (1.5 + geometricProgression(0.20, level, 0.7, 0.05)) + 'x'
   const stunDuration = 1000 + level * 1000
   return {
     effect: {
@@ -22,7 +22,8 @@ export default function(level){
                     stunned: { duration: stunDuration }
                   },
                   persisting: true,
-                  stackingId: 'unstableStun'
+                  stackingId: 'unstableStun',
+                  diminishingReturns: false
                 }
               }
             },

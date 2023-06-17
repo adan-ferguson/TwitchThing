@@ -12,7 +12,7 @@ import { msToS } from '../../../game/utilFunctions.js'
 
 export function statusEffectDisplayInfo(effectInstance){
 
-  const def = DEFS[effectInstance.name] ?? {}
+  const def = DEFS[effectInstance.name]?.() ?? {}
   let text = def.displayName ?? effectInstance.displayName ?? null
   if(!text){
     return null
@@ -184,6 +184,11 @@ const DEFS = {
     return {
       description: 'You can\'t gain debuffs',
       grammatic: ''
+    }
+  },
+  diminishingReturns: () => {
+    return {
+      displayName: 'Dimret'
     }
   }
 }

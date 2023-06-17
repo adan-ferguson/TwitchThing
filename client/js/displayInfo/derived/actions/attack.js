@@ -8,7 +8,7 @@ export function derivedAttackDescription(attack, abilityInstance){
   const times = attack.hits > 1 ?  attack.hits + ' times' : ''
   const chunks = ['Attack', times ,`for ${scalingStr} ${damageType} damage.`]
 
-  if(attack.undodgeable){
+  if(attack.cantDodge){
     chunks.push('This can\'t be dodged.')
   }
 

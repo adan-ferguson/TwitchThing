@@ -35,7 +35,7 @@ export default function(){
                   name: 'constricted',
                   sourceKey: 'self',
                   modification: {
-                    addStacks: 1
+                    stacks: 1
                   }
                 }
               }]

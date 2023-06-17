@@ -5,7 +5,7 @@ export function expandActionDef(actionDef){
   const ret = {}
   const actionKey = Object.keys(actionDef)[0]
   if(!Actions[actionKey]){
-    return actionDef
+    throw 'No more implicit actions'
   }
   const defaults = deepClone(Actions[actionKey].def)
   ret[actionKey] = cleanupObject(mergeOptionsObjects(defaults, actionDef[actionKey]))

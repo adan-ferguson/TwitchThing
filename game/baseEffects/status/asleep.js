@@ -3,6 +3,7 @@ export default function({ duration } = {}){
     polarity: 'debuff',
     stacking: 'extend',
     name: 'asleep',
+    diminishingReturns: true,
     duration,
     mods: [{
       freezeActionBar: true

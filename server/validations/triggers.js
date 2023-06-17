@@ -14,5 +14,6 @@ export const TRIGGER_NAME_SCHEMA = Joi.string().valid(
   'rest',
   'takeTurn',
   'targeted',
+  'thwart',
   'useAbility',
 )

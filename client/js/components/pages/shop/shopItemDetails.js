@@ -1,6 +1,7 @@
 import DIElement from '../../diElement.js'
 import { shopItemDisplayInfo } from './shopItemDisplayInfo.js'
 import { ICON_SVGS } from '../../../assetLoader.js'
+import { arithmeticSum } from '../../../../../game/growthFunctions.js'
 
 const HTML = `
 <div class="shop-item-icon"></div>
@@ -87,7 +88,14 @@ export default class ShopItemDetails extends DIElement{
   }
 
   _updateCount(){
-    const count = this._shopItemDef.data?.[this._shopItemDef.id] * this.sliderEl.value
+    const val = this._shopItemDef.data?.[this._shopItemDef.id]
+    const sliderVal = this.sliderEl.value
+    let count
+    if(val.base){
+      count = arithmeticSum(val.base, val.growth, sliderVal)
+    }else{
+      count = val * sliderVal
+    }
     if(count > 1){
       this.countEl.classList.remove('displaynone')
       this.countEl.textContent = 'x ' + count

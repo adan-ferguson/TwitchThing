@@ -182,6 +182,9 @@ export default class FighterInstance{
   }
 
   get timeUntilNextAction(){
+    if(this.hasMod('freezeActionBar')){
+      return Number.MAX_SAFE_INTEGER
+    }
     return this.turnTime - this.timeSinceLastAction
   }
 

@@ -4,6 +4,7 @@ import Users from '../collections/users.js'
 import Purchases from '../collections/purchases.js'
 import { spendGold } from '../user/inventory.js'
 import { scrapShopItem, xpShopItem } from './misc.js'
+import { arithmeticSum } from '../../game/growthFunctions.js'
 
 export async function getUserShop(userDoc){
   const purchases = await Purchases.find({
@@ -13,9 +14,9 @@ export async function getUserShop(userDoc){
   })
   const items = []
   items.push(adventurerSlotShopItem(userDoc.inventory.adventurerSlots))
-  items.push(xpShopItem(userDoc))
+  items.push(xpShopItem(userDoc, purchases))
   items.push(scrapShopItem(userDoc))
-  items.push(...await chestShopItems(userDoc, purchases))
+  items.push(...chestShopItems(userDoc, purchases))
   return items.filter(i => i)
 }
 
@@ -41,7 +42,7 @@ export async function buyShopItem(userDoc, shopItemId, count){
     userDoc.inventory.scrap += shopItem.data.scrap * count
     returnValue.message = 'Scrap purchased successfully.'
   }else if(shopItem.type === 'stashedXp'){
-    userDoc.inventory.stashedXp += shopItem.data.stashedXp * count
+    userDoc.inventory.stashedXp += arithmeticSum(shopItem.data.stashedXp.base, shopItem.data.stashedXp.growth, count)
     returnValue.message = 'Stashed XP purchased successfully.'
   }
 

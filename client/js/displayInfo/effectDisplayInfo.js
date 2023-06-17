@@ -17,9 +17,9 @@ const DEFS = {
       description: `Gain ${describeStat('magicPower')} equal to your ${describeStat('combatXP')}`
     }
   },
-  CCR: () => {
+  diminishingReturns: () => {
     return {
-      description: 'Repeated stuns have diminishing returns.'
+      description: 'Stuns/sleeps/blinds/etc have diminishing returns.'
     }
   },
   disarmed: effectObj => {

@@ -8,7 +8,8 @@ export default function(){
         scaling: {
           physPower: 1.2
         },
-        undodgeable: true
+        cantDodge: true,
+        cantMiss: true
       }
     }]
   }

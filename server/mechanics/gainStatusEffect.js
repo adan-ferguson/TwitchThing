@@ -4,13 +4,13 @@ import { chooseOne } from '../../game/rando.js'
 import StatusEffectInstance from '../../game/baseEffects/statusEffectInstance.js'
 import { processAbilityEvents } from './abilities.js'
 
-const STUN_RESIST_STATUS_EFFECT = {
+const DIMINISHING_RETURNS_STATUS_EFFECT = {
   polarity: 'neutral',
-  name: 'stunResist',
+  name: 'diminishingReturns',
   stacking: 'stack',
-  maxStacks: 5,
+  stackingId: 'diminishingReturns',
   stats: {
-    stunResist: '33%'
+    ccResist: '25%'
   }
 }
 
@@ -22,7 +22,7 @@ export function gainStatusEffect(combat, source, subject, abilityInstance, statu
     subject
   )
 
-  const statusEffectInstance = new StatusEffectInstance(convertedStatusEffect, subject)
+  let statusEffectInstance = new StatusEffectInstance(convertedStatusEffect, subject)
 
   let ret = {}
   if(statusEffectInstance.polarity === 'debuff'){
@@ -33,21 +33,20 @@ export function gainStatusEffect(combat, source, subject, abilityInstance, statu
     return ret
   }
 
-  const appliedStunResist = applyStunResist(source, subject, statusEffectData)
-  applyStatusEffect(subject, statusEffectInstance, abilityInstance)
-
-  if(appliedStunResist){
-    gainStatusEffect(combat, subject, subject, null, STUN_RESIST_STATUS_EFFECT)
+  if(statusEffectInstance.diminishingReturns && statusEffectInstance.duration){
+    statusEffectInstance = applyDiminishingReturns(statusEffectInstance)
+    gainStatusEffect(combat, subject, subject, null, DIMINISHING_RETURNS_STATUS_EFFECT)
   }
+
+  applyStatusEffect(subject, statusEffectInstance, abilityInstance)
 }
 
-function applyStunResist(source, subject, statusEffect){
-  const ccr = subject.totalStats.get('stunResist').value
-  if (statusEffect.base?.stunned && source !== subject){
-    statusEffect.base.stunned.duration *= 1 - ccr
-    return true
-  }
-  return false
+function applyDiminishingReturns(statusEffectInstance){
+  const ccr = statusEffectInstance.fighterInstance.totalStats.get('ccResist').value
+  const newDuration = statusEffectInstance.duration * (1 - ccr)
+  const newData = statusEffectInstance.data
+  newData.duration = newDuration
+  return new StatusEffectInstance(newData, statusEffectInstance.fighterInstance)
 }
 
 function applyStatusEffect(subject, sei, abilityInstance){
@@ -69,7 +68,7 @@ function applyStatusEffect(subject, sei, abilityInstance){
       }else if(existing.stacking === 'extend'){
         existing.extend(durationRemainingBefore)
       }else if(existing.stacking === 'stack'){
-        existing.addStack()
+        existing.modifyStacks(1).refresh()
       }
       return
     }

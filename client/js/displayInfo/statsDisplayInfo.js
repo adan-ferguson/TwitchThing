@@ -110,9 +110,13 @@ export const statDefinitionsInfo = {
     text: 'Cooldowns',
     description: 'Affects the cooldowns of your items (only items this time, I swear)'
   },
-  chestLevel: {
-    text: 'Increased Chest Level',
-    description: 'Chests you find are higher level.'
+  gold: {
+    text: 'Gold Find',
+    description: 'Multiplies amount of gold found in chests'
+  },
+  chestFind: {
+    text: 'Chest Find',
+    description: 'Increased chance to find a chest after defeating an enemy.'
   },
   basicAttacks: {
     text: 'Basic Attacks'
@@ -122,9 +126,9 @@ export const statDefinitionsInfo = {
     displayedValueFn: value => toPct(value),
     description: 'Most damage they can take at once (percentage of max health)'
   },
-  stunResist: {
-    text: 'Stun Resist',
-    description: 'Reduces duration of repeated stuns'
+  ccResist: {
+    text: 'CC Resist',
+    description: 'Reduces duration of stuns, sleeps, blinds, etc.'
   }
 }
 

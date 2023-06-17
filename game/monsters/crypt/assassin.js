@@ -7,11 +7,11 @@ export default function(){
     },
     items: [
       {
-        name: 'Dagger',
+        name: 'Ambush',
         effect: {
-          stats: {
-            speed: 40
-          }
+          mods: [{
+            sneakAttack: true
+          }]
         }
       },
       {

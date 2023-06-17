@@ -41,15 +41,15 @@ const shrinkingSpores = statusEffect({
   }
 })
 
-const sleepSpores = statusEffect({
-  base: { asleep: { duration: 5000 } },
-  name: 'sleepingSpores',
+const stunSpores = statusEffect({
+  base: { stunned: { duration: 5000 } },
+  name: 'stunSpores',
 })
 
 const options = [
   { weight: 30, value: burningSpores },
   { weight: 15, value: slowingSpores },
-  { weight: 5, value: sleepSpores },
+  { weight: 5, value: stunSpores },
   { weight: 5, value: shrinkingSpores },
 ]
 

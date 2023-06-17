@@ -1,6 +1,9 @@
 const BASE_PRICE = 100
 const BASE_AMOUNT = 15
 
+const XP_BASE = 100
+const XP_GROWTH = 50
+
 export function scrapShopItem(userDoc){
   if(!userDoc.features.workshop){
     return null
@@ -18,7 +21,10 @@ export function scrapShopItem(userDoc){
   }
 }
 
-export function xpShopItem(){
+export function xpShopItem(userDoc, purchases){
+  const amount = purchases.reduce((current, purchase) => {
+    return current + (purchase.shopItem.type === 'stashedXp' ? purchase.count : 0)
+  }, 0)
   return {
     type: 'stashedXp',
     id: 'stashedXp',
@@ -27,7 +33,10 @@ export function xpShopItem(){
       gold: 100
     },
     data: {
-      stashedXp: 250
+      stashedXp: {
+        base: XP_BASE + amount * XP_GROWTH,
+        growth: XP_GROWTH
+      }
     }
   }
 }

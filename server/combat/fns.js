@@ -2,7 +2,7 @@ import { generateMonster } from '../dungeons/monsters.js'
 import { CombatResult } from '../../game/combatResult.js'
 import { generateCombat } from './interop.js'
 import { emit } from '../socketServer.js'
-import { ADVANCEMENT_INTERVAL } from '../dungeons/dungeonRunner.js'
+import { ADVANCEMENT_INTERVAL, cancelRun } from '../dungeons/dungeonRunner.js'
 import Combats from '../collections/combats.js'
 
 const MIN_RESULT_TIME = 2000
@@ -27,54 +27,58 @@ export async function generateCombatEvent(dungeonRun, boss){
   return combatEvent
 }
 
-export function resumeCombatEvent(dungeonRun){
+export async function resumeCombatEvent(dungeonRun){
   runCombat(dungeonRun, dungeonRun.newestEvent.monster)
 }
 
 export async function runCombat(dungeonRun, monsterDef){
 
-  const adventurerInstance = dungeonRun.adventurerInstance
-  const combatEvent = dungeonRun.newestEvent
-  const combatDoc = await generateCombat({
-    fighterDef1: adventurerInstance.adventurer.doc,
-    fighterState1: adventurerInstance.state,
-    fighterDef2: monsterDef,
-    params: {
-      floor: dungeonRun.floor
+  try {
+    const adventurerInstance = dungeonRun.adventurerInstance
+    const combatEvent = dungeonRun.newestEvent
+    const combatDoc = await generateCombat({
+      fighterDef1: adventurerInstance.adventurer.doc,
+      fighterState1: adventurerInstance.state,
+      fighterDef2: monsterDef,
+      params: {
+        floor: dungeonRun.floor
+      }
+    }, combatEvent.combatID)
+    adventurerInstance.state = combatDoc.fighter1.endState
+    adventurerInstance.food += monsterDef.rewards?.food ?? 0
+
+    const refereeTime = Math.max(0, combatDoc.times.total - ADVANCEMENT_INTERVAL)
+    combatEvent.duration = combatDoc.duration + refereeTime + END_COMBAT_PADDING
+    combatEvent.refereeTime = refereeTime
+    combatEvent.pending = false
+
+    const resultEvent = {
+      duration: MIN_RESULT_TIME,
+      result: combatDoc.result,
+      combatID: combatDoc._id,
+      roomType: 'combatResult',
+      monster: monsterDef
     }
-  }, combatEvent.combatID)
 
-  adventurerInstance.state = combatDoc.fighter1.endState
-  adventurerInstance.food += monsterDef.rewards?.food ?? 0
-
-  const refereeTime = Math.max(0, combatDoc.times.total - ADVANCEMENT_INTERVAL)
-  combatEvent.duration = combatDoc.duration + refereeTime + END_COMBAT_PADDING
-  combatEvent.refereeTime = refereeTime
-  combatEvent.pending = false
-
-  const resultEvent = {
-    duration: MIN_RESULT_TIME,
-    result: combatDoc.result,
-    combatID: combatDoc._id,
-    roomType: 'combatResult',
-    monster: monsterDef
-  }
-
-  if(combatDoc.result === CombatResult.F1_WIN){
-    resultEvent.rewards = monsterDef.rewards
-  }else{
-    combatEvent.runFinished = true
-    return combatEvent
-  }
-
-  emit(dungeonRun.doc._id, 'dungeon run update', {
-    id: dungeonRun.doc._id,
-    combatUpdate: {
-      newCombatEvent: combatEvent,
-      combatDoc: combatDoc
+    if(combatDoc.result === CombatResult.F1_WIN){
+      resultEvent.rewards = monsterDef.rewards
+    }else{
+      combatEvent.runFinished = true
+      return combatEvent
     }
-  })
-  dungeonRun.finishRunningCombat(combatEvent, resultEvent)
+
+    emit(dungeonRun.doc._id, 'dungeon run update', {
+      id: dungeonRun.doc._id,
+      combatUpdate: {
+        newCombatEvent: combatEvent,
+        combatDoc: combatDoc
+      }
+    })
+    dungeonRun.finishRunningCombat(combatEvent, resultEvent)
+  }catch(ex){
+    cancelRun(dungeonRun.doc, ex)
+    return
+  }
 }
 
 export async function generateSimulatedCombat(fighterDef1, fighterDef2){

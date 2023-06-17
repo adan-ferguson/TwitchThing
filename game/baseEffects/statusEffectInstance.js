@@ -123,6 +123,10 @@ export default class StatusEffectInstance extends EffectInstance{
     return this.effectData.persisting ?? false
   }
 
+  get diminishingReturns(){
+    return this.effectData.diminishingReturns ?? false
+  }
+
   extend(extendedDuration){
     this._state.extendedDuration = extendedDuration
     return this
@@ -144,12 +148,8 @@ export default class StatusEffectInstance extends EffectInstance{
     return this
   }
 
-  addStack(count = 1){
-    if(count < 1){
-      return this
-    }
-    this._state.stacks = Math.min(this.maxStacks ?? Number.POSITIVE_INFINITY, this.stacks + count)
-    this.refresh()
+  modifyStacks(amount){
+    this._state.stacks = Math.min(this.maxStacks ?? Number.POSITIVE_INFINITY, this.stacks + amount)
     this.invalidate()
     return this
   }

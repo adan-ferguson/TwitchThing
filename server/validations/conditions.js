@@ -22,7 +22,8 @@ export const ABILITY_CONDITIONS_SCHEMA = Joi.object({
   }),
   data: Joi.object({
     damageType: DAMAGE_TYPE_SCHEMA,
-    undodgeable: Joi.bool() // Are we being attacked by a dodgeable attack?
+    cantDodge: Joi.bool(),
+    isAttack: Joi.bool(),
   }),
   owner: FIGHTER_INSTANCE_CONDITIONS_SCHEMA,
   random: Joi.number().min(0).max(1),

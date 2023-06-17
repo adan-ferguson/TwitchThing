@@ -42,3 +42,13 @@ export function getAllItemKeys(){
   }
   return keys
 }
+
+export function getAllSkillKeys(){
+  const keys = []
+  for(let className in INFO){
+    INFO[className].skills.forEach(skill => {
+      keys.push(skill.id)
+    })
+  }
+  return keys
+}

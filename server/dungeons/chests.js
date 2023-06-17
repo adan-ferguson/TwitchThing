@@ -40,9 +40,15 @@ export function generateRandomChest(options = {}){
     chest.noGold = true
   }
 
-  if(chest.type === 'boss'){
-    chest.itemLimit = 5
+  if(chest.type === 'newBoss'){
+    chest.itemLimit = 6
     chest.value *= 3
+    chest.contents.gold = addGold(chest.level * 2)
+  }
+
+  if(chest.type === 'boss'){
+    chest.itemLimit = 3
+    chest.value *= 2
     chest.contents.gold = addGold(chest.level)
   }
 

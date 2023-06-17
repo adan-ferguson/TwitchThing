@@ -2,9 +2,10 @@ import Items from '../../game/items/combined.js'
 import AdventurerItem from '../../game/items/adventurerItem.js'
 import { LOADOUT_OBJECT_SCHEMA } from './loadoutObject.js'
 import Joi from 'joi'
+import { getAllItemKeys } from '../../game/adventurerClassInfo.js'
 
 export function validateAllItems(){
-  for(let id in Items){
+  for(let id of getAllItemKeys()){
     try {
       validateItem(id)
     }catch(ex){

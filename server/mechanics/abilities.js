@@ -1,6 +1,5 @@
 import { arrayize } from '../../game/utilFunctions.js'
 import { subjectKeyMatchesEffectInstances } from '../../game/subjectFns.js'
-import _ from 'lodash'
 
 export function processAbilityEvents(triggerHandler, eventNames, owner, sourceAbility, data = {}){
 
@@ -63,7 +62,7 @@ function conditionsMatch(triggerHandler, conditions, sourceAbility, subjectAbili
   if(conditions.data){
     for(let key in conditions.data){
       if(conditions.data[key] !== data[key]){
-        return
+        return false
       }
     }
   }

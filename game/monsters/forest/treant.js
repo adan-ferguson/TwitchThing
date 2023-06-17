@@ -19,7 +19,7 @@ export default function(){
                 name: 'Sapling',
                 polarity: 'buff',
                 abilities: [{
-                  trigger: 'targeted',
+                  trigger: 'attacked',
                   uses: 3,
                   abilityId: 'saplingBlock',
                   replacements: {

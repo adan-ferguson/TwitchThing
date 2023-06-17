@@ -3,8 +3,8 @@ export default function(combat, actor, subject, abilityInstance = null, actionDe
   subject.effectInstances
     .filter(ei => actionDef.name && ei.name === actionDef.name)
     .forEach(ei => {
-      if(actionDef.modification.addStacks){
-        ei.addStack?.(actionDef.modification.addStacks)
+      if(actionDef.modification.stacks){
+        ei.modifyStacks?.(actionDef.modification.stacks)
       }
       modifiedEffects.push(ei.uniqueID)
     })
