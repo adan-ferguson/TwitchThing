@@ -166,9 +166,6 @@ export default class AbilityInstance{
     if(this.cooldown){
       this.cooldownElapsedPct = 0
     }
-    //   if (this._abilityDef.chance && Math.random() > this._abilityDef.chance){
-    //     return false
-    //   }
     this._state.timesUsed = (this._state.timesUsed ?? 0) + 1
     return true
   }

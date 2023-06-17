@@ -41,7 +41,7 @@ export function performAction(triggerHandler, actor, ability, actionDef, trigger
       const results = arrayize(performIt(target))
       allResults.push(...arrayize(results).map(r => {
         if(actor !== target && r.cancelled){
-          processAbilityEvents(triggerHandler, 'thwart', target)
+          processAbilityEvents(triggerHandler, 'thwart', target, null, expandedActionDef)
         }
         return {
           ...r,

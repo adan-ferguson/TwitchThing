@@ -110,7 +110,7 @@ export const statDefinitionsInfo = {
     text: 'Cooldowns',
     description: 'Affects the cooldowns of your items (only items this time, I swear)'
   },
-  gold: {
+  goldFind: {
     text: 'Gold Find',
     description: 'Multiplies amount of gold found in chests'
   },

@@ -6,7 +6,6 @@ export default function(level){
         trigger: 'gainedHealth',
         actions: [{
           penance: {
-            targets: 'enemy',
             pct
           }
         }]

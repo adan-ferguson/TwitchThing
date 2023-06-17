@@ -2,16 +2,21 @@ import { processAbilityEvents } from '../../abilities.js'
 import { dealDamage } from '../../dealDamage.js'
 import { scaledNumberFromAbilityInstance, scaledNumberFromFighterInstance } from '../../../../game/scaledNumber.js'
 import { ignoresDefenseMatchesDamageType } from '../../../../game/mechanicsFns.js'
+import { deepClone } from '../../../../game/utilFunctions.js'
 
 export default function(combat, attacker, enemy, abilityInstance = null, actionDef = {}){
 
+  if(attacker === enemy){
+    throw 'Attacking self? Probably error.'
+  }
+
   const results = []
   for(let i = 0; i < actionDef.hits; i++){
-    results.push(hit())
+    results.push(hit(deepClone(actionDef)))
   }
   return results
 
-  function hit(){
+  function hit(actionDef){
 
     actionDef = processAbilityEvents(combat, ['attack'], attacker, abilityInstance, actionDef)
     actionDef = processAbilityEvents(combat, ['attacked', actionDef.damageType + 'Attacked'], enemy, abilityInstance, actionDef)
@@ -22,7 +27,11 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
       }
     }
 
-    if(!actionDef.cantDodge && (actionDef.forceDodge || dodgeAttack(enemy))){
+    if(!abilityInstance){
+      abilityInstance = fakeBasicAttackAbilityInstance(attacker)
+    }
+
+    if(!actionDef.cantDodge && tryDodge(actionDef, abilityInstance, enemy)){
       return {
         cancelled: {
           reason: 'dodge'
@@ -30,16 +39,12 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
       }
     }
 
-    if(!actionDef.cantMiss && (actionDef.forceMiss || missAttack(enemy))){
+    if(!actionDef.cantMiss && tryMiss(actionDef, abilityInstance)){
       return {
         cancelled: {
           reason: 'miss'
         }
       }
-    }
-
-    if (!abilityInstance){
-      abilityInstance = fakeBasicAttackAbilityInstance(attacker)
     }
 
     let damage = scaledNumberFromAbilityInstance(abilityInstance, actionDef.scaling)
@@ -54,7 +59,7 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
     const mods = (abilityInstance?.parentEffect ?? attacker).modsOfType('ignoreDef')
     damageInfo.ignoreDefense = ignoresDefenseMatchesDamageType(mods, actionDef.damageType)
 
-    if(attemptCrit(attacker, enemy)){
+    if(tryCrit(actionDef, abilityInstance, enemy)){
       damageInfo.damage *= (1 + attacker.stats.get('critDamage').value)
       damageInfo.crit = true
     }
@@ -62,10 +67,6 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
     damageInfo = dealDamage(combat, attacker, enemy, damageInfo)
     damageInfo = processAbilityEvents(combat, ['attackHit', damageInfo.damageType + 'AttackHit'], attacker, abilityInstance, damageInfo)
     damageInfo = processAbilityEvents(combat, 'hitByAttack', enemy, abilityInstance, damageInfo)
-
-    // if(damageInfo.crit){
-    //   damageInfo = processAbilityEvents(combat, 'crit', attacker, damageInfo)
-    // }
 
     if(actionDef.onHit){
       combat.addPendingTriggers([{
@@ -80,22 +81,23 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
   }
 }
 
-function attemptCrit(actor, target, bonusCritChance){
-  if(target.hasMod('autoCritAgainst')){
+function tryDodge(actionDef, abilityInstance, target){
+  if(actionDef.forceDodge){
     return true
   }
-  return Math.random() +
-    target.stats.get('enemyCritChance').value +
-    actor.stats.get('critChance').value +
-    bonusCritChance > 1
+  return Math.random() + target.stats.get('dodgeChance').value > 1
 }
 
-function dodgeAttack(actor){
-  return Math.random() + actor.stats.get('dodgeChance').value > 1
+function tryMiss(actionDef, abilityInstance){
+  if(actionDef.forceMiss){
+    return true
+  }
+  return Math.random() + abilityInstance.totalStats.get('missChance').value > 1
 }
 
-function missAttack(actor){
-  return Math.random() + actor.stats.get('missChance').value > 1
+function tryCrit(actionDef, abilityInstance, target){
+  const chance = target.stats.get('enemyCritChance').value + abilityInstance.totalStats.get('critChance').value
+  return Math.random() + chance > 1
 }
 
 function fakeBasicAttackAbilityInstance(attacker){

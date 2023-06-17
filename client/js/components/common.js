@@ -1,6 +1,6 @@
 import Stats from '../../../game/stats/stats.js'
 import { getStatDisplayInfo, statDefinitionsInfo, StatsDisplayStyle } from '../displayInfo/statsDisplayInfo.js'
-import { deepClone, makeEl, roundToNearestIntervalOf, wrapContent } from '../../../game/utilFunctions.js'
+import { deepClone, makeEl, roundToNearestIntervalOf, toPct, wrapContent } from '../../../game/utilFunctions.js'
 import health from '../../assets/icons/health.svg'
 import physPower from '../../assets/icons/physPower.svg'
 import magicPower from '../../assets/icons/magicPower.svg'
@@ -164,11 +164,11 @@ export function statScaling(scaling, abilityInstance = null, range = null){
         }
       }else{
         if(range){
-          const val1 = Math.ceil(range[0] * val * 100)
-          const val2 = Math.ceil(range[1] * val * 100)
-          str = `${val1}% to ${val2}%`
+          const val1 = Math.ceil(range[0] * val)
+          const val2 = Math.ceil(range[1] * val)
+          str = `${toPct(val1)} to ${toPct(val2)}`
         }else{
-          str = `${Math.ceil(val * 100)}%`
+          str = toPct(val)
         }
       }
       chunks.push(scalingWrap(scalingType, str))
