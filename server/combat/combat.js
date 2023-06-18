@@ -183,7 +183,6 @@ class Combat{
       this.nextSuddenDeathTick
     ]
     const timeToAdvance = Math.ceil(Math.max(1, Math.min(...nexts)))
-    console.log(timeToAdvance)
     if(timeToAdvance === 1){
       this._consecutiveZeroTimeAdvancements++
       if(this._consecutiveZeroTimeAdvancements >= MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS){

@@ -2,82 +2,102 @@ import { chooseRandomBasicItem } from '../items/generator.js'
 import { toNumberOfDigits } from '../../game/utilFunctions.js'
 import { geometricProgression } from '../../game/growthFunctions.js'
 import AdventurerItem from '../../game/items/adventurerItem.js'
+import { unlockedClasses } from '../../game/user.js'
+import { chooseOne } from '../../game/rando.js'
 
 const GOLD_BASE = 15
 const GOLD_GROWTH = 6
 const GOLD_GROWTH_PCT = 0.01
 
+/**
+ * @param dri {DungeonRunInstance}
+ * @param mi {MonsterInstance}
+ */
+export function generateMonsterChest(dri, mi){
+
+  const preSkillTutorial = dri.user.features.skills ? false : true
+  const fighterSkewed = dri.user.deepestFloor < 11
+
+  const options = {
+    value: mi.level,
+    level: mi.level,
+    itemLimit: 1,
+    type: 'normal',
+    noGold: preSkillTutorial ? true : false,
+    rarities: preSkillTutorial ? [0] : null,
+    goldMultiplier: dri.adventurerInstance.stats.get('goldFind').value
+  }
+
+  if(mi.isBoss){
+    options.type = 'boss'
+    if(dri.adventurer.accomplishments.deepestFloor <= dri.floor){
+      options.itemLimit = 6
+      options.value *= 3
+      options.baseGold = addGold(mi.level * 2)
+    }
+  }
+
+  options.classes = preSkillTutorial ? ['fighter'] : unlockedClasses(dri.user).map(cls => {
+    return { value: cls, weight: fighterSkewed && cls === 'fighter' ? 6 : 1 }
+  })
+
+  return generateRandomChest(options)
+}
+
 export function generateRandomChest(options = {}){
 
-  const chest = {
-    name: 'Chest',
-    type: 'normal', // 'normal' | 'boss' | 'shop'
-    contents: {
-      gold: 0,
-      items: {
-        basic: {}
-      }
-    },
+  options = {
+    type: 'normal',
     level: 1,
     value: 1,
     noGold: false,
+    baseGold: 0,
+    goldMultiplier: 1,
     classes: null,
     itemLimit: 1,
     rarities: null,
     ...options
   }
 
-  if(!chest.classes){
-    throw 'Random chest did not get a list of classes to choose from, probably a bug.'
+  if(!options.classes || !options.classes.length){
+    throw 'No classes provided uhhh'
   }
 
-  if(chest.type === 'shop'){
-    chest.noGold = true
-    chest.itemLimit = 10
+  const contents = {
+    gold: options.baseGold,
+    items: {
+      basic: {}
+    }
   }
 
-  if(chest.type === 'tutorial'){
-    chest.noGold = true
-  }
-
-  if(chest.type === 'newBoss'){
-    chest.itemLimit = 6
-    chest.value *= 3
-    chest.contents.gold = addGold(chest.level * 2)
-  }
-
-  if(chest.type === 'boss'){
-    chest.itemLimit = 3
-    chest.value *= 2
-    chest.contents.gold = addGold(chest.level)
-  }
-
-  const totalValue = chest.level * chest.value
+  const totalValue = options.level * options.value
   let valueRemaining = totalValue
   let items = []
   while(valueRemaining > 0){
-    // tutorial chests drop more fighter items
-    const chestClasses = chest.type === 'tutorial' && Math.random() > 0.75 ? ['fighter'] : chest.classes
-    const item = new AdventurerItem(chooseRandomBasicItem(valueRemaining, chestClasses, options.rarities).id)
+    const advClass = chooseOne(options.classes)
+    const item = new AdventurerItem(chooseRandomBasicItem(valueRemaining, advClass, options.rarities).id)
     items.push(item)
     valueRemaining -= item.rarityInfo.value
   }
 
-  if(items.length > chest.itemLimit){
-    items = items.sort((a, b) => (b.rarity ?? 0) - (a.rarity ?? 0)).slice(0, chest.itemLimit)
+  if(items.length > options.itemLimit){
+    items = items.sort((a, b) => (b.rarity ?? 0) - (a.rarity ?? 0)).slice(0, options.itemLimit)
   }
 
   let leftoverValue = totalValue
   items.forEach(item => {
-    addItem(chest.contents.items.basic, item.baseItemId)
+    addItem(contents.items.basic, item.baseItemId)
     leftoverValue -= item.rarityInfo.value
   })
 
-  if(leftoverValue > 0 && !chest.noGold){
-    chest.contents.gold += addGold(leftoverValue)
+  if(leftoverValue > 0 && !options.noGold){
+    contents.gold += addGold(leftoverValue) * options.goldMultiplier
   }
 
-  return chest
+  return {
+    options,
+    contents,
+  }
 }
 
 export function applyChestToUser(userDoc, chest){

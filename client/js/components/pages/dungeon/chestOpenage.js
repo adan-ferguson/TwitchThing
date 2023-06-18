@@ -60,7 +60,7 @@ export default class ChestOpenage extends DIElement{
 
     const displayInfo = getChestDisplayInfo(this._chest)
     this.querySelector('.inset-title').textContent =
-      `Lvl. ${this._chest.level} ${displayInfo.displayName} Chest`
+      `Lvl. ${this._chest.options.level} ${displayInfo.displayName} Chest`
 
     const contents = this.querySelector('.contents')
     if(this._chest.contents.gold){

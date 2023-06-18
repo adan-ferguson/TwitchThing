@@ -9,9 +9,10 @@ import Combats from '../collections/combats.js'
 import { adjustInventoryBasics } from '../user/inventory.js'
 
 const REWARDS_TYPES = {
-  xp: 'int',
+  xp: 'num',
   chests: 'array',
-  food: 'int'
+  food: 'num',
+  pityPoints: 'num'
 }
 
 export function addRewards(rewards, toAdd){
@@ -26,7 +27,7 @@ export function addRewards(rewards, toAdd){
       continue
     }
 
-    if(REWARDS_TYPES[key] === 'int'){
+    if(REWARDS_TYPES[key] === 'num'){
       if(!r[key]){
         r[key] = 0
       }

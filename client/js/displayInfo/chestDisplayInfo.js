@@ -13,7 +13,7 @@ const CHESTS = {
 
 export function getChestDisplayInfo(chest){
 
-  let type = chest.type ?? 'normal'
+  let type = chest.options.type ?? 'normal'
 
   if(type === 'shop'){
     return shopChest()
@@ -30,7 +30,7 @@ export function getChestDisplayInfo(chest){
   }
 
   function shopChest(){
-    const info = classDisplayInfo(chest.classes[0])
+    const info = classDisplayInfo(chest.options.classes[0])
     return {
       displayName: info.displayName,
       icon: info.icon,

@@ -9,6 +9,7 @@ import {
 } from '../components/common.js'
 import { explodeEffect } from '../../../game/baseEffects/statusEffectInstance.js'
 import { msToS } from '../../../game/utilFunctions.js'
+import { keyword } from './keywordDisplayInfo.js'
 
 export function statusEffectDisplayInfo(effectInstance){
 
@@ -164,7 +165,13 @@ const DEFS = {
   },
   stunned: () => {
     return {
-      description: 'stunned',
+      description: keyword('stunned'),
+      grammatic: 'become'
+    }
+  },
+  blinded: () => {
+    return {
+      description: keyword('blinded'),
       grammatic: 'become'
     }
   },
@@ -188,7 +195,7 @@ const DEFS = {
   },
   diminishingReturns: () => {
     return {
-      displayName: 'Dimret'
+      displayName: 'Dim-Ret'
     }
   }
 }

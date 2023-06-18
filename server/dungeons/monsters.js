@@ -2,7 +2,7 @@ import { chooseOne } from '../../game/rando.js'
 import Monsters from '../../game/monsters/combined.js'
 import { uniqueID } from '../../game/utilFunctions.js'
 import MonsterInstance from '../../game/monsterInstance.js'
-import { generateRandomChest } from './chests.js'
+import { generateMonsterChest, generateRandomChest } from './chests.js'
 import { addRewards } from './results.js'
 import { unlockedClasses } from '../../game/user.js'
 
@@ -65,6 +65,8 @@ const monstersByFloor = [
   // Monsters.kraken
 ]
 
+const PITY_THRESHOLD = 0.75
+
 const BONUS_CHESTS_UNTIL = 12
 const BONUS_CHEST_CHANCE = 0.15
 
@@ -126,29 +128,19 @@ function generateRewards(dungeonRun, monsterDefinition){
   if(dungeonRun.user.accomplishments.firstRunFinished){
     const userChests = dungeonRun.user.accomplishments.chestsFound ?? 0
     const hardEnemy = level >= dungeonRun.adventurer.accomplishments.deepestFloor
-    const dropChance = userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE :
-      hardEnemy ? CHEST_DROP_CHANCE_HARD_ENEMY :
-        CHEST_DROP_CHANCE
+    const dropMulti = dungeonRun.adventurerInstance.stats.get('chestFind').value
+    const dropChance = (userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE :
+      hardEnemy ? CHEST_DROP_CHANCE_HARD_ENEMY : CHEST_DROP_CHANCE) * dropMulti
     const dropChest =
       Math.random() < dropChance ||
       monsterInstance.isBoss ||
-      dropPityChest(dungeonRun)
+      dropPityChest(dungeonRun, dropChance)
 
     if(dropChest){
-      let type = monsterInstance.isBoss ? 'boss' :
-        dungeonRun.user.deepestFloor < 11 ? 'tutorial' : // Have fighter-skewed chests until account beats zone 0
-          'normal'
-
-      if(type === 'boss' && dungeonRun.adventurer.accomplishments.deepestFloor <= dungeonRun.floor){
-        type = 'newBoss'
-      }
-
-      rewards.chests = generateRandomChest({
-        level,
-        type,
-        classes: dungeonRun.user.features.skills ? unlockedClasses(dungeonRun.user) : ['fighter'],
-        rarities: dungeonRun.user.features.skills ? null : [0]
-      })
+      rewards.chests = generateMonsterChest(dungeonRun, monsterInstance)
+      rewards.pityPoints = -1
+    }else{
+      rewards.pityPoints = dropChance
     }
   }
   return addRewards(rewards, monsterInstance.rewards)
@@ -217,10 +209,8 @@ function getBasicMonsterDefinition(floor){
   }
 }
 
-function dropPityChest(dungeonRun){
-  const expectedChests = dungeonRun.events.length * CHEST_DROP_CHANCE / 2
-  const chests = dungeonRun.rewards.chests?.length ?? 0
-  if(chests < Math.round(expectedChests)){
+function dropPityChest(dungeonRun, dropChance){
+  if((dungeonRun.rewards.pityPoints ?? 0) + dropChance > PITY_THRESHOLD){
     return true
   }
   return false

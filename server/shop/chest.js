@@ -18,7 +18,9 @@ export async function shopChestPurchased(userDoc, chestData){
   const chest = generateRandomChest({
     classes: [chestData.className],
     level: chestData.level,
-    type: 'shop'
+    type: 'shop',
+    noGold: true,
+    itemLimit: 10,
   })
   applyChestToUser(userDoc, chest)
   return chest

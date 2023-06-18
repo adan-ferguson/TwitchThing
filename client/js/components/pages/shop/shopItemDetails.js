@@ -91,7 +91,9 @@ export default class ShopItemDetails extends DIElement{
     const val = this._shopItemDef.data?.[this._shopItemDef.id]
     const sliderVal = this.sliderEl.value
     let count
-    if(val.base){
+    if(!val){
+      count = 1
+    }else if(val.base){
       count = arithmeticSum(val.base, val.growth, sliderVal)
     }else{
       count = val * sliderVal
