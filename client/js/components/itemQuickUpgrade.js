@@ -40,7 +40,7 @@ export default class ItemQuickUpgrade extends DIElement{
     }else{
       this.querySelector('.item-after').setItem(new AdventurerItem(upgradedItemDef))
       components.map(component => {
-        if(adventurerItem.isBasic && isEquipped){
+        if(adventurerItem.isBasic && isEquipped && component.type !== 'scrap'){
           component.count--
         }
         componentsEl.append(new ComponentRow().setData(component, inventory))

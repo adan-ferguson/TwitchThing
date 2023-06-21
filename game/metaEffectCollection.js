@@ -116,6 +116,9 @@ function mergeAbilityModification(amod, abilities){
     if(amod.addAction){
       newDef.actions.push(amod.addAction)
     }
+    if(amod.newTrigger){
+      newDef.trigger = amod.newTrigger
+    }
     return newDef
   })
 }

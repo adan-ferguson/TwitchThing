@@ -183,6 +183,7 @@ export const META_EFFECT_SCHEMA = Joi.object({
     abilityModification: Joi.object({
       abilityModificationId: Joi.string(),
       trigger: TRIGGER_NAME_SCHEMA,
+      newTrigger: TRIGGER_NAME_SCHEMA,
       turnRefund: Joi.number().min(0),
       repetitions: Joi.number().integer().min(1),
       exclusiveStats: STATS_SCHEMA,

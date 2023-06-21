@@ -69,7 +69,6 @@ export default class AddXpModalContent extends DIElement{
   }
 
   _setTotalXp(xp){
-    console.log(xp)
     this.sliderEl.value = xp - this._adventurer.xp
     this._updateNumbers()
   }
