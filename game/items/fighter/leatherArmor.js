@@ -4,11 +4,11 @@ export default function(level){
   return {
     effect: {
       stats: {
-        physDef: exponentialPercentage(0.05, level - 1, 0.15),
+        physDef: exponentialPercentage(0.07, level - 1, 0.10),
         speed: 5 + 10 * level
       }
     },
-    orbs: 1 + 2 * level,
+    orbs: 2 + 2 * level,
     displayName: 'Cloth Armor'
   }
 }

@@ -12,7 +12,7 @@ export default function(level){
   }
   if(level > 1){
     ret.effect.stats = {
-      magicPower: wrappedPct(10 * level - 10),
+      magicPower: wrappedPct(15 * level - 15),
     }
   }
   return ret

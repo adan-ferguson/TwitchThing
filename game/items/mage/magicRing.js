@@ -2,9 +2,9 @@ export default function(level){
   return {
     effect: {
       stats: {
-        cooldownMultiplier: Math.pow(0.8, level)
+        cooldownMultiplier: 0.8 * Math.pow(0.87, level - 1)
       }
     },
-    orbs: -1 + 5 * level
+    orbs: 2 + 2 * level
   }
 }

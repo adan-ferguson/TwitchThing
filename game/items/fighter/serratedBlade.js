@@ -4,7 +4,7 @@ export default function(level){
   return {
     effect: {
       stats: {
-        physPower: wrappedPct(20 * level),
+        physPower: wrappedPct(-10 + 30 * level),
       },
       abilities: [{
         trigger: 'attackHit',
@@ -36,6 +36,6 @@ export default function(level){
         }]
       }]
     },
-    orbs: 2 + level * 4
+    orbs: 2 + level * 3
   }
 }

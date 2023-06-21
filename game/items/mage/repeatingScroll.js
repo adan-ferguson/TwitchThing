@@ -13,6 +13,6 @@ export default function(level){
       }],
       tags: ['scroll'],
     },
-    orbs: 3 + level * 7,
+    orbs: 4 + level * 6,
   }
 }

@@ -6,7 +6,7 @@ export default function(level){
     effect: {
       stats: {
         physDef: exponentialPercentage(0.2, level - 1, 0.3),
-        magicPower: wrappedPct(geometricProgression(0.2, level, 30, 5)),
+        magicPower: wrappedPct(geometricProgression(0.5, level, 30, 5)),
         speed: -30 + level * -20
       },
       abilities: [{
@@ -14,7 +14,7 @@ export default function(level){
         actions: [{
           gainHealth: {
             scaling: {
-              magicPower: 0.05 + 0.05 * level
+              magicPower: 0.1 + 0.1 * level
             }
           }
         }]

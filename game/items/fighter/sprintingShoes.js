@@ -1,6 +1,6 @@
 export default function(level){
-  const speed = 30 + level * 10
-  const duration = 4000 + level * 1000
+  const speed = 30 + level * 20
+  const duration = 5000
   return {
     effect: {
       abilities: [{
@@ -22,6 +22,6 @@ export default function(level){
         vars: { speed, duration }
       }]
     },
-    orbs: 2 + 2 * level
+    orbs: 1 + 2 * level
   }
 }

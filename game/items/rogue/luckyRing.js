@@ -11,10 +11,10 @@ const RING_1 = {
 
 const RING_2 = {
   stats: {
-    goldFind: wrappedPct(7777),
+    goldFind: wrappedPct(777),
     chestFind: wrappedPct(777),
     critChance: 0.77,
-    dodgeChance: '7%',
+    dodgeChance: '77%',
   }
 }
 

@@ -7,6 +7,6 @@ export default function(level){
         combatXP: wrappedPct(30 * level)
       }
     },
-    orbs: 3 * level
+    orbs: 1 + 2 * level
   }
 }

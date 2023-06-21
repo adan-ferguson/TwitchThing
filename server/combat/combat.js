@@ -7,6 +7,7 @@ import { performAction, useAbility } from '../mechanics/actions/performAction.js
 import { overtimeDamageBonus } from '../../game/combatMechanics.js'
 import { arrayize } from '../../game/utilFunctions.js'
 import { gainBlockBarrier } from '../mechanics/gainStatusEffect.js'
+import AdventurerInstance from '../../game/adventurerInstance.js'
 
 const MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS = 30
 const MAX_TRIGGER_LOOPS = 30
@@ -263,22 +264,26 @@ class Combat{
   _triggerSuddenDeath(){
     const diff = (this._currentTime - SUDDEN_DEATH) / 1000
     if(diff % 1 === 0 && diff > 0){
-      this.addPendingTriggers(this.fighters.map(fi => {
-        return {
-          performAction: true,
-          actor: fi,
-          def: {
-            takeDamage: {
-              scaling: {
-                hpMax: 0.02 + diff / 300
-              },
-              damageType: diff % 2 ? 'phys' : 'magic',
-              ignoreDefense: true,
-              ignoreOvertime: true
-            },
-          }
-        }
-      }))
+      this.addPendingTriggers(
+        this.fighters
+          .filter(fi => fi instanceof AdventurerInstance)
+          .map(fi => {
+            return {
+              performAction: true,
+              actor: fi,
+              def: {
+                takeDamage: {
+                  scaling: {
+                    hpMax: 0.02 + diff / 300
+                  },
+                  damageType: diff % 2 ? 'phys' : 'magic',
+                  ignoreDefense: true,
+                  ignoreOvertime: true
+                },
+              }
+            }
+          })
+      )
     }
   }
 }

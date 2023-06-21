@@ -11,7 +11,7 @@ export default function(level){
             trigger: 'active',
             exclusiveStats: {
               magicPower,
-              cooldownMultiplier: Math.pow(0.9, level - 1) * 0.7
+              cooldownMultiplier: Math.pow(0.87, level - 1) * 0.8
             },
           }
         }
@@ -24,6 +24,6 @@ export default function(level){
         slot: 1
       }
     }],
-    orbs: 5 + level * 3
+    orbs: 4 + level * 4
   }
 }

@@ -3,7 +3,7 @@ export default function(level){
     effect: {
       abilities: [{
         trigger: 'active',
-        uses: 2 + level * 2,
+        uses: 1 + level * 3,
         conditions: {
           owner: {
             hasDebuff: true

@@ -1,8 +1,8 @@
 export default function(level){
-  const block = level * 0.04 + 0.08
-  const pctReturn = 0.2 + level * 0.1
+  const block = level * 0.06 + 0.06
+  const pctReturn = 0.2 + level * 0.2
   return {
-    orbs: level * 5,
+    orbs: 2 + level * 3,
     effect: {
       stats: {
         block

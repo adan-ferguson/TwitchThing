@@ -5,8 +5,8 @@ export default function(level){
     orbs: level * 5,
     effect: {
       stats: {
-        physPower: wrappedPct(40 * level),
-        magicPower: wrappedPct(40 * level)
+        physPower: wrappedPct(50 * level),
+        magicPower: wrappedPct(50 * level)
       }
     }
   }

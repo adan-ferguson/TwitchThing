@@ -6,7 +6,7 @@ export default function(level){
     effect: {
       stats: {
         hpMax: wrappedPct(level * 10),
-        physPower: wrappedPct(level * 10)
+        physPower: wrappedPct(level * 20)
       }
     }
   }

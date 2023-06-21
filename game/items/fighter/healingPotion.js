@@ -19,6 +19,6 @@ export default function(level){
       }]
     },
     displayName: 'Health Potion',
-    orbs: level * 2
+    orbs: level * 1 + 1
   }
 }

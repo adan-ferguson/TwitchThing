@@ -1,24 +1,25 @@
+import { exponentialPercentage } from '../../growthFunctions.js'
+
 export default function(level){
-  const duration = 3000 + level * 2000
+  const missChance = exponentialPercentage(0.1, level - 1, 0.25)
   return {
     effect: {
       abilities: [{
         trigger: 'active',
-        cooldown: 20000,
+        cooldown: 15000,
         actions: [{
           applyStatusEffect: {
             targets: 'enemy',
             statusEffect: {
-              base: {
-                blinded: {
-                  duration: duration
-                }
+              polarity: 'debuff',
+              stats: {
+                missChance
               }
             }
           }
         }]
       }]
     },
-    orbs: level * 3 + 1
+    orbs: level * 1 + 1
   }
 }

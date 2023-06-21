@@ -1,11 +1,11 @@
-import { exponentialPercentage, geometricProgression } from '../../growthFunctions.js'
+import { exponentialPercentage, geometricProgression, wrappedPct } from '../../growthFunctions.js'
 
 export default function(level){
   return {
-    orbs: level * 5 + 1,
+    orbs: level * 4 + 3,
     effect: {
       stats: {
-        hpMax: 10 + geometricProgression(0.2, level, 20, 5),
+        hpMax: wrappedPct(10 + geometricProgression(0.2, level, 20, 5)),
         physDef: exponentialPercentage(0.1, level - 1, 0.3),
         magicDef: exponentialPercentage(0.1, level - 1, 0.3),
         speed: -10 + level * -10

@@ -1,13 +1,13 @@
 import { exponentialPercentage, geometricProgression, wrappedPct } from '../../growthFunctions.js'
 
 export default function(level){
-  const pow = 15 + geometricProgression(0.2, level, 10, 5)
+  const pow = 20 + geometricProgression(0.2, level, 20, 5)
   const def = exponentialPercentage(0.05, level - 1, 0.1)
   return {
     effect: {
       stats: {
-        combatXP: wrappedPct(pow * 2),
-        speed: level * 10,
+        combatXP: wrappedPct(pow),
+        speed: level * 10 + 10,
         physPower: wrappedPct(pow),
         magicPower: wrappedPct(pow),
         physDef: def,

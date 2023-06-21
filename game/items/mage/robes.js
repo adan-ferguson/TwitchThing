@@ -5,7 +5,7 @@ export default function(level){
     effect: {
       stats: {
         magicPower: wrappedPct( 20 * level),
-        physDef: exponentialPercentage(0.05, level - 1, 0.1)
+        physDef: exponentialPercentage(0.07, level - 1, 0.1)
       }
     },
     orbs: level * 2
