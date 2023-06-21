@@ -3,6 +3,12 @@ import AdventurerPage from '../adventurer/adventurerPage.js'
 import fizzetch from '../../../fizzetch.js'
 import setupEditable from './setupEditable.js'
 import { OrbsDisplayStyle } from '../../orbRow.js'
+import tippyCallout from '../../visualEffects/tippyCallout.js'
+import ItemQuickUpgrade from '../../itemQuickUpgrade.js'
+import SimpleModal from '../../simpleModal.js'
+import { hideLoader, showLoader } from '../../../loader.js'
+import AdventurerItem from '../../../../../game/items/adventurerItem.js'
+import Modal from '../../modal.js'
 
 const HTML = `
 <div class="content-columns fill-contents">
@@ -16,7 +22,7 @@ const HTML = `
       <div class="content-well">
         <di-adventurer-pane></di-adventurer-pane>
       </div>
-      <button class="save content-no-grow">Save</button>
+      <button class="save content-no-grow">Okay</button>
     </div>
     <div class="hinter edit-hinter">
       <i class="fa-solid fa-arrows-left-right"></i>
@@ -41,9 +47,7 @@ export default class LoadoutTab extends DIElement{
     this._setupItemEdit()
     this._setupSkillEdit()
     this.saveButton.addEventListener('click', async (e) => {
-      if(await this._save()){
-        this.parentPage.redirectTo(AdventurerPage.path(this._adventurer.id))
-      }
+      this.parentPage.redirectTo(AdventurerPage.path(this._adventurer.id))
     })
   }
 
@@ -63,24 +67,67 @@ export default class LoadoutTab extends DIElement{
     return this.querySelector('button.save')
   }
 
+  async unload(){
+    if(!this._adventurer.isValid){
+      return await new SimpleModal('Your loadout is invalid and you will not be able to do anything, exit anyway?', [{
+        text: 'Yes',
+        value: false
+      },{
+        text: 'No',
+        value: true
+      }]).show().awaitResult()
+    }
+  }
+
   async showData(parentPage){
 
-    const { items, adventurer } = parentPage
+    const { items, adventurer, user } = parentPage
 
     this._adventurer = adventurer
 
     this.inventoryEl.setup(items, adventurer)
-    if(parentPage.user.features.workshop){
-      this.inventoryEl.showScrapLink()
-    }
     this.adventurerPaneEl.setAdventurer(adventurer)
-    this.skillsEl.setup(adventurer, parentPage.user.features.skills)
-    this._updateSaveButton()
+    this.skillsEl.setup(adventurer, user.features.skills)
+    this._setupQuickUpgrades(user)
+  }
+
+  adventurerItemRightClickOverride(adventurerItemRow){
+    // TODO: this is pretty hacky...
+    const itemSlot = parseInt(adventurerItemRow.getAttribute('slot-index') ?? -1)
+    const isEquipped = itemSlot > -1
+    const item = adventurerItemRow.adventurerItem
+    const iqu = new ItemQuickUpgrade(item, {
+      ...this.parentPage.user.inventory,
+      items: this.inventoryEl.allItems,
+    }, isEquipped)
+    const modal = new Modal(iqu).show()
+
+    iqu.querySelector('.upgrade-button').addEventListener('click', () => {
+      modal.hide()
+      const data = {}
+      if(isEquipped){
+        data.itemSlot = itemSlot
+        data.adventurerID = this._adventurer.id
+      }else{
+        data.itemDef = item.def
+      }
+      fizzetch('/game/workshop/forge/upgrade', data)
+        .then(({ upgradedItemDef }) => {
+          if(isEquipped){
+            const item = new AdventurerItem(upgradedItemDef)
+            this._adventurer.loadout.setSlot(0, itemSlot, item)
+            this.adventurerPaneEl.update(true)
+          }else{
+            adventurerItemRow.setOptions({
+              item: new AdventurerItem(upgradedItemDef)
+            })
+          }
+        })
+    })
   }
 
   async _save(){
     this._saving = true
-    this._updateSaveButton()
     const { error, success } = await fizzetch('/game' + this.parentPage.path + '/save', {
       items: this._adventurer.loadout.items.map(i => i?.def),
       skills: this._adventurer.loadout.skills.map(s => s?.id)
@@ -88,16 +135,10 @@ export default class LoadoutTab extends DIElement{
     if(!success){
       console.error(error || 'Saving failed for some reason')
       this._saving = false
-      this._updateSaveButton()
       return false
     }
     this._saved = true
     return true
-  }
-
-  _updateSaveButton(){
-    const valid = this._adventurer.isValid
-    this.saveButton.toggleAttribute('disabled', !valid || this._saving)
   }
 
   _setupItemEdit(){
@@ -116,16 +157,16 @@ export default class LoadoutTab extends DIElement{
           }
           this.inventoryEl.removeItem(item)
           this.inventoryEl.addItem(loadout.items[slot])
-          loadout.setSlot(0,  slot, item)
+          loadout.setSlot(0, slot, item)
         }else if(change.type === 'remove'){
           this.inventoryEl.addItem(change.row.item)
-          loadout.setSlot(0,  slotIndex(change.row), null)
+          loadout.setSlot(0, slotIndex(change.row), null)
         }else if(change.type === 'swap'){
           loadout.setSlot(0, slotIndex(change.row2), change.row.item)
           loadout.setSlot(0, slotIndex(change.row), change.row2.item)
         }
         this.adventurerPaneEl.update(true)
-        this._updateSaveButton()
+        this._save()
       }
     })
 
@@ -172,7 +213,7 @@ export default class LoadoutTab extends DIElement{
         }
         this.adventurerPaneEl.update(true)
         this.skillsEl.listEl.fullUpdate()
-        this._updateSaveButton()
+        this._save()
       }
     })
 
@@ -193,6 +234,17 @@ export default class LoadoutTab extends DIElement{
 
     function slotIndex(row){
       return parseInt(row.getAttribute('slot-index'))
+    }
+  }
+
+  _setupQuickUpgrades(user){
+    const quickUpgrades = user.features.workshop ? true : false
+    this.classList.toggle('adventurer-item-right-click-override', quickUpgrades)
+
+    const calloutName = 'quick-upgrade-callout'
+    if(quickUpgrades && !localStorage.getItem(calloutName)){
+      tippyCallout(this.inventoryEl, 'You can also upgrade items in the right-click "more info" pane.')
+      localStorage.setItem(calloutName, true)
     }
   }
 }

@@ -51,6 +51,10 @@ export default class AdventurerEditPage extends Page{
     this._loadTab()
   }
 
+  async unload(){
+    return this.tabzEl.currentTab.unload?.() ?? false
+  }
+
   async _loadTab(){
     showLoader()
     const tab = this.tabzEl.currentTab

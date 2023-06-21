@@ -8,6 +8,10 @@ const CHESTS = {
   boss: {
     color: '#59c916',
     stars: 1
+  },
+  zoneReward: {
+    color: '#4696a4',
+    stars: 2
   }
 }
 

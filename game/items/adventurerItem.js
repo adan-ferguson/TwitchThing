@@ -87,27 +87,15 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
   }
 
   get scrapValue(){
+    if(this.data.scrapValue){
+      return this.data.scrapValue
+    }
     const scrapVal = this.rarityInfo.value
     return scrapVal * (1 + this.level * (this.level - 1) / 2)
   }
 
   sameItem(adventurerItem){
     return this.isBasic && adventurerItem.isBasic && this.def === adventurerItem.def
-  }
-
-  withModifiedLevel(levelAdjust){
-    return this
-    // let ai
-    // if(_.isString(this.def)){
-    //   if(level === 1){
-    //     ai = new AdventurerItem(this.def)
-    //   }
-    //   ai = new AdventurerItem({ baseItem: this.def, level })
-    // }else{
-    //   ai = new AdventurerItem({ ...this.def, level })
-    // }
-    // ai.unmodifiedLevel = this.level
-    // return ai
   }
 
   upgradeInfo(){

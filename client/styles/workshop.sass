@@ -1,4 +1,4 @@
-di-workshop-page
+di-workshop-page, di-item-quick-upgrade
 
   .right-column
     align-items: center
@@ -75,3 +75,18 @@ di-workshop-page
     di-list
       flex-grow: 1
       margin-top: 10rem
+
+di-item-quick-upgrade
+  display: flex
+  flex-direction: column
+  gap: 10rem
+  align-items: center
+
+  &.max-level .hide-if-max
+    display: none
+
+  .item-cards
+    display: flex
+    flex-direction: row
+    align-items: center
+    gap: 10rem

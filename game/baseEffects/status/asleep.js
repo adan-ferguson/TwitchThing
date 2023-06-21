@@ -8,6 +8,18 @@ export default function({ duration } = {}){
     mods: [{
       freezeActionBar: true
     }],
-    // TODO: the sleep thing
+    abilities: [{
+      trigger: 'takeDamage',
+      actions: [{
+        modifyStatusEffect: {
+          subject: {
+            key: 'self'
+          },
+          modification: {
+            remove: true
+          }
+        }
+      }]
+    }]
   }
 }

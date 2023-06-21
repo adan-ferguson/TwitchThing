@@ -40,11 +40,6 @@ const as = Joi.object({
       return Joi.attempt(val, STATUS_EFFECT_SCHEMA)
     }).required()
   }),
-  removeStatusEffect: Joi.object({
-    targets: TARGETS_SCHEMA.required(),
-    polarity: POLARITY_SCHEMA,
-    count: Joi.number().integer().min(1)
-  }),
   attack: Joi.object({
     damageType: DAMAGE_TYPE_SCHEMA,
     scaling: SCALED_NUMBER_SCHEMA,
@@ -83,12 +78,18 @@ const as = Joi.object({
       cooldownRemaining: Joi.number().integer()
     }).required()
   }),
-  modifyEffect: Joi.object({
+  modifyStatusEffect: Joi.object({
     targets: TARGETS_SCHEMA,
-    name: Joi.string(),
+    subject: Joi.object({
+      name: Joi.string(),
+      key: SUBJECT_KEYS_SCHEMA,
+      polarity: POLARITY_SCHEMA
+    }).required(),
     modification: Joi.object({
-      stacks: Joi.number().integer()
-    }).required()
+      stacks: Joi.number().integer(),
+      remove: Joi.bool(),
+    }).required(),
+    count: Joi.number().integer().min(1)
   }),
   balancedSmite: Joi.object({
     power: Joi.number().required()

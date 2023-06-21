@@ -62,6 +62,7 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
     if(tryCrit(actionDef, abilityInstance, enemy)){
       damageInfo.damage *= (1 + attacker.stats.get('critDamage').value)
       damageInfo.crit = true
+      processAbilityEvents(combat, 'crit', attacker, abilityInstance)
     }
 
     damageInfo = dealDamage(combat, attacker, enemy, damageInfo)

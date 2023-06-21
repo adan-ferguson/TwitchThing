@@ -48,8 +48,6 @@ export function rowsToInventoryItems(adventurerItemRows){
     }
   })
 
-  debugger
-
   return {
     basic,
     crafted

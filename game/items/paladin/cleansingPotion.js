@@ -10,9 +10,13 @@ export default function(level){
           }
         },
         actions: [{
-          removeStatusEffect: {
-            targets: 'self',
-            polarity: 'debuff'
+          modifyStatusEffect: {
+            subject: {
+              polarity: 'debuff'
+            },
+            modification: {
+              remove: true
+            }
           }
         }]
       }]

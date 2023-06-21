@@ -30,10 +30,11 @@ export default function(){
               trigger: 'takeTurn',
               abilityId: 'constrictAddStack',
               actions: [{
-                modifyEffect: {
+                modifyStatusEffect: {
                   targets: 'enemy',
-                  name: 'constricted',
-                  sourceKey: 'self',
+                  subject: {
+                    name: 'constricted'
+                  },
                   modification: {
                     stacks: 1
                   }

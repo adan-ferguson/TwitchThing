@@ -1,6 +1,6 @@
 import DIElement from '../diElement.js'
 import { OrbsTooltip } from '../orbRow.js'
-import { toDisplayName, wrapContent } from '../../../../game/utilFunctions.js'
+import { makeEl, toDisplayName, wrapContent } from '../../../../game/utilFunctions.js'
 import LoadoutObjectInstance from '../../../../game/loadoutObjectInstance.js'
 import EffectDetails from '../effectDetails.js'
 import SimpleModal from '../simpleModal.js'
@@ -8,6 +8,7 @@ import ItemCard from '../itemCard.js'
 import { affectsIcon } from '../common.js'
 import { getAbilityDisplayInfoForObj } from '../../displayInfo/abilityDisplayInfo.js'
 import { ITEM_ROW_COLORS } from '../../colors.js'
+import ItemQuickUpgrade from '../itemQuickUpgrade.js'
 
 const HTML = `
 <di-loadout-row-state></di-loadout-row-state>
@@ -42,8 +43,13 @@ export default class AdventurerItemRow extends DIElement{
     this.addEventListener('contextmenu', e => {
       if(this.adventurerItem){
         e.preventDefault()
-        const details = new ItemCard().setItem(this.adventurerItem)
-        new SimpleModal(details).show()
+
+        const overrideParent = this.closest('.adventurer-item-right-click-override')
+        if(overrideParent){
+          return overrideParent.adventurerItemRightClickOverride(this)
+        }
+
+        new SimpleModal(new ItemCard().setItem(this.adventurerItem)).show()
       }
     })
   }

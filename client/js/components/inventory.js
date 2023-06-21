@@ -1,10 +1,8 @@
-import { mergeOptionsObjects, wrapContent } from '../../../game/utilFunctions.js'
+import { mergeOptionsObjects } from '../../../game/utilFunctions.js'
 import DIElement from './diElement.js'
 import { inventoryItemsToRows, makeAdventurerItemRow, standardItemSort } from './listHelpers.js'
 import AdventurerItemRow from './adventurer/adventurerItemRow.js'
-import { faIcon } from './common.js'
-import tippy from 'tippy.js'
-import WorkshopPage from './pages/workshop/workshopPage.js'
+import tippyCallout from './visualEffects/tippyCallout.js'
 
 const HTML = `
 <div class="content-rows">
@@ -38,6 +36,37 @@ export default class Inventory extends DIElement{
     return this.querySelector('di-list')
   }
 
+  set showQuickUpgrade(val){
+    this.classList.toggle('show-quick-upgrade', val)
+    const calloutName = 'quick-upgrade-callout'
+    if(val && !localStorage.getItem(calloutName)){
+      tippyCallout(this.listEl.querySelector('di-adventurer-item-row'), 'You can also upgrade items in the right-click "more info" pane.')
+      localStorage.setItem(calloutName, true)
+    }
+  }
+
+  get allItems(){
+    if(!this._cachedItems){
+      const inv = {
+        basic: {},
+        crafted: []
+      }
+      this.listEl.allRows.forEach(row => {
+        const ai = row.adventurerItem
+        if(!ai){
+          return
+        }
+        if(ai.isBasic){
+          inv.basic[ai.baseItemId] = row.count
+        }else{
+          inv.crafted.push(ai.def)
+        }
+      })
+      this._cachedItems = inv
+    }
+    return this._cachedItems
+  }
+
   filterFn = row => {
     return row.adventurerItem && Object.keys(this.adventurer.orbs).includes(row.adventurerItem.advClass)
     // return row.item?.classes.every(cls => this.adventurer.orbs[cls]) ?? false
@@ -51,6 +80,7 @@ export default class Inventory extends DIElement{
     this.adventurer = adventurer
     this._updateSortAndFilter()
     this.listEl.fullUpdate()
+    this._cachedInv = items
     return this
   }
 
@@ -66,6 +96,7 @@ export default class Inventory extends DIElement{
       }
     }
     this.listEl.addRow(makeAdventurerItemRow(adventurerItem))
+    this._cachedInv = null
   }
 
   removeItem(item){
@@ -78,24 +109,7 @@ export default class Inventory extends DIElement{
     }else{
       this.listEl.removeRow(row)
     }
-  }
-
-  showScrapLink(){
-    if(this.querySelector('.scrap-link')){
-      return
-    }
-    const scrapLink = wrapContent(faIcon('recycle'), {
-      class: ['inset-title-right', 'clickable']
-    })
-    scrapLink.style.lineHeight = '0px'
-    tippy(scrapLink, {
-      theme: 'light',
-      content: 'Go to upgrader page'
-    })
-    scrapLink.addEventListener('click', () => {
-      this.parentPage.redirectTo(WorkshopPage.path(), { initialAdventurerID: this.adventurer.id })
-    })
-    this.querySelector('.content-rows').appendChild(scrapLink)
+    this._cachedInv = null
   }
 
   _setupFilteringOptions(){

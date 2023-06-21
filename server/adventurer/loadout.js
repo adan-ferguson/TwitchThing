@@ -13,7 +13,7 @@ import { adjustInventoryBasics, adjustInventoryCrafted } from '../user/inventory
 export function commitAdventurerLoadout(adventurerDoc, user, newItems, newSkills){
   setItems(adventurerDoc, user, newItems)
   setSkills(adventurerDoc, newSkills)
-  validateLoadout(adventurerDoc)
+  // validateLoadout(adventurerDoc)
 }
 
 function setItems(adventurerDoc, user, newItems){

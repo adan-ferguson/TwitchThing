@@ -15,5 +15,11 @@ export const ROGUE_CLASS_INFO = {
     Items.bootsOfSwiftness,
     Items.bagOfGold,
     Items.treasureMap,
-  ],[],[]]
+  ],[
+    Items.cripplingPoison,
+    Items.sleepPowder,
+    // Items.cloak
+  ],[
+    Items.luckyRing
+  ]]
 }

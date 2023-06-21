@@ -6,7 +6,7 @@ import { unlockedClasses } from '../../game/user.js'
 import { chooseOne } from '../../game/rando.js'
 
 const GOLD_BASE = 15
-const GOLD_GROWTH = 6
+const GOLD_GROWTH = 4
 const GOLD_GROWTH_PCT = 0.01
 
 /**
@@ -19,7 +19,7 @@ export function generateMonsterChest(dri, mi){
   const fighterSkewed = dri.user.deepestFloor < 11
 
   const options = {
-    value: mi.level,
+    value: 1,
     level: mi.level,
     itemLimit: 1,
     type: 'normal',
@@ -29,11 +29,16 @@ export function generateMonsterChest(dri, mi){
   }
 
   if(mi.isBoss){
-    options.type = 'boss'
     if(dri.adventurer.accomplishments.deepestFloor <= dri.floor){
+      options.type = 'zoneReward'
       options.itemLimit = 6
-      options.value *= 3
+      options.value = 4
       options.baseGold = addGold(mi.level * 2)
+    }else{
+      options.type = 'boss'
+      options.itemLimit = 3
+      options.value = 2
+      options.baseGold = addGold(mi.level)
     }
   }
 
@@ -114,7 +119,7 @@ function mergeBasicItems(source, target){
 }
 
 function addGold(valueRemaining){
-  valueRemaining = Math.ceil(Math.random() * valueRemaining)
+  valueRemaining = Math.ceil((0.5 + Math.random() / 2) * valueRemaining)
   const gold = GOLD_BASE + Math.ceil(geometricProgression(GOLD_GROWTH_PCT, valueRemaining, GOLD_GROWTH))
   return toNumberOfDigits(gold,2)
 }

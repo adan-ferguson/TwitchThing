@@ -1,17 +1,17 @@
 export default function(level){
-  const duration = 3000 + level * 2000
+  const duration = 5000 + level * 5000
   return {
     effect: {
       abilities: [{
         trigger: 'active',
-        cooldown: 20000,
+        cooldown: duration * 2,
         actions: [{
           applyStatusEffect: {
             targets: 'enemy',
             statusEffect: {
               base: {
-                blinded: {
-                  duration: duration
+                asleep: {
+                  duration
                 }
               }
             }
@@ -19,6 +19,6 @@ export default function(level){
         }]
       }]
     },
-    orbs: level * 3 + 1
+    orbs: level * 3 + 2
   }
 }

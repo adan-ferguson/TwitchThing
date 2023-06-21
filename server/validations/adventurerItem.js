@@ -17,6 +17,7 @@ export function validateAllItems(){
 function validateItem(baseItemId){
   Joi.assert(Items[baseItemId].def, Joi.function())
   Joi.assert(new AdventurerItem(baseItemId).data, LOADOUT_OBJECT_SCHEMA.append({
-    orbs: Joi.number().integer().required()
+    orbs: Joi.number().integer().required(),
+    scrapValue: Joi.number().integer()
   }))
 }

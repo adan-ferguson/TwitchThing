@@ -13,7 +13,7 @@ import { keyword } from './keywordDisplayInfo.js'
 
 export function statusEffectDisplayInfo(effectInstance){
 
-  const def = DEFS[effectInstance.name]?.() ?? {}
+  const def = DEFS[effectInstance.name]?.(effectInstance.effectData) ?? {}
   let text = def.displayName ?? effectInstance.displayName ?? null
   if(!text){
     return null

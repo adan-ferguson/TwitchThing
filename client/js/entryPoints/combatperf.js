@@ -4,7 +4,7 @@ const args = window.COMBAT_ARGS
 const btn = document.querySelector('#run-combat')
 
 if(!args){
-  btn.addAttribute('disabled')
+  btn.disabled = true
   btn.textContent = 'Combat not found'
 }else{
   btn.addEventListener('click', () => {

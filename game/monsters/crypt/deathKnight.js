@@ -19,9 +19,14 @@ export default function(){
                   physPower: 1.7
                 },
                 onHit: {
-                  removeStatusEffect: {
+                  modifyStatusEffect: {
                     targets: 'target',
-                    polarity: 'buff',
+                    subject: {
+                      polarity: 'buff'
+                    },
+                    modification: {
+                      remove: true
+                    }
                   }
                 }
               }

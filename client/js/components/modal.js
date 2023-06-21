@@ -14,7 +14,7 @@ export default class Modal extends HTMLElement{
     closeOnUnderlayClick: true
   }
 
-  constructor(){
+  constructor(content = null){
     super()
     this.classList.add('modal')
     this.innerHTML = HTML
@@ -30,6 +30,9 @@ export default class Modal extends HTMLElement{
       this.hide()
     })
     this.innerContent = this.querySelector('.inner-content')
+    if(content){
+      this.innerContent.append(content)
+    }
   }
 
   setOptions(options = {}){
