@@ -49,9 +49,6 @@ const as = Joi.object({
     hits: Joi.number().integer(),
     cantDodge: Joi.bool(),
     cantMiss: Joi.bool(),
-    onHit: Joi.custom(val => {
-      return Joi.attempt(val, ACTION_SCHEMA)
-    })
   }).or('scaling', 'targetScaling'),
   gainHealth: Joi.object({
     scaling: SCALED_NUMBER_SCHEMA.required(),
@@ -108,6 +105,9 @@ const as = Joi.object({
       return Joi.attempt(val, STATUS_EFFECT_SCHEMA)
     }),
     count: Joi.number().integer().min(1)
+  }),
+  theBountyCollectorKill: Joi.object({
+    value: Joi.number()
   })
 })
 
@@ -141,6 +141,7 @@ const ABILITY_SCHEMA = Joi.object({
   replacements: REPLACEMENT_SCHEMA,
   actions: Joi.array().items(ACTION_SCHEMA),
   uses: Joi.number().integer(),
+  exclusiveStats: STATS_SCHEMA,
   phantomEffect: Joi.custom(val => {
     return Joi.attempt(val, PHANTOM_EFFECT_SCHEMA)
   }),
@@ -180,6 +181,7 @@ export const META_EFFECT_SCHEMA = Joi.object({
     exclusiveStats: STATS_SCHEMA,
     exclusiveMods: MODS_SCHEMA,
     statMultiplier: Joi.number().min(0),
+    addAbility: ABILITY_SCHEMA,
     abilityModification: Joi.object({
       abilityModificationId: Joi.string(),
       trigger: TRIGGER_NAME_SCHEMA,

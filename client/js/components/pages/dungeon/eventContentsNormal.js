@@ -1,5 +1,5 @@
 import RELICS from '../../../relicDisplayInfo.js'
-import { suffixedNumber } from '../../../../../game/utilFunctions.js'
+import { arrayize, suffixedNumber } from '../../../../../game/utilFunctions.js'
 import { ROOM_IMAGES } from '../../../assetLoader.js'
 import MonsterInstance from '../../../../../game/monsterInstance.js'
 
@@ -58,22 +58,25 @@ export default class EventContentsNormal extends HTMLElement{
   }
 
   _addRewards(rewards){
-    if(!rewards){
+    rewards = arrayize(rewards)
+    if(!rewards.length){
       this._rewards.innerHTML = ''
       return
     }
     let html = ''
-    for(let key in rewards){
-      if(key === 'pityPoints'){
-        continue
+    rewards.forEach(r => {
+      for(let key in r){
+        if(key === 'pityPoints'){
+          continue
+        }
+        let val = r[key]
+        if(key === 'chests'){
+          html += '<div>Found a treasure chest</div>'
+        }else{
+          html += `<div>+${suffixedNumber(val)} ${key}</div>`
+        }
       }
-      let val = rewards[key]
-      if(key === 'chests'){
-        html += '<div>Found a treasure chest</div>'
-      }else{
-        html += `<div>+${suffixedNumber(val)} ${key}</div>`
-      }
-    }
+    })
     this._rewards.innerHTML = html
   }
 

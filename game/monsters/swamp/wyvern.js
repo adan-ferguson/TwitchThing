@@ -1,4 +1,5 @@
 import flutteringMonsterItem from '../../commonTemplates/flutteringMonsterItem.js'
+import { onHit } from '../../commonTemplates/onHit.js'
 
 export default function(){
   return {
@@ -14,24 +15,25 @@ export default function(){
       {
         name: 'Acid Breath',
         effect: {
-          abilities: [{
-            trigger: 'active',
-            uses: 1,
-            abilityId: 'acidBreath',
-            actions: [{
-              attack: {
-                damageType: 'magic',
-                scaling: {
-                  magicPower: 2
-                },
-                onHit: {
-                  breakItem: {
-                    count: 2,
-                  }
+          abilities: [
+            {
+              trigger: 'active',
+              uses: 1,
+              abilityId: 'acidBreath',
+              actions: [{
+                attack: {
+                  damageType: 'magic',
+                  scaling: {
+                    magicPower: 2
+                  },
                 }
+              }]
+            },
+            onHit({
+              breakItem: {
+                count: 2
               }
-            }]
-          }]
+            })]
         }
       }
     ]

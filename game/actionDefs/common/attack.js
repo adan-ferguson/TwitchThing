@@ -9,7 +9,6 @@ export default {
   cantMiss: false,
   isAttack: true,
   hits: 1,
-  onHit: null,
   scaling: {},
   targetScaling: {}
 }

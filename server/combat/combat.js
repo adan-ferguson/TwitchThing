@@ -86,7 +86,6 @@ class Combat{
     }
     this.timeline = []
     this._startCombat()
-    this.fighters.forEach(fi => fi.endCombat())
     this.fighterEndState1 = { ...fighterInstance1.state }
     this.fighterEndState2 = { ...fighterInstance2.state }
     this.duration = this._currentTime
@@ -109,7 +108,7 @@ class Combat{
   }
 
   get finished(){
-    return this.fighterInstance1.hp === 0 || this.fighterInstance2.hp === 0
+    return this.fighterInstance1.dead || this.fighterInstance2.dead
   }
 
   get bossFight(){

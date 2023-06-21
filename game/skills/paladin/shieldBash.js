@@ -1,3 +1,5 @@
+import { onHit } from '../../commonTemplates/onHit.js'
+
 export default function(level){
   const physPower = 0.8 + level * 0.2
   const stunBase = 1000 + level * 1000
@@ -7,6 +9,20 @@ export default function(level){
       subjectKey: 'attached',
       stat: 'block',
       base: stunBase * 2
+    }
+  }
+  const applyStun = {
+    applyStatusEffect: {
+      targets: 'target',
+      statusEffect: {
+        base: {
+          stunned: {
+            duration: {
+              scaledNumber
+            }
+          }
+        }
+      }
     }
   }
   return {
@@ -26,23 +42,9 @@ export default function(level){
             scaling: {
               physPower,
             },
-            onHit: {
-              applyStatusEffect: {
-                targets: 'target',
-                statusEffect: {
-                  base: {
-                    stunned: {
-                      duration: {
-                        scaledNumber
-                      }
-                    }
-                  }
-                }
-              }
-            }
           }
         }]
-      }]
+      }, onHit(applyStun)]
     }
   }
 }

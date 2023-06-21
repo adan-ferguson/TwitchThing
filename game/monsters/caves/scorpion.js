@@ -1,3 +1,5 @@
+import { onHit } from '../../commonTemplates/onHit.js'
+
 export default function(){
   return {
     baseStats: {
@@ -16,29 +18,28 @@ export default function(){
               attack: {
                 scaling: {
                   physPower: 1
-                },
-                onHit: {
-                  applyStatusEffect: {
-                    targets: 'target',
-                    statusEffect: {
-                      base: {
-                        damageOverTime: {
-                          damage: {
-                            scaledNumber: {
-                              physPower: 0.3
-                            }
-                          }
-                        }
-                      },
-                      name: 'poisoned',
-                      duration: 15000,
-                      persisting: true,
-                    }
-                  }
                 }
               }
             }]
-          }]
+          },onHit({
+            applyStatusEffect: {
+              targets: 'target',
+              statusEffect: {
+                base: {
+                  damageOverTime: {
+                    damage: {
+                      scaledNumber: {
+                        physPower: 0.3
+                      }
+                    }
+                  }
+                },
+                name: 'poisoned',
+                duration: 15000,
+                persisting: true,
+              }
+            }
+          })]
         }
       },
     ]

@@ -1,12 +1,12 @@
 import { chooseRandomBasicItem } from '../items/generator.js'
 import { toNumberOfDigits } from '../../game/utilFunctions.js'
 import { geometricProgression } from '../../game/growthFunctions.js'
-import AdventurerItem from '../../game/items/adventurerItem.js'
+import AdventurerItem, { ITEM_RARITIES } from '../../game/items/adventurerItem.js'
 import { unlockedClasses } from '../../game/user.js'
 import { chooseOne } from '../../game/rando.js'
 
-const GOLD_BASE = 15
-const GOLD_GROWTH = 4
+const GOLD_BASE = 10
+const GOLD_GROWTH = 2
 const GOLD_GROWTH_PCT = 0.01
 
 /**
@@ -15,6 +15,7 @@ const GOLD_GROWTH_PCT = 0.01
  */
 export function generateMonsterChest(dri, mi){
 
+  const ai = dri.adventurerInstance
   const preSkillTutorial = dri.user.features.skills ? false : true
   const fighterSkewed = dri.user.deepestFloor < 11
 
@@ -25,7 +26,8 @@ export function generateMonsterChest(dri, mi){
     type: 'normal',
     noGold: preSkillTutorial ? true : false,
     rarities: preSkillTutorial ? [0] : null,
-    goldMultiplier: dri.adventurerInstance.stats.get('goldFind').value
+    goldMultiplier: ai.stats.get('goldFind').value,
+    rareFind: ai.stats.get('rareFind').value
   }
 
   if(mi.isBoss){
@@ -46,6 +48,11 @@ export function generateMonsterChest(dri, mi){
     return { value: cls, weight: fighterSkewed && cls === 'fighter' ? 6 : 1 }
   })
 
+  const midas = ai.modsOfType('midas')[0]
+  if(midas && !options.noGold){
+    options.goldOnly = true
+  }
+
   return generateRandomChest(options)
 }
 
@@ -56,8 +63,10 @@ export function generateRandomChest(options = {}){
     level: 1,
     value: 1,
     noGold: false,
+    goldOnly: false,
     baseGold: 0,
     goldMultiplier: 1,
+    rareFind: 1,
     classes: null,
     itemLimit: 1,
     rarities: null,
@@ -78,9 +87,10 @@ export function generateRandomChest(options = {}){
   const totalValue = options.level * options.value
   let valueRemaining = totalValue
   let items = []
-  while(valueRemaining > 0){
+  while(valueRemaining > 0 && !options.goldOnly){
     const advClass = chooseOne(options.classes)
-    const item = new AdventurerItem(chooseRandomBasicItem(valueRemaining, advClass, options.rarities).id)
+    const rarity = chooseRarity(options.rarities, valueRemaining, options.rareFind)
+    const item = new AdventurerItem(chooseRandomBasicItem(valueRemaining, advClass, rarity).id)
     items.push(item)
     valueRemaining -= item.rarityInfo.value
   }
@@ -89,14 +99,8 @@ export function generateRandomChest(options = {}){
     items = items.sort((a, b) => (b.rarity ?? 0) - (a.rarity ?? 0)).slice(0, options.itemLimit)
   }
 
-  let leftoverValue = totalValue
-  items.forEach(item => {
-    addItem(contents.items.basic, item.baseItemId)
-    leftoverValue -= item.rarityInfo.value
-  })
-
-  if(leftoverValue > 0 && !options.noGold){
-    contents.gold += addGold(leftoverValue) * options.goldMultiplier
+  if(!options.noGold){
+    contents.gold += addGold(totalValue) * options.goldMultiplier
   }
 
   return {
@@ -129,4 +133,15 @@ function addItem(obj, name, count = 1){
     obj[name] = 0
   }
   obj[name] += count
+}
+
+function chooseRarity(rarities, valueRemaining, rareFind){
+  if(!rarities){
+    rarities = [0,1,2]
+  }
+  return chooseOne(rarities.map(r => {
+    const info = ITEM_RARITIES[r]
+    const pct = Math.min(1, valueRemaining / info.value)
+    return { value: r, weight: pct * info.weight * (r === 2 ? rareFind : 1) }
+  }))
 }

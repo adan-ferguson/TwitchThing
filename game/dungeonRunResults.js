@@ -3,10 +3,11 @@ import { CombatResult } from './combatResult.js'
 
 export default function calculateResults(eventsList){
   eventsList = eventsList.events ?? eventsList
+  const rewards = toRewards(eventsList)
   const results = {
-    xp: eventsList.reduce((prev, e) => prev + (e.rewards?.xp ?? 0), 0) ?? 0,
+    xp: xp(rewards),
     monstersKilled: monstersKilled(eventsList),
-    chests: chests(eventsList)
+    chests: chests(rewards)
   }
 
   if(!eventsList.length){
@@ -34,10 +35,22 @@ function monstersKilled(eventsList){
   return Object.keys(obj).map(name => { return { name, amount: obj[name] }} )
 }
 
-function chests(eventsList){
+function toRewards(eventsList){
   const arr = []
   eventsList.forEach(e => {
-    const chests = arrayize(e.rewards?.chests ?? [])
+    arr.push(...arrayize(e.rewards))
+  })
+  return arr
+}
+
+function xp(rewards){
+  return rewards.reduce((prev, r) => prev + (r.xp ?? 0), 0) ?? 0
+}
+
+function chests(rewards){
+  const arr = []
+  rewards.forEach(r => {
+    const chests = arrayize(r.chests ?? [])
     chests.forEach(chest => {
       arr.push(chest)
     })

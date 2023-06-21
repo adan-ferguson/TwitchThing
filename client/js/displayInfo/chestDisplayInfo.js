@@ -12,6 +12,9 @@ const CHESTS = {
   zoneReward: {
     color: '#4696a4',
     stars: 2
+  },
+  bounty: {
+    color: '#fae17f'
   }
 }
 

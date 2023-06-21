@@ -8,6 +8,12 @@ export const ROGUE_CLASS_INFO = {
     Skills.ambush,
     Skills.sneakPast,
     Skills.anOpening,
+    Skills.appraise,
+    Skills.lethalStrike,
+    Skills.exhaustiveSearch,
+    Skills.flawlessness,
+    Skills.deadlyMagickqs,
+    Skills.criticalCrit,
   ],
   items: [[
     Items.dagger,
@@ -22,7 +28,7 @@ export const ROGUE_CLASS_INFO = {
     Items.deadlyBlade,
   ],[
     Items.luckyRing,
-    // Items.theBountyCollector,
+    Items.theBountyCollector,
     Items.phantomCloak,
   ]]
 }

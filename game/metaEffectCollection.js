@@ -94,6 +94,9 @@ function merge(baseEffect, metaEffects){
     if(modification.abilityModification && baseEffect.abilities){
       baseEffect.abilities = mergeAbilityModification(modification.abilityModification, baseEffect.abilities)
     }
+    if(modification.addAbility){
+      baseEffect.abilities = [...(baseEffect.abilities ?? []), modification.addAbility]
+    }
   })
   return baseEffect
 }

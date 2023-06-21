@@ -1,7 +1,7 @@
 import { exponentialPercentage } from '../../growthFunctions.js'
 
 export default function(level){
-  const missChance = exponentialPercentage(0.1, level - 1, 0.25)
+  const missChance = exponentialPercentage(0.1, level - 1, 0.20)
   return {
     effect: {
       abilities: [{
@@ -11,7 +11,9 @@ export default function(level){
           applyStatusEffect: {
             targets: 'enemy',
             statusEffect: {
+              name: 'Sand In Eyes',
               polarity: 'debuff',
+              stacking: 'replace',
               stats: {
                 missChance
               }

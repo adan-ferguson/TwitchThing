@@ -50,6 +50,11 @@ export function takeDamage(combat, subject, damageInfo){
     result = processAbilityEvents(combat, 'takeDamage', subject, null, result)
   }
 
+  if(!subject.hp && !subject.dead){
+    // TODO: 'dead' event, possible cancellation
+    subject.dead = true
+  }
+
   return result
 }
 

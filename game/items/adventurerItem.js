@@ -3,8 +3,8 @@ import _ from 'lodash'
 import AdventurerLoadoutObject from '../adventurerLoadoutObject.js'
 import { toDisplayName, uniqueID } from '../utilFunctions.js'
 
-const COMMON_TO_UNCOMMON = 3.75
-const UNCOMMON_TO_RARE = 3.75
+const COMMON_TO_UNCOMMON = 4
+const UNCOMMON_TO_RARE = 4
 
 export const ITEM_RARITIES = [
   {

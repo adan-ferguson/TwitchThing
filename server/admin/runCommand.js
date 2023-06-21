@@ -42,7 +42,7 @@ const COMMANDS = {
       userDoc.features.workshop = 1
       userDoc.features.skills = 1
       userDoc.features.advClasses.rogue = 2
-      userDoc.features.advClasses.chimera = 2
+      userDoc.features.advClasses.chimera = 0
       Users.save(userDoc)
     })
     return 'Stuff given'

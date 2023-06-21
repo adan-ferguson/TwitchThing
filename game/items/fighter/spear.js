@@ -6,8 +6,10 @@ export default function(level){
         metaEffectId: 'spear',
         subject: { key: 'attached' },
         effectModification: {
-          exclusiveStats: {
-            physPower
+          abilityModification: {
+            exclusiveStats: {
+              physPower
+            },
           },
           exclusiveMods: [{
             ignoreDef: 'phys'

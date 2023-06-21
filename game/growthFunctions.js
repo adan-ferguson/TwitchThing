@@ -63,7 +63,7 @@ export function oneTwoFive(val){
 }
 
 export function wrappedPct(val){
-  return `+${val}%`
+  return val >= 0 ? `+${val}%` : `${val}%`
 }
 
 export function arithmeticSum(base, growth, count){

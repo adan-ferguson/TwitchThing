@@ -1,7 +1,7 @@
 import { exponentialPercentage } from '../../growthFunctions.js'
 
 export default function(level){
-  const speed = 20 + level * 30
+  const speed = 10 + level * 30
   return {
     effect: {
       stats: {

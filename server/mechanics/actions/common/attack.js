@@ -12,6 +12,9 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
 
   const results = []
   for(let i = 0; i < actionDef.hits; i++){
+    if(enemy.dead){
+      continue
+    }
     results.push(hit(deepClone(actionDef)))
   }
   return results
@@ -60,7 +63,7 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
     damageInfo.ignoreDefense = ignoresDefenseMatchesDamageType(mods, actionDef.damageType)
 
     if(tryCrit(actionDef, abilityInstance, enemy)){
-      damageInfo.damage *= (1 + attacker.stats.get('critDamage').value)
+      damageInfo.damage *= attacker.stats.get('critDamage').value
       damageInfo.crit = true
       processAbilityEvents(combat, 'crit', attacker, abilityInstance)
     }
@@ -76,6 +79,10 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
         ability: abilityInstance,
         def: actionDef.onHit
       }])
+    }
+
+    if(enemy.dead){
+      processAbilityEvents(combat, 'kill', attacker, abilityInstance)
     }
 
     return { damageInfo }
@@ -97,6 +104,9 @@ function tryMiss(actionDef, abilityInstance){
 }
 
 function tryCrit(actionDef, abilityInstance, target){
+  if(actionDef.damageType !== 'phys' && !abilityInstance.fighterInstance.hasMod('magicCrit')){
+    return false
+  }
   const chance = target.stats.get('enemyCritChance').value + abilityInstance.totalStats.get('critChance').value
   return Math.random() + chance > 1
 }

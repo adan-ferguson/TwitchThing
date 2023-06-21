@@ -12,6 +12,7 @@ export const TRIGGER_NAME_SCHEMA = Joi.string().valid(
   'gainedHealth',
   'hitByAttack',
   'instant',
+  'kill',
   'rest',
   'takeDamage',
   'takeTurn',

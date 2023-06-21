@@ -1,7 +1,26 @@
+import { onHit } from '../../commonTemplates/onHit.js'
+
 export default function(level){
   const duration = 12000 + level * 6000
   const cooldown = 45000 + level * 15000
   const magicPower = 1.4 + level * 0.6
+  const maybeStun = {
+    maybe: {
+      chance: 1 / 3,
+      action: {
+        applyStatusEffect: {
+          targets: 'target',
+          statusEffect: {
+            base: {
+              stunned: {
+                duration: 3000
+              }
+            }
+          }
+        }
+      }
+    }
+  }
   return {
     effect: {
       abilities: [{
@@ -25,26 +44,9 @@ export default function(level){
                       magicPower
                     },
                     range: [0, 1],
-                    onHit: {
-                      maybe: {
-                        chance: 1 / 3,
-                        action: {
-                          applyStatusEffect: {
-                            targets: 'target',
-                            statusEffect: {
-                              base: {
-                                stunned: {
-                                  duration: 3000
-                                }
-                              }
-                            }
-                          }
-                        }
-                      }
-                    }
                   }
                 }]
-              }]
+              }, onHit(maybeStun)]
             }
           }
         }],

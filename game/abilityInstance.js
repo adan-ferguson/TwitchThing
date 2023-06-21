@@ -1,4 +1,3 @@
-import _ from 'lodash'
 import Stats from './stats/stats.js'
 
 export default class AbilityInstance{

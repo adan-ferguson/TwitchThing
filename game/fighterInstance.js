@@ -255,6 +255,14 @@ export default class FighterInstance{
     return this._metaEffectCollection
   }
 
+  get dead(){
+    return this._dead
+  }
+
+  set dead(val){
+    this._dead = val
+  }
+
   getNextActiveAbility(){
     if(this.hasMod('silenced')){
       return null
