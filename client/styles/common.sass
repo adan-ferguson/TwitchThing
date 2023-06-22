@@ -211,16 +211,18 @@ input
   font-family: 'Text Font'
 
 .highlight, .glow
-  box-shadow: 0 0 10px 5px #aef4af
+  &.glow-green
+    color: #aef4af
+  box-shadow: 0 0 10px 5px currentColor
 
 .glow
-  animation: glow 1s infinite alternate
+  animation: glow 0.7s ease-in infinite alternate
 
 @keyframes glow
   from
     background-color: white
   to
-    background-color: #d8f6d8
+    background-color: currentColor
 
 .autocrawl
   font-size: 3em

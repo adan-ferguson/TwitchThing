@@ -217,6 +217,7 @@ export default class List extends DIElement{
       }
     })
     this.rows.append(...toDisplay)
+    hideAllTippys({ duration: 0 })
   }
 
   _fillWithBlanks(arr){

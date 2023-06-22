@@ -3,13 +3,13 @@ import { wrappedPct } from '../../growthFunctions.js'
 export default function(level){
   return {
     effect: {
-      metaEffect: {
+      metaEffects: [{
         subject: {
           key: 'self'
         },
         conditions: {
           owner: {
-            hpPct: 1
+            hpFull: true
           }
         },
         effectModification: {
@@ -17,7 +17,7 @@ export default function(level){
             combatXP: wrappedPct(200 + 300 * level)
           }
         }
-      }
+      }]
     }
   }
 }

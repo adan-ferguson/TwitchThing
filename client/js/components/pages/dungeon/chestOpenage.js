@@ -59,8 +59,13 @@ export default class ChestOpenage extends DIElement{
     this.dispatchEvent(new CustomEvent('opened'))
 
     const displayInfo = getChestDisplayInfo(this._chest)
-    this.querySelector('.inset-title').textContent =
-      `Lvl. ${this._chest.options.level} ${displayInfo.displayName} Chest`
+
+    let text = ''
+    if(this._chest.options.level){
+      text += `Lvl. ${this._chest.options.level} `
+    }
+
+    this.querySelector('.inset-title').textContent = text + `${displayInfo.displayName} Chest`
 
     const contents = this.querySelector('.contents')
     if(this._chest.contents.gold){
@@ -70,7 +75,7 @@ export default class ChestOpenage extends DIElement{
       }))
     }
 
-    const basicItems = arrayOfItems(this._chest.contents.items.basic)
+    const basicItems = arrayOfItems(this._chest.contents.items?.basic ?? [])
     basicItems.forEach(({ name, count }) => {
       const item = new AdventurerItem(name)
       const row = new AdventurerItemRow().setOptions({ item, count })

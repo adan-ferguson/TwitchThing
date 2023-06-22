@@ -290,6 +290,9 @@ export default class FighterInstance{
     if(conditions.hpPctBelow && this.hpPct > conditions.hpPctBelow){
       return false
     }
+    if(conditions.hpFull && this.hpPct < 1){
+      return false
+    }
     if(conditions.deepestFloor && !this.onDeepestFloor){
       return false
     }

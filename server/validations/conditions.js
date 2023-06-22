@@ -5,6 +5,7 @@ import { DAMAGE_TYPE_SCHEMA } from './damage.js'
 import { TRIGGER_NAME_SCHEMA } from './triggers.js'
 
 export const FIGHTER_INSTANCE_CONDITIONS_SCHEMA = Joi.object({
+  hpFull: Joi.bool(),
   hpPctBelow: Joi.number(),   // Is our hpPct below this number?
   deepestFloor: Joi.bool(),   // Are we on the adventurer's deepest floor?
   bossFight: Joi.bool(),

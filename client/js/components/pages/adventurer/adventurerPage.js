@@ -129,10 +129,10 @@ export default class AdventurerPage extends Page{
       this.querySelector('.edit-row').classList.add('displaynone')
       return
     }else if(featureStatus === 1){
-      btn.classList.add('glow')
+      btn.classList.add('glow','glow-green')
       tippyCallout(btn, 'Edit your items here')
     }else if(user.features.spendPoints === 1){
-      pointsBtn.classList.add('glow')
+      pointsBtn.classList.add('glow','glow-green')
       tippyCallout(pointsBtn, 'Spent points here')
     }
 

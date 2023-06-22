@@ -3,6 +3,7 @@ import DIElement from './diElement.js'
 import { inventoryItemsToRows, makeAdventurerItemRow, standardItemSort } from './listHelpers.js'
 import AdventurerItemRow from './adventurer/adventurerItemRow.js'
 import tippyCallout from './visualEffects/tippyCallout.js'
+import { flash } from '../animations/simple.js'
 
 const HTML = `
 <div class="content-rows">
@@ -73,9 +74,8 @@ export default class Inventory extends DIElement{
   }
 
   setup(items, adventurer){
-    if(!this._beenSetup){
-      this.listEl.setRows(inventoryItemsToRows(items))
-    }
+    console.log('setup')
+    this.listEl.setRows(inventoryItemsToRows(items))
     this._beenSetup = true
     this.adventurer = adventurer
     this._updateSortAndFilter()
@@ -110,6 +110,14 @@ export default class Inventory extends DIElement{
       this.listEl.removeRow(row)
     }
     this._cachedInv = null
+  }
+
+  scrollToAndFlash(itemId){
+    const row = this.listEl.findRow(row => row.adventurerItem.id === itemId)
+    if(row){
+      this.listEl.showRow(row)
+      flash(row)
+    }
   }
 
   _setupFilteringOptions(){

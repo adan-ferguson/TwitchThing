@@ -14,7 +14,7 @@ const CHESTS = {
     stars: 2
   },
   bounty: {
-    color: '#fae17f'
+    color: '#dabd74'
   }
 }
 

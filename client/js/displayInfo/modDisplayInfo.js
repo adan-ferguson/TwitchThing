@@ -45,6 +45,16 @@ const DEFS = {
     return {
       description: 'Can\'t basic attack.'
     }
+  },
+  magicCrit: () => {
+    return {
+      description: 'Magic attacks can crit.'
+    }
+  },
+  goldOnly: () => {
+    return {
+      description: 'Chests found will only contain gold.'
+    }
   }
 }
 export function modDisplayInfo(mod){

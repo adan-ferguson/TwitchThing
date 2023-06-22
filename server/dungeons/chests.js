@@ -27,7 +27,8 @@ export function generateMonsterChest(dri, mi){
     noGold: preSkillTutorial ? true : false,
     rarities: preSkillTutorial ? [0] : null,
     goldMultiplier: ai.stats.get('goldFind').value,
-    rareFind: ai.stats.get('rareFind').value
+    rareFind: ai.stats.get('rareFind').value,
+    goldOnly: ai.hasMod('goldOnly'),
   }
 
   if(mi.isBoss){
@@ -110,9 +111,11 @@ export function generateRandomChest(options = {}){
 }
 
 export function applyChestToUser(userDoc, chest){
-  mergeBasicItems(chest.contents.items.basic, userDoc.inventory.items.basic)
+  if(chest.contents.items){
+    mergeBasicItems(chest.contents.items.basic, userDoc.inventory.items.basic)
+  }
   if (chest.contents.gold){
-    userDoc.inventory.gold += chest.contents.gold
+    userDoc.inventory.gold += Math.round(chest.contents.gold)
   }
 }
 

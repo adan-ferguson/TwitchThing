@@ -6,7 +6,7 @@ export default function(combat, actor, subject, abilityInstance = null, actionDe
       type: 'bounty'
     },
     contents: {
-      gold: actionDef.value * subject.level
+      gold: Math.round(actionDef.value * subject.level * actor.stats.get('goldFind').value)
     }
   }
   return gainStatusEffect(combat, actor, subject, abilityInstance, {

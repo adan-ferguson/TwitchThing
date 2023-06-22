@@ -275,6 +275,9 @@ function conditionsDescription(conditions){
   if(conditions.owner?.hpPctBelow){
     return [`Only use when health is below ${conditions.owner.hpPctBelow * 100}%.`]
   }
+  if(conditions.owner?.hpFull){
+    return ['Only use when health is at 100%.']
+  }
   if(conditions.owner?.hasDebuff){
     return ['Only use if you have a debuff.']
   }

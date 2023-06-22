@@ -13,6 +13,7 @@ export const ROGUE_CLASS_INFO = {
     Skills.exhaustiveSearch,
     Skills.flawlessness,
     Skills.deadlyMagickqs,
+    Skills.midasTouch,
     Skills.criticalCrit,
   ],
   items: [[

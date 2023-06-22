@@ -112,15 +112,14 @@ export default class LoadoutTab extends DIElement{
         data.itemDef = item.def
       }
       fizzetch('/game/workshop/forge/upgrade', data)
-        .then(({ upgradedItemDef }) => {
+        .then(({ upgradedItemDef, newInventoryItems }) => {
+          this.inventoryEl.setup(newInventoryItems, this._adventurer)
           if(isEquipped){
             const item = new AdventurerItem(upgradedItemDef)
             this._adventurer.loadout.setSlot(0, itemSlot, item)
             this.adventurerPaneEl.update(true)
           }else{
-            adventurerItemRow.setOptions({
-              item: new AdventurerItem(upgradedItemDef)
-            })
+            this.inventoryEl.scrollToAndFlash(upgradedItemDef.id)
           }
         })
     })

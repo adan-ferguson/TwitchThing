@@ -49,7 +49,8 @@ router.post('/forge/upgrade', async(req, res, next) => {
     )
   }
   res.send({
-    upgradedItemDef
+    upgradedItemDef,
+    newInventoryItems: req.user.inventory.items
   })
 })
 
