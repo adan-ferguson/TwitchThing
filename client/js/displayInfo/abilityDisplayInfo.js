@@ -305,6 +305,9 @@ function prefix(trigger, conditions){
   if(trigger === 'thwart'){
     chunks.push(`After ${keyword('thwart', 'Thwarting')} an attack`)
   }
+  if(trigger === 'crit'){
+    chunks.push('After landing a crit')
+  }
   return chunks
 }
 

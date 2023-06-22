@@ -7,6 +7,10 @@ export default class LoadoutObjectInstance extends EffectInstance{
     this._slotInfo = slotInfo
   }
 
+  get data(){
+    return this._obj.data ?? {}
+  }
+
   get calculateBaseEffectData(){
     return this._obj.effect
   }

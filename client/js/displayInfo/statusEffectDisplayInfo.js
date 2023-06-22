@@ -8,7 +8,7 @@ import {
   wrapStats
 } from '../components/common.js'
 import { explodeEffect } from '../../../game/baseEffects/statusEffectInstance.js'
-import { msToS } from '../../../game/utilFunctions.js'
+import { arrayize, msToS } from '../../../game/utilFunctions.js'
 import { keyword } from './keywordDisplayInfo.js'
 
 export function statusEffectDisplayInfo(effectInstance){
@@ -93,10 +93,13 @@ export function statusEffectDescription(statusEffectDef, abilityInstance){
   }
 
   if(statusEffectDef.stats){
+    if(chunks.length){
+      chunks.push('and gets')
+    }
     chunks.push(wrapStats(statusEffectDef.stats))
   }
 
-  chunks.push(statusEffectDuration(statusEffectDef, abilityInstance))
+  chunks.push(...arrayize(statusEffectDuration(statusEffectDef, abilityInstance)).filter(a => a))
   chunks[chunks.length - 1] += '.'
 
   if(statusEffectDef.maxStacks){
@@ -108,11 +111,14 @@ export function statusEffectDescription(statusEffectDef, abilityInstance){
 
 export function statusEffectDuration(statusEffectDef, abilityInstance){
   if(statusEffectDef.duration){
-    return `for ${toSeconds(optionalScaledNumber(statusEffectDef.duration, abilityInstance))}.`
+    return [
+      `for ${toSeconds(optionalScaledNumber(statusEffectDef.duration, abilityInstance))}`,
+      statusEffectDef.diminishingReturns ? keyword('diminishingReturns') : null
+    ]
   }else if(statusEffectDef.turns){
-    return `for ${statusEffectDef.turns} turn${statusEffectDef.turns === 1 ? '' : 's'}.`
+    return `for ${statusEffectDef.turns} turn${statusEffectDef.turns === 1 ? '' : 's'}`
   }else if(!statusEffectDef.persisting){
-    return 'until end of combat.'
+    return 'until end of combat'
   }
 }
 
@@ -196,6 +202,12 @@ const DEFS = {
   diminishingReturns: () => {
     return {
       displayName: 'Dim-Ret'
+    }
+  },
+  asleep: () => {
+    return {
+      grammatic: 'fall',
+      description: keyword('asleep')
     }
   }
 }

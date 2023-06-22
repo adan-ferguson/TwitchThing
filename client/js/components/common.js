@@ -31,6 +31,10 @@ export function skillPointIcon(){
   return coloredIcon('star', '#92eac6', 'skill-point')
 }
 
+export function scrapEntry(txt = null){
+  return `<span class="icon-and-value">${txt}${faIcon('recycle')}</span>`
+}
+
 export function orbPointEntry(count){
   return `<span class="orb-point-entry icon-and-value">${count}${orbPointIcon()}</span>`
 }

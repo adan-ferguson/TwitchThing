@@ -96,10 +96,7 @@ export default class LoadoutTab extends DIElement{
     const itemSlot = parseInt(adventurerItemRow.getAttribute('slot-index') ?? -1)
     const isEquipped = itemSlot > -1
     const item = adventurerItemRow.adventurerItem
-    const iqu = new ItemQuickUpgrade(item, {
-      ...this.parentPage.user.inventory,
-      items: this.inventoryEl.allItems,
-    }, isEquipped)
+    const iqu = new ItemQuickUpgrade(item, this.parentPage.user.inventory, isEquipped)
     const modal = new Modal(iqu).show()
 
     iqu.querySelector('.upgrade-button').addEventListener('click', () => {
@@ -112,8 +109,8 @@ export default class LoadoutTab extends DIElement{
         data.itemDef = item.def
       }
       fizzetch('/game/workshop/forge/upgrade', data)
-        .then(({ upgradedItemDef, newInventoryItems }) => {
-          this.inventoryEl.setup(newInventoryItems, this._adventurer)
+        .then(({ upgradedItemDef }) => {
+          this.inventoryEl.setup(this.parentPage.user.inventory.items, this._adventurer)
           if(isEquipped){
             const item = new AdventurerItem(upgradedItemDef)
             this._adventurer.loadout.setSlot(0, itemSlot, item)

@@ -102,7 +102,7 @@ verifiedRouter.post('/edit/save', validateIdle, async (req, res) => {
   validateParam(req.body.skills, 'array')
   await commitAdventurerLoadout(req.adventurerDoc, req.user, req.body.items, req.body.skills)
   await Adventurers.save(req.adventurerDoc)
-  await Users.save(req.user)
+  await Users.saveAndEmit(req.user)
   res.status(200).send({ success: 1 })
 })
 

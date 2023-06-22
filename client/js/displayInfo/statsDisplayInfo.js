@@ -55,7 +55,6 @@ export const statDefinitionsInfo = {
   damageTaken: {},
   critChance: {
     text: 'Crit Chance',
-    description: 'Chance to deal bonus damage.',
     displayedValueFn: flatValuePercentageDisplay
   },
   enemyCritChance: {
@@ -65,7 +64,6 @@ export const statDefinitionsInfo = {
   },
   critDamage: {
     text: 'Crit Damage',
-    description: 'Increases damage deal by crits.',
     displayedValueFn: (value, { style }) => {
       if(style === StatsDisplayStyle.CUMULATIVE){
         return roundToFixed(1 + value, 2) + 'x'

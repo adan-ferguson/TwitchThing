@@ -46,41 +46,17 @@ export default class Inventory extends DIElement{
     }
   }
 
-  get allItems(){
-    if(!this._cachedItems){
-      const inv = {
-        basic: {},
-        crafted: []
-      }
-      this.listEl.allRows.forEach(row => {
-        const ai = row.adventurerItem
-        if(!ai){
-          return
-        }
-        if(ai.isBasic){
-          inv.basic[ai.baseItemId] = row.count
-        }else{
-          inv.crafted.push(ai.def)
-        }
-      })
-      this._cachedItems = inv
-    }
-    return this._cachedItems
-  }
-
   filterFn = row => {
     return row.adventurerItem && Object.keys(this.adventurer.orbs).includes(row.adventurerItem.advClass)
     // return row.item?.classes.every(cls => this.adventurer.orbs[cls]) ?? false
   }
 
   setup(items, adventurer){
-    console.log('setup')
     this.listEl.setRows(inventoryItemsToRows(items))
     this._beenSetup = true
     this.adventurer = adventurer
     this._updateSortAndFilter()
     this.listEl.fullUpdate()
-    this._cachedInv = items
     return this
   }
 
@@ -96,7 +72,6 @@ export default class Inventory extends DIElement{
       }
     }
     this.listEl.addRow(makeAdventurerItemRow(adventurerItem))
-    this._cachedInv = null
   }
 
   removeItem(item){
@@ -109,7 +84,6 @@ export default class Inventory extends DIElement{
     }else{
       this.listEl.removeRow(row)
     }
-    this._cachedInv = null
   }
 
   scrollToAndFlash(itemId){

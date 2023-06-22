@@ -1,6 +1,6 @@
 import DIElement from './diElement.js'
 import { roundToNearestIntervalOf, wrapContent, wrapText } from '../../../game/utilFunctions.js'
-import { isAdventurerItem, wrapStats } from './common.js'
+import { isAdventurerItem, scrapEntry, wrapStats } from './common.js'
 import Stats from '../../../game/stats/stats.js'
 import StatsList from './stats/statsList.js'
 import AbilityDescription from './abilityDescription.js'
@@ -43,6 +43,7 @@ export default class EffectDetails extends DIElement{
     this._addMods()
     this._addLoadoutModifiers()
     this._addDescription()
+    this._addMisc()
     this._addTooltips()
   }
 
@@ -124,6 +125,12 @@ export default class EffectDetails extends DIElement{
     const edi = effectDisplayInfo(this._obj)
     if(edi.description){
       this.appendChild(wrapContent(edi.description))
+    }
+  }
+
+  _addMisc(){
+    if(this._obj.data?.scrapValue){
+      this.appendChild(wrapContent(`Worth ${scrapEntry(this._obj.data.scrapValue)}`))
     }
   }
 
