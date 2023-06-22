@@ -48,7 +48,7 @@ const DEFS = {
   },
   magicCrit: () => {
     return {
-      description: 'Magic attacks can crit.'
+      description: 'Your magic attacks can crit.'
     }
   },
   goldOnly: () => {

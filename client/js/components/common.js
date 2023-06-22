@@ -85,6 +85,10 @@ export function attachedItem(text = false){
   return `<i class="fa-solid fa-arrow-left attached-item"></i>${text ? ' <b>Attached Item</b>' : ''}`
 }
 
+export function attachedActiveSkill(){
+  return activeAbility(faIcon('arrow-right'))
+}
+
 export function attachedSkill(text = false){
   return `<i class="fa-solid fa-arrow-right attached-skill"></i>${text ? ' <b>Attached Skill</b>' : ''}`
 }
@@ -204,12 +208,12 @@ export function featureLocked(target, msg){
   target.appendChild(cover)
 }
 
-export function activeAbility(){
-  return '<span class="active-ability-rect">Active</span>'
+export function activeAbility(txt = 'Active'){
+  return `<span class="active-ability-rect">${txt}</span>`
 }
 
-export function triggeredAbility(){
-  return '<span class="triggered-ability-rect">Triggered</span>'
+export function triggeredAbility(txt){
+  return `<span class="triggered-ability-rect">${txt}</span>`
 }
 
 export function pluralize(str, count){

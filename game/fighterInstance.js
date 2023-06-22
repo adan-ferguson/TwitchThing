@@ -287,6 +287,9 @@ export default class FighterInstance{
     if(!conditions){
       return true
     }
+    if(this._state.idle){
+      return false
+    }
     if(conditions.hpPctBelow && this.hpPct > conditions.hpPctBelow){
       return false
     }

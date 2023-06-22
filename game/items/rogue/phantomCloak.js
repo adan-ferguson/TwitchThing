@@ -8,6 +8,7 @@ export default function(level){
     effect: {
       stats,
       metaEffects: [{
+        metaEffectId: 'phantomCloak',
         subject: { key: 'attached' },
         effectModification: {
           abilityModification: {

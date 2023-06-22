@@ -63,7 +63,7 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
     damageInfo.ignoreDefense = ignoresDefenseMatchesDamageType(mods, actionDef.damageType)
 
     if(tryCrit(actionDef, abilityInstance, enemy)){
-      damageInfo.damage *= (1 + attacker.stats.get('critDamage').value)
+      damageInfo.damage *= (1 + abilityInstance.totalStats.get('critDamage').value)
       damageInfo.crit = true
       processAbilityEvents(combat, 'crit', attacker, abilityInstance)
     }

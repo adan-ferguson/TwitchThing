@@ -91,7 +91,7 @@ export function generateRandomChest(options = {}){
   while(valueRemaining > 0 && !options.goldOnly){
     const advClass = chooseOne(options.classes)
     const rarity = chooseRarity(options.rarities, valueRemaining, options.rareFind)
-    const item = new AdventurerItem(chooseRandomBasicItem(valueRemaining, advClass, rarity).id)
+    const item = new AdventurerItem(chooseRandomBasicItem(valueRemaining, advClass, rarity))
     items.push(item)
     valueRemaining -= item.rarityInfo.value
   }
@@ -99,6 +99,10 @@ export function generateRandomChest(options = {}){
   if(items.length > options.itemLimit){
     items = items.sort((a, b) => (b.rarity ?? 0) - (a.rarity ?? 0)).slice(0, options.itemLimit)
   }
+
+  items.forEach(item => {
+    addItem(contents.items.basic, item.name)
+  })
 
   if(!options.noGold){
     contents.gold += addGold(totalValue) * options.goldMultiplier

@@ -158,6 +158,10 @@ export default class AbilityInstance{
     return this.abilityDef.tags ?? []
   }
 
+  get exclusiveStats(){
+    return this.abilityDef.exclusiveStats
+  }
+
   tryUse(){
     if(!this.ready){
       return false

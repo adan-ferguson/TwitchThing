@@ -4,7 +4,7 @@ export default function(level){
   return {
     effect: {
       stats: {
-        rareFind: wrappedPct(50 * level),
+        rareFind: wrappedPct(75 * level),
       }
     }
   }

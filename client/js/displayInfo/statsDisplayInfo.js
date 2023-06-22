@@ -37,7 +37,7 @@ export const statDefinitionsInfo = {
   block: {
     text: 'Block',
     description: 'At the start of combat, gain a barrier. Scales with max health.',
-    displayedValueFn: (value, { style }) => {
+    displayedValueFn: ({ value }, { style }) => {
       if(style === StatsDisplayStyle.CUMULATIVE){
         return toPct(value)
       }
@@ -64,11 +64,11 @@ export const statDefinitionsInfo = {
   },
   critDamage: {
     text: 'Crit Damage',
-    displayedValueFn: (value, { style }) => {
+    displayedValueFn: (statObj, { style }) => {
       if(style === StatsDisplayStyle.CUMULATIVE){
-        return roundToFixed(1 + value, 2) + 'x'
+        return roundToFixed(1 + statObj.value, 2) + 'x'
       }
-      return `+${Math.round((value - 1) * 100)}%`
+      return toCompositeText(statObj.mods, style)
     }
   },
   dodgeChance: {
@@ -116,6 +116,10 @@ export const statDefinitionsInfo = {
     text: 'Chest Find',
     description: 'Increased chance to find a chest after defeating an enemy.'
   },
+  rareFind: {
+    text: 'Rare Item Find',
+    description: 'Increased chance to find rare items.'
+  },
   basicAttacks: {
     text: 'Basic Attacks'
   },
@@ -127,6 +131,10 @@ export const statDefinitionsInfo = {
   ccResist: {
     text: 'CC Resist',
     description: 'Reduces duration of stuns, sleeps, blinds, etc.'
+  },
+  leisurelyPaceMultiplier: {
+    text: 'Leisurely Pace Rooms',
+    description: 'Increase amount of rooms explored per floor while going at Leisurely Pace.'
   }
 }
 
@@ -151,7 +159,7 @@ export function getStatDisplayInfo(stat, options = {}){
   }
   const info = { ...statDefinitionsInfo[stat.name] }
   if(info.displayedValueFn){
-    info.displayedValue = info.displayedValueFn(stat.value, options)
+    info.displayedValue = info.displayedValueFn(stat, options)
     delete info.displayedValueFn
   }
   if(info.displayedValue === undefined){
@@ -186,12 +194,17 @@ function toText(stat, style){
   return `${plusSign(style, value)}${value}`
 }
 
-function flatValuePercentageDisplay(value, { style }){
+function flatValuePercentageDisplay(statObj, { style }){
   let str = ''
-  if(style === StatsDisplayStyle.ADDITIONAL && value > 0){
-    str += '+'
+  if(style === StatsDisplayStyle.ADDITIONAL){
+    const val = toCompositeText(statObj.mods, style)
+    if(val){
+      return val
+    }else if(statObj.value > 0){
+      str += '+'
+    }
   }
-  return str + `${Math.round(value * 100)}%`
+  return str + `${Math.round(statObj.value * 100)}%`
 }
 
 function toCompositeText(mods, style){

@@ -18,5 +18,9 @@ export function getItemPicker(value, advClass, rarity){
 }
 
 export function chooseRandomBasicItem(chestLevel, advClass, rarity){
-  return getItemPicker(chestLevel, advClass, rarity).pickOne()
+  const pick = getItemPicker(chestLevel, advClass, rarity).pickOne()
+  if(!pick){
+    debugger
+  }
+  return pick
 }

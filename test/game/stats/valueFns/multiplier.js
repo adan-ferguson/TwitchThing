@@ -26,4 +26,9 @@ describe('multiplier valueFn', () => {
     expect(val.value).to.be.closeTo(1.62, 0.001, 'Decimal format works for decreases')
   })
 
+  it('Should support 1.5x type things', () => {
+    const val = multiplierValue(['+20%', '1.5x'], 5)
+    expect(val.value).to.be.closeTo(9, 0.001, 'Yep')
+  })
+
 })

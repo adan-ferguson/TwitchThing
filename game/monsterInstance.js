@@ -6,6 +6,7 @@ import { deepClone, toDisplayName, toNumberOfDigits } from './utilFunctions.js'
 import { floorToZone } from './zones.js'
 import LoadoutObjectInstance from './loadoutObjectInstance.js'
 import MonsterItem from './monsterItem.js'
+import { addRewards } from '../server/dungeons/results.js'
 
 const ADJUSTED_DIFFICULTY_PER_ZONE = 1.5
 const ADJUSTED_DIFFICULTY_PER_FLOOR_PER_ZONE = 0.2
@@ -130,10 +131,10 @@ export default class MonsterInstance extends FighterInstance{
   }
 
   get rewards(){
-    return [
-      { xp: this.xpReward },
-      ...this.effectInstances.map(ei => ei.effect.rewards).filter(r => r)
-    ]
+    return addRewards(
+      this.monsterDef.rewards,
+      this.effectInstances.map(ei => ei.effect.rewards).filter(r => r)
+    )
   }
 
   get loadoutEffectInstances(){

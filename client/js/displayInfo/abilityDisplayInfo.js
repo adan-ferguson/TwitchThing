@@ -3,12 +3,10 @@ import AbilityInstance from '../../../game/abilityInstance.js'
 import { derivedAttackDescription } from './derived/actions/attack.js'
 import { statusEffectApplicationDescription, statusEffectDuration } from './statusEffectDisplayInfo.js'
 import {
-  aboveIcon, attachedItem,
+  aboveIcon, attachedActiveSkill, attachedItem,
   attachedSkill,
-  belowIcon, capitalizeFirstChunk, describeStat, healthIcon, physPowerIcon,
-  refundTime, scalingWrap,
-  statScaling, toSeconds,
-  wrapStat
+  belowIcon, capitalizeFirstChunk, describeStat, goldEntry, refundTime, statScaling, toSeconds,
+  wrapStat, wrapStats
 } from '../components/common.js'
 import { damageActionCalcDamage } from '../../../game/mechanicsFns.js'
 import { derivedGainHealthDescription } from './derived/actions/gainHealth.js'
@@ -188,6 +186,12 @@ const ACTION_DEFS = {
     return {
       description: `Break ${actionDef.count ?? 1} of the target's items${duration ? ' ' + duration : ''}.`
     }
+  },
+  theBountyCollectorKill: (actionDef, ability) => {
+    const goldStr = `Enemy Lvl x ${actionDef.value}`
+    return {
+      description: `When you kill an enemy with ${attachedActiveSkill()} get a bounty chest containing ${goldEntry(goldStr)}.`
+    }
   }
 }
 
@@ -264,6 +268,9 @@ function abilityDescription(ability){
   if(ability.turnRefund > 0){
     chunks.push(`Refunds ${refundTime(toPct(ability.turnRefund))}.`)
   }
+  if(ability.exclusiveStats?.critDamage){
+    chunks.push(`<br/>Benefits from ${wrapStats(ability.exclusiveStats)}.`)
+  }
   return chunks.join(' ') //_.capitalize()
 }
 
@@ -315,9 +322,6 @@ function actionDefDescription(actionDef, abilityInstance){
   actionDef = expandActionDef(actionDef)
   if(actionDef.attack){
     const val = derivedAttackDescription(actionDef.attack, abilityInstance)
-    if(actionDef.attack.onHit){
-      val.push(...arrayize(actionDefDescription(actionDef.attack.onHit, abilityInstance)))
-    }
     return val
   }else if(actionDef.applyStatusEffect){
     return statusEffectApplicationDescription(actionDef.applyStatusEffect, abilityInstance)

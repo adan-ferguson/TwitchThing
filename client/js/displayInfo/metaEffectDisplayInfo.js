@@ -3,11 +3,12 @@ import { conditionsDisplayInfo } from './conditionsDisplayInfo.js'
 import EffectDetails from '../components/effectDetails.js'
 import { subjectDescription } from '../subjectClientFns.js'
 import {
-  activeAbility,
+  activeAbility, attachedSkill,
   isAdventurerItem, pluralize,
-  refundTime,
+  refundTime, triggeredAbility,
   wrapStats
 } from '../components/common.js'
+import { keyword } from './keywordDisplayInfo.js'
 
 const DEFS = {
   swordOfFablesMultiplier: (metaEffect, obj) => {
@@ -15,6 +16,9 @@ const DEFS = {
   },
   disabled: () => {
     return null
+  },
+  phantomCloak: (metaEffect, obj) => {
+    return `${attachedSkill()}'s ${activeAbility()} becomes ${triggeredAbility('on ' + keyword('thwart'))}<br/>(It still has a cooldown)`
   }
 }
 

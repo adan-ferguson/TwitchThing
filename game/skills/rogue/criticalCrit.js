@@ -1,10 +1,11 @@
+import { wrappedPct } from '../../growthFunctions.js'
+
 export default function(level){
-  const factor = level + 1
   return {
     effect: {
       stats: {
-        critChance: (1 / factor) + 'x',
-        critDamage: factor + 'x'
+        critChance: (1 / (level + 1)) + 'x',
+        critDamage: wrappedPct(level * 200)
       }
     }
   }

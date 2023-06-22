@@ -3,7 +3,6 @@ import { generateCombat } from './interop.js'
 import { emit } from '../socketServer.js'
 import { ADVANCEMENT_INTERVAL, cancelRun } from '../dungeons/dungeonRunner.js'
 import Combats from '../collections/combats.js'
-import { addRewards } from '../dungeons/results.js'
 import MonsterInstance from '../../game/monsterInstance.js'
 
 const MIN_RESULT_TIME = 2000
