@@ -19,27 +19,26 @@ export default function(){
                 scaling: {
                   physPower: 1
                 }
-              }
-            }]
-          },onHit({
-            applyStatusEffect: {
-              targets: 'target',
-              statusEffect: {
-                base: {
-                  damageOverTime: {
-                    damage: {
-                      scaledNumber: {
-                        physPower: 0.3
+              },
+              applyStatusEffect: {
+                targets: 'target',
+                statusEffect: {
+                  base: {
+                    damageOverTime: {
+                      damage: {
+                        scaledNumber: {
+                          physPower: 0.3
+                        }
                       }
                     }
-                  }
-                },
-                name: 'poisoned',
-                duration: 15000,
-                persisting: true,
+                  },
+                  name: 'poisoned',
+                  duration: 15000,
+                  persisting: true,
+                }
               }
-            }
-          })]
+            }]
+          }]
         }
       },
     ]

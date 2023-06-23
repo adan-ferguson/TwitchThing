@@ -54,13 +54,13 @@ export default function(){
         }
       },
       {
-        name: 'Sprout Head',
+        name: 'Sprout Heads',
         effect: {
           abilities: [{
             abilityId: 'hydraSproutHead',
             trigger: 'instant',
             uses: 6,
-            initialCooldown: 6000,
+            initialCooldown: 5000,
             actions: [SPROUT_HEAD_ACTION(),SPROUT_HEAD_ACTION()]
           }]
         }

@@ -4,6 +4,7 @@ import { emit } from '../socketServer.js'
 import { ADVANCEMENT_INTERVAL, cancelRun } from '../dungeons/dungeonRunner.js'
 import Combats from '../collections/combats.js'
 import MonsterInstance from '../../game/monsterInstance.js'
+import { addRewards } from '../dungeons/results.js'
 
 const MIN_RESULT_TIME = 2000
 const END_COMBAT_PADDING = 1500
@@ -62,8 +63,12 @@ export async function runCombat(dungeonRun, monsterDef){
 
     const endStateMonsterInstance = new MonsterInstance(monsterDef, combatDoc.fighter2.endState)
     if(combatDoc.result === CombatResult.F1_WIN){
-      adventurerInstance.food += endStateMonsterInstance.rewards.food ?? 0
-      resultEvent.rewards = endStateMonsterInstance.rewards
+      const rewards = addRewards(
+        monsterDef.rewards ?? {},
+        endStateMonsterInstance.effectInstances.map(ei => ei.effect.rewards).filter(r => r)
+      )
+      adventurerInstance.food += rewards.food ?? 0
+      resultEvent.rewards = rewards
     }else{
       combatEvent.runFinished = true
       return combatEvent

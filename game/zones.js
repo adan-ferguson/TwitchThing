@@ -5,7 +5,7 @@ const Zones = [{
 },{
   name: 'Woods',
   color: '#def5ce',
-  texture: 'crypt.png',
+  texture: 'tree-bark.png',
 },{
   name: 'Crypt',
   color: '#eeecec',
@@ -17,11 +17,11 @@ const Zones = [{
 },{
   name: 'Water World',
   color: '#d2e8fd',
-  texture: 'crypt.png',
+  texture: 'little-knobs.png',
 },{
-  name: 'SUPER Zone',
-  color: '#f1c4f8',
-  texture: 'maze-white.png'
+  name: 'Heck',
+  color: '#faa2a2',
+  texture: 'little-triangles.png'
 }]
 
 // Final floor gets this bonus size

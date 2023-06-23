@@ -38,6 +38,9 @@ const ABILITY_MODIFICATION_DEFS = {
 }
 
 export function metaEffectDisplayInfo(metaEffect, obj){
+  if(metaEffect.subject?.key === 'self' && obj.izExtreme){
+    return null
+  }
   if(DEFS[metaEffect.metaEffectId]){
     const def = DEFS[metaEffect.metaEffectId](metaEffect, obj)
     if(!def){

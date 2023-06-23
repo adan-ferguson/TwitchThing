@@ -6,7 +6,7 @@ export default function(level){
         trigger: 'rest',
         actions:[{
           modifyAbility: {
-            subjectKey: 'all',
+            targets: 'self',
             trigger: 'active',
             modification: {
               cooldownRemaining: -amount

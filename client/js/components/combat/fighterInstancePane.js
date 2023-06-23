@@ -76,7 +76,7 @@ export default class FighterInstancePane extends HTMLElement{
 
     this.querySelector('.name').textContent = fighterInstance.displayName
     this.effectsListEl.setFighterInstance(fighterInstance)
-    this._actionBarEl.setBaseTime(this.fighterInstance.turnTime)
+    this._actionBarEl.setBaseTime(this.fighterInstance)
     this._update(true)
     return this
   }
@@ -296,11 +296,7 @@ export default class FighterInstancePane extends HTMLElement{
     if(!this._actionBarEl.querySelector('.basic-attack-type-' + type)){
       this._actionBarEl.setBadge(`${ICON_SVGS[type + 'Power']}`)
     }
-    this._actionBarEl.setTime(
-      this.fighterInstance.timeSinceLastAction,
-      this.fighterInstance.timeUntilNextAction,
-      cancelAnimations
-    )
+    this._actionBarEl.setTime(this.fighterInstance, cancelAnimations)
   }
 
   _setupLoadout(){

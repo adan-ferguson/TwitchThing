@@ -5,7 +5,7 @@ import AdventurerItem, { ITEM_RARITIES } from '../../game/items/adventurerItem.j
 import { unlockedClasses } from '../../game/user.js'
 import { chooseOne } from '../../game/rando.js'
 
-const GOLD_BASE = 10
+const GOLD_BASE = 15
 const GOLD_GROWTH = 2
 const GOLD_GROWTH_PCT = 0.01
 
@@ -36,12 +36,12 @@ export function generateMonsterChest(dri, mi){
       options.type = 'zoneReward'
       options.itemLimit = 6
       options.value = 4
-      options.baseGold = addGold(mi.level * 2)
+      options.goldMultiplier *= 2
     }else{
       options.type = 'boss'
       options.itemLimit = 3
       options.value = 2
-      options.baseGold = addGold(mi.level)
+      options.goldMultiplier *= 1.5
     }
   }
 
@@ -105,7 +105,7 @@ export function generateRandomChest(options = {}){
   })
 
   if(!options.noGold){
-    contents.gold += addGold(totalValue) * options.goldMultiplier
+    contents.gold += addGold(totalValue, options.goldMultiplier)
   }
 
   return {
@@ -129,10 +129,10 @@ function mergeBasicItems(source, target){
   }
 }
 
-function addGold(valueRemaining){
-  valueRemaining = Math.ceil((0.5 + Math.random() / 2) * valueRemaining)
+function addGold(valueRemaining, multi = 1){
+  valueRemaining = Math.ceil(Math.random() * valueRemaining)
   const gold = GOLD_BASE + Math.ceil(geometricProgression(GOLD_GROWTH_PCT, valueRemaining, GOLD_GROWTH))
-  return toNumberOfDigits(gold,2)
+  return toNumberOfDigits(gold * multi,2)
 }
 
 function addItem(obj, name, count = 1){

@@ -43,8 +43,8 @@ export default function(level){
               physPower,
             },
           }
-        }]
-      }, onHit(applyStun)]
+        }, applyStun]
+      }]
     }
   }
 }

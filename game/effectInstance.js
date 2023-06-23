@@ -54,7 +54,8 @@ export default class EffectInstance{
    * @return {Stats}
    */
   get stats(){
-    return new Stats(fillArray(() => this.effectData.stats, this.statMultiplier))
+    const extra = fillArray(() => this.effectData.stats, this.statMultiplier - 1)
+    return new Stats(this.effectData.stats, extra)
   }
 
   get exclusiveStats(){
@@ -110,6 +111,15 @@ export default class EffectInstance{
 
   get totalMods(){
     return [...this.fighterInstance.mods, ...this.exclusiveMods]
+  }
+
+  get izExtreme(){
+    for(let ame of (this.effect.appliedMetaEffects ?? [])){
+      if(ame.subject.key === 'self'){
+        return true
+      }
+    }
+    return false
   }
 
   getAbilities(trigger = null, type = 'either'){

@@ -33,6 +33,7 @@ const OPTIONAL_SCALED_NUMBER_SCHEMA = Joi.alternatives().try(
 )
 
 const TARGETS_SCHEMA = Joi.string().valid('self', 'enemy', 'target', 'source', 'all')
+
 const as = Joi.object({
   applyStatusEffect: Joi.object({
     targets: TARGETS_SCHEMA.required(),
@@ -69,7 +70,8 @@ const as = Joi.object({
     trigger: TRIGGER_NAME_SCHEMA
   }),
   modifyAbility: Joi.object({
-    subjectKey: Joi.string().valid(...SUBJECT_KEYS).required(),
+    targets: TARGETS_SCHEMA,
+    subject: Joi.object(),
     trigger: TRIGGER_NAME_SCHEMA,
     modification: Joi.object({
       cooldownRemaining: Joi.number().integer()
@@ -111,7 +113,7 @@ const as = Joi.object({
   })
 })
 
-const ACTION_SCHEMA = as.append({
+const as2 = as.append({
   random: {
     options: Joi.array().items(Joi.object({
       weight: Joi.number().required(),
@@ -123,6 +125,11 @@ const ACTION_SCHEMA = as.append({
     action: as.required()
   }
 })
+
+const ACTION_SCHEMA = Joi.alternatives().try(
+  as2,
+  Joi.array().items(as2)
+)
 
 const REPLACEMENT_SCHEMA = Joi.object({
   dataMerge: Joi.object(),

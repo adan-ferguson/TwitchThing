@@ -17,21 +17,21 @@ export default function(level){
               },
               damageType: 'magic',
             }
-          }]
-        },
-        onHit({
-          applyStatusEffect: {
-            targets: 'target',
-            statusEffect: {
-              base: {
-                slowed: {
-                  speed
-                }
-              },
-              name: 'chilled'
+          },{
+            applyStatusEffect: {
+              targets: 'target',
+              statusEffect: {
+                base: {
+                  slowed: {
+                    speed
+                  }
+                },
+                name: 'chilled'
+              }
             }
-          }
-        })]
+          }]
+        }
+      ]
     }
   }
 }

@@ -53,8 +53,8 @@ const monstersByFloor = [
   Monsters.wyvern,
   Monsters.hydra,
   // // Water World
-  // Monsters.legallyDistinctMurloc,
-  // Monsters.crab,
+  Monsters.legallyDistinctMurloc,
+  Monsters.crab,
   // Monsters.pirate,
   // Monsters.ancientTortoise,
   // Monsters.siren,
@@ -70,7 +70,7 @@ const PITY_THRESHOLD = 0.75
 const BONUS_CHESTS_UNTIL = 12
 const BONUS_CHEST_CHANCE = 0.15
 
-const CHEST_DROP_CHANCE = 0.024
+const CHEST_DROP_CHANCE = 0.025
 const CHEST_DROP_CHANCE_HARD_ENEMY = 0.09 // It's an enemy of level >= adventurer's deepest floor
 
 const BOSS_XP_BONUS = 10
@@ -83,16 +83,6 @@ const FLOOR_SKEW = -0.12
 
 export function foundMonster(dungeonRun){
   return 1
-  // return roomsSinceMonster() > MONSTER_ROOM_BUFFER && Math.random() < MONSTER_CHANCE
-  // function roomsSinceMonster(){
-  //   let i
-  //   for(i = 1; i <= dungeonRun.events.length; i++){
-  //     if(dungeonRun.events.at(-i)?.monster){
-  //       break
-  //     }
-  //   }
-  //   return i - 1
-  // }
 }
 
 export function generateSuperMonster(dungeonRun){

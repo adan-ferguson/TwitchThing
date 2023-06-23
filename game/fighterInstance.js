@@ -11,6 +11,16 @@ const STATE_DEFAULTS = {}
 
 export const COMBAT_BASE_TURN_TIME = 3000
 
+export function speedToTurnTime(speed){
+  let turnTime
+  if(speed >= 0){
+    turnTime = COMBAT_BASE_TURN_TIME * (100 / (speed + 100))
+  }else{
+    turnTime = COMBAT_BASE_TURN_TIME * (1 + speed / -100)
+  }
+  return turnTime
+}
+
 /**
  * Format:
  * {
@@ -143,13 +153,7 @@ export default class FighterInstance{
 
   get turnTime(){
     const speed = this.stats.get('speed').value
-    let turnTime
-    if(speed >= 0){
-      turnTime = COMBAT_BASE_TURN_TIME * (100 / (speed + 100))
-    }else{
-      turnTime = COMBAT_BASE_TURN_TIME * (1 + speed / -100)
-    }
-    return turnTime
+    return speedToTurnTime(speed)
   }
 
   get nextActionTime(){

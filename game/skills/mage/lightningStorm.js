@@ -45,8 +45,8 @@ export default function(level){
                     },
                     range: [0, 1],
                   }
-                }]
-              }, onHit(maybeStun)]
+                }, maybeStun]
+              }]
             }
           }
         }],

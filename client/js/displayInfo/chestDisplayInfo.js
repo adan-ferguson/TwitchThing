@@ -3,7 +3,7 @@ import classDisplayInfo from './classDisplayInfo.js'
 
 const CHESTS = {
   normal: {
-    color: '#606060'
+    color: '#aba9a9'
   },
   boss: {
     color: '#59c916',

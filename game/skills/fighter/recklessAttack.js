@@ -1,5 +1,5 @@
 export default function(level){
-  const physPower = 1.3 + level * 1.1
+  const physPower = 1.8 + level * 1.2
   const turns = level
   return {
     effect: {
@@ -19,6 +19,8 @@ export default function(level){
               name: 'wideOpen',
               turns,
               polarity: 'debuff',
+              stacking: 'extend',
+              persisting: true,
               mods: [{
                 autoCritAgainst: true
               }]

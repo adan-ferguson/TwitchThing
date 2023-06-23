@@ -34,8 +34,8 @@ export default function(level){
             },
             damageType: 'magic',
           }
-        }]
-      }, onHit(burn)]
+        }, burn]
+      }]
     }
   }
 }

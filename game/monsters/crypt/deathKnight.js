@@ -35,9 +35,9 @@ export default function(){
                     physPower: 1.7
                   },
                 }
-              }]
-            },
-            onHit(removeBuff)]
+              }, removeBuff]
+            }
+          ]
         }
       }
     ]

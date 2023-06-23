@@ -12,22 +12,29 @@ export default function(){
           abilities: [{
             trigger: 'active',
             abilityId: 'explode',
-            actions: [{
-              attack: {
-                damageType: 'magic',
-                scaling: {
-                  hp: hpScaling
+            actions: [
+              [
+                {
+                  attack: {
+                    damageType: 'magic',
+                    scaling: {
+                      hp: hpScaling
+                    }
+                  }
                 }
-              }
-            },{
-              takeDamage: {
-                scaling: {
-                  hp: 1
-                },
-                damageType: 'magic',
-                ignoreDefense: true
-              }
-            }],
+              ],
+              [
+                {
+                  takeDamage: {
+                    scaling: {
+                      hp: 1
+                    },
+                    damageType: 'magic',
+                    ignoreDefense: true
+                  }
+                }
+              ]
+            ],
             vars: {
               hpScaling
             }

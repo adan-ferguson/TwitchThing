@@ -9,6 +9,7 @@ import EventContentsResults from './eventContentsResults.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
 import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 import { hideAll } from 'tippy.js'
+import { hideLoader, showLoader } from '../../../loader.js'
 
 const HTML = `
 <div class="content-rows">
@@ -109,10 +110,8 @@ export default class DungeonPage extends Page{
 
   async load(){
 
-    const { dungeonRun, combats } = await this.fetchData()
-    if(combats){
-      this._cachedCombats = combats
-    }
+    const { dungeonRun } = await this.fetchData()
+
     this.dungeonRun = dungeonRun
 
     if(!this.isReplay){
@@ -171,7 +170,7 @@ export default class DungeonPage extends Page{
     this._timelineEl.play()
   }
 
-  _update(options = {}){
+  async _update(options = {}){
 
     options = {
       animate: true,
@@ -190,6 +189,11 @@ export default class DungeonPage extends Page{
 
     this._updateBackground()
     this._stateEl.update(this._timelineEl.elapsedEvents, this.adventurerInstance, !animate)
+
+    if(this.isReplay && !this._combatsAllLoaded && !this._timeline.finished){
+      await this._loadAllCombats()
+      this._combatsAllLoaded = true
+    }
 
     if(this.isReplay && this._timeline.finished){
       this._showResults()
@@ -312,6 +316,12 @@ export default class DungeonPage extends Page{
     }
     const result = await fizzetch(`/game/combat/${combatID}`)
     this._cachedCombats[combatID] = result.combat
+  }
+
+  async _loadAllCombats(){
+    showLoader()
+    this._cachedCombats = await fizzetch(`/game/dungeonrun/${this._dungeonRunID}/allcombats`)
+    hideLoader()
   }
 }
 

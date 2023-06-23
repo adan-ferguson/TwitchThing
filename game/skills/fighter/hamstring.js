@@ -28,9 +28,9 @@ export default function(level){
                 physPower
               },
             }
-          }]
+          }, hamstrung]
         },
-        onHit(hamstrung)]
+      ]
     }
   }
 }

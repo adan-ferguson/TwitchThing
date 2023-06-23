@@ -201,7 +201,7 @@ const DEFS = {
   },
   diminishingReturns: () => {
     return {
-      displayName: 'Dim-Ret'
+      displayName: keyword('diminishingReturns')
     }
   },
   asleep: () => {

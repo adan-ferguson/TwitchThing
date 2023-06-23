@@ -319,6 +319,9 @@ function prefix(trigger, conditions){
 }
 
 function actionDefDescription(actionDef, abilityInstance){
+  if(Array.isArray(actionDef)){
+    return actionDef.map(ad => actionDefDescription(ad, abilityInstance)).flat()
+  }
   actionDef = expandActionDef(actionDef)
   if(actionDef.attack){
     const val = derivedAttackDescription(actionDef.attack, abilityInstance)

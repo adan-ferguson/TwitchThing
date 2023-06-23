@@ -1,7 +1,9 @@
 export default {
-  subjectKey: null,  //required
+  targets: 'self',
+  subject: {},
   trigger: null,
-  modification: {    // required
+  modification: {  // required
     cooldownRemaining: 0
-  }
+  },
+  count: null     // A number of which to modify, otherwise all
 }

@@ -27,13 +27,13 @@ export default function(){
                     magicPower: 2
                   },
                 }
+              },{
+                breakItem: {
+                  count: 2
+                }
               }]
-            },
-            onHit({
-              breakItem: {
-                count: 2
-              }
-            })]
+            }
+          ]
         }
       }
     ]
