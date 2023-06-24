@@ -127,6 +127,26 @@ verifiedRouter.post('/dismiss', async(req, res, next) => {
   res.status(200).send({ success: 1 })
 })
 
+verifiedRouter.post('/refund', async(req, res, next) => {
+  const index = req.user.adventurers.findIndex(advID => advID.equals(req.adventurerDoc._id))
+  if(index === -1){
+    throw 'Adventurer can not be refunded, not in user\'s adventurer list'
+  }
+  req.adventurerDoc.xp /= 2
+  req.adventurerDoc.unlockedSkills = {}
+  req.adventurerDoc.orbs = {}
+  commitAdventurerLoadout(
+    req.adventurerDoc,
+    req.user,
+    fillArray(() => null, 8),
+    fillArray(() => null, 8)
+  )
+  await Adventurers.save(req.adventurerDoc)
+  res.status(200).send({ success: 1, adventurer: req.adventurerDoc })
+})
+
+
+
 verifiedRouter.post('/status', async(req, res, next) => {
   res.send({ status: req.adventurerDoc.dungeonRunID ? 'dungeon' : 'idle' })
 })

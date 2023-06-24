@@ -2,10 +2,10 @@ export default function({ duration } = {}){
   return {
     polarity: 'debuff',
     stacking: 'extend',
-    name: 'stunned',
+    name: 'charmed',
     duration,
     mods: [{
-      freezeActionBar: true
+      noAttack: true
     }]
   }
 }

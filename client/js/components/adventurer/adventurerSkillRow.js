@@ -45,8 +45,17 @@ export default class AdventurerSkillRow extends DIElement{
     this.innerHTML = HTML
     this._update()
     this.addEventListener('contextmenu', e => {
+      if(this._options.status === AdventurerSkillRowStatus.HIDDEN){
+        return
+      }
       if(this.adventurerSkill && this._options.showTooltip && !this._options.noRightClick){
         e.preventDefault()
+
+        // const overrideParent = this.closest('.adventurer-skill-right-click-override')
+        // if(overrideParent){
+        //   return overrideParent.adventurerSkillRightClickOverride(this)
+        // }
+
         const details = new SkillCard().setSkill(this.adventurerSkill)
         new SimpleModal(details).show()
       }

@@ -94,6 +94,10 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
     return scrapVal * (1 + this.level * (this.level - 1) / 2)
   }
 
+  get tags(){
+    return this.effect.tags ?? []
+  }
+
   sameItem(adventurerItem){
     return this.isBasic && adventurerItem.isBasic && this.def === adventurerItem.def
   }

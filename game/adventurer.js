@@ -6,16 +6,18 @@ import AdventurerSkill from './skills/adventurerSkill.js'
 import OrbsData from './orbsData.js'
 
 const XP_BASE = 6
-const XP_GROWTH = 12
-const XP_GROWTH_PCT = 0.23
+const XP_GROWTH = 15
+const XP_GROWTH_PCT = 0.20
+
+const STAT_GROWTH_PCT = 0.04
 
 const HP_BASE = 30
-const HP_GROWTH = 5
-const HP_GROWTH_PCT = 0.04
+const HP_GROWTH = 6.5
+const HP_GROWTH_PCT = STAT_GROWTH_PCT
 
 const POWER_BASE = 5
 const POWER_GROWTH = 1
-const POWER_GROWTH_PCT = 0.03
+const POWER_GROWTH_PCT = STAT_GROWTH_PCT
 
 export function advXpToLevel(xp){
   if(xp < XP_BASE){

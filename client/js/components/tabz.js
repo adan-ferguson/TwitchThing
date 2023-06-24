@@ -43,7 +43,7 @@ export default class Tabz extends DIElement{
     }
     this.querySelectorAll('.tabz-list .tab').forEach(tab => {
       tab.classList.toggle('active', tab.getAttribute('data-tab-name') === name)
-      tab.classList.remove('glow','glow-green')
+      tab.classList.remove('glow')
     })
     this.querySelectorAll('.tabz-content > *').forEach(tabContent => {
       const match = tabContent.getAttribute('data-tab-name') === name

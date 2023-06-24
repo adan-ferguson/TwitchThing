@@ -9,7 +9,7 @@ export default function(){
       name: 'Withdraw',
       effect: {
         abilities: [{
-          trigger: 'instant',
+          trigger: 'active',
           uses: 1,
           conditions: {
             owner: {
@@ -35,7 +35,23 @@ export default function(){
     },{
       name: 'Spiked Shell',
       effect: {
-
+        abilities: [{
+          trigger: 'hitByAttack',
+          conditions: {
+            data: {
+              damageType: 'phys'
+            }
+          },
+          actions: [{
+            dealDamage: {
+              targets: 'enemy',
+              damageType: 'phys',
+              scaling: {
+                physPower: 0.12
+              }
+            }
+          }]
+        }]
       }
     }]
   }

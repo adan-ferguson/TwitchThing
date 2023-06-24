@@ -7,9 +7,8 @@ export default function(level){
         hasTag: 'scroll'
       },
       orbs: {
-        mage: level * -3
+        mage: level * -2
       }
-    }],
-    skillPoints: 2 * level
+    }]
   }
 }

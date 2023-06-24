@@ -1,6 +1,9 @@
 import DIElement from '../../diElement.js'
 import fizzetch from '../../../fizzetch.js'
-import { skillPointEntry } from '../../common.js'
+import { skillPointEntry, xpIcon } from '../../common.js'
+import SimpleModal from '../../simpleModal.js'
+import { showLoader } from '../../../loader.js'
+import { advXpToLevel } from '../../../../../game/adventurer.js'
 
 const HTML = `
 <div class="adv-classes content-columns">
@@ -14,7 +17,9 @@ const HTML = `
     <di-adventurer-edit-class-display></di-adventurer-edit-class-display>
   </div>
 </div>
-<div style="flex: 0 1; align-self: center;">Gain ${skillPointEntry(1)} every 5 levels</div>
+<div style="flex: 0 1; align-self: center;">
+Gain ${skillPointEntry(1)} every 5 levels <button class="refund-points">Refund Points</button>
+</div>
 `
 
 export default class PointsTab extends DIElement{
@@ -53,6 +58,31 @@ export default class PointsTab extends DIElement{
     const { adventurer, user } = this.parentPage
     this.classDisplays.forEach((cd, index) => {
       cd.setup(user, adventurer, index)
+    })
+
+    const btn = this.querySelector('.refund-points')
+    btn.addEventListener('click', () => {
+      const oldLevel = advXpToLevel(adventurer.xp)
+      const newLevel = advXpToLevel(adventurer.xp / 2)
+
+      new SimpleModal(`
+      Refund all points? You'll lose half your ${xpIcon()}
+      <br/><br/>
+      Lvl. ${oldLevel} -> ${newLevel}
+      <br/><br/>
+      (This is like dismissing an adventurer and creating a new one, but a bit more convenient).`, [{
+        text: 'Refund',
+        style: 'scary',
+        value: true
+      },{
+        text: 'Never Mind',
+        value: false
+      }]).show().awaitResult().then(async result => {
+        if(result){
+          await fizzetch(`/game/adventurer/${adventurer.id}/refund`)
+          this.parentPage.reload()
+        }
+      })
     })
   }
 

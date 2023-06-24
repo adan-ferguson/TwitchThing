@@ -55,7 +55,12 @@ const DEFS = {
     return {
       description: 'Chests found will only contain gold.'
     }
-  }
+  },
+  noAttack: () => {
+    return {
+      description: 'Can\'t attack.'
+    }
+  },
 }
 export function modDisplayInfo(mod){
   for(let key in mod){

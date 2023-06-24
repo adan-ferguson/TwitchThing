@@ -1,7 +1,7 @@
 import Actions from './combined.js'
 import { cleanupObject, deepClone, mergeOptionsObjects } from '../utilFunctions.js'
 
-export function expandActionDef(actionDef){
+export function expandActionDef(actionDef, includeKey = true){
   const ret = {}
   const actionKey = Object.keys(actionDef)[0]
   if(!Actions[actionKey]){
@@ -9,5 +9,5 @@ export function expandActionDef(actionDef){
   }
   const defaults = deepClone(Actions[actionKey].def)
   ret[actionKey] = cleanupObject(mergeOptionsObjects(defaults, actionDef[actionKey]))
-  return ret
+  return includeKey ? ret : ret[actionKey]
 }

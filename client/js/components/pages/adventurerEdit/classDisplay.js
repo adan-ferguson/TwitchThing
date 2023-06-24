@@ -1,14 +1,12 @@
 import DIElement from '../../diElement.js'
-import { featureLocked, skillPointEntry } from '../../common.js'
+import { featureLocked } from '../../common.js'
 import classDisplayInfo, { ADVENTURER_CLASS_LIST } from '../../../displayInfo/classDisplayInfo.js'
 import AdventurerSkillRow, { AdventurerSkillRowStatus } from '../../adventurer/adventurerSkillRow.js'
-import AdventurerSkill, { getSkillsForClass } from '../../../../../game/skills/adventurerSkill.js'
+import { getSkillsForClass } from '../../../../../game/skills/adventurerSkill.js'
 import { OrbsTooltip } from '../../orbRow.js'
-import SimpleModal from '../../simpleModal.js'
-import { makeEl, wrapContent } from '../../../../../game/utilFunctions.js'
-import SkillCard from '../../skillCard.js'
 import { ICON_SVGS } from '../../../assetLoader.js'
 import tippyCallout from '../../visualEffects/tippyCallout.js'
+import { showUnlockModal } from './unlockModal.js'
 
 const HTML = `
 <div class="unset">
@@ -136,7 +134,9 @@ export default class ClassDisplay extends DIElement{
         noRightClick: true
       })
       row.addEventListener('click', () => {
-        this._showUnlockModal(skill)
+        if(this._options.status !== AdventurerSkillRowStatus.HIDDEN){
+          this._showUnlockModal(skill)
+        }
       })
       list.appendChild(row)
     }
@@ -158,35 +158,9 @@ export default class ClassDisplay extends DIElement{
   }
 
   _showUnlockModal(skill){
-    const content = makeEl({
-      class: 'skill-unlock-modal-content'
+    showUnlockModal(skill, this._adventurer, s => {
+      this.events.emit('spend skill points', s)
     })
-
-    let buttonHTML
-    if(skill.isMaxLevel){
-      content.appendChild(new SkillCard().setSkill(skill))
-      buttonHTML = 'Max Level'
-    }else{
-      const isUpgrade = skill.level > 0
-      const nextSkill = new AdventurerSkill(skill.id, skill.level + 1)
-      if(isUpgrade){
-        buttonHTML = 'Upgrade'
-        content.appendChild(new SkillCard().setSkill(skill))
-        content.appendChild(wrapContent('<i class="fa-solid fa-arrow-down"></i>'))
-      }else{
-        buttonHTML = 'Unlock'
-      }
-      content.appendChild(new SkillCard().setSkill(nextSkill))
-      buttonHTML += ' ' + skillPointEntry(skill.skillPointsToUpgrade)
-    }
-    const buttons = [{
-      content: buttonHTML,
-      fn: () => {
-        this.events.emit('spend skill points', skill)
-      },
-      disabled: !this._adventurer.canUpgradeSkill(skill)
-    }]
-    new SimpleModal(content, buttons).show()
   }
 }
 

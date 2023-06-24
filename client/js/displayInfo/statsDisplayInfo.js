@@ -134,10 +134,6 @@ export const statDefinitionsInfo = {
   ccResist: {
     text: 'CC Resist',
     description: 'Reduces duration of stuns, sleeps, blinds, etc.'
-  },
-  leisurelyPaceMultiplier: {
-    text: 'Leisurely Pace Rooms',
-    description: 'Increase amount of rooms explored per floor while going at Leisurely Pace.'
   }
 }
 

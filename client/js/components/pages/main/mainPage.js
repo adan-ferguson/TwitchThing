@@ -66,13 +66,13 @@ export default class MainPage extends Page{
     getSocket().on('user dungeon run update', this._dungeonRunUpdates)
 
     if(this.user.features.shop === 1){
-      this._shopEl.classList.add('glow','glow-green')
+      this._shopEl.classList.add('glow')
     }else if(!this.user.features.shop){
       this._shopEl.classList.add('displaynone')
     }
 
     if(this.user.features.workshop === 1){
-      this._workshopEl.classList.add('glow','glow-green')
+      this._workshopEl.classList.add('glow')
     }else if(!this.user.features.workshop){
       this._workshopEl.classList.add('displaynone')
     }

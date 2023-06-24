@@ -9,6 +9,7 @@ import SimpleModal from '../../simpleModal.js'
 import { hideLoader, showLoader } from '../../../loader.js'
 import AdventurerItem from '../../../../../game/items/adventurerItem.js'
 import Modal from '../../modal.js'
+import { showUnlockModal } from './unlockModal.js'
 
 const HTML = `
 <div class="content-columns fill-contents">
@@ -90,6 +91,18 @@ export default class LoadoutTab extends DIElement{
     this.skillsEl.setup(adventurer, user.features.skills)
     this._setupQuickUpgrades(user)
   }
+  //
+  // adventurerSkillRightClickOverride(adventurerSkillRow){
+  //   showUnlockModal(adventurerSkillRow.adventurerSkill, this._adventurer, async s => {
+  //     const adv = this.parentPage?.adventurer
+  //     if(!adv || !s){
+  //       return
+  //     }
+  //     adv.upgradeSkill(s)
+  //     await fizzetch('/game' + this.parentPage.path + '/spendskillpoint', { skillId: s.id })
+  //     this.parentPage.reload()
+  //   })
+  // }
 
   adventurerItemRightClickOverride(adventurerItemRow){
     // TODO: this is pretty hacky...
@@ -236,6 +249,7 @@ export default class LoadoutTab extends DIElement{
   _setupQuickUpgrades(user){
     const quickUpgrades = user.features.workshop ? true : false
     this.classList.toggle('adventurer-item-right-click-override', quickUpgrades)
+    this.classList.toggle('adventurer-skill-right-click-override', true)
 
     const calloutName = 'quick-upgrade-callout'
     if(quickUpgrades && !localStorage.getItem(calloutName)){

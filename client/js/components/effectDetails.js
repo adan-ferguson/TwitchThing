@@ -76,13 +76,12 @@ export default class EffectDetails extends DIElement{
 
   _addStats(){
     const stats = new Stats(this._obj.stats ?? {})
-    if(!stats.isEmpty){
-      this.appendChild(
-        new StatsList().setOptions({
-          statsDisplayStyle: StatsDisplayStyle.ADDITIONAL,
-          stats: new Stats(stats)
-        })
-      )
+    const statsList = new StatsList().setOptions({
+      statsDisplayStyle: StatsDisplayStyle.ADDITIONAL,
+      stats: new Stats(stats)
+    })
+    if(!statsList.empty){
+      this.appendChild(statsList)
     }
   }
 

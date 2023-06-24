@@ -219,6 +219,9 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
       replaceMe: Joi.string().valid('shieldBashStun'),
       duration: OPTIONAL_SCALED_NUMBER_SCHEMA
     }),
+    charmed: Joi.object({
+      duration: OPTIONAL_SCALED_NUMBER_SCHEMA
+    }),
     slowed: Joi.object({
       speed: OPTIONAL_SCALED_NUMBER_SCHEMA
     }),

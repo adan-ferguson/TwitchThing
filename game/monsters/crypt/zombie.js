@@ -26,7 +26,7 @@ export default function(){
                   stackingId: 'zombieDisease',
                   stats: {
                     physPower: '0.9x',
-                    hpMax: '0.9x'
+                    magicPower: '0.9x',
                   }
                 }
               }

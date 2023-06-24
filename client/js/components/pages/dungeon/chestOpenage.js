@@ -41,7 +41,7 @@ export default class ChestOpenage extends DIElement{
       return
     }
 
-    this.classList.remove('clickable', 'glow')
+    this.classList.remove('clickable', 'glow-natural')
     this.innerHTML = OPENED_HTML
 
     if(animate){
@@ -92,7 +92,7 @@ export default class ChestOpenage extends DIElement{
     this.querySelectorAll('.stars').forEach(el => {
       el.innerHTML = starsHTML
     })
-    this.classList.add('clickable', 'glow')
+    this.classList.add('clickable', 'glow-natural')
     this.addEventListener('click', () => this.open())
   }
 }

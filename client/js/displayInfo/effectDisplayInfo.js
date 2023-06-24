@@ -28,11 +28,16 @@ const DEFS = {
     }
   },
   sneakPast: effectObj => {
-    console.log('a')
     const chance = effectObj.effect.stats.sneakChance
     const xp = effectObj.effect.stats.sneakXP.substring(1)
     return {
       description: `You have a ${chance} chance to sneak by non-boss monsters for ${xp} xp. If they're guarding a chest, you steal it.`
+    }
+  },
+  exhaustiveSearch: effectObj => {
+    const multi = effectObj.effect.stats.leisurelyPaceMultiplier
+    return {
+      description: `When using Leisurely Pace, explore an extra ${multi} rooms per floor.`
     }
   }
 }

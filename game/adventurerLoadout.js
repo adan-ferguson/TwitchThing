@@ -100,7 +100,7 @@ export default class AdventurerLoadout{
     const ret = { loadoutItem }
 
     if(loadoutItem?.orbs){
-      const modOrbs = this.modifiers.get(col, slot, 'orbs')
+      const modOrbs = this.modifiers.get(col, slot, 'orbs', loadoutItem)
         .filter(mo => {
           for(let key in mo){
             if(key in loadoutItem.orbs){

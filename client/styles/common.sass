@@ -210,15 +210,21 @@ input
   padding: 8rem 12rem
   font-family: 'Text Font'
 
-.highlight, .glow
-  &.glow-green
-    color: #71a972
-  box-shadow: 0 0 10px 5px currentColor
-
 .glow
+  box-shadow: 0 0 10px 5px #8fde90
+  animation: glow 0.7s ease-in-out infinite alternate
+
+.glow-natural
+  box-shadow: 0 0 10px 5px currentColor
   animation: glow 0.7s ease-in-out infinite alternate
 
 @keyframes glow
+  from
+    background-color: white
+  to
+    background-color: #8fde90
+
+@keyframes glow-natural
   from
     background-color: white
   to

@@ -100,7 +100,7 @@ function conditionsMatch(conditions, loadoutObject){
   if(!conditions || !loadoutObject){
     return true
   }
-  if(conditions.hasTag && !loadoutObject.tags[conditions.hasTag]){
+  if(conditions.hasTag && !loadoutObject.tags?.includes(conditions.hasTag)){
     return false
   }
   if(conditions.hasAbility && !loadoutObject.abilities.find(a => a.trigger === conditions.hasAbility)){

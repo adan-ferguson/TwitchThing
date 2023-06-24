@@ -1,28 +1,37 @@
 export default function(){
   return {
     baseStats: {
-      physPower: '+120%',
-      physDef: '+30%',
-      speed: -30,
-      hpMax: '+120%'
+      physPower: '+80%',
+      speed: -40,
+      hpMax: '+100%'
     },
     items: [
       {
-        name: 'Screech',
+        name: 'Ghostly Breath',
         effect: {
           abilities: [{
             trigger: 'active',
             cooldown: 30000,
+            initialCooldown: 10000,
             actions: [{
+              attack: {
+                scaling: {
+                  magicPower: 3
+                },
+                damageType: 'magic'
+              }
+            },{
               applyStatusEffect: {
                 targets: 'enemy',
                 statusEffect: {
-                  statusEffectId: 'feared',
-                  duration: 15000,
-                  mods: [{
-                    noBasicAttack: true
-                  }],
-                  name: 'Feared'
+                  stacking: 'stack',
+                  polarity: 'debuff',
+                  stats: {
+                    physPower: '0.75x',
+                    magicPower: '0.75x',
+                    hpMax: '0.75x',
+                  },
+                  name: 'Aged'
                 }
               }
             }]
