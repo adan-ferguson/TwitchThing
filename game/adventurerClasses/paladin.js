@@ -12,8 +12,8 @@ export const PALADIN_CLASS_INFO = {
     Skills.shieldsUp,
     Skills.patience,
     Skills.greaterHeal,
-    Skills.purity,
     Skills.penance,
+    Skills.purity,
     Skills.divineIntervention
   ],
   items: [[

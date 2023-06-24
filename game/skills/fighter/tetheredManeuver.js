@@ -1,5 +1,5 @@
 export default function(level){
-  const cooldownMultiplier = 0.9 * Math.pow(0.8, level - 1)
+  const cooldownMultiplier = 0.9 * Math.pow(0.8, level - 1) + 'x'
   return {
     effect: {
       abilities: [{

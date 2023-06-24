@@ -3,7 +3,7 @@ export default function(level){
   return {
     effect: {
       stats: {
-        cooldownMultiplier: val,
+        cooldownMultiplier: val + 'x',
         magicPower: val + 'x'
       }
     }

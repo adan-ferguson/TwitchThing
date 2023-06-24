@@ -94,7 +94,7 @@ export default class AbilityInstance{
   }
 
   get cooldownMultiplier(){
-    if(this.parentEffect.useCooldownMultiplier){
+    if(this.parentEffect.useCooldownMultiplier && this.trigger === 'active'){
       return this.totalStats.get('cooldownMultiplier').value
     }
     return 1

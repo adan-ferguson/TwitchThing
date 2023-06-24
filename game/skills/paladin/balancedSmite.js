@@ -1,10 +1,10 @@
 export default function(level){
-  const power = 2.4 + level * 0.8
+  const power = 2.0 + level * 1.2
   return {
     effect: {
       abilities: [{
         trigger: 'active',
-        cooldown: 15000 * Math.pow(0.8, level - 1),
+        cooldown: 12000,
         actions: [{
           balancedSmite: {
             power

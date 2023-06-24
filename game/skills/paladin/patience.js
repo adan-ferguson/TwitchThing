@@ -12,9 +12,9 @@ export default function(level){
         },
         effectModification: {
           stats: {
-            combatXP: wrappedPct(100 + 200 * level),
-            physPower: wrappedPct(25 + 25 * level),
-            magicPower: wrappedPct(25 + 25 * level),
+            combatXP: wrappedPct(200 + 300 * level),
+            physPower: wrappedPct(20 + 30 * level),
+            magicPower: wrappedPct(20 + 30 * level),
           }
         }
       }]

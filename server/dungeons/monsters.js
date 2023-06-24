@@ -55,7 +55,7 @@ const monstersByFloor = [
   // // Water World
   Monsters.legallyDistinctMurloc,
   Monsters.crab,
-  // Monsters.pirate,
+  Monsters.pirate,
   // Monsters.ancientTortoise,
   // Monsters.siren,
   // Monsters.twoHeadedShark,

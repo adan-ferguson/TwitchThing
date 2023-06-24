@@ -16,10 +16,10 @@ export default function(){
 
   return {
     baseStats: {
-      physPower: '+20%',
-      physDef: '+30%',
-      speed: -10,
-      hpMax: '+30%'
+      physPower: '+5%',
+      physDef: '+20%',
+      speed: -15,
+      hpMax: '+20%'
     },
     items: [
       {
@@ -29,13 +29,13 @@ export default function(){
             {
               trigger: 'active',
               initialCooldown: 8000,
-              actions: [{
+              actions: [removeBuff, {
                 attack: {
                   scaling: {
                     physPower: 1.7
                   },
                 }
-              }, removeBuff]
+              }]
             }
           ]
         }

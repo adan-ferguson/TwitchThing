@@ -7,8 +7,8 @@ export default function(level){
     orbs: 2 + level * 5,
     effect: {
       stats: {
-        hpMax: wrappedPct(level * 20),
-        physPower: wrappedPct(level * 40)
+        hpMax: wrappedPct(level * 10),
+        physPower: wrappedPct(level * 50)
       },
       abilities: [{
         trigger: 'attackHit',

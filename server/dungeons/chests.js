@@ -146,9 +146,11 @@ function chooseRarity(rarities, valueRemaining, rareFind){
   if(!rarities){
     rarities = [0,1,2]
   }
-  return chooseOne(rarities.map(r => {
+  const chances = rarities.map(r => {
     const info = ITEM_RARITIES[r]
-    const pct = Math.min(1, valueRemaining / info.value)
+    const pct = Math.min(1, Math.pow(valueRemaining / info.value, 2))
     return { value: r, weight: pct * info.weight * (r === 2 ? rareFind : 1) }
-  }))
+  })
+  console.log(chances)
+  return chooseOne(chances)
 }

@@ -105,8 +105,11 @@ export const statDefinitionsInfo = {
     description: '2 + 1 per 10 levels'
   },
   cooldownMultiplier: {
-    text: 'Cooldowns',
-    description: 'Affects the cooldowns of your items (only items this time, I swear)'
+    text: 'Cooldown Duration',
+    description: 'Affects cooldowns of your active abilities (lower is better) (only active abilities now, I promise)',
+    displayedValueFn: (statObj, { style }) => {
+      return roundToFixed(statObj.value, 2) + 'x'
+    }
   },
   goldFind: {
     text: 'Gold Find',

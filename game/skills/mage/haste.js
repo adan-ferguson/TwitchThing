@@ -1,7 +1,7 @@
 export default function(level){
   const cooldown = 30000 + level * 15000
   const speed = 50 + level * 50
-  const cooldownMultiplier = 1 - speed / (100 + speed)
+  const cooldownMultiplier = (1 - speed / (150 + speed)) + 'x'
   return {
     effect: {
       abilities: [{

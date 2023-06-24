@@ -3,7 +3,7 @@ export default function(level){
     orbs: level * 1,
     effect: {
       stats: {
-        block: 0.04 + 0.04 * level
+        block: 0.03 + 0.04 * level
       }
     }
   }
