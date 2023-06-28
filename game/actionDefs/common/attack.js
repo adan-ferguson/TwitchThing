@@ -7,7 +7,6 @@ export default {
   ignoreDefense: false,
   cantDodge: false,
   cantMiss: false,
-  isAttack: true,
   hits: 1,
   scaling: {},
   targetScaling: {}

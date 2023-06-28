@@ -8,7 +8,7 @@ export default function(level){
         cooldown: 30000,
         conditions: {
           owner: {
-            doesntHaveStatusEffectWithName: 'block'
+            doesntHaveStatusEffect: { name: 'block' }
           }
         },
         actions: [{

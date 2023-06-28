@@ -3,6 +3,8 @@ import { scaledNumberFromAbilityInstance } from '../../game/scaledNumber.js'
 import { chooseOne } from '../../game/rando.js'
 import StatusEffectInstance from '../../game/baseEffects/statusEffectInstance.js'
 import { processAbilityEvents } from './abilities.js'
+import { blockBarrierAction } from '../../game/commonTemplates/blockBarrierAction.js'
+import { performAction } from './actions/performAction.js'
 
 const DIMINISHING_RETURNS_STATUS_EFFECT = {
   polarity: 'neutral',
@@ -26,7 +28,7 @@ export function gainStatusEffect(combat, source, subject, abilityInstance, statu
 
   let ret = {}
   if(statusEffectInstance.polarity === 'debuff'){
-    ret = processAbilityEvents(combat, 'gainingDebuff', subject, abilityInstance, ret)
+    ret = processAbilityEvents(combat, 'gainingDebuff', subject, abilityInstance, ret, {})
   }
 
   if(ret.cancelled){
@@ -77,21 +79,6 @@ function applyStatusEffect(subject, sei, abilityInstance){
   subject.addStatusEffect(sei.data, {
     sourceEffectId
   })
-}
-
-export function gainBlockBarrier(combat, subject, multiplier = 1){
-  const block = subject.stats.get('block').value
-  if(block){
-    gainStatusEffect(combat, subject, subject,null, {
-      stackingId: 'block',
-      polarity: 'buff',
-      stacking: 'replace',
-      name: 'block',
-      barrier: {
-        hp: Math.ceil(subject.hpMax * block) * multiplier
-      }
-    })
-  }
 }
 
 function convertStatusEffectParams(statusEffect, abilityInstance, subject){

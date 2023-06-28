@@ -1,29 +1,17 @@
 import _ from 'lodash'
 import Actions from './combined.js'
+import IntermediateActions from '../intermediateActions/combined.js'
 import { expandActionDef } from '../../../game/actionDefs/expandActionDef.js'
 import { arrayize } from '../../../game/utilFunctions.js'
 import { processAbilityEvents } from '../abilities.js'
-import { chooseOne } from '../../../game/rando.js'
 import DungeonRunInstance from '../../dungeons/dungeonRunInstance.js'
 
 export function performAction(triggerHandler, actor, ability, actionDef, triggerData = {}){
   const key = Object.keys(actionDef)[0]
-  const expandedActionDef = expandActionDef(actionDef)[key]
-  if(key === 'random'){
-    const randomDef = chooseOne(expandedActionDef.options)
-    return performAction(triggerHandler, actor, ability, randomDef, triggerData)
-  }else if(key === 'maybe'){
-    if(expandedActionDef.chance < Math.random()){
-      return {
-        actor: actor.uniqueID,
-        effect: ability?.parentEffect.uniqueID,
-        ability: ability?.index,
-        actionDef: { [key]: expandedActionDef },
-        results: []
-      }
-    }else{
-      return performAction(triggerHandler, actor, ability, expandedActionDef.action, triggerData)
-    }
+  const expandedActionDef = expandActionDef(actionDef)?.[key]
+  if(!expandedActionDef){
+    // It's an intermediate action
+    return performIntermediateAction(...arguments)
   }
 
   return {
@@ -61,6 +49,9 @@ export function performAction(triggerHandler, actor, ability, actionDef, trigger
         }
       }
     }
+    if(!Actions[key]){
+      debugger
+    }
     return Actions[key].def(triggerHandler, actor, target, ability, expandedActionDef, triggerData)
   }
 
@@ -76,6 +67,17 @@ export function performAction(triggerHandler, actor, ability, actionDef, trigger
       return [triggerHandler.getEnemyOf(actor)]
     }
   }
+}
+
+export function performIntermediateAction(triggerHandler, actor, ability, actionDef, triggerData){
+  const key = Object.keys(actionDef)[0]
+  const actionDefs = arrayize(IntermediateActions[key].def(triggerHandler, actor, ability, actionDef[key], triggerData))
+  if(!actionDefs.length){
+    return performAction(triggerHandler, actor, ability, { pass: {} }, triggerData)
+  }
+  return actionDefs.map(ad => {
+    return performAction(triggerHandler, actor, ability, ad, triggerData)
+  })
 }
 
 export function useAbility(combat, ability, triggerData = {}){

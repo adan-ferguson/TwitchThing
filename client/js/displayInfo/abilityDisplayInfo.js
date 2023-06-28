@@ -323,6 +323,10 @@ function actionDefDescription(actionDef, abilityInstance){
     return actionDef.map(ad => actionDefDescription(ad, abilityInstance)).flat()
   }
   actionDef = expandActionDef(actionDef)
+  if(!actionDef){
+    // Maybe an intermediate action def? Figure this out
+    return null
+  }
   if(actionDef.attack){
     const val = derivedAttackDescription(actionDef.attack, abilityInstance)
     return val

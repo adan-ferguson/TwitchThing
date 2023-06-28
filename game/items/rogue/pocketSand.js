@@ -13,7 +13,7 @@ export default function(level){
             statusEffect: {
               name: 'Sand In Eyes',
               polarity: 'debuff',
-              stacking: 'replace',
+              stacking: 'stack',
               stats: {
                 missChance
               }

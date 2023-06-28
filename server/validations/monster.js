@@ -6,7 +6,8 @@ import { getAllMonsters } from '../dungeons/monsters.js'
 
 const MONSTER_SCHEMA = Joi.object({
   baseStats: STATS_SCHEMA,
-  items: Joi.array().items(MONSTER_ITEM_SCHEMA)
+  items: Joi.array().items(MONSTER_ITEM_SCHEMA),
+  displayName: Joi.string(),
 })
 
 export function validateAllMonsters(){

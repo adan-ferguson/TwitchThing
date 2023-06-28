@@ -1,5 +1,5 @@
 import Stats from './stats/stats.js'
-import { deepClone, minMax } from './utilFunctions.js'
+import { arrayize, deepClone, minMax } from './utilFunctions.js'
 import StatusEffectInstance from './baseEffects/statusEffectInstance.js'
 import PhantomEffectInstance from './baseEffects/phantomEffectInstance.js'
 import MetaEffectCollection from './metaEffectCollection.js'
@@ -105,7 +105,8 @@ export default class FighterInstance{
     this._cachedStats = new Stats(
       [derivedStats, ...baseStatAffectors, ...loadoutStatAffectors],
       statusEffectAffectors,
-      this.effectInstances.filter(ei => !ei.disabled).map(ei => ei.transStats).flat().filter(t => t)
+      this.effectInstances.filter(ei => !ei.disabled).map(ei => ei.transStats),
+      this.effectInstances.filter(ei => !ei.disabled).map(ei => ei.statsModifiers)
     )
     return this._cachedStats
   }
@@ -306,10 +307,10 @@ export default class FighterInstance{
     if(conditions.bossFight && !this._state.combat?.bossFight){
       return false
     }
-    if(conditions.hasStatusEffectWithName && !this.hasStatusEffectWithName(conditions.hasStatusEffectWithName)){
+    if(conditions.hasStatusEffect && !this.hasStatusEffect(conditions.hasStatusEffect)){
       return false
     }
-    if(conditions.doesntHaveStatusEffectWithName && this.hasStatusEffectWithName(conditions.doesntHaveStatusEffectWithName)){
+    if(conditions.doesntHaveStatusEffectWithName && this.hasStatusEffect(conditions.doesntHaveStatusEffectWithName)){
       return false
     }
     if(conditions.hasDebuff){
@@ -325,8 +326,16 @@ export default class FighterInstance{
     return true
   }
 
-  hasStatusEffectWithName(name){
-    return this.statusEffectInstances.some(sei => sei.name === name)
+  hasStatusEffect(conditions){
+    return this.statusEffectInstances.some(sei => {
+      if(conditions.name && sei.name !== conditions.name){
+        return false
+      }
+      if(conditions.tag && !sei.tags.includes(conditions.tag)){
+        return false
+      }
+      return true
+    })
   }
 
   startCombat(combatParams){

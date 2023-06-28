@@ -70,6 +70,10 @@ export default class EffectInstance{
     return this.effectData.transStats ?? []
   }
 
+  get statsModifiers(){
+    return this.effectData.statsModifiers ?? []
+  }
+
   get statMultiplier(){
     return this.effect.statMultiplier ?? 1
   }

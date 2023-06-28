@@ -11,17 +11,21 @@ const DEFAULT_DEFINITION = {
   inverted: false           // If inverted, lower = better & higher = worse
 }
 
-export function makeStatObject(name){
+export function makeStatObject(name, modifiers = []){
   const statDef = StatDefinitions[name]?.def
   if(!statDef){
     throw 'Unknown stat name: ' + name
   }
-  return{
+  let obj = {
     ...DEFAULT_DEFINITION,
     ...statDef,
     name,
     defaultValue: defaultValue(statDef)
   }
+  modifiers.forEach(m => {
+    obj = { ...obj, ...m }
+  })
+  return obj
 }
 
 function defaultValue(stat){

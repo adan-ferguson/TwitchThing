@@ -1,10 +1,11 @@
-export function biteMonsterItem(initialCooldown, physPower){
-  return{
+export function biteMonsterItem(initialCooldown, physPower, def = {}){
+  return {
     name: 'Bite',
     effect: {
       abilities: [{
         trigger: 'active',
         initialCooldown,
+        ...def,
         actions: [{
           attack: {
             scaling: {

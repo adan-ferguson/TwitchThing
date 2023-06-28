@@ -50,11 +50,8 @@ export function checkForRewards(userDoc){
   }
 
   if(shouldRewardZoneClear(4)){
-    userDoc.inventory.scrap += 100
-    userDoc.inventory.gold += 1000
     popups.push(zoneCleared(4, {
-      message: 'Here, have some stuff',
-      items: { scrap: 100, gold: 1000, zone: 'Heck' }
+      items: { zone: 'Heck' }
     }))
   }
 

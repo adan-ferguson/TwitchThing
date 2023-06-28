@@ -1,9 +1,9 @@
 export default function(){
   return {
     baseStats: {
-      speed: 20,
-      hpMax: '-10%',
-      magicDef: '40%'
+      speed: 30,
+      hpMax: '-40%',
+      physPower: '-20%'
     },
     items: [
       {
@@ -18,7 +18,7 @@ export default function(){
                 statusEffect: {
                   base: {
                     charmed: {
-                      duration: 15000
+                      duration: 20000
                     }
                   }
                 }

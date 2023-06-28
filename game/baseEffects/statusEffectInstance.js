@@ -19,6 +19,10 @@ export default class StatusEffectInstance extends EffectInstance{
     return this._data
   }
 
+  get tags(){
+    return this.data.tags ?? []
+  }
+
   get stackingId(){
     return this.effectData.stackingId ?? null
   }
@@ -59,7 +63,7 @@ export default class StatusEffectInstance extends EffectInstance{
   }
 
   get duration(){
-    return this.effectData.duration + (this._state.extendedDuration ?? 0)
+    return (this.effectData.duration ?? 0) + (this._state.extendedDuration ?? 0)
   }
 
   get durationRemaining(){
@@ -70,7 +74,7 @@ export default class StatusEffectInstance extends EffectInstance{
     if(!this.fighterInstance.inCombat && !this.persisting){
       return true
     }
-    if(Number.isFinite(this.duration) && !this.durationRemaining){
+    if(this.duration && !this.durationRemaining){
       return true
     }
     if(this.barrier && !this.barrierHp){
@@ -139,6 +143,9 @@ export default class StatusEffectInstance extends EffectInstance{
   }
 
   expire(){
+    if(this.data.cantRemove){
+      return
+    }
     this._expired = true
   }
 

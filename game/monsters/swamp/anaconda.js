@@ -13,7 +13,6 @@ export default function(){
             trigger: 'active',
             uses: 1,
             abilityId: 'constrict',
-            vars: { speed: -5 },
             actions: [{
               applyStatusEffect: {
                 targets: 'enemy',
@@ -21,25 +20,26 @@ export default function(){
                   polarity: 'debuff',
                   name: 'constricted',
                   stats: {
-                    speed: -20
+                    speed: -10
                   },
                   stacking: 'stack',
+                  abilities: [{
+                    trigger: 'instant',
+                    initialCooldown: 3000,
+                    actions: [{
+                      modifyStatusEffect: {
+                        targets: 'self',
+                        subject: {
+                          key: 'self'
+                        },
+                        modification: {
+                          stacks: 1
+                        }
+                      }
+                    }]
+                  }]
                 }
               }
-            },{
-              trigger: 'takeTurn',
-              abilityId: 'constrictAddStack',
-              actions: [{
-                modifyStatusEffect: {
-                  targets: 'enemy',
-                  subject: {
-                    name: 'constricted'
-                  },
-                  modification: {
-                    stacks: 1
-                  }
-                }
-              }]
             }]
           }]
         }

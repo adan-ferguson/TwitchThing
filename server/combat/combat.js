@@ -6,8 +6,8 @@ import { processAbilityEvents } from '../mechanics/abilities.js'
 import { performAction, useAbility } from '../mechanics/actions/performAction.js'
 import { overtimeDamageBonus } from '../../game/combatMechanics.js'
 import { arrayize } from '../../game/utilFunctions.js'
-import { gainBlockBarrier } from '../mechanics/gainStatusEffect.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
+import { blockBarrierAction } from '../../game/commonTemplates/blockBarrierAction.js'
 
 const MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS = 30
 const MAX_TRIGGER_LOOPS = 30
@@ -144,6 +144,10 @@ class Combat{
     return this.fighterInstance1 === fighterInstance ? this.fighterInstance2 : this.fighterInstance1
   }
 
+  getFighterInstance(uniqueID){
+    return this.fighters.find(f => f.uniqueID === uniqueID)
+  }
+
   _startCombat(){
     // Time = 0 before start-of-combat triggers
     // Time = 1 resolve start-of-combat triggers
@@ -161,7 +165,7 @@ class Combat{
   _run(){
     while(!this.finished){
       this._advanceTime()
-      const actions = this._doActions()
+      const actions = this._doActions().flat()
       // if(!this.fighterInstance1.hp){
       //   processAbilityEvents(this, 'defeated', this.fighterInstance1)
       // }
@@ -284,5 +288,12 @@ class Combat{
           })
       )
     }
+  }
+}
+
+function gainBlockBarrier(combat, subject){
+  const action = blockBarrierAction(subject)
+  if(action){
+    performAction(combat, subject, null, action)
   }
 }

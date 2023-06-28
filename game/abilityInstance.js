@@ -172,6 +172,10 @@ export default class AbilityInstance{
     }) ? true : false
   }
 
+  get uncancellable(){
+    return this.abilityDef.uncancellable ? true : false
+  }
+
   tryUse(){
     if(!this.ready){
       return false

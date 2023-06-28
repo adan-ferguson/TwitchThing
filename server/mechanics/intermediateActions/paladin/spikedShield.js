@@ -1,6 +1,6 @@
 import { dealDamage } from '../../dealDamage.js'
 
-export default function(combat, actor, subject, abilityInstance, actionDef, triggerData){
+export default function(combat, actor, abilityInstance, actionDef, triggerData){
 
   const blocked = triggerData.damageDistribution
     .reduce((prev, val) => prev + (val.name === 'block' ? val.amount : 0), 0)
@@ -8,9 +8,12 @@ export default function(combat, actor, subject, abilityInstance, actionDef, trig
   const damage = Math.ceil(blocked * actionDef.pctReturn)
 
   return {
-    damageInfo: dealDamage(combat, actor, subject,{
+    dealDamage: {
+      targets: 'enemy',
       damageType: 'phys',
-      damage
-    })
+      scaling: {
+        flat: damage
+      }
+    }
   }
 }

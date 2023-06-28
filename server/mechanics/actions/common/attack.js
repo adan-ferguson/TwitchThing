@@ -82,7 +82,9 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
     }
 
     if(enemy.dead){
-      processAbilityEvents(combat, 'kill', attacker, abilityInstance)
+      processAbilityEvents(combat, 'kill', attacker, abilityInstance, {
+        killed: enemy.uniqueID
+      })
     }
 
     return { damageInfo }

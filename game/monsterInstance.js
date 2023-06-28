@@ -8,7 +8,7 @@ import LoadoutObjectInstance from './loadoutObjectInstance.js'
 import MonsterItem from './monsterItem.js'
 
 const ADJUSTED_DIFFICULTY_PER_ZONE = 1.5
-const ADJUSTED_DIFFICULTY_PER_FLOOR_PER_ZONE = 0.2
+const ADJUSTED_DIFFICULTY_PER_FLOOR_PER_ZONE = 0.15
 
 const STAT_GROWTH_PCT = 0.12
 

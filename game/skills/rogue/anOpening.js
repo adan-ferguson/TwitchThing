@@ -5,7 +5,7 @@ export default function(level){
         trigger: 'thwart',
         conditions: {
           data: {
-            isAttack: true
+            isAttack: true // TODO: ?
           }
         },
         actions: [{

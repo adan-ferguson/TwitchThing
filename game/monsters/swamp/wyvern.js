@@ -1,5 +1,4 @@
 import flutteringMonsterItem from '../../commonTemplates/flutteringMonsterItem.js'
-import { onHit } from '../../commonTemplates/onHit.js'
 
 export default function(){
   return {

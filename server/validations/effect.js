@@ -1,6 +1,6 @@
 import { SUBJECT_KEYS, SUBJECT_KEYS_SCHEMA } from './subjectKeys.js'
 import Joi from 'joi'
-import { STATS_NAME_SCHEMA, STATS_SCHEMA } from './stats.js'
+import { STATS_MODIFIERS_SCHEMA, STATS_NAME_SCHEMA, STATS_SCHEMA } from './stats.js'
 import { DAMAGE_TYPE_SCHEMA } from './damage.js'
 import { MODS_SCHEMA } from './mods.js'
 import { status as StatusEffects, phantom as PhantomEffects } from '../../game/baseEffects/combined.js'
@@ -110,25 +110,27 @@ const as = Joi.object({
   }),
   theBountyCollectorKill: Joi.object({
     value: Joi.number()
-  })
-})
-
-const as2 = as.append({
+  }),
+  terribleCurse: Joi.bool(),
   random: {
     options: Joi.array().items(Joi.object({
       weight: Joi.number().required(),
-      value: as.required()
+      value: Joi.custom(val => {
+        return Joi.attempt(val, as)
+      }).required(),
     }))
   },
   maybe: {
     chance: Joi.number().min(0).max(1).required(),
-    action: as.required()
-  }
+    action: Joi.custom(val => {
+      return Joi.attempt(val, as)
+    }).required(),
+  },
 })
 
 const ACTION_SCHEMA = Joi.alternatives().try(
-  as2,
-  Joi.array().items(as2)
+  as,
+  Joi.array().items(as)
 )
 
 const REPLACEMENT_SCHEMA = Joi.object({
@@ -160,6 +162,7 @@ const es = Joi.object({
   effectId: Joi.string(),
   abilities: Joi.array().items(ABILITY_SCHEMA),
   stats: STATS_SCHEMA,
+  statsModifiers: STATS_MODIFIERS_SCHEMA,
   mods: MODS_SCHEMA,
   exclusiveStats: STATS_SCHEMA,
   exclusiveMods: MODS_SCHEMA,
@@ -247,7 +250,8 @@ export const STATUS_EFFECT_SCHEMA = EFFECT_SCHEMA.append({
   polarity: POLARITY_SCHEMA,
   name: Joi.string(),
   persisting: Joi.boolean().truthy(),
-  diminishingReturns: Joi.boolean()
+  diminishingReturns: Joi.boolean(),
+  cantRemove: Joi.boolean(),
 })
 
 export const PHANTOM_EFFECT_SCHEMA = EFFECT_SCHEMA.append({

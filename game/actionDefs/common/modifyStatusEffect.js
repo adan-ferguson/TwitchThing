@@ -3,7 +3,7 @@ export default {
   subject: { // required
     name: null,
     key: null,
-    polarity: null
+    polarity: null,
   },
   modification: {  // required
     stacks: 0,

@@ -1,12 +1,11 @@
 export default function(){
   return {
     baseStats: {
-      physPower: '+10%',
-      hpMax: '+20',
-      speed: 10,
+      hpMax: '+20%',
+      speed: 20,
     },
     items: [{
-      name: 'Aggression',
+      name: 'Gallop',
       effect: {
         abilities: [{
           trigger: 'startOfCombat',
@@ -15,12 +14,26 @@ export default function(){
               targets: 'self',
               statusEffect: {
                 duration: 10000,
-                name: 'Aggressive',
+                name: 'Sprinting',
                 polarity: 'buff',
                 stats: {
-                  speed: 50,
-                  physPower: '+50%'
+                  speed: 100
                 }
+              }
+            }
+          }]
+        }]
+      }
+    },{
+      name: 'Ride Down',
+      effect: {
+        abilities: [{
+          trigger: 'active',
+          cooldown: 10000,
+          actions: [{
+            attack: {
+              scaling: {
+                physPower: 1.5
               }
             }
           }]

@@ -14,7 +14,9 @@ export default function(level){
         },
         conditions: {
           owner: {
-            hasStatusEffectWithName: 'block'
+            hasStatusEffect: {
+              name: 'block'
+            }
           }
         }
       }]

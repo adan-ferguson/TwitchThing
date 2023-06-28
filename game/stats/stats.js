@@ -1,6 +1,6 @@
 import statValueFns from './statValueFns.js'
 import { calcStatDiff } from './statDiff.js'
-import { roundToFixed } from '../utilFunctions.js'
+import { arrayize, isolate, roundToFixed } from '../utilFunctions.js'
 import { makeStatObject } from './statObject.js'
 import _ from 'lodash'
 import { wrappedPct } from '../growthFunctions.js'
@@ -11,14 +11,12 @@ export default class Stats{
   baseAffectors = []
   additionalAffectors = []
 
-  /**
-   * @param baseStats {[object],object,Stats}
-   * @param additionalStats {[object],object,Stats}
-   * @param transStats
-   */
-  constructor(baseStats = null, additionalStats = null, transStats = []){
+  constructor(baseStats = null, additionalStats = null, transStats = [], modifiers = []){
+
     this.baseAffectors = toAffectorsArray(baseStats)
     this.additionalAffectors = toAffectorsArray(additionalStats)
+
+    transStats = arrayize(transStats).flat().filter(t => t)
     transStats.forEach(ts => {
       // TODO: this only works with multiplier type
       const value = (this.get(ts.from, false).value - 1)
@@ -26,6 +24,8 @@ export default class Stats{
         [ts.to]: wrappedPct(100 * value * (ts.ratio ?? 1))
       })
     })
+
+    this.modifiers = arrayize(modifiers).flat().filter(t => t)
   }
 
   get isEmpty(){
@@ -34,10 +34,6 @@ export default class Stats{
 
   get affectors(){
     return this.baseAffectors.concat(this.additionalAffectors)
-  }
-
-  set transStats(val){
-    this._transStats = val
   }
 
   has(nameOrStat){
@@ -53,7 +49,7 @@ export default class Stats{
       return this._cache[name]
     }
 
-    const statObj = makeStatObject(name)
+    const statObj = makeStatObject(name, isolate(this.modifiers, name))
 
     const fn = statValueFns[statObj.type]
 
@@ -99,6 +95,11 @@ export default class Stats{
     forced.forEach(name => all[name] = true)
     this.affectors.forEach(affector => {
       Object.keys(affector).forEach(key => {
+        all[key] = true
+      })
+    })
+    this.modifiers.forEach(modifier => {
+      Object.keys(modifier).forEach(key => {
         all[key] = true
       })
     })

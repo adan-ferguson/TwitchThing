@@ -1,6 +1,8 @@
 import Skills from '../skills/combined.js'
 import Items from '../items/combined.js'
 
+Skills.tetheredManeuver = Skills.unstoppable
+
 export const FIGHTER_CLASS_INFO = {
   skills: [
     Skills.slash,
@@ -13,7 +15,7 @@ export const FIGHTER_CLASS_INFO = {
     Skills.recklessAttack,
     Skills.resistance,
     Skills.swiftStrikes,
-    Skills.tetheredManeuver,
+    Skills.unstoppable,
     Skills.execute,
   ],
   items: [
