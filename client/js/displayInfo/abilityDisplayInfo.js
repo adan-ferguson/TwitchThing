@@ -310,7 +310,7 @@ function prefix(trigger, conditions){
     chunks.push('After your turn')
   }
   if(trigger === 'thwart'){
-    chunks.push(`After ${keyword('thwart', 'Thwarting')} an attack`)
+    chunks.push(`After ${keyword('thwart', 'Thwarting')} an enemy ability`)
   }
   if(trigger === 'crit'){
     chunks.push('After landing a crit')

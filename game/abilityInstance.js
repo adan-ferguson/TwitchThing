@@ -132,9 +132,6 @@ export default class AbilityInstance{
     if(this.parentEffect.disabled){
       return false
     }
-    if(this.fighterInstance.hasMod('noAttack') && this.isAttack){
-      return false
-    }
     return this.fighterInstance.meetsConditions(this.conditions.owner)
   }
 
@@ -164,12 +161,6 @@ export default class AbilityInstance{
 
   get exclusiveStats(){
     return this.abilityDef.exclusiveStats
-  }
-
-  get isAttack(){
-    return this.actions.find(action => {
-      return expandActionDef(action, false).isAttack
-    }) ? true : false
   }
 
   get uncancellable(){

@@ -13,7 +13,7 @@ export default function(){
             applyStatusEffect: {
               targets: 'self',
               statusEffect: {
-                duration: 10000,
+                duration: 5000,
                 name: 'Sprinting',
                 polarity: 'buff',
                 stats: {

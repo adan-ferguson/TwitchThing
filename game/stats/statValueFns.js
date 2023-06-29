@@ -5,7 +5,8 @@ export default {
   [StatType.MULTIPLIER]: multiplierValue,
   [StatType.PERCENTAGE]: percentageValue,
   [StatType.COMPOSITE]: compositeValue,
-  [StatType.MINIMUM_ONLY]: minimumOnlyValue
+  [StatType.MINIMUM_ONLY]: minimumOnlyValue,
+  [StatType.MAXIMUM_ONLY]: maximumOnlyValue
 }
 
 export function parseStatVal(val){
@@ -185,6 +186,24 @@ function minimumOnlyValue(values, defaultValue){
 
   const value = mods.all.flat.reduce((val, mod) => {
     return Math.min(val, mod)
+  }, defaultValue)
+
+  return { value, mods }
+}
+
+function maximumOnlyValue(values, defaultValue){
+  const mods = organizeMods(values)
+
+  if(mods.all.pct.length){
+    throw 'Maximum-Only stats can not have percentage values'
+  }
+
+  if(mods.all.multi.length){
+    throw 'Maximum-Only stats can not have multiplier values'
+  }
+
+  const value = mods.all.flat.reduce((val, mod) => {
+    return Math.max(val, mod)
   }, defaultValue)
 
   return { value, mods }

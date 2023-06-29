@@ -131,9 +131,17 @@ export const statDefinitionsInfo = {
     displayedValueFn: value => toPct(value),
     description: 'Most damage they can take at once (percentage of max health)'
   },
+  damageThreshold: {
+    text: 'Damage Threshold',
+    displayedValueFn: value => toPct(value),
+    description: 'When dealt damage which is lower than this, ignore it (percentage of max health)'
+  },
   ccResist: {
     text: 'CC Resist',
     description: 'Reduces duration of stuns, sleeps, blinds, etc.'
+  },
+  healing: {
+    text: 'Healing'
   }
 }
 
@@ -187,7 +195,7 @@ function toText(stat, style){
     return `${value > 1 ? '+' : ''}${Math.round((value - 1) * 100)}%`
   }else if(stat.type === StatType.PERCENTAGE){
     return `${plusSign(style, value)}${roundToFixed(value * 100, 1)}%`
-  }else if(stat.type === StatType.MINIMUM_ONLY){
+  }else if(stat.type === StatType.MINIMUM_ONLY || stat.type === StatType.MAXIMUM_ONLY){
     return value
   }
   return `${plusSign(style, value)}${value}`

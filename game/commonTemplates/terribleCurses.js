@@ -14,18 +14,10 @@ function terribleCurse(def){
 }
 
 const agony = terribleCurse({
-  name: 'TERRIBLE Curse: Agony',
-  abilities: [{
-    trigger: 'instant',
-    cooldown: 3000,
-    actions: [{
-      takeDamage: {
-        scaling: {
-          hp: 0.05
-        }
-      }
-    }]
-  }]
+  name: 'TERRIBLE Curse: Feebleness',
+  stats: {
+    hpMax: '0.5x'
+  }
 })
 
 const suffering = terribleCurse({

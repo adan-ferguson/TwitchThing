@@ -2,9 +2,8 @@ import { chooseOne } from '../../game/rando.js'
 import Monsters from '../../game/monsters/combined.js'
 import { uniqueID } from '../../game/utilFunctions.js'
 import MonsterInstance from '../../game/monsterInstance.js'
-import { generateMonsterChest, generateRandomChest } from './chests.js'
+import { generateMonsterChest } from './chests.js'
 import { addRewards } from './results.js'
-import { unlockedClasses } from '../../game/user.js'
 
 const monstersByFloor = [
   null,
@@ -66,14 +65,14 @@ const monstersByFloor = [
   // Heck
   Monsters.maniacalMinion,
   Monsters.cerberus,
-  Monsters.nightMare,
   Monsters.accursedDevil,
-  // Monsters.pitFiend,
-  // Monsters.soulSummoner,
-  // Monsters.succubus,
-  // Monsters.fireElemental,
-  // Monsters.cyberneticDemon,
-  // Monsters.triablo,
+  Monsters.nightMare,
+  Monsters.pitFiend,
+  Monsters.soulSummoner,
+  Monsters.succubus,
+  Monsters.fireElemental,
+  Monsters.virtualDemon,
+  Monsters.triablo,
 ]
 
 const PITY_THRESHOLD = 0.75

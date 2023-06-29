@@ -1,7 +1,6 @@
-export function simpleAttackAction(damageType, scaling){
+export function simpleAttackAction(damageType, scaling = 1){
   return {
     attack: {
-      targets: 'enemy',
       damageType,
       scaling: {
         [damageType + 'Power']: scaling

@@ -223,7 +223,7 @@ class Combat{
     while(this._pendingTriggers.length && loops < MAX_TRIGGER_LOOPS){
       const triggers = this._pendingTriggers
       this._pendingTriggers = []
-      this._triggerUpdates.push(...triggers.map(resolveTrigger).flat())
+      this._triggerUpdates.push(...triggers.map(resolveTrigger).flat(Infinity))
       loops++
       if(this.finished){
         return

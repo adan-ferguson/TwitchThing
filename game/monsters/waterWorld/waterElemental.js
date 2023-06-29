@@ -12,7 +12,6 @@ export default function(){
         effect: {
           abilities: [{
             trigger: 'active',
-            initialCooldown: 3000,
             cooldown: 20000,
             actions: [barrierAction({
               hpMax: 0.2

@@ -37,6 +37,12 @@ export function takeDamage(combat, subject, damageInfo){
       result.mitigated += damage - maxDamage
       damage = maxDamage
     }
+
+    const minDamage = Math.ceil(subject.hpMax * subject.stats.get('damageThreshold').value)
+    if(damage < minDamage){
+      result.mitigated += damage
+      damage = 0
+    }
   }
 
   if(!damageInfo.ignoreOvertime){

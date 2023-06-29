@@ -3,11 +3,6 @@ export default function(level){
     effect: {
       abilities: [{
         trigger: 'thwart',
-        conditions: {
-          data: {
-            isAttack: true // TODO: ?
-          }
-        },
         actions: [{
           applyStatusEffect: {
             targets: 'self',

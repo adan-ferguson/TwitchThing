@@ -1,8 +1,8 @@
 export default function(){
   return {
     baseStats: {
-      speed: 30,
-      hpMax: '-40%',
+      speed: 10,
+      hpMax: '-20%',
       physPower: '-20%'
     },
     items: [
@@ -11,20 +11,28 @@ export default function(){
         effect: {
           abilities: [{
             trigger: 'active',
-            uses: 1,
+            cooldown: 30000,
             actions: [{
               applyStatusEffect: {
                 targets: 'enemy',
                 statusEffect: {
                   base: {
                     charmed: {
-                      duration: 15000
+                      duration: 10000
                     }
                   }
                 }
               }
             }]
           }]
+        }
+      },
+      {
+        name: 'Drain Life',
+        effect: {
+          stats: {
+            lifesteal: 0.33
+          }
         }
       }
     ]

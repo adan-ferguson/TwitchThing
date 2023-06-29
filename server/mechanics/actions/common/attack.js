@@ -12,6 +12,9 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
 
   const results = []
   for(let i = 0; i < actionDef.hits; i++){
+    if(attacker.hasMod('noAttack')){
+      continue
+    }
     if(enemy.dead){
       continue
     }

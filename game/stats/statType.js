@@ -3,5 +3,6 @@ export const StatType = {
   MULTIPLIER: 1, // 0 to infinity, default is 1
   PERCENTAGE: 2, // 0 to 1, default is 0
   COMPOSITE: 3,
-  MINIMUM_ONLY: 4
+  MINIMUM_ONLY: 4,
+  MAXIMUM_ONLY: 5
 }

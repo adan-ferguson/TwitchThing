@@ -126,6 +126,9 @@ const as = Joi.object({
       return Joi.attempt(val, as)
     }).required(),
   },
+  fireSpiritExplode: {
+    ratio: Joi.number()
+  }
 })
 
 const ACTION_SCHEMA = Joi.alternatives().try(

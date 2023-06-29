@@ -29,7 +29,6 @@ export const ABILITY_CONDITIONS_SCHEMA = Joi.object({
   data: Joi.object({
     damageType: DAMAGE_TYPE_SCHEMA,
     cantDodge: Joi.bool(),
-    isAttack: Joi.bool(),
   }),
   owner: FIGHTER_INSTANCE_CONDITIONS_SCHEMA,
   target: FIGHTER_INSTANCE_CONDITIONS_SCHEMA,
