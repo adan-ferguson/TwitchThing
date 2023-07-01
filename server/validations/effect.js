@@ -151,7 +151,7 @@ const ABILITY_SCHEMA = Joi.object({
   abilityId: Joi.string(),
   initialCooldown: Joi.number().integer(),
   cooldown: Joi.number().integer(),
-  resetCooldownAfterCombat: Joi.bool(),
+  resetAfterCombat: Joi.bool(),
   turnRefund: Joi.number().min(0),
   repetitions: Joi.number().integer().min(1),
   replacements: REPLACEMENT_SCHEMA,

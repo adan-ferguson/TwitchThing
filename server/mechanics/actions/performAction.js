@@ -85,21 +85,23 @@ export function performIntermediateAction(triggerHandler, actor, ability, action
 
 export function useAbility(combat, ability, triggerData = {}){
   const owner = ability.fighterInstance
-  triggerData = processAbilityEvents(combat, 'useAbility', owner, ability, triggerData)
+
+  let objData = {}
+  objData = processAbilityEvents(combat, 'useAbility', owner, ability, objData)
 
   if(combat.getEnemyOf){
-    triggerData = processAbilityEvents(combat, 'enemyUseAbility', combat.getEnemyOf(owner), ability, triggerData)
+    objData = processAbilityEvents(combat, 'enemyUseAbility', combat.getEnemyOf(owner), ability, objData)
   }
 
-  if(triggerData.cancelled){
+  if(objData.cancelled){
     return [{
       actor: owner.uniqueID,
       effect: ability?.parentEffect.uniqueID,
       ability: ability?.index,
       actionDef: { cancelled: true },
       results: [{
-        subject: triggerData.cancelled.cancelledByFighter,
-        cancelled: triggerData.cancelled
+        subject: objData.cancelled.cancelledByFighter,
+        cancelled: objData.cancelled
       }]
     }]
   }

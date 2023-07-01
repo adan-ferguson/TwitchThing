@@ -262,7 +262,7 @@ function abilityDescription(ability){
   if(ability.conditions){
     chunks.push(...conditionsDescription(ability.conditions))
   }
-  if(ability.resetCooldownAfterCombat){
+  if(ability.resetAfterCombat){
     chunks.push('Resets to initial cooldown after combat.')
   }
   if(ability.turnRefund > 0){

@@ -8,6 +8,6 @@ export default function(level){
         }
       }
     },
-    displayName: 'Unstoppable'
+    displayName: 'Defiant Agility',
   }
 }
