@@ -71,6 +71,9 @@ export function performAction(triggerHandler, actor, ability, actionDef, trigger
 
 export function performIntermediateAction(triggerHandler, actor, ability, actionDef, triggerData){
   const key = Object.keys(actionDef)[0]
+  if(!IntermediateActions[key]){
+    debugger
+  }
   const actionDefs = arrayize(IntermediateActions[key].def(triggerHandler, actor, ability, actionDef[key], triggerData))
   if(!actionDefs.length){
     return performAction(triggerHandler, actor, ability, { pass: {} }, triggerData)

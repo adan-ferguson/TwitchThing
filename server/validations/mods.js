@@ -13,6 +13,7 @@ export const MODS_SCHEMA = Joi.array().items(
     noAttack: Joi.boolean().truthy(),
     noBasicAttack: Joi.boolean().truthy(),
     preventGainStatusEffect: Joi.string().valid('buff','debuff'),
+    cantDie: Joi.boolean(),
     magicCrit: Joi.bool(),
     goldOnly: Joi.bool()
   })

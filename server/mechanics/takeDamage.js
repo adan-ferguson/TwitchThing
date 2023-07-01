@@ -56,9 +56,20 @@ export function takeDamage(combat, subject, damageInfo){
     result = processAbilityEvents(combat, 'takeDamage', subject, null, result)
   }
 
-  if(!subject.hp && !subject.dead){
-    // TODO: 'dead' event, possible cancellation
-    subject.dead = true
+  if(!subject.hp && subject.canDie){
+    const deathResult = processAbilityEvents(combat, 'dying', subject, null)
+    if(deathResult.cancelled){
+      subject.deathPreventedViaAbility = true
+    }else{
+      processAbilityEvents(combat, 'dead', subject, null, result)
+      subject.dead = true
+      result.dead = true
+    }
+  }
+
+  if(!subject.dead && !subject.hp){
+    subject.hp = 1
+    result.damageDistribution.at(-1).finalValue = 1
   }
 
   return result

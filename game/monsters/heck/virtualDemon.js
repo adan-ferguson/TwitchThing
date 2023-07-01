@@ -10,7 +10,7 @@ export default function(){
         effect: {
           stats: {
             critChance: 0.2,
-            critDamage: '+100%'
+            critDamage: '+50%'
           }
         }
       },

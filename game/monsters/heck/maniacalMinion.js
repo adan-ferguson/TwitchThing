@@ -1,27 +1,28 @@
 export default function(){
   return {
     baseStats: {
-      physPower: '-10%',
+      physPower: '-20%',
       hpMax: '-10%',
-      speed: 20,
+      speed: 30,
     },
     items: [{
-      name: 'Off the Handle',
+      name: 'Raging',
       effect: {
-        metaEffects: [{
-          subject: {
-            key: 'self'
-          },
-          conditions: {
-            owner: {
-              hasDebuff: true
+        abilities: [{
+          trigger: 'startOfCombat',
+          actions: [{
+            applyStatusEffect: {
+              targets: 'self',
+              statusEffect: {
+                name: 'No Die!',
+                mods: [{
+                  cantDie: true,
+                }],
+                duration: 15000,
+                polarity: 'buff',
+              }
             }
-          },
-          effectModification: {
-            stats: {
-              speed: 100
-            }
-          }
+          }]
         }]
       }
     }]

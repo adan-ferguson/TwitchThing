@@ -6,6 +6,7 @@ export default class MetaEffectCollection{
     this.categories = {
       slots: [[],[]],
       ids: {},
+      statusEffects: {},
       all: []
     }
     this.cache = {}
@@ -35,6 +36,9 @@ export default class MetaEffectCollection{
         if(meDef.subject.id){
           pushOrCreate(this.categories.ids, meDef.subject.id, meDef)
         }
+        if(meDef.subject.polarity){
+          pushOrCreate(this.categories.statusEffects, meDef.subject.polarity, meDef)
+        }
       }
     })
   }
@@ -50,6 +54,7 @@ export default class MetaEffectCollection{
       }
       toApply.push(...(this.categories.ids[effectInstance.uniqueID] ?? []))
       toApply.push(...this.categories.all)
+      toApply.push(...(this.categories.statusEffects[effectInstance.baseEffectData.polarity] ?? []))
       const filtered = toApply.filter((meDef => {
         return effectInstance.fighterInstance.meetsConditions(meDef.conditions?.owner)
       }))

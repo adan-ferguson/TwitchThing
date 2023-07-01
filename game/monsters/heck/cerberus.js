@@ -4,7 +4,7 @@ export default function(){
   return {
     baseStats: {
       hpMax: '-20%',
-      speed: 50
+      speed: 45
     },
     items: [
       biteMonsterItem(4000, 1.4, {

@@ -14,20 +14,11 @@ export default function(){
           abilities: [{
             trigger: 'active',
             uses: 1,
-            initialCooldown: 10000,
             abilityId: 'terribleCurse',
             actions: [{
               terribleCurse: true
             }]
           }]
-        }
-      },{
-        name: 'Satanic Satin',
-        effect: {
-          effectId: 'satanicSatin',
-          stats: {
-            ccResist: '100%'
-          }
         }
       }
     ],

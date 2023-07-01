@@ -23,7 +23,8 @@ const agony = terribleCurse({
 const suffering = terribleCurse({
   name: 'TERRIBLE Curse: Suffering',
   stats: {
-    healing: '0.25x'
+    healing: '0.5x',
+    barrierPower: '0.5x'
   }
 })
 
@@ -38,8 +39,8 @@ const debilitation = terribleCurse({
 const vulnerability = terribleCurse({
   name: 'TERRIBLE Curse: Frailty',
   stats: {
-    magicDef: '-100%',
-    physDef: '-100%'
+    magicDef: '-50%',
+    physDef: '-50%'
   }
 })
 

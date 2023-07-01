@@ -260,12 +260,20 @@ export default class FighterInstance{
     return this._metaEffectCollection
   }
 
+  get canDie(){
+    return !this._dead && !this._state.deathPreventedViaAbility && !this.hasMod('cantDie')
+  }
+
   get dead(){
     return this._dead
   }
 
   set dead(val){
     this._dead = val
+  }
+
+  set deathPreventedViaAbility(val){
+    this._state.deathPreventedViaAbility = val
   }
 
   getNextActiveAbility(){
@@ -373,6 +381,7 @@ export default class FighterInstance{
       })
     }
     this.statusEffectInstances.forEach(sei => sei.advanceTime(ms))
+    this.deathPreventedViaAbility = false
     this.uncache()
   }
 

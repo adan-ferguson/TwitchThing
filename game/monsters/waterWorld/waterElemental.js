@@ -14,7 +14,7 @@ export default function(){
             trigger: 'active',
             cooldown: 20000,
             actions: [barrierAction({
-              hpMax: 0.2
+              hpMax: 0.25
             },{
               stats: {
                 physPower: '2x',

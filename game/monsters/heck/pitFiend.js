@@ -3,8 +3,8 @@ import { simpleAttackAction } from '../../commonTemplates/simpleAttackAction.js'
 export default function(){
   return {
     baseStats: {
-      hpMax: '+50%',
-      speed: 20,
+      hpMax: '+40%',
+      speed: -25,
       physPower: '+20%',
       magicPower: '+20%',
     },
@@ -19,6 +19,20 @@ export default function(){
               simpleAttackAction('phys'),
               simpleAttackAction('magic')
             ]
+          }]
+        }
+      },{
+        name: 'Get Mad!',
+        effect: {
+          metaEffects: [{
+            subject: {
+              polarity: 'debuff'
+            },
+            effectModification: {
+              stats: {
+                speed: 25
+              }
+            }
           }]
         }
       }

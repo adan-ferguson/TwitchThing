@@ -61,6 +61,11 @@ const DEFS = {
       description: 'Can\'t attack.'
     }
   },
+  cantDie: () => {
+    return {
+      description: 'Can\'t die!'
+    }
+  }
 }
 export function modDisplayInfo(mod){
   for(let key in mod){

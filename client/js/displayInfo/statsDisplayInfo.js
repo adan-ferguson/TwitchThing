@@ -142,6 +142,9 @@ export const statDefinitionsInfo = {
   },
   healing: {
     text: 'Healing'
+  },
+  barrierPower: {
+    text: 'Barrier Strength'
   }
 }
 

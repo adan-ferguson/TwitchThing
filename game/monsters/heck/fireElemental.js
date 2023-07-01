@@ -3,10 +3,10 @@ import { barrierAction } from '../../commonTemplates/barrierAction.js'
 export default function(){
   return {
     baseStats: {
-      hpMax: '-20%',
+      hpMax: '+20%',
       physPower: '-20%',
       magicPower: '-20%',
-      speed: 10,
+      speed: 20,
     },
     items: [
       {
@@ -16,7 +16,7 @@ export default function(){
             trigger: 'active',
             cooldown: 20000,
             actions: [barrierAction({
-              hpMax: 0.2
+              hpMax: 0.4
             },{
               stats: {
                 physPower: '2x',
@@ -31,7 +31,7 @@ export default function(){
         effect: {
           abilities: [{
             trigger: 'active',
-            initialCooldown: 15000,
+            initialCooldown: 16000,
             cooldown: 20000,
             actions: [
               {
@@ -48,13 +48,13 @@ export default function(){
                       damageOverTime: {
                         damage: {
                           scaledNumber: {
-                            magicPower: 0.2
+                            magicPower: 0.1
                           }
                         },
                         damageType: 'magic'
                       }
                     },
-                    name: 'burned',
+                    name: 'seriousBurn',
                     duration: 60000,
                     persisting: true
                   },

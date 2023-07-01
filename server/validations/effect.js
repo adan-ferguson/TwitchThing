@@ -112,6 +112,10 @@ const as = Joi.object({
     value: Joi.number()
   }),
   terribleCurse: Joi.bool(),
+  terribleSituation: Joi.bool(),
+  painTrain: Joi.object({
+    magicPower: Joi.number()
+  }),
   random: {
     options: Joi.array().items(Joi.object({
       weight: Joi.number().required(),
@@ -157,6 +161,7 @@ const ABILITY_SCHEMA = Joi.object({
   phantomEffect: Joi.custom(val => {
     return Joi.attempt(val, PHANTOM_EFFECT_SCHEMA)
   }),
+  uncancellable: Joi.bool(),
   tags: TAGS_LIST_SCHEMA,
   vars: Joi.object()
 })
@@ -186,7 +191,8 @@ export const META_EFFECT_SCHEMA = Joi.object({
   }),
   subject: Joi.object({
     key: SUBJECT_KEYS_SCHEMA,
-    id: Joi.string()
+    id: Joi.string(),
+    polarity: POLARITY_SCHEMA,
   }).required(),
   effectModification: {
     stats: STATS_SCHEMA,

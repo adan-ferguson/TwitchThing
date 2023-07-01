@@ -160,7 +160,11 @@ export default class FighterInstancePane extends HTMLElement{
       if(!barEl){
         continue
       }
-      barEl.setValue(-amount, { relative: true, animate: true })
+      if(distribution.finalValue){
+        barEl.setValue(distribution.finalValue, { animate: true })
+      }else{
+        barEl.setValue(-amount, { relative: true, animate: true })
+      }
       new FlyingTextEffect(barEl, html, {
         html: true,
         fontSize: TEXT_EFFECT_MIN + Math.min(0.5, dmgStr / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX,
