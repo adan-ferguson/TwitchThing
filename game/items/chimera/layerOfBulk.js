@@ -4,9 +4,9 @@ export default function(level){
   return {
     effect: {
       stats: {
-        physPower: wrappedPct(10 + 20 * level),
-        hpMax: wrappedPct(10 + 20 * level)
+        hpMax: wrappedPct(5 + 15 * level),
       }
-    }
+    },
+    orbs: level * 1
   }
 }

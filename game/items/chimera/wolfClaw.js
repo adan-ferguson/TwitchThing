@@ -19,6 +19,7 @@ export default function(level){
         }]
       }]
     },
-    orbs: 1 + level * 2
+    orbs: 1 + level * 2,
+    displayName: 'Wolf Claws'
   }
 }

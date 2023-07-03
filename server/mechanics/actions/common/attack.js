@@ -57,7 +57,7 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
     damage += scaledNumberFromFighterInstance(enemy, actionDef.targetScaling)
     let damageInfo = {
       damageType: actionDef.damageType,
-      damage: damage, // * attacker.stats.get('damageDealt').value,
+      damage: damage,
       range: actionDef.range,
       lifesteal: actionDef.lifesteal
     }
@@ -71,18 +71,13 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
       processAbilityEvents(combat, 'crit', attacker, abilityInstance)
     }
 
+    const debuffCount = enemy.statusEffectInstances.filter(sei => sei.polarity === 'debuff').length
+    damageInfo.damage *= (1 + debuffCount * attacker.stats.get('damagePerEnemyDebuff').value)
+
     let damageResult = dealDamage(combat, attacker, enemy, damageInfo)
     damageResult = processAbilityEvents(combat, ['attackHit', damageInfo.damageType + 'AttackHit'], attacker, abilityInstance, damageResult)
     damageResult = processAbilityEvents(combat, 'hitByAttack', enemy, abilityInstance, damageResult)
 
-    if(actionDef.onHit){
-      combat.addPendingTriggers([{
-        performAction: true,
-        actor: attacker,
-        ability: abilityInstance,
-        def: actionDef.onHit
-      }])
-    }
 
     if(enemy.dead){
       processAbilityEvents(combat, 'kill', attacker, abilityInstance, {

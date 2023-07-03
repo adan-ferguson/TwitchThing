@@ -9,6 +9,6 @@ export default function(level){
       }
     },
     orbs: 2 + 2 * level,
-    displayName: 'Cloth Armor'
+    displayName: 'Light Armor'
   }
 }

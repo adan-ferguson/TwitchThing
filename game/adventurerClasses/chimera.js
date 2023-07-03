@@ -5,33 +5,28 @@ export const CHIMERA_CLASS_INFO = {
   skills: [
     Skills.wildSlash,
     Skills.bite,
-    Skills.bodySlam,
-    Skills.unstoppable,
-    Skills.furiousStrikes,
     Skills.survivalInstincts,
-    Skills.predatoryInstincts,
-
-    // Skills.fightAndOrFlight
-    // Skills.enlarged hpMax, physpower, spd-
-
-    // Skills.heavyweight, hpMax -> physPower
-    // Skills.roar,
-    // Skills.maul,
-    // Skills.lightningTackle,
-    // Skills.breatheFire,
-    // Skills.trollRegeneration,
+    Skills.enlarged,
+    Skills.bodySlam,
+    Skills.fightAndOrFlight,
+    Skills.senseWeakness,
+    Skills.furiousStrikes,
+    // Skills.regeneration,
+    // Skills.onTheBackfoot,
+    Skills.unstoppable,
+    // Skills.elementalBreath,
   ],
   items: [[
     Items.turtleShell,
     Items.wolfClaw,
     Items.cheetahLegs,
-    // Items.waspStinger, attacks can poison
-    // Items.bulk, hpMax+, spd-
+    Items.waspStinger,
+    Items.layerOfBulk, // name....
   ],[
     // Items.shimmeringScales,
     // Items.krakenTentacle,   attacks slow
     // Items.batWings,         fluttering...probably can't really do that though
-    // Items.salamanderSkin,   attacks deal magic damage? or fire aura?
+    // Items.salamanderTail,   attacks deal magic damage?
   ],[
     // Items.phoenixPlumage,
     // Items.extraArms, ^v

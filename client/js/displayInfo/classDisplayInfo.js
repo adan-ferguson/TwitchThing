@@ -20,7 +20,7 @@ const ADV_CLASSES = {
   },
   chimera: {
     description: 'A humanoid with beastly tendencies. And beastly body-parts. Has a hodgepodge of abilities.',
-    color: '#98ab65'
+    color: '#579d0e'
   }
 }
 

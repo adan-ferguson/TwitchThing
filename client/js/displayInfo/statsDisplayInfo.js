@@ -81,21 +81,11 @@ export const statDefinitionsInfo = {
   },
   lifesteal: {
     text: 'Lifesteal',
-    displayedValueFn: (value, { style }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE){
-        return toPct(value)
-      }
-      return `+${toPct(value)}`
-    }
+    displayedValueFn: flatPct
   },
   critLifesteal: {
     text: 'Crit Lifesteal',
-    displayedValueFn: (value, { style }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE){
-        return `${Math.round(value * 100)}%`
-      }
-      return `+${Math.round(value * 100)}%`
-    }
+    displayedValueFn: flatPct
   },
   combatXP: {
     text: 'XP Gain'
@@ -145,7 +135,7 @@ export const statDefinitionsInfo = {
   },
   barrierPower: {
     text: 'Barrier Strength'
-  }
+  },
 }
 
 const DEFAULTS = {
@@ -235,4 +225,11 @@ function plusSign(style, value){
     return ''
   }
   return '+'
+}
+
+function flatPct(value, { style }){
+  if(style === StatsDisplayStyle.CUMULATIVE){
+    return toPct(value)
+  }
+  return `+${toPct(value)}`
 }

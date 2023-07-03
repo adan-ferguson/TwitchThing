@@ -11,7 +11,7 @@ export default function(){
       speed: 150
     },
     items: [{
-      name: 'Venom Stinger',
+      name: 'Stinger',
       effect: {
         abilities: [{
           vars: {
