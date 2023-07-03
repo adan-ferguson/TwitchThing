@@ -1,5 +1,4 @@
 import Stats from './stats/stats.js'
-import { expandActionDef } from './actionDefs/expandActionDef.js'
 
 export default class AbilityInstance{
 
@@ -94,8 +93,12 @@ export default class AbilityInstance{
     this._state.cooldownElapsedPct = Math.max(0, Math.min(val, 1))
   }
 
+  get useCooldownMultiplier(){
+    return this.parentEffect.useCooldownMultiplier && this.trigger === 'active' || this.abilityDef.useCooldownMultiplier
+  }
+
   get cooldownMultiplier(){
-    if(this.parentEffect.useCooldownMultiplier && this.trigger === 'active'){
+    if(this.useCooldownMultiplier){
       return this.totalStats.get('cooldownMultiplier').value
     }
     return 1

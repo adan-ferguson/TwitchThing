@@ -10,18 +10,6 @@ export default function(){
     },
     items: [
       {
-        name: 'TERRIBLE Situation',
-        effect: {
-          abilities: [{
-            uncancellable: true,
-            trigger: 'startOfCombat',
-            actions: [{
-              terribleSituation: true
-            }]
-          }]
-        }
-      },
-      {
         name: 'Blightning Bolt',
         effect: {
           abilities: [{
@@ -54,7 +42,19 @@ export default function(){
             }]
           }]
         }
-      }
+      },
+      {
+        name: 'Shrug Off (EVIL Edition)',
+        effect: {
+          abilities: [{
+            trigger: 'gainingDebuff',
+            cooldown: 12000,
+            replacements: {
+              cancel: 'Shrugged Off'
+            },
+          }]
+        }
+      },
     ]
   }
 }

@@ -125,6 +125,9 @@ function mergeAbilityModification(amod, abilities){
       newDef.actions.push(amod.addAction)
     }
     if(amod.newTrigger){
+      if(newDef.trigger === 'active'){
+        newDef.useCooldownMulitplier = true
+      }
       newDef.trigger = amod.newTrigger
     }
     return newDef

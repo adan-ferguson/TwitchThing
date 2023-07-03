@@ -132,6 +132,11 @@ const as = Joi.object({
   },
   fireSpiritExplode: {
     ratio: Joi.number()
+  },
+  returnDamage: {
+    damageType: DAMAGE_TYPE_SCHEMA,
+    returnDamageType: DAMAGE_TYPE_SCHEMA,
+    pct: Joi.number().min(0),
   }
 })
 

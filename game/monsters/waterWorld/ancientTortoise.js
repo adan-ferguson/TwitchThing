@@ -1,3 +1,5 @@
+import { spikedShellAbility } from '../../commonTemplates/spikedShellAbility.js'
+
 export default function(){
   return {
     baseStats: {
@@ -35,23 +37,7 @@ export default function(){
     },{
       name: 'Spiked Shell',
       effect: {
-        abilities: [{
-          trigger: 'hitByAttack',
-          conditions: {
-            data: {
-              damageType: 'phys'
-            }
-          },
-          actions: [{
-            dealDamage: {
-              targets: 'enemy',
-              damageType: 'phys',
-              scaling: {
-                physPower: 0.12
-              }
-            }
-          }]
-        }]
+        abilities: [spikedShellAbility(0.12)]
       }
     }]
   }

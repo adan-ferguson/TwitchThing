@@ -71,9 +71,9 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
       processAbilityEvents(combat, 'crit', attacker, abilityInstance)
     }
 
-    damageInfo = dealDamage(combat, attacker, enemy, damageInfo)
-    damageInfo = processAbilityEvents(combat, ['attackHit', damageInfo.damageType + 'AttackHit'], attacker, abilityInstance, damageInfo)
-    damageInfo = processAbilityEvents(combat, 'hitByAttack', enemy, abilityInstance, damageInfo)
+    let damageResult = dealDamage(combat, attacker, enemy, damageInfo)
+    damageResult = processAbilityEvents(combat, ['attackHit', damageInfo.damageType + 'AttackHit'], attacker, abilityInstance, damageResult)
+    damageResult = processAbilityEvents(combat, 'hitByAttack', enemy, abilityInstance, damageResult)
 
     if(actionDef.onHit){
       combat.addPendingTriggers([{
@@ -90,7 +90,7 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
       })
     }
 
-    return { damageInfo }
+    return { damageInfo: damageResult }
   }
 }
 

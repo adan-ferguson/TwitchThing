@@ -38,11 +38,11 @@ const COMMANDS = {
       userDoc.inventory.stashedXp += 100000000
       userDoc.inventory.gold += 100000000
       userDoc.inventory.scrap += 100000000
-      userDoc.features.shop = 1
-      userDoc.features.workshop = 1
-      userDoc.features.skills = 1
+      userDoc.features.shop = 2
+      userDoc.features.workshop = 2
+      userDoc.features.skills = 2
       userDoc.features.advClasses.rogue = 2
-      userDoc.features.advClasses.chimera = 0
+      userDoc.features.advClasses.chimera = 2
       Users.save(userDoc)
     })
     return 'Stuff given'

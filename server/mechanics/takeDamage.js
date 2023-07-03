@@ -23,6 +23,10 @@ export function takeDamage(combat, subject, damageInfo){
     damage *= randomBetween(...damageInfo.range)
   }
 
+  if(!damageInfo.ignoreOvertime){
+    damage *= combat.overtimeDamageBonus
+  }
+
   if(!damageInfo.ignoreDefense){
     const mitigated = Math.floor(
       damage *
@@ -43,10 +47,6 @@ export function takeDamage(combat, subject, damageInfo){
       result.mitigated += damage
       damage = 0
     }
-  }
-
-  if(!damageInfo.ignoreOvertime){
-    damage *= combat.overtimeDamageBonus
   }
 
   result.damageDistribution = distributeDamage(subject, Math.ceil(damage))
