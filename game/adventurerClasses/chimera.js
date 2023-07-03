@@ -3,36 +3,38 @@ import Items from '../items/combined.js'
 
 export const CHIMERA_CLASS_INFO = {
   skills: [
-    // Skills.wildSlash,
-    // Skills.bite,
+    Skills.wildSlash,
+    Skills.bite,
+    Skills.bodySlam,
     Skills.unstoppable,
-    // Skills.bodySlam,
+    Skills.furiousStrikes,
+    Skills.survivalInstincts,
+    Skills.predatoryInstincts,
+
+    // Skills.fightAndOrFlight
+    // Skills.enlarged hpMax, physpower, spd-
+
+    // Skills.heavyweight, hpMax -> physPower
+    // Skills.roar,
     // Skills.maul,
-    // Skills.survivalInstincts,
-    // Skills.enlarged,
-    // Skills.predatoryInstincts,
     // Skills.lightningTackle,
     // Skills.breatheFire,
-    // Skills.roar,
-    // Skills.extraArms,
-    // Skills.furiousStrikes, like swift strikes but scales with speed
     // Skills.trollRegeneration,
-    // Skills.fightAndOrFlight
   ],
   items: [[
-    Items.turtleShell,  // this is
+    Items.turtleShell,
     Items.wolfClaw,
+    Items.cheetahLegs,
     // Items.waspStinger, attacks can poison
-    // Items.spiderWebbing, // meh
-    // Items.gatorHide, // no
-    // Items.cheetahLegs, spd+
+    // Items.bulk, hpMax+, spd-
   ],[
-    // Items.mammothStrength, hp+, ppow+, spd-
-    // Items.batWings,        fluttering...probably can't really do that though
-    // Items.goldenMane,
+    // Items.shimmeringScales,
+    // Items.krakenTentacle,   attacks slow
+    // Items.batWings,         fluttering...probably can't really do that though
+    // Items.salamanderSkin,   attacks deal magic damage? or fire aura?
   ],[
     // Items.phoenixPlumage,
-    // Items.krakenTentacle,   attacks slow
-    // Items.behemothCarapace,
+    // Items.extraArms, ^v
+    // Items.behemothCarapace, damage threshold
   ]]
 }

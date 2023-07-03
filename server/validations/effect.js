@@ -137,6 +137,11 @@ const as = Joi.object({
     damageType: DAMAGE_TYPE_SCHEMA,
     returnDamageType: DAMAGE_TYPE_SCHEMA,
     pct: Joi.number().min(0),
+  },
+  furiousStrikes: {
+    base: Joi.number().integer(),
+    per: Joi.number().min(1),
+    damagePer: Joi.number().greater(0)
   }
 })
 
