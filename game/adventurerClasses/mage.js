@@ -14,7 +14,7 @@ export const MAGE_CLASS_INFO = {
     Skills.imbueWeapons,
     Skills.overload,
     Skills.higherLearning,
-    Skills.lightningStorm,
+    Skills.lightningStorm, // ??
   ],
   items: [[
     Items.wand,

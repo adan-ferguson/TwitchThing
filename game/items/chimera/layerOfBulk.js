@@ -7,6 +7,7 @@ export default function(level){
         hpMax: wrappedPct(5 + 15 * level),
       }
     },
-    orbs: level * 1
+    orbs: level * 1,
+    displayName: 'Bulk'
   }
 }

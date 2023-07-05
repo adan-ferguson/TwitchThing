@@ -16,7 +16,7 @@ export function speedToTurnTime(speed){
   if(speed >= 0){
     turnTime = COMBAT_BASE_TURN_TIME * (100 / (speed + 100))
   }else{
-    turnTime = COMBAT_BASE_TURN_TIME * (1 + speed / -100)
+    turnTime = COMBAT_BASE_TURN_TIME * (1 + speed / -200)
   }
   return turnTime
 }

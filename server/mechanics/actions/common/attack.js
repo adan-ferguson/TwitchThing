@@ -56,6 +56,7 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
     let damage = scaledNumberFromAbilityInstance(abilityInstance, actionDef.scaling)
     damage += scaledNumberFromFighterInstance(enemy, actionDef.targetScaling)
     let damageInfo = {
+      isAttack: true,
       damageType: actionDef.damageType,
       damage: damage,
       range: actionDef.range,

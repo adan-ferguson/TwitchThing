@@ -1,4 +1,4 @@
-export function spikedShellAbility(returnPct){
+export function spikedShellAbility(returnPct, damageType = 'phys'){
   return {
     trigger: 'hitByAttack',
     conditions: {
@@ -9,16 +9,8 @@ export function spikedShellAbility(returnPct){
     actions: [{
       returnDamage: {
         damageType: 'phys',
-        pct: 0.12
+        pct: returnPct
       }
     }]
   }
 }
-
-// dealDamage: {
-//   targets: 'enemy',
-//     damageType: 'phys',
-//     scaling: {
-//     physPower: 0.12
-//   }
-// }

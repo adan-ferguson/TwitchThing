@@ -6,9 +6,10 @@ export function takeDamage(combat, subject, damageInfo){
   damageInfo = {
     damage: 0,
     damageType: 'phys',
-    ignoreDefense: false,
     range: null,
+    ignoreDefense: false,
     ignoreOvertime: false,
+    isAttack: false,
     ...damageInfo
   }
 
@@ -42,10 +43,12 @@ export function takeDamage(combat, subject, damageInfo){
       damage = maxDamage
     }
 
-    const minDamage = Math.ceil(subject.hpMax * subject.stats.get('damageThreshold').value)
-    if(damage < minDamage){
-      result.mitigated += damage
-      damage = 0
+    if(damageInfo.isAttack){
+      const minDamage = Math.ceil(subject.hpMax * subject.stats.get('damageThreshold').value)
+      if(damage < minDamage){
+        result.mitigated += damage
+        damage = 0
+      }
     }
   }
 

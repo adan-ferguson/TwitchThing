@@ -11,10 +11,10 @@ export const CHIMERA_CLASS_INFO = {
     Skills.fightAndOrFlight,
     Skills.senseWeakness,
     Skills.furiousStrikes,
-    // Skills.regeneration,
-    // Skills.onTheBackfoot,
     Skills.unstoppable,
-    // Skills.elementalBreath,
+    Skills.extraArms,
+    Skills.elementalBreath,
+    // Skills.???,
   ],
   items: [[
     Items.turtleShell,
@@ -23,13 +23,13 @@ export const CHIMERA_CLASS_INFO = {
     Items.waspStinger,
     Items.layerOfBulk, // name....
   ],[
-    // Items.shimmeringScales,
-    // Items.krakenTentacle,   attacks slow
+    Items.shimmeringScales,
     // Items.batWings,         fluttering...probably can't really do that though
-    // Items.salamanderTail,   attacks deal magic damage?
+    Items.salamanderTail,
+    Items.regeneration,
   ],[
     // Items.phoenixPlumage,
-    // Items.extraArms, ^v
+    // Items.krakenTentacle,   attacks slow
     // Items.behemothCarapace, damage threshold
   ]]
 }
