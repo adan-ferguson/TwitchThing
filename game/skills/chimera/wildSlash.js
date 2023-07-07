@@ -7,15 +7,15 @@ export default function(level){
         trigger: 'active',
         cooldown: 10000,
         actions: [{
-          attack: {
-            scaling: {
-              physPower
-            }
-          }
-        },{
           takeDamage: {
             scaling: {
               hp: pct
+            }
+          }
+        },{
+          attack: {
+            scaling: {
+              physPower
             }
           }
         }]

@@ -61,7 +61,7 @@ function derived(metaEffect, obj){
   if(metaEffect.conditions){
     headerContent = conditionsDisplayInfo(metaEffect.conditions)
   }else{
-    headerContent = subjectDescription(metaEffect.subjectKey, isItem)
+    headerContent = subjectDescription(metaEffect.subject?.key, isItem)
   }
 
   if(headerContent){

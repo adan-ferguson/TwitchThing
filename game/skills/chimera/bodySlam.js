@@ -1,5 +1,5 @@
 export default function(level){
-  const hpMax = 0.4 + 0.2 * level
+  const hpMax = 0.25 + 0.15 * level
   return {
     effect: {
       abilities: [{

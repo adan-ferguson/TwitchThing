@@ -136,6 +136,7 @@ export const statDefinitionsInfo = {
   barrierPower: {
     text: 'Barrier Strength'
   },
+  damagePerEnemyDebuff: null,
 }
 
 const DEFAULTS = {

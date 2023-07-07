@@ -21,15 +21,15 @@ export const CHIMERA_CLASS_INFO = {
     Items.wolfClaw,
     Items.cheetahLegs,
     Items.waspStinger,
-    Items.layerOfBulk, // name....
+    Items.layerOfBulk,
   ],[
     Items.shimmeringScales,
-    // Items.batWings,         fluttering...probably can't really do that though
+    Items.batWings,
     Items.salamanderTail,
     Items.regeneration,
   ],[
-    // Items.phoenixPlumage,
-    // Items.krakenTentacle,   attacks slow
-    // Items.behemothCarapace, damage threshold
+    Items.phoenixPlumage,
+    Items.krakenTentacle,
+    Items.behemothCarapace,
   ]]
 }

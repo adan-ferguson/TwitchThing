@@ -4,17 +4,17 @@ export default function(level){
     effect: {
       abilities: [{
         trigger: 'active',
-        cooldown: 20000 + level * 10000,
+        cooldown: 30000 + level * 30000,
         actions: [{
           elementalBreath: {
             magicPower,
             burn: magicPower / 10,
-            slow: 10 + level * 10,
-            weaken: Math.pow(0.9, level + 1)
+            slow: 20 + level * 20,
+            weaken: 0.8 * Math.pow(0.85, level - 1)
           }
         }]
       }],
-      displayName: 'Dragon Breath'
-    }
+    },
+    displayName: 'Dragon Breath',
   }
 }

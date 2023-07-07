@@ -10,6 +10,5 @@ export default function(level){
         }
       }]
     },
-    skillPoints: 2 * level
   }
 }

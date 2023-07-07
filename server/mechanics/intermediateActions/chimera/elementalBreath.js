@@ -14,17 +14,20 @@ export default function(combat, actor, abilityInstance, def){
             }
           }
         }
-      }
+      },
+      name: 'Burned'
     }),
     ase({
       stats: {
         speed: -def.speed
-      }
+      },
+      name: 'Chilled'
     }),
     ase({
       stats: {
         damageDealt: def.weaken + 'x'
-      }
+      },
+      name: 'Weakened'
     }),
   ]
 

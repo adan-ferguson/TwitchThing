@@ -5,7 +5,7 @@ export default {
   }
 }
 
-export function flutteringAbility(){
+export function flutteringAbility(cooldown = 10000){
   return {
     abilityId: 'flutteringDodge',
     trigger: 'attacked',
@@ -14,7 +14,7 @@ export function flutteringAbility(){
         cantDodge: false
       }
     },
-    cooldown: 10000,
+    cooldown,
     replacements: {
       dataMerge: {
         forceDodge: true

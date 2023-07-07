@@ -1,21 +1,16 @@
-import { expandActionDef } from '../../../game/actionDefs/expandActionDef.js'
 import AbilityInstance from '../../../game/abilityInstance.js'
-import { derivedAttackDescription } from './derived/actions/attack.js'
-import { statusEffectApplicationDescription, statusEffectDuration } from './statusEffectDisplayInfo.js'
+import { statusEffectDuration } from './statusEffectDisplayInfo.js'
 import {
   aboveIcon, attachedActiveSkill, attachedItem,
   attachedSkill,
-  belowIcon, capitalizeFirstChunk, describeStat, goldEntry, refundTime, statScaling, toSeconds,
-  wrapStat, wrapStats
+  belowIcon, describeStat, goldEntry, statScaling, toSeconds,
+  wrapStat
 } from '../components/common.js'
 import { damageActionCalcDamage } from '../../../game/mechanicsFns.js'
-import { derivedGainHealthDescription } from './derived/actions/gainHealth.js'
-import { arrayize, msToS, toPct } from '../../../game/utilFunctions.js'
-import { derivedModifyAbilityDescription } from './derived/actions/modifyAbility.js'
-import { derivedDealDamageDescription } from './derived/actions/dealDamage.js'
-import { derivedRemoveStatusEffectDescription } from './derived/actions/removeStatusEffect.js'
+import { msToS, toPct } from '../../../game/utilFunctions.js'
 import { scaledNumberFromInstance } from '../../../game/scaledNumber.js'
 import { keyword } from './keywordDisplayInfo.js'
+import { actionArrayDescriptions } from './actionDisplayInfo.js'
 
 const DEFS = {
   flutteringDodge: () => {
@@ -159,42 +154,6 @@ const DEFS = {
   }
 }
 
-const ACTION_DEFS = {
-  balancedSmite: (actionDef, ability) => {
-    const phys = statScaling({
-      physPower: actionDef.power
-    }, ability)
-    const magic = statScaling({
-      magicPower: actionDef.power
-    }, ability)
-    return {
-      description: `Attack for ${phys} phys damage or ${magic} magic damage, whichever is lower. (Phys if tie)`
-    }
-  },
-  shieldsUp: (actionDef, ability) => {
-    return {
-      description: `Restore your block barrier with an extra <b>${toPct(actionDef.multiplier - 1)}</b> strength. Only use when your block barrier is down.`
-    }
-  },
-  penance: (actionDef, ability) => {
-    return {
-      description: `Whenever you heal, deal damage equal to <b>${toPct(actionDef.pct)}</b> of the amount healed.`
-    }
-  },
-  breakItem: (actionDef, ability) => {
-    const duration = statusEffectDuration(actionDef.statusEffect ?? {}, ability)
-    return {
-      description: `Break ${actionDef.count ?? 1} of the target's items${duration ? ' ' + duration : ''}.`
-    }
-  },
-  theBountyCollectorKill: (actionDef, ability) => {
-    const goldStr = `Enemy Lvl x ${actionDef.value}`
-    return {
-      description: `When you kill an enemy with ${attachedActiveSkill()} get a bounty chest containing ${goldEntry(goldStr)}.`
-    }
-  }
-}
-
 const phantomEffectDefinitions = {
   // attackAppliesStatusEffect: (def, abilityInstance) => {
   //   const chunks = ['On hit,']
@@ -235,43 +194,28 @@ function abilityDescription(ability){
   const chunks = []
   const abilityInstance = ability instanceof AbilityInstance ? ability : null
   chunks.push(...prefix(ability.trigger, ability.conditions ?? {}))
+  chunks.push(...actionArrayDescriptions(ability.actions, abilityInstance))
 
-  let capitalize = true
-  if(chunks.length){
-    capitalize = false
-    chunks[chunks.length - 1] += ','
-  }
-  ability.actions?.forEach(actionDef => {
-    let toAdd = []
-    toAdd.push(...arrayize(actionDefDescription(actionDef, abilityInstance)))
-    if(!toAdd?.length){
-      return
-    }
-    if(capitalize){
-      toAdd = capitalizeFirstChunk(toAdd)
-    }
-    chunks.push(...toAdd)
-    capitalize = true
-  })
-  if(ability.phantomEffect){
-    const type = Object.keys(ability.phantomEffect.base)[0]
-    if(phantomEffectDefinitions[type]){
-      chunks.push(phantomEffectDefinitions[type](ability.phantomEffect.base[type], abilityInstance))
-    }
-  }
-  if(ability.conditions){
-    chunks.push(...conditionsDescription(ability.conditions))
-  }
-  if(ability.resetAfterCombat){
-    chunks.push('Resets to initial cooldown after combat.')
-  }
-  if(ability.turnRefund > 0){
-    chunks.push(`Refunds ${refundTime(toPct(ability.turnRefund))}.`)
-  }
-  if(ability.exclusiveStats?.critDamage){
-    chunks.push(`<br/>Benefits from ${wrapStats(ability.exclusiveStats)}.`)
-  }
-  return chunks.join(' ') //_.capitalize()
+  // if(ability.phantomEffect){
+  //   const type = Object.keys(ability.phantomEffect.base)[0]
+  //   if(phantomEffectDefinitions[type]){
+  //     chunks.push(phantomEffectDefinitions[type](ability.phantomEffect.base[type], abilityInstance))
+  //   }
+  // }
+  // if(ability.conditions){
+  //   chunks.push(...conditionsDescription(ability.conditions))
+  // }
+  // if(ability.resetAfterCombat){
+  //   chunks.push('Resets to initial cooldown after combat.')
+  // }
+  // if(ability.turnRefund > 0){
+  //   chunks.push(`Refunds ${refundTime(toPct(ability.turnRefund))}.`)
+  // }
+  // if(ability.exclusiveStats?.critDamage){
+  //   chunks.push(`<br/>Benefits from ${wrapStats(ability.exclusiveStats)}.`)
+  // }
+
+  return chunks.join(' ')
 }
 
 function startOfCombatPrefix(){
@@ -316,35 +260,4 @@ function prefix(trigger, conditions){
     chunks.push('After landing a crit')
   }
   return chunks
-}
-
-function actionDefDescription(actionDef, abilityInstance){
-  if(Array.isArray(actionDef)){
-    return actionDef.map(ad => actionDefDescription(ad, abilityInstance)).flat()
-  }
-  actionDef = expandActionDef(actionDef)
-  if(!actionDef){
-    // Maybe an intermediate action def? Figure this out
-    return null
-  }
-  if(actionDef.attack){
-    const val = derivedAttackDescription(actionDef.attack, abilityInstance)
-    return val
-  }else if(actionDef.applyStatusEffect){
-    return statusEffectApplicationDescription(actionDef.applyStatusEffect, abilityInstance)
-  }else if(actionDef.gainHealth){
-    return derivedGainHealthDescription(actionDef.gainHealth, abilityInstance)
-  }else if(actionDef.modifyAbility){
-    return derivedModifyAbilityDescription(actionDef.modifyAbility, abilityInstance)
-  }else if(actionDef.dealDamage){
-    return derivedDealDamageDescription(actionDef.dealDamage, abilityInstance)
-  }else if(actionDef.removeStatusEffect){
-    return derivedRemoveStatusEffectDescription(actionDef.removeStatusEffect)
-  }else{
-    const key = Object.keys(actionDef)[0]
-    if(ACTION_DEFS[key]){
-      return ACTION_DEFS[key](actionDef[key], abilityInstance).description
-    }
-  }
-  return null
 }

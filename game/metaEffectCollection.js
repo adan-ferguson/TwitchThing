@@ -24,7 +24,7 @@ export default class MetaEffectCollection{
         const key = meDef.subject.key
         if(key){
           if(key === 'attached' && ei.slotInfo){
-            add(this.categories.slots, ei.slotInfo.col + 1 % 2, ei.slotInfo.row, meDef)
+            add(this.categories.slots, (ei.slotInfo.col + 1) % 2, ei.slotInfo.row, meDef)
           }else if(key === 'self'){
             pushOrCreate(this.categories.ids, ei.uniqueID, meDef)
           }else if(key === 'all'){

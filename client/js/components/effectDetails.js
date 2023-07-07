@@ -131,6 +131,9 @@ export default class EffectDetails extends DIElement{
     if(this._obj.data?.scrapValue){
       this.appendChild(wrapContent(`Worth ${scrapEntry(this._obj.data.scrapValue)}`))
     }
+    if(this._obj.statMultiplier !== 1 && this._isMeta){
+      this.appendChild(wrapContent(`All stats are multiplied by ${this._obj.statMultiplier}`))
+    }
   }
 
   _addTooltips(){

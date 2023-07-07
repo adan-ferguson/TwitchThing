@@ -142,6 +142,12 @@ const as = Joi.object({
     base: Joi.number().integer(),
     per: Joi.number().min(1),
     damagePer: Joi.number().greater(0)
+  },
+  elementalBreath: {
+    magicPower: Joi.number(),
+    burn: Joi.number(),
+    slow: Joi.number(),
+    weaken: Joi.number(),
   }
 })
 

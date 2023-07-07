@@ -1,7 +1,7 @@
 import { exponentialPercentage } from '../../growthFunctions.js'
 
 export default function(level){
-  const def = exponentialPercentage(0.15, level - 1, 0.4)
+  const def = exponentialPercentage(0.2, level - 1, 0.4)
   return {
     effect: {
       metaEffects: [{

@@ -1,9 +1,17 @@
 import Stats from '../../../game/stats/stats.js'
 import { getStatDisplayInfo, statDefinitionsInfo, StatsDisplayStyle } from '../displayInfo/statsDisplayInfo.js'
-import { deepClone, makeEl, roundToNearestIntervalOf, toPct, wrapContent } from '../../../game/utilFunctions.js'
+import {
+  deepClone,
+  makeEl,
+  roundToNearestIntervalOf,
+  toDisplayName,
+  toPct,
+  wrapContent
+} from '../../../game/utilFunctions.js'
 import health from '../../assets/icons/health.svg'
 import physPower from '../../assets/icons/physPower.svg'
 import magicPower from '../../assets/icons/magicPower.svg'
+import speed from '../../assets/icons/action.svg'
 import gold from '../../assets/icons/gold.svg'
 import AdventurerItem from '../../../game/items/adventurerItem.js'
 import AbilityInstance from '../../../game/abilityInstance.js'
@@ -143,10 +151,12 @@ export function scalingWrap(scalingType, valStr = ''){
   const ICONS = {
     magicPower: magicPower,
     physPower: physPower,
-    health: health
+    health: health,
+    hpMax: health,
+    speed: speed,
   }
   return `
-<span class="icon-and-value" scaling-type="${scalingType}">
+<span class="icon-and-value" scaling-type="${scalingType}" tooltip="${toDisplayName(scalingType)}">
     ${valStr}${ICONS[scalingType]}
 </span>`
 }
@@ -158,7 +168,7 @@ export function toSeconds(ms){
 export function statScaling(scaling, abilityInstance = null, range = null){
   const chunks = []
   for(let scalingType in scaling){
-    if(['physPower', 'magicPower'].includes(scalingType)){
+    if(['physPower', 'magicPower', 'hpMax'].includes(scalingType)){
       const val = scaling[scalingType]
       let str = ''
       if(abilityInstance instanceof AbilityInstance){
