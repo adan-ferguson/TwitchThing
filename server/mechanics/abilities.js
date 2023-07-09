@@ -6,21 +6,27 @@ export function processAbilityEvents(triggerHandler, eventNames, owner, sourceAb
   eventNames = arrayize(eventNames)
 
   const pendingTriggers = []
-  for(let eventName of eventNames){
-    const abilities = getFighterInstanceAbilities(triggerHandler, owner, eventName, sourceAbility, data)
-    for(let ability of abilities){
-      if(ability.tryUse()){
-        data = performReplacement(ability, data, sourceAbility)
-        if(ability.actions){
-          pendingTriggers.push({ ability, data })
+  runThroughEvents()
+  triggerHandler.addPendingTriggers(pendingTriggers)
+
+  return data
+
+  function runThroughEvents(){
+    for(let eventName of eventNames){
+      const abilities = getFighterInstanceAbilities(triggerHandler, owner, eventName, sourceAbility, data)
+      for(let ability of abilities){
+        if(ability.tryUse()){
+          data = performReplacement(ability, data, sourceAbility)
+          if(ability.actions){
+            pendingTriggers.push({ ability, data })
+          }
+          if(data.cancelled){
+            return
+          }
         }
       }
     }
   }
-
-  triggerHandler.addPendingTriggers(pendingTriggers)
-
-  return data
 }
 
 function performReplacement(replacerAbility, actionData, sourceAbility){

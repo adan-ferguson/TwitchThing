@@ -17,7 +17,7 @@ const DEFS = {
   diminishingReturns: {
     icon: faIcon('angles-down'),
     description: 'Repeated uses have diminishing returns.'
-  }
+  },
 }
 
 export function keyword(name, displayText = null){

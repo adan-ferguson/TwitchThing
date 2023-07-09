@@ -2,6 +2,7 @@ import { expandActionDef } from '../../../game/actionDefs/expandActionDef.js'
 import { healthIcon, iconAndValue, scalingWrap, statScaling, wrapStat } from '../components/common.js'
 import { arrayize, roundToFixed, toPct } from '../../../game/utilFunctions.js'
 import { modDisplayInfo } from './modDisplayInfo.js'
+import { statusEffectApplicationDescription } from './statusEffectDisplayInfo.js'
 
 const ACTION_DEFS = {
   attack: (def, abilityInstance) => {
@@ -15,7 +16,7 @@ const ACTION_DEFS = {
     }
 
     if(def.lifesteal){
-      chunks.push(`${roundToFixed(def.lifesteal * 100, 2)}% lifesteal.`)
+      chunks.push(`Benefits from ${wrapStat('lifesteal', def.lifesteal)}.`)
     }
 
     abilityInstance?.parentEffect.exclusiveMods.forEach(mod => {
@@ -27,12 +28,19 @@ const ACTION_DEFS = {
 
     return chunks
   },
+  dealDamage: (def, abilityInstance) => {
+    const damageType = def.damageType
+    const scalingStr = statScaling(def.scaling, abilityInstance, def.range)
+    return `Deal an extra ${scalingStr} ${damageType} damage.`
+  },
   takeDamage: (def, abilityInstance) => {
     let amount
     if(def.scaling.hp){
-      amount = `<b>${iconAndValue(healthIcon(), toPct(def.scaling.hp) + ' current')}</b>`
+      amount = iconAndValue(healthIcon(), toPct(def.scaling.hp) + ' current')
+    }else if(def.scaling.flat){
+      amount = Math.ceil(def.scaling.flat)
     }
-    return ['Take', amount, def.damageType, 'damage.']
+    return ['Take', '<b>' + amount + '</b>', def.damageType, 'damage.']
   },
   furiousStrikes: (def, abilityInstance) => {
     const scaling = {
@@ -58,20 +66,26 @@ const ACTION_DEFS = {
     chunks.push('If your health is at 50% or lower, apply all 3.')
     return chunks
   },
+  applyStatusEffect: (def, abilityInstance) => {
+    return statusEffectApplicationDescription(def, abilityInstance)
+  },
+  returnDamage: def => {
+    return `Reflect <b>${toPct(def.pct)}</b> ${def.damageType} damage back.`
+  },
+  gainHealth: (actionDef, abilityInstance) => {
+    const scaling = actionDef.scaling
+    if(scaling.hpMax){
+      return [`Recover <b>${toPct(scaling.hpMax)}</b> max health.`]
+    }else if(scaling.hpMissing){
+      return [`Recover <b>${toPct(scaling.hpMissing)}</b> missing health.`]
+    }else{
+      return [`Recover ${statScaling(scaling, abilityInstance)} ${healthIcon()}.`]
+    }
+  },
   // dealDamage: (actionDef, abilityInstance) => {
   //   const damageType = actionDef.damageType
   //   const scalingStr = statScaling(actionDef.scaling, abilityInstance, actionDef.range)
   //   return [`Deal an extra ${scalingStr} ${damageType} damage.`]
-  // },
-  // gainHealth: (actionDef, abilityInstance) => {
-  //   const scaling = actionDef.scaling
-  //   if(scaling.hpMax){
-  //     return [`recover <b>${scaling.hpMax * 100}%</b> max health.`]
-  //   }else if(scaling.hpMissing){
-  //     return [`recover <b>${scaling.hpMissing * 100}%</b> missing health.`]
-  //   }else{
-  //     return [`recover ${statScaling(scaling, abilityInstance)} health.`]
-  //   }
   // },
   // modifyAbility: (actionDef, abilityInstance) => {
   //   return [`Refresh your active cooldowns by ${msToS(actionDef.modification.cooldownRemaining * -1)}s.`]

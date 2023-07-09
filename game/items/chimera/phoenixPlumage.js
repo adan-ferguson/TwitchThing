@@ -14,6 +14,7 @@ export default function(level){
         },{
           persisting: true,
           stats: {
+            physPower: '2x',
             magicPower: '2x'
           }
         })]

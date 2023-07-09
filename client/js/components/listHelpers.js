@@ -144,7 +144,7 @@ export function removeInventoryItem(list, adventurerItem, all = false){
 
 export function makeAdventurerItemRow(itemDef, count = 1){
   const item = itemDef instanceof AdventurerItem ? itemDef : new AdventurerItem(itemDef)
-  return new AdventurerItemRow().setOptions( { item, count })
+  return new AdventurerItemRow().setOptions( { item, count, inList: true })
 }
 
 export function advClassIndex(advClassName){

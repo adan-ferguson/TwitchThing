@@ -27,14 +27,14 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
     actionDef = processAbilityEvents(combat, ['attack'], attacker, abilityInstance, actionDef)
     actionDef = processAbilityEvents(combat, ['attacked', actionDef.damageType + 'Attacked'], enemy, abilityInstance, actionDef)
 
+    if(!abilityInstance){
+      abilityInstance = fakeBasicAttackAbilityInstance(attacker)
+    }
+
     if(actionDef.cancelled){
       return {
         cancelled: actionDef.cancelled
       }
-    }
-
-    if(!abilityInstance){
-      abilityInstance = fakeBasicAttackAbilityInstance(attacker)
     }
 
     if(!actionDef.cantDodge && tryDodge(actionDef, abilityInstance, enemy)){
@@ -58,7 +58,7 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
     let damageInfo = {
       isAttack: true,
       damageType: actionDef.damageType,
-      damage: damage,
+      damage: damage * abilityInstance.totalStats.get('damageDealt').value,
       range: actionDef.range,
       lifesteal: actionDef.lifesteal
     }
@@ -79,7 +79,6 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
     damageResult = processAbilityEvents(combat, ['attackHit', damageInfo.damageType + 'AttackHit'], attacker, abilityInstance, damageResult)
     damageResult = processAbilityEvents(combat, 'hitByAttack', enemy, abilityInstance, damageResult)
 
-
     if(enemy.dead){
       processAbilityEvents(combat, 'kill', attacker, abilityInstance, {
         killed: enemy.uniqueID
@@ -91,16 +90,10 @@ export default function(combat, attacker, enemy, abilityInstance = null, actionD
 }
 
 function tryDodge(actionDef, abilityInstance, target){
-  if(actionDef.forceDodge){
-    return true
-  }
   return Math.random() + target.stats.get('dodgeChance').value > 1
 }
 
 function tryMiss(actionDef, abilityInstance){
-  if(actionDef.forceMiss){
-    return true
-  }
   return Math.random() + abilityInstance.totalStats.get('missChance').value > 1
 }
 

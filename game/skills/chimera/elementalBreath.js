@@ -8,9 +8,9 @@ export default function(level){
         actions: [{
           elementalBreath: {
             magicPower,
-            burn: magicPower / 10,
-            slow: 20 + level * 20,
-            weaken: 0.8 * Math.pow(0.85, level - 1)
+            burn: magicPower / 4,
+            slow: 50 + level * 50,
+            weaken: 0.7 * Math.pow(0.8, level - 1)
           }
         }]
       }],

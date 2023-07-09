@@ -215,6 +215,7 @@ export default class List extends DIElement{
       if(this._options.showFiltered && this._options.filterFn && !el.classList.contains('blank-row')){
         el.classList.toggle('filtered', !this._options.filterFn(el))
       }
+      el.becameVisibleInList?.()
     })
     this.rows.append(...toDisplay)
     hideAllTippys({ duration: 0 })

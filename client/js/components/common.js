@@ -165,14 +165,14 @@ export function toSeconds(ms){
   return roundToNearestIntervalOf(ms / 1000, 0.01) + 's'
 }
 
-export function statScaling(scaling, abilityInstance = null, range = null){
+export function statScaling(scaling, obj = null, range = null){
   const chunks = []
   for(let scalingType in scaling){
     if(['physPower', 'magicPower', 'hpMax'].includes(scalingType)){
       const val = scaling[scalingType]
       let str = ''
-      if(abilityInstance instanceof AbilityInstance){
-        const statVal = val * abilityInstance.totalStats.get(scalingType).value
+      if(obj?.totalStats){
+        const statVal = val * obj.totalStats.get(scalingType).value
         if(range){
           const val1 = Math.ceil(statVal * range[0])
           const val2 = Math.ceil(statVal * range[1])
@@ -219,11 +219,11 @@ export function featureLocked(target, msg){
 }
 
 export function activeAbility(txt = 'Active'){
-  return `<span class="active-ability-rect">${txt}</span>`
+  return `<span class="active-ability-rect" tooltip="Active Ability">${txt}</span>`
 }
 
 export function triggeredAbility(txt){
-  return `<span class="triggered-ability-rect">${txt}</span>`
+  return `<span class="triggered-ability-rect" tooltip="Triggered Ability">${txt}</span>`
 }
 
 export function pluralize(str, count){

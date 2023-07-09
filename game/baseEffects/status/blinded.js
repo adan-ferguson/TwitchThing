@@ -9,9 +9,7 @@ export default function({ duration } = {}){
     abilities: [{
       trigger: 'attack',
       replacements: {
-        dataMerge: {
-          forceMiss: true
-        }
+        cancel: 'Missed'
       }
     }]
   }

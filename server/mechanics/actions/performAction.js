@@ -78,6 +78,8 @@ export function performIntermediateAction(triggerHandler, actor, ability, action
   if(!actionDefs.length){
     return performAction(triggerHandler, actor, ability, { pass: {} }, triggerData)
   }
+
+  // TODO: this should do what the iterateActions function does
   return actionDefs.map(ad => {
     return performAction(triggerHandler, actor, ability, ad, triggerData)
   })

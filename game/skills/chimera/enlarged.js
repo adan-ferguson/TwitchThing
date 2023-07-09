@@ -7,7 +7,7 @@ export default function(level){
       stats: {
         physPower: wrappedPct(val),
         hpMax: wrappedPct(val),
-        speed: -(val / 2)
+        speed: -val
       }
     },
   }

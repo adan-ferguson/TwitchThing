@@ -8,7 +8,7 @@ export default function(){
     baseStats: {
       hpMax: '-50%',
       physPower: '-50%',
-      speed: 150
+      speed: 200
     },
     items: [{
       name: 'Stinger',

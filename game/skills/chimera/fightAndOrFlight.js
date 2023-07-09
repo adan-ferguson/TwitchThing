@@ -1,8 +1,8 @@
 import { wrappedPct } from '../../growthFunctions.js'
 
 export default function(level){
-  const speed = level * 25 + 25
-  const physPower = wrappedPct(50 + 50 * level)
+  const speed = level * 40 + 20
+  const physPower = wrappedPct(speed)
   return {
     effect: {
       metaEffects: [{

@@ -15,6 +15,7 @@ export default function(level){
         }]
       }]
     },
+    displayName: 'Troll Regeneration',
     orbs: 3 + level * 3
   }
 }

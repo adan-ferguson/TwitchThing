@@ -1,8 +1,10 @@
 import { toPct } from '../../../game/utilFunctions.js'
+import { scalingWrap, statScaling } from '../components/common.js'
+import EffectInstance from '../../../game/effectInstance.js'
 
 export function effectDisplayInfo(effectObj){
   const id = effectObj.effectId ?? effectObj.name
-  return DEFS[id]?.(effectObj.effect) ?? {}
+  return DEFS[id]?.(effectObj.effect, effectObj instanceof EffectInstance ? effectObj : null) ?? {}
 }
 
 const DEFS = {
@@ -48,6 +50,12 @@ const DEFS = {
   unstoppable: effect => {
     return {
       description: `Your minimum speed is ${effect.statsModifiers.speed.minValue}.`
+    }
+  },
+  behemothCarapace: (effect, effectInstance = null) => {
+    const scaling = statScaling({ hpMax: effect.stats.damageThreshold }, effectInstance)
+    return {
+      description: `You have a damage threshold equal to ${scaling}. Ignore incoming attack damage which is lower than this.`
     }
   }
 }

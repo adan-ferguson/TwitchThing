@@ -1,6 +1,7 @@
 import { STATUSEFFECT_COLORS } from '../colors.js'
 import { effectInstanceState } from '../effectInstanceState.js'
 import {
+  capitalizeFirstChunk,
   optionalScaledNumber,
   statScaling,
   toSeconds,
@@ -70,7 +71,7 @@ function derivedPrefix(actionDef, abilityInstance){
   }else if(actionDef.targets === 'enemy'){
     chunks.push(`enemy ${grammatic}`)
   }
-  return chunks
+  return capitalizeFirstChunk(chunks)
 }
 
 export function statusEffectApplicationDescription(applyStatusEffectDef, abilityInstance){
@@ -92,7 +93,7 @@ export function statusEffectDescription(statusEffectDef, abilityInstance){
     chunks.push(def.description)
   }
 
-  if(statusEffectDef.stats){
+  if(statusEffectDef.stats && !def.statsHandled){
     if(chunks.length){
       chunks.push('and gets')
     }
@@ -103,7 +104,7 @@ export function statusEffectDescription(statusEffectDef, abilityInstance){
   chunks[chunks.length - 1] += '.'
 
   if(statusEffectDef.maxStacks){
-    chunks.push(`Stacks up to ${statusEffectDef.maxStacks} times.`)
+    chunks.push(`Stacks up to <b>${statusEffectDef.maxStacks}</b> times.`)
   }
 
   return chunks
@@ -117,7 +118,7 @@ export function statusEffectDuration(statusEffectDef, abilityInstance){
     ]
   }else if(statusEffectDef.turns){
     return `for ${statusEffectDef.turns} turn${statusEffectDef.turns === 1 ? '' : 's'}`
-  }else if(!statusEffectDef.persisting){
+  }else if(statusEffectDef.persisting === false){
     return 'until end of combat'
   }
 }
@@ -143,15 +144,21 @@ const DEFS = {
     }
   },
   barrier: (def, abilityInstance) => {
-    const chunks = ['a barrier that blocks']
+    const chunks = ['a barrier with']
     const params = def.vars.params
     if(params.hp.scaledNumber){
       chunks.push(statScaling(params.hp.scaledNumber, abilityInstance))
     }
-    chunks.push('damage')
+    chunks.push('power')
+
+    if(def.stats){
+      chunks.push(`which grants you ${wrapStats(def.stats)}`)
+    }
+
     return {
       grammatic: 'gain',
-      description: chunks.join(' ')
+      description: chunks.join(' '),
+      statsHandled: true,
     }
   },
   wideOpen: (def, abilityInstance) => {

@@ -1,5 +1,5 @@
 export default function(level){
-  const minValue = Math.round((-4 + level) * 100 / 3)
+  const minValue = Math.round((-3 + level) * 100 / 2)
   return {
     effect: {
       statsModifiers: {

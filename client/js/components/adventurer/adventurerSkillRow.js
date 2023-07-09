@@ -3,12 +3,9 @@ import classDisplayInfo from '../../displayInfo/classDisplayInfo.js'
 import { wrapContent } from '../../../../game/utilFunctions.js'
 import EffectDetails from '../effectDetails.js'
 import LoadoutObjectInstance from '../../../../game/loadoutObjectInstance.js'
-import ItemDetails from '../itemDetails.js'
 import SimpleModal from '../simpleModal.js'
 import SkillCard from '../skillCard.js'
 import { affectsIcon } from '../common.js'
-import { getAbilityDisplayInfoForObj } from '../../displayInfo/abilityDisplayInfo.js'
-import { ITEM_ROW_COLORS } from '../../colors.js'
 import AdventurerSkill from '../../../../game/skills/adventurerSkill.js'
 
 const HTML = `

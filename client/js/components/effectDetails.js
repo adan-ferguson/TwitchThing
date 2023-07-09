@@ -1,6 +1,6 @@
 import DIElement from './diElement.js'
 import { roundToNearestIntervalOf, wrapContent, wrapText } from '../../../game/utilFunctions.js'
-import { isAdventurerItem, scrapEntry, wrapStats } from './common.js'
+import { activeAbility, isAdventurerItem, scrapEntry, triggeredAbility, wrapStats } from './common.js'
 import Stats from '../../../game/stats/stats.js'
 import StatsList from './stats/statsList.js'
 import AbilityDescription from './abilityDescription.js'
@@ -131,8 +131,8 @@ export default class EffectDetails extends DIElement{
     if(this._obj.data?.scrapValue){
       this.appendChild(wrapContent(`Worth ${scrapEntry(this._obj.data.scrapValue)}`))
     }
-    if(this._obj.statMultiplier !== 1 && this._isMeta){
-      this.appendChild(wrapContent(`All stats are multiplied by ${this._obj.statMultiplier}`))
+    if(this._obj.statMultiplier && this._obj.statMultiplier !== 1 && this._isMeta){
+      this.appendChild(wrapContent(`Stats are multiplied by ${this._obj.statMultiplier}.<br/> (Generally doesn't affect ${activeAbility('these')} or ${triggeredAbility('these')})`))
     }
   }
 

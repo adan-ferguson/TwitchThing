@@ -124,11 +124,19 @@ export default class AdventurerItemRow extends DIElement{
       orbs: null,
       showState: false,
       shouldBeEmpty: false,
+      inList: false,
     }
   }
 
   flash(){
     this.stateEl?.flash()
+  }
+
+  becameVisibleInList(){
+    if(this._waitingForVisibility){
+      this._draw()
+      this._waitingForVisibility = false
+    }
   }
 
   _update(){
@@ -140,6 +148,29 @@ export default class AdventurerItemRow extends DIElement{
       this._adventurerItemInstance = null
       this._adventurerItem = this._options.item
     }
+
+    if(this._options.inList && !this._firstDraw){
+      this._waitingForVisibility = true
+      return this
+    }
+
+    this._draw()
+
+    // const ado = getAbilityDisplayInfoForObj(this.adventurerItem)
+    // if(ado[0]?.type === 'active'){
+    //   this.style.borderColor = ITEM_ROW_COLORS.active
+    //   this.style.borderWidth = '3rem'
+    // }else{
+    //   this.style.borderColor = null
+    //   this.style.borderWidth = null
+    // }
+
+    return this
+  }
+
+  _draw(){
+
+    this._firstDraw = true
 
     this.classList.toggle('should-be-empty', this._options.shouldBeEmpty ? true : false)
     this.classList.toggle('invalid', !(this._options.valid ?? true))
@@ -165,17 +196,6 @@ export default class AdventurerItemRow extends DIElement{
     this.stateEl.setOptions({
       loadoutEffectInstance: this._options.showState ? this.adventurerItemInstance : false
     }).update()
-
-    const ado = getAbilityDisplayInfoForObj(this.adventurerItem)
-    // if(ado[0]?.type === 'active'){
-    //   this.style.borderColor = ITEM_ROW_COLORS.active
-    //   this.style.borderWidth = '3rem'
-    // }else{
-    //   this.style.borderColor = null
-    //   this.style.borderWidth = null
-    // }
-
-    return this
   }
 
   _blank(){

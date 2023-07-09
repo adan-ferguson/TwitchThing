@@ -34,22 +34,12 @@ export const statDefinitionsInfo = {
     icon: ICON_SVGS.magicDef,
     description: 'Blocks magical damage.\nThis is multiplicative, so 50% + 50% = 75%.',
   },
-  block: {
-    text: 'Block',
-    description: 'At the start of combat, gain a barrier. Scales with max health.',
-    displayedValueFn: ({ value }, { style }) => {
-      if(style === StatsDisplayStyle.CUMULATIVE){
-        return toPct(value)
-      }
-      return `+${toPct(value)}`
-    }
-  },
   missChance: {},
   speed: {
     text: 'Speed',
     displayInverted: true,
     icon: ICON_SVGS.action,
-    description: 'Speed. Each extra 100 speed is about +1 turn per 3 seconds.',
+    description: 'Speed, affects turn time. Formula is complicated and weird.',
   },
   damageDealt: {},
   damageTaken: {},
@@ -116,16 +106,36 @@ export const statDefinitionsInfo = {
   basicAttacks: {
     text: 'Basic Attacks'
   },
-  damageCeiling: {
-    text: 'Damage Ceiling',
-    displayedValueFn: value => toPct(value),
-    description: 'Most damage they can take at once (percentage of max health)'
+  block: {
+    text: 'Block',
+    description: 'At the start of combat, gain a barrier. Scales with max health.',
+    displayedValueFn: ({ value }, { style, owner }) => {
+      if (style === StatsDisplayStyle.CUMULATIVE){
+        return owner.hpMax * value
+      }
+      return `+${toPct(value)}`
+    }
   },
-  damageThreshold: {
-    text: 'Damage Threshold',
-    displayedValueFn: value => toPct(value),
-    description: 'When dealt damage which is lower than this, ignore it (percentage of max health)'
-  },
+  // damageCeiling: {
+  //   text: 'Damage Ceiling',
+  //   displayedValueFn: ({ value }, { owner }) => {
+  //     if(owner){
+  //       return owner.hpMax * value
+  //     }
+  //     return toPct(value)
+  //   },
+  //   description: 'Most damage you can take from one attack. Scales with max health.'
+  // },
+  // damageThreshold: {
+  //   text: 'Damage Threshold',
+  //   displayedValueFn: ({ value }, { owner }) => {
+  //     if(owner){
+  //       return owner.hpMax * value
+  //     }
+  //     return toPct(value)
+  //   },
+  //   description:
+  // },
   ccResist: {
     text: 'CC Resist',
     description: 'Reduces duration of stuns, sleeps, blinds, etc.'
@@ -228,7 +238,7 @@ function plusSign(style, value){
   return '+'
 }
 
-function flatPct(value, { style }){
+function flatPct({ value }, { style }){
   if(style === StatsDisplayStyle.CUMULATIVE){
     return toPct(value)
   }

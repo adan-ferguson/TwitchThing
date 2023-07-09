@@ -16,9 +16,7 @@ export function flutteringAbility(cooldown = 10000){
     },
     cooldown,
     replacements: {
-      dataMerge: {
-        forceDodge: true
-      }
+      cancel: 'dodge'
     }
   }
 }

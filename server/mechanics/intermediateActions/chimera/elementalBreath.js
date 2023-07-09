@@ -11,28 +11,32 @@ export default function(combat, actor, abilityInstance, def){
           damage: {
             scaledNumber: {
               magicPower: def.burn
-            }
-          }
+            },
+          },
+          damageType: 'magic'
         }
       },
+      stackingId: 'dbBurn',
       name: 'Burned'
     }),
     ase({
       stats: {
-        speed: -def.speed
+        speed: -def.slow
       },
+      stackingId: 'dbChill',
       name: 'Chilled'
     }),
     ase({
       stats: {
         damageDealt: def.weaken + 'x'
       },
+      stackingId: 'dbWeak',
       name: 'Weakened'
     }),
   ]
 
   if(actor.hpPct <= 0.5){
-    actions.push(options.map(o => [o]))
+    actions.push(...options)
   }else{
     actions.push(chooseOne(options))
   }

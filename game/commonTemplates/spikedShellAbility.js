@@ -3,12 +3,12 @@ export function spikedShellAbility(returnPct, damageType = 'phys'){
     trigger: 'hitByAttack',
     conditions: {
       data: {
-        damageType: 'phys'
+        damageType
       }
     },
     actions: [{
       returnDamage: {
-        damageType: 'phys',
+        damageType,
         pct: returnPct
       }
     }]

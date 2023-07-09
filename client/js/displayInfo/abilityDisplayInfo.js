@@ -7,7 +7,7 @@ import {
   wrapStat
 } from '../components/common.js'
 import { damageActionCalcDamage } from '../../../game/mechanicsFns.js'
-import { msToS, toPct } from '../../../game/utilFunctions.js'
+import { arrayize, msToS, toPct } from '../../../game/utilFunctions.js'
 import { scaledNumberFromInstance } from '../../../game/scaledNumber.js'
 import { keyword } from './keywordDisplayInfo.js'
 import { actionArrayDescriptions } from './actionDisplayInfo.js'
@@ -183,7 +183,7 @@ export function getAbilityDisplayInfo(ability){
   }
   return {
     ability,
-    descriptionHTML: definition.description ?? abilityDescription(ability),
+    descriptionHTML: abilityDescription(ability),
     type: ability.trigger === 'active' ? 'active' : 'nonactive',
     cooldown: ability.cooldown ?? ability.initialCooldown ?? null,
     initialCooldown: ability.initialCooldown ?? null
@@ -194,6 +194,7 @@ function abilityDescription(ability){
   const chunks = []
   const abilityInstance = ability instanceof AbilityInstance ? ability : null
   chunks.push(...prefix(ability.trigger, ability.conditions ?? {}))
+  chunks.push(...arrayize(replacementsDescription(ability.replacements, ability, abilityInstance)))
   chunks.push(...actionArrayDescriptions(ability.actions, abilityInstance))
 
   // if(ability.phantomEffect){
@@ -220,6 +221,18 @@ function abilityDescription(ability){
 
 function startOfCombatPrefix(){
   return ['At the start of combat']
+}
+
+function replacementsDescription(replacements, abilityDef, abilityInstance){
+  if(!replacements){
+    return
+  }
+  if(replacements.cancel === 'dodge'){
+    return 'Dodge it.'
+  }
+  if(replacements.cancel && abilityDef.trigger ==='dying'){
+    return 'Survive with 1 health.'
+  }
 }
 
 function conditionsDescription(conditions){
@@ -258,6 +271,25 @@ function prefix(trigger, conditions){
   }
   if(trigger === 'crit'){
     chunks.push('After landing a crit')
+  }
+  if(trigger === 'hitByAttack'){
+    const type = conditions.data?.damageType ? 'a ' + conditions.data.damageType : 'an'
+    chunks.push('After being hit by', type, 'attack')
+    if(conditions.source?.subjectKey === 'attached'){
+      chunks.push(`with ${attachedSkill()}`)
+    }
+  }
+  if(trigger === 'attacked'){
+    chunks.push('When attacked')
+  }
+  if(trigger === 'dying'){
+    chunks.push('On death')
+  }
+  if(conditions?.random){
+    chunks.push(`(${toPct(conditions.random)} chance)`)
+  }
+  if(chunks.length){
+    return [chunks.join(' ') + ':']
   }
   return chunks
 }

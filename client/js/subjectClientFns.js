@@ -27,7 +27,9 @@ export function subjectKeyForLoadoutObject(loadoutObject){
   }
   const subjectKeys = {}
   for(let me of loadoutObject.metaEffects){
-    subjectKeys[me.subjectKey] = true
+    if(me.subject.key){
+      subjectKeys[me.subject.key] = true
+    }
   }
   for(let ability of loadoutObject.abilities){
     if(ability.conditions?.source?.subjectKey){

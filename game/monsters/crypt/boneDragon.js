@@ -7,7 +7,7 @@ export default function(){
     },
     items: [
       {
-        name: 'Ghostly Breath',
+        name: 'Necrotic Breath',
         effect: {
           abilities: [{
             trigger: 'active',
@@ -27,9 +27,7 @@ export default function(){
                   stacking: 'stack',
                   polarity: 'debuff',
                   stats: {
-                    physPower: '0.75x',
-                    magicPower: '0.75x',
-                    hpMax: '0.75x',
+                    damageDealt: '-30%',
                   },
                   name: 'Aged'
                 }
