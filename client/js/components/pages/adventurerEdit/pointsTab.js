@@ -66,7 +66,7 @@ export default class PointsTab extends DIElement{
       const newLevel = advXpToLevel(adventurer.xp / 2)
 
       new SimpleModal(`
-      Refund all points? You'll lose half your ${xpIcon()}
+      Refund all points? You'll lose half your xp.
       <br/><br/>
       Lvl. ${oldLevel} -> ${newLevel}
       <br/><br/>

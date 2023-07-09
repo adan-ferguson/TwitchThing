@@ -93,7 +93,7 @@ function derivedAbilityModification(abilityModification){
     chunks.push(activeAbility(), 'ability')
   }
   if(abilityModification.exclusiveStats){
-    chunks.push('benefits from', wrapStats(abilityModification.exclusiveStats))
+    chunks.push('Benefits from', wrapStats(abilityModification.exclusiveStats))
   }
   if(abilityModification.repetitions){
     chunks.push(`get repeated ${pluralize('time', abilityModification.repetitions)}.`)

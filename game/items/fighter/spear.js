@@ -1,5 +1,5 @@
 export default function(level){
-  const physPower = (1.1 + level * 0.6) + 'x'
+  const physPower = (1.4 + level * 0.6) + 'x'
   return {
     effect: {
       metaEffects: [{
@@ -17,7 +17,7 @@ export default function(level){
         }
       }],
     },
-    orbs: 1 + level * 3,
+    orbs: 2 + level * 2,
     vars: {
       physPower
     }

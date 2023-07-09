@@ -5,10 +5,10 @@ export default function(level){
     effect: {
       stats: {
         physPower: (level + 3) + 'x',
-        speed: -75 - 25 * level
+        speed: -50 - 50 * level
       }
     },
-    orbs: 4 * level + 4,
+    orbs: 5 * level + 5,
     loadoutModifiers: [bigLoadoutModifier()]
   }
 }

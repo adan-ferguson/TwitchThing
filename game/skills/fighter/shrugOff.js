@@ -8,7 +8,7 @@ export default function(level){
         abilityId: 'shrugOff',
         cooldown,
         replacements: {
-          cancel: 'Shrugged Off'
+          cancel: 'shrugOff'
         },
         actions: [{
           gainHealth: {

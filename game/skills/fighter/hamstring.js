@@ -1,8 +1,6 @@
-import { onHit } from '../../commonTemplates/onHit.js'
-
 export default function(level){
   const physPower = 1.2 + level * 0.2
-  const speed = -15 - level * 10
+  const speed = -20 - level * 10
   const hamstrung = {
     applyStatusEffect: {
       targets: 'target',

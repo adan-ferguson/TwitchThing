@@ -79,7 +79,7 @@ const ACTION_DEFS = {
     }else if(scaling.hpMissing){
       return [`Recover <b>${toPct(scaling.hpMissing)}</b> missing health.`]
     }else{
-      return [`Recover ${statScaling(scaling, abilityInstance)} ${healthIcon()}.`]
+      return [`Recover ${statScaling(scaling, abilityInstance)} health.`]
     }
   },
   // dealDamage: (actionDef, abilityInstance) => {

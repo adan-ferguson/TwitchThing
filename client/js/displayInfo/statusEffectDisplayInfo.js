@@ -76,6 +76,7 @@ function derivedPrefix(actionDef, abilityInstance){
 
 export function statusEffectApplicationDescription(applyStatusEffectDef, abilityInstance){
   const chunks = []
+  console.log('a')
   chunks.push(...derivedPrefix(applyStatusEffectDef, abilityInstance))
   chunks.push(...statusEffectDescription(applyStatusEffectDef.statusEffect, abilityInstance))
   return chunks
@@ -163,17 +164,8 @@ const DEFS = {
   },
   wideOpen: (def, abilityInstance) => {
     return {
-      description: '"Attacks against you always crit"',
-      grammatic: 'gain'
-    }
-  },
-  sprinting: (def, abilityInstance) => {
-    const chunks = []
-    for(let key in def.stats){
-      chunks.push(wrapStat(key, def.stats[key]))
-    }
-    return {
-      description: `Gain ${chunks.join(' + ')} for the first ${msToS(chunks.duration)}s of combat.`
+      description: 'Attacks against you always crit',
+      grammatic: ''
     }
   },
   stunned: () => {

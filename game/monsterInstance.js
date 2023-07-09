@@ -20,7 +20,7 @@ const POWER_GROWTH = 0.9
 
 const XP_BASE = 2
 const XP_GROWTH = 1
-const XP_GROWTH_PCT = 0.18
+const XP_GROWTH_PCT = 0.14
 const XP_ZONE_BONUS = 2
 
 export function monsterLevelToXpReward(lvl){

@@ -203,12 +203,12 @@ function abilityDescription(ability){
   //     chunks.push(phantomEffectDefinitions[type](ability.phantomEffect.base[type], abilityInstance))
   //   }
   // }
-  // if(ability.conditions){
-  //   chunks.push(...conditionsDescription(ability.conditions))
-  // }
-  // if(ability.resetAfterCombat){
-  //   chunks.push('Resets to initial cooldown after combat.')
-  // }
+  if(ability.conditions){
+    chunks.push(...conditionsDescription(ability.conditions))
+  }
+  if(ability.resetAfterCombat){
+    chunks.push('Resets to initial cooldown after combat.')
+  }
   // if(ability.turnRefund > 0){
   //   chunks.push(`Refunds ${refundTime(toPct(ability.turnRefund))}.`)
   // }
@@ -226,6 +226,10 @@ function startOfCombatPrefix(){
 function replacementsDescription(replacements, abilityDef, abilityInstance){
   if(!replacements){
     return
+  }
+  // TODO: this is hacky
+  if(replacements.cancel === 'shrugOff'){
+    return 'Ignore it.'
   }
   if(replacements.cancel === 'dodge'){
     return 'Dodge it.'
@@ -257,7 +261,7 @@ function prefix(trigger, conditions){
     const type = conditions.data?.damageType ? 'a ' + conditions.data.damageType : 'an'
     chunks.push('After landing', type, 'attack')
     if(conditions.source?.subjectKey === 'attached'){
-      chunks.push(`with ${attachedSkill()}`)
+      chunks.push(`with ${attachedSkill()} `)
     }
   }
   if(trigger === 'rest'){
@@ -284,6 +288,9 @@ function prefix(trigger, conditions){
   }
   if(trigger === 'dying'){
     chunks.push('On death')
+  }
+  if(trigger === 'gainingDebuff'){
+    chunks.push('When gaining a debuff')
   }
   if(conditions?.random){
     chunks.push(`(${toPct(conditions.random)} chance)`)
