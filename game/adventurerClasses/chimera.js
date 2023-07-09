@@ -7,6 +7,7 @@ export const CHIMERA_CLASS_INFO = {
     Skills.bite,
     Skills.survivalInstincts,
     Skills.enlarged,
+    Skills.ambush,
     Skills.bodySlam,
     Skills.fightAndOrFlight,
     Skills.senseWeakness,
@@ -14,7 +15,6 @@ export const CHIMERA_CLASS_INFO = {
     Skills.unstoppable,
     Skills.extraArms,
     Skills.elementalBreath,
-    // Skills.???,
   ],
   items: [[
     Items.turtleShell,
