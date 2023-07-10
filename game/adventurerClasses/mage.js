@@ -4,16 +4,16 @@ import Items from '../items/combined.js'
 export const MAGE_CLASS_INFO = {
   skills: [
     Skills.magicMissile,
-    Skills.barrier,
     Skills.intelligence,
+    Skills.barrier,
+    Skills.lightningFamiliar,
     Skills.frostRay,
-    Skills.lightningStorm,
+    Skills.prepareSpells,
     Skills.mirrorImage,
-    // Skills.imbueWeapons,
+    Skills.brilliance,
     Skills.haste,
     Skills.overload,
     Skills.fireball,
-    Skills.brilliance,
     Skills.higherLearning,
   ],
   items: [[
@@ -26,7 +26,7 @@ export const MAGE_CLASS_INFO = {
     Items.favoriteScroll,
     Items.unstableScroll,
     Items.miniatureScroll,
-    Items.manaSeasoning,
+    Items.manaBiscuit,
   ],[
     Items.ascendedScroll,
     Items.repeatingScroll,

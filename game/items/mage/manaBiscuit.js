@@ -1,7 +1,10 @@
 export default function(level){
-  const amount = level * 10000
+  const amount = 5000 + level * 5000
   return {
     effect: {
+      stats: {
+        startingFood: level
+      },
       abilities: [{
         trigger: 'rest',
         actions:[{
@@ -15,6 +18,6 @@ export default function(level){
         }]
       }]
     },
-    orbs: level * 1
+    orbs: 2 + level * 1
   }
 }
