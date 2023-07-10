@@ -2,7 +2,7 @@ import { makeEl, roundToFixed, wrapContent } from '../../../game/utilFunctions.j
 import tippy from 'tippy.js'
 import { ABILITY_DESCRIPTION_COLORS, ITEM_ROW_COLORS } from '../colors.js'
 import DIElement from './diElement.js'
-import { addTooltipToSvg, magicPowerIcon } from './common.js'
+import { addTooltipToSvg, magicPowerIcon, pluralize } from './common.js'
 
 export default class AbilityDescription extends DIElement{
 
@@ -39,7 +39,10 @@ function makeBotRow(displayInfo){
     botLeftChunks.push('Active')
   }
   if(displayInfo.ability.uses && displayInfo.ability.trigger !== 'startOfCombat'){
-    botLeftChunks.push(`${displayInfo.ability.uses} use${displayInfo.ability.uses > 1 ? 's' : ''}`)
+    botLeftChunks.push(pluralize('use', displayInfo.ability.uses))
+    if(displayInfo.ability.resetAfterCombat){
+      botLeftChunks.push('per combat')
+    }
   }
   if(displayInfo.ability.tags?.length){
     const tagsEls = tagsToIcons(displayInfo.ability.tags)

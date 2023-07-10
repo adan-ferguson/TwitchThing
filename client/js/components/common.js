@@ -119,7 +119,7 @@ export function wrapStats(stats){
   for(let stat of allStats){
     chunks.push(wrapStatObj(stat))
   }
-  return chunks.join(' & ')
+  return chunks.join(' ')
 }
 
 export function wrapStat(statType, val){

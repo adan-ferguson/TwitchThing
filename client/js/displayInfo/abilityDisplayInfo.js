@@ -206,8 +206,8 @@ function abilityDescription(ability){
   if(ability.conditions){
     chunks.push(...conditionsDescription(ability.conditions))
   }
-  if(ability.resetAfterCombat){
-    chunks.push('Resets to initial cooldown after combat.')
+  if(ability.resetAfterCombat && ability.cooldown){
+    chunks.push('<br/><br/>Cooldown resets after combat.')
   }
   // if(ability.turnRefund > 0){
   //   chunks.push(`Refunds ${refundTime(toPct(ability.turnRefund))}.`)
@@ -291,6 +291,9 @@ function prefix(trigger, conditions){
   }
   if(trigger === 'gainingDebuff'){
     chunks.push('When gaining a debuff')
+  }
+  if(trigger === 'useActiveAbility'){
+    chunks.push('After using an active ability')
   }
   if(conditions?.random){
     chunks.push(`(${toPct(conditions.random)} chance)`)

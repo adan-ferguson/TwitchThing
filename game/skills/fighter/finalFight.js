@@ -26,6 +26,7 @@ export default function(level){
               stats: {
                 speed,
                 physPower,
+                lifesteal: 0.25
               }
             }
           }

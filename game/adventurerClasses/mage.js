@@ -7,14 +7,14 @@ export const MAGE_CLASS_INFO = {
     Skills.barrier,
     Skills.intelligence,
     Skills.frostRay,
+    Skills.lightningStorm,
     Skills.mirrorImage,
+    // Skills.imbueWeapons,
     Skills.haste,
-    Skills.brilliance,
-    Skills.fireball,
-    Skills.imbueWeapons,
     Skills.overload,
+    Skills.fireball,
+    Skills.brilliance,
     Skills.higherLearning,
-    Skills.lightningStorm, // ??
   ],
   items: [[
     Items.wand,

@@ -91,6 +91,10 @@ export function useAbility(combat, ability, triggerData = {}){
   let objData = {}
   objData = processAbilityEvents(combat, 'useAbility', owner, ability, objData)
 
+  if(ability.trigger === 'active'){
+    objData = processAbilityEvents(combat, 'useActiveAbility', owner, ability, objData)
+  }
+
   if(combat.getEnemyOf){
     objData = processAbilityEvents(combat, 'enemyUseAbility', combat.getEnemyOf(owner), ability, objData)
   }
