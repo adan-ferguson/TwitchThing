@@ -6,7 +6,6 @@ export default function(level){
   return {
     effect: {
       stats: {
-        combatXP: wrappedPct(pow),
         speed: level * 10 + 10,
         physPower: wrappedPct(pow),
         magicPower: wrappedPct(pow),

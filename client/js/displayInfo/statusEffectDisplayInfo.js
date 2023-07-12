@@ -76,7 +76,6 @@ function derivedPrefix(actionDef, abilityInstance){
 
 export function statusEffectApplicationDescription(applyStatusEffectDef, abilityInstance){
   const chunks = []
-  console.log('a')
   chunks.push(...derivedPrefix(applyStatusEffectDef, abilityInstance))
   chunks.push(...statusEffectDescription(applyStatusEffectDef.statusEffect, abilityInstance))
   return chunks

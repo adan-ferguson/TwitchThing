@@ -113,9 +113,9 @@ export default class EffectDetails extends DIElement{
     [...(this._obj.exclusiveMods ?? []), ...(this._obj.mods ?? [])].forEach(mod => {
       const mdi = modDisplayInfo(mod)
       if(mdi.description && !this._isMeta){
-        this.appendChild(wrapText(mdi.description))
+        this.appendChild(wrapContent(mdi.description))
       }else if(mdi.metaDescription && this._isMeta){
-        this.appendChild(wrapText(mdi.metaDescription))
+        this.appendChild(wrapContent(mdi.metaDescription))
       }
     })
   }

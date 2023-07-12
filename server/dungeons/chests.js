@@ -5,8 +5,8 @@ import AdventurerItem, { ITEM_RARITIES } from '../../game/items/adventurerItem.j
 import { unlockedClasses } from '../../game/user.js'
 import { chooseOne } from '../../game/rando.js'
 
-const GOLD_BASE = 15
-const GOLD_GROWTH = 2
+const GOLD_BASE = 13
+const GOLD_GROWTH = 1.9
 const GOLD_GROWTH_PCT = 0.01
 
 /**

@@ -1,5 +1,5 @@
 import { toPct } from '../../../game/utilFunctions.js'
-import { scalingWrap, statScaling } from '../components/common.js'
+import { describeStat, statScaling } from '../components/common.js'
 import EffectInstance from '../../../game/effectInstance.js'
 
 export function effectDisplayInfo(effectObj){
@@ -14,11 +14,11 @@ const DEFS = {
   // Sapling: () => {
   //   return { description: 'Block an incoming attack/ability.' }
   // },
-  // brilliance: effectObj => {
-  //   return {
-  //     description: `Gain ${describeStat('magicPower')} equal to your ${describeStat('combatXP')}`
-  //   }
-  // },
+  brilliance: (effect, effectInstance) => {
+    return {
+      description: `Gain ${describeStat('magicPower')} equal to ${effect.vars.ratio}x your ${describeStat('combatXP')}`
+    }
+  },
   // diminishingReturns: () => {
   //   return {
   //     description: 'Stuns/sleeps/blinds/etc have diminishing returns.'

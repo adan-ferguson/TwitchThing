@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { describeStat, triggeredAbility } from '../components/common.js'
 
 const DEFS = {
   sneakAttack: mod => {
@@ -64,6 +65,11 @@ const DEFS = {
   cantDie: () => {
     return {
       description: 'Can\'t die!'
+    }
+  },
+  glitchedCooldowns: () => {
+    return {
+      description: `Your ${describeStat('cooldownMultiplier')} stat also affects ${triggeredAbility('triggered abilities')} & buffs/debuffs. Probably stupid.`
     }
   }
 }

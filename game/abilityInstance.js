@@ -94,7 +94,9 @@ export default class AbilityInstance{
   }
 
   get useCooldownMultiplier(){
-    return this.parentEffect.useCooldownMultiplier && this.trigger === 'active' || this.abilityDef.useCooldownMultiplier
+    return this.parentEffect.useCooldownMultiplier && this.trigger === 'active' ||
+      this.abilityDef.useCooldownMultiplier ||
+      this.fighterInstance.hasMod('glitchedCooldowns')
   }
 
   get cooldownMultiplier(){

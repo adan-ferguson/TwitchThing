@@ -15,6 +15,7 @@ export default class Stats{
 
     this.baseAffectors = toAffectorsArray(baseStats)
     this.additionalAffectors = toAffectorsArray(additionalStats)
+    this.modifiers = arrayize(modifiers).flat().filter(t => t)
 
     transStats = arrayize(transStats).flat().filter(t => t)
     transStats.forEach(ts => {
@@ -24,8 +25,6 @@ export default class Stats{
         [ts.to]: wrappedPct(100 * value * (ts.ratio ?? 1))
       })
     })
-
-    this.modifiers = arrayize(modifiers).flat().filter(t => t)
   }
 
   get isEmpty(){

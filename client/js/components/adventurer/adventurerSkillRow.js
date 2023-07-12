@@ -7,6 +7,8 @@ import SimpleModal from '../simpleModal.js'
 import SkillCard from '../skillCard.js'
 import { affectsIcon } from '../common.js'
 import AdventurerSkill from '../../../../game/skills/adventurerSkill.js'
+import { getAbilityDisplayInfoForObj } from '../../displayInfo/abilityDisplayInfo.js'
+import { ITEM_ROW_COLORS } from '../../colors.js'
 
 const HTML = `
 <di-loadout-row-state></di-loadout-row-state>
@@ -172,14 +174,14 @@ export default class AdventurerSkillRow extends DIElement{
       displayStyle: 'skill'
     }).update()
 
-    // const ado = getAbilityDisplayInfoForObj(this.adventurerSkill)
-    // if(ado[0]?.type === 'active'){
-    //   this.style.borderColor = ITEM_ROW_COLORS.active
-    //   this.style.borderWidth = '3rem'
-    // }else{
-    //   this.style.borderColor = null
-    //   this.style.borderWidth = null
-    // }
+    const ado = getAbilityDisplayInfoForObj(this.adventurerSkill)
+    if(ado[0]?.type === 'active'){
+      this.style.borderColor = ITEM_ROW_COLORS.active
+      this.style.borderWidth = '3rem'
+    }else{
+      this.style.borderColor = null
+      this.style.borderWidth = null
+    }
 
     return this
   }

@@ -7,7 +7,7 @@ import OrbsData from './orbsData.js'
 
 const XP_BASE = 6
 const XP_GROWTH = 15
-const XP_GROWTH_PCT = 0.16
+const XP_GROWTH_PCT = 0.17
 
 const STAT_GROWTH_PCT = 0.04
 
@@ -51,7 +51,6 @@ export default class Adventurer{
 
   constructor(adventurerDoc){
     this._doc = JSON.parse(JSON.stringify(adventurerDoc))
-    this._loadout = new AdventurerLoadout(adventurerDoc)
   }
 
   get id(){
@@ -94,6 +93,9 @@ export default class Adventurer{
   }
 
   get loadout(){
+    if(!this._loadout){
+      this._loadout = new AdventurerLoadout(this.doc)
+    }
     return this._loadout
   }
 
@@ -163,5 +165,6 @@ export default class Adventurer{
       throw 'Can not upgrade skill'
     }
     this.doc.unlockedSkills[skill.id] = skill.level + 1
+    this._loadout = null
   }
 }

@@ -20,7 +20,6 @@ export default function(level){
               turns,
               polarity: 'debuff',
               stacking: 'extend',
-              persisting: true,
               mods: [{
                 autoCritAgainst: true
               }]

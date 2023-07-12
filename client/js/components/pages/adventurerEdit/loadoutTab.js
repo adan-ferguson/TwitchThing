@@ -6,10 +6,8 @@ import { OrbsDisplayStyle } from '../../orbRow.js'
 import tippyCallout from '../../visualEffects/tippyCallout.js'
 import ItemQuickUpgrade from '../../itemQuickUpgrade.js'
 import SimpleModal from '../../simpleModal.js'
-import { hideLoader, showLoader } from '../../../loader.js'
 import AdventurerItem from '../../../../../game/items/adventurerItem.js'
 import Modal from '../../modal.js'
-import { showUnlockModal } from './unlockModal.js'
 
 const HTML = `
 <div class="content-columns fill-contents">

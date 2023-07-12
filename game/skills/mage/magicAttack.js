@@ -7,12 +7,10 @@ export default function(level){
         magicAttack: true
       }]
     },
-    displayName: 'Wand',
-    orbs: level * 1
   }
   if(level > 1){
     ret.effect.stats = {
-      magicPower: wrappedPct(15 * level - 15),
+      magicPower: wrappedPct(30 * level - 30),
     }
   }
   return ret

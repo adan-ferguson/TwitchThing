@@ -193,6 +193,15 @@ export default class AdventurerItemRow extends DIElement{
       this.classList.remove('blank')
     }
 
+    const ado = getAbilityDisplayInfoForObj(this.adventurerItem)
+    if(ado[0]?.type === 'active'){
+      this.style.borderColor = ITEM_ROW_COLORS.active
+      this.style.borderWidth = '3rem'
+    }else{
+      this.style.borderColor = null
+      this.style.borderWidth = null
+    }
+
     this.stateEl.setOptions({
       loadoutEffectInstance: this._options.showState ? this.adventurerItemInstance : false
     }).update()

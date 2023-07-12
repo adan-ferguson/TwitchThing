@@ -15,6 +15,7 @@ export const MODS_SCHEMA = Joi.array().items(
     preventGainStatusEffect: Joi.string().valid('buff','debuff'),
     cantDie: Joi.boolean(),
     magicCrit: Joi.bool(),
-    goldOnly: Joi.bool()
+    goldOnly: Joi.bool(),
+    glitchedCooldowns: Joi.bool(),
   })
 )

@@ -1,8 +1,6 @@
-import { onHit } from '../../commonTemplates/onHit.js'
-
 export default function(level){
   const cooldown = 9000 + level * 3000
-  const speed = -20 - level * 20
+  const speed = -20 - level * 30
   const magicPower = 0.5 + 0.2 * level
   return {
     effect: {
