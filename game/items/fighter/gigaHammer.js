@@ -1,4 +1,4 @@
-import { bigLoadoutModifier } from '../../commonTemplates/bigLoadoutModifier.js'
+import { bigLoadoutModifier } from '../../commonMechanics/bigLoadoutModifier.js'
 
 export default function(level){
   return {

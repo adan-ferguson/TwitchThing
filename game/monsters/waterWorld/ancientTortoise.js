@@ -1,4 +1,4 @@
-import { spikedShellAbility } from '../../commonTemplates/spikedShellAbility.js'
+import { spikedShellAbility } from '../../commonMechanics/spikedShellAbility.js'
 
 export default function(){
   return {

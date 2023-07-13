@@ -1,4 +1,4 @@
-import { barrierAction } from '../../commonTemplates/barrierAction.js'
+import { barrierAction } from '../../commonMechanics/barrierAction.js'
 
 export default function(level){
   return {

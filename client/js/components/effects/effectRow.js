@@ -31,9 +31,14 @@ export default class EffectRow extends DIElement{
       return null
     }
 
+    const ed = new EffectDetails().setObject(this._effect)
+    if(!ed.innerHTML){
+      return null
+    }
+
     const tooltip = document.createElement('div')
     tooltip.classList.add('loadout-row-tooltip')
-    tooltip.appendChild(new EffectDetails().setObject(this._effect))
+    tooltip.appendChild(ed)
 
     return tooltip
   }

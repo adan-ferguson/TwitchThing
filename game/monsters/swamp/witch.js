@@ -1,6 +1,6 @@
-import { magicAttackItem } from '../../commonTemplates/magicAttackItem.js'
-import { counterspellAbility } from '../../commonTemplates/counterspellAbility.js'
-import { flutteringAbility } from '../../commonTemplates/flutteringMonsterItem.js'
+import { magicAttackItem } from '../../commonMechanics/magicAttackItem.js'
+import { counterspellAbility } from '../../commonMechanics/counterspellAbility.js'
+import { flutteringAbility } from '../../commonMechanics/flutteringMonsterItem.js'
 
 const hex = function(def){
   return {

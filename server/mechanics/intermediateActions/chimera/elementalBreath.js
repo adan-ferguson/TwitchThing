@@ -1,4 +1,4 @@
-import { simpleAttackAction } from '../../../../game/commonTemplates/simpleAttackAction.js'
+import { simpleAttackAction } from '../../../../game/commonMechanics/simpleAttackAction.js'
 import { chooseOne } from '../../../../game/rando.js'
 
 export default function(combat, actor, abilityInstance, def){

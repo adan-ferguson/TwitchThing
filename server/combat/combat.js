@@ -7,12 +7,13 @@ import { performAction, useAbility } from '../mechanics/actions/performAction.js
 import { overtimeDamageBonus } from '../../game/combatMechanics.js'
 import { arrayize } from '../../game/utilFunctions.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
-import { blockBarrierAction } from '../../game/commonTemplates/blockBarrierAction.js'
+import { blockBarrierAction } from '../../game/commonMechanics/blockBarrierAction.js'
 
 const MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS = 30
 const MAX_TRIGGER_LOOPS = 30
 const MAX_TRIGGER_COUNTER = 500
 
+const MAX_CALCULATION_TIME = 3000
 const OVERTIME = 60000
 const SUDDEN_DEATH = 120000
 
@@ -65,6 +66,7 @@ class Combat{
   _triggerUpdates = []
   _consecutiveZeroTimeAdvancements = 0
   _currentTime = 0
+  _startTimestamp = Date.now()
   _lastTimestamp = Date.now()
 
   constructor(fighterInstance1, fighterInstance2, params){
@@ -164,6 +166,9 @@ class Combat{
 
   _run(){
     while(!this.finished){
+      if(Date.now() - this._startTimestamp > MAX_CALCULATION_TIME){
+        throw 'Combat took too long to calculate.'
+      }
       this._advanceTime()
       const actions = this._doActions().flat()
       // if(!this.fighterInstance1.hp){

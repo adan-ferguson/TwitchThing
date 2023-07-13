@@ -1,4 +1,4 @@
-import { biteMonsterItem } from '../../commonTemplates/biteMonsterItem.js'
+import { biteMonsterItem } from '../../commonMechanics/biteMonsterItem.js'
 
 export default function(){
   return {

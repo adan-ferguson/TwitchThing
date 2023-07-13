@@ -1,4 +1,4 @@
-import { flutteringAbility } from '../../commonTemplates/flutteringMonsterItem.js'
+import { flutteringAbility } from '../../commonMechanics/flutteringMonsterItem.js'
 
 export default function(level){
   const cooldown = 20000 * Math.pow(0.9, level - 1)

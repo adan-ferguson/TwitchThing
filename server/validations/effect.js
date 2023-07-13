@@ -90,6 +90,10 @@ const as = Joi.object({
     }).required(),
     count: Joi.number().integer().min(1)
   }),
+  shieldBash: Joi.object({
+    physPower: Joi.number(),
+    stunMin: Joi.number(),
+  }),
   balancedSmite: Joi.object({
     power: Joi.number().required()
   }),

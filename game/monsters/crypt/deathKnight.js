@@ -1,4 +1,4 @@
-import { onHit } from '../../commonTemplates/onHit.js'
+import { onHit } from '../../commonMechanics/onHit.js'
 
 export default function(){
 

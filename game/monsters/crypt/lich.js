@@ -1,5 +1,5 @@
-import { barrierAction } from '../../commonTemplates/barrierAction.js'
-import { magicAttackItem } from '../../commonTemplates/magicAttackItem.js'
+import { barrierAction } from '../../commonMechanics/barrierAction.js'
+import { magicAttackItem } from '../../commonMechanics/magicAttackItem.js'
 
 export default function(){
   return {

@@ -119,7 +119,7 @@ export function wrapStats(stats){
   for(let stat of allStats){
     chunks.push(wrapStatObj(stat))
   }
-  return chunks.join(' ')
+  return chunks.join('; ')
 }
 
 export function wrapStat(statType, val){
@@ -132,9 +132,9 @@ export function wrapStatObj(statObj){
   })
   let content = info.displayedValue
   if(info.icon){
-    return `<span class="stat-wrap icon-and-value" stat-type="${statObj.type}">${content}${info.icon}</span>`
+    return `<span class="stat-wrap icon-and-value" tooltip="${info.text}" stat-type="${statObj.type}">${content}${info.icon}</span>`
   }else{
-    return `<span class="stat-wrap icon-and-value" stat-type="${statObj.type}">${content} ${info.text}</span>`
+    return `<span class="stat-wrap icon-and-value" tooltip="${info.text}" stat-type="${statObj.type}">${content} ${info.text}</span>`
   }
 }
 
@@ -182,8 +182,8 @@ export function statScaling(scaling, obj = null, range = null){
         }
       }else{
         if(range){
-          const val1 = Math.ceil(range[0] * val)
-          const val2 = Math.ceil(range[1] * val)
+          const val1 = range[0] * val
+          const val2 = range[1] * val
           str = `${toPct(val1)} to ${toPct(val2)}`
         }else{
           str = toPct(val)

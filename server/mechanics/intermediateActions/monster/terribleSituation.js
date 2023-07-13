@@ -1,4 +1,4 @@
-import { terribleCurses } from '../../../../game/commonTemplates/terribleCurses.js'
+import { terribleCurses } from '../../../../game/commonMechanics/terribleCurses.js'
 
 export default function(combat, actor, abilityInstance, actionDef, triggerData){
   const target = combat.getEnemyOf(actor)

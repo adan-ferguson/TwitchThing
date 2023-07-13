@@ -93,10 +93,9 @@ export function useAbility(combat, ability, triggerData = {}){
 
   if(ability.trigger === 'active'){
     objData = processAbilityEvents(combat, 'useActiveAbility', owner, ability, objData)
-  }
-
-  if(combat.getEnemyOf){
-    objData = processAbilityEvents(combat, 'enemyUseAbility', combat.getEnemyOf(owner), ability, objData)
+    if(combat.getEnemyOf){
+      objData = processAbilityEvents(combat, 'enemyUseActiveAbility', combat.getEnemyOf(owner), ability, objData)
+    }
   }
 
   if(objData.cancelled){

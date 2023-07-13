@@ -25,10 +25,12 @@ const DEFS = {
 const ABILITY_MODIFICATION_DEFS = {
   miniatureScroll: amDef => {
     const pct = toPct(amDef.turnRefund)
-    return wrapContent(`
-    ${activeAbility()} refunds ${refundTime(pct)}, 
-    but only benefits from ${wrapStats(amDef.exclusiveStats)}.
-    `)
+    let str = `${activeAbility()} refunds ${refundTime(pct)}`
+    if(amDef.exclusiveStats){
+      str += `, but only benefits from ${wrapStats(amDef.exclusiveStats)}`
+    }
+    str += '.'
+    return wrapContent(str)
   },
   unstableScroll: amDef => {
     return wrapContent(`
@@ -93,10 +95,10 @@ function derivedAbilityModification(abilityModification){
     chunks.push(activeAbility(), 'ability')
   }
   if(abilityModification.exclusiveStats){
-    chunks.push('Benefits from', wrapStats(abilityModification.exclusiveStats))
+    chunks.push('benefits from', wrapStats(abilityModification.exclusiveStats))
   }
   if(abilityModification.repetitions){
-    chunks.push(`get repeated ${pluralize('time', abilityModification.repetitions)}.`)
+    chunks.push(`gets repeated ${pluralize('extra time', abilityModification.repetitions)}.`)
   }
   // if(abilityModification.addAction){
   //

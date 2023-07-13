@@ -1,7 +1,7 @@
 export default function(level){
   return {
     loadoutModifiers: [{
-      loadoutModifierId: 'attachedActive',
+      loadoutModifierId: 'ascensionScroll',
       subjectKey: 'attached',
       conditions: {
         hasAbility: 'active'

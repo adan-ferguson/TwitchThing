@@ -1,4 +1,4 @@
-import { simpleAttackAction } from '../../commonTemplates/simpleAttackAction.js'
+import { simpleAttackAction } from '../../commonMechanics/simpleAttackAction.js'
 
 export default function(){
   return {
@@ -48,7 +48,7 @@ export default function(){
         effect: {
           abilities: [{
             trigger: 'gainingDebuff',
-            cooldown: 12000,
+            cooldown: 10000,
             replacements: {
               cancel: 'Shrugged Off'
             },

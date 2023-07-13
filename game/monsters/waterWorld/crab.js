@@ -1,4 +1,4 @@
-import tastyMonsterItem from '../../commonTemplates/tastyMonsterItem.js'
+import tastyMonsterItem from '../../commonMechanics/tastyMonsterItem.js'
 
 export default function(){
   return {

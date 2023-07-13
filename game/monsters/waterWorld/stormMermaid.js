@@ -1,4 +1,4 @@
-import { lightningStormAbility } from '../../commonTemplates/lightningStormAbility.js'
+import { lightningStormAbility } from '../../commonMechanics/lightningStormAbility.js'
 
 export default function(){
   return {

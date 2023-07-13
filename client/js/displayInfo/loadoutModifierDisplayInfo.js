@@ -2,7 +2,7 @@ import { makeEl, wrapContent } from '../../../game/utilFunctions.js'
 import { subjectDescription } from '../subjectClientFns.js'
 import {
   activeAbility,
-  attachedItem,
+  attachedItem, attachedSkill,
   describeStat,
   neighbouringIcon,
   orbEntries,
@@ -27,9 +27,9 @@ const DEFS = {
   big: () => {
     return `${neighbouringIcon()} Neighbouring item slots must be empty.`
   },
-  attachedActive: () => {
-    return `${attachedItem()} must have an ${activeAbility()}.`
-  }
+  // ascensionScroll: lm => {
+  //   return `Is upgraded by ${pluralize('level', lm.levelUp)}, but must have an ${activeAbility('active')} ability.`
+  // }
 }
 
 export function loadoutModifierToEl(modifier, isItem){
@@ -42,11 +42,11 @@ export function loadoutModifierToEl(modifier, isItem){
   const nodes = []
   const contentNodes = []
   if(modifier.subjectKey !== 'self'){
-    const content = modifier.conditions?.hasTag === 'scroll' ? 'Your scrolls ' : subjectDescription(modifier.subjectKey, isItem)
+    let content = modifier.conditions?.hasTag === 'scroll' ? 'Your scrolls ' : subjectDescription(modifier.subjectKey, isItem)
     nodes.push(wrapContent(content, { class: 'loadout-modifier-header' }))
   }
 
-  let str
+  const chunks = []
   if(modifier.orbs){
     const value = { ...modifier.orbs }
     const advClass = Object.keys(value)[0]
@@ -55,24 +55,30 @@ export function loadoutModifierToEl(modifier, isItem){
       value[advClass] *= -1
       moreOrLess = 'less'
     }
-    str = `Costs ${orbEntries(value)} ${moreOrLess}`
-  }else if(modifier.restrictions){
+    chunks.push(`Costs ${orbEntries(value)} ${moreOrLess}.`)
+  }
+  if(modifier.levelUp){
+    chunks.push(`Is upgraded by ${pluralize('level', modifier.levelUp)}.`)
+  }
+  if(modifier.restrictions){
     const value = modifier.restrictions
     if(value.slot){
-      str = `Can only be equipped in slot ${value.slot}`
+      chunks.push(`Can only be equipped in slot ${value.slot}.`)
     }else if(value.empty){
-      str = 'Must be empty'
+      chunks.push('Must be empty.')
     }else if(value.hasAbility === 'active'){
-      str = `Must have an ${activeAbility()}`
+      chunks.push(`Must have an ${activeAbility()}.`)
     }else if(value.hasStat){
-      str = `Must have ${describeStat(value.hasStat)} stat`
+      chunks.push(`Must have ${describeStat(value.hasStat)} stat.`)
     }
-  }else if(modifier.levelUp){
-    str =`Is upgraded by ${pluralize('level', modifier.levelUp)}`
   }
 
-  if(str){
-    contentNodes.push(wrapContent(str))
+  if(modifier.conditions?.hasAbility === 'active'){
+    chunks.push('Must have an active ability.')
+  }
+
+  if(chunks.length){
+    contentNodes.push(wrapContent(chunks.join(' ')))
   }
 
   if(!contentNodes.length){

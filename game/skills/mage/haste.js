@@ -15,6 +15,7 @@ export default function(level){
               polarity: 'buff',
               persisting: true,
               duration: 10000,
+              stacking: 'extend',
               stats: {
                 speed,
                 cooldownMultiplier

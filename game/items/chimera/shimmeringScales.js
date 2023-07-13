@@ -1,5 +1,5 @@
 import { exponentialPercentage } from '../../growthFunctions.js'
-import { spikedShellAbility } from '../../commonTemplates/spikedShellAbility.js'
+import { spikedShellAbility } from '../../commonMechanics/spikedShellAbility.js'
 
 export default function(level){
   return {

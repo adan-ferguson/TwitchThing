@@ -1,8 +1,19 @@
 import { expandActionDef } from '../../../game/actionDefs/expandActionDef.js'
-import { healthIcon, iconAndValue, scalingWrap, statScaling, wrapStat } from '../components/common.js'
-import { arrayize, roundToFixed, toPct } from '../../../game/utilFunctions.js'
+import {
+  attachedItem, attachedSkill,
+  describeStat,
+  healthIcon,
+  iconAndValue,
+  scalingWrap,
+  statScaling,
+  toSeconds,
+  wrapStat
+} from '../components/common.js'
+import { arrayize, msToS, roundToFixed, toPct } from '../../../game/utilFunctions.js'
 import { modDisplayInfo } from './modDisplayInfo.js'
 import { statusEffectApplicationDescription } from './statusEffectDisplayInfo.js'
+import AbilityInstance from '../../../game/abilityInstance.js'
+import { scaledNumberFromInstance } from '../../../game/scaledNumber.js'
 
 const ACTION_DEFS = {
   attack: (def, abilityInstance) => {
@@ -82,6 +93,28 @@ const ACTION_DEFS = {
       return [`Recover ${statScaling(scaling, abilityInstance)} health.`]
     }
   },
+  modifyAbility: (actionDef, ai) => {
+    if(actionDef.modification.cooldownRemaining){
+      return modifyCooldownRemaining(actionDef)
+    }
+  },
+  shieldBash: (actionDef, ai) => {
+    const chunks = []
+    chunks.push(`Bash the enemy for ${statScaling({
+      physPower: actionDef.physPower
+    }, ai)} phys damage.`)
+
+    chunks.push(`If ${attachedItem()} has a block stat, stun the opponent for`)
+
+    if(ai){
+      const block =
+      chunks.push(`<b>${msToS(actionDef.stunMin)}s</b>`)
+    }else{
+      chunks.push(`<b>${msToS(actionDef.stunMin)}s+</b>, scaling with that block value.`)
+    }
+
+    return chunks
+  },
   // dealDamage: (actionDef, abilityInstance) => {
   //   const damageType = actionDef.damageType
   //   const scalingStr = statScaling(actionDef.scaling, abilityInstance, actionDef.range)
@@ -144,4 +177,13 @@ export function actionArrayDescriptions(actions, abilityInstance){
     }
   })
   return chunks
+}
+
+function modifyCooldownRemaining(def){
+  //  TODO: hacky
+  if(def.targets === 'self'){
+    return `Refresh your active cooldowns by ${msToS(-def.modification.cooldownRemaining)}s.`
+  }else{
+    return `Increase enemy's action cooldowns by ${msToS(def.modification.cooldownRemaining)}s.`
+  }
 }

@@ -8,7 +8,7 @@ export const TRIGGER_NAME_SCHEMA = Joi.string().valid(
   'attackHit',
   'crit',
   'dying',
-  'enemyUseAbility',
+  'enemyUseActiveAbility',
   'gainingDebuff',
   'gainedHealth',
   'hitByAttack',

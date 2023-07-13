@@ -1,5 +1,5 @@
 export default function(level){
-  const scaling = 0.25 + 0.25 * level
+  const scaling = 0.2 + 0.4 * level
   return {
     effect: {
       abilities: [{
@@ -15,7 +15,7 @@ export default function(level){
         }]
       }]
     },
-    orbs: 1 + level * 3,
+    orbs: 3 + level * 3,
     displayName: 'Lightning Ring'
   }
 }

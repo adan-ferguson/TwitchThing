@@ -9,7 +9,7 @@ import {
   wrapStats
 } from '../components/common.js'
 import { explodeEffect } from '../../../game/baseEffects/statusEffectInstance.js'
-import { arrayize, msToS } from '../../../game/utilFunctions.js'
+import { arrayize, msToS, toPct } from '../../../game/utilFunctions.js'
 import { keyword } from './keywordDisplayInfo.js'
 
 export function statusEffectDisplayInfo(effectInstance){
@@ -206,6 +206,12 @@ const DEFS = {
     return {
       grammatic: 'fall',
       description: keyword('asleep')
+    }
+  },
+  illusion: (def, abilityInstance) => {
+    return {
+      grammatic: 'conjure',
+      description: `${def.vars.clones} illusions. Enemy abilities have a ${toPct(def.vars.chance)} chance to hit an illusion instead`
     }
   }
 }

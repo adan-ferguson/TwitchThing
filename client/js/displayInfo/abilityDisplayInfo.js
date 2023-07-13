@@ -1,9 +1,12 @@
 import AbilityInstance from '../../../game/abilityInstance.js'
-import { statusEffectDuration } from './statusEffectDisplayInfo.js'
 import {
-  aboveIcon, attachedActiveSkill, attachedItem,
+  aboveIcon,
+  attachedItem,
   attachedSkill,
-  belowIcon, describeStat, goldEntry, statScaling, toSeconds,
+  belowIcon,
+  describeStat,
+  statScaling,
+  toSeconds,
   wrapStat
 } from '../components/common.js'
 import { damageActionCalcDamage } from '../../../game/mechanicsFns.js'
@@ -56,12 +59,6 @@ const DEFS = {
       description: 'At the start of combat,<br/>sprout 3 Saplings.'
     }
   },
-  mirrorImage: ability => {
-    return {
-      description: `Conjure ${ability.vars.clones} illusions.
-      Enemy abilities have a ${toPct(ability.vars.chance)} to hit a clone instead.`
-    }
-  },
   saplingBlock: () => {
     return {
       hide: true
@@ -106,20 +103,6 @@ const DEFS = {
   summonSkeleton: ability => {
     return {
       description: 'Summon a skeleton archer which shoots arrows.'
-    }
-  },
-  shieldBash: ability => {
-    let part2
-    if(ability instanceof AbilityInstance){
-      const block = toSeconds(scaledNumberFromInstance(ability, ability.vars.scaledNumber))
-      part2 = `<span style="font-weight:bold;">${block}</span>.`
-    }else{
-      part2 = `${toSeconds(ability.vars.stunBase)} (increases with the ${describeStat('block')} stat of the ${attachedItem(true)}).`
-    }
-    return {
-      description: `
-      Bash the enemy for ${statScaling(ability.vars, ability)} phys damage.
-      The target becomes stunned for ${part2}`
     }
   },
   spikedShield: ability => {
@@ -237,6 +220,9 @@ function replacementsDescription(replacements, abilityDef, abilityInstance){
   if(replacements.cancel && abilityDef.trigger ==='dying'){
     return 'Survive with 1 health.'
   }
+  if(replacements.cancel === 'countered'){
+    return 'Counter it.'
+  }
 }
 
 function conditionsDescription(conditions){
@@ -294,6 +280,9 @@ function prefix(trigger, conditions){
   }
   if(trigger === 'useActiveAbility'){
     chunks.push('After using an active ability')
+  }
+  if(trigger === 'enemyUseActiveAbility'){
+    chunks.push('When an enemy uses an active ability')
   }
   if(conditions?.random){
     chunks.push(`(${toPct(conditions.random)} chance)`)

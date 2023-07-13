@@ -1,4 +1,4 @@
-import { simpleAttackAction } from '../../commonTemplates/simpleAttackAction.js'
+import { simpleAttackAction } from '../../commonMechanics/simpleAttackAction.js'
 
 export default function(){
   return {

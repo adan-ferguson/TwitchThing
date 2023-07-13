@@ -1,4 +1,4 @@
-import { barrierAction } from '../../commonTemplates/barrierAction.js'
+import { barrierAction } from '../../commonMechanics/barrierAction.js'
 
 export default function(level){
   const magicPower = 0.6 + level * 0.5

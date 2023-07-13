@@ -7,12 +7,11 @@ export default function(level){
       abilities: [{
         trigger: 'active',
         cooldown,
-        abilityId: 'mirrorImage',
         actions: [{
           applyStatusEffect: {
             targets: 'self',
             statusEffect: {
-              name: 'Illusion',
+              name: 'illusion',
               stacking: 'stack',
               persisting: true,
               polarity: 'buff',
@@ -26,14 +25,14 @@ export default function(level){
                 replacements: {
                   cancel: 'fooled'
                 }
-              }]
+              }],
+              vars: {
+                clones,
+                chance
+              },
             }
           }
-        }],
-        vars: {
-          clones,
-          chance
-        }
+        }]
       }]
     }
   }

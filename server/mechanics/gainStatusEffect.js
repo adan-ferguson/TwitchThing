@@ -3,7 +3,7 @@ import { scaledNumberFromAbilityInstance } from '../../game/scaledNumber.js'
 import { chooseOne } from '../../game/rando.js'
 import StatusEffectInstance from '../../game/baseEffects/statusEffectInstance.js'
 import { processAbilityEvents } from './abilities.js'
-import { blockBarrierAction } from '../../game/commonTemplates/blockBarrierAction.js'
+import { blockBarrierAction } from '../../game/commonMechanics/blockBarrierAction.js'
 import { performAction } from './actions/performAction.js'
 
 const DIMINISHING_RETURNS_STATUS_EFFECT = {
