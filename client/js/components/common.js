@@ -90,7 +90,7 @@ export function coloredIcon(iconName, color = null, cls = null){
 }
 
 export function attachedItem(text = false){
-  return `<i class="fa-solid fa-arrow-left attached-item"></i>${text ? ' <b>Attached Item</b>' : ''}`
+  return `<i ${text ? '' : 'tooltip="Attached Item"'} class="fa-solid fa-arrow-left attached-item"></i>${text ? ' <b>Attached Item</b>' : ''}`
 }
 
 export function attachedActiveSkill(){
@@ -134,7 +134,7 @@ export function wrapStatObj(statObj){
   if(info.icon){
     return `<span class="stat-wrap icon-and-value" tooltip="${info.text}" stat-type="${statObj.type}">${content}${info.icon}</span>`
   }else{
-    return `<span class="stat-wrap icon-and-value" tooltip="${info.text}" stat-type="${statObj.type}">${content} ${info.text}</span>`
+    return `<span class="stat-wrap" tooltip="${info.text}" stat-type="${statObj.type}">${content} ${info.text}</span>`
   }
 }
 
@@ -143,7 +143,7 @@ export function describeStat(statType){
   if(info.icon){
     return `<span class="stat-wrap icon-and-value" stat-type="${statType}">${info.text}${info.icon}</span>`
   }else{
-    return `<span class="stat-wrap icon-and-value" stat-type="${statType}">${info.text}</span>`
+    return `<span class="stat-wrap" stat-type="${statType}">${info.text}</span>`
   }
 }
 

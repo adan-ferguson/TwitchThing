@@ -5,11 +5,11 @@ export default function(combat, actor, abilityInstance, actionDef, triggerData){
   }
   const damage = Math.ceil(triggerData.healthGained * actionDef.pct)
   return {
-    dealDamage: {
+    attack: {
       damageType: 'magic',
       scaling: {
         flat: damage
-      }
+      },
     }
   }
 }

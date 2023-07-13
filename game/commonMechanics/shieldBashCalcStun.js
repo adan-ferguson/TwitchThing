@@ -1,6 +1,6 @@
 import { getMatchingEffectInstances } from '../subjectFns.js'
 
-export function spikedShieldCalcStun(abilityInstance, actionDef){
+export function shieldBashCalcStun(abilityInstance, actionDef){
   const attached = getMatchingEffectInstances(abilityInstance.parentEffect, 'attached')[0]
   const block = attached?.stats.get('block').value
   if(!block){

@@ -14,6 +14,8 @@ import { modDisplayInfo } from './modDisplayInfo.js'
 import { statusEffectApplicationDescription } from './statusEffectDisplayInfo.js'
 import AbilityInstance from '../../../game/abilityInstance.js'
 import { scaledNumberFromInstance } from '../../../game/scaledNumber.js'
+import { shieldBashCalcStun } from '../../../game/commonMechanics/shieldBashCalcStun.js'
+import { dimret, keyword } from './keywordDisplayInfo.js'
 
 const ACTION_DEFS = {
   attack: (def, abilityInstance) => {
@@ -99,55 +101,42 @@ const ACTION_DEFS = {
     }
   },
   shieldBash: (actionDef, ai) => {
+
     const chunks = []
     chunks.push(`Bash the enemy for ${statScaling({
       physPower: actionDef.physPower
     }, ai)} phys damage.`)
 
-    chunks.push(`If ${attachedItem()} has a block stat, stun the opponent for`)
-
     if(ai){
-      const block =
-      chunks.push(`<b>${msToS(actionDef.stunMin)}s</b>`)
+      const block = shieldBashCalcStun(ai, actionDef)
+      if(block){
+        chunks.push(`The target becomes ${keyword('stunned')}${dimret()} <b>${msToS(block)}s</b>.`)
+      }
     }else{
-      chunks.push(`<b>${msToS(actionDef.stunMin)}s+</b>, scaling with that block value.`)
+      chunks.push(`If ${attachedItem()} has ${describeStat('block')}, the target becomes ${keyword('stunned')}${dimret()}`)
+      chunks.push(`for at least <b>${msToS(actionDef.stunMin)}s</b> (increases with that block value).`)
     }
 
     return chunks
   },
-  // dealDamage: (actionDef, abilityInstance) => {
-  //   const damageType = actionDef.damageType
-  //   const scalingStr = statScaling(actionDef.scaling, abilityInstance, actionDef.range)
-  //   return [`Deal an extra ${scalingStr} ${damageType} damage.`]
-  // },
-  // modifyAbility: (actionDef, abilityInstance) => {
-  //   return [`Refresh your active cooldowns by ${msToS(actionDef.modification.cooldownRemaining * -1)}s.`]
-  //
-  // },
+  balancedSmite: (actionDef, ability) => {
+    const phys = statScaling({
+      physPower: actionDef.power
+    }, ability)
+    const magic = statScaling({
+      magicPower: actionDef.power
+    }, ability)
+    return `Attack for ${phys} phys damage or ${magic} magic damage, whichever is lower. (Phys if tie)`
+  },
+  shieldsUp: (actionDef, ability) => {
+    return `Restore your block barrier with an extra <b>${toPct(actionDef.multiplier - 1)}</b> strength. Only use when your block barrier is down.`
+  },
+  penance: (actionDef, ability) => {
+    return `Whenever you heal, attack for magic damage equal to <b>${toPct(actionDef.pct)}</b> of the amount healed.`
+  },
   // removeStatusEffect: (actionDef, abilityInstance) => {
   //   return `Remove all ${actionDef.polarity}s from ${actionDef.targets === 'self' ? 'yourself' : 'the enemy'}.`
   // }
-  // balancedSmite: (actionDef, ability) => {
-  //   const phys = statScaling({
-  //     physPower: actionDef.power
-  //   }, ability)
-  //   const magic = statScaling({
-  //     magicPower: actionDef.power
-  //   }, ability)
-  //   return {
-  //     description: `Attack for ${phys} phys damage or ${magic} magic damage, whichever is lower. (Phys if tie)`
-  //   }
-  // },
-  // shieldsUp: (actionDef, ability) => {
-  //   return {
-  //     description: `Restore your block barrier with an extra <b>${toPct(actionDef.multiplier - 1)}</b> strength. Only use when your block barrier is down.`
-  //   }
-  // },
-  // penance: (actionDef, ability) => {
-  //   return {
-  //     description: `Whenever you heal, deal damage equal to <b>${toPct(actionDef.pct)}</b> of the amount healed.`
-  //   }
-  // },
   // breakItem: (actionDef, ability) => {
   //   const duration = statusEffectDuration(actionDef.statusEffect ?? {}, ability)
   //   return {

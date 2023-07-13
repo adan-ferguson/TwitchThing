@@ -18,6 +18,9 @@ const DEFS = {
     icon: faIcon('angles-down'),
     description: 'Repeated uses have diminishing returns.'
   },
+  overtime: {
+    description: '60 seconds into combat (unless something affects it or I changed it and forgot to update this tooltip which will probably happen)'
+  }
 }
 
 export function keyword(name, displayText = null){
@@ -29,4 +32,8 @@ export function keyword(name, displayText = null){
     }).outerHTML
   }
   return null
+}
+
+export function dimret(){
+  return keyword('diminishingReturns')
 }

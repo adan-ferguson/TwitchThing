@@ -4,17 +4,17 @@ import Items from '../items/combined.js'
 export const PALADIN_CLASS_INFO = {
   skills: [
     Skills.smite,
-    Skills.shieldBash,
     Skills.ardent,
+    Skills.shieldBash,
     Skills.lesserHeal,
-    Skills.balancedSmite,
     Skills.devotion,
+    Skills.balancedSmite,
     Skills.shieldsUp,
     Skills.patience,
     Skills.greaterHeal,
     Skills.penance,
+    Skills.divineIntervention,
     Skills.purity,
-    Skills.divineIntervention
   ],
   items: [[
     Items.buckler,

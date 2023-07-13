@@ -1,10 +1,10 @@
-import { geometricProgression, wrappedPct } from '../../growthFunctions.js'
+import { wrappedPct } from '../../growthFunctions.js'
 
 export default function(level){
   return {
     effect: {
       stats: {
-        hpMax: wrappedPct(20 + geometricProgression(0.2, level, 20, 5))
+        hpMax: wrappedPct(10 + 30 * level)
       }
     },
   }

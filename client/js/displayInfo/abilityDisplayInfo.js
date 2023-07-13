@@ -4,7 +4,7 @@ import {
   attachedItem,
   attachedSkill,
   belowIcon,
-  describeStat,
+  describeStat, refundTime,
   statScaling,
   toSeconds,
   wrapStat
@@ -192,9 +192,9 @@ function abilityDescription(ability){
   if(ability.resetAfterCombat && ability.cooldown){
     chunks.push('<br/><br/>Cooldown resets after combat.')
   }
-  // if(ability.turnRefund > 0){
-  //   chunks.push(`Refunds ${refundTime(toPct(ability.turnRefund))}.`)
-  // }
+  if(ability.turnRefund > 0){
+    chunks.push(`Refunds ${refundTime(toPct(ability.turnRefund))}.`)
+  }
   // if(ability.exclusiveStats?.critDamage){
   //   chunks.push(`<br/>Benefits from ${wrapStats(ability.exclusiveStats)}.`)
   // }

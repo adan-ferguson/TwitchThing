@@ -111,7 +111,10 @@ export const statDefinitionsInfo = {
     description: 'At the start of combat, gain a barrier. Scales with max health.',
     displayedValueFn: ({ value }, { style, owner }) => {
       if (style === StatsDisplayStyle.CUMULATIVE){
-        return owner.hpMax * value
+        if(!owner){
+          return toPct(value)
+        }
+        return Math.round(owner.hpMax * value)
       }
       return `+${toPct(value)}`
     }

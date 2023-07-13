@@ -215,7 +215,8 @@ export default class FighterInstancePane extends HTMLElement{
     }
 
     this.statsList.setOptions({
-      excluded: this._excluded()
+      excluded: this._excluded(),
+      owner: this.fighterInstance,
     })
 
     this.statsList.setStats(this.fighterInstance.stats)

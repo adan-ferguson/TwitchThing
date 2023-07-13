@@ -70,6 +70,8 @@ function derivedPrefix(actionDef, abilityInstance){
     chunks.push(`the target ${grammatic}`)
   }else if(actionDef.targets === 'enemy'){
     chunks.push(`enemy ${grammatic}`)
+  }else if(actionDef.targets === 'all'){
+    chunks.push(`everyone ${grammatic}`)
   }
   return capitalizeFirstChunk(chunks)
 }

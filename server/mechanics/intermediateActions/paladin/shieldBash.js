@@ -1,9 +1,9 @@
-import { spikedShieldCalcStun } from '../../../../game/commonMechanics/spikedShieldCalcStun.js'
+import { shieldBashCalcStun } from '../../../../game/commonMechanics/shieldBashCalcStun.js'
 import { simpleAttackAction } from '../../../../game/commonMechanics/simpleAttackAction.js'
 
 export default function(combat, actor, abilityInstance, actionDef, triggerData){
-  const actions = [simpleAttackAction('physPower', actionDef.physPower)]
-  const duration = spikedShieldCalcStun(abilityInstance, actionDef)
+  const actions = [simpleAttackAction('phys', actionDef.physPower)]
+  const duration = shieldBashCalcStun(abilityInstance, actionDef)
   if(duration){
     actions.push({
       applyStatusEffect: {

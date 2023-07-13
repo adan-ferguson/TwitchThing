@@ -4,7 +4,7 @@ export default function(level){
     effect: {
       abilities: [{
         trigger: 'active',
-        cooldown: 12000,
+        cooldown: 10000,
         actions: [{
           balancedSmite: {
             power
