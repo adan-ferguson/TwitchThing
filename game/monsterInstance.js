@@ -19,13 +19,13 @@ const POWER_BASE = 5
 const POWER_GROWTH = 0.8
 
 const XP_BASE = 2
-const XP_GROWTH = 1
-const XP_GROWTH_PCT = 0.14
-const XP_ZONE_BONUS = 2
+const XP_GROWTH = 1.25
+const XP_GROWTH_PCT = 0.08
+const XP_ZONE_BONUS = 1.6
 
 export function monsterLevelToXpReward(lvl){
   const zoneBonuses = Math.floor((lvl - 1) / 10)
-  const val = Math.ceil(geometricProgression(XP_GROWTH_PCT, lvl - 1, XP_GROWTH))
+  const val = Math.floor(geometricProgression(XP_GROWTH_PCT, lvl - 1, XP_GROWTH))
   return toNumberOfDigits(
     XP_BASE + val * Math.pow(XP_ZONE_BONUS, zoneBonuses),
     3

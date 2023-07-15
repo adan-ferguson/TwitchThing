@@ -308,7 +308,7 @@ export default class FighterInstance{
     if(this._state.idle){
       return false
     }
-    if(conditions.hpPctBelow && this.hpPct > conditions.hpPctBelow){
+    if(conditions.hpPctBelow && this.hpPct >= conditions.hpPctBelow){
       return false
     }
     if(conditions.hpFull && this.hpPct < 1){
@@ -323,7 +323,7 @@ export default class FighterInstance{
     if(conditions.hasStatusEffect && !this.hasStatusEffect(conditions.hasStatusEffect)){
       return false
     }
-    if(conditions.doesntHaveStatusEffectWithName && this.hasStatusEffect(conditions.doesntHaveStatusEffectWithName)){
+    if(conditions.doesntHaveStatusEffect && this.hasStatusEffect(conditions.doesntHaveStatusEffect)){
       return false
     }
     if(conditions.hasDebuff){

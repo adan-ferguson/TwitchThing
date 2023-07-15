@@ -7,7 +7,6 @@ export default function(level){
       stats: {
         physDef: exponentialPercentage(0.2, level - 1, 0.3),
         magicPower: wrappedPct(geometricProgression(0.5, level, 30, 5)),
-        speed: -30 + level * -20
       },
       abilities: [{
         trigger: 'takeTurn',

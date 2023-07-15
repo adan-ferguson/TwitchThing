@@ -46,6 +46,9 @@ export async function runCombat(dungeonRun, monsterDef){
     }, combatEvent.combatID)
 
     adventurerInstance.state = combatDoc.fighter1.endState
+
+    const xpBonus = adventurerInstance.stats.get('combatXP').value
+
     adventurerInstance.endCombat()
 
     const refereeTime = Math.max(0, combatDoc.times.total - ADVANCEMENT_INTERVAL)
@@ -68,6 +71,7 @@ export async function runCombat(dungeonRun, monsterDef){
         endStateMonsterInstance.effectInstances.map(ei => ei.effect.rewards).filter(r => r)
       )
       adventurerInstance.food += rewards.food ?? 0
+      rewards.xp *= xpBonus
       resultEvent.rewards = rewards
     }else{
       combatEvent.runFinished = true

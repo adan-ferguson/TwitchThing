@@ -1,19 +1,16 @@
 import { expandActionDef } from '../../../game/actionDefs/expandActionDef.js'
 import {
-  attachedItem, attachedSkill,
+  attachedItem,
   describeStat,
   healthIcon,
   iconAndValue,
   scalingWrap,
   statScaling,
-  toSeconds,
   wrapStat
 } from '../components/common.js'
-import { arrayize, msToS, roundToFixed, toPct } from '../../../game/utilFunctions.js'
+import { arrayize, msToS, toPct } from '../../../game/utilFunctions.js'
 import { modDisplayInfo } from './modDisplayInfo.js'
 import { statusEffectApplicationDescription } from './statusEffectDisplayInfo.js'
-import AbilityInstance from '../../../game/abilityInstance.js'
-import { scaledNumberFromInstance } from '../../../game/scaledNumber.js'
 import { shieldBashCalcStun } from '../../../game/commonMechanics/shieldBashCalcStun.js'
 import { dimret, keyword } from './keywordDisplayInfo.js'
 
@@ -134,9 +131,14 @@ const ACTION_DEFS = {
   penance: (actionDef, ability) => {
     return `Whenever you heal, attack for magic damage equal to <b>${toPct(actionDef.pct)}</b> of the amount healed.`
   },
-  // removeStatusEffect: (actionDef, abilityInstance) => {
-  //   return `Remove all ${actionDef.polarity}s from ${actionDef.targets === 'self' ? 'yourself' : 'the enemy'}.`
-  // }
+  modifyStatusEffect: (actionDef, abilityInstance) => {
+    if(actionDef.modification.remove){
+      return `Remove all ${actionDef.subject.polarity}s from ${actionDef.targets === 'self' ? 'yourself' : 'the enemy'}.`
+    }
+  },
+  spikedShield: actionDef => {
+    return `Return <b>${toPct(actionDef.pctReturn)}</b> of blocked phys damage back at the attacker.`
+  },
   // breakItem: (actionDef, ability) => {
   //   const duration = statusEffectDuration(actionDef.statusEffect ?? {}, ability)
   //   return {

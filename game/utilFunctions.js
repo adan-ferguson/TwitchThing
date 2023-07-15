@@ -94,6 +94,10 @@ export function wrapContent(content, options = {}){
   })
 }
 
+export function htmlToEl(html){
+  return wrapContent(html).children[0]
+}
+
 export function makeEl(options = {}){
 
   options = {

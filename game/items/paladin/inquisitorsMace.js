@@ -29,6 +29,7 @@ export default function(level){
                   duration
                 }
               },
+              diminishingReturns: true,
             }
           }
         }]

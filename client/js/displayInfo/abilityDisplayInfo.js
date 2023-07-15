@@ -105,11 +105,6 @@ const DEFS = {
       description: 'Summon a skeleton archer which shoots arrows.'
     }
   },
-  spikedShield: ability => {
-    return {
-      description: `Return <b>${toPct(ability.vars.pctReturn)}</b> of blocked phys damage back at the attacker.`
-    }
-  },
   immaculateShield: ability => {
     return {
       description: 'As long as your <b>Block</b> barrier is up, you can\'t be debuffed.'
@@ -223,6 +218,9 @@ function replacementsDescription(replacements, abilityDef, abilityInstance){
   if(replacements.cancel === 'countered'){
     return 'Counter it.'
   }
+  if(abilityDef.abilityId === 'immaculateShield'){
+    return `Ignore it if your ${describeStat('block')} barrier is up.`
+  }
 }
 
 function conditionsDescription(conditions){
@@ -233,7 +231,7 @@ function conditionsDescription(conditions){
     return ['Only use when health is at 100%.']
   }
   if(conditions.owner?.hasDebuff){
-    return ['Only use if you have a debuff.']
+    return ['Only use if you are debuffed.']
   }
   return []
 }

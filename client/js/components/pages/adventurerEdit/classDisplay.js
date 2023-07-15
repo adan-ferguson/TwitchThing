@@ -1,5 +1,5 @@
 import DIElement from '../../diElement.js'
-import { featureLocked } from '../../common.js'
+import { coloredIcon, featureLocked } from '../../common.js'
 import classDisplayInfo, { ADVENTURER_CLASS_LIST } from '../../../displayInfo/classDisplayInfo.js'
 import AdventurerSkillRow, { AdventurerSkillRowStatus } from '../../adventurer/adventurerSkillRow.js'
 import { getSkillsForClass } from '../../../../../game/skills/adventurerSkill.js'
@@ -7,6 +7,7 @@ import { OrbsTooltip } from '../../orbRow.js'
 import { ICON_SVGS } from '../../../assetLoader.js'
 import tippyCallout from '../../visualEffects/tippyCallout.js'
 import { showUnlockModal } from './unlockModal.js'
+import { htmlToEl, makeEl, wrapContent } from '../../../../../game/utilFunctions.js'
 
 const HTML = `
 <div class="unset">
@@ -127,18 +128,24 @@ export default class ClassDisplay extends DIElement{
     list.innerHTML = ''
     for(let i = 0; i < 12; i++){
       const skill = skills[i]
+      const status = skillStatus(this._adventurer, skill)
       const row = new AdventurerSkillRow().setOptions({
-        status: skillStatus(this._adventurer, skill),
+        status,
         skill: skills[i],
         clickable: true,
         noRightClick: true
       })
       row.addEventListener('click', () => {
-        if(this._options.status !== AdventurerSkillRowStatus.HIDDEN){
+        if(status !== AdventurerSkillRowStatus.HIDDEN){
           this._showUnlockModal(skill)
         }
       })
-      list.appendChild(row)
+      const rowRow = makeEl({
+        class: 'skill-row-row'
+      })
+      const icon = coloredIcon('check', '#92eac6', status === AdventurerSkillRowStatus.UNLOCKED ? '' : 'hidden')
+      rowRow.append(row, htmlToEl(icon))
+      list.appendChild(rowRow)
     }
 
     if(!this._user.features.skills){

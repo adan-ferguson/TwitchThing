@@ -120,10 +120,9 @@ export async function generateMonster(dungeonRun, boss){
 
 function generateRewards(dungeonRun, monsterDefinition){
   const monsterInstance = new MonsterInstance(monsterDefinition)
-  const advStats = dungeonRun.adventurerInstance.stats
   const level = monsterInstance.level
   const rewards = {
-    xp: monsterInstance.xpReward * advStats.get('combatXP').value * (monsterInstance.isBoss ? BOSS_XP_BONUS : 1)
+    xp: monsterInstance.xpReward * (monsterInstance.isBoss ? BOSS_XP_BONUS : 1)
   }
   if(dungeonRun.user.accomplishments.firstRunFinished){
     const userChests = dungeonRun.user.accomplishments.chestsFound ?? 0

@@ -1,5 +1,5 @@
 export default function(level){
-  const duration = 15000 * level
+  const duration = 5000 + 5000 * level
   return {
     effect: {
       abilities: [{
@@ -7,7 +7,7 @@ export default function(level){
         abilityId: 'divineIntervention',
         actions: [{
           applyStatusEffect: {
-            targets: 'all',
+            targets: 'self',
             statusEffect: {
               name: 'Divine Intervention',
               polarity: 'buff',
