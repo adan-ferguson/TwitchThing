@@ -1,40 +1,28 @@
-import { geometricProgression, inverseGeometricProgression } from './growthFunctions.js'
-import { toNumberOfDigits } from './utilFunctions.js'
+import { geometricProgression } from './growthFunctions.js'
 import _ from 'lodash'
 import AdventurerLoadout from './adventurerLoadout.js'
 import AdventurerSkill from './skills/adventurerSkill.js'
 import OrbsData from './orbsData.js'
+import AdventurerXpCalculator from './adventurerXpCalculator.js'
 
-const XP_BASE = 6
-const XP_GROWTH = 14
-const XP_GROWTH_PCT = 0.17
-
-const STAT_GROWTH_PCT = 0.04
+const STAT_GROWTH_PCT = 0.05
 
 const HP_BASE = 30
-const HP_GROWTH = 6.5
+const HP_GROWTH = 7
 const HP_GROWTH_PCT = STAT_GROWTH_PCT
 
 const POWER_BASE = 5
 const POWER_GROWTH = 1
 const POWER_GROWTH_PCT = STAT_GROWTH_PCT
 
+const calc = new AdventurerXpCalculator()
+
 export function advXpToLevel(xp){
-  if(xp < XP_BASE){
-    return 1
-  }
-  const lvl = Math.floor(inverseGeometricProgression(XP_GROWTH_PCT, xp - XP_BASE, XP_GROWTH)) + 2
-  return advLevelToXp(lvl) <= xp ? lvl : lvl - 1
+  return calc.xpToLevel(xp)
 }
 
 export function advLevelToXp(lvl){
-  if(lvl <= 1){
-    return 0
-  }
-  return toNumberOfDigits(
-    Math.ceil(geometricProgression(XP_GROWTH_PCT, lvl - 2, XP_GROWTH)) + XP_BASE,
-    3
-  )
+  return calc.levelToXp(lvl)
 }
 
 export function adventurerLevelToHp(lvl){

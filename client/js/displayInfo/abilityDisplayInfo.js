@@ -7,7 +7,7 @@ import {
   describeStat, refundTime,
   statScaling,
   toSeconds,
-  wrapStat
+  wrapStat, wrapStats
 } from '../components/common.js'
 import { damageActionCalcDamage } from '../../../game/mechanicsFns.js'
 import { arrayize, msToS, toPct } from '../../../game/utilFunctions.js'
@@ -190,9 +190,9 @@ function abilityDescription(ability){
   if(ability.turnRefund > 0){
     chunks.push(`Refunds ${refundTime(toPct(ability.turnRefund))}.`)
   }
-  // if(ability.exclusiveStats?.critDamage){
-  //   chunks.push(`<br/>Benefits from ${wrapStats(ability.exclusiveStats)}.`)
-  // }
+  if(ability.exclusiveStats){
+    chunks.push(`Benefits from ${wrapStats(ability.exclusiveStats)}.`)
+  }
 
   return chunks.join(' ')
 }

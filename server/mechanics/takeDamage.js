@@ -10,6 +10,7 @@ export function takeDamage(combat, subject, damageInfo){
     ignoreDefense: false,
     ignoreOvertime: false,
     isAttack: false,
+    crit: false,
     ...damageInfo
   }
 
@@ -18,7 +19,7 @@ export function takeDamage(combat, subject, damageInfo){
     damageType: damageInfo.damageType
   }
 
-  let damage = result.baseDamage * subject.stats.get('damageTaken').value
+  let damage = result.baseDamage
 
   if(damageInfo.range){
     damage *= randomBetween(...damageInfo.range)
@@ -29,6 +30,9 @@ export function takeDamage(combat, subject, damageInfo){
   }
 
   if(!damageInfo.ignoreDefense){
+
+    damage *= subject.stats.get('damageTaken').value
+
     const mitigated = Math.floor(
       damage *
       subject.stats.get(damageInfo.damageType + 'Def').value *
@@ -73,6 +77,10 @@ export function takeDamage(combat, subject, damageInfo){
   if(!subject.dead && !subject.hp){
     subject.hp = 1
     result.damageDistribution.at(-1).finalValue = 1
+  }
+
+  if(damageInfo.crit){
+    result.crit = true
   }
 
   return result

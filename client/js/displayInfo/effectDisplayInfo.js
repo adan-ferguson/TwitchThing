@@ -29,19 +29,19 @@ const DEFS = {
   //     description: 'Item(s) disabled'
   //   }
   // },
-  // sneakPast: effectObj => {
-  //   const chance = effectObj.effect.stats.sneakChance
-  //   const xp = effectObj.effect.stats.sneakXP.substring(1)
-  //   return {
-  //     description: `You have a ${chance} chance to sneak by non-boss monsters for ${xp} xp. If they're guarding a chest, you steal it.`
-  //   }
-  // },
-  // exhaustiveSearch: effectObj => {
-  //   const multi = effectObj.effect.stats.leisurelyPaceMultiplier
-  //   return {
-  //     description: `When using Leisurely Pace, explore an extra ${multi} rooms per floor.`
-  //   }
-  // },
+  sneakPast: effectObj => {
+    const chance = effectObj.stats.sneakChance
+    const xp = effectObj.stats.sneakXP.substring(1)
+    return {
+      description: `You have a ${chance} chance to sneak by non-boss monsters for ${xp} xp. If they're guarding a chest, you steal it.`
+    }
+  },
+  exhaustiveSearch: effect => {
+    const multi = effect.stats.leisurelyPaceMultiplier
+    return {
+      description: `When using Leisurely Pace, explore ${multi} rooms per floor.`
+    }
+  },
   senseWeakness: effect => {
     return {
       description: `Attacks deal <b>+${toPct(effect.stats.damagePerEnemyDebuff)}</b> damage for each debuff the target has. (Stacks don't count)`

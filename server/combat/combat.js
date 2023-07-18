@@ -171,12 +171,6 @@ class Combat{
       }
       this._advanceTime()
       const actions = this._doActions().flat()
-      // if(!this.fighterInstance1.hp){
-      //   processAbilityEvents(this, 'defeated', this.fighterInstance1)
-      // }
-      // if(!this.fighterInstance2.hp){
-      //   processAbilityEvents(this, 'defeated', this.fighterInstance2)
-      // }
       this._triggerSuddenDeath()
       this._resolveTriggers()
       this._addTimelineEntry({

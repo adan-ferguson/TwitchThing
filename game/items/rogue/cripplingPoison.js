@@ -1,5 +1,5 @@
 export default function(level){
-  const speed = -level * 10 - 5
+  const speed = -level * 20 - 10
   return {
     effect: {
       stats: {
@@ -16,7 +16,7 @@ export default function(level){
                 damageOverTime: {
                   damage: {
                     scaledNumber: {
-                      physPower: 0.25 + 0.15 * level
+                      physPower: 0.2 + 0.1 * level
                     }
                   }
                 }

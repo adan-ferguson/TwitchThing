@@ -11,13 +11,9 @@ export function foundStairs(dungeonRun){
     return false
   }
 
-  if(floor === 1){
-    // Tutorial purposes
-    return room >= 4
-  }
-
-  const size = floorSize(floor)
+  const size = floor === 1 ? 8 : floorSize(floor)
   const leisurelyFactor = dungeonRun.adventurerInstance.stats.get('leisurelyPaceMultiplier').value
   const factor = pace === 'Leisurely' ? leisurelyFactor : BRISK_STAIRS_TIME
+  console.log('floorsize', size * factor)
   return room >= size * factor
 }

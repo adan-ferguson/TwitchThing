@@ -119,16 +119,16 @@ export const statDefinitionsInfo = {
       return `+${toPct(value)}`
     }
   },
-  // damageCeiling: {
-  //   text: 'Damage Ceiling',
-  //   displayedValueFn: ({ value }, { owner }) => {
-  //     if(owner){
-  //       return owner.hpMax * value
-  //     }
-  //     return toPct(value)
-  //   },
-  //   description: 'Most damage you can take from one attack. Scales with max health.'
-  // },
+  damageCeiling: {
+    text: 'Damage Ceiling',
+    displayedValueFn: ({ value }, { owner }) => {
+      if(owner){
+        return Math.round(owner.hpMax * value)
+      }
+      return toPct(value)
+    },
+    description: 'Most damage you can take from one attack. Scales with max health.'
+  },
   // damageThreshold: {
   //   text: 'Damage Threshold',
   //   displayedValueFn: ({ value }, { owner }) => {

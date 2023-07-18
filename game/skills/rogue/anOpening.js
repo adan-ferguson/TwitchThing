@@ -8,8 +8,9 @@ export default function(level){
             targets: 'self',
             statusEffect: {
               polarity: 'buff',
-              turns: 1,
+              turns: level,
               name: 'An Opening!',
+              stacking: 'replace',
               stats: {
                 critChance: 1
               }
@@ -18,7 +19,6 @@ export default function(level){
         }]
       }]
     },
-    maxLevel: 1,
     displayName: 'An Opening!'
   }
 }

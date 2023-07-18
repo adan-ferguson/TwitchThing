@@ -1,7 +1,8 @@
 import { expandActionDef } from '../../../game/actionDefs/expandActionDef.js'
 import {
+  attachedActiveSkill,
   attachedItem,
-  describeStat,
+  describeStat, goldEntry,
   healthIcon,
   iconAndValue,
   scalingWrap,
@@ -145,12 +146,10 @@ const ACTION_DEFS = {
   //     description: `Break ${actionDef.count ?? 1} of the target's items${duration ? ' ' + duration : ''}.`
   //   }
   // },
-  // theBountyCollectorKill: (actionDef, ability) => {
-  //   const goldStr = `Enemy Lvl x ${actionDef.value}`
-  //   return {
-  //     description: `When you kill an enemy with ${attachedActiveSkill()} get a bounty chest containing ${goldEntry(goldStr)}.`
-  //   }
-  // }
+  theBountyCollectorKill: (actionDef, ability) => {
+    const goldStr = `Enemy Lvl x ${actionDef.value}`
+    return `When you kill an enemy with ${attachedActiveSkill(true)}, get a bounty chest containing ${goldEntry(goldStr)}.`
+  }
 }
 
 export function actionArrayDescriptions(actions, abilityInstance){

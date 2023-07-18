@@ -26,6 +26,5 @@ export default function(level){
       }]
     },
     orbs: level * 3 + 3,
-    displayName: 'Boots of Shuffling'
   }
 }

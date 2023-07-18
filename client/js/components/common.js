@@ -119,7 +119,7 @@ export function wrapStats(stats){
   for(let stat of allStats){
     chunks.push(wrapStatObj(stat))
   }
-  return chunks.join('; ')
+  return chunks.join(' and ')
 }
 
 export function wrapStat(statType, val){
@@ -215,7 +215,7 @@ export function featureLocked(target, msg){
     return
   }
   const cover = makeEl({ class: 'feature-locked', content: `${faIcon('lock')} <span>${msg}</span>` })
-  target.appendChild(cover)
+  target.prepend(cover)
 }
 
 export function activeAbility(txt = 'Active'){

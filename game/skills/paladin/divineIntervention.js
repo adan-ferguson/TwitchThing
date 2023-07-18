@@ -13,7 +13,8 @@ export default function(level){
               polarity: 'buff',
               duration,
               stats: {
-                damageTaken: '-100%'
+                physDef: '100%',
+                magicDef: '100%',
               }
             }
           }

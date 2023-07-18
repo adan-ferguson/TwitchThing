@@ -142,6 +142,7 @@ verifiedRouter.post('/refund', async(req, res, next) => {
     fillArray(() => null, 8)
   )
   await Adventurers.save(req.adventurerDoc)
+  await Users.save(req.user)
   res.status(200).send({ success: 1, adventurer: req.adventurerDoc })
 })
 

@@ -18,7 +18,7 @@ const DEFS = {
     return null
   },
   phantomCloak: (metaEffect, obj) => {
-    return `${attachedSkill()}'s ${activeAbility()} becomes ${triggeredAbility('on ' + keyword('thwart'))}<br/>(It still has a cooldown)`
+    return `${attachedSkill(true)}'s ${activeAbility()} becomes ${triggeredAbility('on ' + keyword('thwart'))} (It still has a cooldown)`
   }
 }
 

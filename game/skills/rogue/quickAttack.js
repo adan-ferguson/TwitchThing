@@ -1,5 +1,5 @@
 export default function(level){
-  const physPower = 0.7 + 0.2 * level
+  const physPower = 0.6 + 0.2 * level
   return {
     effect: {
       abilities: [{

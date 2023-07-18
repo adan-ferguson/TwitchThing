@@ -11,6 +11,7 @@ import { metaEffectDisplayInfo } from '../displayInfo/metaEffectDisplayInfo.js'
 import { effectDisplayInfo } from '../displayInfo/effectDisplayInfo.js'
 import tippy from 'tippy.js'
 import { loadoutModifierToEl } from '../displayInfo/loadoutModifierDisplayInfo.js'
+import { flavorDisplayInfo } from '../displayInfo/flavorDisplayInfo.js'
 
 export default class EffectDetails extends DIElement{
 
@@ -44,6 +45,7 @@ export default class EffectDetails extends DIElement{
     this._addLoadoutModifiers()
     this._addDescription()
     this._addMisc()
+    this._addFlavor()
     this._addTooltips()
   }
 
@@ -133,6 +135,13 @@ export default class EffectDetails extends DIElement{
     }
     if(this._obj.statMultiplier && this._obj.statMultiplier !== 1 && this._isMeta){
       this.appendChild(wrapContent(`Stats are multiplied by ${this._obj.statMultiplier}.<br/> (Generally doesn't affect ${activeAbility('these')} or ${triggeredAbility('these')})`))
+    }
+  }
+
+  _addFlavor(){
+    const flav = flavorDisplayInfo(this._obj)
+    if(flav){
+      this.appendChild(wrapContent(flav, { elementType: 'i' }))
     }
   }
 

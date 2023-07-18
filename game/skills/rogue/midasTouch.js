@@ -4,7 +4,7 @@ export default function(level){
   return {
     effect: {
       stats: {
-        goldFind: wrappedPct(100 + 100 * level),
+        goldFind: wrappedPct(100 * level),
       },
       mods: [{
         goldOnly: true

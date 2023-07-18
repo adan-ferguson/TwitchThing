@@ -2,7 +2,7 @@ import { wrappedPct } from '../../growthFunctions.js'
 
 export default function(level){
   const physPower = 1.2 + 0.3 * level
-  const critDamage = wrappedPct(0.5 + 0.5 * level)
+  const critDamage = wrappedPct(50 + 50 * level)
   return {
     effect: {
       abilities: [{

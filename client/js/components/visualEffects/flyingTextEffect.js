@@ -22,7 +22,7 @@ export default class FlyingTextEffect extends EventEmitter{
       text,
       direction: 'up',
       color: 'black',
-      distance: 80,
+      distance: 120,
       fontSize: 1.2,
       duration: 2000,
       autoStart: true,

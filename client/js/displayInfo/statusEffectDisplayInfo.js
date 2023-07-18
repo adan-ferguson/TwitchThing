@@ -103,10 +103,17 @@ export function statusEffectDescription(statusEffectDef, abilityInstance){
   }
 
   chunks.push(...arrayize(statusEffectDuration(statusEffectDef, abilityInstance)).filter(a => a))
+  if(statusEffectDef.stacking === 'stack'){
+    chunks.push(keyword('stacks'))
+  }
   chunks[chunks.length - 1] += '.'
 
   if(statusEffectDef.maxStacks){
     chunks.push(`Stacks up to <b>${statusEffectDef.maxStacks}</b> times.`)
+  }
+
+  if(def.endChunk){
+    chunks.push(def.endChunk)
   }
 
   return chunks
@@ -214,6 +221,11 @@ const DEFS = {
     return {
       grammatic: 'conjure',
       description: `${def.vars.clones} illusions. Enemy abilities have a ${toPct(def.vars.chance)} chance to hit an illusion instead`
+    }
+  },
+  patience: () => {
+    return {
+      endChunk: 'Remove these at end of combat.'
     }
   }
 }

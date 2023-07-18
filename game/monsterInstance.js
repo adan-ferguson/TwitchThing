@@ -7,10 +7,10 @@ import { floorToZone } from './zones.js'
 import LoadoutObjectInstance from './loadoutObjectInstance.js'
 import MonsterItem from './monsterItem.js'
 
-const ADJUSTED_DIFFICULTY_PER_ZONE = 1.5
+const ADJUSTED_DIFFICULTY_PER_ZONE = 2
 const ADJUSTED_DIFFICULTY_PER_FLOOR_PER_ZONE = 0.15
 
-const STAT_GROWTH_PCT = 0.12
+const STAT_GROWTH_PCT = 0.13
 
 const HP_BASE = 12
 const HP_GROWTH = 8
@@ -18,10 +18,10 @@ const HP_GROWTH = 8
 const POWER_BASE = 5
 const POWER_GROWTH = 0.8
 
-const XP_BASE = 2
-const XP_GROWTH = 1.25
+const XP_BASE = 1
+const XP_GROWTH = 1.5
 const XP_GROWTH_PCT = 0.08
-const XP_ZONE_BONUS = 1.6
+const XP_ZONE_BONUS = 1.8
 
 export function monsterLevelToXpReward(lvl){
   const zoneBonuses = Math.floor((lvl - 1) / 10)

@@ -71,7 +71,7 @@ export async function runCombat(dungeonRun, monsterDef){
         endStateMonsterInstance.effectInstances.map(ei => ei.effect.rewards).filter(r => r)
       )
       adventurerInstance.food += rewards.food ?? 0
-      rewards.xp *= xpBonus
+      rewards.xp = Math.round(rewards.xp * xpBonus)
       resultEvent.rewards = rewards
     }else{
       combatEvent.runFinished = true

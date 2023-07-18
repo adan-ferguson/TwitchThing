@@ -20,6 +20,10 @@ const DEFS = {
   },
   overtime: {
     description: '60 seconds into combat (unless something affects it or I changed it and forgot to update this tooltip which will probably happen)'
+  },
+  stacks: {
+    icon: faIcon('layer-group'),
+    description: 'Stacks'
   }
 }
 

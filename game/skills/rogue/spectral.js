@@ -2,9 +2,8 @@ export default function(level){
   return {
     effect: {
       stats: {
-        critChance: 0.05 + level * 0.05
-      }
+        damageCeiling: 0.35 * Math.pow(0.85, level - 1)
+      },
     },
-    orbs: level * 1
   }
 }

@@ -14,7 +14,7 @@ export default function(level){
         },
         effectModification: {
           stats: {
-            combatXP: wrappedPct(200 + 300 * level)
+            combatXP: wrappedPct(100 + 200 * level)
           }
         }
       }]

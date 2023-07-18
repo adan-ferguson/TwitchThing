@@ -57,11 +57,7 @@ function makeBotRow(displayInfo){
   if(displayInfo.cooldown){
     let str = ''
     if(displayInfo.initialCooldown){
-      // Only actives need this initial cooldown thing, it's just extra confusing otherwise.
-      // Maybe this is wrong though, can think of some convoluted examples.
-      if(displayInfo.cooldown !== displayInfo.initialCooldown || displayInfo.type !== 'nonactive'){
-        str += d2(displayInfo.cooldown - displayInfo.initialCooldown) + '/'
-      }
+      str += d2(displayInfo.cooldown - displayInfo.initialCooldown) + '/'
     }
     str += d2(displayInfo.cooldown)
     row.appendChild(makeEl({

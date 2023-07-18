@@ -151,6 +151,5 @@ function chooseRarity(rarities, valueRemaining, rareFind){
     const pct = Math.min(1, Math.pow(valueRemaining / info.value, 2))
     return { value: r, weight: pct * info.weight * (r === 2 ? rareFind : 1) }
   })
-  console.log(chances)
   return chooseOne(chances)
 }
