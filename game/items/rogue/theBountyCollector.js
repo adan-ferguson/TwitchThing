@@ -1,5 +1,5 @@
 export default function(level){
-  const value = 2 + level * 3
+  const value = level * 5
   return {
     effect: {
       abilities: [{
@@ -17,6 +17,6 @@ export default function(level){
         }]
       }]
     },
-    orbs: 6 + level * 4,
+    orbs: 5 + level * 5,
   }
 }

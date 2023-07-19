@@ -2,18 +2,18 @@ import { exponentialPercentage, geometricProgression, wrappedPct } from '../../g
 
 export default function(level){
   return {
-    orbs: level * 6 + 4,
+    orbs: level * 5 + 5,
     effect: {
       stats: {
         physDef: exponentialPercentage(0.2, level - 1, 0.3),
-        magicPower: wrappedPct(geometricProgression(0.5, level, 30, 5)),
+        magicPower: wrappedPct(20 + geometricProgression(0.25, level, 30, 5)),
       },
       abilities: [{
         trigger: 'takeTurn',
         actions: [{
           gainHealth: {
             scaling: {
-              magicPower: 0.1 + 0.1 * level
+              magicPower: 0.05 + 0.15 * level
             }
           }
         }]

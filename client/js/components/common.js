@@ -113,11 +113,13 @@ export function belowIcon(){
   return '<i class="fa-solid fa-arrow-down attached-skill"></i>'
 }
 
-export function wrapStats(stats){
+export function wrapStats(stats, { exclude = [] } = {}){
   const chunks = []
   const allStats = Object.values(new Stats(stats).getAll())
   for(let stat of allStats){
-    chunks.push(wrapStatObj(stat))
+    if(!exclude.includes(stat.name)){
+      chunks.push(wrapStatObj(stat))
+    }
   }
   return chunks.join(' and ')
 }
@@ -155,9 +157,15 @@ export function scalingWrap(scalingType, valStr = ''){
     hpMax: health,
     speed: speed,
   }
+  let extra = ''
+  if(scalingType === 'health'){
+    extra = ' current health'
+  }else if (scalingType === 'hpMax'){
+    extra = ' max health'
+  }
   return `
 <span class="icon-and-value" scaling-type="${scalingType}" tooltip="${toDisplayName(scalingType)}">
-    ${valStr}${ICONS[scalingType]}
+    ${valStr}${extra}${ICONS[scalingType]}
 </span>`
 }
 
@@ -168,8 +176,8 @@ export function toSeconds(ms){
 export function statScaling(scaling, obj = null, range = null){
   const chunks = []
   for(let scalingType in scaling){
+    const val = scaling[scalingType]
     if(['physPower', 'magicPower', 'hpMax'].includes(scalingType)){
-      const val = scaling[scalingType]
       let str = ''
       if(obj?.totalStats){
         const statVal = val * obj.totalStats.get(scalingType).value
@@ -190,6 +198,8 @@ export function statScaling(scaling, obj = null, range = null){
         }
       }
       chunks.push(scalingWrap(scalingType, str))
+    }else if(scalingType === 'hp'){
+      chunks.push(scalingWrap('health', toPct(val)))
     }
   }
   return chunks.join(' + ')

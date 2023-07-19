@@ -18,7 +18,7 @@ export default function(){
 
   return {
     baseStats: {
-      speed: 50,
+      speed: 55,
       hpMax: '-50%',
       physPower: '-40%',
       magicPower: '+40%'

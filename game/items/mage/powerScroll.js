@@ -1,5 +1,5 @@
 export default function(level){
-  const magicPower = (1.2 + level * 0.3) + 'x'
+  const magicPower = (1.4 + level * 0.3) + 'x'
   return {
     effect: {
       metaEffects: [{
@@ -15,6 +15,6 @@ export default function(level){
       }],
       tags: ['scroll'],
     },
-    orbs: 2 + level * 2
+    orbs: 3 + level * 1
   }
 }

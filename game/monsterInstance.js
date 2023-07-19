@@ -21,7 +21,7 @@ const POWER_GROWTH = 0.8
 const XP_BASE = 1
 const XP_GROWTH = 1.5
 const XP_GROWTH_PCT = 0.08
-const XP_ZONE_BONUS = 1.8
+const XP_ZONE_BONUS = 2
 
 export function monsterLevelToXpReward(lvl){
   const zoneBonuses = Math.floor((lvl - 1) / 10)

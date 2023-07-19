@@ -28,7 +28,7 @@ export function shopItemDisplayInfo(shopItemDef){
   }else if(shopItemDef.type === 'stashedXp'){
     name = 'Stashed XP'
     imageHtml = xpIcon()
-    description = 'Buy XP to give to an adventurer. Value increases with each purchase. (50, 100, 150, and so on)'
+    description = 'Buy XP to give to an adventurer. Value increases with each purchase. (25, 50, 75, and so on)'
     color = 'green'
   }
 

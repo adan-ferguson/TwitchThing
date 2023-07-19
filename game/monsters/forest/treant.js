@@ -18,6 +18,7 @@ export default function(){
               statusEffect: {
                 name: 'Sapling',
                 polarity: 'buff',
+                statusEffectId: 'sproutSaplings',
                 abilities: [{
                   trigger: 'attacked',
                   uses: 3,

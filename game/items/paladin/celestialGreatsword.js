@@ -1,6 +1,6 @@
 export default function(level){
   return {
-    orbs: level * 12,
+    orbs: level * 8 + 4,
     effect: {
       stats: {
         physPower: (level + 1) + 'x',

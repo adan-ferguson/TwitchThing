@@ -11,14 +11,20 @@ import {
 } from '../components/common.js'
 import { arrayize, msToS, toPct } from '../../../game/utilFunctions.js'
 import { modDisplayInfo } from './modDisplayInfo.js'
-import { statusEffectApplicationDescription } from './statusEffectDisplayInfo.js'
+import { statusEffectApplicationDescription, statusEffectDuration } from './statusEffectDisplayInfo.js'
 import { shieldBashCalcStun } from '../../../game/commonMechanics/shieldBashCalcStun.js'
 import { dimret, keyword } from './keywordDisplayInfo.js'
 
 const ACTION_DEFS = {
   attack: (def, abilityInstance) => {
     const damageType = def.damageType
-    const scalingStr = statScaling(def.scaling, abilityInstance, def.range)
+    let scalingStr = ''
+    if(Object.keys(def.scaling).length){
+      scalingStr += statScaling(def.scaling, abilityInstance, def.range)
+    }
+    if(Object.keys(def.targetScaling).length){
+      scalingStr += statScaling(def.targetScaling, abilityInstance, def.range)
+    }
     const times = def.hits > 1 ?  def.hits + ' times' : ''
     const chunks = ['Attack', times ,`for ${scalingStr} ${damageType} damage.`]
 
@@ -140,15 +146,19 @@ const ACTION_DEFS = {
   spikedShield: actionDef => {
     return `Return <b>${toPct(actionDef.pctReturn)}</b> of blocked phys damage back at the attacker.`
   },
-  // breakItem: (actionDef, ability) => {
-  //   const duration = statusEffectDuration(actionDef.statusEffect ?? {}, ability)
-  //   return {
-  //     description: `Break ${actionDef.count ?? 1} of the target's items${duration ? ' ' + duration : ''}.`
-  //   }
-  // },
+  breakItem: (actionDef, ability) => {
+    const duration = statusEffectDuration(actionDef.statusEffect ?? {}, ability)
+    return `Break ${actionDef.count ?? 1} of the enemy's items${duration ? ' ' + duration : ''}`
+  },
   theBountyCollectorKill: (actionDef, ability) => {
     const goldStr = `Enemy Lvl x ${actionDef.value}`
     return `When you kill an enemy with ${attachedActiveSkill(true)}, get a bounty chest containing ${goldEntry(goldStr)}.`
+  },
+  mushroomSpores: () => {
+    return 'Release spores which give the attacker a random debuff.'
+  },
+  explode: (actionDef, ability) => {
+    return `Explode, dealing ${scalingWrap('health', toPct(actionDef.scaling.hp))} magic damage to the enemy.`
   }
 }
 

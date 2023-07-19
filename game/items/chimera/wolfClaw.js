@@ -10,7 +10,7 @@ export default function(level){
               name: 'frenzy',
               polarity: 'buff',
               stacking: 'stack',
-              maxStacks: 3 + level * 2,
+              maxStacks: 4 + level * 1,
               stats: {
                 speed: 8 + level * 2
               }
@@ -19,7 +19,7 @@ export default function(level){
         }]
       }]
     },
-    orbs: 1 + level * 2,
+    orbs: 2 + level * 1,
     displayName: 'Wolf Claws'
   }
 }

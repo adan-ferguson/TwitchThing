@@ -6,7 +6,7 @@ export default function(){
     actions: [{
       attack: {
         scaling: {
-          physPower: 1.2
+          physPower: 1.5
         },
         cantDodge: true,
         cantMiss: true

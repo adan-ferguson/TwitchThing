@@ -9,16 +9,10 @@ export default function(){
         name: 'Wail',
         effect: {
           abilities: [{
-            abilityId: 'bansheeWail',
             trigger: 'active',
             uses: 1,
             actions: [{
-              attack: {
-                damageType: 'magic',
-                targetScaling: {
-                  hp: 0.5
-                }
-              }
+              bansheeWail: {},
             }]
           }]
         }
@@ -27,7 +21,7 @@ export default function(){
         name: 'Incorporeal',
         effect: {
           stats: {
-            damageCeiling: 0.5
+            damageCeiling: 1/3
           }
         }
       }

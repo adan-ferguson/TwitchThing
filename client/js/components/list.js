@@ -218,6 +218,8 @@ export default class List extends DIElement{
       el.becameVisibleInList?.()
     })
     this.rows.append(...toDisplay)
+
+    console.log('hide all')
     hideAllTippys({ duration: 0 })
   }
 

@@ -2,6 +2,7 @@ import { toNumberOfDigits } from './utilFunctions.js'
 
 const BASE_GROWTH = 3
 const GROWTH_FACTOR = 0.12
+const FLAT_FACTOR = 0.125
 const COUNT = 1000
 
 export default class AdventurerXpCalculator{
@@ -46,6 +47,6 @@ function growthMulti(lvl){
   if(lvl < 10){
     return 1
   }else{
-    return 1 + (lvl - 10) * 0.2
+    return 1 + (lvl - 10) * FLAT_FACTOR
   }
 }

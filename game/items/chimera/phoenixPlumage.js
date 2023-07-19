@@ -14,12 +14,12 @@ export default function(level){
         },{
           persisting: true,
           stats: {
-            physPower: '2x',
-            magicPower: '2x'
+            physPower: (level + 3) / 2 + 'x',
+            magicPower: (level + 3) / 2 + 'x'
           }
         })]
       }],
     },
-    orbs: level * 10 + 5
+    orbs: level * 15
   }
 }

@@ -6,13 +6,13 @@ const DEFS = {
     description: 'Thwarting is when an enemy action against you fails (dodged, missed, ignored, and so on)'
   },
   stunned: {
-    description: 'Action bar stops filling.'
+    description: 'Action bar does not fill.'
   },
   blinded: {
     description: 'Attacks auto-miss.'
   },
   asleep: {
-    description: 'Action bar stops filling. Ends upon taking damage.'
+    description: 'Action bar does not fill. Ends upon taking damage.'
   },
   diminishingReturns: {
     icon: faIcon('angles-down'),

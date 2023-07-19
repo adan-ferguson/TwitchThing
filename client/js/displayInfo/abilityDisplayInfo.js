@@ -6,12 +6,10 @@ import {
   belowIcon,
   describeStat, refundTime,
   statScaling,
-  toSeconds,
   wrapStat, wrapStats
 } from '../components/common.js'
 import { damageActionCalcDamage } from '../../../game/mechanicsFns.js'
 import { arrayize, msToS, toPct } from '../../../game/utilFunctions.js'
-import { scaledNumberFromInstance } from '../../../game/scaledNumber.js'
 import { keyword } from './keywordDisplayInfo.js'
 import { actionArrayDescriptions } from './actionDisplayInfo.js'
 
@@ -44,19 +42,9 @@ const DEFS = {
       description: `Taking ${damage} ${action.damageType} damage.`
     }
   },
-  mushroomSpores: ability => {
-    return {
-      description: 'When attacked, release spores which give the attacker a random debuff.'
-    }
-  },
   bearForm: () => {
     return {
       description: 'Turn into a bear!'
-    }
-  },
-  sproutSaplings: () => {
-    return {
-      description: 'At the start of combat,<br/>sprout 3 Saplings.'
     }
   },
   saplingBlock: () => {
@@ -191,7 +179,10 @@ function abilityDescription(ability){
     chunks.push(`Refunds ${refundTime(toPct(ability.turnRefund))}.`)
   }
   if(ability.exclusiveStats){
-    chunks.push(`Benefits from ${wrapStats(ability.exclusiveStats)}.`)
+    const statsDisp = wrapStats(ability.exclusiveStats, { exclude: ['physPower','magicPower'] })
+    if(statsDisp.innerHTML){
+      chunks.push(`Benefits from ${statsDisp}.`)
+    }
   }
 
   return chunks.join(' ')

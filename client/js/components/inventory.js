@@ -41,7 +41,7 @@ export default class Inventory extends DIElement{
     this.classList.toggle('show-quick-upgrade', val)
     const calloutName = 'quick-upgrade-callout'
     if(val && !localStorage.getItem(calloutName)){
-      tippyCallout(this.listEl.querySelector('di-adventurer-item-row'), 'You can also upgrade items in the right-click "more info" pane.')
+      tippyCallout(this.listEl.querySelector('di-adventurer-item-row'), 'You can also upgrade items in the right-click "more info" popup.')
       localStorage.setItem(calloutName, true)
     }
   }

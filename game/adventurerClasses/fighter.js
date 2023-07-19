@@ -20,12 +20,12 @@ export const FIGHTER_CLASS_INFO = {
     [
       Items.shortSword,
       Items.sprintingShoes,
-      Items.heavyAxe,
+      Items.spear,
       Items.leatherArmor,
       Items.healingPotion
     ],
     [
-      Items.spear,
+      Items.heavyAxe,
       Items.serratedBlade,
       Items.coffeeCarafe,
       Items.heavyArmor,

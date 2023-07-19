@@ -70,7 +70,10 @@ function derived(metaEffect, obj){
     nodes.push(wrapContent(headerContent, { class: 'meta-effect-header' }))
   }
 
-  nodes.push(new EffectDetails().setObject(metaEffect.effectModification, true))
+  const details = new EffectDetails().setObject(metaEffect.effectModification, true)
+  if(details.innerHTML){
+    nodes.push(details)
+  }
 
   if(metaEffect.effectModification.abilityModification){
     nodes.push(...derivedAbilityModification(metaEffect.effectModification.abilityModification))

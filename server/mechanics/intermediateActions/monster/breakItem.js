@@ -1,13 +1,15 @@
 import AdventurerItem from '../../../../game/items/adventurerItem.js'
 import { chooseMulti } from '../../../../game/rando.js'
-import { gainStatusEffect } from '../../gainStatusEffect.js'
 
 export default function(combat, actor, abilityInstance, actionDef, triggerData){
   const target = combat.getEnemyOf(actor)
   const breakableItems = target.loadoutEffectInstances.filter(lei => {
     return (lei.obj instanceof AdventurerItem) && !lei.disabled
   })
-  const chosen = chooseMulti(breakableItems, actionDef.count)
+  if(!breakableItems.length){
+    return
+  }
+  const chosen = chooseMulti(breakableItems, actionDef.count ?? 1)
   const statusEffectData = {
     polarity: 'debuff',
     name: 'disarmed',

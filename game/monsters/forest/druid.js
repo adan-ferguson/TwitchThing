@@ -20,6 +20,7 @@ export default function(){
                 targets: 'self',
                 statusEffect: {
                   name: 'Bear Form',
+                  statusEffectId: 'bearForm',
                   mods: [{
                     silenced: true
                   }],

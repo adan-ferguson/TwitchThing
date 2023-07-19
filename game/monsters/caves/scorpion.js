@@ -20,6 +20,7 @@ export default function(){
                   physPower: 1
                 }
               },
+            },{
               applyStatusEffect: {
                 targets: 'target',
                 statusEffect: {

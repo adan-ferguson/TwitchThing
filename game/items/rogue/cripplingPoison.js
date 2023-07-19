@@ -1,5 +1,5 @@
 export default function(level){
-  const speed = -level * 20 - 10
+  const speed = -level * 10 - 20
   return {
     effect: {
       stats: {
@@ -29,6 +29,6 @@ export default function(level){
         }]
       }]
     },
-    orbs: level * 4 + 2
+    orbs: level * 2 + 3
   }
 }

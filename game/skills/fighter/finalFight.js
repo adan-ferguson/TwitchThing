@@ -23,6 +23,7 @@ export default function(level){
               }],
               duration,
               polarity: 'buff',
+              statusEffectId: 'finalFight',
               stats: {
                 speed,
                 physPower,

@@ -1,15 +1,8 @@
 import { STATUSEFFECT_COLORS } from '../colors.js'
 import { effectInstanceState } from '../effectInstanceState.js'
-import {
-  capitalizeFirstChunk,
-  optionalScaledNumber,
-  statScaling,
-  toSeconds,
-  wrapStat,
-  wrapStats
-} from '../components/common.js'
+import { capitalizeFirstChunk, optionalScaledNumber, statScaling, toSeconds, wrapStats } from '../components/common.js'
 import { explodeEffect } from '../../../game/baseEffects/statusEffectInstance.js'
-import { arrayize, msToS, toPct } from '../../../game/utilFunctions.js'
+import { arrayize, toPct } from '../../../game/utilFunctions.js'
 import { keyword } from './keywordDisplayInfo.js'
 
 export function statusEffectDisplayInfo(effectInstance){
@@ -226,6 +219,26 @@ const DEFS = {
   patience: () => {
     return {
       endChunk: 'Remove these at end of combat.'
+    }
+  },
+  bearForm: () => {
+    return {
+      description: 'Turn into a bear',
+      grammatic: '',
+      statsHandled: true,
+    }
+  },
+  sproutSaplings: () => {
+    return {
+      description: 'Sprout 3 Saplings which intercept abilities',
+      grammatic: '',
+    }
+  },
+  finalFight: effectData => {
+    return {
+      grammatic: '',
+      description: `You can't die and you gain ${wrapStats(effectData.stats)}`,
+      statsHandled: true,
     }
   }
 }

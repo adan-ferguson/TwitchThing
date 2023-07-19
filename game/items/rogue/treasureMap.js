@@ -1,12 +1,12 @@
-import { geometricProgression, wrappedPct } from '../../growthFunctions.js'
+import { wrappedPct } from '../../growthFunctions.js'
 
 export default function(level){
   return {
     effect: {
       stats: {
-        chestFind: wrappedPct(geometricProgression(0.2, level, 25, 5))
+        chestFind: wrappedPct(10 + 15 * level)
       }
     },
-    orbs: level * 2
+    orbs: level * 1 + 1
   }
 }

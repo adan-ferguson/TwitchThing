@@ -1,8 +1,8 @@
 const BASE_PRICE = 100
 const BASE_AMOUNT = 15
 
-const XP_BASE = 50
-const XP_GROWTH = 50
+const XP_BASE = 25
+const XP_GROWTH = 25
 
 export function scrapShopItem(userDoc){
   if(!userDoc.features.workshop){

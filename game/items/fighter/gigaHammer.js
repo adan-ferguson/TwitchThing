@@ -4,8 +4,8 @@ export default function(level){
   return {
     effect: {
       stats: {
-        physPower: (level + 3) + 'x',
-        speed: -50 - 50 * level
+        physPower: (level * 2 + 2) + 'x',
+        speed: -100 * level
       }
     },
     orbs: 5 * level + 5,

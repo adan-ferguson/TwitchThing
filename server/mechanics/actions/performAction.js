@@ -79,10 +79,7 @@ export function performIntermediateAction(triggerHandler, actor, ability, action
     return performAction(triggerHandler, actor, ability, { pass: {} }, triggerData)
   }
 
-  // TODO: this should do what the iterateActions function does
-  return actionDefs.map(ad => {
-    return performAction(triggerHandler, actor, ability, ad, triggerData)
-  })
+  return performActions(actionDefs, triggerHandler, actor, ability, triggerData)
 }
 
 export function useAbility(combat, ability, triggerData = {}){
@@ -115,29 +112,31 @@ export function useAbility(combat, ability, triggerData = {}){
   const results = []
 
   for(let i = 0; i < ability.repetitions; i++){
-    iterateActions(ability.actions)
+    results.push(...performActions(ability.actions, combat, owner, ability, triggerData))
   }
 
   owner.clearPhantomEffects()
   return results
+}
 
-  function iterateActions(actions){
-    for(let i = 0; i < actions.length; i++){
-      let actionDef = actions[i]
-      if(_.isArray(actionDef)){
-        // Decoupled action array, use this to define actions where if one fails, the
-        // subsequent ones should still be performed.
-        // eg.
-        // actions: [[attackDef],[attackDef],[attackDef]] would do all 3 if 1st dodged
-        // actions: [attackDef, attackDef, attackDef] would not
-        iterateActions(actionDef)
-      }else{
-        const actionResult = performAction(combat, owner, ability, actionDef, triggerData)
-        results.push(actionResult)
-        if(actionResult.cancelled){
-          return
-        }
+function performActions(actions, combat, owner, ability, triggerData){
+  const results = []
+  for (let i = 0; i < actions.length; i++){
+    let actionDef = actions[i]
+    if (_.isArray(actionDef)){
+      // Decoupled action array, use this to define actions where if one fails, the
+      // subsequent ones should still be performed.
+      // eg.
+      // actions: [[attackDef],[attackDef],[attackDef]] would do all 3 if 1st dodged
+      // actions: [attackDef, attackDef, attackDef] would not
+      results.push(...performActions(actionDef, combat, owner, ability, triggerData))
+    } else {
+      const actionResult = performAction(combat, owner, ability, actionDef, triggerData)
+      results.push(actionResult)
+      if (actionResult.cancelled){
+        return
       }
     }
   }
+  return results
 }

@@ -2,11 +2,11 @@ import { exponentialPercentage } from '../../growthFunctions.js'
 
 export default function(level){
   return {
-    orbs: level * 4 + 3,
+    orbs: level * 3 + 7,
     effect: {
       stats: {
-        physDef: exponentialPercentage(0.15, level - 1, 0.4),
-        magicDef: exponentialPercentage(0.15, level - 1, 0.4),
+        physDef: exponentialPercentage(0.2, level - 1, 0.35),
+        magicDef: exponentialPercentage(0.2, level - 1, 0.35),
         speed: -10 + level * -20
       }
     },

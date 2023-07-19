@@ -72,7 +72,7 @@ export default class LoadoutRowState extends DIElement{
         max: this._stateInfo.abilityBarMax,
         color: barColor
       })
-      .setValue(this._stateInfo.abilityBarValue)
+      .setValue(this._stateInfo.abilityState === 'ready' ? 0 : this._stateInfo.abilityBarValue)
     this._updateDots(this._stateInfo.abilityUses)
   }
 

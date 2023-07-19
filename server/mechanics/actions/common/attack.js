@@ -6,10 +6,6 @@ import { deepClone } from '../../../../game/utilFunctions.js'
 
 export default function(combat, attacker, enemy, abilityInstance = null, actionDef = {}){
 
-  if(attacker === enemy){
-    throw 'Attacking self? Probably error.'
-  }
-
   const results = []
   for(let i = 0; i < actionDef.hits; i++){
     if(attacker.hasMod('noAttack')){

@@ -2,15 +2,16 @@ import { flutteringAbility } from '../../commonMechanics/flutteringMonsterItem.j
 
 export default function(level){
   const cooldown = 20000 * Math.pow(0.9, level - 1)
-  return {
+  const ret = {
     effect: {
       abilities: [
         flutteringAbility(cooldown)
       ],
-      stats: {
-        speed: 10 + level * 10
-      }
     },
-    orbs: level * 2 + 3
+    orbs: level * 3 + 2
   }
+  if(level > 1){
+    ret.effect.stats = { speed: ( level - 1 ) * 20 }
+  }
+  return ret
 }

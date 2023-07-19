@@ -3,9 +3,9 @@ import { spikedShellAbility } from '../../commonMechanics/spikedShellAbility.js'
 export default function(level){
   return {
     effect: {
-      abilities: [spikedShellAbility(0.06 + 0.06 * level)]
+      abilities: [spikedShellAbility(0.08 + 0.04 * level)]
     },
-    orbs: 2 + level * 2,
+    orbs: 3 + level * 1,
     displayName: 'Spiked Shell'
   }
 }

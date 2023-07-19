@@ -242,20 +242,18 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   _excluded(){
-    return ['hpMax','speed']
-    // const magicAttack = this.fighterInstance.hasMod('magicAttack')
-    // const showPhys = this.fighterInstance.hasMod('physScaling') ||
-    //   this.fighterInstance.physPower !== this.fighterInstance.basePower
-    // const showMagic = this.fighterInstance.hasMod('magicScaling') ||
-    //   this.fighterInstance.magicPower !== this.fighterInstance.basePower
-    //
-    // if((showPhys || !magicAttack) && showMagic){
-    //   return [...excluded]
-    // }else if(magicAttack && !showPhys){
-    //   return [...excluded, 'physPower']
-    // }else{
-    //   return [...excluded, 'magicPower']
-    // }
+    const excluded = ['hpMax','speed']
+    const magicAttack = this.fighterInstance.hasMod('magicAttack')
+    const showPhys = this.fighterInstance.physPower !== this.fighterInstance.basePower
+    const showMagic = this.fighterInstance.magicPower !== this.fighterInstance.basePower
+
+    if((showPhys || !magicAttack) && showMagic){
+      return [...excluded]
+    }else if(magicAttack && !showPhys){
+      return [...excluded, 'physPower']
+    }else{
+      return [...excluded, 'magicPower']
+    }
   }
 
   _getEffectEl(effectId, eventName){

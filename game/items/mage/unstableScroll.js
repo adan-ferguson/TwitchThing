@@ -1,8 +1,8 @@
 import { geometricProgression } from '../../growthFunctions.js'
 
 export default function(level){
-  const magicPower = (1.5 + geometricProgression(0.25, level, 0.8, 0.05)) + 'x'
-  const stunDuration = 1000 + level * 1000
+  const magicPower = (1.5 + geometricProgression(0.25, level, 1, 0.05)) + 'x'
+  const stunDuration = 500 + level * 1500
   return {
     effect: {
       metaEffects: [{
@@ -32,6 +32,6 @@ export default function(level){
       }],
       tags: ['scroll']
     },
-    orbs: 2 + 3 * level
+    orbs: 3 + 2 * level
   }
 }

@@ -1,5 +1,5 @@
 export default function(level){
-  const scaling = 0.2 + 0.4 * level
+  const scaling = 0.5 * level
   return {
     effect: {
       abilities: [{

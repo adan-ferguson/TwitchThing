@@ -51,8 +51,9 @@ export default class DIElement extends HTMLElement{
         theme: 'light',
         // onHide: () => false,
         maxWidth: 'none',
-        delay: 50,
-        duration: 150
+        // delay: 50,
+        duration: 150,
+
       })
     }
     if(content && !this.inTooltip){

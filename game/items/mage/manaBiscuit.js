@@ -18,6 +18,6 @@ export default function(level){
         }]
       }]
     },
-    orbs: 1 + level * 2
+    orbs: 2 + level * 1
   }
 }

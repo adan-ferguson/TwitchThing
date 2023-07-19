@@ -8,6 +8,6 @@ export default function(level){
         critDamage: wrappedPct(20 + geometricProgression(0.25, level, 20, 5))
       }
     },
-    orbs: level * 4 + 2
+    orbs: level * 3 + 3
   }
 }

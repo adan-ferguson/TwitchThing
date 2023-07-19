@@ -19,7 +19,7 @@ export default function(){
         effect: {
           abilities: [{
             trigger: 'active',
-            cooldown: 15000,
+            uses: 1,
             actions: [{
               breakItem: {
                 statusEffect: {

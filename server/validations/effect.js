@@ -42,6 +42,7 @@ const as = Joi.object({
     }).required()
   }),
   attack: Joi.object({
+    targets: TARGETS_SCHEMA,
     damageType: DAMAGE_TYPE_SCHEMA,
     scaling: SCALED_NUMBER_SCHEMA,
     targetScaling: SCALED_NUMBER_SCHEMA,
@@ -152,8 +153,12 @@ const as = Joi.object({
     burn: Joi.number(),
     slow: Joi.number(),
     weaken: Joi.number(),
+  },
+  mushroomSpores: {},
+  explode: {
+    scaling: SCALED_NUMBER_SCHEMA,
   }
-})
+}).max(1)
 
 const ACTION_SCHEMA = Joi.alternatives().try(
   as,
