@@ -34,6 +34,17 @@ const OPTIONAL_SCALED_NUMBER_SCHEMA = Joi.alternatives().try(
 
 const TARGETS_SCHEMA = Joi.string().valid('self', 'enemy', 'target', 'source', 'all')
 
+const ATTACK_SCHEMA = Joi.object({
+  targets: TARGETS_SCHEMA,
+  damageType: DAMAGE_TYPE_SCHEMA,
+  scaling: SCALED_NUMBER_SCHEMA.required(),
+  lifesteal: Joi.number().positive(),
+  range: Joi.array().length(2).items(Joi.number()),
+  hits: Joi.number().integer(),
+  cantDodge: Joi.bool(),
+  cantMiss: Joi.bool(),
+})
+
 const as = Joi.object({
   applyStatusEffect: Joi.object({
     targets: TARGETS_SCHEMA.required(),
@@ -41,17 +52,8 @@ const as = Joi.object({
       return Joi.attempt(val, STATUS_EFFECT_SCHEMA)
     }).required()
   }),
-  attack: Joi.object({
-    targets: TARGETS_SCHEMA,
-    damageType: DAMAGE_TYPE_SCHEMA,
-    scaling: SCALED_NUMBER_SCHEMA,
-    targetScaling: SCALED_NUMBER_SCHEMA,
-    lifesteal: Joi.number().positive(),
-    range: Joi.array().length(2).items(Joi.number()),
-    hits: Joi.number().integer(),
-    cantDodge: Joi.bool(),
-    cantMiss: Joi.bool(),
-  }).or('scaling', 'targetScaling'),
+  attack: ATTACK_SCHEMA,
+  targetScaledAttack: ATTACK_SCHEMA,
   gainHealth: Joi.object({
     scaling: SCALED_NUMBER_SCHEMA.required(),
   }),
@@ -157,7 +159,7 @@ const as = Joi.object({
   mushroomSpores: {},
   explode: {
     scaling: SCALED_NUMBER_SCHEMA,
-  }
+  },
 }).max(1)
 
 const ACTION_SCHEMA = Joi.alternatives().try(

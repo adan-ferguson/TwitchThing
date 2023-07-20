@@ -12,7 +12,12 @@ export default function(){
             trigger: 'active',
             uses: 1,
             actions: [{
-              bansheeWail: {},
+              targetScaledAttack: {
+                damageType: 'magic',
+                scaling: {
+                  hp: 0.5,
+                }
+              },
             }]
           }]
         }

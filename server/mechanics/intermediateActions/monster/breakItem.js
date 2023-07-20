@@ -13,6 +13,7 @@ export default function(combat, actor, abilityInstance, actionDef, triggerData){
   const statusEffectData = {
     polarity: 'debuff',
     name: 'disarmed',
+    persisting: false,
     metaEffects: chosen.map(lei => {
       return {
         metaEffectId: 'disarmed',

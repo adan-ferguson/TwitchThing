@@ -8,7 +8,7 @@ import LoadoutObjectInstance from './loadoutObjectInstance.js'
 import MonsterItem from './monsterItem.js'
 
 const ADJUSTED_DIFFICULTY_PER_ZONE = 2
-const ADJUSTED_DIFFICULTY_PER_FLOOR_PER_ZONE = 0.15
+const ADJUSTED_DIFFICULTY_PER_FLOOR_QUADRATIC = 0.002
 
 const STAT_GROWTH_PCT = 0.13
 
@@ -50,10 +50,7 @@ export function monsterLevelToPower(lvl){
 
 export function adjustedDifficultyLevel(lvl){
   const zone = floorToZone(lvl)
-  const zoneFloor = lvl - zone * 10 - 1
-  return lvl +
-    Math.max(0, zone) * ADJUSTED_DIFFICULTY_PER_ZONE +
-    zoneFloor * zone * ADJUSTED_DIFFICULTY_PER_FLOOR_PER_ZONE
+  return lvl + Math.max(0, zone) * ADJUSTED_DIFFICULTY_PER_ZONE + ADJUSTED_DIFFICULTY_PER_FLOOR_QUADRATIC * lvl * lvl
 }
 
 export default class MonsterInstance extends FighterInstance{

@@ -4,7 +4,7 @@ import {
   attachedItem,
   describeStat, goldEntry,
   healthIcon,
-  iconAndValue,
+  iconAndValue, pluralize,
   scalingWrap,
   statScaling,
   wrapStat
@@ -15,35 +15,22 @@ import { statusEffectApplicationDescription, statusEffectDuration } from './stat
 import { shieldBashCalcStun } from '../../../game/commonMechanics/shieldBashCalcStun.js'
 import { dimret, keyword } from './keywordDisplayInfo.js'
 
+const ABILITY_ACTION_HARDCODES = {
+  hex: () => {
+    return 'Turn the enemy into a random critter for 60 seconds.'
+  },
+  hydraMultiHeaded: () => {
+    return 'Sprout 6 hydra heads.'
+  },
+  hydraSproutHead: () => {
+    return 'Sprout 2 more hydra heads.'
+  }
+}
+
 const ACTION_DEFS = {
   attack: (def, abilityInstance) => {
-    const damageType = def.damageType
-    let scalingStr = ''
-    if(Object.keys(def.scaling).length){
-      scalingStr += statScaling(def.scaling, abilityInstance, def.range)
-    }
-    if(Object.keys(def.targetScaling).length){
-      scalingStr += statScaling(def.targetScaling, abilityInstance, def.range)
-    }
-    const times = def.hits > 1 ?  def.hits + ' times' : ''
-    const chunks = ['Attack', times ,`for ${scalingStr} ${damageType} damage.`]
-
-    if(def.cantDodge){
-      chunks.push('This can\'t be dodged.')
-    }
-
-    if(def.lifesteal){
-      chunks.push(`Benefits from ${wrapStat('lifesteal', def.lifesteal)}.`)
-    }
-
-    abilityInstance?.parentEffect.exclusiveMods.forEach(mod => {
-      const mdi = modDisplayInfo(mod)
-      if(mdi.abilityDescription){
-        chunks.push(mdi.abilityDescription)
-      }
-    })
-
-    return chunks
+    let scalingStr = statScaling(def.scaling, abilityInstance, def.range)
+    return attackDescription(def, scalingStr)
   },
   dealDamage: (def, abilityInstance) => {
     const damageType = def.damageType
@@ -77,7 +64,7 @@ const ACTION_DEFS = {
     <ul>
       <li>Fire: Take ${statScaling({ magicPower: def.burn }, abilityInstance)} magic damage per 3s</li>
       <li>Ice: ${wrapStat('speed', def.slow)}</li>
-      <li>Necrotic: ${wrapStat('damageDealt', def.weaken)}</li>
+      <li>Necrotic: ${wrapStat('physPower', def.weaken)} & ${wrapStat('physPower', def.weaken)}</li>
     </ul>
     `)
     chunks.push('If your health is at 50% or lower, apply all 3.')
@@ -141,14 +128,16 @@ const ACTION_DEFS = {
   modifyStatusEffect: (actionDef, abilityInstance) => {
     if(actionDef.modification.remove){
       return `Remove all ${actionDef.subject.polarity}s from ${actionDef.targets === 'self' ? 'yourself' : 'the enemy'}.`
+    }else if(actionDef.modification.stacks){
+      return `Add ${pluralize('stack', actionDef.modification.stacks)}`
     }
   },
   spikedShield: actionDef => {
     return `Return <b>${toPct(actionDef.pctReturn)}</b> of blocked phys damage back at the attacker.`
   },
   breakItem: (actionDef, ability) => {
-    const duration = statusEffectDuration(actionDef.statusEffect ?? {}, ability)
-    return `Break ${actionDef.count ?? 1} of the enemy's items${duration ? ' ' + duration : ''}`
+    const duration = ' until end of combat.'
+    return `Break ${actionDef.count ?? 1} of the enemy's items${duration ? ' ' + duration : ''}.`
   },
   theBountyCollectorKill: (actionDef, ability) => {
     const goldStr = `Enemy Lvl x ${actionDef.value}`
@@ -159,10 +148,21 @@ const ACTION_DEFS = {
   },
   explode: (actionDef, ability) => {
     return `Explode, dealing ${scalingWrap('health', toPct(actionDef.scaling.hp))} magic damage to the enemy.`
+  },
+  targetScaledAttack: (def, abilityInstance) => {
+    let scalingStr = statScaling(def.scaling, abilityInstance, def.range, ' target\'s')
+    return attackDescription(def, scalingStr)
+  },
+  maybe: (actionDef, ability) => {
+    const key = Object.keys(actionDef.action)[0]
+    return [`${toPct(actionDef.chance)} chance:`, ...arrayize(ACTION_DEFS[key](actionDef.action[key]))]
   }
 }
 
 export function actionArrayDescriptions(actions, abilityInstance){
+  if(ABILITY_ACTION_HARDCODES[abilityInstance?.abilityId]){
+    return [ABILITY_ACTION_HARDCODES[abilityInstance.abilityId](abilityInstance)]
+  }
   const chunks = []
   actions = actions ?? []
   actions.forEach(actionDef => {
@@ -186,4 +186,28 @@ function modifyCooldownRemaining(def){
   }else{
     return `Increase enemy's action cooldowns by ${msToS(def.modification.cooldownRemaining)}s.`
   }
+}
+
+function attackDescription(def, str, abilityInstance){
+
+  const damageType = def.damageType
+  const times = def.hits > 1 ?  def.hits + ' times' : ''
+  const chunks = ['Attack', times ,`for ${str} ${damageType} damage.`]
+
+  if(def.cantDodge){
+    chunks.push('This can\'t be dodged.')
+  }
+
+  if(def.lifesteal){
+    chunks.push(`Benefits from ${wrapStat('lifesteal', def.lifesteal)}.`)
+  }
+
+  abilityInstance?.parentEffect.exclusiveMods.forEach(mod => {
+    const mdi = modDisplayInfo(mod)
+    if(mdi.abilityDescription){
+      chunks.push(mdi.abilityDescription)
+    }
+  })
+
+  return chunks
 }

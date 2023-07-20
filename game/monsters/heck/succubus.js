@@ -1,8 +1,8 @@
 export default function(){
   return {
     baseStats: {
-      speed: 10,
-      hpMax: '-20%',
+      speed: 20,
+      hpMax: '-10%',
       physPower: '-20%'
     },
     items: [
@@ -12,6 +12,7 @@ export default function(){
           abilities: [{
             trigger: 'active',
             cooldown: 30000,
+            initialCooldown: 6000,
             actions: [{
               applyStatusEffect: {
                 targets: 'enemy',
@@ -28,7 +29,7 @@ export default function(){
         }
       },
       {
-        name: 'Drain Life',
+        name: 'Drain You',
         effect: {
           stats: {
             lifesteal: 0.33

@@ -28,7 +28,7 @@ export default function(){
                 statusEffect: {
                   name: 'frosty',
                   polarity: 'debuff',
-                  duration: 20000,
+                  duration: 30000,
                   persisting: true,
                   stacking: 'stack',
                   stackingId: 'seaSerpentFrost',

@@ -9,5 +9,4 @@ export default {
   cantMiss: false,
   hits: 1,
   scaling: {},
-  targetScaling: {}
 }

@@ -26,8 +26,10 @@ export default function(){
                 statusEffect: {
                   stacking: 'stack',
                   polarity: 'debuff',
+                  persisting: false,
                   stats: {
-                    damageDealt: '-30%',
+                    physPower: '0.7x',
+                    magicPower: '0.7x',
                   },
                   name: 'Aged'
                 }

@@ -1,5 +1,5 @@
 export default function(){
-  const chance = 0.1
+  const chance = 0.2
   return {
     baseStats: {
       hpMax: '+20%',
@@ -21,7 +21,7 @@ export default function(){
               maybe: {
                 chance,
                 action: {
-                  attack: {
+                  targetScaledAttack: {
                     damageType: 'magic',
                     scaling: {
                       hpMax: 1

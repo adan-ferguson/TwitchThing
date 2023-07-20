@@ -3,7 +3,8 @@ export default function(){
     baseStats: {
       physPower: '+10%',
       speed: 20,
-      hpMax: '+10%'
+      hpMax: '+10%',
+      magicDef: '30%'
     }
   }
 }

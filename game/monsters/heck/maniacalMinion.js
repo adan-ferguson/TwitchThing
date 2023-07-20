@@ -18,6 +18,7 @@ export default function(){
                 mods: [{
                   cantDie: true,
                 }],
+                statusEffectId: 'noDie',
                 duration: 15000,
                 polarity: 'buff',
               }

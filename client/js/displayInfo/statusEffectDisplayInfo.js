@@ -1,6 +1,13 @@
 import { STATUSEFFECT_COLORS } from '../colors.js'
 import { effectInstanceState } from '../effectInstanceState.js'
-import { capitalizeFirstChunk, optionalScaledNumber, statScaling, toSeconds, wrapStats } from '../components/common.js'
+import {
+  capitalizeFirstChunk,
+  optionalScaledNumber,
+  statScaling,
+  toSeconds,
+  wrapStat,
+  wrapStats
+} from '../components/common.js'
 import { explodeEffect } from '../../../game/baseEffects/statusEffectInstance.js'
 import { arrayize, toPct } from '../../../game/utilFunctions.js'
 import { keyword } from './keywordDisplayInfo.js'
@@ -239,6 +246,37 @@ const DEFS = {
       grammatic: '',
       description: `You can't die and you gain ${wrapStats(effectData.stats)}`,
       statsHandled: true,
+    }
+  },
+  skeletonArcher: () => {
+    return {
+      grammatic: '',
+      description: 'Summon a skeleton archer'
+    }
+  },
+  constricted: effectDef => {
+    return {
+      grammatic: 'become',
+      description: `wrapped up, giving them ${wrapStat('speed', effectDef.stats.speed)} every 3 seconds.`,
+      statsHandled: true
+    }
+  },
+  charmed: effectDef => {
+    return {
+      grammatic: 'become',
+      description: `${keyword('charmed')}`
+    }
+  },
+  lightningStorm: (effectDef, abilityInstance) => {
+    return {
+      grammatic: 'summon',
+      description: 'a lightning storm which periodically attacks the enemy'
+    }
+  },
+  noDie: (effectDef) => {
+    return {
+      grammatic: 'gain',
+      description: '"No Die!"'
     }
   }
 }

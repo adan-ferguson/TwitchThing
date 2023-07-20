@@ -5,7 +5,7 @@ export default function(){
     baseStats: {
       hpMax: '+10%',
       speed: -65, // keep this desynced
-      magicPower: '+40%',
+      magicPower: '+50%',
       physPower: '-40%'
     },
     items: [
@@ -15,7 +15,6 @@ export default function(){
           abilities: [{
             trigger: 'active',
             cooldown: 6000,
-            abilityId: 'summonSkeleton',
             actions: [{
               applyStatusEffect: {
                 targets: 'self',
@@ -29,7 +28,7 @@ export default function(){
                     actions: [{
                       attack: {
                         scaling: {
-                          magicPower: 0.4
+                          magicPower: 0.3
                         },
                         damageType: 'phys'
                       }
@@ -48,7 +47,7 @@ export default function(){
             trigger: 'active',
             cooldown: 6000,
             actions: [barrierAction({
-              magicPower: 0.8
+              magicPower: 1
             }, { name: 'Bone Shield' })]
           }]
         }

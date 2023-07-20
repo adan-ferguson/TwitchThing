@@ -173,7 +173,7 @@ export function toSeconds(ms){
   return roundToNearestIntervalOf(ms / 1000, 0.01) + 's'
 }
 
-export function statScaling(scaling, obj = null, range = null){
+export function statScaling(scaling, obj = null, range = null, sourceStr = ''){
   const chunks = []
   for(let scalingType in scaling){
     const val = scaling[scalingType]
@@ -197,9 +197,9 @@ export function statScaling(scaling, obj = null, range = null){
           str = toPct(val)
         }
       }
-      chunks.push(scalingWrap(scalingType, str))
+      chunks.push(scalingWrap(scalingType, str + sourceStr))
     }else if(scalingType === 'hp'){
-      chunks.push(scalingWrap('health', toPct(val)))
+      chunks.push(scalingWrap('health', toPct(val) + sourceStr))
     }
   }
   return chunks.join(' + ')

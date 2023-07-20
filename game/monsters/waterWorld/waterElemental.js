@@ -4,6 +4,7 @@ export default function(){
   return{
     baseStats: {
       hpMax: '-30%',
+      magicPower: '+100%',
       speed: 30
     },
     items: [
@@ -34,13 +35,13 @@ export default function(){
             actions: [[{
               attack: {
                 scaling: {
-                  magicPower: 2
+                  magicPower: 1
                 },
                 damageType: 'magic'
               } }],[{
               gainHealth: {
                 scaling: {
-                  magicPower: 2
+                  magicPower: 1
                 }
               }
             }]]

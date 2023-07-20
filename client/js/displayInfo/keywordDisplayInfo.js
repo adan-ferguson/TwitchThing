@@ -24,6 +24,9 @@ const DEFS = {
   stacks: {
     icon: faIcon('layer-group'),
     description: 'Stacks'
+  },
+  charmed: {
+    description: 'Can\'t attack'
   }
 }
 

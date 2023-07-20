@@ -28,7 +28,8 @@ export default function(combat, actor, abilityInstance, def){
     }),
     ase({
       stats: {
-        damageDealt: def.weaken + 'x'
+        physPower: def.weaken + 'x',
+        magicPower: def.weaken + 'x',
       },
       stackingId: 'dbWeak',
       name: 'Weakened'

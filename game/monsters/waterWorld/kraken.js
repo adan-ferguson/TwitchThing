@@ -25,8 +25,7 @@ export default function(){
     effect: {
       abilities: [{
         trigger: 'active',
-        initialCooldown: 10000,
-        uses: 1,
+        cooldown: 15000,
         actions: [{
           applyStatusEffect: {
             targets: 'enemy',
@@ -45,7 +44,7 @@ export default function(){
   }
   return {
     baseStats: {
-      physPower: '-25%',
+      physPower: '-10%',
       speed: 10,
       hpMax: '+500%'
     },
