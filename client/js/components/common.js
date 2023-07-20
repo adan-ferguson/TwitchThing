@@ -149,7 +149,7 @@ export function describeStat(statType){
   }
 }
 
-export function scalingWrap(scalingType, valStr = ''){
+export function scalingWrap(scalingType, valStr = '', showExtra = true){
   const ICONS = {
     magicPower: magicPower,
     physPower: physPower,
@@ -158,10 +158,12 @@ export function scalingWrap(scalingType, valStr = ''){
     speed: speed,
   }
   let extra = ''
-  if(scalingType === 'health'){
-    extra = ' current health'
-  }else if (scalingType === 'hpMax'){
-    extra = ' max health'
+  if(showExtra){
+    if(scalingType === 'health'){
+      extra = ' current health'
+    }else if (scalingType === 'hpMax'){
+      extra = ' max health'
+    }
   }
   return `
 <span class="icon-and-value" scaling-type="${scalingType}" tooltip="${toDisplayName(scalingType)}">
@@ -197,7 +199,7 @@ export function statScaling(scaling, obj = null, range = null, sourceStr = ''){
           str = toPct(val)
         }
       }
-      chunks.push(scalingWrap(scalingType, str + sourceStr))
+      chunks.push(scalingWrap(scalingType, str + sourceStr, obj?.totalStats ? false : true))
     }else if(scalingType === 'hp'){
       chunks.push(scalingWrap('health', toPct(val) + sourceStr))
     }

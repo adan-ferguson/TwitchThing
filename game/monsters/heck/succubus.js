@@ -3,7 +3,7 @@ export default function(){
     baseStats: {
       speed: 20,
       hpMax: '-10%',
-      physPower: '-20%'
+      physPower: '-10%'
     },
     items: [
       {
@@ -11,7 +11,7 @@ export default function(){
         effect: {
           abilities: [{
             trigger: 'active',
-            cooldown: 30000,
+            cooldown: 20000,
             initialCooldown: 6000,
             actions: [{
               applyStatusEffect: {

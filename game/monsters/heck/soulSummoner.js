@@ -1,12 +1,14 @@
 import { barrierAction } from '../../commonMechanics/barrierAction.js'
 
 export default function(){
+  const time = 5000
+  const ratio = 4
   const explode = {
     trigger: 'instant',
-    initialCooldown: 5000,
+    initialCooldown: time,
     actions: [{
       fireSpiritExplode: {
-        ratio: 4
+        ratio
       }
     }]
   }
@@ -14,7 +16,8 @@ export default function(){
     baseStats: {
       speed: 60,
       hpMax: '-50%',
-      physPower: '-50%',
+      physPower: '-60%',
+      magicPower: '+110%',
     },
     items: [
       {
@@ -23,13 +26,13 @@ export default function(){
           abilities: [{
             trigger: 'active',
             cooldown: 6000,
-            abilityId: 'summonFireSpirit',
             actions: [barrierAction({
-              magicPower: 2.5
+              magicPower: 2.51
             }, {
-              abilities: [explode]
+              name: 'fireSpirit',
+              abilities: [explode],
             })]
-          }]
+          }],
         }
       }
     ],

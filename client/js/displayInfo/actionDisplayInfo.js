@@ -35,7 +35,11 @@ const ACTION_DEFS = {
   dealDamage: (def, abilityInstance) => {
     const damageType = def.damageType
     const scalingStr = statScaling(def.scaling, abilityInstance, def.range)
-    return `Deal an extra ${scalingStr} ${damageType} damage.`
+    if(def.targets === 'target'){
+      return `Deal an extra ${scalingStr} ${damageType} damage.`
+    }else if(def.targets === 'enemy'){
+      return `Deal ${scalingStr} ${damageType} damage to the enemy.`
+    }
   },
   takeDamage: (def, abilityInstance) => {
     let amount
@@ -156,6 +160,15 @@ const ACTION_DEFS = {
   maybe: (actionDef, ability) => {
     const key = Object.keys(actionDef.action)[0]
     return [`${toPct(actionDef.chance)} chance:`, ...arrayize(ACTION_DEFS[key](actionDef.action[key]))]
+  },
+  terribleCurse: (actionDef, ability) => {
+    const str = statScaling({
+      magicPower: actionDef.attackScaling
+    }, ability)
+    return `Give the opponent a TERRIBLE curse, or if they have one already, attack for ${str} magic damage.`
+  },
+  fireSpiritExplode: (actionDef, ability) => {
+    return `Explode! Deal ${actionDef.ratio}x remaining barrier magic damage.`
   }
 }
 

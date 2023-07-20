@@ -25,6 +25,7 @@ export default function(){
         name: 'Get Mad!',
         effect: {
           metaEffects: [{
+            metaEffectId: 'getMad',
             subject: {
               polarity: 'debuff'
             },

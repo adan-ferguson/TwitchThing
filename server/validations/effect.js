@@ -118,7 +118,9 @@ const as = Joi.object({
   theBountyCollectorKill: Joi.object({
     value: Joi.number()
   }),
-  terribleCurse: Joi.bool(),
+  terribleCurse: Joi.object({
+    attackScaling: Joi.number(),
+  }),
   terribleSituation: Joi.bool(),
   painTrain: Joi.object({
     magicPower: Joi.number()

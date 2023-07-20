@@ -27,7 +27,7 @@ export default function(){
         }
       },
       {
-        name: 'Fire Wave',
+        name: 'Fire Blast',
         effect: {
           abilities: [{
             trigger: 'active',
@@ -76,7 +76,13 @@ export default function(){
                 targets: 'enemy',
                 damageType: 'magic',
                 scaling: {
-                  magicPower: 0.2
+                  magicPower: 0.1
+                }
+              }
+            },{
+              gainHealth: {
+                scaling: {
+                  magicPower: 0.1
                 }
               }
             }]

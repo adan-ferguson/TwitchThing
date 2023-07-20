@@ -10,5 +10,5 @@ export default function(combat, actor, abilityInstance, actionDef, triggerData){
       }
     }
   }
-  return simpleAttackAction('magic', 1)
+  return simpleAttackAction('magic', actionDef.attackScaling)
 }

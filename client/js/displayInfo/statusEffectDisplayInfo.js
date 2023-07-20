@@ -9,7 +9,7 @@ import {
   wrapStats
 } from '../components/common.js'
 import { explodeEffect } from '../../../game/baseEffects/statusEffectInstance.js'
-import { arrayize, toPct } from '../../../game/utilFunctions.js'
+import { arrayize, msToS, toPct } from '../../../game/utilFunctions.js'
 import { keyword } from './keywordDisplayInfo.js'
 
 export function statusEffectDisplayInfo(effectInstance){
@@ -277,6 +277,12 @@ const DEFS = {
     return {
       grammatic: 'gain',
       description: '"No Die!"'
+    }
+  },
+  fireSpirit: (effectDef, abilityInstance) => {
+    return {
+      grammatic: 'summon',
+      description: 'a fire spirit which blocks damage and explodes after 5s'
     }
   }
 }

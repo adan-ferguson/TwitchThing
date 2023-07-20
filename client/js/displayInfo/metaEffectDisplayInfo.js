@@ -19,6 +19,9 @@ const DEFS = {
   },
   phantomCloak: (metaEffect, obj) => {
     return `${attachedSkill(true)}'s ${activeAbility()} becomes ${triggeredAbility('on ' + keyword('thwart'))} (It still has a cooldown)`
+  },
+  getMad: (metaEffect, obj) => {
+    return `Your debuffs also grant you ${wrapStats(metaEffect.effectModification.stats)}.`
   }
 }
 
@@ -62,8 +65,8 @@ function derived(metaEffect, obj){
   let headerContent
   if(metaEffect.conditions){
     headerContent = conditionsDisplayInfo(metaEffect.conditions)
-  }else{
-    headerContent = subjectDescription(metaEffect.subject?.key, isItem)
+  }else if(metaEffect.subject){
+    headerContent = subjectDescription(metaEffect.subject, isItem)
   }
 
   if(headerContent){

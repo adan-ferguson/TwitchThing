@@ -1,6 +1,7 @@
 import { attachedItem, attachedSkill, neighbouringIcon } from './components/common.js'
 
-export function subjectDescription(subjectKey, isItem){
+export function subjectDescription(subject, isItem){
+  const subjectKey = subject.key
   if(subjectKey === 'self'){
     return 'This '
   }else if(subjectKey === 'allItems'){
@@ -11,6 +12,8 @@ export function subjectDescription(subjectKey, isItem){
     return`${neighbouringIcon()} Neighbouring ${isItem ? 'Items' : 'Skills'} `
   }else if(subjectKey === 'all'){
     return 'All '
+  }else if(subject.polarity === 'debuff'){
+    return 'Your debuffs '
   }
   return ''
 }

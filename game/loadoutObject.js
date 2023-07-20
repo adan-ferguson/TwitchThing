@@ -9,6 +9,10 @@ export default class LoadoutObject{
     return this._calculatedData
   }
 
+  get effectId(){
+    return this.effect.effectId
+  }
+
   get calculateData(){
     throw 'No calc data implement'
   }

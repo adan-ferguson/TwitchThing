@@ -14,9 +14,10 @@ export default function(){
           abilities: [{
             trigger: 'active',
             uses: 1,
-            abilityId: 'terribleCurse',
             actions: [{
-              terribleCurse: true
+              terribleCurse: {
+                attackScaling: 1
+              }
             }]
           }]
         }

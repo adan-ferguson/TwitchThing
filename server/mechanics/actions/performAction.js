@@ -131,9 +131,9 @@ function performActions(actions, combat, owner, ability, triggerData){
       // actions: [attackDef, attackDef, attackDef] would not
       results.push(...performActions(actionDef, combat, owner, ability, triggerData))
     } else {
-      const actionResult = performAction(combat, owner, ability, actionDef, triggerData)
-      results.push(actionResult)
-      if (actionResult.cancelled){
+      const r = arrayize(performAction(combat, owner, ability, actionDef, triggerData))
+      results.push(...r)
+      if(results.at(-1)?.cancelled){
         return
       }
     }
