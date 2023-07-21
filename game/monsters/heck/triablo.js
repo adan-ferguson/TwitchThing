@@ -3,10 +3,10 @@ import { simpleAttackAction } from '../../commonMechanics/simpleAttackAction.js'
 export default function(){
   return {
     baseStats: {
-      hpMax: '+1000%',
-      speed: -50,
-      physPower: '+50%',
-      magicPower: '+50%'
+      hpMax: '+666%',
+      speed: -20,
+      physPower: '+25%',
+      magicPower: '+150%'
     },
     items: [
       {
@@ -16,7 +16,7 @@ export default function(){
             trigger: 'active',
             initialCooldown: 10000,
             cooldown: 20000,
-            actions: [simpleAttackAction('magic', 2),{
+            actions: [simpleAttackAction('magic', 1),{
               modifyAbility: {
                 targets: 'enemy',
                 trigger: 'active',
@@ -29,29 +29,60 @@ export default function(){
         }
       },
       {
-        name: 'Pain Train',
+        name: 'Bane Train',
         effect: {
           abilities: [{
             initialCooldown: 20000,
-            cooldown: 40000,
             trigger: 'active',
             actions: [{
-              painTrain: {
-                magicPower: 1
+              modifyStatusEffect: {
+                targets: 'target',
+                subject: {
+                  polarity: 'buff'
+                },
+                count: 2,
+                modification: {
+                  remove: true
+                }
               }
-            }]
+            }, simpleAttackAction('magic', 1)]
           }]
         }
       },
       {
-        name: 'Shrug Off (EVIL Edition)',
+        name: 'Dark Armor (of Doom)',
         effect: {
           abilities: [{
-            trigger: 'gainingDebuff',
-            cooldown: 10000,
-            replacements: {
-              cancel: 'Shrugged Off'
-            },
+            trigger: 'startOfCombat',
+            uses: 1,
+            actions: [{
+              applyStatusEffect: {
+                targets: 'self',
+                statusEffect: {
+                  name: 'darkArmor',
+                  startingStacks: 20,
+                  polarity: 'buff',
+                  stats: {
+                    physDef: '10%',
+                    magicDef: '10%'
+                  },
+                  abilities: [{
+                    trigger: 'instant',
+                    initialCooldown: 3000,
+                    actions: [{
+                      modifyStatusEffect: {
+                        subject: {
+                          key: 'self'
+                        },
+                        modification: {
+                          stacks: -1
+                        }
+                      }
+                    }]
+                  }]
+                }
+              }
+            }]
           }]
         }
       },

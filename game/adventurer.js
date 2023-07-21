@@ -5,7 +5,7 @@ import AdventurerSkill from './skills/adventurerSkill.js'
 import OrbsData from './orbsData.js'
 import AdventurerXpCalculator from './adventurerXpCalculator.js'
 
-const STAT_GROWTH_PCT = 0.05
+const STAT_GROWTH_PCT = 0.06
 
 const HP_BASE = 30
 const HP_GROWTH = 7

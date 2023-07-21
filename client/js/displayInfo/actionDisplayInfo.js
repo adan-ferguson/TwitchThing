@@ -131,9 +131,15 @@ const ACTION_DEFS = {
   },
   modifyStatusEffect: (actionDef, abilityInstance) => {
     if(actionDef.modification.remove){
-      return `Remove all ${actionDef.subject.polarity}s from ${actionDef.targets === 'self' ? 'yourself' : 'the enemy'}.`
+      const polarity = actionDef.subject.polarity
+      const str = actionDef.count ? pluralize(polarity, actionDef.count) : `all ${polarity}s`
+      return `Remove ${str} from ${actionDef.targets === 'self' ? 'yourself' : 'the enemy'}.`
     }else if(actionDef.modification.stacks){
-      return `Add ${pluralize('stack', actionDef.modification.stacks)}`
+      if(actionDef.modification.stacks > 1){
+        return `Add ${pluralize('stack', actionDef.modification.stacks)}`
+      }else{
+        return `Remove ${pluralize('stack', -actionDef.modification.stacks)}`
+      }
     }
   },
   spikedShield: actionDef => {

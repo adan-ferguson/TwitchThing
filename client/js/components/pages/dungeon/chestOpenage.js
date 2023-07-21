@@ -4,6 +4,7 @@ import DIElement from '../../diElement.js'
 import { ICON_SVGS } from '../../../assetLoader.js'
 import AdventurerItem from '../../../../../game/items/adventurerItem.js'
 import AdventurerItemRow from '../../adventurer/adventurerItemRow.js'
+import { standardItemSort } from '../../listHelpers.js'
 
 const UNOPENED_HTML = `
 <span class="unopened">
@@ -76,11 +77,16 @@ export default class ChestOpenage extends DIElement{
     }
 
     const basicItems = arrayOfItems(this._chest.contents.items?.basic ?? [])
-    basicItems.forEach(({ name, count }) => {
-      const item = new AdventurerItem(name)
-      const row = new AdventurerItemRow().setOptions({ item, count })
-      contents.appendChild(row)
-    })
+    const rows = basicItems
+      .map(({ name, count }) => {
+        const item = new AdventurerItem(name)
+        return new AdventurerItemRow().setOptions({ item, count })
+      })
+      .sort((a,b) => {
+        return b.adventurerItem.rarity - a.adventurerItem.rarity
+      })
+
+    rows.forEach(row => contents.appendChild(row))
 
     this.events.emit('opened')
   }

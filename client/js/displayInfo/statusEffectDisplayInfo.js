@@ -284,5 +284,10 @@ const DEFS = {
       grammatic: 'summon',
       description: 'a fire spirit which blocks damage and explodes after 5s'
     }
+  },
+  darkArmor: (effectDef, ability) => {
+    return {
+      description: 'a bunch of phys + magic defense which reduces over time.'
+    }
   }
 }

@@ -2,7 +2,7 @@ import { toNumberOfDigits } from './utilFunctions.js'
 
 const BASE_GROWTH = 3
 const GROWTH_FACTOR = 0.12
-const FLAT_FACTOR = 0.125
+const FLAT_FACTOR = 0.1
 const COUNT = 1000
 
 export default class AdventurerXpCalculator{
@@ -25,7 +25,7 @@ export default class AdventurerXpCalculator{
   }
 
   levelToXp(lvl){
-    return this._vals[lvl]
+    return this._vals[lvl] ?? 0
   }
 
   _bsearch(xp, start = 0, end = COUNT - 1){
@@ -44,9 +44,13 @@ export default class AdventurerXpCalculator{
 }
 
 function growthMulti(lvl){
-  if(lvl < 10){
-    return 1
-  }else{
-    return 1 + (lvl - 10) * FLAT_FACTOR
+  let factor = 1
+  if(lvl > 2){
+    // double speed growth between 3-30
+    factor += (lvl - 2) * FLAT_FACTOR * 2
+    if(lvl > 30){
+      factor -= (lvl - 30) * FLAT_FACTOR
+    }
   }
+  return factor
 }

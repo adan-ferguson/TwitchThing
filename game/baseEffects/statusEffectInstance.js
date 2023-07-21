@@ -51,7 +51,11 @@ export default class StatusEffectInstance extends EffectInstance{
   }
 
   get stacks(){
-    return this._state.stacks ?? 1
+    return this._state.stacks ?? this.startingStacks
+  }
+
+  get startingStacks(){
+    return this._data.startingStacks ?? 1
   }
 
   get maxStacks(){
