@@ -17,9 +17,11 @@ const HTML = `
 <di-orb-row class="fighter-orbs displaynone"></di-orb-row>
 <div class="absolute-full-size fill-contents standard-contents">
   <div class="flex-rows top-section flex-grow">
-    <di-hp-bar></di-hp-bar>
-    <di-stats-list></di-stats-list>
-    <di-effects-list></di-effects-list>
+    <div class="absolute-full-size">
+      <di-hp-bar></di-hp-bar>
+      <di-stats-list></di-stats-list>
+      <di-effects-list></di-effects-list>
+    </div>
   </div>
   <di-action-bar></di-action-bar>
   <div class="loadout-container"></div>

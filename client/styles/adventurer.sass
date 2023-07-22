@@ -109,21 +109,25 @@ di-fighter-instance-pane
     color: red
 
   .top-section
-    transition: background-color 0.2s
-
-    cursor: pointer
-    padding: 0
-    margin-bottom: 6rem // If this needs top padding, dungeon page has difference ahhh
-
-    di-xp-bar
-      margin: 2rem
-      position: relative
-
-    &:hover
-      background-color: #effaf8
+    overflow: hidden
+    position: relative
 
     > *
-      margin-bottom: 6rem
+      transition: background-color 0.2s
+      cursor: pointer
+      padding: 0
+      margin-bottom: 6rem // If this needs top padding, dungeon page has difference ahhh
+      overflow: hidden
+
+      di-xp-bar
+        margin: 2rem
+        position: relative
+
+      &:hover
+        background-color: #effaf8
+
+      > *
+        margin-bottom: 6rem
 
   &.boss
     margin-left: -2rem

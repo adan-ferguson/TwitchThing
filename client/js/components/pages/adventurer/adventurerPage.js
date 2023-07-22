@@ -93,10 +93,6 @@ export default class AdventurerPage extends Page{
     this.adventurer = new Adventurer(adventurer)
     this.adventurerPane.setAdventurer(this.adventurer)
 
-    if(user.features.shop || user.inventory.stashedXp){
-      this._setupAdder(user, adventurer)
-    }
-
     this._setupEditEquipmentButton(user)
     this._setupTopRightButton(user)
 
@@ -162,28 +158,6 @@ export default class AdventurerPage extends Page{
     showLoader('Entering Dungeon...')
     const { dungeonRun } = await fizzetch(`/game/adventurer/${this.adventurerID}/enterdungeon`)
     this.redirectTo(DungeonPage.path(dungeonRun._id))
-  }
-
-  _setupAdder(user, adventurer){
-    const adder = this.adventurerPane.showAdder()
-    adder.addEventListener('click', () => {
-      const content = new AddXpModalContent(user, adventurer)
-      new SimpleModal(content, {
-        text: 'Confirm',
-        style: 'good',
-        fn: () => {
-          if(content.val){
-            showLoader()
-            fizzetch(`/game/adventurer/${this.adventurerID}/addxp`, {
-              xp: content.val
-            }).then(() => {
-              hideLoader()
-              this.reload()
-            })
-          }
-        }
-      }, 'Stashed XP').show()
-    })
   }
 }
 

@@ -14,7 +14,7 @@ const DEFAULTS = {
   elapsedTime: 0,
   startTime: 0,
   purged: false,
-  adventurerState: {}
+  adventurerState: {},
 }
 
 const DungeonRuns = new Collection('dungeonRuns', DEFAULTS)

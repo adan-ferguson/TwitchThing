@@ -8,6 +8,8 @@ import ItemQuickUpgrade from '../../itemQuickUpgrade.js'
 import SimpleModal from '../../simpleModal.js'
 import AdventurerItem from '../../../../../game/items/adventurerItem.js'
 import Modal from '../../modal.js'
+import AddXpModalContent from '../adventurer/addXpModalContent.js'
+import { hideLoader, showLoader } from '../../../loader.js'
 
 const HTML = `
 <div class="content-columns fill-contents">
@@ -40,7 +42,6 @@ export default class LoadoutTab extends DIElement{
     super()
     this.innerHTML = HTML
     this.adventurerPaneEl.setOptions({
-      hideXpBar: true,
       orbsStyle: OrbsDisplayStyle.REMAINING
     })
     this._setupItemEdit()
@@ -88,6 +89,10 @@ export default class LoadoutTab extends DIElement{
     this.adventurerPaneEl.setAdventurer(adventurer)
     this.skillsEl.setup(adventurer, user.features.skills)
     this._setupQuickUpgrades(user)
+
+    if(user.features.shop || user.inventory.stashedXp){
+      this._setupAdder(user, adventurer)
+    }
   }
   //
   // adventurerSkillRightClickOverride(adventurerSkillRow){
@@ -254,6 +259,28 @@ export default class LoadoutTab extends DIElement{
       tippyCallout(this.inventoryEl, 'You can also upgrade items in the right-click "more info" pane.')
       localStorage.setItem(calloutName, true)
     }
+  }
+
+  _setupAdder(user, adventurer){
+    const adder = this.adventurerPaneEl.showAdder()
+    adder.addEventListener('click', () => {
+      const content = new AddXpModalContent(user, adventurer)
+      new SimpleModal(content, {
+        text: 'Confirm',
+        style: 'good',
+        fn: () => {
+          if(content.val){
+            showLoader()
+            fizzetch(`/game/adventurer/${adventurer.id}/addxp`, {
+              xp: content.val
+            }).then(() => {
+              hideLoader()
+              this.parentPage.reload()
+            })
+          }
+        }
+      }, 'Stashed XP').show()
+    })
   }
 }
 

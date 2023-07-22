@@ -47,7 +47,10 @@ function growthMulti(lvl){
   let factor = 1
   if(lvl > 2){
     // double speed growth between 3-30
-    factor += (lvl - 2) * FLAT_FACTOR * 2
+    factor += (lvl - 2) * FLAT_FACTOR
+    if(lvl > 10){
+      factor += (lvl - 10) * FLAT_FACTOR
+    }
     if(lvl > 30){
       factor -= (lvl - 30) * FLAT_FACTOR
     }
