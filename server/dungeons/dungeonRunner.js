@@ -25,7 +25,10 @@ export async function start(){
   console.log('starting dungeon runner')
   const dungeonRuns = await DungeonRuns.find({
     query: {
-      finished: false
+      finished: false,
+      cancelled: {
+        $ne: true
+      }
     }
   })
   console.log(`found ${dungeonRuns.length} runs`)
@@ -159,8 +162,9 @@ export async function cancelRun(dungeonRunDoc, ex){
   })
   const adventurerDoc = await Adventurers.findByID(dungeonRunDoc.adventurer._id)
   adventurerDoc.dungeonRunID = null
+  dungeonRunDoc.cancelled = true
   await Adventurers.save(adventurerDoc)
-  await DungeonRuns.delete(dungeonRunDoc)
+  await DungeonRuns.save(dungeonRunDoc)
 }
 
 function validateNew(adventurerDoc, userDoc, { startingFloor }){

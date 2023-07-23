@@ -3,6 +3,7 @@ import path from 'path'
 import { Worker } from 'node:worker_threads'
 import { uniqueID } from '../../game/utilFunctions.js'
 import Combats from '../collections/combats.js'
+import { emit } from '../socketServer.js'
 
 const WORKER_COUNT = 4
 const workers = []
@@ -19,11 +20,11 @@ export async function startCombatWorkers(){
         callbacks[obj.workerId](obj)
         delete callbacks[obj.workerId]
       }
-      console.log('unbusy')
       if(queue.length){
         queue.splice(0, 1)[0](worker)
       }else{
         workerDef.isBusy = false
+        emitWorkerStatus()
       }
     })
     worker.on('error', msg => {
@@ -55,17 +56,33 @@ export function generateCombat(data, combatID = null){
         combatDoc._id = combatID
       }
       const doc = await Combats.save(combatDoc)
-      console.log('combat ran', combatID, combatDoc.times.startup, combatDoc.times.calc)
+      emitCombat(combatDoc)
       res(doc)
     }
     getAvailableWorker().then(worker => {
-      console.log('Workers + Queue Length', ...workers.map(w => w.isBusy ? 1 : 0), queue.length)
+      emitWorkerStatus()
       worker.postMessage({
         workerId: id,
         data
       })
     })
   })
+}
+
+export function getWorkerStatus(){
+  return {
+    workers: workers.map(w => w.isBusy ? 1 : 0),
+    queueLength: queue.length
+  }
+}
+
+export function emitWorkerStatus(){
+  emit('admin performance tab','admin update workers', getWorkerStatus())
+}
+
+export function emitCombat(combatDoc){
+  console.log('combat ran', combatDoc._id, combatDoc.times.startup, combatDoc.times.calc)
+  // emit('admin performance tab','admin show combat', getWorkerStatus())
 }
 
 function getAvailableWorker(){

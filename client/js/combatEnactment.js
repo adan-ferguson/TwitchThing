@@ -37,14 +37,17 @@ export default class CombatEnactment extends EventEmitter{
     return this._combatID
   }
 
+  get preCombat(){
+    return !this.timeline || this.timeline.time === 0
+  }
+
   setPendingCombat(combatEvent){
     this._combatID = combatEvent.combatID
     this._fighterPane2.setFighter(toFighterInstance(combatEvent.monster))
-    this._showRefereeTime()
+    this._updateTopThing()
   }
 
   setCombat(combat){
-    console.log(combat.timeline)
     this._combat = combat
     this._combatID = combat._id
     this._fighterPane1.setFighter(toFighterInstance(combat.fighter1.def, combat.fighter1.startState))
@@ -101,11 +104,6 @@ export default class CombatEnactment extends EventEmitter{
       return
     }
     const currentEntry = this._timeline.currentEntry
-    if(!currentEntry){
-      this._showRefereeTime()
-    }else{
-      this._hideRefereeTime()
-    }
     this._fighterPane1.setState(currentEntry.fighterState1, cancelAnimations)
     this._fighterPane2.setState(currentEntry.fighterState2, cancelAnimations)
     this._fighterPane1.advanceTime(this._timeline.timeSinceLastEntry)
@@ -148,17 +146,12 @@ export default class CombatEnactment extends EventEmitter{
   //   }
   // }
 
-  _showRefereeTime(){
-    // TODO: referee time
-  }
-
-  _hideRefereeTime(){
-    // TODO: referee time
-  }
-
   _updateTopThing(){
     if(!this._topThing){
       return
+    }
+    if(this.preCombat){
+      return this._topThing.update('Waiting for referee...')
     }
     let color = null
     const currentEntry = this._timeline.currentEntry

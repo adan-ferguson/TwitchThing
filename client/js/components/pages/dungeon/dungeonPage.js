@@ -250,7 +250,7 @@ export default class DungeonPage extends Page{
     const enemyPane = new FighterInstancePane()
     this._eventEl.setContents(enemyPane, animate)
     const ce = new CombatEnactment(this._adventurerPane, enemyPane, this.topThingEl)
-    if(combat){
+    if(combat.timeline){
       ce.setCombat(combat)
       ce.timeline.setTime(this._timeline.timeSinceLastEntry - (this.currentEvent.refereeTime ?? 0), true)
     }else{
@@ -276,7 +276,8 @@ export default class DungeonPage extends Page{
       return
     }
     if(this._ce && this.currentEvent.roomType === 'combat'){
-      this._ce.timeline?.setTime(this._timeline.timeSinceLastEntry - (this.currentEvent.refereeTime ?? 0), jumped)
+      const time = this._timeline.timeSinceLastEntry - (this.currentEvent.refereeTime ?? 0)
+      this._ce.timeline?.setTime(time, jumped)
     }
     if(this._timeline.finished && this.isReplay){
       this._showResults()

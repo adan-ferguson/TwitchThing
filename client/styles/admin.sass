@@ -9,3 +9,20 @@ di-admin-page
       flex-grow: 1
       margin-top: 15rem
       width: 100%
+
+  .adv-admin-row
+    display: flex
+    flex-direction: row
+    gap: 10rem
+    align-items: center
+
+  di-admin-performance-tab
+    .workers
+      display: flex
+      gap: 10rem
+      .worker
+        width: 10rem
+        height: 10rem
+        background-color: green
+        &.worker-busy
+          background-color: red

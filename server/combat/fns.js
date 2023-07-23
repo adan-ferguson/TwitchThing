@@ -33,9 +33,10 @@ export async function resumeCombatEvent(dungeonRun){
 
 export async function runCombat(dungeonRun, monsterDef){
 
+  const adventurerInstance = dungeonRun.adventurerInstance
+  const combatEvent = dungeonRun.newestEvent
+
   try {
-    const adventurerInstance = dungeonRun.adventurerInstance
-    const combatEvent = dungeonRun.newestEvent
     const combatDoc = await generateCombat({
       fighterDef1: adventurerInstance.adventurer.doc,
       fighterState1: adventurerInstance.state,
@@ -87,6 +88,7 @@ export async function runCombat(dungeonRun, monsterDef){
     })
     dungeonRun.finishRunningCombat(combatEvent, resultEvent)
   }catch(ex){
+    combatEvent.error = true
     cancelRun(dungeonRun.doc, ex)
   }
 }

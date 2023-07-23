@@ -33,18 +33,19 @@ export default class Tabz extends DIElement{
     return this.querySelector('.tabz-content .active')
   }
 
+  get currentTabName(){
+    return this.currentTab?.getAttribute('data-tab-name')
+  }
+
   getContentEl(name){
     return this.querySelector(`.tabz-content [data-tab-name=${name}]`)
   }
 
   setTab(name){
-    if(!name){
+    if(!name || name === this.currentTabName){
       return
     }
-    this.querySelectorAll('.tabz-list .tab').forEach(tab => {
-      tab.classList.toggle('active', tab.getAttribute('data-tab-name') === name)
-      tab.classList.remove('glow')
-    })
+    this.unloadTab()
     this.querySelectorAll('.tabz-content > *').forEach(tabContent => {
       const match = tabContent.getAttribute('data-tab-name') === name
       if(match){
@@ -53,6 +54,22 @@ export default class Tabz extends DIElement{
       tabContent.classList.toggle('active', match)
     })
     this.events.emit('changed')
+  }
+
+  unloadTab(){
+    if(this.currentTab){
+      this.currentTab.unload?.()
+    }
+    this.querySelectorAll('.tabz-list .tab').forEach(tab => {
+      tab.classList.toggle('active', tab.getAttribute('data-tab-name') === name)
+      tab.classList.remove('glow')
+    })
+  }
+
+  reloadTab(){
+    const currentName = this.currentTabName
+    this.unloadTab()
+    this.setTab(currentName)
   }
 }
 customElements.define('di-tabz', Tabz)

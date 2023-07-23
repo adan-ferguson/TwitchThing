@@ -7,6 +7,8 @@ import { getErrorLogTail, getOutputLogTail } from '../../logging.js'
 import { generateSimulatedCombat, getCombatArgs } from '../../combat/fns.js'
 import { getAllMonsters } from '../../dungeons/monsters.js'
 import { runCommand } from '../../admin/runCommand.js'
+import { getWorkerStatus } from '../../combat/interop.js'
+import DungeonRuns from '../../collections/dungeonRuns.js'
 
 const router = express.Router()
 
@@ -55,7 +57,7 @@ router.post('/sim/run', async (req, res) => {
   const f2 = validateParam(req.body.fighter2)
   const combat = await generateSimulatedCombat(f1, f2)
   res.status(200).send({ combatID: combat._id })
-  // for(let i = 0; i < 100; i++){
+  // for(let i = 0; i < 1000; i++){
   //   generateSimulatedCombat(f1, f2)
   // }
 })
@@ -64,6 +66,33 @@ router.get('/combatperf/:combatID', async (req, res) => {
   res.render('combatperf', {
     combatArgs: await getCombatArgs(req.params.combatID)
   })
+})
+
+router.post('/performance',  async (req, res) => {
+  const cancelledRuns = await DungeonRuns.find({
+    query: {
+      cancelled: true,
+      purged: false,
+    },
+    projection: {
+      _id: 1
+    }
+  })
+  res.status(200).send({ ...getWorkerStatus(), cancelledRuns })
+})
+
+router.post('/purgecancelled', (req, res) => {
+  DungeonRuns.collection.updateMany({
+    cancelled: true,
+    purged: {
+      $ne: true,
+    }
+  }, [{
+    $set: {
+      purged: true
+    }
+  }])
+  res.status(200).send({})
 })
 
 export default router

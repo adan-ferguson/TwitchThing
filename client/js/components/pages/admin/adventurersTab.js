@@ -1,7 +1,8 @@
-import AdventurerRow from '../../adventurer/adventurerRow.js'
 import fizzetch from '../../../fizzetch.js'
 import { hideLoader, showLoader } from '../../../loader.js'
-import { wrapContent } from '../../../../../game/utilFunctions.js'
+import { makeEl, wrapText } from '../../../../../game/utilFunctions.js'
+import OrbRow from '../../orbRow.js'
+import Adventurer from '../../../../../game/adventurer.js'
 
 const HTML = `
 <div class="content-well fill-contents">
@@ -20,7 +21,7 @@ export default class AdminAdventurerTab extends HTMLElement{
     this.innerHTML = HTML
     this._list = this.querySelector('di-list')
       .setOptions({
-        pageSize: 20
+        pageSize: 15
       })
     this._adventurerPane = this.querySelector('di-adventurer-pane')
   }
@@ -33,7 +34,7 @@ export default class AdminAdventurerTab extends HTMLElement{
     adventurers.forEach(adventurer => {
       const row = wrapAdventurer(adventurer)
       row.addEventListener('click', e => {
-        this._adventurerPane.setAdventurer(adventurer)
+        this._adventurerPane.setAdventurer(new Adventurer(adventurer))
       })
       rows.push(row)
     })
@@ -43,5 +44,8 @@ export default class AdminAdventurerTab extends HTMLElement{
 customElements.define('di-admin-adventurer-tab', AdminAdventurerTab)
 
 function wrapAdventurer(adventurer){
-  return wrapContent('')
+  const el = makeEl({ class: 'adv-admin-row buttonish' })
+  el.append(wrapText(adventurer.name))
+  el.append(new OrbRow().setData(adventurer.orbs))
+  return el
 }
