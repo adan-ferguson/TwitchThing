@@ -7,6 +7,11 @@ import { processAbilityEvents } from '../abilities.js'
 import DungeonRunInstance from '../../dungeons/dungeonRunInstance.js'
 
 export function performAction(triggerHandler, actor, ability, actionDef, triggerData = {}){
+
+  if(triggerHandler.finished){
+    return
+  }
+
   const key = Object.keys(actionDef)[0]
   const expandedActionDef = expandActionDef(actionDef)?.[key]
   if(!expandedActionDef){
@@ -32,8 +37,8 @@ export function performAction(triggerHandler, actor, ability, actionDef, trigger
           processAbilityEvents(triggerHandler, 'thwart', target, null, expandedActionDef)
         }
         return {
+          subject: target.uniqueID,
           ...r,
-          subject: target.uniqueID
         }
       }))
     })
@@ -78,7 +83,6 @@ export function performIntermediateAction(triggerHandler, actor, ability, action
   if(!actionDefs.length){
     return performAction(triggerHandler, actor, ability, { pass: {} }, triggerData)
   }
-
   return performActions(actionDefs, triggerHandler, actor, ability, triggerData)
 }
 

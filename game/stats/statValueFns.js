@@ -60,26 +60,39 @@ function percentageValue(values, defaultValue){
 
   const mods = organizeMods(values)
 
-  if(mods.all.flat.length){
-    throw 'Percentage stats can not have flat values'
+  if(mods.positive.multi.length){
+    throw 'Percentage stats can not have positive multipliers'
   }
 
-  if(mods.all.multi.length){
-    throw 'Percentage stats can not have multiplier values'
+  if(mods.negative.pct.length){
+    throw 'Percentage stats can not have negative pcts'
   }
 
-  let value = mods.positive.pct.reduce((val, mod) => {
-    if(mod > 100){
+  mods.positive.pct.forEach(p => {
+    if(p > 100){
       throw 'Percentage stats can not have values over 100'
     }
+  })
+
+  mods.all.flat.forEach(f => {
+    if(f < 0){
+      throw 'Percentage stats can not have negative flats'
+    }else if(f > 1){
+      throw 'Percentage stats can not have flats above 1'
+    }
+  })
+
+  const positives = [
+    ...mods.positive.pct,
+    ...mods.positive.flat.map(f => f * 100)
+  ]
+
+  let value = positives.reduce((val, mod) => {
     return val + (1 - val) * (mod / 100)
   }, defaultValue)
 
-  value = mods.negative.pct.reduce((val, mod) => {
-    if(mods < -100){
-      throw 'Percentage stats can not have values under 100'
-    }
-    return val * (1 + mod / 100)
+  value = mods.negative.multi.reduce((val, mod) => {
+    return val * mod
   }, value)
 
   return {

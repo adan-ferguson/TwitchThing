@@ -1,16 +1,23 @@
 import { processAbilityEvents } from '../../abilities.js'
 import { dealDamage } from '../../dealDamage.js'
-import { scaledNumberFromAbilityInstance, scaledNumberFromFighterInstance } from '../../../../game/scaledNumber.js'
+import { scaledNumberFromAbilityInstance } from '../../../../game/scaledNumber.js'
 import { ignoresDefenseMatchesDamageType } from '../../../../game/mechanicsFns.js'
 import { deepClone } from '../../../../game/utilFunctions.js'
 
 export default function(combat, attacker, enemy, abilityInstance = null, actionDef = {}){
 
+  if(
+    attacker.hasMod('noAttack') ||
+    actionDef.basic && attacker.hasMod('noBasicAttack')
+  ){
+    return {
+      subject: attacker.uniqueID,
+      cancelled: { reason: 'noAttack', reasonMsg: 'Can\'t attack' }
+    }
+  }
+
   const results = []
   for(let i = 0; i < actionDef.hits; i++){
-    if(attacker.hasMod('noAttack')){
-      continue
-    }
     if(enemy.dead){
       continue
     }

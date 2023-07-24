@@ -39,8 +39,8 @@ const debilitation = terribleCurse({
 const vulnerability = terribleCurse({
   name: 'TERRIBLE Curse: Frailty',
   stats: {
-    magicDef: '-50%',
-    physDef: '-50%'
+    magicDef: '0.5x',
+    physDef: '0.5x'
   }
 })
 
@@ -61,5 +61,5 @@ const lethargy = terribleCurse({
 })
 
 export function terribleCurses(){
-  return [agony, suffering, debilitation, vulnerability, simplicity, lethargy]
+  return [vulnerability] //[agony, suffering, debilitation, vulnerability, simplicity, lethargy]
 }

@@ -193,7 +193,7 @@ export function getStatDisplayInfo(stat, options = {}){
 }
 
 function toText(stat, style){
-  if(!stat.value && stat.type === StatType.COMPOSITE){
+  if(!stat.value){
     return toCompositeText(stat.mods, style)
   }
   const subtractDefaultValue = style === StatsDisplayStyle.ADDITIONAL && [StatType.FLAT, StatType.COMPOSITE].includes(stat.type)

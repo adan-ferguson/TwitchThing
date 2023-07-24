@@ -12,7 +12,7 @@ export default function(){
           abilities: [{
             trigger: 'active',
             cooldown: 20000,
-            initialCooldown: 6000,
+            initialCooldown: 4000,
             actions: [{
               applyStatusEffect: {
                 targets: 'enemy',

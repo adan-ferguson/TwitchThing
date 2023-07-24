@@ -210,7 +210,9 @@ export default class FighterInstancePane extends HTMLElement{
       this._hpChangeQueue.clear()
     }
 
-    if(this.fighterInstance.hp !== this.hpBarEl.value && this._hpChangeQueue.isEmpty){
+    // TODO: rounding error...
+    const diff = Math.abs(this.fighterInstance.hp - this.hpBarEl.value)
+    if(diff > 1 && this._hpChangeQueue.isCleared){
       this.hpBarEl.setValue(this.fighterInstance.hp, {
         animate: !cancelAnimations
       })
@@ -266,11 +268,11 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   _displayCancellation(cancelled){
-    const reason = cancelled.reason || 'cancelled'
+    const reason = cancelled.reasonMsg || toDisplayName(cancelled.reason) || 'Cancelled'
     const targetEl = this._getEffectEl(cancelled.cancelledByEffect) ?? this.hpBarEl
     new FlyingTextEffect(
       targetEl,
-      toDisplayName(reason),
+      reason,
       {
         clearExistingForSource: true
       }
@@ -327,8 +329,8 @@ class ResultQueue{
     this._queue = []
   }
 
-  get isEmpty(){
-    return this._queue.length ? false : true
+  get isCleared(){
+    return this._timeout ? false : true
   }
 
   add(fn){
@@ -340,6 +342,7 @@ class ResultQueue{
 
   clear(){
     clearTimeout(this._timeout)
+    this._timeout = null
     this._queue = []
   }
 
@@ -349,6 +352,7 @@ class ResultQueue{
     }
     this._queue[0]()
     this._timeout = setTimeout(() => {
+      this._timeout = null
       this._queue = this._queue.slice(1)
       this._next()
     }, STAGGER_TIME)

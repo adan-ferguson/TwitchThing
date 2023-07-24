@@ -215,7 +215,7 @@ export default class TimelineControls extends HTMLElement{
   }
 
   _setupEventLog(adventurer){
-    this._eventLog = new EventLog(this._timeline, adventurer, {
+    this._eventLog = new EventLog(this._timeline, {
       rowsClickable: this._options.isReplay
     })
     this._eventLog.addEventListener('event_selected', e => {

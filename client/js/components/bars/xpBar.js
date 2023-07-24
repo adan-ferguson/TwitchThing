@@ -1,6 +1,9 @@
 import Bar from './bar.js'
 import { suffixedNumber } from '../../../../game/utilFunctions.js'
 
+const BASE_ANIM_TIME = 1000
+const LVL_ANIM_TIME = 500
+
 export default class XpBar extends Bar{
 
   constructor(){
@@ -10,10 +13,6 @@ export default class XpBar extends Bar{
     }
     this._options.showLabel = true
     this._options.rounding = true
-  }
-
-  get animSpeed(){
-    return 1000
   }
 
   get level(){
@@ -84,18 +83,21 @@ export default class XpBar extends Bar{
       onLevelup
     }
     this._xpAnimation = xpAnimation
-    let xpToAdd = targetXp - this._val
-    this._flyingText(`+${suffixedNumber(xpToAdd)} xp`)
+    const xpToAdd = targetXp - this._val
+    let xpLeft = xpToAdd
+    const animTime = this._calcAnimTime(xpToAdd)
+    this._flyingText(`+${suffixedNumber(xpLeft)} xp`)
     if(skipToEnd){
       this.skipToEndOfAnimation()
     }
-    while(xpToAdd > 0){
+    while(xpLeft > 0){
       let toNextLevel = this._options.max - this._val
       if(xpAnimation.skipped){
         return
       }
-      if (xpToAdd >= toNextLevel){
-        await super.setValue(this._options.max, { animate: true })
+      if (xpLeft >= toNextLevel){
+        const diff = this._options.max - this._val
+        await super.setValue(this._options.max, { animate: true, animTime: animTime * (diff / xpToAdd) })
         if(xpAnimation.skipped){
           return
         }
@@ -105,9 +107,10 @@ export default class XpBar extends Bar{
           await onLevelup(xpAnimation.currentLevel)
         }
         this._setLevel(xpAnimation.currentLevel)
-        xpToAdd -= toNextLevel
+        xpLeft -= toNextLevel
       }else{
-        await super.setValue(targetXp, { animate: true })
+        const diff = targetXp - this._val
+        await super.setValue(targetXp, { animate: true, animTime: animTime * (diff / xpToAdd) })
         return
       }
     }
@@ -119,6 +122,12 @@ export default class XpBar extends Bar{
       min: this._levelToXp(level),
       max: this._levelToXp(level + 1)
     })
+  }
+
+  _calcAnimTime(xpToAdd){
+    const before = this._xpToLevel(this._val)
+    const after = this._xpToLevel(this._val + xpToAdd)
+    return BASE_ANIM_TIME + LVL_ANIM_TIME * (after - before)
   }
 }
 

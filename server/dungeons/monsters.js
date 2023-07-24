@@ -65,11 +65,11 @@ const monstersByFloor = [
   // Heck
   Monsters.maniacalMinion,
   Monsters.cerberus,
-  Monsters.accursedDevil,
   Monsters.nightMare,
   Monsters.pitFiend,
-  Monsters.soulSummoner,
   Monsters.succubus,
+  Monsters.soulSummoner,
+  Monsters.accursedDevil,
   Monsters.fireElemental,
   Monsters.virtualDemon,
   Monsters.triablo,

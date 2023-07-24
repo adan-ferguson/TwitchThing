@@ -107,6 +107,7 @@ export default class Bar extends HTMLElement{
 
     options = {
       animate: false,
+      animTime: this.animSpeed,
       flyingText: false,
       relative: false,
       ...options
@@ -132,7 +133,7 @@ export default class Bar extends HTMLElement{
       this._val = val
       this._updateBar()
     }else {
-      await this._animateToValue(val)
+      await this._animateToValue(val, options.animTime)
     }
   }
 
@@ -144,7 +145,7 @@ export default class Bar extends HTMLElement{
     this._updateColors()
   }
 
-  _animateToValue(val){
+  _animateToValue(val, time){
 
     function setWidth(bar, pct){
       bar.style.width = `${pct * 100}%`
@@ -181,7 +182,7 @@ export default class Bar extends HTMLElement{
       this._val = val
 
       this.animation = new CustomAnimation({
-        duration: this.animSpeed * Math.sqrt(Math.abs(targetWidth - currentWidth)),
+        duration: time * Math.sqrt(Math.abs(targetWidth - currentWidth)),
         easing: 'easeOut',
         start: () => {
           if(snappingBar){

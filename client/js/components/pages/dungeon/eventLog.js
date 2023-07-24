@@ -1,14 +1,13 @@
-import Adventurer from '../../../../../game/adventurer.js'
 import MonsterInstance from '../../../../../game/monsterInstance.js'
 
-const ROW_HTML = (floor, room, description) => `
+const ROW_HTML = (floor, room, description, food) => `
 <span class="floor">${floor}-${room}</span>
 <di-bar class="hp-pct"></di-bar>
 <span class="desc">${description}</span>
 `
 
 export default class EventLog extends HTMLElement{
-  constructor(timeline, adventurer, options = {}){
+  constructor(timeline, options = {}){
     super()
 
     this._timeline = timeline
@@ -25,7 +24,7 @@ export default class EventLog extends HTMLElement{
       if(shouldSkip(event)){
         return
       }
-      const row = new EventLogRow(event, adventurer)
+      const row = new EventLogRow(event, event.adventurerState)
       row.classList.toggle('clickable', options.rowsClickable)
       row.addEventListener('click', () => {
         if(row.classList.contains('current') || !options.rowsClickable){
@@ -79,17 +78,17 @@ export default class EventLog extends HTMLElement{
 }
 
 class EventLogRow extends HTMLElement{
-  constructor(event, adventurer){
+  constructor(event, adventurerState = {}){
     super()
     this.event = event
     const desc = (DESCRIPTION_FNS[event.roomType] ?? DESCRIPTION_FNS.unknown)(event)
     this.innerHTML = ROW_HTML(
       event.floor,
-      event.room ?? 0,
-      desc
+      event.room ?? 1,
+      desc,
+      adventurerState?.food ?? ''
     )
 
-    const adv = new Adventurer(adventurer, event.adventurerState)
     const hpBar = this.querySelector('di-bar')
     hpBar.setOptions({
       max: 1,
@@ -97,7 +96,7 @@ class EventLogRow extends HTMLElement{
       showValue: false,
       rounding: false
     })
-    hpBar.setValue(adv.hpPct)
+    hpBar.setValue(adventurerState.hpPct ?? 1)
   }
 }
 

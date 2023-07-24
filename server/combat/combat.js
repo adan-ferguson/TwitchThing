@@ -211,6 +211,9 @@ class Combat{
   _resolveTriggers(){
 
     const resolveTrigger = trigger => {
+      if(this.finished){
+        return
+      }
       if(trigger.performAction){
         return performAction(this, trigger.actor, trigger.ability, trigger.def, trigger.data)
       }else{
