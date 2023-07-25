@@ -5,9 +5,9 @@ import AdventurerItem, { ITEM_RARITIES } from '../../game/items/adventurerItem.j
 import { unlockedClasses } from '../../game/user.js'
 import { chooseOne } from '../../game/rando.js'
 
-const GOLD_BASE = 10
-const GOLD_GROWTH = 1.8
-const GOLD_GROWTH_PCT = 0.01
+const GOLD_BASE = 12
+const GOLD_GROWTH = 2
+const GOLD_GROWTH_PCT = 0.02
 
 /**
  * @param dri {DungeonRunInstance}
@@ -130,9 +130,9 @@ function mergeBasicItems(source, target){
 }
 
 function addGold(valueRemaining, multi = 1){
-  valueRemaining = Math.ceil(Math.random() * valueRemaining)
-  const gold = GOLD_BASE + Math.ceil(geometricProgression(GOLD_GROWTH_PCT, valueRemaining, GOLD_GROWTH))
-  return toNumberOfDigits(gold * multi,2)
+  const range = valueToGoldRange(valueRemaining)
+  const val = range.min + Math.random() * (range.max - range.min)
+  return toNumberOfDigits(val * multi,2)
 }
 
 function addItem(obj, name, count = 1){
@@ -152,4 +152,14 @@ function chooseRarity(rarities, valueRemaining, rareFind){
     return { value: r, weight: pct * info.weight * (r === 2 ? rareFind : 1) }
   })
   return chooseOne(chances)
+}
+
+export function valueToGoldRange(val){
+  const geo = geometricProgression(GOLD_GROWTH_PCT, val, GOLD_GROWTH)
+  val = (GOLD_BASE + geo) * 2 / 3
+  return {
+    min: val / 2,
+    max: val,
+    geo
+  }
 }

@@ -8,10 +8,6 @@ import DungeonRunInstance from '../../dungeons/dungeonRunInstance.js'
 
 export function performAction(triggerHandler, actor, ability, actionDef, triggerData = {}){
 
-  if(triggerHandler.finished){
-    return
-  }
-
   const key = Object.keys(actionDef)[0]
   const expandedActionDef = expandActionDef(actionDef)?.[key]
   if(!expandedActionDef){

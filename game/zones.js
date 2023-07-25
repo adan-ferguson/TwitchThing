@@ -26,9 +26,9 @@ const Zones = [{
 
 // Final floor gets this bonus size
 const FINAL_FLOOR_BONUS = 1 //.2
-const SIZE_BASE = 10
-const SIZE_PER_FLOOR = 2
-const ZONE_0_REDUCTION = 1/2
+const SIZE_BASE = 8.5
+const SIZE_PER_FLOOR = 1.5
+const ZONE_0_REDUCTION = 2/3
 
 export default Zones
 

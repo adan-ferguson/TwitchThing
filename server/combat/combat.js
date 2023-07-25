@@ -211,9 +211,6 @@ class Combat{
   _resolveTriggers(){
 
     const resolveTrigger = trigger => {
-      if(this.finished){
-        return
-      }
       if(trigger.performAction){
         return performAction(this, trigger.actor, trigger.ability, trigger.def, trigger.data)
       }else{
@@ -227,22 +224,17 @@ class Combat{
       this._pendingTriggers = []
       this._triggerUpdates.push(...triggers.map(resolveTrigger).flat(Infinity))
       loops++
-      if(this.finished){
-        return
-      }
     }
   }
 
   _doActions(){
 
-    if(this.finished){
-      return []
-    }
-
     const actions = []
 
     shuffle([this.fighterInstance1, this.fighterInstance2]).forEach(actor => {
-      actions.push(...takeCombatTurn(this, actor))
+      if(!this.finished){
+        actions.push(...takeCombatTurn(this, actor))
+      }
     })
 
     return actions

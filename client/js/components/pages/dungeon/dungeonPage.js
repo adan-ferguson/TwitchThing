@@ -188,7 +188,7 @@ export default class DungeonPage extends Page{
     }
 
     this._updateBackground()
-    this._stateEl.update(this._timelineEl.elapsedEvents, this.adventurerInstance, !animate)
+    this._stateEl.update(this._timelineEl.elapsedEvents, this.adventurerInstance, animate)
 
     if(this.isReplay && !this._combatsAllLoaded && !this._timeline.finished){
       await this._loadAllCombats()

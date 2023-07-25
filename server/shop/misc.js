@@ -1,5 +1,5 @@
 const BASE_PRICE = 100
-const BASE_AMOUNT = 15
+const SCRAP_BASE_AMOUNT = 20
 
 const XP_BASE = 25
 const XP_GROWTH = 25
@@ -16,7 +16,7 @@ export function scrapShopItem(userDoc){
       gold: BASE_PRICE
     },
     data: {
-      scrap: BASE_AMOUNT
+      scrap: SCRAP_BASE_AMOUNT
     }
   }
 }

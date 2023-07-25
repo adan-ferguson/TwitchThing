@@ -47,7 +47,7 @@ export default function(){
             trigger: 'active',
             cooldown: 6000,
             actions: [barrierAction({
-              magicPower: 1
+              magicPower: 2
             }, { name: 'Bone Shield' })]
           }]
         }

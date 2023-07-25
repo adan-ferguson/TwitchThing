@@ -90,7 +90,6 @@ export default class State extends HTMLElement{
 
     this._xpAnimation?.cancel()
 
-
     // TODO: make a text animation helper
     this._xpAnimation = new CustomAnimation({
       duration: 1500,

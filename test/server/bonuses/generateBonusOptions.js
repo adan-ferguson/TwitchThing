@@ -1,7 +1,5 @@
-import { adjustedDifficultyLevel } from '../../../game/monsterInstance.js'
+import { floorSize } from '../../../game/zones.js'
 
-const adl = adjustedDifficultyLevel
-
-for(let i = 1; i <= 60; i++){
-  console.log(i, adl(i))
+for(let i = 1; i < 100; i++){
+  console.log(i, floorSize(i))
 }
