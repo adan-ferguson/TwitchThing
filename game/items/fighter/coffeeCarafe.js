@@ -25,6 +25,6 @@ export default function(level){
         }]
       }]
     },
-    orbs: 3 + level * 2
+    orbs: 2 + level * 2
   }
 }

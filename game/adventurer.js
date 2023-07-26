@@ -15,14 +15,12 @@ const POWER_BASE = 5
 const POWER_GROWTH = 1
 const POWER_GROWTH_PCT = STAT_GROWTH_PCT
 
-const calc = new AdventurerXpCalculator()
-
 export function advXpToLevel(xp){
-  return calc.xpToLevel(xp)
+  return AdventurerXpCalculator.xpToLevel(xp)
 }
 
 export function advLevelToXp(lvl){
-  return calc.levelToXp(lvl)
+  return AdventurerXpCalculator.levelToXp(lvl)
 }
 
 export function adventurerLevelToHp(lvl){

@@ -67,7 +67,11 @@ export default class StatusEffectInstance extends EffectInstance{
   }
 
   get duration(){
-    return (this.effectData.duration ?? 0) + (this._state.extendedDuration ?? 0)
+    return (this.effectData.duration ?? 0) + this.extendedDuration
+  }
+
+  get extendedDuration(){
+    return this._state.extendedDuration ?? 0
   }
 
   get durationRemaining(){
@@ -136,7 +140,7 @@ export default class StatusEffectInstance extends EffectInstance{
   }
 
   extend(extendedDuration){
-    this._state.extendedDuration = extendedDuration
+    this._state.extendedDuration = this.extendedDuration + extendedDuration
     return this
   }
 

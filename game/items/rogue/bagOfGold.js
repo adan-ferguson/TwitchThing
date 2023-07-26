@@ -4,7 +4,7 @@ export default function(level){
   return {
     effect: {
       stats: {
-        chestFind: wrappedPct(25 + 15 * level)
+        goldFind: wrappedPct(25 + 15 * level)
       }
     },
     orbs: level * 1 + 2

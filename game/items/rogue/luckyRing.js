@@ -3,7 +3,7 @@ import { wrappedPct } from '../../growthFunctions.js'
 const RING_1 = {
   stats: {
     goldFind: wrappedPct(77),
-    chestFind: wrappedPct(77),
+    rareFind: wrappedPct(77),
     critChance: 0.07,
     dodgeChance: '7%',
   }
@@ -12,7 +12,7 @@ const RING_1 = {
 const RING_2 = {
   stats: {
     goldFind: wrappedPct(777),
-    chestFind: wrappedPct(777),
+    rareFind: wrappedPct(777),
     critChance: 0.77,
     dodgeChance: '77%',
   }

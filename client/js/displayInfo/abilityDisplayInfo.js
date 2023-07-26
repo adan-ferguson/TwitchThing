@@ -61,7 +61,7 @@ function abilityDescription(ability){
   if(ability.exclusiveStats){
     const statsDisp = wrapStats(ability.exclusiveStats, { exclude: ['physPower','magicPower'] })
     if(statsDisp){
-      chunks.push(`Gain ${statsDisp} while using this ability.`)
+      chunks.push(`This ability benefits from ${statsDisp}.`)
     }
   }
 

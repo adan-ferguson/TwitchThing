@@ -120,7 +120,7 @@ export function useAbility(combat, ability, triggerData = {}){
 }
 
 function performActions(actions, combat, owner, ability, triggerData){
-  const results = []
+  const actionResults = []
   for (let i = 0; i < actions.length; i++){
     let actionDef = actions[i]
     if (_.isArray(actionDef)){
@@ -129,14 +129,14 @@ function performActions(actions, combat, owner, ability, triggerData){
       // eg.
       // actions: [[attackDef],[attackDef],[attackDef]] would do all 3 if 1st dodged
       // actions: [attackDef, attackDef, attackDef] would not
-      results.push(...performActions(actionDef, combat, owner, ability, triggerData))
+      actionResults.push(...performActions(actionDef, combat, owner, ability, triggerData))
     } else {
       const r = arrayize(performAction(combat, owner, ability, actionDef, triggerData))
-      results.push(...r)
-      if(results.at(-1)?.cancelled){
-        return
+      actionResults.push(...r)
+      if(actionResults.at(-1)?.results?.at(-1)?.cancelled){
+        return actionResults
       }
     }
   }
-  return results
+  return actionResults
 }

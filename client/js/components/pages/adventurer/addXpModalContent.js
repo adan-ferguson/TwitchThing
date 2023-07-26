@@ -5,9 +5,9 @@ import { advLevelToXp, advXpToLevel } from '../../../../../game/adventurer.js'
 const HTML = `
 <di-xp-bar></di-xp-bar>
 <div class="flex-columns slider-controls">
-  <button class="minus">Lvl <i class="fa-solid fa-minus"></i></button>
+  <button class="minus"><i class="fa-solid fa-minus"></i></button>
   <input class='xp-to-add flex-grow' type="range" min="0" value="0"/>
-  <button class="plus">Lvl <i class="fa-solid fa-plus"></i></button>
+  <button class="plus"><i class="fa-solid fa-plus"></i></button>
 </div>
 <div class="flex-columns xp-numbers">
   <span><span class="xp-remaining number"></span>${xpIcon()}</span>

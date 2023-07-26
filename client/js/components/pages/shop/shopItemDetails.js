@@ -2,14 +2,19 @@ import DIElement from '../../diElement.js'
 import { shopItemDisplayInfo } from './shopItemDisplayInfo.js'
 import { ICON_SVGS } from '../../../assetLoader.js'
 import { arithmeticSum } from '../../../../../game/growthFunctions.js'
+import { advLevelToXp } from '../../../../../game/adventurer.js'
 
 const HTML = `
 <div class="shop-item-icon"></div>
 <div>
-  <span class="shop-item-name"></span> <span class="displaynone shop-item-count"></span>
+  <span class="shop-item-name"></span> <span class="shop-item-count"></span>
 </div>
 <div class="shop-item-description"></div>
-<input type="range" class="count-slider displaynone" value="1" min="0"/>
+<div class="flex-columns slider-controls displaynone">
+  <button class="minus"><i class="fa-solid fa-minus"></i></button>
+  <input type="range" class="count-slider" value="1" min="0"/>
+  <button class="plus"><i class="fa-solid fa-plus"></i></button>
+</div>
 <button class="buy-button">
   <span>Buy</span>
   <span class="gold-value"></span>
@@ -81,10 +86,18 @@ export default class ShopItemDetails extends DIElement{
   }
 
   _showSlider(){
-    this.sliderEl.classList.remove('displaynone')
+    this.querySelector('.slider-controls').classList.remove('displaynone')
     this.sliderEl.value = 0
     this.sliderEl.setAttribute('max', Math.floor(this._userGold / this._shopItemDef.price.gold))
     this.sliderEl.addEventListener('input', () => this._updateCount())
+    this.querySelector('.minus').addEventListener('click', () => {
+      this.sliderEl.value -= 1
+      this._updateCount()
+    })
+    this.querySelector('.plus').addEventListener('click', () => {
+      this.sliderEl.value += 1
+      this._updateCount()
+    })
   }
 
   _updateCount(){
@@ -98,11 +111,10 @@ export default class ShopItemDetails extends DIElement{
     }else{
       count = val * sliderVal
     }
-    if(count > 1){
-      this.countEl.classList.remove('displaynone')
-      this.countEl.textContent = 'x ' + count
-    }else{
+    if(!this._shopItemDef.scalable){
       this.countEl.classList.add('displaynone')
+    }else{
+      this.countEl.textContent = 'x ' + count
     }
     this.goldValueEl.textContent = this._shopItemDef.price.gold * this.sliderEl.value
   }

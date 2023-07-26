@@ -1,7 +1,7 @@
 import { advLevelToXp, advXpToLevel } from '../../../game/adventurer.js'
 import { monsterLevelToXpReward } from '../../../game/monsterInstance.js'
 
-for(let i = 2; i <= 100; i++){
+for(let i = 1; i <= 100; i++){
   const xp = advLevelToXp(i)
   console.log(i, xp, monsterLevelToXpReward(i))
   test(advXpToLevel(xp - 1), i - 1)
