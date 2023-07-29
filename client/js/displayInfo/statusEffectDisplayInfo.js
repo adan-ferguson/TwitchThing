@@ -287,7 +287,8 @@ const DEFS = {
   },
   darkArmor: (effectDef, ability) => {
     return {
-      description: 'a bunch of phys + magic defense which reduces over time.'
+      description: 'a bunch of phys + magic defense which reduces over time',
+      statsHandled: true,
     }
   }
 }

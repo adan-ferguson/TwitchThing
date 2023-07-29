@@ -20,3 +20,5 @@ npm rum build
 npm run startdb
 npm run startserver
 ```
+
+nginx location `/etc/nginx/conf.d`

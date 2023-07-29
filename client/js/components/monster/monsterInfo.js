@@ -17,7 +17,7 @@ export default class MonsterInfo extends HTMLElement{
     super()
     this.innerHTML = HTML
     this.querySelector('.name').textContent = monsterInstance.displayName
-    this.querySelector('.description').textContent = monsterInstance.description
+    this.querySelector('.description').textContent = monsterInstance.xpReward + ' xp'
 
     this.querySelector('di-stats-list')
       .setOptions({
@@ -25,7 +25,13 @@ export default class MonsterInfo extends HTMLElement{
         statsDisplayStyle: StatsDisplayStyle.CUMULATIVE,
         forced: ['physPower','speed','hpMax']
       })
-      .setStats(monsterInstance.stats)
+
+    this._monsterInstance = monsterInstance
+    this.update()
+  }
+
+  update(){
+    this.querySelector('di-stats-list').setStats(this._monsterInstance.stats)
   }
 }
 

@@ -68,6 +68,9 @@ export default class LoadoutTab extends DIElement{
   }
 
   async unload(){
+    if(!this._adventurer){
+      return
+    }
     if(!this._adventurer.isValid){
       return await new SimpleModal('Your loadout is invalid and you will not be able to do anything, exit anyway?', [{
         text: 'Yes',

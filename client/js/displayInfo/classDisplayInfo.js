@@ -15,11 +15,11 @@ const ADV_CLASSES = {
     color: '#d2a200'
   },
   rogue: {
-    description: 'A sneaky jerk who specializes in treasure-finding, but has some fighting abilities',
+    description: 'Specializes in treasure-finding, but has some fighting abilities.',
     color: '#7a7a7a'
   },
   chimera: {
-    description: 'A humanoid with beastly tendencies. And beastly body-parts. Has a hodgepodge of abilities.',
+    description: 'Has a variety of monstrous abilities!',
     color: '#579d0e'
   }
 }

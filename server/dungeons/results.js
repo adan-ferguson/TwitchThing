@@ -53,7 +53,10 @@ export async function finalize(dungeonRunDoc){
   }
 
   const lastEvent = dungeonRunDoc.events.at(-1)
-  const deepestFloor = dungeonRunDoc.floor + (lastEvent.roomType === 'cleared' ? 1 : 0)
+  let deepestFloor = dungeonRunDoc.floor
+  if(['cleared','outOfOrder'].includes(lastEvent.roomType)){
+    deepestFloor += 1
+  }
 
   const adventurerDoc = await saveAdventurer()
   const userDoc = await Users.findByID(dungeonRunDoc.adventurer.userID)
@@ -67,14 +70,14 @@ export async function finalize(dungeonRunDoc){
     adventurerDoc.dungeonRunID = null
     adventurerDoc.xp = xpAfter
     adventurerDoc.level = advXpToLevel(xpAfter)
-    adventurerDoc.accomplishments.deepestFloor = Math.min(60, Math.max(deepestFloor, adventurerDoc.accomplishments.deepestFloor))
-    if(deepestFloor === 60 && lastEvent.roomType === 'cleared' && !adventurerDoc.accomplishments.deepestSuperFloor){
-      adventurerDoc.accomplishments.deepestSuperFloor = 1
-      emit(userDoc._id, 'show popup', {
-        title: 'Wow!',
-        message: `${adventurerDoc.name} cleared the whole dungeon, now try the unfair and gigantic waste of time SUPER dungeon!`
-      })
-    }
+    adventurerDoc.accomplishments.deepestFloor = Math.max(deepestFloor, adventurerDoc.accomplishments.deepestFloor)
+    // if(deepestFloor === 60 && lastEvent.roomType === 'cleared' && !adventurerDoc.accomplishments.deepestSuperFloor){
+    //   adventurerDoc.accomplishments.deepestSuperFloor = 1
+    //   emit(userDoc._id, 'show popup', {
+    //     title: 'Wow!',
+    //     message: `${adventurerDoc.name} cleared the whole dungeon, now try the unfair and gigantic waste of time SUPER dungeon!`
+    //   })
+    // }
     await Adventurers.save(adventurerDoc)
     return adventurerDoc
   }

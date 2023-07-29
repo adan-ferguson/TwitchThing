@@ -11,8 +11,6 @@ const HTML = `
     <di-xp-bar></di-xp-bar>
     <div class="flex-columns">
         <di-stats-list></di-stats-list>
-        <div class="divider"></div>
-        <div class="bonuses-list">Put split loadout here</div>
     </div>
 </div>
 `
@@ -36,7 +34,15 @@ export default class AdventurerInfo extends HTMLElement{
 
     this.querySelector('di-xp-bar')
       .setLevelFunctions(advXpToLevel, advLevelToXp)
-      .setValue(adventurerInstance.fighterData.xp)
+      .setValue(adventurerInstance.adventurer.xp)
+
+    this._adventurerInstance = adventurerInstance
+    this.update()
+  }
+
+  update(){
+    this.querySelector('di-stats-list')
+      .setStats(this._adventurerInstance.stats)
   }
 }
 

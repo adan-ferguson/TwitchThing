@@ -2,6 +2,7 @@ import SimpleModal from './simpleModal.js'
 import classDisplayInfo from '../displayInfo/classDisplayInfo.js'
 import { ICON_SVGS } from '../assetLoader.js'
 import { arrayize } from '../../../game/utilFunctions.js'
+import prettyMilliseconds from 'pretty-ms'
 
 const popupQueue = []
 
@@ -40,6 +41,9 @@ function makeContent(data){
       return `<li>${itemHtml(key, data.items[key])}</li>`
     })
     content += `<ul>${listItems.join('')}</ul>`
+  }
+  if(data.time){
+    content += `<hr/><div class="subtitle">Account Age: ${prettyMilliseconds(data.time, { verbose: true })}</div>`
   }
   return `<div class="popup-content">${content}</div>`
 }

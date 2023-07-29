@@ -9,6 +9,7 @@ const DEFAULTS = {
   auth: {
     type: 'none'
   },
+  creationTime: Date.now(),
   displayname: null,
   adventurers: [],
   accomplishments: {
@@ -166,7 +167,8 @@ Users.resetAll = async function(){
       magicID: userDoc.magicID,
       iat: userDoc.iat,
       auth: userDoc.auth,
-      displayname: userDoc.displayname
+      displayname: userDoc.displayname,
+      creationTime: Date.now(),
     })
   }))
 }

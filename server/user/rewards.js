@@ -57,8 +57,7 @@ export function checkForRewards(userDoc){
 
   if(shouldRewardZoneClear(5)){
     popups.push(zoneCleared(5, {
-      message: 'You\'ve reached the end of the dungeon for now. Try the not-fair SUPER dungeon!',
-      zone: 'SUPER Dungeon'
+      message: 'You\'ve reached the end of the dungeon for now...stay tuned for more.',
     }))
   }
 
@@ -71,6 +70,7 @@ export function checkForRewards(userDoc){
   function zoneCleared(zoneNumber, items){
     return {
       title: `${Zones[zoneNumber].name} Cleared`,
+      time: Date.now() - userDoc.creationTime,
       ...items
     }
   }

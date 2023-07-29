@@ -24,6 +24,7 @@ import nextZone from '../assets/rooms/nextZone.png'
 import outOfOrder from '../assets/rooms/outOfOrder.png'
 import relic from '../assets/rooms/relic.png'
 import rest from '../assets/rooms/rest.png'
+import sneak from '../assets/rooms/sneak.png'
 import stairs from '../assets/rooms/stairs.png'
 import timeOver from '../assets/rooms/timeOver.png'
 import wandering from '../assets/rooms/wandering.png'
@@ -59,6 +60,7 @@ export const ROOM_IMAGES = {
   outOfOrder,
   relic,
   rest,
+  sneak,
   stairs,
   timeOver,
   wandering

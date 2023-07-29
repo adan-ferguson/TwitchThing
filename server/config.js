@@ -12,15 +12,10 @@ const defaults = {
   },
   secret: null,
   requireHttps: true,
-  serverURL: null
 }
 
 if(!options.secret){
   throw 'config.js requires a "secret" value, this can just be any string.'
-}
-
-if(!options.serverURL){
-  throw 'config.js requires "serverURL" value'
 }
 
 if(!options.magic.publishableKey){

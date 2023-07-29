@@ -41,7 +41,7 @@ export default class ClassDisplay extends DIElement{
       const ci = this.classInfoEl
       ci.classList.remove('displaynone')
       ci.querySelector('.class-name').textContent = cdi.displayName
-      ci.querySelector('.description').textContent = cdi.description
+      ci.querySelector('.description').innerHTML = cdi.description
     })
     this.unlockButton.addEventListener('click', () => {
       if(this.classSelectorEl.selectedClass){

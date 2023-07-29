@@ -228,6 +228,9 @@ export default class FighterInstancePane extends HTMLElement{
     this._updateActionBar(cancelAnimations)
     this.loadoutEl.updateAllRows()
     this.classList.toggle('boss', this.fighterInstance.isBoss ? true : false)
+    if(this._infoContent){
+      this._infoContent.update()
+    }
 
     if(!this.fighterInstance.hp){
       this._showOnDefeat()
@@ -237,12 +240,16 @@ export default class FighterInstancePane extends HTMLElement{
 
   _showFighterInfoModal(){
     const modal = new Modal()
-    if(this.fighterInstance instanceof Adventurer){
-      modal.innerContent.appendChild(new AdventurerInfo(this.fighterInstance))
+    if(this.fighterInstance instanceof AdventurerInstance){
+      this._infoContent = new AdventurerInfo(this.fighterInstance)
     }else{
-      modal.innerContent.appendChild(new MonsterInfo(this.fighterInstance))
+      this._infoContent = new MonsterInfo(this.fighterInstance)
     }
+    modal.innerContent.appendChild(this._infoContent)
     modal.show()
+    modal.addEventListener('hide', () => {
+      this._infoContent = null
+    })
   }
 
   _excluded(){

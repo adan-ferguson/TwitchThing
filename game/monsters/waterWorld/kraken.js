@@ -46,7 +46,7 @@ export default function(){
     baseStats: {
       physPower: '-10%',
       speed: 10,
-      hpMax: '+500%'
+      hpMax: '+750%'
     },
     items: [chillingTouch, inkCloud]
   }

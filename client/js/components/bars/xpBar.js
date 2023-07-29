@@ -96,8 +96,8 @@ export default class XpBar extends Bar{
         return
       }
       if (xpLeft >= toNextLevel){
-        const diff = this._options.max - this._val
-        await super.setValue(this._options.max, { animate: true, animTime: animTime * (diff / xpToAdd) })
+        // const diff = this._options.max - this._val
+        await super.setValue(this._options.max, { animate: true, animTime: 1000 })
         if(xpAnimation.skipped){
           return
         }
@@ -109,8 +109,8 @@ export default class XpBar extends Bar{
         this._setLevel(xpAnimation.currentLevel)
         xpLeft -= toNextLevel
       }else{
-        const diff = targetXp - this._val
-        await super.setValue(targetXp, { animate: true, animTime: animTime * (diff / xpToAdd) })
+        // const diff = targetXp - this._val
+        await super.setValue(targetXp, { animate: true, animTime: 1000 })
         return
       }
     }

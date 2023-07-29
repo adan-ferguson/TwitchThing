@@ -75,7 +75,7 @@ export default class FloorSlider extends HTMLElement{
 
   _update(){
     this._entriesEl.innerHTML = ''
-    const max = this._options.max
+    const max = Math.min(60, this._options.max)
     const zones = 1 + Math.floor((max - 1) / 10)
     for(let i = 0; i < zones; i++){
       this._entriesEl.appendChild(this._makeZone(i, max))

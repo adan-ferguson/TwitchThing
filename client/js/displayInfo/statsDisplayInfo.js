@@ -228,6 +228,8 @@ function toCompositeText(mods, style){
     const pctValue = statValueFns[StatType.MULTIPLIER](mods.all.pct.map(v => v + '%'))
     pctValue.type = StatType.MULTIPLIER
     return toText(pctValue, style)
+  }else{
+    return 0
   }
 }
 

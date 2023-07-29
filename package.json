@@ -53,6 +53,7 @@
     "passport-magic": "^1.0.0",
     "pm2": "^5.1.0",
     "prettier": "^2.3.2",
+    "pretty-ms": "^8.0.0",
     "prop-types": "^15.7.2",
     "read-last-lines": "^1.8.0",
     "request-promise-native": "^1.0.9",

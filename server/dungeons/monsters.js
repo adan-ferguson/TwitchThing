@@ -141,7 +141,6 @@ function generateRewards(dungeonRun, monsterDefinition){
     }else{
       rewards.pityPoints = dropChance
     }
-    console.log(dungeonRun.rewards.pityPoints, rewards.pityPoints)
   }
   return addRewards(rewards, monsterInstance.rewards)
 }

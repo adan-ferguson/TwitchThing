@@ -24,6 +24,9 @@ export default class EventLog extends HTMLElement{
       if(shouldSkip(event)){
         return
       }
+      if([...this.childNodes].at(-1)?.event?.combatID === event.combatID){
+        return
+      }
       const row = new EventLogRow(event, event.adventurerState)
       row.classList.toggle('clickable', options.rowsClickable)
       row.addEventListener('click', () => {
