@@ -47,6 +47,18 @@ export default class LoadoutTab extends DIElement{
     this._setupItemEdit()
     this._setupSkillEdit()
     this.saveButton.addEventListener('click', async (e) => {
+      if(!this._adventurer.isValid){
+        const result = await new SimpleModal('Your loadout is invalid, and you will not be able to do anything. Exit anyway?', [{
+          text: 'Yes',
+          value: false
+        },{
+          text: 'No',
+          value: true
+        }]).show().awaitResult()
+        if(result){
+          return
+        }
+      }
       this.parentPage.redirectTo(AdventurerPage.path(this._adventurer.id))
     })
   }
@@ -65,21 +77,6 @@ export default class LoadoutTab extends DIElement{
 
   get saveButton(){
     return this.querySelector('button.save')
-  }
-
-  async unload(){
-    if(!this._adventurer){
-      return
-    }
-    if(!this._adventurer.isValid){
-      return await new SimpleModal('Your loadout is invalid and you will not be able to do anything, exit anyway?', [{
-        text: 'Yes',
-        value: false
-      },{
-        text: 'No',
-        value: true
-      }]).show().awaitResult()
-    }
   }
 
   async showData(parentPage){

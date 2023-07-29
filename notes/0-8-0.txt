@@ -1,2 +1,33 @@
 v0.8.0
 ------
+New Things:
+- Users can not play anonymously without logging in, which was a big sticking point for people (understandably).
+- Skill selector added, gain one skill point for each 5 levels gained. The previous idea of "random skill options on level-up" has been removed, because it was hard to make it interesting.
+- Now have 8 item slots AND 8 skill slots.
+- 5 classes, rogue unlocked level 30, ??? unlocked level 40.
+- Each class now has 12 items, 12 skills. In general, the old items have been split up into items & skills, usually active abilities are skills.
+- 6th zone added, the "super dungeon" has been removed for now.
+- You can now buy "Stashed XP", which you can give to adventurers. You also get stashed XP when you dismiss an adventurer (50%).
+
+Changes:
+- Basically remade the entire battle engine, a lot of small differences, but you'd have to be looking close to even see them.
+- Lots of enemies have a bunch of changes because I had to remake all of them too.
+- Speed has more diminishing returns, both positive and negative.
+- Some abilities also now have diminishing returns. They'll have a double-down-arrow icon.
+- When leveling up items, now they generally also increase in Orb cost. No more level 250 items, unfortunately. (Or I mean, I guess technically you could...)
+- Starting food is now 2 + 1 per 10 levels.
+- Gold accrual is a lot flatter now.
+- Adventurer slot prices don't grow as harshly now. (Free -> 1000 -> 2000 -> 5000 -> 10000 -> ... )
+- Shop chests now cap at level 100.
+- To prevent overly long combats, after 60 seconds, combats enter "overtime" which increases all damage dealt by more and more the longer it goes. After 120 seconds, the player starts taking unpreventable damage.
+- A bunch of other things, who cares.
+
+Improvements:
+- In the shop, some items have sliders, so you can buy multiple at once. (Not chests yet, but I don't think you'll be buying like a billion of them anymore anyway)
+- Tooltips generally improved in many ways (probably wasted too much time on these, honestly)
+- You can now upgrade items from the adventurer loadout page. When you right-click an item, if you have forge unlocked, it'll show an "upgrade" button.
+- Combats should generally calculate faster, and slow ones won't crash the server or slow everyone else down. Still a lot of work to do on this though.
+- More, probably.
+
+Fixes:
+- Fixed a lot, but the funniest bug before was cooldown multiplier affecting status effect ticks. Cooldown reduction now just affects your active items. (Or does it? ...)

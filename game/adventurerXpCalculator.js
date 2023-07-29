@@ -9,10 +9,10 @@ const vals = []
 
 export default {
   xpToLevel(xp){
-    return bsearch(xp)
+    return bsearch(xp) + 1
   },
   levelToXp(level){
-    return vals[level] ?? 0
+    return vals[level - 1] ?? 0
   }
 }
 
