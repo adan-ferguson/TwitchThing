@@ -117,6 +117,17 @@ export default class DungeonRunInstance extends EventEmitter{
     await this._nextEvent()
   }
 
+  async cancel(message){
+    this._addEvent({
+      runFinished: true,
+      roomType: 'outOfOrder',
+      message: `${this.adventurerInstance.displayName} finds a secret message! It says: "${message}". Suddenly, everything explodes.`
+    })
+    this.doc.elapsedTime = this.nextEventTime
+    this.doc.results = calculateResults(this.events)
+    this.doc.finished = true
+  }
+
   getNewEvents(){
     const slice = this.events.slice(this._newEventIterator)
     this._newEventIterator = this.events.length
