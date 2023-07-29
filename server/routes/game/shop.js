@@ -2,6 +2,7 @@ import express from 'express'
 import { buyShopItem, getUserShop } from '../../shop/shop.js'
 import Users from '../../collections/users.js'
 import { validateParam } from '../../validations.js'
+import Joi from 'joi'
 
 const router = express.Router()
 
@@ -22,7 +23,8 @@ router.post('/', async (req, res, next) => {
 
 router.post('/buy', async(req, res, next) => {
   const itemId = validateParam(req.body.id)
-  const result = await buyShopItem(req.user, itemId)
+  const count = req.body.count
+  const result = await buyShopItem(req.user, itemId, count)
   res.send({
     result,
     newShop: await getUserShop(req.user)

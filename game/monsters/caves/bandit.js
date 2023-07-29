@@ -1,15 +1,19 @@
-import { sneakAttackMod } from '../../mods/combined.js'
-
-export default {
-  baseStats: {
-    speed: 5,
-    hpMax: '-20%',
-    physPower: '+5%'
-  },
-  items: [
-    {
-      name: 'Ambush',
-      mods: [sneakAttackMod]
-    }
-  ]
+export default function(){
+  return {
+    baseStats: {
+      speed: 5,
+      hpMax: '-20%',
+      physPower: '+10%'
+    },
+    items: [
+      {
+        name: 'Ambush',
+        effect: {
+          mods: [{
+            sneakAttack: true
+          }]
+        }
+      }
+    ]
+  }
 }

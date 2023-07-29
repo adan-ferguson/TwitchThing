@@ -1,33 +1,30 @@
-import statusEffectAction from '../../actions/statusEffectAction.js'
-import { speedStat } from '../../stats/combined.js'
-
-export default {
-  levelFn: level => {
-    const speed = 22 + level * 3
-    return {
+export default function(level){
+  const speed = 20 + level * 30
+  const duration = 20000
+  return {
+    effect: {
       stats: {
         startingFood: level
       },
-      abilities: {
-        rest: {
-          description: `After resting, gain [Sspeed${speed}] for 20 seconds.`,
-          actions: [
-            statusEffectAction({
-              effect: {
-                isBuff: true,
-                displayName: 'Caffeine Rush',
-                persisting: true,
-                stacking: 'extend',
-                duration: 20000,
-                stats: {
-                  [speedStat.name]: speed
-                }
+      abilities: [{
+        trigger: 'rest',
+        actions:[{
+          applyStatusEffect: {
+            targets: 'self',
+            statusEffect: {
+              name: 'caffeineRush',
+              polarity: 'buff',
+              persisting: true,
+              stacking: 'extend',
+              duration,
+              stats: {
+                speed
               }
-            })
-          ]
-        }
-      }
-    }
-  },
-  orbs: 4
+            }
+          }
+        }]
+      }]
+    },
+    orbs: 2 + level * 2
+  }
 }

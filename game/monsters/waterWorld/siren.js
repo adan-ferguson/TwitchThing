@@ -1,23 +1,32 @@
-import cancelAction from '../../actions/cancelAction.js'
-
-export default {
-  baseStats: {
-    speed: 30
-  },
-  items: [
-    {
-      name: 'Charm',
-      abilities: {
-        attacked: {
-          chance: 1/3,
-          description: '1/3 chance to prevent incoming attacks.',
-          actions: [
-            cancelAction({
-              cancelReason: 'charmed'
-            })
-          ]
+export default function(){
+  return {
+    baseStats: {
+      speed: 30,
+      hpMax: '-40%',
+      physPower: '-20%'
+    },
+    items: [
+      {
+        name: 'Charm',
+        effect: {
+          abilities: [{
+            trigger: 'active',
+            uses: 1,
+            actions: [{
+              applyStatusEffect: {
+                targets: 'enemy',
+                statusEffect: {
+                  base: {
+                    charmed: {
+                      duration: 15000
+                    }
+                  }
+                }
+              }
+            }]
+          }]
         }
       }
-    }
-  ]
+    ]
+  }
 }

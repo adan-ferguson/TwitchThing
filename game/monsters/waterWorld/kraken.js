@@ -1,50 +1,53 @@
-import { bossMod } from '../../mods/combined.js'
-import constrictMonsterItem from '../../monsterItems/constrictMonsterItem.js'
-import gainHealthAction from '../../actions/gainHealthAction.js'
-import { fillArray } from '../../utilFunctions.js'
-import attackAction from '../../actions/attackAction.js'
-
-export default {
-  baseStats: {
-    physPower: '+60%',
-    speed: -40,
-    hpMax: '+400%'
-  },
-  items: [
-    {
-      name: 'Boss',
-      mods: [bossMod]
-    },
-    constrictMonsterItem({
-      initialCooldown: 15000,
-      cooldown: 45000
-    }),
-    {
-      name: 'Multi-Attack',
-      abilities: {
-        active: {
-          initialCooldown: 5000,
-          cooldown: 30000,
-          description: 'Attack 5 times for [physAttack0.4] damage.',
-          actions:
-            fillArray(() => [attackAction({
-              damageMulti: 0.5
-            })], 5)
-        }
-      }
-    },
-    {
-      name: 'Regenerate',
-      abilities: {
-        tick: {
-          initialCooldown: 5000,
-          actions: [
-            gainHealthAction({
-              scaling: { magicPower: 0.5 }
-            })
-          ]
-        }
-      }
+export default function(){
+  const chillingTouch = {
+    name: 'Chilling Touch',
+    effect: {
+      abilities: [{
+        trigger: 'attackHit',
+        actions: [{
+          applyStatusEffect: {
+            targets: 'enemy',
+            statusEffect: {
+              polarity: 'debuff',
+              name: 'chilled',
+              stats: {
+                speed: -20
+              },
+              stacking: 'stack'
+            }
+          }
+        }]
+      }]
     }
-  ]
+  }
+  const inkCloud = {
+    name: 'Ink Cloud',
+    effect: {
+      abilities: [{
+        trigger: 'active',
+        cooldown: 15000,
+        actions: [{
+          applyStatusEffect: {
+            targets: 'enemy',
+            statusEffect: {
+              name: 'Inked',
+              polarity: 'debuff',
+              stacking: 'stack',
+              stats: {
+                missChance: '33%'
+              }
+            }
+          }
+        }]
+      }]
+    }
+  }
+  return {
+    baseStats: {
+      physPower: '-10%',
+      speed: 10,
+      hpMax: '+750%'
+    },
+    items: [chillingTouch, inkCloud]
+  }
 }

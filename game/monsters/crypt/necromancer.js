@@ -1,49 +1,57 @@
-import { magicAttackMod } from '../../mods/combined.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
-import attackAction from '../../actions/attackAction.js'
+import { barrierAction } from '../../commonMechanics/barrierAction.js'
 
-export default {
-  baseStats: {
-    hpMax: '+10%',
-    speed: -65, // keep this desynced
-    physPower: '-50%',
-    magicPower: '+10%'
-  },
-  items: [
-    {
-      name: 'Magic Attack',
-      mods: [magicAttackMod]
+export default function(){
+  return {
+    baseStats: {
+      hpMax: '+10%',
+      speed: -65, // keep this desynced
+      magicPower: '+50%',
+      physPower: '-40%'
     },
-    {
-      name: 'Skeleton Archer',
-      abilities: {
-        active: {
-          cooldown: 6000,
-          description: 'Summons a skeleton archer to shoot the opponent. Shoots every 3 seconds for [magicScaling0.4] phys damage.',
-          actions: [
-            statusEffectAction({
-              effect: {
-                stacking: false,
-                displayName: 'Skeleton Archer',
-                description: 'It\'s in the background so you can\'t hit it. (Not a cop-out or anything)',
-                isBuff: true,
-                abilities: {
-                  tick: {
+    items: [
+      {
+        name: 'Summon Skeleton Archer',
+        effect: {
+          abilities: [{
+            trigger: 'active',
+            cooldown: 6000,
+            actions: [{
+              applyStatusEffect: {
+                targets: 'self',
+                statusEffect: {
+                  statusEffectId: 'skeletonArcher',
+                  name: 'Skeleton Archer',
+                  polarity: 'buff',
+                  abilities: [{
+                    trigger: 'instant',
                     initialCooldown: 3000,
-                    actions: [
-                      attackAction({
-                        damageType: 'phys',
-                        damageScaling: 'magic',
-                        damageMulti: 0.4
-                      })
-                    ]
-                  }
+                    actions: [{
+                      attack: {
+                        scaling: {
+                          magicPower: 0.3
+                        },
+                        damageType: 'phys'
+                      }
+                    }]
+                  }]
                 }
               }
-            })
-          ]
+            }]
+          }]
         }
-      }
-    }
-  ]
+      },
+      {
+        name: 'Bone Shield',
+        effect: {
+          abilities: [{
+            trigger: 'active',
+            cooldown: 6000,
+            actions: [barrierAction({
+              magicPower: 2
+            }, { name: 'Bone Shield' })]
+          }]
+        }
+      },
+    ]
+  }
 }

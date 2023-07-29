@@ -21,7 +21,7 @@ const HTML = `
       <button class="play" title="Play"><i class="fa-solid fa-play"></i></button>
       <button class="finish" title="Finish"><i class="fa-solid fa-forward-fast"></i></button> 
     </div>
-    <button class="permalink" title="Event Log"><i class="fa-solid fa-clipboard"></i></button>
+    <button class="diagnose" title="Diagnose"><i class="fa-solid fa-clipboard"></i></button>
   </div>
 </div>
 `

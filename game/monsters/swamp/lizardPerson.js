@@ -1,8 +1,10 @@
-export default {
-  description: 'Like a big kobold.',
-  baseStats: {
-    physPower: '+10%',
-    speed: 20,
-    hpMax: '+10%'
+export default function(){
+  return {
+    baseStats: {
+      physPower: '+10%',
+      speed: 20,
+      hpMax: '+10%',
+      magicDef: '30%'
+    }
   }
 }

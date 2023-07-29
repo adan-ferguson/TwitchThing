@@ -1,37 +1,48 @@
-import { magicScalingMod } from '../../mods/combined.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
-import { poisonedStatusEffect } from '../../statusEffects/combined.js'
-
-const damage = 0.02
-
-export default {
-  baseStats: {
-    hpMax: '-50%',
-    physPower: '-50%',
-    speed: 150
-  },
-  items: [{
-    name: 'Toxic Sting',
-    mods: [magicScalingMod],
-    abilities: {
-      attackHit: {
-        chance: 0.2,
-        description: `Attacks have a 20% chance to inflict poison. [physScaling${damage}] phys damage per second. Lasts 30s.`,
-        actions: [
-          statusEffectAction({
-            base: poisonedStatusEffect,
-            affects: 'enemy',
-            effect: {
-              persisting: true,
-              duration: 30000,
-              params: {
-                damage,
-                damageType: 'phys'
+export default function(){
+  const scaling = {
+    physPower: 0.3
+  }
+  const chance = 0.25
+  const duration = 30000
+  return {
+    baseStats: {
+      hpMax: '-50%',
+      physPower: '-50%',
+      speed: 200
+    },
+    items: [{
+      name: 'Stinger',
+      effect: {
+        abilities: [{
+          vars: {
+            chance,
+            scaling,
+            duration
+          },
+          abilityId: 'waspSting',
+          trigger: 'attackHit',
+          conditions: {
+            random: chance
+          },
+          actions: [{
+            applyStatusEffect: {
+              targets: 'target',
+              statusEffect: {
+                base: {
+                  damageOverTime: {
+                    damage: {
+                      scaledNumber: scaling
+                    }
+                  }
+                },
+                name: 'poisoned',
+                duration,
+                persisting: true
               }
             }
-          })
-        ]
+          }]
+        }]
       }
-    }
-  }]
+    }]
+  }
 }

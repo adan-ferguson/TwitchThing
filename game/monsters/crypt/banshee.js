@@ -1,33 +1,35 @@
-import attackAction from '../../actions/attackAction.js'
-
-export default {
-  baseStats: {
-    physPower: '-70%',
-    magicPower: '+30%',
-    hpMax: '-50%'
-  },
-  items: [
-    {
-      name: 'Wail',
-      abilities: {
-        active: {
-          description: 'Deal 50% of enemy\'s remaining health as magic damage.',
-          uses: 1,
-          actions: [
-            attackAction({
-              damageType: 'magic',
-              damageMulti: 0,
-              targetHpPct: 0.5
-            })
-          ]
+export default function(){
+  return {
+    baseStats: {
+      physPower: '-20%',
+      hpMax: '-20%'
+    },
+    items: [
+      {
+        name: 'Wail',
+        effect: {
+          abilities: [{
+            trigger: 'active',
+            uses: 1,
+            actions: [{
+              targetScaledAttack: {
+                damageType: 'magic',
+                scaling: {
+                  hp: 0.5,
+                }
+              },
+            }]
+          }]
+        }
+      },
+      {
+        name: 'Incorporeal',
+        effect: {
+          stats: {
+            damageCeiling: 1/3
+          }
         }
       }
-    },
-    {
-      name: 'Incorporeal',
-      stats: {
-        dodgeChance: '33%'
-      }
-    }
-  ]
+    ]
+  }
 }

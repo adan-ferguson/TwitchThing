@@ -1,11 +1,10 @@
-import physScaling from '../../mods/generic/physScaling.js'
-
-export default {
-  levelFn: level => ({
-    stats: {
-      critChance: 0.12 + 0.03 * level
+export default function(level){
+  return {
+    effect: {
+      stats: {
+        critChance: 0.05 + level * 0.05
+      }
     },
-    mods: [physScaling]
-  }),
-  orbs: 2
+    orbs: level * 1
+  }
 }

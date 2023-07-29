@@ -1,12 +1,31 @@
-import biteMonsterItem from '../../monsterItems/biteMonsterItem.js'
+import { biteMonsterItem } from '../../commonMechanics/biteMonsterItem.js'
 
-export default {
-  baseStats: {
-    physPower: '-10%',
-    speed: -40,
-    hpMax: '+50%'
-  },
-  items: [
-    biteMonsterItem()
-  ]
+export default function(){
+  return {
+    baseStats: {
+      physPower: '-20%',
+      magicPower: '-20%',
+      speed: 0,
+      hpMax: '-20%',
+    },
+    items: [
+      {
+        name: 'Fire Bolt',
+        effect: {
+          abilities: [{
+            trigger: 'active',
+            cooldown: 5000,
+            actions: [{
+              attack: {
+                scaling: {
+                  magicPower: 1.9
+                }
+              }
+            }]
+          }]
+        }
+      },
+      biteMonsterItem(5000, 1.3),
+    ]
+  }
 }

@@ -1,53 +1,44 @@
 import StatRow from './statRow.js'
-import { getStatDisplayInfo, StatsDisplayStyle } from '../../statsDisplayInfo.js'
+import { getStatDisplayInfo, StatsDisplayStyle } from '../../displayInfo/statsDisplayInfo.js'
 import Stats from '../../../../game/stats/stats.js'
 import { mergeOptionsObjects, wait } from '../../../../game/utilFunctions.js'
 import { flash } from '../../animations/simple.js'
 import _ from 'lodash'
+import DIElement from '../diElement.js'
 
 const STAT_INCREASE_COLOR = '#c0ffc0'
 const STAT_DECREASE_COLOR = '#fabcbc'
 const STAT_EFFECT_TIME = 500
 
-export default class StatsList extends HTMLElement{
+export default class StatsList extends DIElement{
 
-  _options = {
-    statsDisplayStyle: StatsDisplayStyle.CUMULATIVE,
-    iconsOnly: false,
-    showTooltips: true,
-    truncate: true,
-    maxItems: 999,
-    hideIfDefaultValue: false,
-    forced: [],
-    excluded: []
+  get defaultOptions(){
+    return {
+      stats: new Stats(),
+      owner: null,
+      statsDisplayStyle: StatsDisplayStyle.CUMULATIVE,
+      iconsOnly: false,
+      showTooltips: true,
+      truncate: true,
+      maxItems: 999,
+      hideIfDefaultValue: false,
+      forced: [],
+      excluded: []
+    }
   }
 
-  _stats = new Stats()
-  _owner = null
-
   get stats(){
-    return this._stats
+    return this._options.stats
   }
 
   get empty(){
     return this.querySelector('di-stat-row') ? false : true
   }
 
-  setOptions(options){
-    const newOptions = mergeOptionsObjects(this._options, options)
-    if(_.isEqual(newOptions, this._options)){
-      return this
-    }
-    this._options = newOptions
-    this._update()
-    return this
-  }
-
-  setStats(stats, owner = null, showStatChangeEffect = false){
-    // TODO: options
-    this._stats = stats
-    this._owner = owner
+  setStats(stats, showStatChangeEffect = false){
+    this._options.stats = stats
     this._update(showStatChangeEffect)
+    return this
   }
 
   async _update(showStatChangeEffect = false){
@@ -59,17 +50,19 @@ export default class StatsList extends HTMLElement{
       unusedStats[row.getAttribute('stat-key')] = row
     })
 
-    const statsToShow = this._stats.getAll(this._options.forced)
+    const statsToShow = this._options.stats.getAll(this._options.forced)
 
     for(let key in statsToShow){
       const stat = statsToShow[key]
       if(this._options.excluded.indexOf(key) > -1){
         continue
       }
-      if(this._options.hideIfDefaultValue && stat.value === stat.defaultValue){
+      if(this._options.hideIfDefaultValue &&
+        stat.value === stat.defaultValue &&
+        this._options.forced.indexOf(key) === -1){
         continue
       }
-      this._updateStat(stat, this._owner, showStatChangeEffect)
+      this._updateStat(stat, this._options.owner, showStatChangeEffect)
       delete unusedStats[key]
     }
 
@@ -121,7 +114,7 @@ export default class StatsList extends HTMLElement{
     }
     if(showStatChangeEffect){
       rows.forEach(r => flash(r, STAT_DECREASE_COLOR, STAT_EFFECT_TIME))
-      await wait(STAT_EFFECT_TIME / 2)
+      await wait(10)
     }
     rows.forEach(r => r.remove())
   }

@@ -3,16 +3,11 @@ di-shop-page
     display: flex
     flex-wrap: wrap
     align-content: start
-
-    $padding: 20rem
-    padding: $padding 0 0 $padding !important
-
-    > *
-      margin-right: $padding
-      margin-bottom: $padding
+    gap: 20rem
+    padding: 20rem !important
 
     di-shop-item
-      width: 170rem
+      width: 165rem
       height: 150rem
       display: flex
       flex-direction: column
@@ -29,11 +24,23 @@ di-shop-page
           height: 25rem
           width: 25rem
           font-size: 2em
+        .xp-icon
+          height: initial
+          width: initial
 
       &:hover
         border-style: solid
 
+  .price-row
+    svg
+      height: 1.5em
+
 di-shop-item-details
+
+  display: flex
+  flex-direction: column
+  gap: 10rem
+  text-align: center
 
   .shop-item-icon
     display: flex
@@ -55,17 +62,7 @@ di-shop-item-details
     display: flex
     flex-direction: column
     align-items: center
-
-  .drop-chance
-    margin-top: 15rem
-
-    > *
-      margin-bottom: 6rem
-      display: flex
-
-      img
-        height: 1em
-        margin-right: 4rem
+    max-width: 350rem
 
 .chest-el
   position: relative

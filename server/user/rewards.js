@@ -6,6 +6,7 @@ export function checkForRewards(userDoc){
   const popups = []
 
   if(shouldRewardZoneClear(0)){
+    userDoc.inventory.gold += 100
     userDoc.features.shop = 1
     popups.push(zoneCleared(0, {
       message: 'Shop unlocked, visit it from the main page, or from the gold counter in the header.',
@@ -39,18 +40,24 @@ export function checkForRewards(userDoc){
   }
 
   if(shouldRewardZoneClear(3)){
-    userDoc.inventory.scrap += 100
-    userDoc.inventory.gold += 1000
+    userDoc.features.advClasses.chimera = 1
     popups.push(zoneCleared(3, {
-      message: 'Here, have some stuff',
-      items: { scrap: 100, gold: 1000, zone: 'Water World' }
+      items: {
+        class: 'chimera',
+        zone: 'Water World'
+      }
     }))
   }
 
   if(shouldRewardZoneClear(4)){
     popups.push(zoneCleared(4, {
-      message: 'You\'ve reached the end of the dungeon for now. Try the bonus floor 51 for wacky fun time wow!',
-      zone: 'SUPER Zone'
+      items: { zone: 'Heck' }
+    }))
+  }
+
+  if(shouldRewardZoneClear(5)){
+    popups.push(zoneCleared(5, {
+      message: 'You\'ve reached the end of the dungeon for now...stay tuned for more.',
     }))
   }
 
@@ -63,6 +70,7 @@ export function checkForRewards(userDoc){
   function zoneCleared(zoneNumber, items){
     return {
       title: `${Zones[zoneNumber].name} Cleared`,
+      time: Date.now() - userDoc.creationTime,
       ...items
     }
   }

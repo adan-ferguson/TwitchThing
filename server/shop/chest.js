@@ -1,11 +1,7 @@
 import { applyChestToUser, generateRandomChest } from '../dungeons/chests.js'
 
-const CHEST_BASE_PRICE = 100
-// const PRICE_GROWTH = 250
-// const PRICE_GROWTH_RATE = 0.2
-
-export async function chestShopItems(userDoc, purchases){
-  const purchasesByClass = await countPurchases(purchases)
+export function chestShopItems(userDoc, purchases){
+  const purchasesByClass = countPurchases(purchases)
 
   const chests = []
 
@@ -22,16 +18,18 @@ export async function shopChestPurchased(userDoc, chestData){
   const chest = generateRandomChest({
     classes: [chestData.className],
     level: chestData.level,
-    type: 'shop'
+    type: 'shop',
+    noGold: true,
+    itemLimit: 10,
   })
   applyChestToUser(userDoc, chest)
   return chest
 }
 
-async function countPurchases(purchases){
+function countPurchases(purchases){
   const byType = {}
   purchases.forEach(purchase => {
-    if(purchase.shopItem.type !== 'chest'){
+    if(purchase.shopItem?.type !== 'chest'){
       return
     }
     const type = purchase.shopItem.data.className
@@ -47,19 +45,20 @@ async function countPurchases(purchases){
 }
 
 function chestDef(className, purchaseCount){
+  const level = Math.min(100, 10 + purchaseCount * 10)
   return {
     type: 'chest',
     id: className + 'Chest',
     price: {
-      gold: toPrice(purchaseCount)
+      gold: toPrice(level)
     },
     data: {
-      level: 5 + purchaseCount * 5,
+      level,
       className
     }
   }
 }
 
-function toPrice(purchaseCount){
-  return CHEST_BASE_PRICE * (purchaseCount + 1)
+function toPrice(level){
+  return level * 10
 }

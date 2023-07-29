@@ -1,12 +1,13 @@
-import { combatXPStat, magicPowerStat } from '../../stats/combined.js'
-import { leveledPctString } from '../../growthFunctions.js'
+import { exponentialPercentage, wrappedPct } from '../../growthFunctions.js'
 
-export default {
-  levelFn: level => ({
-    stats: {
-      [magicPowerStat.name]: leveledPctString(20, 5, level),
-      [combatXPStat.name]: leveledPctString(20, 5, level),
-    }
-  }),
-  orbs: 3
+export default function(level){
+  return {
+    effect: {
+      stats: {
+        magicPower: wrappedPct( 20 * level),
+        physDef: exponentialPercentage(0.05, level - 1, 0.1)
+      }
+    },
+    orbs: level * 2
+  }
 }

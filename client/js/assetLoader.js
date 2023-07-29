@@ -5,6 +5,7 @@ import gold from '../assets/icons/gold.svg'
 import health from '../assets/icons/health.svg'
 import magicDef from '../assets/icons/magicDef.svg'
 import magicPower from '../assets/icons/magicPower.svg'
+import orbAdd from '../assets/icons/orbAdd.svg'
 import physDef from '../assets/icons/physDef.svg'
 import physPower from '../assets/icons/physPower.svg'
 
@@ -12,6 +13,7 @@ import fighter from '../assets/icons/orbs/fighter.svg'
 import mage from '../assets/icons/orbs/mage.svg'
 import paladin from '../assets/icons/orbs/paladin.svg'
 import rogue from '../assets/icons/orbs/rogue.svg'
+import chimera from '../assets/icons/orbs/chimera.svg'
 
 import cleared from '../assets/rooms/cleared.png'
 import combatResult from '../assets/rooms/combatResult.png'
@@ -22,6 +24,7 @@ import nextZone from '../assets/rooms/nextZone.png'
 import outOfOrder from '../assets/rooms/outOfOrder.png'
 import relic from '../assets/rooms/relic.png'
 import rest from '../assets/rooms/rest.png'
+import sneak from '../assets/rooms/sneak.png'
 import stairs from '../assets/rooms/stairs.png'
 import timeOver from '../assets/rooms/timeOver.png'
 import wandering from '../assets/rooms/wandering.png'
@@ -31,6 +34,7 @@ export const ICON_SVGS = {
   adventurerSlot,
   chest,
   gold,
+  orbAdd,
   physPower,
   physDef,
   magicPower,
@@ -38,11 +42,12 @@ export const ICON_SVGS = {
   health
 }
 
-export const CLASS_SVGS = {
+export const ORB_SVGS = {
   fighter,
   mage,
   paladin,
-  rogue
+  rogue,
+  chimera
 }
 
 export const ROOM_IMAGES = {
@@ -55,6 +60,7 @@ export const ROOM_IMAGES = {
   outOfOrder,
   relic,
   rest,
+  sneak,
   stairs,
   timeOver,
   wandering

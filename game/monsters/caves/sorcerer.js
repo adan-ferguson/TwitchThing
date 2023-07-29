@@ -1,27 +1,31 @@
-import attackAction from '../../actions/attackAction.js'
-
-export default {
-  baseStats: {
-    hpMax: '-20%',
-    magicPower: '+110%',
-    physPower: '-40%'
-  },
-  items: [
-    {
-      name: 'Lightning Bolt',
-      abilities: {
-        active: {
-          initialCooldown: 4000,
-          cooldown: 8000,
-          actions: [
-            attackAction({
-              damageMulti: 2,
-              range: [0, 1],
-              damageType: 'magic'
-            })
-          ]
+export default function(){
+  return {
+    baseStats: {
+      hpMax: '+5%',
+      magicPower: '+120%',
+      physPower: '-30%',
+      speed: 25,
+    },
+    items: [
+      {
+        name: 'Lightning Bolt',
+        effect: {
+          abilities: [{
+            trigger: 'active',
+            initialCooldown: 4000,
+            cooldown: 8000,
+            actions: [{
+              attack: {
+                scaling: {
+                  magicPower: 2
+                },
+                damageType: 'magic',
+                range: [0, 1]
+              }
+            }]
+          }]
         }
       }
-    }
-  ]
+    ]
+  }
 }

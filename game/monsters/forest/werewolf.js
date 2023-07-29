@@ -1,31 +1,31 @@
-import statusEffectAction from '../../actions/statusEffectAction.js'
-
-export default {
-  baseStats: {
-    hpMax: '+20%',
-    physPower: '-40%'
-  },
-  items: [
-    {
-      name: 'Frenzy',
-      abilities: {
-        attackHit: {
-          description: 'Gain phys power and speed after landing an attack.',
-          actions: [
-            statusEffectAction({
-              effect: {
-                stacking: true,
-                displayName: 'Frenzied',
-                description: 'Increased phys power and attack speed.',
-                stats: {
-                  physPower: '+10%',
-                  speed: 25
+export default function(){
+  return {
+    baseStats: {
+      hpMax: '+20%',
+      physPower: '-10%'
+    },
+    items: [
+      {
+        name: 'Frenzy',
+        effect: {
+          abilities: [{
+            trigger: 'attackHit',
+            actions: [{
+              applyStatusEffect: {
+                targets: 'self',
+                statusEffect: {
+                  name: 'frenzy',
+                  polarity: 'buff',
+                  stacking: 'stack',
+                  stats: {
+                    speed: 30
+                  }
                 }
               }
-            })
-          ]
+            }]
+          }]
         }
       }
-    }
-  ]
+    ]
+  }
 }

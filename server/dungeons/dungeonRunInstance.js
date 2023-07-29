@@ -1,11 +1,12 @@
 import { EventEmitter } from 'events'
-import AdventurerInstance from '../../game/adventurerInstance.js'
 import { generateEvent } from './dungeonEventPlanner.js'
 import { addRewards } from './results.js'
 import { ADVANCEMENT_INTERVAL } from './dungeonRunner.js'
 import calculateResults from '../../game/dungeonRunResults.js'
-import { toArray } from '../../game/utilFunctions.js'
-import _ from 'lodash'
+import { arrayize } from '../../game/utilFunctions.js'
+import AdventurerInstance from '../../game/adventurerInstance.js'
+import { resumeCombatEvent } from '../combat/fns.js'
+import { useAbility } from '../mechanics/actions/performAction.js'
 
 export default class DungeonRunInstance extends EventEmitter{
 
@@ -29,6 +30,12 @@ export default class DungeonRunInstance extends EventEmitter{
     return this.doc.adventurer
   }
 
+  get adventurerInstance(){
+    if(!this._adventurerInstance){
+      this._adventurerInstance = new AdventurerInstance(this.doc.adventurer, this.doc.adventurerState)
+    }
+    return this._adventurerInstance
+  }
   get floor(){
     return this.doc.floor
   }
@@ -57,7 +64,13 @@ export default class DungeonRunInstance extends EventEmitter{
   }
 
   get nextEventTime(){
-    return this.newestEvent ? this.newestEvent.time + this.newestEvent.duration : 0
+    if(this.newestEvent){
+      if(this.newestEvent.pending){
+        return Number.POSITIVE_INFINITY
+      }
+      return this.newestEvent.time + this.newestEvent.duration
+    }
+    return 0
   }
 
   get pace(){
@@ -101,10 +114,6 @@ export default class DungeonRunInstance extends EventEmitter{
       return
     }
 
-    // Reset this each advancement to make sure that everything is synced up.
-    // If we just let this roll, then it's possible the doc state is wrong but
-    // we would never notice unless the server reloaded.
-    this.adventurerInstance = new AdventurerInstance(this.doc.adventurer, this.doc.adventurerState)
     await this._nextEvent()
   }
 
@@ -135,6 +144,25 @@ export default class DungeonRunInstance extends EventEmitter{
     }
   }
 
+  finishRunningCombat(newCombatEvent, resultEvent){
+    this.shouldEmit = true
+    this.events.pop()
+    this._addEvent([newCombatEvent, resultEvent])
+  }
+
+  resumePending(){
+    if(this.newestEvent?.pending){
+      resumeCombatEvent(this)
+    }
+  }
+
+  addPendingTriggers(triggers){
+    // Just resolve them immediately, there's nothing in between triggering and resolving in a dungeon run.
+    triggers.forEach(trigger => {
+      useAbility(this, trigger.ability, trigger.data)
+    })
+  }
+
   async _nextEvent(){
     this.doc.room = this.newestEvent?.nextRoom || this.doc.room
     this.doc.floor = this.newestEvent?.nextFloor || this.doc.floor
@@ -143,13 +171,14 @@ export default class DungeonRunInstance extends EventEmitter{
 
   async _addEvent(events){
 
+    events = arrayize(events)
     let durationSum = 0
-    events = toArray(events)
+    let startTime = events[0].time ?? this.doc.elapsedTime
     events.forEach((e, i) => {
       const nextEvent = {
         room: this.doc.room,
         floor: this.doc.floor,
-        time: this.doc.elapsedTime + durationSum,
+        time: startTime + durationSum,
         duration: ADVANCEMENT_INTERVAL,
         ...e
       }
@@ -158,9 +187,6 @@ export default class DungeonRunInstance extends EventEmitter{
       if(nextEvent.rewards){
         if(nextEvent.rewards.xp){
           nextEvent.rewards.xp = Math.ceil(nextEvent.rewards.xp)
-        }
-        if(nextEvent.rewards.food){
-          debugger
         }
         this.doc.rewards = addRewards(this.doc.rewards, nextEvent.rewards)
       }
@@ -173,6 +199,9 @@ export default class DungeonRunInstance extends EventEmitter{
       }
       this._updateState(nextEvent)
     })
+
+    this._fixTimeline()
+    this.doc.elapsedTime = Math.min(this.doc.elapsedTime, this.nextEventTime)
   }
 
   /**
@@ -180,12 +209,24 @@ export default class DungeonRunInstance extends EventEmitter{
    * @param event
    */
   _updateState(event){
-
-    if('hp' in this.adventurerInstance.state && isNaN(this.adventurerInstance.state.hpPct)){
-      debugger
+    const state = {
+      ...this.adventurerInstance.state,
+      currentFloor: this.floor
     }
+    event.adventurerState = state
+    this.doc.adventurerState = state
+    this._adventurerInstance = null
+  }
 
-    event.adventurerState = this.adventurerInstance.state
-    this.doc.adventurerState = this.adventurerInstance.state
+  _fixTimeline(){
+    if(!this.events.length){
+      return
+    }
+    let time = this.events[0].time
+    for(let i in this.events){
+      const entry = this.events[i]
+      entry.time = time
+      time += entry.duration
+    }
   }
 }

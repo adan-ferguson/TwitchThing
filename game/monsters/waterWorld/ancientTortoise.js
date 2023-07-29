@@ -1,48 +1,44 @@
-import statusEffectAction from '../../actions/statusEffectAction.js'
-import { freezeActionBarMod, magicScalingMod } from '../../mods/combined.js'
-import gainHealthAction from '../../actions/gainHealthAction.js'
+import { spikedShellAbility } from '../../commonMechanics/spikedShellAbility.js'
 
-export default {
-  baseStats: {
-    hpMax: '+120%',
-    physPower: '+50%',
-    magicPower: '-20%',
-    speed: -100
-  },
-  items: [{
-    name: 'Withdraw',
-    mods: [magicScalingMod],
-    abilities: {
-      active: {
-        uses: 1,
-        description: 'Usable only when below 50% health. Hide in shell for 10 seconds to regain health.',
-        conditions: {
-          hpPctBelow: 0.5
-        },
-        actions: [
-          statusEffectAction({
-            effect: {
-              displayName: 'Withdrawn',
-              duration: 10000,
-              mods: [freezeActionBarMod],
-              stats: {
-                physDef: '90%',
-                magicDef: '90%'
-              },
-              abilities: {
-                tick: {
-                  cooldown: 1000,
-                  actions: [
-                    gainHealthAction({
-                      scaling: { magicPower: 0.5 }
-                    })
-                  ]
+export default function(){
+  return {
+    baseStats: {
+      hpMax: '+200%',
+      physPower: '+50%',
+      speed: -60
+    },
+    items: [{
+      name: 'Withdraw',
+      effect: {
+        abilities: [{
+          trigger: 'active',
+          uses: 1,
+          conditions: {
+            owner: {
+              hpPctBelow: 0.5
+            }
+          },
+          actions: [{
+            applyStatusEffect: {
+              targets: 'self',
+              statusEffect: {
+                name: 'Withdrawn',
+                mods: [{ freezeActionBar: true }],
+                duration: 10000,
+                stats: {
+                  physDef: '90%',
+                  magicDef: '90%'
                 }
               }
             }
-          })
-        ]
+          }]
+        }]
       }
-    }
-  }]
+    },{
+      name: 'Spiked Shell',
+      effect: {
+        abilities: [spikedShellAbility(0.12)]
+      }
+    }]
+  }
 }

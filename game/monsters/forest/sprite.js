@@ -1,31 +1,36 @@
-import statusEffectAction from '../../actions/statusEffectAction.js'
-import { dodgingStatusEffect } from '../../statusEffects/combined.js'
-import attackAction from '../../actions/attackAction.js'
-import { magicScalingMod } from '../../mods/combined.js'
-import flutteringMonsterItem from '../../monsterItems/flutteringMonsterItem.js'
+import flutteringMonsterItem from '../../commonMechanics/flutteringMonsterItem.js'
 
-export default {
-  baseStats: {
-    speed: 50,
-    hpMax: '-50%',
-    physPower: '-40%',
-    magicPower: '+40%'
-  },
-  items: [
-    flutteringMonsterItem,
-    {
-      name: 'Magic Blast',
-      abilities: {
-        active: {
-          initialCooldown: 7500,
-          actions: [
-            attackAction({
-              damageType: 'magic'
-            })
-          ]
+export default function(){
+
+  const magicBlast = {
+    trigger: 'active',
+    initialCooldown: 4000,
+    cooldown: 8000,
+    actions: [{
+      attack: {
+        scaling: {
+          magicPower: 1
+        },
+        damageType: 'magic'
+      }
+    }]
+  }
+
+  return {
+    baseStats: {
+      speed: 55,
+      hpMax: '-50%',
+      physPower: '-40%',
+      magicPower: '+40%'
+    },
+    items: [
+      flutteringMonsterItem,
+      {
+        name: 'Magic Blast',
+        effect: {
+          abilities: [magicBlast]
         }
-      },
-      mods: [magicScalingMod]
-    }
-  ]
+      }
+    ]
+  }
 }

@@ -1,16 +1,22 @@
-import biteMonsterItem from '../../monsterItems/biteMonsterItem.js'
+import { biteMonsterItem } from '../../commonMechanics/biteMonsterItem.js'
 
-export default {
-  baseStats: {
-    hpMax: '+50%',
-    physPower: '+30%',
-    speed: -20
-  },
-  displayName: 'Two-Headed Shark',
-  items: [
-    biteMonsterItem(),
-    biteMonsterItem({
-      name: 'Bite Again'
-    })
-  ]
+export default function(){
+  return {
+    baseStats: {
+      hpMax: '+10%',
+      physPower: '+10%',
+      speed: 30
+    },
+    displayName: 'Two-Headed Shark',
+    items: [
+      biteMonsterItem(5000, 1.4, {
+        cooldown: 15000
+      }), {
+        ...biteMonsterItem(10000, 1.4, {
+          cooldown: 15000,
+        }),
+        name: 'Bite Again'
+      }
+    ]
+  }
 }

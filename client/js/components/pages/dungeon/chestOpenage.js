@@ -1,10 +1,10 @@
 import { fillArray, makeEl, wait } from '../../../../../game/utilFunctions.js'
-import LoadoutRow from '../../loadout/loadoutRow.js'
-import FighterItemLoadoutItem from '../../../fighterItemLoadoutItem.js'
-import AdventurerItemInstance from '../../../../../game/adventurerItemInstance.js'
-import { getChestDisplayInfo } from '../../../chestDisplayInfo.js'
+import { getChestDisplayInfo } from '../../../displayInfo/chestDisplayInfo.js'
 import DIElement from '../../diElement.js'
 import { ICON_SVGS } from '../../../assetLoader.js'
+import AdventurerItem from '../../../../../game/items/adventurerItem.js'
+import AdventurerItemRow from '../../adventurer/adventurerItemRow.js'
+import { standardItemSort } from '../../listHelpers.js'
 
 const UNOPENED_HTML = `
 <span class="unopened">
@@ -42,7 +42,7 @@ export default class ChestOpenage extends DIElement{
       return
     }
 
-    this.classList.remove('clickable', 'glow')
+    this.classList.remove('clickable', 'glow-natural')
     this.innerHTML = OPENED_HTML
 
     if(animate){
@@ -60,8 +60,13 @@ export default class ChestOpenage extends DIElement{
     this.dispatchEvent(new CustomEvent('opened'))
 
     const displayInfo = getChestDisplayInfo(this._chest)
-    this.querySelector('.inset-title').textContent =
-      `Lvl. ${this._chest.level} ${displayInfo.displayName} Chest`
+
+    let text = ''
+    if(this._chest.options.level){
+      text += `Lvl. ${this._chest.options.level} `
+    }
+
+    this.querySelector('.inset-title').textContent = text + `${displayInfo.displayName} Chest`
 
     const contents = this.querySelector('.contents')
     if(this._chest.contents.gold){
@@ -71,15 +76,17 @@ export default class ChestOpenage extends DIElement{
       }))
     }
 
-    const basicItems = arrayOfItems(this._chest.contents.items.basic)
-    basicItems.forEach(({ itemDef, count }) => {
-      const info = new FighterItemLoadoutItem(new AdventurerItemInstance(itemDef))
-      const row = new LoadoutRow().setItem(info)
-      if(count > 1){
-        row.setCount(count)
-      }
-      contents.appendChild(row)
-    })
+    const basicItems = arrayOfItems(this._chest.contents.items?.basic ?? [])
+    const rows = basicItems
+      .map(({ name, count }) => {
+        const item = new AdventurerItem(name)
+        return new AdventurerItemRow().setOptions({ item, count })
+      })
+      .sort((a,b) => {
+        return b.adventurerItem.rarity - a.adventurerItem.rarity
+      })
+
+    rows.forEach(row => contents.appendChild(row))
 
     this.events.emit('opened')
   }
@@ -91,22 +98,20 @@ export default class ChestOpenage extends DIElement{
     this.querySelectorAll('.stars').forEach(el => {
       el.innerHTML = starsHTML
     })
-    this.classList.add('clickable', 'glow')
+    this.classList.add('clickable', 'glow-natural')
     this.addEventListener('click', () => this.open())
   }
 }
 
-customElements.define('di-chest-openage', ChestOpenage )
+customElements.define('di-chest-openage', ChestOpenage)
 
 function arrayOfItems(obj){
   const arr = []
-  for(let group in obj){
-    for(let name in obj[group]){
-      arr.push({
-        itemDef: { group, name },
-        count: obj[group][name]
-      })
-    }
+  for(let name in obj){
+    arr.push({
+      name,
+      count: obj[name]
+    })
   }
   return arr.sort((a, b) => a.orbs - b.orbs)
 }

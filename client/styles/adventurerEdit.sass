@@ -1,0 +1,252 @@
+di-adventurer-edit-page
+
+  .tab
+    .unspent-points
+      margin-left: 8rem
+      i
+        margin-right: 3rem
+
+  //.content-columns > *
+  //  margin-right: 4rem !important
+
+.loadout-row-tooltip
+
+  max-width: 325rem
+
+  .tooltip-content
+    display: flex
+    flex-direction: column
+
+    di-stats-list
+      margin-left: -6rem
+      margin-right: -6rem
+      margin-bottom: 4rem
+
+    > *
+      margin-bottom: 10rem
+
+      &:last-child
+        margin-bottom: 0
+
+  .right-click
+    font-size: 0.9em
+    margin-top: 10rem
+    font-style: italic
+    width: 100%
+    gap: 15rem
+
+    display: flex
+    justify-content: space-between
+
+di-ability-description
+  white-space: initial
+  display: block
+  position: relative
+  border: 0.5rem solid
+  margin-top: 3rem
+  text-align: left
+  line-height: 1.5em
+  padding: 10rem
+  font-family: 'Text Font', serif
+
+  > *
+    display: inline-block
+
+  svg
+    height: 1em
+    margin-right: 0.2em
+    vertical-align: middle //text-top
+
+  //&[ability-type=active]
+  //  border-color: $activeAbilityColor
+  //  background-color: $activeAbilityColorBg
+  //
+  //&[ability-type=triggered]
+  //  border-color: $triggeredAbilityColor
+  //  background-color: $triggeredAbilityColorBg
+
+  .description
+    .action-description
+      display: flex
+      align-items: center
+
+  .bot-row
+    margin-top: 6rem
+    margin-bottom: -6rem
+    gap: 12rem
+    font-family: 'Main Font'
+
+    span
+      font-size: 12rem
+      margin-left: 12rem
+
+    i
+      font-size: 0.9em
+      margin-right: 3rem
+
+    img
+      height: 1.1em
+      vertical-align: middle
+      margin-right: 3rem
+
+  .name
+    font-weight: bold
+
+  .description
+    margin-top: 5rem
+
+    > *
+      vertical-align: middle
+
+    .action-row
+      display: flex
+      flex-direction: row
+      align-items: center
+
+    .scaling-type
+      display: inline-flex
+      flex-direction: row
+      font-weight: bold
+      align-items: center
+
+      svg
+        height: 1em
+        margin-bottom: 4rem
+        margin-right: 2rem
+
+    .scaling-type-magic
+      color: #4488FF
+
+    .scaling-type-phys
+      color: #DD5533
+
+    .scaling-type-hp
+      color: #8be369
+
+di-adventurer-edit-points-tab
+
+  .refund-points
+    border: none
+    text-decoration: underline
+    color: #d74c4c
+    display: inline
+
+  di-adventurer-edit-class-display
+    > *
+      > *:not(:last-child)
+        margin-bottom: 20rem
+    display: block
+    padding: 20rem
+    .class-name
+      text-align: center
+    .class-info
+      display: flex
+      flex-direction: column
+      .class-name
+        margin-bottom: 20rem
+      .unlock
+        align-self: center
+        position: absolute
+        bottom: 20rem
+        svg
+          height: 1.5em
+          margin-left: 0.5em
+          margin-top: -3rem
+
+    .orb-adder
+      justify-content: center
+      align-items: center
+      border-bottom: 0.5rem solid #CCC
+      padding-bottom: 7rem
+      di-orb-row
+        font-size: 2em
+      button
+        font-size: 2em
+        margin-left: 0.5em
+        width: 1.1em
+        height: 1.1em
+        border: none
+        border-radius: 50%
+        color: white
+        align-items: center
+        position: relative
+        padding: 0
+        filter: drop-shadow(1.75rem 1.75rem 1.75rem #999)
+    .skills-list
+      position: relative
+      flex-grow: 1
+      display: flex
+      flex-direction: column
+      gap: 10rem
+      .feature-locked
+        left: -5rem
+        right: -5rem
+      > .skill-row-row
+        display: flex
+        flex: 0 1 8%
+        gap: 10rem
+        align-items: center
+
+        > di-adventurer-skill-row
+          flex-grow: 1
+          height: 100%
+
+        > i.fa-solid
+          //width: 20rem
+          font-size: 1.2em
+
+  di-adventurer-edit-skill-point-meter
+    flex-grow: 0 !important
+
+di-adventurer-edit-class-selector
+  display: flex
+  flex-direction: row
+  flex-wrap: wrap
+  justify-content: center
+  button
+    border: none
+    border-radius: 50%
+    padding: 2rem
+    filter: drop-shadow(1.75rem 1.75rem 0.75rem #ccc)
+
+    svg
+      height: 3em
+    &:not(.selected) svg
+      fill: #DDDDDD
+
+di-inventory, di-skills
+  padding-top: 8rem
+
+di-inventory
+  di-list.items.blank-row
+    border: none
+
+.editable
+  di-adventurer-skill-row, di-adventurer-item-row
+    .cooldown
+      background-color: transparent
+    &:not(.blank, .filtered)
+      cursor: pointer
+      filter: drop-shadow(1.75rem 1.75rem 0.75rem #ccc)
+      &:hover
+        background-color: #e9ffdf
+    &.filtered
+      opacity: 0.4
+    &.hoverable
+      background-color: #f8f8ff
+    &.hovered
+      background-color: #e1e7fa
+
+  &.hoverable .border
+    background-color: #f8f8ff
+  &.hovered .border
+    background-color: #e1e7fa
+
+.popped-out
+  position: absolute
+
+di-adventurer-edit-skills
+  padding-top: 8rem
+
+  di-list
+    position: relative

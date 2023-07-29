@@ -3,8 +3,7 @@ import Adventurers from '../collections/adventurers.js'
 import Users from '../collections/users.js'
 import DungeonRunInstance from './dungeonRunInstance.js'
 import { emit } from '../socketServer.js'
-import { cancelRun } from './results.js'
-import AdventurerInstance from '../../game/adventurerInstance.js'
+import Adventurer from '../../game/adventurer.js'
 
 let lastAdvancement = new Date()
 let running = false
@@ -26,7 +25,10 @@ export async function start(){
   console.log('starting dungeon runner')
   const dungeonRuns = await DungeonRuns.find({
     query: {
-      finished: false
+      finished: false,
+      cancelled: {
+        $ne: true
+      }
     }
   })
   console.log(`found ${dungeonRuns.length} runs`)
@@ -50,6 +52,7 @@ export async function start(){
       return
     }
     activeRuns[dr._id] = new DungeonRunInstance(dr, user)
+    activeRuns[dr._id].resumePending()
   })
 
   console.log('go!')
@@ -147,6 +150,23 @@ export function getActiveRun(id){
   return activeRuns[id]
 }
 
+export async function cancelRun(dungeonRunDoc, ex){
+  if(!activeRuns[dungeonRunDoc._id]){
+    return
+  }
+  delete activeRuns[dungeonRunDoc._id]
+  console.log('run cancelled', dungeonRunDoc._id)
+  emit(dungeonRunDoc._id, 'dungeon run update', {
+    id: dungeonRunDoc._id,
+    error: ex?.message ?? ex
+  })
+  const adventurerDoc = await Adventurers.findByID(dungeonRunDoc.adventurer._id)
+  adventurerDoc.dungeonRunID = null
+  dungeonRunDoc.cancelled = true
+  await Adventurers.save(adventurerDoc)
+  await DungeonRuns.save(dungeonRunDoc)
+}
+
 function validateNew(adventurerDoc, userDoc, { startingFloor }){
   if(!adventurerDoc){
     throw 'Adventurer not found'
@@ -157,11 +177,8 @@ function validateNew(adventurerDoc, userDoc, { startingFloor }){
   if(adventurerDoc.dungeonRun){
     throw 'Adventurer already in dungeon'
   }
-  if(adventurerDoc.nextLevelUp){
-    throw 'Adventurer can not enter dungeon, they have a pending levelup'
-  }
-  const adventurer = new AdventurerInstance(adventurerDoc)
-  if(!adventurer.isLoadoutValid){
+  const adventurer = new Adventurer(adventurerDoc)
+  if(!adventurer.isValid){
     throw 'Adventurer has invalid loadout.'
   }
 }
@@ -172,14 +189,7 @@ async function advanceRuns(){
     try {
       await run.advance()
     }catch(ex){
-      await run.cancel(ex.message ?? ex)
-      console.log('run cancelled', run.doc._id, ex)
-      // emit(run.doc._id, 'dungeon run update', {
-      //   error: ex.message ?? ex,
-      //   _id: run.doc._id
-      // })
-      // cancelRun(run.doc)
-      // delete activeRuns[id]
+      cancelRun(run.doc, ex)
     }
   }
 }
@@ -199,7 +209,7 @@ function emitSocketEvents(){
     }
     delete clipped.events
 
-    emit(clipped._id, 'dungeon run update', clipped)
+    emit(clipped._id, 'dungeon run update', { id: clipped._id, dungeonRun: clipped })
     if(!perUser[clipped.adventurer.userID]){
       perUser[clipped.adventurer.userID] = []
     }
@@ -240,6 +250,6 @@ function truncatedRun(doc){
   return truncatedDoc
 }
 
-function virtualTime(doc){
+export function virtualTime(doc){
   return doc.elapsedTime + (new Date() - lastAdvancement) - ADVANCEMENT_INTERVAL
 }

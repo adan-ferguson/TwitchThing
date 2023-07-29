@@ -2,11 +2,32 @@ import Server from './server.js'
 import db from './db.js'
 import * as DungeonRunner from './dungeons/dungeonRunner.js'
 import { initLogging } from './logging.js'
-initLogging().then(() => {
-  db.init().then(async () => {
-    DungeonRunner.start()
-    await Server.init().catch(error => {
-      console.log('Server failed to load.', error)
-    })
-  })
+import { startCombatWorkers } from './combat/interop.js'
+import { validateAllMonsters } from './validations/monster.js'
+import { validateAllItems } from './validations/adventurerItem.js'
+import { validateAllSkills } from './validations/adventurerSkill.js'
+import { validateAllBaseEffects } from './validations/effect.js'
+
+init().catch(ex => {
+  console.error(ex)
+  process.exit()
 })
+
+async function init(){
+  await initLogging()
+  await db.init()
+  await startCombatWorkers()
+  validateEverything()
+  DungeonRunner.start()
+  await Server.init().catch(error => {
+    console.log('Server failed to load.', error)
+  })
+}
+
+function validateEverything(){
+  validateAllItems()
+  validateAllSkills()
+  validateAllMonsters()
+  validateAllBaseEffects()
+}
+

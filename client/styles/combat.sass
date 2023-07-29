@@ -47,6 +47,9 @@ di-combat-page
 
 di-fighter-instance-pane
 
+  di-monster-loadout
+    height: 100%
+
   di-hp-bar
     margin: 2rem
     margin-top: 0 !important
@@ -67,19 +70,14 @@ di-fighter-instance-pane
     flex-grow: 1 !important
     align-items: flex-start
     align-content: flex-start
-    margin-right: -5rem
-    margin-bottom: -5rem
-    max-height: 200rem
-    overflow-y: auto
+    gap: 5rem
 
     di-effect-row
       position: relative
       display: flex
       align-items: center
       justify-content: center
-      min-width: 95rem
-      margin-right: 5rem
-      margin-bottom: 5rem
+      //min-width: 95rem
 
       &.persisting
         border: 0.5rem solid currentColor

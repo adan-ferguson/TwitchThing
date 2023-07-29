@@ -1,62 +1,31 @@
 import FighterInstance from './fighterInstance.js'
-import AdventurerItemInstance from './adventurerItemInstance.js'
-import OrbsData from './orbsData.js'
-import { geometricProgession, inverseGeometricProgression } from './growthFunctions.js'
-import BonusesData from './bonusesData.js'
-import { minMax, toNumberOfDigits } from './utilFunctions.js'
-import { startingFoodStat } from './stats/combined.js'
-
-const XP_BASE = 100
-const XP_GROWTH = 200
-const XP_GROWTH_PCT = 0.3
-
-const HP_BASE = 40
-const HP_GROWTH = 18
-const HP_GROWTH_PCT = 0.05
-
-const POWER_BASE = 10
-const POWER_GROWTH = 3
-const POWER_GROWTH_PCT = 0.05
-
-export function advXpToLevel(xp){
-  if(xp < XP_BASE){
-    return 1
-  }
-  const lvl = Math.floor(inverseGeometricProgression(XP_GROWTH_PCT, xp - XP_BASE, XP_GROWTH)) + 2
-  return advLevelToXp(lvl) <= xp ? lvl : lvl - 1
-}
-
-export function advLevelToXp(lvl){
-  if(lvl <= 1){
-    return 0
-  }
-  return toNumberOfDigits(
-    Math.round(geometricProgession(XP_GROWTH_PCT, lvl - 2, XP_GROWTH)) + XP_BASE,
-    3
-  )
-}
-
-export function adventurerLevelToHp(lvl){
-  return HP_BASE + Math.ceil(geometricProgession(HP_GROWTH_PCT, lvl - 1, HP_GROWTH))
-}
-
-export function adventurerLevelToPower(lvl){
-  return POWER_BASE + Math.ceil(geometricProgession(POWER_GROWTH_PCT, lvl - 1, POWER_GROWTH))
-}
+import { minMax } from './utilFunctions.js'
+import LoadoutObjectInstance from './loadoutObjectInstance.js'
+import Adventurer, { adventurerLevelToHp, adventurerLevelToPower } from './adventurer.js'
 
 export default class AdventurerInstance extends FighterInstance{
 
-  constructor(adventurerDef, initialState = {}){
-    super(adventurerDef, initialState)
-    this.bonusesData = new BonusesData(adventurerDef.bonuses, this)
+  _adventurer
+  _itemInstances = []
+  _skillInstances = []
+
+  constructor(adventurer, initialState = {}){
+    adventurer = adventurer instanceof Adventurer ? adventurer : new Adventurer(adventurer)
+    super()
+    this._adventurer = adventurer
+    this.state = initialState
   }
 
-  get accomplishments(){
-    return this.fighterData.accomplishments
+  get idle(){
+    return this._state.idle
   }
 
-  get level(){
-    return advXpToLevel(this._fighterData.xp)
+  get uniqueID(){
+    return this.adventurer.id
+  }
+
+  get adventurer(){
+    return this._adventurer
   }
 
   get bonuses(){
@@ -64,52 +33,33 @@ export default class AdventurerInstance extends FighterInstance{
   }
 
   get displayName(){
-    return this.fighterData.name
+    return this.adventurer.name
   }
 
-  get ItemClass(){
-    return AdventurerItemInstance
+  get loadoutEffectInstances(){
+    const leis = []
+    for(let i = 0; i < 8; i++){
+      leis.push(this._itemInstances[i], this._skillInstances[i])
+    }
+    return leis.filter(l => l)
   }
 
   get baseHp(){
-    return adventurerLevelToHp(this.level)
+    return adventurerLevelToHp(this.adventurer.level)
   }
 
   get basePower(){
-    return adventurerLevelToPower(this.level)
+    return adventurerLevelToPower(this.adventurer.level)
   }
 
   get baseStats(){
-    return [
-      {
-        [startingFoodStat.name]: 3
-      },
-      ...this.bonuses.map(bonusInstance => bonusInstance.stats)
-    ]
-  }
-
-  get baseMods(){
-    return this.bonuses.map(bonusInstance => bonusInstance.mods)
-  }
-
-  get orbs(){
-    const max = this.bonuses.map(bonusInstance => {
-      return bonusInstance.orbsData.maxOrbs
-    })
-    const used = this.itemInstances.map(ii => ii?.orbs.maxOrbs || {})
-    return new OrbsData(max, used)
-  }
-
-  get effectInstances(){
-    return [...this.bonuses, ...super.effectInstances]
-  }
-
-  get shouldLevelUp(){
-    return this.bonusesData.levelTotal < this.level
+    return [{
+      startingFood: 2 + Math.floor(this.adventurer.level / 10)
+    }]
   }
 
   get maxFood(){
-    return this.stats.get(startingFoodStat).value
+    return this.stats.get('startingFood').value
   }
 
   get food(){
@@ -120,18 +70,53 @@ export default class AdventurerInstance extends FighterInstance{
     this._state.food = minMax(0, val, this.maxFood)
   }
 
-  get isLoadoutValid(){
-    const orbs = this.orbs
-    if(!orbs.isValid){
-      return false
+  get loadoutState(){
+    const stateDef = { items: [], skills: [] }
+    for(let i = 0; i < 8; i++){
+      stateDef.items[i] = this._itemInstances[i]?.state
+      stateDef.skills[i] = this._skillInstances[i]?.state
     }
-    return true
+    return stateDef
   }
 
-  getEquippedSlotBonus(slotIndex){
-    // TODO: equipping of slot bonuses, for now the slot bonuses are just hardcoded
-    return this.bonusesData.instances.find(bonusInstance => {
-      return bonusInstance.slotBonus?.slotIndex === slotIndex
-    })?.slotBonus
+  set loadoutState(stateDef){
+    const items = stateDef?.items ?? []
+    const skills = stateDef?.skills ?? []
+    const loadout = this.adventurer.loadout
+    for(let i = 0; i < 8; i++){
+      if(loadout.items[i]){
+        const si = loadout.getSlotInfo(0, i)
+        this._itemInstances[i] = new LoadoutObjectInstance({
+          obj: si.loadoutItem,
+          owner: this,
+          state: items[i],
+          slotInfo: { col: 0, row: i }
+        })
+      }
+      if(loadout.skills[i]){
+        const si = loadout.getSlotInfo(1, i)
+        this._skillInstances[i] = new LoadoutObjectInstance({
+          obj: si.loadoutItem,
+          owner: this,
+          state: skills[i],
+          slotInfo: { col: 1, row: i }
+        })
+      }
+    }
+  }
+
+  get onDeepestFloor(){
+    if(!this._state.currentFloor){
+      return false
+    }
+    return this._state.currentFloor >= this.adventurer.deepestFloor
+  }
+
+  getSlotInfo(col, row){
+    // TODO: check for temporary item
+    const slotInfo = this._adventurer.loadout.getSlotInfo(col, row)
+    slotInfo.valid = true
+    slotInfo.loadoutItem = (col === 0 ? this._itemInstances : this._skillInstances)[row]
+    return slotInfo
   }
 }

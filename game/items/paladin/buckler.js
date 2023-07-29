@@ -1,11 +1,10 @@
-import { exponentialPercentage, leveledPctString } from '../../growthFunctions.js'
-
-export default {
-  levelFn: level => ({
-    stats: {
-      hpMax: leveledPctString(3, 2, level),
-      blockChance: exponentialPercentage(0.03, level - 1, 0.1)
+export default function(level){
+  return {
+    orbs: level * 1,
+    effect: {
+      stats: {
+        block: 0.03 + 0.04 * level
+      }
     }
-  }),
-  orbs: 1
+  }
 }

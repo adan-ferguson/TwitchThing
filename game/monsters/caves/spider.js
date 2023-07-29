@@ -1,34 +1,35 @@
-import statusEffect from '../../actions/statusEffectAction.js'
-
-export default {
-  baseStats: {
-    physPower: '-10%',
-    speed: -10
-  },
-  items: [
-    {
-      name: 'Web Shot',
-      abilities: {
-        active: {
-          cooldown: 9000,
-          description: 'Reduce target\'s speed by 25. Lasts 10s.',
-          actions: [
-            statusEffect({
-              affects: 'enemy',
-              effect: {
-                stacking: true,
-                displayName: 'Webbed',
-                description: 'Speed reduced.',
-                duration: 10000,
-                persisting: true,
-                stats: {
-                  speed: -25
+export default function(){
+  return {
+    baseStats: {
+      physPower: '+20%',
+      hpMax: '+30%',
+      speed: 10
+    },
+    items: [
+      {
+        name: 'Web Shot',
+        effect: {
+          abilities: [{
+            trigger: 'active',
+            cooldown: 9000,
+            actions: [{
+              applyStatusEffect: {
+                targets: 'enemy',
+                statusEffect: {
+                  base: {
+                    slowed: {
+                      speed: -40
+                    }
+                  },
+                  name: 'webbed',
+                  persisting: true,
+                  duration: 10000
                 }
               }
-            })
-          ]
+            }]
+          }]
         }
       }
-    }
-  ]
+    ]
+  }
 }

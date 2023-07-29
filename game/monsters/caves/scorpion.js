@@ -1,39 +1,47 @@
-import { poisonedStatusEffect } from '../../statusEffects/combined.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
-import attackAction from '../../actions/attackAction.js'
+import { onHit } from '../../commonMechanics/onHit.js'
 
-const damage = 0.1
-
-export default {
-  baseStats: {
-    hpMax: '+30%',
-    speed: -30,
-    physPower: '-10%'
-  },
-  items: [
-    {
-      name: 'Tail Sting',
-      abilities: {
-        active: {
-          cooldown: 12000,
-          description: `{A0} Poison the opponent for [physScaling${damage}] phys damage per second. Lasts 10s.`,
-          actions: [
-            attackAction(),
-            statusEffectAction({
-              base: poisonedStatusEffect,
-              affects: 'enemy',
-              effect: {
-                duration: 10000,
-                persisting: true,
-                params: {
-                  damage,
-                  damageType: 'phys'
+export default function(){
+  return {
+    baseStats: {
+      hpMax: '+30%',
+      speed: -30,
+      physPower: '-10%'
+    },
+    items: [
+      {
+        name: 'Tail Sting',
+        effect: {
+          abilities: [{
+            trigger: 'active',
+            cooldown: 12000,
+            actions: [{
+              attack: {
+                scaling: {
+                  physPower: 1
+                }
+              },
+            },{
+              applyStatusEffect: {
+                targets: 'target',
+                statusEffect: {
+                  base: {
+                    damageOverTime: {
+                      damage: {
+                        scaledNumber: {
+                          physPower: 0.3
+                        }
+                      }
+                    }
+                  },
+                  name: 'poisoned',
+                  duration: 15000,
+                  persisting: true,
                 }
               }
-            })
-          ]
+            }]
+          }]
         }
       },
-    },
-  ]
+    ]
+  }
 }

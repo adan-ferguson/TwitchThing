@@ -1,0 +1,22 @@
+import Skills from '../../game/skills/combined.js'
+import AdventurerSkill from '../../game/skills/adventurerSkill.js'
+import Joi from 'joi'
+import { LOADOUT_OBJECT_SCHEMA } from './loadoutObject.js'
+import { getAllSkillKeys } from '../../game/adventurerClassInfo.js'
+
+export function validateAllSkills(){
+  for(let id of getAllSkillKeys()){
+    try {
+      validateSkill(id)
+    }catch(ex){
+      throw `Skill "${id}" failed validation: ` + ex
+    }
+  }
+}
+
+function validateSkill(id){
+  Joi.assert(Skills[id].def, Joi.function())
+  Joi.assert(new AdventurerSkill(id).data, LOADOUT_OBJECT_SCHEMA.append({
+    skillPoints: Joi.number().integer(),
+  }))
+}

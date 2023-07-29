@@ -3,13 +3,16 @@ import SimpleModal from './simpleModal.js'
 import tippy from 'tippy.js'
 import { suffixedNumber } from '../../../game/utilFunctions.js'
 import goldIcon from '../../assets/icons/gold.svg'
+import { faIcon, simpleTippy } from './common.js'
+import Modal from './modal.js'
+import RegisterForm from './registerForm.js'
 
 const HTML = `
 <div class="left-side">
   <button class="back-button"><i class="fa-solid fa-arrow-left"></i></button>
   <div class="flex-rows">
     <a class="autocrawl clickable" href="/game">AUTOCRAWL</a>
-    <a class="version" href="/notes/0-7-1">v0.7.1.1</a>
+    <a class="version" href="/notes/0-8-0">v0.8.0.0</a>
   </div>
 </div>
 <div class="right-side">
@@ -20,7 +23,9 @@ const HTML = `
   <div class="gold-button displaynone">
     ${goldIcon}
     <span class="val"></span>
-    <span class="val"></span>
+  </div>
+  <div class="register-button displaynone">
+    ${faIcon('circle-exclamation')}
   </div>
   <div class="user-info clickable">
     <span class="displayname"></span> <i class="fa-solid fa-caret-down"></i>
@@ -80,6 +85,8 @@ export default class Header extends HTMLElement{
       }
       return options
     })
+
+    this._setupRegisterButton()
   }
 
   set titleText(val){
@@ -101,11 +108,12 @@ export default class Header extends HTMLElement{
       this.querySelector('.displayname').textContent = this.user.displayname
       this._updateGold()
       this._updateScrap()
+      this._updateRegisterButton()
     }
   }
 
   _updateGold(){
-    let tip = 'Gold'
+    let tip = 'Shop'
     const goldButtonEl = this.querySelector('.gold-button')
     goldButtonEl.querySelector('.val').textContent = suffixedNumber(this.user.inventory.gold ?? 0, 5)
     if(!this.user.features?.shop){
@@ -136,6 +144,22 @@ export default class Header extends HTMLElement{
     }
     scrapEl.classList.remove('displaynone')
     scrapEl._tippy.setContent(tip)
+  }
+
+  _setupRegisterButton(){
+    const btn = this.querySelector('.register-button')
+    simpleTippy(btn, 'Register account and get rid of annoying exclamation point')
+    btn.addEventListener('click', () => {
+      const modal = new Modal()
+      modal.innerContent.append(new RegisterForm({
+        linkExisting: true
+      }))
+      modal.show()
+    })
+  }
+
+  _updateRegisterButton(){
+    this.querySelector('.register-button').classList.toggle('displaynone', this.user.isRegistered ? true : false)
   }
 }
 

@@ -102,7 +102,8 @@ export default class List extends DIElement{
       filterFn: null,
       showFiltered: false,
       selectableRows: false,
-      clickableRows: false
+      clickableRows: false,
+      blankFn: null
     }
   }
 
@@ -129,14 +130,14 @@ export default class List extends DIElement{
 
   setRows(rows){
     this._rowsCache = rows.slice()
-    this._fullUpdate()
+    this.fullUpdate()
     return this
   }
 
   addRow(row){
     // TODO: binary search here
     this._rowsCache.push(row)
-    this._fullUpdate()
+    this.fullUpdate()
   }
 
   removeRow(row){
@@ -167,7 +168,7 @@ export default class List extends DIElement{
     this.page = Math.ceil((index + 1) / this._pageSize)
   }
 
-  _fullUpdate(){
+  fullUpdate(){
     const filtered = (!this._options.showFiltered && this._options.filterFn) ?
       this._rowsCache.filter(this._options.filterFn) : [...this._rowsCache]
     this._sortedRows = this._options.sortFn ? filtered.sort((a, b) => {
@@ -207,26 +208,33 @@ export default class List extends DIElement{
     this.rows.innerHTML = ''
     const start = (this._page - 1) * this._pageSize
     const toDisplay = this._sortedRows.slice(start, start + this._pageSize)
-    fillWithBlanks(toDisplay, this._pageSize)
+    this._fillWithBlanks(toDisplay)
     toDisplay.forEach(el => {
       el.classList.add('list-row')
       el.style.flexBasis = `${100 / this._pageSize}%`
       if(this._options.showFiltered && this._options.filterFn && !el.classList.contains('blank-row')){
         el.classList.toggle('filtered', !this._options.filterFn(el))
       }
+      el.becameVisibleInList?.()
     })
     this.rows.append(...toDisplay)
+
+    hideAllTippys({ duration: 0 })
+  }
+
+  _fillWithBlanks(arr){
+    for(let i = 0; i < this._pageSize; i++){
+      if(!arr[i]){
+        if(this._options.blankFn){
+          arr[i] = this._options.blankFn()
+        }else{
+          const blankRow = document.createElement('div')
+          blankRow.classList.add('blank-row')
+          arr[i] = blankRow
+        }
+      }
+    }
+    return arr
   }
 }
 customElements.define('di-list', List)
-
-function fillWithBlanks(arr, length){
-  for(let i = 0; i < length; i++){
-    if(!arr[i]){
-      const blankRow = document.createElement('div')
-      blankRow.classList.add('blank-row')
-      arr[i] = blankRow
-    }
-  }
-  return arr
-}

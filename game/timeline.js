@@ -56,6 +56,9 @@ export default class Timeline extends EventEmitter{
   }
 
   setTime(val, jumped = false){
+    if(isNaN(val)){
+      debugger
+    }
     const before = this._time
     if(before === undefined){
       jumped = true
@@ -71,7 +74,19 @@ export default class Timeline extends EventEmitter{
   }
 
   addEntry(entry){
-    this._entries.push(entry)
+    if(entry.time === this.duration){
+      this._entries.push(entry)
+    }else{
+      const i = this._entries.findIndex(e => e.time === entry.time)
+      if(i === -1){
+        debugger
+      }
+      this._entries[i] = entry
+    }
     this.emit('entry_added', entry)
+  }
+
+  updateNewestEntry(entry){
+    this._entries[this._entries.length - 1] = entry
   }
 }

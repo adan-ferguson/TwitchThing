@@ -1,41 +1,61 @@
-import tippy from 'tippy.js'
-import { effectDisplayInfo } from '../../effectDisplayInfo.js'
+import { statusEffectDisplayInfo } from '../../displayInfo/statusEffectDisplayInfo.js'
 import { flash } from '../../animations/simple.js'
 import { ACTION_COLOR } from '../../colors.js'
-import { parseDescriptionString } from '../../descriptionString.js'
+import DIElement from '../diElement.js'
+import EffectDetails from '../effectDetails.js'
+import { wrapContent } from '../../../../game/utilFunctions.js'
 
 const HTML = `
 <di-bar></di-bar>
 <di-mini-bar></di-mini-bar>
 `
 
-export default class EffectRow extends HTMLElement{
+export default class EffectRow extends DIElement{
 
   barEl
 
   constructor(key, effect){
     super()
+    this.classList.add('effect-instance')
     this.innerHTML = HTML
-    this.setAttribute('effect-key', key)
     this.barEl = this.querySelector('di-bar')
     this._miniBarEl = this.querySelector('di-mini-bar')
       .setOptions({
         color: ACTION_COLOR
       })
-    if(effect.description){
-      const parsed = parseDescriptionString(effect.description)
-      this._tippy = tippy(this, {
-        theme: 'light',
-        content: parsed
-      })
-    }
-    this.update(effect, false)
   }
 
-  update(effect, cancelAnimations = false){
+  get tooltip(){
 
-    this.effect = effect
-    const info = effectDisplayInfo(effect)
+    if(!this._effect){
+      return null
+    }
+
+    const ed = new EffectDetails().setObject(this._effect)
+    if(!ed.innerHTML){
+      return null
+    }
+
+    const tooltip = document.createElement('div')
+    tooltip.classList.add('loadout-row-tooltip')
+    tooltip.appendChild(ed)
+
+    return tooltip
+  }
+
+  setEffect(effect, key){
+    this.setAttribute('effect-id', key)
+    return this.update(effect, true)
+  }
+
+  update(effect, key, cancelAnimations = false){
+
+    this._effect = effect
+
+    const info = statusEffectDisplayInfo(effect)
+    if(!info){
+      debugger // Shouldn't reach here...
+    }
 
     this.classList.toggle('persisting', effect.persisting)
 
@@ -54,11 +74,14 @@ export default class EffectRow extends HTMLElement{
     }
 
     if(info.abilityInfo){
-      this._timedMiniBar = info.abilityInfo.ability.cooldown ? true : false
+      this._timedMiniBar = info.abilityInfo.abilityState === 'cooldown-refreshing' ? true : false
       this._miniBarEl
-        .setOptions({ max: info.abilityInfo.barMax })
-        .setValue(info.abilityInfo.barValue)
+        .setOptions({ max: info.abilityInfo.abilityBarMax })
+        .setValue(info.abilityInfo.abilityBarValue)
     }
+
+    this.setTooltip(this.tooltip)
+    return this
   }
 
   advanceTime(ms){
@@ -71,7 +94,7 @@ export default class EffectRow extends HTMLElement{
   }
 
   flash(){
-    flash(this.barEl.foregroundEl, effectDisplayInfo(this.effect).colors.flash, 500)
+    flash(this.barEl.foregroundEl, statusEffectDisplayInfo(this._effect).colors.flash, 500)
   }
 }
 customElements.define('di-effect-row', EffectRow)

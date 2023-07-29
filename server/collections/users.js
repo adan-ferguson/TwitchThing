@@ -1,6 +1,5 @@
 import Adventurers from './adventurers.js'
 import Collection from './collection.js'
-import db from '../db.js'
 import { emit } from '../socketServer.js'
 
 const DEFAULTS = {
@@ -10,6 +9,7 @@ const DEFAULTS = {
   auth: {
     type: 'none'
   },
+  creationTime: Date.now(),
   displayname: null,
   adventurers: [],
   accomplishments: {
@@ -22,6 +22,8 @@ const DEFAULTS = {
   },
   features: { // featureName: 0 = locked, 1 = unlocked & brand new, 2 = unlocked
     editLoadout: 0,
+    spendPoints: 0,
+    skills: 0,
     dungeonPicker: 0,
     shop: 0,
     workshop: 0,
@@ -29,13 +31,15 @@ const DEFAULTS = {
       fighter: 2,
       mage: 2,
       paladin: 2,
-      rogue: 0
+      rogue: 0,
+      chimera: 0
     }
   },
   inventory: {
     adventurerSlots: 1,
     gold: 0,
     scrap: 0,
+    stashedXp: 0,
     items: {
       basic: {},
       crafted: {}
@@ -60,11 +64,29 @@ Users.loadFromMagicID = async function(magicID){
   return results[0]
 }
 
+Users.deserializeFromSession = async function(obj){
+  if(!obj){
+    return null
+  }else if(obj.userID){
+    // new
+    return await Users.findByID(obj.userID)
+  }else{
+    // old
+    return await Users.loadFromMagicID(obj)
+  }
+}
+
 Users.create = async function(magicID, iat, email, provider){
   return await Users.save({
     magicID,
     iat,
     auth: { type: provider, email }
+  })
+}
+
+Users.createAnonymous = async function(){
+  return await Users.save({
+    displayName: 'generic_user_with_underscores'
   })
 }
 
@@ -96,12 +118,12 @@ Users.setDisplayname = async function(userDoc, displayname){
   await Users.save(userDoc)
 }
 
-Users.newAdventurer = async function(userDoc, adventurername, startingClass){
+Users.newAdventurer = async function(userDoc, adventurername){
   const availableSlots = userDoc.inventory.adventurerSlots - userDoc.adventurers.length
   if(availableSlots <= 0){
     throw { message: 'No slots available.', code: 403 }
   }
-  // TODO: prevent duplicates?
+  const startingClass = userDoc.accomplishments.firstRunFinished ? null : 'fighter'
   const adventurerDoc = await Adventurers.createNew(userDoc._id, adventurername, startingClass)
   userDoc.adventurers.push(adventurerDoc._id)
   await Users.save(userDoc)
@@ -122,6 +144,7 @@ Users.gameData = function(userDoc){
     gameData: true
   }
   filteredData.isAdmin = Users.isAdmin(userDoc)
+  filteredData.isRegistered = filteredData.magicID ? true : false
   delete filteredData.magicID
   delete filteredData.iat
   delete filteredData.auth
@@ -144,7 +167,8 @@ Users.resetAll = async function(){
       magicID: userDoc.magicID,
       iat: userDoc.iat,
       auth: userDoc.auth,
-      displayname: userDoc.displayname
+      displayname: userDoc.displayname,
+      creationTime: Date.now(),
     })
   }))
 }

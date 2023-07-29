@@ -1,19 +1,23 @@
 @font-face
+  font-family: 'Main Font'
+  src: url('../assets/CourierPrime-Regular.ttf')
+
+@font-face
   font-family: 'Number Font'
   src: url('../assets/CourierPrime-Regular.ttf')
 
 @font-face
-  font-family: 'Main Font'
-  src: url('../assets/CourierPrime-Regular.ttf')
-  //src: url('../assets/Inter-Regular.ttf')
+  font-family: 'Text Font'
+  src: url('../assets/NunitoSans.ttf')
+  //src: url('../assets/NunitoSans.ttf')
 
 html
-  font-size: 0.12vh
+  font-size: 0.125vh
   user-select: none
 
-@media (max-aspect-ratio: 1/1)
-  html
-    font-size: 0.12vw
+//@media (max-aspect-ratio: 5/4)
+//  html
+//    font-size: 0.1vw
 
 html, body
   position: relative
@@ -47,6 +51,9 @@ body
   font-size: 1.1em
   font-weight: bold
 
+.align-center
+  text-align: center
+
 input
   font-family: 'Main Font', Arial, serif
   font-size: 12rem
@@ -62,6 +69,7 @@ button, .buttonish
   display: flex
   align-items: center
   justify-content: center
+  gap: 3rem
 
   transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease
 
@@ -139,12 +147,13 @@ input
 .displaynone
   display: none !important
 
-.tippy-content
-  white-space: pre-line
+//.tippy-content
+//  white-space: pre-line
 
 .fill-contents
   display: flex
   flex-direction: column
+  gap: 5rem
 
   > *
     flex-grow: 1
@@ -153,6 +162,11 @@ input
   display: flex
   align-items: center
   justify-content: center
+
+.center-contents-baseline
+  display: flex
+  justify-content: center
+  align-items: baseline
 
 .absolute-center-both
   position: absolute
@@ -194,18 +208,27 @@ input
 
 .tippy-box .tippy-content
   padding: 8rem 12rem
-
-.highlight, .glow
-  box-shadow: 0 0 10px 5px #aef4af
+  font-family: 'Text Font'
 
 .glow
-  animation: glow 1s infinite alternate
+  box-shadow: 0 0 10px 5px #8fde90
+  animation: glow 0.7s ease-in-out infinite alternate
+
+.glow-natural
+  box-shadow: 0 0 10px 5px currentColor
+  animation: glow 0.7s ease-in-out infinite alternate
 
 @keyframes glow
   from
     background-color: white
   to
-    background-color: #d8f6d8
+    background-color: #8fde90
+
+@keyframes glow-natural
+  from
+    background-color: white
+  to
+    background-color: currentColor
 
 .autocrawl
   font-size: 3em
@@ -216,9 +239,10 @@ input
 .hinter
   display: flex
   flex-direction: column
-  flex: 0 0 70rem !important
+  flex: 0 0 15rem !important
   text-align: center
   justify-content: center
+  margin: 0 -15rem
 
 $insetPadding: 6rem
 .inset-title, .inset-title-right
@@ -233,3 +257,54 @@ $insetPadding: 6rem
 .inset-title-right
   left: initial
   right: $insetPadding
+
+svg
+  height: 1em
+
+.stat-wrap
+  font-weight: bold
+
+.icon-and-value
+  display: inline-flex
+  font-weight: bold
+  align-items: center
+  gap: 3rem
+
+  //i, svg
+  //  padding-top: 2rem
+
+.feature-locked
+
+  ~ *
+    visibility: hidden
+
+  position: absolute
+  top: 0
+  right: 0
+  bottom: 0
+  left: 0
+  background-color: #fff5ee
+  border: 0.5rem solid #d7c036
+
+  display: flex
+  justify-content: center
+  align-items: center
+  padding: 10%
+  text-align: center
+  font-weight: bold
+  color: black
+  gap: 7rem
+
+.xp-icon
+  display: inline-flex
+  gap: 1rem
+  background-color: #7bb08d
+  border-radius: 5rem
+  padding: 3rem
+
+  > *
+    font-size: 0.6em
+    color: white
+
+  .fa-plus
+    font-size: 0.4em

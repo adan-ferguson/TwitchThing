@@ -1,8 +1,9 @@
-export default {
-  description: 'Like a small lizard person.',
-  baseStats: {
-    physPower: '+10%',
-    hpMax: '+10%',
-    speed: 20
+export default function(){
+  return {
+    baseStats: {
+      physPower: '+10%',
+      hpMax: '+20%',
+      speed: 20
+    }
   }
 }

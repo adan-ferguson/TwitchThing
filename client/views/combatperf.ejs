@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>AutoCrawl</title>
+    <link rel="stylesheet" href="/styles/style.css">
+    <script src="https://kit.fontawesome.com/d486ec65d1.js" crossorigin="anonymous"></script>
+</head>
+<body>
+    <button id="run-combat">Run Combat</button>
+    <span id="run-time"></span>
+    <script>
+      window.COMBAT_ARGS = <%- locals.combatArgs ? JSON.stringify(locals.combatArgs) : "null" %>
+    </script>
+    <script defer src="/scripts/combatperf.js"></script>
+</body>
+</html>

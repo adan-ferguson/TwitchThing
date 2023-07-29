@@ -1,53 +1,56 @@
-import { magicScalingMod, silencedMod } from '../../mods/combined.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
-import gainHealthAction from '../../actions/gainHealthAction.js'
-
-export default {
-  baseStats: {
-    hpMax: '-10%',
-    physPower: '-50%',
-    magicPower: '+20%',
-    speed: 55
-  },
-  items: [
-    {
-      name: 'Bear Form',
-      abilities: {
-        active: {
-          initialCooldown: 11000,
-          description: 'Switch to Bear Form.',
-          uses: 1,
-          actions: [
-            statusEffectAction({
-              effect: {
-                stacking: false,
-                mods: [silencedMod],
-                displayName: 'Bear Form',
-                description: 'Modified stats, can only basic attack.',
-                stats: {
-                  hpMax: '+220%',
-                  physPower: '+220%',
-                  speed: -100,
+export default function(){
+  return {
+    baseStats: {
+      hpMax: '-20%',
+      physPower: '-50%',
+      magicPower: '+40%',
+      speed: 30
+    },
+    items: [
+      {
+        name: 'Bear Form',
+        effect: {
+          abilities: [{
+            trigger: 'active',
+            initialCooldown: 11000,
+            abilityId: 'bearForm',
+            uses: 1,
+            actions: [{
+              applyStatusEffect: {
+                targets: 'self',
+                statusEffect: {
+                  name: 'Bear Form',
+                  statusEffectId: 'bearForm',
+                  mods: [{
+                    silenced: true
+                  }],
+                  stats: {
+                    hpMax: '+220%',
+                    physPower: '+220%',
+                    speed: -70
+                  }
                 }
               }
-            })
-          ]
+            }]
+          }]
+        }
+      },
+      {
+        name: 'Regrowth',
+        effect: {
+          abilities: [{
+            trigger: 'active',
+            initialCooldown: 5000,
+            actions: [{
+              gainHealth: {
+                scaling: {
+                  magicPower: 1
+                }
+              }
+            }]
+          }]
         }
       }
-    },
-    {
-      name: 'Regrowth',
-      mods: [magicScalingMod],
-      abilities: {
-        active: {
-          initialCooldown: 3500,
-          actions: [
-            gainHealthAction({
-              scaling: { magicPower: 1 }
-            })
-          ]
-        }
-      }
-    }
-  ]
+    ]
+  }
 }

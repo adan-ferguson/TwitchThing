@@ -1,6 +1,25 @@
-export default {
-  baseStats: {
-    speed: 70,
-    damageTaken: '-30%'
+export default function(){
+  return {
+    baseStats: {
+      speed: 70,
+    },
+    items: [{
+      name: 'Gargle Gibberish',
+      effect: {
+        abilities: [{
+          trigger: 'active',
+          uses: 1,
+          actions: [{
+            modifyAbility: {
+              targets: 'enemy',
+              trigger: 'active',
+              modification: {
+                cooldownRemaining: 10000
+              }
+            }
+          }]
+        }]
+      }
+    }]
   }
 }

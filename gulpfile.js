@@ -8,7 +8,8 @@ import VinylFile from 'vinyl'
 import path from 'path'
 
 const S = gulpSass(sass)
-const REGISTRIES = ['items', 'monsters', 'mods', 'bonuses', 'statusEffects', 'stats']
+const REGISTRIES = ['items', 'monsters', 'skills', 'baseEffects', 'stats', 'actionDefs']
+const SERVER_REGISTRIES = ['actions','intermediateActions']
 
 function buildStyles(){
   return gulp.src('./client/styles/**/*.*ss')
@@ -28,7 +29,12 @@ function generateRegistries(){
       .pipe(exporterConcater(t, './game/' + t + '/combined.js'))
       .pipe(gulp.dest('.'))
   })
-  return merge(...pipes)
+  const serverPipes = SERVER_REGISTRIES.map(t => {
+    return gulp.src('./server/mechanics/' + t + '/*/**/*.js')
+      .pipe(exporterConcater(t, './server/mechanics/' + t + '/combined.js'))
+      .pipe(gulp.dest('.'))
+  })
+  return merge(...pipes, ...serverPipes)
 }
 
 function importComponents(){
@@ -63,37 +69,23 @@ function exporterConcater(itemType, targetFile){
 
   function combinedFileContents(){
     let str = ''
-    const groups = {}
+    const exportStrings = []
+    const groupedExportStrings = {}
     files.forEach(({ name, path, group }) => {
       str += `import ${name} from './${path}'\n`
-      str += `${name}.name = '${name}'\n`
-      str += `${name}.group = '${group}'\n`
-      if(!groups[group]){
-        groups[group] = []
+      const exportString = `${name}: { def: ${name}, id: '${name}', group: '${group}' }`
+      exportStrings.push(exportString)
+      if(!groupedExportStrings[group]){
+        groupedExportStrings[group] = []
       }
-      groups[group].push(name)
+      groupedExportStrings[group].push(exportString)
     })
-    str += 'export default {\n'
-    let all = []
-    for(let groupName in groups){
-      all.push(...groups[groupName])
-      str += `  ${groupName}: { ${groups[groupName].map(name => `${name}`).join(',')} },\n`
+    str += `export default { ${exportStrings.join(',')} }\n`
+    for(let key in groupedExportStrings){
+      str += `export const ${key} = { ${groupedExportStrings[key].join(',')} }\n`
     }
-    str += '}\n'
-    str += `export const all = { ${all.join(',')} }\n`
-    str += `export { ${all.map(name => `${name} as ${name + capFirst(itemType)}`).join(',')} }\n`
     return str
   }
-}
-
-function capFirst(str){
-  // Remove 's'
-  str = str.slice(0, 1).toUpperCase() + str.slice(1, str.length - 1)
-  if(str.charAt(str.length - 1) === 'e'){
-    // Remove 'e'
-    str = str.slice(0, str.length - 1)
-  }
-  return str
 }
 
 function makeComponentImporter(targetPath){

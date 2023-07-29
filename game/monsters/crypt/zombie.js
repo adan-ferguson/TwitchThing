@@ -1,27 +1,39 @@
-import statusEffect from '../../actions/statusEffectAction.js'
-import { diseasedStatusEffect } from '../../statusEffects/combined.js'
-
-export default {
-  baseStats: {
-    hpMax: '+60%',
-    speed: -60,
-    physPower: '-30%'
-  },
-  items: [
-    {
-      name: 'Disease',
-      abilities: {
-        attackHit: {
-          chance: 0.2,
-          description: 'Attacks have 20% chance to disease the enemy.',
-          actions: [
-            statusEffect({
-              base: diseasedStatusEffect,
-              affects: 'enemy'
-            })
-          ]
+export default function(){
+  return {
+    baseStats: {
+      hpMax: '+50%',
+      speed: -20,
+      physPower: '-20%'
+    },
+    items: [
+      {
+        name: 'Disease',
+        effect: {
+          abilities: [{
+            abilityId: 'zombieDisease',
+            trigger: 'attackHit',
+            conditions: {
+              random: 0.2
+            },
+            actions: [{
+              applyStatusEffect: {
+                targets: 'target',
+                statusEffect: {
+                  name: 'diseased',
+                  persisting: true,
+                  polarity: 'debuff',
+                  stacking: 'stack',
+                  stackingId: 'zombieDisease',
+                  stats: {
+                    physPower: '0.9x',
+                    magicPower: '0.9x',
+                  }
+                }
+              }
+            }]
+          }]
         }
       }
-    }
-  ]
+    ]
+  }
 }

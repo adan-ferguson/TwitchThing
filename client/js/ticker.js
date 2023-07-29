@@ -56,7 +56,7 @@ export default class Ticker extends EventEmitter{
   }
 
   start(){
-    if(this.reachedEnd || this.running){
+    if(this.reachedEnd || (this.running && this._ticking)){
       return
     }
     this._startTicks()

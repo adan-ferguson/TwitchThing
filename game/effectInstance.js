@@ -1,161 +1,174 @@
-import { toDisplayName } from './utilFunctions.js'
+import { fillArray, uniqueID } from './utilFunctions.js'
 import Stats  from './stats/stats.js'
-import AbilitiesData from './abilitiesData.js'
-import ModsCollection from './modsCollection.js'
-import { scaleStats } from './stats/statScaling.js'
+import AbilityInstance from './abilityInstance.js'
 
 // Stupid
 new Stats()
 
 export default class EffectInstance{
 
-  owner
+  _baseEffectData
+  _fighterInstance
   _state = {}
-  effectId = ''
 
   constructor(owner, state = {}){
-    this.owner = owner
-    this._state = state
+    this._fighterInstance = owner
+    if(!state.uniqueID){
+      state.uniqueID = uniqueID()
+    }
+    this.state = state
+  }
+
+  get calculateBaseEffectData(){
+    throw 'calculateBaseEffectData not implemented'
+  }
+
+  get uniqueID(){
+    return this._state.uniqueID
+  }
+
+  get fighterInstance(){
+    return this._fighterInstance
   }
 
   get effectData(){
-    throw 'effectData getter not defined'
+    return this.fighterInstance.metaEffectCollection.apply(this)
   }
 
-  get displayName(){
-    return this.effectData.displayName ?? toDisplayName(this.effectData.name)
+  get effect(){
+    return this.effectData
   }
 
-  get description(){
-    return this.effectData.description ?? ''
+  get metaEffects(){
+    return this.effect.metaEffects
   }
 
-  get disabled(){
-    if(!this.owner){
-      return false
+  get baseEffectData(){
+    if(!this._baseEffectData){
+      this._baseEffectData = this.calculateBaseEffectData
     }
-    if(this.owner.isEffectDisabled(this)){
-      return true
-    }
-    return false
+    return this._baseEffectData
   }
 
   /**
    * @return {Stats}
    */
   get stats(){
-    if(this.disabled){
-      return new Stats()
-    }
-    const scaledStats = this.effectData.scaledStats
-    if(scaledStats){
-      return new Stats(scaleStats(scaledStats.stats, scaledStats.scaling, this.owner))
-    }
-    return new Stats(this.effectData.stats)
+    const extra = fillArray(() => this.effectData.stats, this.statMultiplier - 1)
+    return new Stats(this.effectData.stats, extra)
   }
 
   get exclusiveStats(){
-    return this.owner?.statsForEffect(this) ?? new Stats()
+    return new Stats(this.effectData.exclusiveStats)
+  }
+
+  get totalStats(){
+    return new Stats([this.fighterInstance.stats, this.exclusiveStats])
+  }
+
+  get transStats(){
+    return this.effectData.transStats ?? []
+  }
+
+  get statsModifiers(){
+    return this.effectData.statsModifiers ?? []
+  }
+
+  get statMultiplier(){
+    return this.effect.statMultiplier ?? 1
   }
 
   get state(){
-    this.fixState()
-    return JSON.parse(JSON.stringify(this._state))
-  }
-
-  /**
-   * @return {ModsCollection}
-   */
-  get mods(){
-    if(this.disabled){
-      return new ModsCollection()
+    if(this._abilities){
+      this._state.abilities = abilitiesStateValue(this._abilities)
+      this._abilities = null
     }
-    return new ModsCollection(this.effectData.mods || [])
+    return JSON.parse(JSON.stringify(this._state))
   }
 
   set state(newState){
     this._state = {
+      abilities: {},
       ...newState
     }
-    this.fixState()
-  }
-
-  get hasAbilities(){
-    return Object.keys(this.effectData.abilities ?? {}).length > 0
+    this._abilities = null
   }
 
   get abilities(){
-    return this.generateAbilitiesData().instances
-  }
-
-  get enabledAbilities(){
-    if(this.disabled){
-      return {}
+    if(!this._abilities){
+      this._abilities = makeAbilities(this.effectData.abilities, this._state.abilities, this)
     }
-    return this.abilities
+    return this._abilities
   }
 
-  get slotEffect(){
-    return this.effectData.slotEffect ?? null
+  get mods(){
+    return this.effectData.mods ?? []
   }
 
-  get isValid(){
-    return this.effectData ? true : false
+  get disabled(){
+    return this.totalMods.some(m => m.disabled)
   }
 
-  generateAbilitiesData(){
-    return new AbilitiesData(this.effectData.abilities, this._state?.abilities ?? {}, this)
+  get exclusiveMods(){
+    return this.effectData.exclusiveMods ?? []
   }
 
-  /**
-   * @param eventName {string}
-   */
-  getAbility(eventName){
-    return this.generateAbilitiesData().instances[eventName]
+  get totalMods(){
+    return [...this.fighterInstance.mods, ...this.exclusiveMods]
   }
 
-  useAbility(eventName){
-    const ad = this.generateAbilitiesData()
-    const inst = ad.instances[eventName]
-    inst.use()
-    this._state.abilities = ad.stateVal
-
-    if(inst.nextTurnOffset){
-      let offset = 0
-      if(inst.nextTurnOffset.pct){
-        offset += this.owner.turnTime * inst.nextTurnOffset.pct
+  get izExtreme(){
+    for(let ame of (this.effect.appliedMetaEffects ?? [])){
+      if(ame.subject.key === 'self'){
+        return true
       }
-      this.owner.nextTurnOffset += offset
     }
+    return false
   }
 
-  shouldTrigger(triggerName){
-    if(this.disabled){
-      return false
-    }
-    const abilityInstance = this.getAbility(triggerName)
-    if(!abilityInstance?.shouldTrigger()){
-      return false
-    }
-    return true
+  getAbilities(trigger = null, type = 'either'){
+    return this.abilities.filter(ai => {
+      if(ai.type !== type && type !== 'either'){
+        return false
+      }else{
+        return !trigger || ai.trigger === trigger
+      }
+    })
   }
 
   advanceTime(ms){
-    const ad = this.generateAbilitiesData()
-    ad.advanceTime(ms)
-    this._state.abilities = ad.stateVal
+    this.abilities.forEach(ai => {
+      ai.advanceTime(ms)
+    })
   }
 
-  refreshCooldown(def = null){
-    const ad = this.generateAbilitiesData()
-    ad.refreshCooldowns(def)
-    this._state.abilities = ad.stateVal
+  modsOfType(type){
+    return this.totalMods.map(m => m[type]).filter(m => m)
   }
 
-  fixState(){
-    this._state = {
-      abilities: this.generateAbilitiesData().stateVal,
-      ...this._state
-    }
+  endCombat(){
+    this.abilities.forEach(ai => {
+      ai.endCombat()
+    })
   }
+
+  invalidate(){
+    this.fighterInstance.uncache()
+    this._baseEffectData = null
+  }
+}
+
+function makeAbilities(abilitiesDef, abilitiesStateVal, parent){
+  if(!abilitiesDef){
+    return []
+  }
+  const abilities = []
+  abilitiesDef.forEach((abilityDef, i) => {
+    abilities.push(new AbilityInstance(abilityDef, abilitiesStateVal[i], parent, i))
+  })
+  return abilities
+}
+
+function abilitiesStateValue(abilities){
+  return abilities.map(a => a.state)
 }

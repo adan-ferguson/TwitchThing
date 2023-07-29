@@ -130,9 +130,18 @@ export default class App extends HTMLElement{
   }
 
   showError(error){
-    debugger
     this.setPage('')
-    alertModal(_.isObject(error) ? JSON.stringify(error) : error)
+    let str
+    if(!error){
+      str = 'Some error'
+    }else if(error.message){
+      str = error.message
+    }else if(_.isString(error)){
+      str = error
+    }else{
+      str = JSON.stringify(error)
+    }
+    alertModal(str)
   }
 
   _resetBackground(){

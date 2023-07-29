@@ -58,14 +58,14 @@ export default class Scrapyard extends DIElement{
       title: 'Choose items to scrap',
       userInventory: this._inventory
     }).listEl.events.on('clickrow', ({ e, row }) => {
-      this._addItemToScrapList(row.loadoutItem, e.shiftKey)
+      this._addItemToScrapList(row.adventurerItem, e.shiftKey)
     })
 
     this.toScrapEl.setOptions({
       pageSize: 12,
       clickableRows: true
     }).events.on('clickrow', ({ e, row }) => {
-      this._removeItemFromScrapList(row.loadoutItem, e.shiftKey)
+      this._removeItemFromScrapList(row.adventurerItem, e.shiftKey)
     })
 
     this.scrapButton.addEventListener('click', async () => {
@@ -79,22 +79,22 @@ export default class Scrapyard extends DIElement{
     })
   }
 
-  _addItemToScrapList(loadoutItem, all = false){
-    const count = removeInventoryItem(this.workshopInventoryEl.listEl, loadoutItem, all)
-    addInventoryItem(this.toScrapEl, loadoutItem, count)
+  _addItemToScrapList(adventurerItem, all = false){
+    const count = removeInventoryItem(this.workshopInventoryEl.listEl, adventurerItem, all)
+    addInventoryItem(this.toScrapEl, adventurerItem, count)
     this._updateScrapCount()
   }
 
-  _removeItemFromScrapList(loadoutItem, all = false){
-    const count = removeInventoryItem(this.toScrapEl, loadoutItem, all)
-    addInventoryItem(this.workshopInventoryEl.listEl, loadoutItem, count)
+  _removeItemFromScrapList(adventurerItem, all = false){
+    const count = removeInventoryItem(this.toScrapEl, adventurerItem, all)
+    addInventoryItem(this.workshopInventoryEl.listEl, adventurerItem, count)
     this._updateScrapCount()
   }
 
   _updateScrapCount(){
     let scrap = 0
     this.toScrapEl.allRows.forEach(row => {
-      scrap += row.loadoutItem.scrapValue * (row.count ?? 1)
+      scrap += row.adventurerItem.scrapValue * (row.count ?? 1)
     })
     this.scrapEl.textContent = scrap
     this.scrapButton.toggleAttribute('disabled', !scrap)

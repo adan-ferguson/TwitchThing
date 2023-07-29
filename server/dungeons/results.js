@@ -1,20 +1,25 @@
 import Adventurers from '../collections/adventurers.js'
 import Users from '../collections/users.js'
-import { toArray } from '../../game/utilFunctions.js'
+import { arrayize } from '../../game/utilFunctions.js'
 import { emit } from '../socketServer.js'
 import DungeonRuns from '../collections/dungeonRuns.js'
-import { advXpToLevel } from '../../game/adventurerInstance.js'
+import { advXpToLevel } from '../../game/adventurer.js'
 import { applyChestToUser } from './chests.js'
 import Combats from '../collections/combats.js'
-import { adjustInventoryBasics } from '../loadouts/inventory.js'
-import { checkForRewards } from '../user/rewards.js'
+import { adjustInventoryBasics } from '../user/inventory.js'
 
 const REWARDS_TYPES = {
-  xp: 'int',
-  chests: 'array'
+  xp: 'num',
+  chests: 'array',
+  food: 'num',
+  pityPoints: 'num'
 }
 
 export function addRewards(rewards, toAdd){
+  if(Array.isArray(toAdd)){
+    toAdd.forEach(r => rewards = addRewards(rewards, r))
+    return rewards
+  }
   const r = { ...rewards }
   for(let key in toAdd){
 
@@ -22,7 +27,7 @@ export function addRewards(rewards, toAdd){
       continue
     }
 
-    if(REWARDS_TYPES[key] === 'int'){
+    if(REWARDS_TYPES[key] === 'num'){
       if(!r[key]){
         r[key] = 0
       }
@@ -31,7 +36,7 @@ export function addRewards(rewards, toAdd){
       if(!r[key]){
         r[key] = []
       }
-      r[key].push(...toArray(toAdd[key]))
+      r[key].push(...arrayize(toAdd[key]))
     }
   }
   return r
@@ -48,9 +53,13 @@ export async function finalize(dungeonRunDoc){
   }
 
   const lastEvent = dungeonRunDoc.events.at(-1)
-  const deepestFloor = dungeonRunDoc.floor + ((lastEvent.roomType === 'cleared' || lastEvent.roomType === 'outOfOrder') ? 1 : 0)
+  let deepestFloor = dungeonRunDoc.floor
+  if(['cleared','outOfOrder'].includes(lastEvent.roomType)){
+    deepestFloor += 1
+  }
 
-  await saveAdventurer()
+  const adventurerDoc = await saveAdventurer()
+  const userDoc = await Users.findByID(dungeonRunDoc.adventurer.userID)
   await saveUser()
   await saveDungeonRun()
   await purgeOldRuns(dungeonRunDoc.adventurer._id)
@@ -62,15 +71,19 @@ export async function finalize(dungeonRunDoc){
     adventurerDoc.xp = xpAfter
     adventurerDoc.level = advXpToLevel(xpAfter)
     adventurerDoc.accomplishments.deepestFloor = Math.max(deepestFloor, adventurerDoc.accomplishments.deepestFloor)
-    if(dungeonRunDoc.floor === 51){
-      adventurerDoc.accomplishments.superMonster = Math.max(dungeonRunDoc.room - 1, adventurerDoc.accomplishments.superMonster ?? 0)
-    }
+    // if(deepestFloor === 60 && lastEvent.roomType === 'cleared' && !adventurerDoc.accomplishments.deepestSuperFloor){
+    //   adventurerDoc.accomplishments.deepestSuperFloor = 1
+    //   emit(userDoc._id, 'show popup', {
+    //     title: 'Wow!',
+    //     message: `${adventurerDoc.name} cleared the whole dungeon, now try the unfair and gigantic waste of time SUPER dungeon!`
+    //   })
+    // }
     await Adventurers.save(adventurerDoc)
+    return adventurerDoc
   }
 
   async function saveUser(){
 
-    const userDoc = await Users.findByID(dungeonRunDoc.adventurer.userID)
     dungeonRunDoc.rewards.chests?.forEach(chest => {
       applyChestToUser(userDoc, chest)
     })
@@ -80,14 +93,33 @@ export async function finalize(dungeonRunDoc){
     }
 
     if(!userDoc.accomplishments.firstRunFinished){
-      adjustInventoryBasics(userDoc, { fighter : { slash : 1 } })
+      adjustInventoryBasics(userDoc, { shortSword: 1 })
       userDoc.accomplishments.firstRunFinished = 1
       userDoc.features.editLoadout = 1
       emit(userDoc._id, 'show popup', {
-        title: 'You fool!',
+        title: 'Augh!',
         message: `You got crushed! What were you thinking? You didn't even have a weapon!
         
         I just hooked you up with an item. Go to your adventurer's inventory to equip it.`
+      })
+    }
+
+    if(adventurerDoc.level > 1 && !userDoc.features.spendPoints){
+      adjustInventoryBasics(userDoc, { shortSword: 1 })
+      userDoc.features.spendPoints = 1
+      emit(userDoc._id, 'show popup', {
+        title: 'That Went Better',
+        message: `Your adventurer leveled up! Go to the Edit Adventurer page to assign orbs (or not, whatever).
+        
+        Orbs let you equip more items and unlock skills.`
+      })
+    }
+
+    if(adventurerDoc.level >= 5 && !userDoc.features.skills){
+      userDoc.features.skills = 1
+      emit(userDoc._id, 'show popup', {
+        title: 'Skill Point!',
+        message: 'You got your first skill point, go spend it now! Now now now!'
       })
     }
 
@@ -110,13 +142,6 @@ export async function finalize(dungeonRunDoc){
     dungeonRunDoc.finalized = true
     await DungeonRuns.save(dungeonRunDoc)
   }
-}
-
-export async function cancelRun(dungeonRunDoc){
-  const adventurerDoc = await Adventurers.findByID(dungeonRunDoc.adventurer._id)
-  adventurerDoc.dungeonRunID = null
-  await Adventurers.save(adventurerDoc)
-  await DungeonRuns.delete(dungeonRunDoc)
 }
 
 export async function purgeAllOldRuns(){
@@ -156,7 +181,7 @@ export async function purgeOldRuns(adventurerID){
       purged: { $ne: true }
     },
     sort: {
-      startTime: 1
+      startTime: -1
     }
   })
   purgeReplays(runs.slice(5))
@@ -174,9 +199,10 @@ async function purgeReplays(drDocs){
     doc.purged = true
     await DungeonRuns.save(doc)
   }
-  console.log('Deleting combats')
-  const result = await Combats.collection.deleteMany({
+  const result = await Combats.collection.updateMany({
     _id: { $in: combatIDs }
-  })
-  return result.deletedCount
+  }, [{
+    $unset: 'timeline'
+  }])
+  return result.modifiedCount
 }

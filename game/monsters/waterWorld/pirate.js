@@ -1,25 +1,31 @@
-import attackAction from '../../actions/attackAction.js'
-
-export default {
-  baseStats: {
-    hpMax: '-30%',
-    physPower: '+10%'
-  },
-  items: [
-    {
-      name: 'Pistol Shot',
-      abilities: {
-        active: {
-          initialCooldown: 8000,
-          description: 'Attack for [physScaling1.7] damage, 1/3 chance to crit.',
-          actions: [
-            attackAction({
-              damageMulti: 1.7,
-              extraCritChance: 1/3
-            })
-          ]
+export default function(){
+  return {
+    baseStats: {
+      hpMax: '-20%',
+      physPower: '-10%',
+      speed: 30
+    },
+    items: [
+      {
+        name: 'Cannon Shot',
+        effect: {
+          abilities: [{
+            trigger: 'active',
+            cooldown: 6000,
+            exclusiveStats: {
+              critDamage: '+200%',
+              critChance: 1 / 3
+            },
+            actions: [{
+              attack: {
+                scaling: {
+                  physPower: 1.5
+                }
+              }
+            }]
+          }]
         }
       }
-    }
-  ]
+    ]
+  }
 }

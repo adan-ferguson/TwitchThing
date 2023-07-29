@@ -1,45 +1,45 @@
-import attackAction from '../../actions/attackAction.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
+import { onHit } from '../../commonMechanics/onHit.js'
 
-export default {
-  baseStats: {
-    physPower: '-10%',
-    physDef: '+30%',
-    speed: -20,
-    hpMax: '+30%'
-  },
-  items: [
-    {
-      name: 'Cursed Strike',
-      abilities: {
-        active: {
-          cooldown: 8000,
-          description: 'Deal [physScaling1.2] phys damage. Inflicts a curse (more chance to be crit).',
-          actions: [
-            attackAction({
-              damageMulti: 1.2
-            }),
-            statusEffectAction({
-              affects: 'enemy',
-              effect: {
-                displayName: 'Cursed',
-                stacking: true,
-                persisting: true,
-                duration: 30000,
-                stats: {
-                  enemyCritChance: 0.1
+export default function(){
+
+  const removeBuff = {
+    modifyStatusEffect: {
+      targets: 'target',
+      subject: {
+        polarity: 'buff'
+      },
+      modification: {
+        remove: true
+      }
+    }
+  }
+
+  return {
+    baseStats: {
+      physPower: '+5%',
+      physDef: '+20%',
+      speed: -15,
+      hpMax: '+20%'
+    },
+    items: [
+      {
+        name: 'Cursed Strike',
+        effect: {
+          abilities: [
+            {
+              trigger: 'active',
+              initialCooldown: 8000,
+              actions: [removeBuff, {
+                attack: {
+                  scaling: {
+                    physPower: 1.7
+                  },
                 }
-              }
-            })
+              }]
+            }
           ]
         }
       }
-    },
-    {
-      name: 'Deadly Blade',
-      stats: {
-        critDamage: '+100%'
-      }
-    }
-  ]
+    ]
+  }
 }

@@ -22,7 +22,7 @@ async function init(){
 
   const sessionOptions = {
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     secret: config.secret,
     cookie: {
       secure: false

@@ -1,51 +1,38 @@
-di-loadout
-  flex: 0 0 300rem !important
-
-  di-list
-    flex-grow: 1
-
-di-inventory
-  .filtering-options
-    margin-bottom: 8rem !important
-
-.editable
-  di-loadout-row
-    .cooldown
-      background-color: transparent
-    &:not(.blank-row, .filtered)
-      cursor: pointer
-      &:hover
-        background-color: #e9ffdf
-    &.filtered
-      opacity: 0.4
-
-  .hoverable, &.hoverable
-    background-color: #f8f8ff
-
-  .hovered, &.hovered
-    background-color: #e1e7fa
-
-.popped-out
-  position: absolute
-
-di-loadout-row
-  //border: 0.5rem solid #CCC
+.loadout-container
+  flex: 0 0 300rem
   position: relative
-  margin-bottom: 5rem
-  box-sizing: border-box
 
-  .di-bar .bar-border
-    border-width: 2rem
-
-  .hit-area
+  > *
     position: absolute
-    top: -4rem
-    bottom: -4rem
+    top: 0
     left: 0
     right: 0
+    bottom: 0
+
+di-loadout-row-state
+
+  position: absolute
+  top: 0
+  right: 0
+  left: 0
+  bottom: 0
+
+  box-sizing: border-box
+  overflow: hidden
+
+  &[display-style="skill"]
+    border-radius: 20rem
+    .cooldown
+      border-radius: 20rem
+
+  .di-bar
+    background-color: transparent
+  .di-bar .bar-border
+    border: none !important
 
   &.disabled
     opacity: 0.5
+    background-color: #FFF
 
   di-item-row
     height: 100%
@@ -71,135 +58,42 @@ di-loadout-row
     left: 0
     right: 0
     height: 100%
+    border: 1rem solid #888
+    box-sizing: border-box
+    overflow: hidden
 
     .bar-foreground
       opacity: 0.22
 
-    //.bar-border
-    //  border: none !important
+  &[ability-state="not-ready"]
+    border-width: 2rem
 
   &[ability-state=ready]
-    .bar-border
+    .cooldown
       border-width: 2rem
+    &[ability-type=active] .cooldown
+      border-color: #74d5d9
+    &[ability-type=nonactive] .cooldown
+      border-color: #ffa227
+    &.next
+      filter: drop-shadow(1rem 1rem 0.75rem #74d5d9)
 
-  &[ability-state=disabled]
-    .bar-border
-      opacity: 0.35
+  &.extreme
+    outline: 1rem solid #c3a2ff
+    box-shadow: 0 0 4px 2px #c3a2ff
 
-    //.cooldown .bar-foreground
-    //  opacity: 1
+  //&[ability-cooldown-state=disabled]
+  //  opacity: 0.4
 
-di-adventurer-loadout-editor-page
-  .content-columns > *
-    margin-right: 10rem !important
-
-.loadout-row-tooltip
-
-  .tooltip-content
-    display: flex
-    flex-direction: column
-
-    di-stats-list
-      margin-left: -6rem
-      margin-right: -6rem
-      margin-bottom: 4rem
-
-    > *
-      margin-bottom: 10rem
-
-      &:last-child
-        margin-bottom: 0
-
-  .right-click
-    font-size: 0.9em
-    margin-top: 10rem
-    font-style: italic
-
-di-ability-description
-  white-space: initial
-  display: block
-  position: relative
-  border: 0.5rem solid
-  margin-top: 3rem
-  text-align: left
-  line-height: 1.5em
-
-  .parsed-description
-    padding: 7rem
-    text-align: left
-
-    > *
+  .dots
+    position: absolute
+    bottom: -1rem
+    left: 6rem
+    .dot
+      border-radius: 50%
+      background-color: white
       display: inline-block
-
-    svg
-      height: 1em
-      margin-right: 0.2em
-      vertical-align: text-top
-
-    .stat-wrap, .scaling-type
-      font-weight: bold
-      display: inline
-
-  //&[ability-type=active]
-  //  border-color: $activeAbilityColor
-  //  background-color: $activeAbilityColorBg
-  //
-  //&[ability-type=triggered]
-  //  border-color: $triggeredAbilityColor
-  //  background-color: $triggeredAbilityColorBg
-
-  .description
-    .action-description
-      display: flex
-      align-items: center
-
-  .bot-row
-    margin-top: 6rem
-    padding: 0 6rem 2rem
-
-    span
-      font-size: 12rem
-      margin-left: 12rem
-
-    i
-      font-size: 0.9em
-      margin-right: 3rem
-
-    img
-      height: 1.1em
-      vertical-align: middle
-      margin-right: 3rem
-
-  .name
-    font-weight: bold
-
-  .description
-    margin-top: 5rem
-
-    > *
-      vertical-align: middle
-
-    .action-row
-      display: flex
-      flex-direction: row
-      align-items: center
-
-    .scaling-type
-      display: inline-flex
-      flex-direction: row
-      font-weight: bold
-      align-items: center
-
-      svg
-        height: 1em
-        margin-bottom: 4rem
-        margin-right: 2rem
-
-    .scaling-type-magic
-      color: #4488FF
-
-    .scaling-type-phys
-      color: #DD5533
-
-    .scaling-type-hp
-      color: #8be369
+      width: 5rem
+      height: 5rem
+      border: 1rem solid black
+      margin-right: 2rem

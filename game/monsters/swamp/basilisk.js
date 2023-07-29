@@ -1,31 +1,38 @@
-import maybeAction from '../../actions/maybeAction.js'
-import attackAction from '../../actions/attackAction.js'
-
-export default {
-  baseStats: {
-    hpMax: '+20%',
-    physPower: '-30%',
-    speed: 20
-  },
-  items: [
-    {
-      name: 'Deadly Gaze',
-      abilities: {
-        active: {
-          description: '10% chance to deal magic damage equal to enemy\'s max health',
-          cooldown: 7500,
-          actions: [
-            maybeAction({
-              chance: 0.1
-            }),
-            attackAction({
-              targetMaxHpPct: 1,
-              damageType: 'magic',
-              damageMulti: 0
-            })
-          ]
+export default function(){
+  const chance = 0.2
+  return {
+    baseStats: {
+      hpMax: '+20%',
+      physPower: '-20%',
+      speed: 20
+    },
+    items: [
+      {
+        name: 'Deadly Gaze',
+        effect: {
+          abilities: [{
+            vars: {
+              chance,
+            },
+            abilityId: 'deadlyGaze',
+            trigger: 'active',
+            initialCooldown: 7000,
+            actions: [{
+              maybe: {
+                chance,
+                action: {
+                  targetScaledAttack: {
+                    damageType: 'magic',
+                    scaling: {
+                      hpMax: 1
+                    }
+                  }
+                }
+              }
+            }]
+          }]
         }
       }
-    }
-  ]
+    ]
+  }
 }

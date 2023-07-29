@@ -1,0 +1,110 @@
+di-adventurer-skill-row, di-adventurer-item-row, di-monster-item-row
+  position: relative
+  background-color: white
+
+  &.disabled
+    opacity: 0.4
+
+  &.clickable
+    cursor: pointer
+    filter: drop-shadow(1.75rem 1.75rem 1.75rem #999)
+
+    &:hover
+      background-color: #dfeaff
+
+  &.idle
+    border: 1rem solid #888
+
+  &.blank
+    border: 1rem dashed #888
+
+    &.should-be-empty
+      border: none
+
+  .hit-area
+    position: absolute
+    top: -4rem
+    bottom: -4rem
+    left: 0
+    right: 0
+
+  .content
+    position: relative
+    display: flex
+    flex-direction: row
+    align-items: center
+    padding: 0 9rem
+    height: 100%
+    color: #222
+
+di-adventurer-skill-row
+
+  border-radius: 20rem
+
+  &.locked
+    border: 0.4rem solid #BBB
+
+  .content
+    i.skill-point
+      vertical-align: middle
+      margin-right: 2rem
+
+    > *
+      width: 100%
+
+  .hidden-skill
+    text-align: center
+    svg
+      vertical-align: top
+
+  .name
+    color: black
+
+  .skill-contents
+    display: flex
+    align-items: center
+    justify-content: space-between
+    padding-right: 15rem
+
+  .class-identifier
+    position: absolute
+    top: 50%
+    right: 2rem
+    transform: translateY(-50%)
+    height: 90% !important
+    opacity: 1
+    .orb-icon
+      height: 100%
+
+di-skill-card, di-item-card, di-monster-item-card
+  .skill-name
+    display: flex
+    align-items: center
+    svg
+      height: 1em
+      margin-left: 4rem
+      margin-bottom: 2rem
+  .obj-border
+    position: relative
+    padding: 20rem
+    //margin-top: 10rem
+    min-width: 225rem
+    border: 0.5rem solid #000
+    display: flex
+    align-items: center
+    justify-content: center
+
+    .inset-title, .inset-title-right
+      border-color: black
+
+.tippy-content
+  .skill-border
+    white-space: initial
+    margin: 0 10rem
+
+.skill-unlock-modal-content
+  display: flex
+  flex-direction: column
+  align-items: center
+  gap: 12rem
+  padding-top: 12rem

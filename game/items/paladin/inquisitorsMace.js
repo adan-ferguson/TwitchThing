@@ -1,35 +1,39 @@
-import { stunnedStatusEffect } from '../../statusEffects/combined.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
-import { leveledPctString } from '../../growthFunctions.js'
-import { roundToFixed } from '../../utilFunctions.js'
+import { wrappedPct } from '../../growthFunctions.js'
 
-export default {
-  levelFn: level => {
-    const duration = 1900 + level * 100
-    return {
-      displayName: 'Inquisitor\'s Mace',
+export default function(level){
+  const duration = 1000 + level * 1000
+  return {
+    displayName: 'Inquisitor\'s Mace',
+    orbs: 4 + level * 4,
+    effect: {
       stats: {
-        physPower: leveledPctString(30, 10, level)
+        hpMax: wrappedPct(level * 10),
+        physPower: wrappedPct(level * 50)
       },
-      abilities: {
-        attackHit: {
-          description: `After landing an attack, 20% chance to stun for ${roundToFixed(duration / 1000, 1)} seconds.`,
-          chance: 0.2,
-          actions: [
-            statusEffectAction({
-              base: stunnedStatusEffect,
-              affects: 'enemy',
-              effect: {
-                stacking: 'extend',
-                stackingId: 'macestun',
-                duration
-              }
-            })
-          ]
-        }
-      }
+      abilities: [{
+        trigger: 'attackHit',
+        conditions: {
+          source: {
+            subjectKey: 'attached'
+          },
+          data: {
+            damageType: 'phys'
+          }
+        },
+        actions: [{
+          applyStatusEffect: {
+            targets: 'target',
+            statusEffect: {
+              base: {
+                stunned: {
+                  duration
+                }
+              },
+              diminishingReturns: true,
+            }
+          }
+        }]
+      }]
     }
-  },
-  orbs: 6,
-  rarity: 1
+  }
 }

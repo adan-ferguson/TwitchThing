@@ -10,6 +10,7 @@ import { getAllActiveRuns, getRunData } from '../../dungeons/dungeonRunner.js'
 import { requireRegisteredUser } from '../../validations.js'
 import adminRouter from './admin.js'
 import Combats from '../../collections/combats.js'
+import config from '../../config.js'
 
 const router = express.Router()
 
@@ -43,7 +44,9 @@ router.post('/combat/:combatID', async(req, res) => {
 })
 
 router.get(new RegExp('.*'), async(req, res) => {
-  res.render('game')
+  res.render('game',{
+    magicPublishableKey: config.magic.publishableKey
+  })
 })
 
 export default router

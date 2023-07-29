@@ -78,9 +78,7 @@ export default class Bar extends HTMLElement{
     }
 
     this._options = newOptions
-    this._barLabel.classList.toggle('hidden', !this._options.showLabel)
-    this._updateLabel()
-    this._updateColors()
+    this._updateBar()
     return this
   }
 
@@ -109,6 +107,7 @@ export default class Bar extends HTMLElement{
 
     options = {
       animate: false,
+      animTime: this.animSpeed,
       flyingText: false,
       relative: false,
       ...options
@@ -132,17 +131,21 @@ export default class Bar extends HTMLElement{
 
     if(!options.animate){
       this._val = val
-      this._updateLabel()
-      this.backgroundEl.classList.add('hidden')
-      this.backgroundEl.style.width = `${this._pct(val) * 100}%`
-      this.foregroundEl.style.width = `${this._pct(val) * 100}%`
-      this._updateColors()
+      this._updateBar()
     }else {
-      await this._animateToValue(val)
+      await this._animateToValue(val, options.animTime)
     }
   }
 
-  _animateToValue(val){
+  _updateBar(){
+    this._updateLabel()
+    this.backgroundEl.classList.add('hidden')
+    this.backgroundEl.style.width = `${this._pct(this._val) * 100}%`
+    this.foregroundEl.style.width = `${this._pct(this._val) * 100}%`
+    this._updateColors()
+  }
+
+  _animateToValue(val, time){
 
     function setWidth(bar, pct){
       bar.style.width = `${pct * 100}%`
@@ -179,7 +182,7 @@ export default class Bar extends HTMLElement{
       this._val = val
 
       this.animation = new CustomAnimation({
-        duration: this.animSpeed * Math.sqrt(Math.abs(targetWidth - currentWidth)),
+        duration: time * Math.sqrt(Math.abs(targetWidth - currentWidth)),
         easing: 'easeOut',
         start: () => {
           if(snappingBar){

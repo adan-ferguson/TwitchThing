@@ -1,6 +1,7 @@
-export default {
-  baseStats: {
-    speed: 5,
-    hpMax: '-45%'
+export default function(){
+  return {
+    baseStats: {
+      speed: 5
+    }
   }
 }

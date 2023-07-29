@@ -1,15 +1,14 @@
 import express from 'express'
 import Users from '../../collections/users.js'
 import Adventurers from '../../collections/adventurers.js'
-import DungeonRuns from '../../collections/dungeonRuns.js'
-import Combats from '../../collections/combats.js'
-import { cancelAllRuns, getActiveRunData } from '../../dungeons/dungeonRunner.js'
+import { getActiveRunData } from '../../dungeons/dungeonRunner.js'
 import { validateParam } from '../../validations.js'
 import { getErrorLogTail, getOutputLogTail } from '../../logging.js'
-import { generateSimulatedCombat } from '../../combat.js'
+import { generateSimulatedCombat, getCombatArgs } from '../../combat/fns.js'
 import { getAllMonsters } from '../../dungeons/monsters.js'
-import Purchases from '../../collections/purchases.js'
-import { purgeAllOldRuns } from '../../dungeons/results.js'
+import { runCommand } from '../../admin/runCommand.js'
+import { getWorkerStatus } from '../../combat/interop.js'
+import DungeonRuns from '../../collections/dungeonRuns.js'
 
 const router = express.Router()
 
@@ -31,7 +30,6 @@ router.post('/', async(req, res) => {
 
 router.post('/adventurers', async(req, res) => {
   const adventurers = await Adventurers.find()
-  adventurers.forEach(adv => adv.dungeonRun = getActiveRunData(adv.dungeonRunID))
   res.status(200).send({ adventurers })
 })
 
@@ -44,21 +42,7 @@ router.post('/logs', async(req, res) => {
 
 router.post('/runcommand', async(req, res) => {
   const cmd = validateParam(req.body.command)
-  let result = 'Command not found'
-  if(cmd === 'reset all'){
-    cancelAllRuns()
-    await Promise.all([
-      Users.resetAll(),
-      Adventurers.removeAll(),
-      DungeonRuns.removeAll(),
-      Combats.removeAll(),
-      Purchases.removeAll()
-    ])
-    result = 'Everything has been successfully reset.'
-  }else if(cmd === 'purge'){
-    const removed = await purgeAllOldRuns()
-    result = `Old runs purged. ${removed} combats removed.`
-  }
+  const result = await runCommand(cmd)
   res.status(200).send({ result })
 })
 
@@ -73,6 +57,42 @@ router.post('/sim/run', async (req, res) => {
   const f2 = validateParam(req.body.fighter2)
   const combat = await generateSimulatedCombat(f1, f2)
   res.status(200).send({ combatID: combat._id })
+  // for(let i = 0; i < 1000; i++){
+  //   generateSimulatedCombat(f1, f2)
+  // }
+})
+
+router.get('/combatperf/:combatID', async (req, res) => {
+  res.render('combatperf', {
+    combatArgs: await getCombatArgs(req.params.combatID)
+  })
+})
+
+router.post('/performance',  async (req, res) => {
+  const cancelledRuns = await DungeonRuns.find({
+    query: {
+      cancelled: true,
+      purged: false,
+    },
+    projection: {
+      _id: 1
+    }
+  })
+  res.status(200).send({ ...getWorkerStatus(), cancelledRuns })
+})
+
+router.post('/purgecancelled', (req, res) => {
+  DungeonRuns.collection.updateMany({
+    cancelled: true,
+    purged: {
+      $ne: true,
+    }
+  }, [{
+    $set: {
+      purged: true
+    }
+  }])
+  res.status(200).send({})
 })
 
 export default router

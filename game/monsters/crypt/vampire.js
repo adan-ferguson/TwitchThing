@@ -1,14 +1,19 @@
-export default {
-  baseStats: {
-    speed: 20,
-    physPower: '-20%'
-  },
-  items: [
-    {
-      name: 'Lifesteal',
-      stats: {
-        lifesteal: 0.5
+export default function(){
+  return {
+    baseStats: {
+      speed: 20,
+      physPower: '+10%',
+      hpMax: '-10%'
+    },
+    items: [
+      {
+        name: 'Lifesteal',
+        effect: {
+          stats: {
+            lifesteal: 0.33
+          }
+        }
       }
-    }
-  ]
+    ]
+  }
 }

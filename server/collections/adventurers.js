@@ -1,5 +1,4 @@
 import Collection from './collection.js'
-import { firstLevelBonus } from '../adventurer/bonuses.js'
 
 const DEFAULTS = {
   _id: null,
@@ -8,28 +7,30 @@ const DEFAULTS = {
   level: 1,
   xp: 0,
   userID: null,
-  items: [null, null, null, null, null, null, null, null],
+  loadout: {
+    items: [null, null, null, null, null, null, null, null],
+    skills: [null, null, null, null, null, null, null, null]
+  },
+  orbs: {},
+  unlockedSkills: {},
   dungeonRunID: null,
-  bonuses: {},
   accomplishments: {
     deepestFloor: 1,
-    superMonsters: 0
-  },
-  rerolls: 0,
-  nextLevelUp: null
+    deepestSuperFloor: 0
+  }
 }
 
-const Adventurers = new Collection('adventurers', DEFAULTS)
-
-Adventurers.createNew = async function(userID, name, startingClass){
-  return await Adventurers.save(
-    {
-      name, userID, bonuses: {
-        [startingClass]: {
-          [firstLevelBonus(startingClass)]: 1
-        }
-      }
-    })
+class AdventurersCollection extends Collection{
+  constructor(){
+    super('adventurers', DEFAULTS)
+  }
+  async createNew(userID, name, startingClass = null){
+    const doc = { name, userID }
+    if(startingClass){
+      doc.orbs = { [startingClass]: 1 }
+    }
+    return await this.save(doc)
+  }
 }
 
-export default Adventurers
+export default new AdventurersCollection()

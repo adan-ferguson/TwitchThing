@@ -7,8 +7,7 @@ import { isObject } from '../../../game/utilFunctions.js'
 import SimPage from './pages/sim/simPage.js'
 import CombatPage from './pages/combat/combatPage.js'
 import AdminPage from './pages/admin/adminPage.js'
-import LevelupPage from './pages/levelup/levelupPage.js'
-import AdventurerLoadoutEditorPage from './pages/adventurerLoadout/adventurerLoadoutEditorPage.js'
+import AdventurerEditPage from './pages/adventurerEdit/adventurerEditPage.js'
 import DungeonPickerPage from './pages/dungeonPicker/dungeonPickerPage.js'
 import ShopPage from './pages/shop/shopPage.js'
 import WorkshopPage from './pages/workshop/workshopPage.js'
@@ -22,8 +21,7 @@ const pages = [
   SimPage,
   CombatPage,
   AdminPage,
-  LevelupPage,
-  AdventurerLoadoutEditorPage,
+  AdventurerEditPage,
   DungeonPickerPage,
   ShopPage,
   WorkshopPage,

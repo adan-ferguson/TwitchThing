@@ -2,30 +2,35 @@ import Page from '../page.js'
 import { getSocket, joinSocketRoom, leaveSocketRoom } from '../../../socketClient.js'
 import Zones, { floorToZone, floorToZoneName } from '../../../../../game/zones.js'
 import Timeline from '../../../../../game/timeline.js'
-import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 import fizzetch from '../../../fizzetch.js'
 import FighterInstancePane from '../../combat/fighterInstancePane.js'
 import CombatEnactment from '../../../combatEnactment.js'
 import EventContentsResults from './eventContentsResults.js'
 import AdventurerPage from '../adventurer/adventurerPage.js'
+import AdventurerInstance from '../../../../../game/adventurerInstance.js'
+import { hideAll } from 'tippy.js'
+import { hideLoader, showLoader } from '../../../loader.js'
 
 const HTML = `
-<div class='content-columns'>
-  <div class='content-rows'>
-    <div class="content-well fill-contents">
-      <di-fighter-instance-pane class="adventurer"></di-fighter-instance-pane>
-      <di-adventurer-pane class="displaynone"></di-adventurer-pane>
+<div class="content-rows">
+  <di-top-thing></di-top-thing>
+  <div class='content-columns'>
+    <div class='content-rows'>
+      <div class="content-well fill-contents">
+        <di-fighter-instance-pane class="adventurer"></di-fighter-instance-pane>
+        <di-adventurer-pane class="displaynone"></di-adventurer-pane>
+      </div>
+      <div class="bot-row content-well">
+        <di-dungeon-timeline-controls></di-dungeon-timeline-controls>
+      </div>
     </div>
-    <div class="bot-row content-well">
-      <di-dungeon-timeline-controls></di-dungeon-timeline-controls>
-    </div>
-  </div>
-  <div class="content-rows">
-    <div class="content-well">
-      <di-dungeon-event></di-dungeon-event>
-    </div>
-    <div class="state bot-row content-well">
-      <di-dungeon-state></di-dungeon-state>
+    <div class="content-rows">
+      <div class="content-well">
+        <di-dungeon-event></di-dungeon-event>
+      </div>
+      <div class="state bot-row content-well">
+        <di-dungeon-state></di-dungeon-state>
+      </div>
     </div>
   </div>
 </div>
@@ -69,10 +74,10 @@ export default class DungeonPage extends Page{
   }
 
   get isMyAdventurer(){
-    if(!this.app.user || !this.adventurer){
+    if(!this.app.user || !this.adventurerDoc){
       return false
     }
-    return this.app.user._id === this.adventurer.userID
+    return this.app.user._id === this.adventurerDoc.userID
   }
 
   get watching(){
@@ -80,31 +85,33 @@ export default class DungeonPage extends Page{
   }
 
   get titleText(){
-    return 'Exploring' + (this.currentEvent ? ' ' + floorToZoneName(this.currentEvent?.floor) : '')
+    return this.currentEvent ? floorToZoneName(this.currentEvent?.floor) : 'Exploring'
   }
 
   get currentEvent(){
     return this._timeline.currentEntry
   }
 
-  get adventurer(){
+  get adventurerDoc(){
     return this.dungeonRun.adventurer
   }
 
   get adventurerInstance(){
-    return new AdventurerInstance(this.adventurer, this.currentEvent?.adventurerState ?? {})
+    return new AdventurerInstance(this.adventurerDoc, this.currentEvent?.adventurerState ?? {})
   }
 
   get isReplay(){
     return this.dungeonRun.finished ? true : false
   }
 
+  get topThingEl(){
+    return this.querySelector('di-top-thing')
+  }
+
   async load(){
 
-    const { dungeonRun, combats } = await this.fetchData()
-    if(combats){
-      this._cachedCombats = combats
-    }
+    const { dungeonRun } = await this.fetchData()
+
     this.dungeonRun = dungeonRun
 
     if(!this.isReplay){
@@ -114,8 +121,8 @@ export default class DungeonPage extends Page{
 
     this._stateEl.setup(dungeonRun)
     this._setupTimeline(dungeonRun)
-    this._adventurerPane.setFighter(new AdventurerInstance(this.adventurer, dungeonRun.adventurerState))
-    this._eventEl.setup(this.adventurer, this._timeline)
+    this._adventurerPane.setFighter(new AdventurerInstance(this.adventurerDoc, dungeonRun.adventurerState))
+    this._eventEl.setup(this.adventurerDoc, this._timeline)
     this._update({ animate: false })
   }
 
@@ -127,19 +134,22 @@ export default class DungeonPage extends Page{
     this._timelineEl.destroy()
   }
 
-  _socketUpdate = (dungeonRun) => {
+  _socketUpdate = ({ id, error, combatUpdate, dungeonRun }) => {
 
-    if(this.dungeonRun._id !== dungeonRun._id){
+    if(this.dungeonRun._id !== id){
       return
     }
 
-    if(dungeonRun.error){
-      return this.app.showError(dungeonRun.error)
+    if(error){
+      return this.app.showError(error)
+    }
+
+    if(combatUpdate){
+      return this._combatLoaded(combatUpdate)
     }
 
     this.dungeonRun = dungeonRun
     this._timelineEl.addEvents(dungeonRun.newEvents)
-    this._timelineEl.play()
 
     if(dungeonRun.newEvents){
       dungeonRun.newEvents.forEach(ev => this._loadCombat(ev.combatID))
@@ -156,18 +166,18 @@ export default class DungeonPage extends Page{
         force: dungeonRun.finished ? true : false
       })
     }
+
+    this._timelineEl.play()
   }
 
-  _update(options = {}){
+  async _update(options = {}){
 
     options = {
       animate: true,
       ...options
     }
 
-    if(this._ce){
-      this._ce.destroy()
-    }
+    hideAll()
 
     const animate = options.animate
 
@@ -180,8 +190,14 @@ export default class DungeonPage extends Page{
     this._updateBackground()
     this._stateEl.update(this._timelineEl.elapsedEvents, this.adventurerInstance, animate)
 
+    if(this.isReplay && !this._combatsAllLoaded && !this._timeline.finished){
+      await this._loadAllCombats()
+      this._combatsAllLoaded = true
+    }
+
     if(this.isReplay && this._timeline.finished){
       this._showResults()
+      this._ce?.destroy()
       return
     }
 
@@ -191,8 +207,10 @@ export default class DungeonPage extends Page{
     if(this.currentEvent.roomType === 'combat'){
       this._enactCombat(animate)
     }else{
+      this.topThingEl.updateEvent(this.currentEvent)
       this._eventEl.update(this.currentEvent, animate)
-      this._adventurerPane.setState(this.currentEvent.adventurerState ?? {}, animate)
+      this._adventurerPane.setState(this.currentEvent.adventurerState ?? {}, !animate)
+      this._ce?.destroy()
     }
   }
 
@@ -204,6 +222,7 @@ export default class DungeonPage extends Page{
       return
     }
     const results = new EventContentsResults()
+    this.topThingEl.update('Results')
     this._eventEl.setContents(results, true)
     this._timelineEl.pause()
     this._adventurerResultsPane.classList.remove('displaynone')
@@ -211,22 +230,45 @@ export default class DungeonPage extends Page{
     if(this.isMyAdventurer){
       results.showFinalizerButton(async () => {
         await fizzetch(`/game/dungeonrun/${this._dungeonRunID}/finalize`)
-        this.redirectTo(AdventurerPage.path(this.adventurer._id))
+        this.redirectTo(AdventurerPage.path(this.adventurerDoc._id))
       })
     }
     results.play(this.dungeonRun, this._adventurerResultsPane, this.watching)
   }
 
   async _enactCombat(animate){
-    const combat  = await this._getCombat(this.currentEvent.combatID)
+    if(this._ce){
+      if(this._ce.combatID === this.currentEvent.combatID){
+        this._ce.timeline.setTime(this._timeline.timeSinceLastEntry - (this.currentEvent.refereeTime ?? 0), true)
+        return
+      }else{
+        this._ce?.destroy()
+      }
+    }
+
+    const combat = await this._getCombat(this.currentEvent.combatID)
     const enemyPane = new FighterInstancePane()
     this._eventEl.setContents(enemyPane, animate)
-    const ce = new CombatEnactment(this._adventurerPane, enemyPane, combat)
-    ce.timeline.setTime(this._timeline.timeSinceLastEntry, true)
+    const ce = new CombatEnactment(this._adventurerPane, enemyPane, this.topThingEl)
+    if(combat.timeline){
+      ce.setCombat(combat)
+      ce.timeline.setTime(this._timeline.timeSinceLastEntry - (this.currentEvent.refereeTime ?? 0), true)
+    }else{
+      ce.setPendingCombat(this.currentEvent)
+    }
     ce.on('destroyed', () => {
       this._ce = null
     })
     this._ce = ce
+  }
+
+  _combatLoaded({ combatDoc, newCombatEvent }){
+    this._timelineEl.updateEvent(newCombatEvent)
+    this._cachedCombats[combatDoc._id] = combatDoc
+    if(this._ce?.combatID === combatDoc._id){
+      this._ce.setCombat(combatDoc)
+      this._ce.timeline.setTime(this._timeline.timeSinceLastEntry - (this.currentEvent.refereeTime ?? 0), true)
+    }
   }
 
   _timeChange({ before, after, jumped }){
@@ -234,7 +276,8 @@ export default class DungeonPage extends Page{
       return
     }
     if(this._ce && this.currentEvent.roomType === 'combat'){
-      this._ce.timeline.setTime(this._timeline.timeSinceLastEntry, jumped)
+      const time = this._timeline.timeSinceLastEntry - (this.currentEvent.refereeTime ?? 0)
+      this._ce.timeline?.setTime(time, jumped)
     }
     if(this._timeline.finished && this.isReplay){
       this._showResults()
@@ -274,6 +317,12 @@ export default class DungeonPage extends Page{
     }
     const result = await fizzetch(`/game/combat/${combatID}`)
     this._cachedCombats[combatID] = result.combat
+  }
+
+  async _loadAllCombats(){
+    showLoader()
+    this._cachedCombats = await fizzetch(`/game/dungeonrun/${this._dungeonRunID}/allcombats`)
+    hideLoader()
   }
 }
 

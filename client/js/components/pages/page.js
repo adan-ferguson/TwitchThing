@@ -50,11 +50,15 @@ export default class Page extends HTMLElement{
     this.redirectTo('')
   }
 
-  redirectTo(path){
+  redirectTo(path, args){
     if(this.loadstate === 'unloaded'){
       return
     }
-    this.app.setPage(path)
+    this.app.setPage(path, args)
+  }
+
+  reload(){
+    this.app.reloadPage()
   }
 
   async fetchData(args = {}){

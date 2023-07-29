@@ -1,7 +1,8 @@
 import Adventurers from '../collections/adventurers.js'
-import { adjustInventoryBasics, spendInventoryBasics, spendScrap } from '../loadouts/inventory.js'
+import { adjustInventoryBasics, spendInventoryBasics, spendScrap } from '../user/inventory.js'
 import Users from '../collections/users.js'
-import AdventurerItemInstance from '../../game/adventurerItemInstance.js'
+import AdventurerItem from '../../game/items/adventurerItem.js'
+import Craftings from '../collections/craftings.js'
 
 export async function getUserWorkshop(userDoc){
   return {
@@ -13,17 +14,40 @@ export async function getUserWorkshop(userDoc){
 export async function scrapItems(userDoc, { basic, crafted }){
   adjustInventoryBasics(userDoc, basic, true)
   crafted.forEach(id => {
-    if(!userDoc.inventory.items.crafted[id]){
+    const itemDef = userDoc.inventory.items.crafted[id]
+    if(!itemDef){
       throw 'Item not found: ' + id
     }
-    userDoc.inventory.scrap += new AdventurerItemInstance(userDoc.inventory.items.crafted[id]).scrapValue
+    const scrap = new AdventurerItem(itemDef).scrapValue
+    userDoc.inventory.scrap += scrap
+    Craftings.save({
+      userID: userDoc._id,
+      timestamp: Date.now(),
+      type: 'scrap',
+      itemDef,
+      data: {
+        scrap,
+        baseItem: itemDef.baseItem
+      }
+    })
     delete userDoc.inventory.items.crafted[id]
   })
-  Object.keys(basic).forEach(group => {
-    Object.keys(basic[group]).forEach(name => {
-      userDoc.inventory.scrap += new AdventurerItemInstance({ group, name }).scrapValue * basic[group][name]
+  for(let baseItemId in basic){
+    const count = basic[baseItemId]
+    const scrap = new AdventurerItem(baseItemId).scrapValue
+    userDoc.inventory.scrap += count * scrap
+    Craftings.save({
+      userID: userDoc._id,
+      timestamp: Date.now(),
+      type: 'scrap',
+      itemDef: baseItemId,
+      data: {
+        count,
+        scrap: count * scrap,
+        baseItem: baseItemId,
+      }
     })
-  })
+  }
   await Users.saveAndEmit(userDoc)
 }
 
@@ -31,9 +55,6 @@ export async function upgradeInventoryItem(userDoc, itemDef){
   if(itemDef.id){
     // Crafted
     itemDef = userDoc.inventory.items.crafted[itemDef.id]
-  }else{
-    // Basic
-    spendInventoryBasics(userDoc, itemDef.group, itemDef.name, 1)
   }
   const upgradedItemDef = await upgradeItem(userDoc, itemDef)
   userDoc.inventory.items.crafted[upgradedItemDef.id] = upgradedItemDef
@@ -49,27 +70,38 @@ export async function upgradeAdventurerItem(userDoc, slotIndex, adventurerID){
   if(advDoc.dungeonRunID){
     throw 'Adventurer is in a dungeon run.'
   }
-  const itemDef = advDoc.items[slotIndex]
+  const itemDef = advDoc.loadout.items[slotIndex]
   if(!itemDef){
     throw 'Could not find item.'
   }
-  const upgradedItemDef = await upgradeItem(userDoc, itemDef)
-  advDoc.items[slotIndex] = upgradedItemDef
+  const upgradedItemDef = await upgradeItem(userDoc, itemDef, true)
+  advDoc.loadout.items[slotIndex] = upgradedItemDef
   await Adventurers.save(advDoc)
   await Users.saveAndEmit(userDoc)
   return upgradedItemDef
 }
 
-async function upgradeItem(userDoc, itemDef){
-  const aii = new AdventurerItemInstance(itemDef)
+async function upgradeItem(userDoc, itemDef, countSelf = false){
+  const aii = new AdventurerItem(itemDef)
   const upgradeInfo = aii.upgradeInfo()
+
+  if(!upgradeInfo.upgradedItemDef){
+    throw 'Can not upgrade item for some reason'
+  }
 
   upgradeInfo.components.forEach(component => {
     if(component.type === 'scrap'){
       spendScrap(userDoc, component.count)
     }else if(component.type === 'item'){
-      spendInventoryBasics(userDoc, component.group, component.name, component.count)
+      spendInventoryBasics(userDoc, component.baseItemId, component.count - (aii.isBasic && countSelf ? 1 : 0))
     }
+  })
+
+  await Craftings.save({
+    userID: userDoc._id,
+    timestamp: Date.now(),
+    type: 'upgrade',
+    itemDef
   })
 
   upgradeInfo.upgradedItemDef.createdTimestamp = Date.now()

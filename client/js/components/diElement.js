@@ -2,6 +2,7 @@ import { mergeOptionsObjects } from '../../../game/utilFunctions.js'
 import _ from 'lodash'
 import { EventEmitter } from 'events'
 import tippy from 'tippy.js'
+import { getTooltipForStatType } from '../displayInfo/statsDisplayInfo.js'
 
 export default class DIElement extends HTMLElement{
 
@@ -9,6 +10,13 @@ export default class DIElement extends HTMLElement{
     super()
     this.events = new EventEmitter() // Because DOM events don't show up in performance tab
     this._options = { ...this.defaultOptions }
+    if(this.initialHTML){
+      this.innerHTML = this.initialHTML
+    }
+  }
+
+  get initialHTML(){
+    return null
   }
 
   get defaultOptions(){
@@ -19,9 +27,17 @@ export default class DIElement extends HTMLElement{
     return this.closest('.page')
   }
 
-  setOptions(options = {}){
+  get inTooltip(){
+    return this.closest('.tippy-content')
+  }
+
+  get inModal(){
+    return this.closest('di-modal')
+  }
+
+  setOptions(options = {}, forceUpdate = false){
     const newOptions = mergeOptionsObjects(this._options, options)
-    if(_.isEqual(newOptions, this._options)){
+    if(!forceUpdate && _.isEqual(newOptions, this._options)){
       return this
     }
     this._options = newOptions
@@ -32,15 +48,32 @@ export default class DIElement extends HTMLElement{
   setTooltip(content = null){
     if(!this._tippy){
       tippy(this, {
-        theme: 'light'
+        theme: 'light',
+        // onHide: () => false,
+        maxWidth: 'none',
+        // delay: 50,
+        duration: 150,
+
       })
     }
-    if(content){
+    if(content && !this.inTooltip){
       this._tippy.enable()
       this._tippy.setContent(content)
     }else{
       this._tippy.disable()
     }
+  }
+
+  addTooltipsToStats(){
+    this.querySelectorAll('.stat-wrap').forEach(el => {
+      const content = getTooltipForStatType(el.getAttribute('stat-type'))
+      if(content){
+        tippy(el, {
+          theme: 'light',
+          content
+        })
+      }
+    })
   }
 
   _update(){

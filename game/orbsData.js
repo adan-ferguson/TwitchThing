@@ -2,13 +2,17 @@ import _ from 'lodash'
 
 export default class OrbsData{
 
-  constructor(maxOrbs = {}, usedOrbs = {}){
-    this._maxOrbs = toObj(maxOrbs)
-    this._usedOrbs = toObj(usedOrbs)
+  constructor(usedOrbs = {}, maxOrbs = {}, ){
+    this._usedOrbs = toObj(usedOrbs, 'used')
+    this._maxOrbs = toObj(maxOrbs, 'max')
   }
 
   get maxOrbs(){
     return this._maxOrbs
+  }
+
+  get usedOrbs(){
+    return this._usedOrbs
   }
 
   get classes(){
@@ -41,9 +45,12 @@ export default class OrbsData{
   }
 }
 
-function toObj(objOrArray){
+function toObj(objOrArray, key){
   if(Array.isArray(objOrArray)){
     objOrArray = objOrArray.reduce((current, next) => {
+      if(next instanceof OrbsData){
+        next = next[key + 'Orbs']
+      }
       for(let group in next){
         if(!current[group]){
           current[group] = 0
@@ -52,6 +59,8 @@ function toObj(objOrArray){
       }
       return current
     }, {})
+  }else if(objOrArray instanceof OrbsData){
+    objOrArray = objOrArray[key + 'Orbs']
   }
 
   // Remove negatives, maybe shouldn't always be the case?

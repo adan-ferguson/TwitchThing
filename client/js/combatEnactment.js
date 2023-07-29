@@ -1,7 +1,9 @@
 import { EventEmitter } from 'events'
 import { toFighterInstance } from '../../game/toFighterInstance.js'
 import Timeline from '../../game/timeline.js'
-import { toArray } from '../../game/utilFunctions.js'
+import { arrayize, roundToFixed } from '../../game/utilFunctions.js'
+import { betterDateFormat } from './components/timer.js'
+import { overtimeDamageBonus } from '../../game/combatMechanics.js'
 
 export default class CombatEnactment extends EventEmitter{
 
@@ -10,16 +12,13 @@ export default class CombatEnactment extends EventEmitter{
   _combat
   _timeline
   _destroyed = false
+  _topThing
 
-  constructor(fighterPane1, fighterPane2, combat){
+  constructor(fighterPane1, fighterPane2, topThing){
     super()
     this._fighterPane1 = fighterPane1
     this._fighterPane2 = fighterPane2
-    this._combat = combat
-
-    this._fighterPane1.setFighter(toFighterInstance(combat.fighter1.data, combat.fighter1.startState))
-    this._fighterPane2.setFighter(toFighterInstance(combat.fighter2.data, combat.fighter2.startState))
-    this._setupTimeline(combat)
+    this._topThing = topThing
   }
 
   get fighterInstance1(){
@@ -35,7 +34,25 @@ export default class CombatEnactment extends EventEmitter{
   }
 
   get combatID(){
-    return this._combat._id
+    return this._combatID
+  }
+
+  get preCombat(){
+    return !this.timeline || this.timeline.time === 0
+  }
+
+  setPendingCombat(combatEvent){
+    this._combatID = combatEvent.combatID
+    this._fighterPane2.setFighter(toFighterInstance(combatEvent.monster))
+    this._updateTopThing()
+  }
+
+  setCombat(combat){
+    this._combat = combat
+    this._combatID = combat._id
+    this._fighterPane1.setFighter(toFighterInstance(combat.fighter1.def, combat.fighter1.startState))
+    this._fighterPane2.setFighter(toFighterInstance(combat.fighter2.def, combat.fighter2.startState))
+    this._setupTimeline(combat)
   }
 
   destroy(){
@@ -62,6 +79,7 @@ export default class CombatEnactment extends EventEmitter{
         this.emit('finished')
       }
       this._prevEntryIndex = this._timeline.currentEntryIndex
+      this._updateTopThing()
     })
   }
 
@@ -69,13 +87,13 @@ export default class CombatEnactment extends EventEmitter{
     if(this._destroyed){
       return
     }
-    entries = toArray(entries)
+    entries = arrayize(entries)
     entries.forEach(entry => {
       entry.actions.forEach(action => {
         this._performAction(action)
       })
-      entry.tickUpdates.forEach(tickUpdate => {
-        this._performTickUpdate(tickUpdate)
+      entry.triggers.forEach(action => {
+        this._performAction(action)
       })
     })
     this._updatePanes()
@@ -93,13 +111,12 @@ export default class CombatEnactment extends EventEmitter{
   }
 
   async _performAction(action){
-    this._getPane(action.owner).displayActionPerformed(action)
+    this._getPane(action.actor).displayActionPerformed(action)
     action.results.forEach(result => {
       if(result.type === 'blank'){
         return
       }
-      this._getPane(result.subject).displayResult(result, action.effect)
-      result.triggeredEvents?.forEach(action => this._performAction(action))
+      this._getPane(result.subject).displayResult(result)
     })
   }
 
@@ -121,11 +138,33 @@ export default class CombatEnactment extends EventEmitter{
     throw 'Tried to get pane from fighter id, but there was none.'
   }
 
-  _performTickUpdate(tickUpdate){
-    if(tickUpdate.results){
-      this._performAction(tickUpdate)
-    }else{
-      this._getPane(tickUpdate.owner ?? tickUpdate.subject).displayResult(tickUpdate)
+  // _performTickUpdate(tickUpdate){
+  //   if(tickUpdate.results){
+  //     this._performAction(tickUpdate)
+  //   }else{
+  //     this._getPane(tickUpdate.owner ?? tickUpdate.subject).displayResult(tickUpdate)
+  //   }
+  // }
+
+  _updateTopThing(){
+    if(!this._topThing){
+      return
     }
+    if(this.preCombat){
+      return this._topThing.update('Waiting for referee...')
+    }
+    let color = null
+    const currentEntry = this._timeline.currentEntry
+    const chunks = ['Combat ' + betterDateFormat(Math.max(0, this._timeline.time))]
+    if(currentEntry.overtime){
+      const bonus = overtimeDamageBonus(currentEntry.overtime + this._timeline.timeSinceLastEntry)
+      chunks.push(`Overtime! All damage x${roundToFixed(bonus, 2, true)}`)
+      color = '#2569c0'
+    }
+    if(currentEntry.suddenDeath){
+      chunks.push('Hurry up already!')
+      color = '#b20a0a'
+    }
+    this._topThing.update(chunks.join(' - '), color)
   }
 }

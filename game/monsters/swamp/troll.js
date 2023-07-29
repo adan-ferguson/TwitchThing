@@ -1,25 +1,28 @@
-import gainHealthAction from '../../actions/gainHealthAction.js'
-
-export default {
-  baseStats: {
-    hpMax: '+60%',
-    physPower: '+10%',
-    speed: -20
-  },
-  items: [
-    {
-      name: 'Hyper Regeneration',
-      abilities: {
-        tick: {
-          initialCooldown: 5000,
-          description: 'Regenerate 15% of missing health.',
-          actions: [
-            gainHealthAction({
-              scaling: { hpMissingPct: 0.15 }
-            })
-          ]
+export default function(){
+  return {
+    baseStats: {
+      hpMax: '+40%',
+      physPower: '+10%',
+      physDef: '20%',
+      speed: -10
+    },
+    items: [
+      {
+        name: 'Hyper Regeneration',
+        effect: {
+          abilities: [{
+            trigger: 'instant',
+            initialCooldown: 5000,
+            actions: [{
+              gainHealth: {
+                scaling: {
+                  hpMissing: 0.2
+                }
+              }
+            }]
+          }]
         }
       }
-    }
-  ]
+    ]
+  }
 }

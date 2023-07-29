@@ -1,12 +1,12 @@
-import FighterItemLoadoutItem from '../fighterItemLoadoutItem.js'
-import AdventurerItemInstance from '../../../game/adventurerItemInstance.js'
-import LoadoutRow from './loadout/loadoutRow.js'
+import AdventurerItem from '../../../game/items/adventurerItem.js'
+import AdventurerItemRow from './adventurer/adventurerItemRow.js'
+import { ADVENTURER_CLASS_LIST } from '../displayInfo/classDisplayInfo.js'
 
 export function adventurerItemsToRows(items){
   const rows = []
   items.forEach((itemDef, i) => {
     if(itemDef){
-      const row = makeRow(itemDef)
+      const row = makeAdventurerItemRow(itemDef)
       if(!row){
         return
       }
@@ -19,16 +19,14 @@ export function adventurerItemsToRows(items){
 
 export function inventoryItemsToRows(items){
   const rows = []
-  Object.keys(items.basic).forEach(group => {
-    Object.keys(items.basic[group]).forEach(name => {
-      const row = makeRow({ group, name }, items.basic[group][name])
-      if(row){
-        rows.push(row)
-      }
-    })
+  Object.keys(items.basic).forEach(itemId => {
+    const row = makeAdventurerItemRow(itemId, items.basic[itemId])
+    if(row){
+      rows.push(row)
+    }
   })
   Object.values(items.crafted).forEach(itemDef => {
-    const row = makeRow(itemDef)
+    const row = makeAdventurerItemRow(itemDef)
     if(row){
       rows.push(row)
     }
@@ -36,23 +34,17 @@ export function inventoryItemsToRows(items){
   return rows
 }
 
-export function rowsToInventoryItems(rows){
+export function rowsToInventoryItems(adventurerItemRows){
 
   const basic = {}
   const crafted = []
 
-  rows.forEach(row => {
-    if(!(row.loadoutItem instanceof FighterItemLoadoutItem)){
-      return
-    }
-    const itemDef = row.loadoutItem.itemInstance.itemDef
-    if(row.loadoutItem.isBasic){
-      if(!basic[itemDef.group]){
-        basic[itemDef.group] = {}
-      }
-      basic[itemDef.group][itemDef.name] = row.count ?? 1
+  adventurerItemRows.forEach(row => {
+    const item = row.adventurerItem
+    if(item.isBasic){
+      basic[item.baseItemId] = row.count ?? 1
     }else{
-      crafted.push(itemDef.id)
+      crafted.push(item.id)
     }
   })
 
@@ -64,14 +56,27 @@ export function rowsToInventoryItems(rows){
 
 export function standardItemSort(rowA, rowB){
 
-  if(rowA.loadoutItem.isBasic && !rowB.loadoutItem.isBasic){
+  const itemA = rowA.adventurerItem
+  const itemB = rowB.adventurerItem
+
+  if(!itemA){
+    if(!itemB){
+      return 0
+    }
+    return -1
+  }
+  if(!itemB){
     return 1
-  }else if(!rowA.loadoutItem.isBasic && rowB.loadoutItem.isBasic){
+  }
+
+  if(itemA.isBasic && !itemB.isBasic){
+    return 1
+  }else if(!itemA.isBasic && itemB.isBasic){
     return -1
   }
 
-  const orbsA = rowA.loadoutItem.orbs._maxOrbs
-  const orbsB = rowB.loadoutItem.orbs._maxOrbs
+  const orbsA = itemA.orbs
+  const orbsB = itemB.orbs
 
   const classesA = Object.keys(orbsA)
   const classesB = Object.keys(orbsB)
@@ -91,6 +96,10 @@ export function standardItemSort(rowA, rowB){
     return -1
   }
 
+  if(itemA.rarity !== itemB.rarity){
+    return itemA.rarity - itemB.rarity
+  }
+
   const totalA = Object.values(orbsA).reduce((prev, val) => prev + val)
   const totalB = Object.values(orbsB).reduce((prev, val) => prev + val)
 
@@ -100,25 +109,23 @@ export function standardItemSort(rowA, rowB){
     return -1
   }
 
-  return rowA.loadoutItem.displayName - rowB.loadoutItem.displayName
+  return itemA.displayName - itemB.displayName
 }
 
-export function addInventoryItem(list, loadoutItem, count = 1){
-  const existingRow = list.findRow(row => row.loadoutItem.equals(loadoutItem))
+export function addInventoryItem(list, adventurerItem, count = 1){
+  const existingRow = list.findRow(row => row.adventurerItem.equals(adventurerItem))
   if(existingRow){
-    if(loadoutItem.isBasic){
+    if(adventurerItem.isBasic){
       existingRow.count += count
     }
     return
   }
-  loadoutItem.setOwner(null)
-  const row = new LoadoutRow()
-  row.setItem(loadoutItem).setCount(count)
+  const row = new AdventurerItemRow().setOptions({ item: adventurerItem, count })
   list.addRow(row)
 }
 
-export function removeInventoryItem(list, loadoutItem, all = false){
-  const existingRow = list.findRow(row => row.loadoutItem === loadoutItem)
+export function removeInventoryItem(list, adventurerItem, all = false){
+  const existingRow = list.findRow(row => row.adventurerItem.equals(adventurerItem))
   if(!existingRow){
     return
   }
@@ -135,15 +142,11 @@ export function removeInventoryItem(list, loadoutItem, all = false){
   }
 }
 
-function makeRow(itemDef, count = null){
-  const item = new AdventurerItemInstance(itemDef)
-  if(!item.isValid){
-    return null
-  }
-  const info = new FighterItemLoadoutItem(item)
-  const row = new LoadoutRow().setItem(info)
-  if(count !== null){
-    row.setCount(count)
-  }
-  return row
+export function makeAdventurerItemRow(itemDef, count = 1){
+  const item = itemDef instanceof AdventurerItem ? itemDef : new AdventurerItem(itemDef)
+  return new AdventurerItemRow().setOptions( { item, count, inList: true })
+}
+
+export function advClassIndex(advClassName){
+  return ADVENTURER_CLASS_LIST.findIndex(advClass => advClass.name === advClassName)
 }

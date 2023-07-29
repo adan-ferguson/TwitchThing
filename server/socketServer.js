@@ -11,17 +11,12 @@ export function setup(server, sessionMiddleware){
     sessionMiddleware(socket.request, {}, next)
   })
 
-  io.on('connection', socket => {
-
-    const magicID = socket.request.session?.passport?.user
-    if(magicID){
-      socket.request.user = Users.loadFromMagicID(magicID).then(user => {
-        if(user){
-          const id = user._id.toString()
-          socket.join(id)
-          socket.emit('user connect', id)
-        }
-      })
+  io.on('connection', async socket => {
+    const user = await Users.deserializeFromSession(socket.request.session?.passport?.user)
+    if(user){
+      const id = user._id.toString()
+      socket.join(id)
+      socket.emit('user connect', id)
     }else{
       socket.emit('anonymous connect')
     }

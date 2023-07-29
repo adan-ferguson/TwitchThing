@@ -1,35 +1,30 @@
-import AdventurerInstance from '../../../../game/adventurerInstance.js'
-import { OrbsDisplayStyle } from '../orbRow.js'
+import Adventurer from '../../../../game/adventurer.js'
 import Modal from '../modal.js'
 import AdventurerInfo from '../adventurer/adventurerInfo.js'
-import MonsterInfo from '../monsterInfo.js'
+import MonsterInfo from '../monster/monsterInfo.js'
 import FlyingTextEffect from '../visualEffects/flyingTextEffect.js'
 import CustomAnimation from '../../animations/customAnimation.js'
 import { mergeOptionsObjects, roundToFixed, toDisplayName } from '../../../../game/utilFunctions.js'
-import {
-  freezeActionBarMod,
-  freezeCooldownsMod,
-  magicAttackMod,
-  magicScalingMod,
-  physScalingMod
-} from '../../../../game/mods/combined.js'
-import { DAMAGE_COLORS, FLASH_COLORS } from '../../colors.js'
+import { DAMAGE_COLORS } from '../../colors.js'
 import { flash } from '../../animations/simple.js'
-import LoadoutRow from '../loadout/loadoutRow.js'
-import EffectRow from '../effects/effectRow.js'
 import { ICON_SVGS } from '../../assetLoader.js'
+import AdventurerInstance from '../../../../game/adventurerInstance.js'
+import AdventurerLoadout from '../adventurer/adventurerLoadout.js'
+import MonsterLoadout from '../monster/monsterLoadout.js'
 
 const HTML = `
 <div class="name"></div>
 <di-orb-row class="fighter-orbs displaynone"></di-orb-row>
 <div class="absolute-full-size fill-contents standard-contents">
   <div class="flex-rows top-section flex-grow">
-    <di-hp-bar></di-hp-bar>
-    <di-stats-list></di-stats-list>
-    <di-effects-list></di-effects-list>
+    <div class="absolute-full-size">
+      <di-hp-bar></di-hp-bar>
+      <di-stats-list></di-stats-list>
+      <di-effects-list></di-effects-list>
+    </div>
   </div>
   <di-action-bar></di-action-bar>
-  <di-loadout></di-loadout>
+  <div class="loadout-container"></div>
 </div>
 `
 
@@ -38,10 +33,6 @@ const TEXT_EFFECT_MAX = 2.1
 const STAGGER_TIME = 175
 
 export default class FighterInstancePane extends HTMLElement{
-
-  _orbRowEl
-  _loadoutEl
-  _effectsListEl
 
   hpBarEl
 
@@ -53,15 +44,10 @@ export default class FighterInstancePane extends HTMLElement{
     this.innerHTML = HTML
     this.hpBarEl = this.querySelector('di-hp-bar')
     this._actionBarEl = this.querySelector('di-action-bar')
-    this._loadoutEl = this.querySelector('di-loadout')
-    this._orbRowEl = this.querySelector('.fighter-orbs').setOptions({
-      style: OrbsDisplayStyle.MAX_ONLY
-    })
     this.statsList = this.querySelector('di-stats-list').setOptions({
       iconsOnly: true,
-      forced: ['physPower','magicPower'] // Excluded takes priority, so these might be hidden
+      forced: ['physPower','magicPower']
     })
-    this._effectsListEl = this.querySelector('di-effects-list')
     this._hpChangeQueue = new ResultQueue()
 
     this.querySelector('.top-section').addEventListener('click', e => {
@@ -73,6 +59,14 @@ export default class FighterInstancePane extends HTMLElement{
     return this._actionBarEl.querySelector('.bar-badge')
   }
 
+  get loadoutEl(){
+    return this.querySelector('.loadout-container > *')
+  }
+
+  get effectsListEl(){
+    return this.querySelector('di-effects-list')
+  }
+
   setOptions(options){
     this._options = mergeOptionsObjects(this._options, options)
     return this
@@ -80,59 +74,54 @@ export default class FighterInstancePane extends HTMLElement{
 
   setFighter(fighterInstance){
     this.fighterInstance = fighterInstance
-    this._loadoutEl.setFighterInstance(fighterInstance)
+    this._setupLoadout()
+
     this.querySelector('.name').textContent = fighterInstance.displayName
-    this._orbRowEl.setData(fighterInstance.orbs)
-    this._effectsListEl.setFighterInstance(fighterInstance)
-    this._update(false)
+    this.effectsListEl.setFighterInstance(fighterInstance)
+    this._actionBarEl.setBaseTime(this.fighterInstance)
+    this._update(true)
     return this
   }
 
   setState(newState, cancelAnimations = false){
-    this.fighterInstance.setState(newState)
+    this.fighterInstance.state = newState
     this._update(cancelAnimations)
     return this
   }
 
   advanceTime(ms){
-    if(this.fighterInstance.inCombat && !this.fighterInstance.mods.contains(freezeActionBarMod)){
+    if(this.fighterInstance.inCombat && !this.fighterInstance.hasMod('freezeActionBar')){
       this._actionBarEl.advanceTime(ms)
     }
-    if(!this.fighterInstance.mods.contains(freezeCooldownsMod)){
-      this._loadoutEl.advanceTime(ms)
+    if(!this.fighterInstance.hasMod('freezeCooldown')){
+      this.loadoutEl.advanceTime(ms)
     }
-    this._effectsListEl.advanceTime(ms)
+    this.effectsListEl.advanceTime(ms)
   }
 
   displayActionPerformed(action){
-    if(action.basicAttack){
-      const color = DAMAGE_COLORS[this.fighterInstance.basicAttackType]
-      flash(this.basicAttackEl, color)
-    }else if(action.effect){
-      const effectEl = this._getEffectEl(action.effect)
-      if(effectEl instanceof LoadoutRow){
-        flash(effectEl, FLASH_COLORS[effectEl.loadoutItem.abilityDisplayInfo.type], 500)
-      }else if(effectEl instanceof EffectRow){
-        effectEl.flash()
+    if(action.actionDef.attack){
+      if(action.actionDef.attack.basic){
+        const color = DAMAGE_COLORS[this.fighterInstance.basicAttackType]
+        flash(this.basicAttackEl, color)
       }
     }
+    const effectEl = this._getEffectEl(action.effect)
+    effectEl?.flash?.()
   }
 
-  displayResult(result, effect){
-
-    if(result.type === 'attack'){
+  displayResult(result){
+    if(result.damageInfo){
       this._queueHpChange(() => this._displayDamageResult(result))
-    }else if(result.type === 'damage'){
-      this._queueHpChange(() => this._displayDamageResult(result))
-    }else if(result.type === 'gainHealth'){
-      this._queueHpChange(() => this._displayLifeGained(result.data.amount))
-    }else if(result.type === 'cancel'){
-      this._displayCancellation(result, effect)
+    }else if(result.cancelled){
+      this._displayCancellation(result.cancelled)
+    }else if(result.healthGained){
+      this._queueHpChange(() => this._displayLifeGained(result.healthGained))
     }
   }
 
   _displayLifeGained(amount){
-    if(!amount){
+    if(amount <= 0){
       return
     }
     new FlyingTextEffect(this.hpBarEl, amount, {
@@ -148,12 +137,12 @@ export default class FighterInstancePane extends HTMLElement{
 
   _displayDamageResult = (damageResult) => {
 
-    if(damageResult.cancelled){
-      this._displayCancellation(damageResult)
-      return
-    }
+    // if(damageResult.cancelled){
+    //   this._displayCancellation(damageResult)
+    //   return
+    // }
 
-    const data = damageResult.data
+    const data = damageResult.damageInfo
     const classes = ['damage']
     if(data.crit){
       classes.push('crit')
@@ -162,17 +151,22 @@ export default class FighterInstancePane extends HTMLElement{
       classes.push('magic')
     }
 
-    for(let key in data.damageDistribution){
-      if(data.damageDistribution[key] === 0){
+    for(let distribution of data.damageDistribution){
+      const amount = distribution.amount
+      if(amount === 0){
         continue
       }
-      let dmgStr = roundToFixed(data.damageDistribution[key], 2)
+      let dmgStr = roundToFixed(amount, 2)
       let html = `<span class="${classes.join(' ')}">-${dmgStr}${data.crit ? '!!' : ''}</span>`
-      let barEl = key === 'hp' ? this.hpBarEl : this._getEffectEl(key)?.barEl
+      let barEl = distribution.id === 'hp' ? this.hpBarEl : this._getEffectEl(distribution.id)?.barEl
       if(!barEl){
         continue
       }
-      barEl.setValue(-data.damageDistribution[key], { relative: true, animate: true })
+      if(distribution.finalValue){
+        barEl.setValue(distribution.finalValue, { animate: true })
+      }else{
+        barEl.setValue(-amount, { relative: true, animate: true })
+      }
       new FlyingTextEffect(barEl, html, {
         html: true,
         fontSize: TEXT_EFFECT_MIN + Math.min(0.5, dmgStr / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX,
@@ -212,23 +206,31 @@ export default class FighterInstancePane extends HTMLElement{
       cancelAnimations = true
     }
 
+    if(cancelAnimations){
+      this._hpChangeQueue.clear()
+    }
 
-    if(this.fighterInstance.hp !== this.hpBarEl.value){
-      if(cancelAnimations || (!this.hpBarEl.animating && this._hpChangeQueue.isEmpty)){
-        this._hpChangeQueue.clear()
-        this.hpBarEl.setValue(this.fighterInstance.hp)
-      }
+    // TODO: rounding error...
+    const diff = Math.abs(this.fighterInstance.hp - this.hpBarEl.value)
+    if(diff > 1 && this._hpChangeQueue.isCleared){
+      this.hpBarEl.setValue(this.fighterInstance.hp, {
+        animate: !cancelAnimations
+      })
     }
 
     this.statsList.setOptions({
-      excluded: this._excluded()
+      excluded: this._excluded(),
+      owner: this.fighterInstance,
     })
 
-    this.statsList.setStats(this.fighterInstance.stats, this.fighterInstance)
-    this._effectsListEl.update(cancelAnimations)
-    this._updateActionBar()
-    this._loadoutEl.updateAllRows()
+    this.statsList.setStats(this.fighterInstance.stats)
+    this.effectsListEl.update(cancelAnimations)
+    this._updateActionBar(cancelAnimations)
+    this.loadoutEl.updateAllRows()
     this.classList.toggle('boss', this.fighterInstance.isBoss ? true : false)
+    if(this._infoContent){
+      this._infoContent.update()
+    }
 
     if(!this.fighterInstance.hp){
       this._showOnDefeat()
@@ -239,20 +241,22 @@ export default class FighterInstancePane extends HTMLElement{
   _showFighterInfoModal(){
     const modal = new Modal()
     if(this.fighterInstance instanceof AdventurerInstance){
-      modal.innerContent.appendChild(new AdventurerInfo(this.fighterInstance))
+      this._infoContent = new AdventurerInfo(this.fighterInstance)
     }else{
-      modal.innerContent.appendChild(new MonsterInfo(this.fighterInstance))
+      this._infoContent = new MonsterInfo(this.fighterInstance)
     }
+    modal.innerContent.appendChild(this._infoContent)
     modal.show()
+    modal.addEventListener('hide', () => {
+      this._infoContent = null
+    })
   }
 
   _excluded(){
     const excluded = ['hpMax','speed']
-    const magicAttack = this.fighterInstance.mods.contains(magicAttackMod)
-    const showPhys = this.fighterInstance.mods.contains(physScalingMod) ||
-      this.fighterInstance.physPower !== this.fighterInstance.basePower
-    const showMagic = this.fighterInstance.mods.contains(magicScalingMod) ||
-      this.fighterInstance.magicPower !== this.fighterInstance.basePower
+    const magicAttack = this.fighterInstance.hasMod('magicAttack')
+    const showPhys = this.fighterInstance.physPower !== this.fighterInstance.basePower
+    const showMagic = this.fighterInstance.magicPower !== this.fighterInstance.basePower
 
     if((showPhys || !magicAttack) && showMagic){
       return [...excluded]
@@ -267,29 +271,20 @@ export default class FighterInstancePane extends HTMLElement{
     if(!effectId){
       return null
     }
-    const loadoutRow = this._loadoutEl._rows.find(el => {
-      // TODO: eventName should have to be the main event for the effect
-      return el.loadoutItem?.obj.effectId === effectId
-    })
-    if(loadoutRow){
-      return loadoutRow
-    }
-    return [...this._effectsListEl.querySelectorAll('di-effect-row')].find(el => {
-      return el.effect.effectId === effectId
-    })
+    return this.querySelector(`.effect-instance[effect-id="${effectId}"]`)
   }
 
-  _displayCancellation(result, effect){
-    if(result.data?.cancelReason){
-      const targetEl = this._getEffectEl(effect) ?? this.hpBarEl
-      new FlyingTextEffect(
-        targetEl,
-        toDisplayName(result.data.cancelReason),
-        {
-          clearExistingForSource: true
-        }
-      )
-    }
+  _displayCancellation(cancelled){
+    const reason = cancelled.reasonMsg || toDisplayName(cancelled.reason) || 'Cancelled'
+    const targetEl = this._getEffectEl(cancelled.cancelledByEffect) ?? this.hpBarEl
+    new FlyingTextEffect(
+      targetEl,
+      reason,
+      {
+        clearExistingForSource: true
+      }
+    )
+    flash(targetEl)
   }
 
   _showOnDefeat(){
@@ -310,15 +305,26 @@ export default class FighterInstancePane extends HTMLElement{
     this.querySelector('.standard-contents').style.opacity = '1'
   }
 
-  _updateActionBar(){
+  _updateActionBar(cancelAnimations = false){
     const type = this.fighterInstance.basicAttackType
     if(!this._actionBarEl.querySelector('.basic-attack-type-' + type)){
       this._actionBarEl.setBadge(`${ICON_SVGS[type + 'Power']}`)
     }
-    this._actionBarEl.setTime(
-      this.fighterInstance._state.timeSinceLastAction ?? 0,
-      this.fighterInstance.timeUntilNextAction
-    )
+    this._actionBarEl.setTime(this.fighterInstance, cancelAnimations)
+  }
+
+  _setupLoadout(){
+    const loadoutContainer = this.querySelector('.loadout-container')
+    loadoutContainer.innerHTML = ''
+    if(this.fighterInstance instanceof AdventurerInstance){
+      loadoutContainer.appendChild(
+        new AdventurerLoadout()
+          .setOptions({ showState: true })
+          .setAdventurer(this.fighterInstance)
+      )
+    }else{
+      loadoutContainer.appendChild(new MonsterLoadout().setMonsterInstance(this.fighterInstance))
+    }
   }
 }
 
@@ -330,8 +336,8 @@ class ResultQueue{
     this._queue = []
   }
 
-  get isEmpty(){
-    return this._queue.length ? false : true
+  get isCleared(){
+    return this._timeout ? false : true
   }
 
   add(fn){
@@ -343,6 +349,7 @@ class ResultQueue{
 
   clear(){
     clearTimeout(this._timeout)
+    this._timeout = null
     this._queue = []
   }
 
@@ -352,6 +359,7 @@ class ResultQueue{
     }
     this._queue[0]()
     this._timeout = setTimeout(() => {
+      this._timeout = null
       this._queue = this._queue.slice(1)
       this._next()
     }, STAGGER_TIME)

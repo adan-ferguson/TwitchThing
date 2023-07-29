@@ -1,20 +1,16 @@
-$margin: 6rem
+$margin: 8rem
 $itemsHeight: 30rem
 
 di-list
   display: flex
   flex-direction: column
   justify-content: space-between
-  margin-bottom: -$margin
 
   .items
     flex-grow: 1
     display: flex
     flex-direction: column
-    //margin-bottom: $itemsHeight
-
-    > *
-      margin-bottom: $margin
+    gap: $margin
 
     .blank-row
       border: 0.5rem dashed #CCC
@@ -30,6 +26,8 @@ di-list
     justify-content: space-evenly
     align-items: center
     flex-grow: 0
+    margin-top: $margin
 
     button
       border: none
+      padding: 7rem

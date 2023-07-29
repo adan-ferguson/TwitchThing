@@ -36,7 +36,7 @@ export default class WorkshopInventory extends DIElement{
     this.innerHTML = HTML
     this.listEl.setOptions({
       showFiltered: true,
-      pageSize: 15,
+      pageSize: 14,
       clickableRows: true
     })
     this.querySelector('.supertitle').textContent = title
@@ -64,12 +64,17 @@ export default class WorkshopInventory extends DIElement{
       return
     }
     const row = this.listEl.allRows.find(row => {
-      return row.loadoutItem?.itemInstance?.id === itemDef.id
+      return row.adventurerItem?.id === itemDef.id
     })
     if(row){
       this.listEl.showRow(row)
       row.click()
     }
+  }
+
+  setAdventurer(id){
+    this.adventurerDropdownEl.value = id
+    this._updateList()
   }
 
   _setupDropdown(adventurers){
@@ -94,7 +99,7 @@ export default class WorkshopInventory extends DIElement{
           filterFn: () => adv.dungeonRunID ? false : true,
           sortFn: null
         })
-        .setRows(adventurerItemsToRows(adv.items))
+        .setRows(adventurerItemsToRows(adv.loadout.items))
     }else{
       this.listEl
         .setOptions({

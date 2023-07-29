@@ -1,10 +1,10 @@
-import { fadeIn, fadeOut } from '../../../animations/simple.js'
 import EventContentsNormal from './eventContentsNormal.js'
 
 export default class Event extends HTMLElement{
 
   _adventurer
   _timeline
+  _topThing
   currentContents = null
 
   constructor(){
@@ -12,37 +12,20 @@ export default class Event extends HTMLElement{
     this.classList.add('fill-contents', 'absolute-full-size')
   }
 
-  setup(adventurer, timeline){
+  setup(adventurer, timeline, topThing){
     this._adventurer = adventurer
     this._timeline = timeline
+    this._topThing = topThing
 
     timeline.on('timechange', () => this._updateTimeBar())
   }
 
   update(dungeonEvent, animate = false){
-    // const wasNormal = this.currentContents instanceof EventContentsNormal
-    // if(wasNormal && sameRoom(this.currentContents.dungeonEvent, dungeonEvent)){
-    //   console.log('update')
-    //   this.currentContents.update(dungeonEvent)
-    // }else{
-    // }
     this.setContents(new EventContentsNormal(dungeonEvent), animate)
   }
 
   async setContents(contents, animate = true){
-
-    // console.log('content change', animate)
-    //
-    // animate = animate && this.currentContents
-    // if(animate){
-    //   console.log('fadeout')
-    //   await fadeOut(this, 100)
-    //   console.log('fadein')
-    //   fadeIn(this, 100)
-    // }else{
-    //   console.log('nofade')
-    // }
-
+    this.currentContents?.stop?.()
     this.innerHTML = ''
     this.currentContents = contents
     this.appendChild(this.currentContents)

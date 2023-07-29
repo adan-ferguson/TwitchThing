@@ -1,14 +1,15 @@
 import { OrbsDisplayStyle, OrbsTooltip } from './orbRow.js'
+import DIElement from './diElement.js'
 
 const HTML = `
-<div class="card-border">
+<div class="obj-border">
   <span class="inset-title item-name"></span>
   <di-orb-row class="inset-title-right item-orbs"></di-orb-row>
   <di-effect-details></di-effect-details>
 </div>
 `
 
-export default class ItemCard extends HTMLElement{
+export default class ItemCard extends DIElement{
 
   get orbEl(){
     return this.querySelector('.item-orbs')
@@ -18,27 +19,24 @@ export default class ItemCard extends HTMLElement{
     return this.querySelector('.item-name')
   }
 
-  get effectDetails(){
+  get loadoutObjectDetails(){
     return this.querySelector('di-effect-details')
   }
 
-  setItem(itemInstance){
+  setItem(adventurerItem){
     this.innerHTML = HTML
-    if (!itemInstance){
+    if (!adventurerItem){
       return
     }
-    this.nameEl.textContent = itemInstance.displayName
+    this.nameEl.textContent = adventurerItem.displayName
     this.orbEl
       .setOptions({
-        style: OrbsDisplayStyle.MAX_ONLY,
+        style: OrbsDisplayStyle.USED_ONLY,
         tooltip: OrbsTooltip.ITEM
       })
-      .setData(itemInstance.orbs)
-    this.effectDetails
-      .setOptions({
-        showTooltips: true
-      })
-      .setEffect(itemInstance)
+      .setData(adventurerItem.orbs)
+    this.loadoutObjectDetails.setObject(adventurerItem)
+    this.addTooltipsToStats()
     return this
   }
 }

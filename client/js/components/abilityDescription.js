@@ -1,35 +1,23 @@
-import { makeEl, roundToFixed } from '../../../game/utilFunctions.js'
+import { makeEl, roundToFixed, wrapContent } from '../../../game/utilFunctions.js'
 import tippy from 'tippy.js'
-import abilityDisplayInfo from '../abilityDisplayInfo.js'
 import { ABILITY_DESCRIPTION_COLORS, ITEM_ROW_COLORS } from '../colors.js'
+import DIElement from './diElement.js'
+import { addTooltipToSvg, magicPowerIcon, pluralize } from './common.js'
 
-export default class AbilityDescription extends HTMLElement{
+export default class AbilityDescription extends DIElement{
 
-  constructor(itemInstance){
-    super()
-    if(itemInstance){
-      this.setItem(itemInstance)
-    }
-  }
+  setAbilityDisplayInfo(displayInfo){
 
-  setItem(itemInstance, tooltips = false){
-
-    const displayInfo = abilityDisplayInfo(itemInstance)
     this.innerHTML = ''
-
-    if(!displayInfo || displayInfo.phantom){
-      this.classList.add('displaynone')
-      return
-    }
 
     this.style.borderColor = ITEM_ROW_COLORS[displayInfo.type]
     this.style.backgroundColor = ABILITY_DESCRIPTION_COLORS[displayInfo.type]
     this.setAttribute('ability-type', displayInfo.type)
 
-    this.appendChild(displayInfo.descriptionEl)
+    this.appendChild(wrapContent(displayInfo.descriptionHTML))
     this.appendChild(makeBotRow(displayInfo))
 
-    if(tooltips){
+    if(!this.inTooltip){
       tooltip(this.querySelector('.initial-cooldown'), 'Initial Cooldown / Cooldown')
       tooltip(this.querySelector('.cooldown'), 'Cooldown')
     }
@@ -40,30 +28,43 @@ export default class AbilityDescription extends HTMLElement{
 
 customElements.define('di-ability-description', AbilityDescription)
 
-function makeBotRow(adi){
+function makeBotRow(displayInfo){
 
   const row = makeEl({
     class: ['bot-row', 'flex-centered', 'flex-columns', 'flex-spaced']
   })
 
-  let botLeftText = adi.type === 'active' ? 'Active' : ''
-  if(adi.ability.uses){
-    botLeftText += (botLeftText.length ? ', ' : '')
-    botLeftText += `${adi.ability.uses} use${adi.ability.uses > 1 ? 's' : ''}`
+  const botLeftChunks = []
+  if(displayInfo.type === 'active'){
+    botLeftChunks.push('Active')
   }
-  row.appendChild(makeEl({ text: botLeftText }))
-
-  if(adi.ability.cooldown){
-    let str = ''
-    if(adi.ability.initialCooldown){
-      str += d2(adi.ability.cooldown - adi.ability.initialCooldown) + '/'
+  if(displayInfo.ability.uses && displayInfo.ability.trigger !== 'startOfCombat'){
+    botLeftChunks.push(pluralize('use', displayInfo.ability.uses))
+    if(displayInfo.ability.resetAfterCombat){
+      botLeftChunks.push('per combat')
     }
-    str += d2(adi.ability.cooldown)
+  }
+  if(displayInfo.ability.tags?.length){
+    const tagsEls = tagsToIcons(displayInfo.ability.tags)
+    if(tagsEls.length){
+      botLeftChunks.push(tagsEls.join(''))
+    }
+  }
+  if(botLeftChunks.length){
+    row.appendChild(wrapContent(botLeftChunks.join(' ')))
+  }
+
+  if(displayInfo.cooldown){
+    let str = ''
+    if(displayInfo.initialCooldown){
+      str += d2(displayInfo.cooldown - displayInfo.initialCooldown) + '/'
+    }
+    str += d2(displayInfo.cooldown)
     row.appendChild(makeEl({
-      class: adi.ability.initialCooldown ? 'initial-cooldown' : 'cooldown',
+      class: displayInfo.initialCooldown ? 'initial-cooldown' : 'cooldown',
       content: '<i class="fa-solid fa-hourglass"></i>' + str
     }))
-  }else if(!botLeftText){
+  }else if(!botLeftChunks.length){
     row.classList.add('displaynone')
   }
 
@@ -83,4 +84,14 @@ function tooltip(el, content){
     content
   })
   el.classList.add('clickable')
+}
+
+function tagsToIcons(tags){
+  const icons = []
+  tags.forEach(tag => {
+    if(tag === 'spell'){
+      icons.push(addTooltipToSvg(magicPowerIcon(), 'Spell'))
+    }
+  })
+  return icons
 }

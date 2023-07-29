@@ -2,14 +2,15 @@ import Page from '../page.js'
 import '../../adventurer/adventurerPane.js'
 import fizzetch from '../../../fizzetch.js'
 import tippyCallout from '../../visualEffects/tippyCallout.js'
-import { showLoader } from '../../../loader.js'
+import { hideLoader, showLoader } from '../../../loader.js'
 import SimpleModal, { alertModal } from '../../simpleModal.js'
 import AdventurerPreviousRunsPage from '../adventurerPreviousRuns/adventurerPreviousRunsPage.js'
 import DungeonPage from '../dungeon/dungeonPage.js'
-import AdventurerLoadoutEditorPage from '../adventurerLoadout/adventurerLoadoutEditorPage.js'
-import LevelupPage from '../levelup/levelupPage.js'
 import DungeonPickerPage from '../dungeonPicker/dungeonPickerPage.js'
-import AdventurerInstance from '../../../../../game/adventurerInstance.js'
+import Adventurer from '../../../../../game/adventurer.js'
+import AdventurerEditPage from '../adventurerEdit/adventurerEditPage.js'
+import { orbPointEntry, skillPointEntry, xpIcon } from '../../common.js'
+import AddXpModalContent from './addXpModalContent.js'
 
 const HTML = `
 <div class="content-columns">
@@ -17,7 +18,10 @@ const HTML = `
     <div class="content-well">
       <di-adventurer-pane></di-adventurer-pane>
     </div>
-    <button class="edit content-no-grow">Edit Equipment</button>
+    <div class="content-no-grow edit-row content-columns">
+      <button class="edit">Edit Adventurer</button>
+      <button class="spend-points content-no-grow displaynone"></button>
+    </div>
   </div>
   <div class="content-rows dungeons">
     <div class="top-right content-well center-contents clickable"></div>
@@ -45,7 +49,12 @@ export default class AdventurerPage extends Page{
       this.redirectTo(AdventurerPreviousRunsPage.path(this.adventurerID))
     })
     this.querySelector('.dismiss').addEventListener('click', () => {
-      new SimpleModal(`Are you sure you want to dismiss ${this.adventurer.name}? Just to clarify I mean DELETE!\n\nEquipped items will be returned to your inventory.`, [{
+      new SimpleModal(`
+      Are you sure you want to dismiss ${escape(this.adventurer.name)}? Just to clarify I mean DELETE!
+      <br/><br/>
+      Equipped items will be returned to your inventory.
+      <br/><br/>
+      You'll gain ${Math.floor(this.adventurer.xp / 2)} ${xpIcon()}`, [{
         text: 'DELETE',
         style: 'scary',
         fn: () => {
@@ -81,8 +90,9 @@ export default class AdventurerPage extends Page{
       return this.redirectTo(DungeonPage.path(adventurer.dungeonRunID))
     }
 
-    this.adventurer = adventurer
-    this.adventurerPane.setAdventurer(adventurer)
+    this.adventurer = new Adventurer(adventurer)
+    this.adventurerPane.setAdventurer(this.adventurer)
+
     this._setupEditEquipmentButton(user)
     this._setupTopRightButton(user)
 
@@ -94,42 +104,54 @@ export default class AdventurerPage extends Page{
   _setupEditEquipmentButton(user){
 
     const btn = this.querySelector('button.edit')
+    const pointsBtn = this.querySelector('button.spend-points')
     const featureStatus = user.features.editLoadout
+
+    let points = ''
+    const unspentOrbs = this.adventurer.unspentOrbs
+    const unspentSkillPoints = this.adventurer.unspentSkillPoints
+    if(unspentOrbs > 0){
+      points += orbPointEntry(unspentOrbs)
+    }
+    if(unspentSkillPoints > 0){
+      points += skillPointEntry(unspentSkillPoints)
+    }
+    if(points){
+      pointsBtn.classList.remove('displaynone')
+      pointsBtn.innerHTML = points
+    }
+
     if(!featureStatus){
-      btn.classList.add('displaynone')
+      this.querySelector('.edit-row').classList.add('displaynone')
       return
     }else if(featureStatus === 1){
       btn.classList.add('glow')
-      btn.classList.remove('displaynone')
-      tippyCallout(btn, 'Click here to edit your items')
+      tippyCallout(btn, 'Edit your items here')
+    }else if(user.features.spendPoints === 1){
+      pointsBtn.classList.add('glow')
+      tippyCallout(pointsBtn, 'Spent points here')
     }
 
     btn.addEventListener('click', () => {
-      this.redirectTo(AdventurerLoadoutEditorPage.path(this.adventurerID))
+      this.redirectTo(AdventurerEditPage.path(this.adventurerID))
+    })
+    pointsBtn.addEventListener('click', () => {
+      this.redirectTo(AdventurerEditPage.path(this.adventurerID), { tab: 'Spend Points' })
     })
   }
 
   _setupTopRightButton(user){
-    const advInstance = new AdventurerInstance(this.adventurer)
-    if(advInstance.shouldLevelUp){
-      this._topRightButton.classList.add('highlight')
-      this._topRightButton.innerHTML = '<div>Level Up!<div/>'
-      this._topRightButton.addEventListener('click', () => {
-        this.redirectTo(LevelupPage.path(this.adventurerID))
-      })
-    }else{
-      const quickDungeon = user.features.dungeonPicker
-      this._topRightButton.textContent = 'Enter Dungeon'
-      this._topRightButton.addEventListener('click', () => {
-        if(!advInstance.isLoadoutValid){
-          alertModal('This adventurer has invalid items for some reason, can not enter dungeon.')
-        }else if(quickDungeon){
-          this.redirectTo(DungeonPickerPage.path(this.adventurerID))
-        }else{
-          this._quickEnterDungeon()
-        }
-      })
-    }
+    const quickDungeon = user.features.dungeonPicker
+    this._topRightButton.textContent = 'Enter Dungeon'
+    this._topRightButton.addEventListener('click', () => {
+      if(!this.adventurer.isValid){
+        alertModal('This adventurer has invalid items for some reason, can not enter dungeon. Is there a scary glowing red rectangle on the left?')
+      }else if(quickDungeon){
+        this.redirectTo(DungeonPickerPage.path(this.adventurerID))
+      }else{
+        this._quickEnterDungeon()
+      }
+    })
   }
 
   async _quickEnterDungeon(){

@@ -1,53 +1,46 @@
-import attackAction from '../../actions/attackAction.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
-import { barrierStatusEffect } from '../../statusEffects/combined.js'
-import { magicAttackMod } from '../../mods/combined.js'
+import { barrierAction } from '../../commonMechanics/barrierAction.js'
+import { magicAttackItem } from '../../commonMechanics/magicAttackItem.js'
 
-export default {
-  baseStats: {
-    magicDef: '40%',
-    physPower: '-50%',
-    magicPower: '+80%',
-    hpMax: '-30%',
-    speed: -80
-  },
-  items: [
-    {
-      name: 'Magic Attack',
-      mods: [magicAttackMod]
+export default function(){
+  return {
+    baseStats: {
+      magicDef: '40%',
+      physPower: '-50%',
+      magicPower: '+80%',
+      hpMax: '-40%',
+      speed: -40
     },
-    {
-      name: 'EVIL Barrier',
-      abilities: {
-        active: {
-          cooldown: 12000,
-          description: `Gain a barrier which absorbs [magicScaling${1.5}] damage.`,
-          actions: [
-            statusEffectAction({
-              base: barrierStatusEffect,
-              effect: {
-                params: {
-                  magicPower: 1.5
+    items: [
+      magicAttackItem(),
+      {
+        name: 'EVIL Barrier',
+        effect: {
+          abilities: [{
+            trigger: 'active',
+            cooldown: 12000,
+            actions: [barrierAction({
+              magicPower: 1.7
+            }, { name: 'EVIL Barrier' })]
+          }]
+        }
+      },
+      {
+        name: 'Death Kill Beam',
+        effect: {
+          abilities: [{
+            trigger: 'active',
+            initialCooldown: 20000,
+            actions: [{
+              attack: {
+                damageType: 'magic',
+                scaling: {
+                  magicPower: 3.5
                 }
               }
-            })
-          ]
+            }]
+          }]
         }
       }
-    },
-    {
-      name: 'Death Kill Beam',
-      abilities: {
-        active: {
-          initialCooldown: 20000,
-          actions: [
-            attackAction({
-              damageType: 'magic',
-              damageMulti: 3.5
-            })
-          ]
-        }
-      }
-    }
-  ]
+    ]
+  }
 }

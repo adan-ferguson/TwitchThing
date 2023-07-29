@@ -1,19 +1,59 @@
 di-effect-details
 
+  max-width: 315rem !important
+
+  display: flex
+  gap: 10rem
+  line-height: 1.5em
+  flex-direction: column
+  text-align: center
+  font-family: 'Text Font', serif
+
+  .meta-effect, .loadout-modifier
+    border: 0.5rem solid #CCC
+    padding: 10rem
+
+    .meta-effect-header, .loadout-modifier-header
+      border-bottom: 0.5rem solid #CCC
+      margin-bottom: 10rem
+      padding-bottom: 5rem
+      text-align: center
+
+  .loadout-modifier-content
+    padding-left: 15rem
+    margin: 0
+
+    li:not(:last-child)
+      margin-bottom: 4rem
+
+
+  hr
+    margin: 4rem 0
+
+  > div
+    padding: 0 6rem
+
   > *
-    margin-top: 8rem
-    &:first-child
-      margin-top: 0
-
-  .effect-description
-    padding: 6rem 6rem 0
-    line-height: 1.5em
-
-    di-orb-row
-      font-size: 0.9em
-    > *
-      display: inline-block
-      vertical-align: middle
+    display: inline
+    //
+    //> *
+    //  margin-right: 7px
 
     di-orb-entry
-      padding: 0
+      display: inline-flex
+
+    //di-orb-row
+    //  font-size: 0.9em
+    //> *
+    //  display: inline-block
+    //  vertical-align: middle
+    //
+    //di-orb-entry
+    //  padding: 0
+
+  .keyword
+    font-weight: bold
+    text-decoration: underline
+
+    &:hover
+      background-color: #0000AA22

@@ -13,7 +13,7 @@ export function runEnd(dungeonRun){
       message: `${dungeonRun.adventurerInstance.displayName} returns triumphantly after clearing the ${zone}.`
     }
   }
-  if(floor === 50){
+  if(floor === 60){
     return {
       runFinished: true,
       roomType: 'outOfOrder',

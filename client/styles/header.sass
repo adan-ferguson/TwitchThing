@@ -40,9 +40,17 @@ di-header
   .right-side
     display: flex
     flex-direction: row
+    align-items: center
 
     > *
       margin-left: 8rem
+
+    .register-button
+      color: red
+      font-size: 1.5em !important
+      cursor: pointer
+      &:hover
+        color: hotpink
 
     .gold-button, .scrap-button
       min-width: 50rem
@@ -70,6 +78,6 @@ di-header
         background-color: #EEE
 
 
-@media (max-aspect-ratio: 1/1)
-  di-header
-    flex-basis: 75rem
+//@media (max-aspect-ratio: 5/4)
+//  di-header
+//    flex-basis: 75rem

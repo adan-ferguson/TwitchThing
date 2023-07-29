@@ -1,10 +1,9 @@
 import { chooseOne } from '../../game/rando.js'
-import { all as Monsters } from '../../game/monsters/combined.js'
+import Monsters from '../../game/monsters/combined.js'
 import { uniqueID } from '../../game/utilFunctions.js'
 import MonsterInstance from '../../game/monsterInstance.js'
-import { generateRandomChest } from './chests.js'
+import { generateMonsterChest } from './chests.js'
 import { addRewards } from './results.js'
-import { unlockedClasses } from '../../game/user.js'
 
 const monstersByFloor = [
   null,
@@ -19,40 +18,40 @@ const monstersByFloor = [
   Monsters.sorcerer,
   Monsters.rockGolem,
   Monsters.minotaur,
-  // Forest
+  // // Forest
   Monsters.woodElf,
   Monsters.sprite,
-  Monsters.boar,
   Monsters.badger,
   Monsters.mushroom,
+  Monsters.boar,
   Monsters.werewolf,
   Monsters.centaur,
   Monsters.druid,
   Monsters.treant,
   Monsters.tyrannosaurus,
-  // Crypt
+  // // Crypt
   Monsters.skeleton,
   Monsters.zombie,
   Monsters.ghastlySkull,
   Monsters.assassin,
   Monsters.banshee,
   Monsters.necromancer,
-  Monsters.deathKnight,
   Monsters.vampire,
+  Monsters.deathKnight,
   Monsters.lich,
   Monsters.boneDragon,
-  // Swamp
+  // // Swamp
   Monsters.lizardPerson,
   Monsters.wasp,
-  Monsters.orc,
-  Monsters.biteyPlant,
+  Monsters.gator,
   Monsters.anaconda,
-  Monsters.troll,
+  Monsters.biteyPlant,
   Monsters.basilisk,
+  Monsters.troll,
   Monsters.witch,
   Monsters.wyvern,
   Monsters.hydra,
-  // Water World
+  // // Water World
   Monsters.legallyDistinctMurloc,
   Monsters.crab,
   Monsters.pirate,
@@ -60,16 +59,29 @@ const monstersByFloor = [
   Monsters.siren,
   Monsters.twoHeadedShark,
   Monsters.stormMermaid,
-  Monsters.seaSerpent,
+  Monsters.seaDrake,
   Monsters.waterElemental,
-  Monsters.kraken
+  Monsters.kraken,
+  // Heck
+  Monsters.maniacalMinion,
+  Monsters.cerberus,
+  Monsters.nightMare,
+  Monsters.pitFiend,
+  Monsters.succubus,
+  Monsters.soulSummoner,
+  Monsters.accursedDevil,
+  Monsters.fireElemental,
+  Monsters.virtualDemon,
+  Monsters.triablo,
 ]
 
-const BONUS_CHESTS_UNTIL = 12
-const BONUS_CHEST_CHANCE = 0.25
+const PITY_THRESHOLD = 0.75
 
-const CHEST_DROP_CHANCE = 0.04
-const CHEST_DROP_CHANCE_HARD_ENEMY = 0.12 // It's an enemy of level >= adventurer's deepest floor
+const BONUS_CHESTS_UNTIL = 12
+const BONUS_CHEST_CHANCE = 0.15
+
+const CHEST_DROP_CHANCE = 0.025
+const CHEST_DROP_CHANCE_HARD_ENEMY = 0.09 // It's an enemy of level >= adventurer's deepest floor
 
 const BOSS_XP_BONUS = 10
 
@@ -81,16 +93,6 @@ const FLOOR_SKEW = -0.12
 
 export function foundMonster(dungeonRun){
   return 1
-  // return roomsSinceMonster() > MONSTER_ROOM_BUFFER && Math.random() < MONSTER_CHANCE
-  // function roomsSinceMonster(){
-  //   let i
-  //   for(i = 1; i <= dungeonRun.events.length; i++){
-  //     if(dungeonRun.events.at(-i)?.monster){
-  //       break
-  //     }
-  //   }
-  //   return i - 1
-  // }
 }
 
 export function generateSuperMonster(dungeonRun){
@@ -105,9 +107,10 @@ export function generateSuperMonster(dungeonRun){
 
 export async function generateMonster(dungeonRun, boss){
 
-  const level = boss ? dungeonRun.floor : floorToLevel(dungeonRun.floor)
-  const monsterDefinition = getMonsterDefinition(level)
-  monsterDefinition.level = level
+  const index = boss ? dungeonRun.floor : floorToLevel(dungeonRun.floor)
+  const monsterDefinition = getMonsterDefinition(index)
+  monsterDefinition.level = index
+  monsterDefinition.boss = boss
 
   return {
     ...monsterDefinition,
@@ -117,32 +120,26 @@ export async function generateMonster(dungeonRun, boss){
 
 function generateRewards(dungeonRun, monsterDefinition){
   const monsterInstance = new MonsterInstance(monsterDefinition)
-  const advStats = dungeonRun.adventurerInstance.stats
   const level = monsterInstance.level
   const rewards = {
-    xp: monsterInstance.xpReward * advStats.get('combatXP').value * (monsterInstance.isBoss ? BOSS_XP_BONUS : 1)
+    xp: monsterInstance.xpReward * (monsterInstance.isBoss ? BOSS_XP_BONUS : 1)
   }
   if(dungeonRun.user.accomplishments.firstRunFinished){
     const userChests = dungeonRun.user.accomplishments.chestsFound ?? 0
-    const hardEnemy = level >= dungeonRun.adventurerInstance.accomplishments.deepestFloor
-    const dropChance = userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE :
-      hardEnemy ? CHEST_DROP_CHANCE_HARD_ENEMY :
-        CHEST_DROP_CHANCE
+    const hardEnemy = level >= dungeonRun.adventurer.accomplishments.deepestFloor
+    const dropMulti = dungeonRun.adventurerInstance.stats.get('chestFind').value
+    const dropChance = (userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE :
+      hardEnemy ? CHEST_DROP_CHANCE_HARD_ENEMY : CHEST_DROP_CHANCE) * dropMulti
     const dropChest =
       Math.random() < dropChance ||
       monsterInstance.isBoss ||
-      dropPityChest(dungeonRun)
+      dropPityChest(dungeonRun, dropChance)
 
     if(dropChest){
-      let type = monsterInstance.isBoss ? 'boss' :
-        userChests < BONUS_CHESTS_UNTIL ? 'tutorial' :
-          'normal'
-
-      rewards.chests = generateRandomChest({
-        level: Math.floor(level * advStats.get('chestLevel').value),
-        type,
-        classes: unlockedClasses(dungeonRun.user)
-      })
+      rewards.chests = generateMonsterChest(dungeonRun, monsterInstance)
+      rewards.pityPoints = -1
+    }else{
+      rewards.pityPoints = dropChance
     }
   }
   return addRewards(rewards, monsterInstance.rewards)
@@ -173,7 +170,13 @@ export function generateFloorChoices(floor, range = 1, skew = 0){
  * @return {[object]}
  */
 export function getAllMonsters(){
-  return monstersByFloor.slice(1).map((_, floor) => getBasicMonsterDefinition(floor + 1))
+  return monstersByFloor.slice(1).map((_, floor) => {
+    const def = getBasicMonsterDefinition(floor + 1)
+    if((floor + 1) % 10 === 0){
+      def.boss = true
+    }
+    return def
+  })
 }
 
 /**
@@ -200,15 +203,13 @@ function getBasicMonsterDefinition(floor){
   }
   return {
     _id: 'basic-' + uniqueID(),
-    baseType: monstersByFloor[floor].name,
+    baseType: monstersByFloor[floor].id,
     level: floor
   }
 }
 
-function dropPityChest(dungeonRun){
-  const expectedChests = dungeonRun.events.length * CHEST_DROP_CHANCE / 2
-  const chests = dungeonRun.rewards.chests?.length ?? 0
-  if(chests < Math.round(expectedChests)){
+function dropPityChest(dungeonRun, dropChance){
+  if((dungeonRun.rewards.pityPoints ?? 0) + dropChance > PITY_THRESHOLD){
     return true
   }
   return false

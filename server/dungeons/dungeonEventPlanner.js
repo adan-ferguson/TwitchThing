@@ -1,8 +1,9 @@
-import { foundMonster } from './monsters.js'
+import { foundMonster, generateMonster } from './monsters.js'
 import { foundStairs } from './stairs.js'
-import { generateCombatEvent } from '../combat.js'
+import { generateCombatEvent } from '../combat/fns.js'
 import { shouldRest, rest } from './resting.js'
 import { runEnd } from './runEnd.js'
+import { generateSneakEvent, trySneak } from './sneak.js'
 
 /**
  * @param dungeonRun {DungeonRunInstance}
@@ -16,7 +17,7 @@ export async function generateEvent(dungeonRun){
   const bossFloor = floor % 10 === 0
   const previousEvent = dungeonRun.events.at(-1)
 
-  if(previousEvent.boss){
+  if(previousEvent.monster?.boss){
     const runEndEvent = runEnd(dungeonRun)
     if(runEndEvent){
       return runEndEvent
@@ -31,7 +32,8 @@ export async function generateEvent(dungeonRun){
 
   if(dungeonRun.user.accomplishments.firstRunFinished && foundStairs(dungeonRun)){
     if(bossFloor){
-      return await generateCombatEvent(dungeonRun, true)
+      const monsterDef = await generateMonster(dungeonRun, true)
+      return await generateCombatEvent(dungeonRun, monsterDef)
     }
     const message = dungeonRun.pace === 'Brisk' ?
       `${adventurerInstance.displayName} found the stairs and goes deeper.` :
@@ -51,7 +53,11 @@ export async function generateEvent(dungeonRun){
   const encounterPossible = previousEvent.wandering ? true : false //(previousEvent?.combatID || room <= 1) ? false : true
 
   if(encounterPossible && foundMonster(dungeonRun)){
-    return await generateCombatEvent(dungeonRun)
+    const monsterDef = await generateMonster(dungeonRun)
+    if(trySneak(adventurerInstance)){
+      return generateSneakEvent(dungeonRun, monsterDef)
+    }
+    return await generateCombatEvent(dungeonRun, monsterDef)
   }
 
   if(dungeonRun.instructions.leave){

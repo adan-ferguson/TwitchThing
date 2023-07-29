@@ -5,7 +5,7 @@ const Zones = [{
 },{
   name: 'Woods',
   color: '#def5ce',
-  texture: 'crypt.png',
+  texture: 'tree-bark.png',
 },{
   name: 'Crypt',
   color: '#eeecec',
@@ -17,18 +17,19 @@ const Zones = [{
 },{
   name: 'Water World',
   color: '#d2e8fd',
-  texture: 'crypt.png',
+  texture: 'little-knobs.png',
 },{
-  name: 'SUPER Zone',
-  color: '#f1c4f8',
-  texture: 'maze-white.png'
+  name: 'Heck',
+  color: '#c25656',
+  texture: 'little-triangles.png'
 }]
 
 // Final floor gets this bonus size
-const FINAL_FLOOR_BONUS = 2
-const SIZE_BASE = 6
-const SIZE_AFTER_ZONE_0 = 4
-const SIZE_PER_FLOOR = 1
+const FINAL_FLOOR_BONUS = 1 //.2
+const SIZE_BASE = 9.5
+const SIZE_PER_FLOOR = 1.5
+const SIZE_PER_ZONE = 2
+const ZONE_0_REDUCTION = 2/3
 
 export default Zones
 
@@ -41,12 +42,8 @@ export function floorToZone(floor){
 }
 
 export function floorSize(floor){
-  if(floor > 50){
-    return 50
-  }
   const zone = Math.floor((floor - 1) / 10)
   const zoneFloor = floor - zone * 10
   const bonus = zoneFloor === 10 ? FINAL_FLOOR_BONUS : 1
-  const base = SIZE_BASE + (zone > 0 ? SIZE_AFTER_ZONE_0 : 0)
-  return Math.floor(bonus * (base + zoneFloor * SIZE_PER_FLOOR))
+  return Math.floor((zone === 0 ? ZONE_0_REDUCTION : 1) * bonus * (SIZE_BASE + zoneFloor * SIZE_PER_FLOOR) + zone * SIZE_PER_ZONE)
 }

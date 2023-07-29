@@ -1,107 +1,90 @@
-import AdventurerInstance, { advLevelToXp, advXpToLevel } from '../../../../game/adventurerInstance.js'
+import DIElement from '../diElement.js'
 import { OrbsDisplayStyle } from '../orbRow.js'
-import Modal from '../modal.js'
-import AdventurerInfo from './adventurerInfo.js'
-import { magicAttackMod, magicScalingMod, physScalingMod } from '../../../../game/mods/combined.js'
+import AdventurerInstance from '../../../../game/adventurerInstance.js'
+import { advLevelToXp, advXpToLevel } from '../../../../game/adventurer.js'
+import { wrapContent } from '../../../../game/utilFunctions.js'
+import { xpIcon } from '../common.js'
 
 const HTML = `
-<div class="name"></div>
-<di-orb-row class="fighter-orbs displaynone"></di-orb-row>
+<div class="inset-title name"></div>
 <div class="absolute-full-size fill-contents standard-contents">
-  <div class="flex-grow flex-rows top-section">
-    <di-xp-bar></di-xp-bar>
-    <di-stats-list></di-stats-list>
-    <di-orb-row class="adventurer-orbs"></di-orb-row>
-  </div>
-  <di-loadout></di-loadout>
+  <di-xp-bar class="flex-no-grow"></di-xp-bar>
+  <di-stats-list class="adventurer-stats"></di-stats-list>
+  <di-orb-row class="adventurer-orbs"></di-orb-row>
+  <di-adventurer-loadout></di-adventurer-loadout>
 </div>
 `
 
-export default class AdventurerPane extends HTMLElement{
-
-  _hpBar
-  _actionBar
-  orbRow
-
-  _extraStats
+export default class AdventurerPane extends DIElement{
 
   constructor(){
     super()
-    this.classList.add('flex-rows')
     this.innerHTML = HTML
-    this._name = this.querySelector('div.name')
-    this.xpBar = this.querySelector('di-xp-bar')
-    this.xpBar.setLevelFunctions(advXpToLevel, advLevelToXp)
-    this.orbRow = this.querySelector('di-orb-row.adventurer-orbs')
+    this.statsListEl
       .setOptions({
-        style: OrbsDisplayStyle.SHOW_MAX
+        maxItems: 16,
+        forced: ['hpMax', 'physPower', 'magicPower']
       })
+    // TODO: click more stats
+  }
 
-    this.loadoutEl = this.querySelector('di-loadout')
-    this.statsList = this.querySelector('di-stats-list')
-      .setOptions({
-        maxItems: 10,
-        forced: ['hpMax', 'physPower']
-      })
+  get defaultOptions(){
+    return {
+      hideXpBar: false,
+      hideLoadout: false,
+      orbsStyle: OrbsDisplayStyle.SHOW_MAX
+    }
+  }
 
-    this.querySelector('.top-section').addEventListener('click', e => {
-      if(this.adventurerInstance){
-        this._showAdventurerInfoModal()
-      }
+  get statsListEl(){
+    return this.querySelector('di-stats-list')
+  }
+
+  get loadoutEl(){
+    return this.querySelector('di-adventurer-loadout')
+  }
+
+  get orbRowEl(){
+    return this.querySelector('di-orb-row.adventurer-orbs')
+  }
+
+  get xpBar(){
+    return this.querySelector('di-xp-bar')
+  }
+
+  showAdder(){
+    const adder = wrapContent(xpIcon(), {
+      class: ['adder']
     })
+    this.xpBar.appendChild(adder)
+    return adder
   }
 
   setAdventurer(adventurer){
-    this.adventurerInstance = new AdventurerInstance(adventurer)
-    this.adventurerInstance.idle = true
-    this._name.textContent = adventurer.name
-    this.xpBar.setValue(adventurer.xp)
-    this.loadoutEl.setFighterInstance(this.adventurerInstance)
+    this.adventurer = adventurer
     this.update()
   }
 
-  setExtraStats(extraStats){
-    this._extraStats = extraStats
-    this.update()
-  }
-
-  updateItems(){
-    this.adventurerPane.updateStats(true)
-    this.adventurerPane.updateOrbs()
-  }
-
-  update(showStatChangeEffect = false){
-    this.adventurerInstance._itemInstances = this.loadoutEl.loadoutItems.map(loadoutItem => loadoutItem?.itemInstance)
-    this.updateStats(showStatChangeEffect)
-    this.updateOrbs()
-    this.loadoutEl.update()
-  }
-
-  updateOrbs(){
-    this.orbRow.setData(this.adventurerInstance.orbs)
-  }
-
-  updateStats(showStatChangeEffect){
-    this.statsList.setOptions({
-      excluded: this._excluded()
-    }).setStats(this.adventurerInstance.stats, this.adventurerInstance, showStatChangeEffect)
+  update(showChangeEffect = false){
+    this._update(showChangeEffect)
   }
 
   async addXp(toAdd, options = { }){
-    const advData = this.adventurerInstance.fighterData
     this._xpAnimation = true
-    await this.xpBar.setValue(advData.xp + toAdd, {
+    const total = this.adventurer.xp + toAdd
+    await this.xpBar.setValue(total, {
       ...options,
       animate: true,
       skipToEndOfAnimation: options.skipAnimation ? true : false,
       onLevelup: (level, animate = true) => {
+        this.adventurer.xp = advLevelToXp(level)
+        options.onLevelup?.(level)
         if(animate){
           this.update(true)
         }
-        advData.xp = advLevelToXp(level)
-        options.onLevelup?.(level)
       }
     })
+    this.adventurer.xp = total
     this.update(true)
   }
 
@@ -109,31 +92,31 @@ export default class AdventurerPane extends HTMLElement{
     if(this._xpAnimation){
       this._xpAnimation = false
       this.xpBar.skipToEndOfAnimation()
-      this.update()
+      // this.update()
     }
   }
 
-  _showAdventurerInfoModal(){
-    const modal = new Modal()
-    modal.innerContent.appendChild(new AdventurerInfo(this.adventurerInstance, this.statsList.stats))
-    modal.show()
-  }
-
-  _excluded(){
-    const excluded = []
-    const magicAttack = this.adventurerInstance.mods.contains(magicAttackMod)
-    const showPhys = this.adventurerInstance.mods.contains(physScalingMod) ||
-      this.adventurerInstance.physPower !== this.adventurerInstance.basePower
-    const showMagic = this.adventurerInstance.mods.contains(magicScalingMod) ||
-      this.adventurerInstance.magicPower !== this.adventurerInstance.basePower
-
-    if((showPhys || !magicAttack) && showMagic){
-      return [...excluded]
-    }else if(magicAttack && !showPhys){
-      return [...excluded, 'physPower']
-    }else{
-      return [...excluded, 'magicPower']
+  _update(showChangeEffect = false){
+    if(!this.adventurer){
+      return
     }
+    this.loadoutEl.setAdventurer(this.adventurer)
+    this.orbRowEl
+      .setOptions({
+        style: this._options.orbsStyle
+      })
+      .setData(this.adventurer.orbsData, showChangeEffect)
+    const adventurerInstance = new AdventurerInstance(this.adventurer, { idle: true })
+    this.xpBar
+      .setLevelFunctions(advXpToLevel, advLevelToXp)
+      .setValue(this.adventurer.doc.xp)
+    this.xpBar.classList.toggle('displaynone', this._options.hideXpBar)
+    this.statsListEl
+      .setOptions({
+        owner: adventurerInstance
+      })
+      .setStats(adventurerInstance.stats, showChangeEffect)
+    this.querySelector('.name').textContent = `Lv.${this.adventurer.level} - ${this.adventurer.name}`
   }
 }
 

@@ -1,32 +1,33 @@
-import { bossMod } from '../../mods/combined.js'
-import biteMonsterItem from '../../monsterItems/biteMonsterItem.js'
+import { biteMonsterItem } from '../../commonMechanics/biteMonsterItem.js'
 
-export default {
-  baseStats: {
-    physPower: '+20%',
-    speed: -50,
-    hpMax: '+120%'
-  },
-  items: [
-    {
-      name: 'Boss',
-      mods: [bossMod]
+export default function(){
+  return {
+    baseStats: {
+      physPower: '+20%',
+      speed: -20,
+      hpMax: '+220%'
     },
-    {
-      name: 'Enrage',
-      description: 'Gain stats based on missing health.',
-      scaledStats: {
-        scaling: {
-          property: 'hpPct',
-          inverted: true
-        },
-        stats: {
-          speed: 60,
-          physPower: '50%',
-          physDef: '50%'
+    items: [
+      {
+        name: 'Enrage',
+        effect: {
+          metaEffects: [{
+            subject: { key: 'self' },
+            conditions: {
+              owner: {
+                hpPctBelow: 0.5
+              }
+            },
+            effectModification: {
+              stats: {
+                speed: 100,
+                physPower: '+60%'
+              }
+            }
+          }]
         }
-      }
-    },
-    biteMonsterItem()
-  ]
+      },
+      biteMonsterItem(11000, 1.4)
+    ]
+  }
 }

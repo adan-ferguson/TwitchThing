@@ -1,8 +1,8 @@
 import DIElement from '../../diElement.js'
-import AdventurerItemInstance from '../../../../../game/adventurerItemInstance.js'
 import ComponentRow from './componentRow.js'
 import { hideLoader, showLoader } from '../../../loader.js'
 import fizzetch from '../../../fizzetch.js'
+import AdventurerItem from '../../../../../game/items/adventurerItem.js'
 
 const HTML = `
 <div class="content-columns">
@@ -45,7 +45,7 @@ export default class Forge extends DIElement{
     return this.querySelector('.upgrade-button')
   }
 
-  async load(){
+  async load(showAdventurerID = null){
 
     await this._fetchData()
 
@@ -56,7 +56,7 @@ export default class Forge extends DIElement{
     }).listEl.setOptions({
       selectableRows: true
     }).events.on('selectrow', row => {
-      this._itemSelected(row.loadoutItem.itemInstance)
+      this._itemSelected(row.adventurerItem)
     })
 
     this.workshopInventoryEl.adventurerDropdownEl.addEventListener('change', () => {
@@ -71,7 +71,7 @@ export default class Forge extends DIElement{
         data.itemSlot = row.__slotIndex
         data.adventurerID = this.workshopInventoryEl.selectedAdventurer?._id
       }else{
-        data.itemDef = this._selectedItem.itemDef
+        data.itemDef = this._selectedItem.def
       }
       const { upgradedItemDef } = await fizzetch('/game/workshop/forge/upgrade', data)
       if(!upgradedItemDef){
@@ -80,6 +80,10 @@ export default class Forge extends DIElement{
       this._reloadAfterUpgrade(upgradedItemDef)
       hideLoader()
     })
+
+    if(showAdventurerID){
+      this.workshopInventoryEl.setAdventurer(showAdventurerID)
+    }
   }
 
   async _fetchData(){
@@ -105,27 +109,40 @@ export default class Forge extends DIElement{
     this.upgradeButton.toggleAttribute('disabled', true)
   }
 
-  _itemSelected(itemInstance){
-    if(!itemInstance){
+  _itemSelected(adventurerItem){
+    if(!adventurerItem){
       return this._deselectItem()
     }
-    this._selectedItem = itemInstance
-    const { upgradedItemDef, components } = itemInstance.upgradeInfo()
+    this._selectedItem = adventurerItem
 
-    this.querySelector('.item-before').setItem(itemInstance)
-    this.querySelector('.item-after').setItem(new AdventurerItemInstance(upgradedItemDef))
-    this.querySelector('.right-column').classList.remove('hidden')
+    const { upgradedItemDef, components } = adventurerItem.upgradeInfo()
 
+    this.querySelector('.item-before').setItem(adventurerItem)
+
+    const rightCol = this.querySelector('.right-column')
+    rightCol.classList.remove('hidden')
     const componentsEl = this.querySelector('.item-components')
     componentsEl.innerHTML = ''
-    components.map(component => {
-      componentsEl.append(new ComponentRow().setData(component, this._inventory))
-    })
+
+    const maxLevel = upgradedItemDef ? false : true
+    if(maxLevel){
+      rightCol.classList.add('max-level')
+    }else{
+      rightCol.classList.remove('max-level')
+      this.querySelector('.item-after').setItem(new AdventurerItem(upgradedItemDef))
+      components.map(component => {
+        if(adventurerItem.isBasic && this.workshopInventoryEl.selectedAdventurer && component.type !== 'scrap'){
+          component.count--
+        }
+        componentsEl.append(new ComponentRow().setData(component, this._inventory))
+      })
+    }
 
     this.upgradeButton.toggleAttribute(
       'disabled',
-      componentsEl.querySelector('.not-enough') ? true : false
+      maxLevel || componentsEl.querySelector('.not-enough') ? true : false
     )
+    this.upgradeButton.textContent = maxLevel ? 'Max Level' : 'Upgrade'
   }
 }
 customElements.define('di-workshop-forge', Forge)

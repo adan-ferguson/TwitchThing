@@ -1,106 +1,122 @@
-import { magicAttackMod } from '../../mods/combined.js'
-import randomAction from '../../actions/randomAction.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
-import { dodgingStatusEffect } from '../../statusEffects/combined.js'
+import { magicAttackItem } from '../../commonMechanics/magicAttackItem.js'
+import { counterspellAbility } from '../../commonMechanics/counterspellAbility.js'
+import { flutteringAbility } from '../../commonMechanics/flutteringMonsterItem.js'
 
-const hex = {
-  duration: 30000,
-  stackingId: 'hex',
-  stacking: 'replace',
-  persisting: true
+const hex = function(def){
+  return {
+    applyStatusEffect: {
+      targets: 'enemy',
+      statusEffect: {
+        duration: 30000,
+        stackingId: 'hex',
+        stacking: 'replace',
+        polarity: 'debuff',
+        persisting: true,
+        ...def
+      }
+    }
+  }
 }
 
-const frogged = statusEffectAction({
-  affects: 'enemy',
-  effect: {
-    ...hex,
-    displayName: 'Hex: Frog',
-    stats: {
-      physPower: '-40%'
-    }
+const frog = hex({
+  name: 'Hex: Frog',
+  stats: {
+    physPower: '-50%',
+    magicPower: '-50%',
   }
 })
 
-const catted = statusEffectAction({
-  affects: 'enemy',
-  effect: {
-    ...hex,
-    displayName: 'Hex: Cat',
-    stats: {
-      hpMax: '-40%',
-      physPower: '-40%',
-      speed: 50
-    }
+const turtle = hex({
+  name: 'Hex: Turtle',
+  stats: {
+    physDef: '+50%',
+    physPower: '-25%',
+    magicPower: '-25%',
+    speed: -100
   }
 })
 
-const crowed = statusEffectAction({
-  affects: 'enemy',
-  effect: {
-    ...hex,
-    displayName: 'Hex: Crow',
-    stats: {
-      physPower: '-40%',
-      hpMax: '-40%'
-    },
-    abilities: {
-      targeted: {
-        cooldown: 10000,
-        description: 'Automatically dodge an attack.',
-        actions: [
-          statusEffectAction({
-            base: dodgingStatusEffect,
-            effect: {
-              duration: 0
-            }
-          })
-        ]
-      }
-    }
+const cat = hex({
+  name: 'Hex: Cat',
+  stats: {
+    physPower: '-50%',
+    magicPower: '-50%',
+    speed: 50
   }
 })
 
-const turtled = statusEffectAction({
-  affects: 'enemy',
-  effect: {
-    ...hex,
-    displayName: 'Hex: Turtle',
-    stats: {
-      physDef: '+40%',
-      speed: -80
-    },
-  }
-})
-
-export default {
-  baseStats: {
-    hpMax: '-30%',
-    speed: -30,
-    magicPower: '+40%',
-    magicDef: '+50%'
+const crow = hex({
+  name: 'Hex: Crow',
+  stats: {
+    physPower: '-50%',
+    magicPower: '-50%',
+    speed: 50
   },
-  items: [
-    {
-      name: 'Magic Attack',
-      mods: [magicAttackMod]
+  abilities: [flutteringAbility()]
+})
+
+const dragon = hex({
+  name: 'Hex: ...Dragon?',
+  stats: {
+    physPower: '+200%',
+    magicPower: '+200%',
+    speed: 100
+  },
+  abilities: [{
+    trigger: 'instant',
+    initialCooldown: 10000,
+    actions: [{
+      attack: {
+        scaling: {
+          magicPower: 2.5
+        },
+        damageType: 'magic'
+      }
+    }]
+  }],
+  polarity: 'buff'
+})
+
+const options = [
+  { weight: 20, value: frog },
+  { weight: 15, value: cat },
+  { weight: 10, value: turtle },
+  { weight: 5, value: crow },
+  { weight: 0.5, value: dragon },
+]
+
+export default function(){
+  return {
+    baseStats: {
+      hpMax: '-30%',
+      speed: -20,
+      magicPower: '+40%',
+      magicDef: '+50%'
     },
-    {
-      name: 'Hex',
-      abilities: {
-        active: {
-          description: 'Transform the enemy into a random critter for 30 seconds.',
-          initialCooldown: 6000,
-          uses: 1,
-          actions: [
-            randomAction([
-              frogged,
-              catted,
-              crowed,
-              turtled
-            ])
-          ]
+    items: [
+      magicAttackItem(),
+      {
+        name: 'Counterspell',
+        effect: {
+          abilities: [counterspellAbility(15000)]
+        }
+      },
+      {
+        name: 'Hex',
+        effect: {
+          abilities: [{
+            abilityId: 'hex',
+            trigger: 'active',
+            initialCooldown: 6000,
+            uses: 1,
+            actions: [{
+              random: {
+                options
+              }
+            }]
+          }]
         }
       }
-    }
-  ]
+    ]
+  }
 }

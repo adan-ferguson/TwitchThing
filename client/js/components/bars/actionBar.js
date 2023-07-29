@@ -1,5 +1,7 @@
 import Bar from './bar.js'
-import { ACTION_COLOR } from '../../colors.js'
+import { ACTION_COLOR, FLASH_COLORS } from '../../colors.js'
+import { flash } from '../../animations/simple.js'
+import { COMBAT_BASE_TURN_TIME, speedToTurnTime } from '../../../../game/fighterInstance.js'
 
 export default class ActionBar extends Bar{
 
@@ -19,11 +21,25 @@ export default class ActionBar extends Bar{
     })
   }
 
-  setTime(elapsed, remaining){
+  setBaseTime(fighterInstance){
+    const speedStatObj = fighterInstance.stats.get('speed')
+    this._baseTime = speedToTurnTime(speedStatObj.baseValue)
+  }
+
+  setTime(fighterInstance, dontFlash = false){
+    const elapsed = fighterInstance.timeSinceLastAction
+    const speedStatObj = fighterInstance.stats.get('speed')
+    const turnTime = speedToTurnTime(speedStatObj.value)
     this.setOptions({
-      max: elapsed + remaining
+      max: turnTime
     })
     this._setTime(elapsed)
+
+    if(Math.abs(turnTime - this._baseTime) > 0){
+      this.setAttribute('polarity', turnTime > this._baseTime ? 'debuff' : 'buff')
+    }else{
+      this.removeAttribute('polarity')
+    }
   }
 
   advanceTime(ms){

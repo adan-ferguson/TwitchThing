@@ -1,63 +1,53 @@
-import { magicAttackMod } from '../../mods/combined.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
-import { barrierStatusEffect } from '../../statusEffects/combined.js'
-import attackAction from '../../actions/attackAction.js'
-import gainHealthAction from '../../actions/gainHealthAction.js'
+import { barrierAction } from '../../commonMechanics/barrierAction.js'
 
-export default {
-  baseStats: {
-    magicPower: '-30%',
-    hpMax: '-20%',
-    speed: 20
-  },
-  items: [
-    {
-      name: 'Magic Attack',
-      mods: [magicAttackMod]
+export default function(){
+  return{
+    baseStats: {
+      hpMax: '-30%',
+      magicPower: '+100%',
+      speed: 30
     },
-    {
-      name: 'Water Shield',
-      abilities: {
-        active: {
-          initialCooldown: 6000,
-          cooldown: 20000,
-          description: 'Gain a barrier with [magicScaling3] health. Magic power is doubled while the barrier is up.',
-          actions: [
-            statusEffectAction({
-              base: barrierStatusEffect,
-              effect: {
-                displayName: 'Water Shield',
-                stacking: 'replace',
-                stats: {
-                  magicPower: '2x'
+    items: [
+      {
+        name: 'Water Shield',
+        effect: {
+          abilities: [{
+            trigger: 'active',
+            cooldown: 20000,
+            actions: [barrierAction({
+              hpMax: 0.25
+            },{
+              stats: {
+                physPower: '2x',
+                magicPower: '2x'
+              }
+            })]
+          }]
+        }
+      },
+      {
+        name: 'Tidal Wave',
+        effect: {
+          abilities: [{
+            trigger: 'active',
+            initialCooldown: 15000,
+            cooldown: 20000,
+            actions: [[{
+              attack: {
+                scaling: {
+                  magicPower: 1
                 },
-                params: {
-                  magicPower: 3
+                damageType: 'magic'
+              } }],[{
+              gainHealth: {
+                scaling: {
+                  magicPower: 1
                 }
               }
-            })
-          ]
+            }]]
+          }]
         }
       }
-    },
-    {
-      name: 'Tidal Wave',
-      abilities: {
-        active: {
-          description: 'Deal [magicScaling2] damage, and restore [magicScaling1] health.',
-          initialCooldown: 12000,
-          cooldown: 20000,
-          actions: [
-            attackAction({
-              damageType: 'magic',
-              damageMulti: 2
-            }),
-            gainHealthAction({
-              scaling: { magicPower: 1 }
-            })
-          ]
-        }
-      }
-    }
-  ]
+    ]
+  }
 }

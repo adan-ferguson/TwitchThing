@@ -1,11 +1,30 @@
-import tastyMonsterItem from '../../monsterItems/tastyMonsterItem.js'
+import tastyMonsterItem from '../../commonMechanics/tastyMonsterItem.js'
 
-export default {
-  baseStats: {
-    physDef: '40%',
-    speed: -20
-  },
-  items: [
-    tastyMonsterItem
-  ]
+export default function(){
+  return {
+    baseStats: {
+      physDef: '50%',
+      speed: 10
+    },
+    items: [
+      {
+        name: 'Double Pinch',
+        effect: {
+          abilities: [{
+            trigger: 'active',
+            cooldown: 7000,
+            actions: [{
+              attack: {
+                hits: 2,
+                scaling: {
+                  physPower: 1
+                }
+              }
+            }]
+          }]
+        }
+      },
+      tastyMonsterItem
+    ]
+  }
 }

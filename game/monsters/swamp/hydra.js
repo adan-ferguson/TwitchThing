@@ -1,49 +1,70 @@
-import bossMonsterItem from '../../monsterItems/bossMonsterItem.js'
-import statusEffectAction from '../../actions/statusEffectAction.js'
-import { barrierStatusEffect } from '../../statusEffects/combined.js'
-
-const EXTRA_HEAD = statusEffectAction({
-  base: barrierStatusEffect,
-  effect: {
-    displayName: 'Extra Head',
-    description: 'Grants an extra attack',
-    stacking: false,
-    params: {
-      hpMax: 1
-    },
-    stats: {
-      attacks: 1
+const SPROUT_HEAD_ACTION = (i = 5) => {
+  return {
+    applyStatusEffect: {
+      targets: 'self',
+      statusEffect: {
+        name: 'Hydra Head',
+        base: {
+          barrier: {
+            hp: {
+              scaledNumber: {
+                hpMax: 1
+              }
+            }
+          }
+        },
+        stacking: null,
+        abilities: [{
+          trigger: 'instant',
+          initialCooldown: (i + 1) * 1000,
+          cooldown: 6000,
+          actions: [{
+            attack: {
+              scaling: {
+                physPower: 1
+              }
+            }
+          }]
+        }]
+      }
     }
   }
-})
+}
 
-export default {
-  baseStats: {
-    hpMax: '-72%',
-    physPower: '-65%',
-    speed: -100
-  },
-  items: [
-    bossMonsterItem,
-    {
-      name: 'Multi-Headed',
-      abilities: {
-        startOfCombat: {
-          uses: 1,
-          description: 'Start combat with six Extra Heads.',
-          actions: new Array(6).fill(EXTRA_HEAD)
-        }
-      }
+export default function(){
+  return {
+    baseStats: {
+      hpMax: '-70%',
+      physPower: '-70%',
+      speed: -100
     },
-    {
-      name: 'Regenerate Head',
-      abilities: {
-        tick: {
-          initialCooldown: 10000,
-          description: 'Sprout a new Extra Head.',
-          actions: [EXTRA_HEAD]
+    items: [
+      {
+        name: 'Multi-Headed',
+        effect: {
+          abilities: [{
+            abilityId: 'hydraMultiHeaded',
+            trigger: 'startOfCombat',
+            uses: 1,
+            actions: new Array(6).fill(0).map((_, i) => SPROUT_HEAD_ACTION(i))
+          }],
+          mods: [{
+            freezeActionBar: true
+          }]
+        }
+      },
+      {
+        name: 'Sprout Heads',
+        effect: {
+          abilities: [{
+            abilityId: 'hydraSproutHead',
+            trigger: 'instant',
+            uses: 6,
+            initialCooldown: 5000,
+            actions: [SPROUT_HEAD_ACTION(),SPROUT_HEAD_ACTION()]
+          }]
         }
       }
-    }
-  ]
+    ]
+  }
 }

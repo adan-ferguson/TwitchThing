@@ -1,47 +1,23 @@
-import { isObject } from '../game/utilFunctions.js'
 import Users from './collections/users.js'
+import Joi from 'joi'
+import _ from 'lodash'
 
-export function validateParam(val, options){
-
-  options = isObject(options) ? options : {}
-  options = {
-    required: true,
-    type: null,
-    validationFn: null,
-    ...options
-  }
-  if(val === undefined){
-    if(options.required){
-      throw { code: 400, message:  'Required parameter is missing.' }
+/**
+ * Validate a query parameter.
+ * @param val
+ * @param type
+ * @param required
+ * @returns {*}
+ */
+export function validateParam(val, type = 'any', required = true){
+  try {
+    type = _.isString(type) ? type : type.type
+    if(!required){
+      return Joi.attempt(val, Joi[type]())
     }
-  }else{
-    validateType()
-  }
-
-  if(options.validationFn && !options.validationFn(val)){
-    throw { code: 400, message:  'Validation function failed.' }
-  }
-
-  return val
-
-  function validateType(){
-    const type = options.type
-
-    let err = false
-    if(type === 'array' && !Array.isArray(val)){
-      err = true
-    }else if(type === 'integer'){
-      val = parseInt(val)
-      if(!Number.isInteger(val)){
-        err = true
-      }
-    }else if(isObject(type)){
-      Object.keys(type).find(key => validateParam(val[key], type[key]))
-    }
-
-    if(err){
-      throw { code: 400, message: `Parameter ${val} is invalid type, expected ${type}.` }
-    }
+    return Joi.attempt(val, Joi[type]().required())
+  }catch(ex){
+    throw { code: 400, message: ex }
   }
 }
 

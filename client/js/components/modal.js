@@ -6,13 +6,15 @@ const HTML = `
 </div>
 `
 
+let currentModal
+
 export default class Modal extends HTMLElement{
 
   _options = {
     closeOnUnderlayClick: true
   }
 
-  constructor(){
+  constructor(content = null){
     super()
     this.classList.add('modal')
     this.innerHTML = HTML
@@ -28,6 +30,9 @@ export default class Modal extends HTMLElement{
       this.hide()
     })
     this.innerContent = this.querySelector('.inner-content')
+    if(content){
+      this.innerContent.append(content)
+    }
   }
 
   setOptions(options = {}){
@@ -40,11 +45,17 @@ export default class Modal extends HTMLElement{
   }
 
   show = () => {
-    document.body.appendChild(this)
+    if(!currentModal){
+      document.body.appendChild(this)
+    }else{
+      console.error('double modal DARK mode')
+    }
+    currentModal = this
     return this
   }
 
   hide = (result = null) => {
+    currentModal = null
     this.remove()
     this.dispatchEvent(new CustomEvent('hide', {
       detail: {

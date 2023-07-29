@@ -1,31 +1,31 @@
 import FighterInstance  from './fighterInstance.js'
-import * as Monsters from './monsters/combined.js'
-import MonsterItemInstance from './monsterItemInstance.js'
-import { geometricProgession } from './growthFunctions.js'
+import Monsters from './monsters/combined.js'
+import { geometricProgression } from './growthFunctions.js'
 import OrbsData from './orbsData.js'
-import { toDisplayName, toNumberOfDigits } from './utilFunctions.js'
-import { bossMod } from './mods/combined.js'
+import { deepClone, toDisplayName, toNumberOfDigits } from './utilFunctions.js'
 import { floorToZone } from './zones.js'
+import LoadoutObjectInstance from './loadoutObjectInstance.js'
+import MonsterItem from './monsterItem.js'
 
-const ADJUSTED_DIFFICULTY_PER_ZONE = 2.25
+const ADJUSTED_DIFFICULTY_PER_ZONE = 2
+const ADJUSTED_DIFFICULTY_PER_FLOOR_QUADRATIC = 0.002
 
-const HP_BASE = 25
-const HP_GROWTH = 18
-const HP_GROWTH_PCT = 0.11
+const STAT_GROWTH_PCT = 0.13
 
-const POWER_BASE = 10
-const POWER_GROWTH = 3
-const POWER_GROWTH_PCT = 0.1
+const HP_BASE = 12
+const HP_GROWTH = 8
 
-const XP_BASE = 50
-const XP_GROWTH = 20
-const XP_GROWTH_PCT = 0.2
-const XP_ZONE_BONUS = 1.75
+const POWER_BASE = 5
+const POWER_GROWTH = 0.8
 
-export function levelToXpReward(lvl){
+const XP_BASE = 1
+const XP_GROWTH = 1.5
+const XP_GROWTH_PCT = 0.08
+const XP_ZONE_BONUS = 2
+
+export function monsterLevelToXpReward(lvl){
   const zoneBonuses = Math.floor((lvl - 1) / 10)
-  const adjustedLevel = adjustedDifficultyLevel(lvl)
-  const val = Math.ceil(geometricProgession(XP_GROWTH_PCT, adjustedLevel - 1, XP_GROWTH))
+  const val = Math.floor(geometricProgression(XP_GROWTH_PCT, lvl - 1, XP_GROWTH))
   return toNumberOfDigits(
     XP_BASE + val * Math.pow(XP_ZONE_BONUS, zoneBonuses),
     3
@@ -35,7 +35,7 @@ export function levelToXpReward(lvl){
 export function monsterLevelToHp(lvl){
   const adjustedLevel = adjustedDifficultyLevel(lvl)
   return toNumberOfDigits(
-    HP_BASE + Math.ceil(geometricProgession(HP_GROWTH_PCT, adjustedLevel - 1, HP_GROWTH)),
+    HP_BASE + Math.ceil(geometricProgression(STAT_GROWTH_PCT, adjustedLevel - 1, HP_GROWTH)),
     2
   )
 }
@@ -43,35 +43,47 @@ export function monsterLevelToHp(lvl){
 export function monsterLevelToPower(lvl){
   const adjustedLevel = adjustedDifficultyLevel(lvl)
   return toNumberOfDigits(
-    POWER_BASE + Math.ceil(geometricProgession(POWER_GROWTH_PCT, adjustedLevel - 1, POWER_GROWTH)),
+    POWER_BASE + Math.ceil(geometricProgression(STAT_GROWTH_PCT, adjustedLevel - 1, POWER_GROWTH)),
     2
   )
 }
 
-function adjustedDifficultyLevel(lvl){
+export function adjustedDifficultyLevel(lvl){
   const zone = floorToZone(lvl)
-  return lvl
-    + Math.max(0, zone - 1) * ADJUSTED_DIFFICULTY_PER_ZONE
-    + (zone > 20 ? 1 : 0) // scrap-offsetting difficulty jump
+  return lvl + Math.max(0, zone) * ADJUSTED_DIFFICULTY_PER_ZONE + ADJUSTED_DIFFICULTY_PER_FLOOR_QUADRATIC * lvl * lvl
 }
 
 export default class MonsterInstance extends FighterInstance{
 
-  monsterDef
+  _monsterData
+  _monsterDef
+  _itemInstances = []
 
   constructor(monsterDef, initialState = {}){
+    super()
 
-    const baseInfo = Monsters.all[monsterDef.baseType]
-    const monsterData = {
-      description: null,
-      baseStats: {},
-      items: [],
-      ...baseInfo,
-      ...monsterDef
+    const baseInfo = Monsters[monsterDef.baseType]
+    this._monsterData = {
+      ...baseInfo.def()
     }
+    this._monsterDef = monsterDef
+    this.state = initialState
+  }
 
-    super(monsterData, initialState)
-    this.monsterDef = monsterDef
+  get itemInstances(){
+    return this._itemInstances
+  }
+
+  get uniqueID(){
+    return this.monsterDef._id
+  }
+
+  get monsterDef(){
+    return deepClone(this._monsterDef)
+  }
+
+  get monsterData(){
+    return deepClone(this._monsterData)
   }
 
   get isSuper(){
@@ -79,19 +91,15 @@ export default class MonsterInstance extends FighterInstance{
   }
 
   get description(){
-    return this.fighterData.description
+    return this.monsterData.description
   }
 
   get displayName(){
-    return (this.isSuper ? 'SUPER ' : '' ) + (this.monsterDef.displayName ?? toDisplayName(this.fighterData.name))
+    return (this.isSuper ? 'SUPER ' : '' ) + (this.monsterData.displayName ?? toDisplayName(this.monsterDef.baseType))
   }
 
   get level(){
-    return this._fighterData.level ?? 1
-  }
-
-  get ItemClass(){
-    return MonsterItemInstance
+    return this.monsterDef.level ?? 1
   }
 
   get baseHp(){
@@ -103,14 +111,7 @@ export default class MonsterInstance extends FighterInstance{
   }
 
   get baseStats(){
-    const stats = [this._fighterData.baseStats] ?? []
-    if(this.level > 50){
-      stats.push({
-        speed: 50,
-        cooldownReduction: '33%'
-      })
-    }
-    return stats
+    return [this.monsterData.baseStats] ?? []
   }
 
   get orbs(){
@@ -118,14 +119,35 @@ export default class MonsterInstance extends FighterInstance{
   }
 
   get xpReward(){
-    return levelToXpReward(this.level)
+    return monsterLevelToXpReward(this.level)
   }
 
   get isBoss(){
-    return this.mods.contains(bossMod)
+    return this.monsterDef.boss
   }
 
-  get rewards(){
-    return this._fighterData.rewards ?? {}
+  get loadoutEffectInstances(){
+    return this._itemInstances.filter(i => i)
+  }
+
+  get loadoutState(){
+    const stateDef = []
+    for(let i = 0; i < 8; i++){
+      stateDef[i] = this._itemInstances[i]?.state
+    }
+    return stateDef
+  }
+
+  set loadoutState(stateDef){
+    for(let i = 0; i < 8; i++){
+      if(this.monsterData.items?.[i]){
+        this._itemInstances[i] = new LoadoutObjectInstance({
+          obj: new MonsterItem(this.monsterData.items[i]),
+          owner: this,
+          state: stateDef[i],
+          slotInfo: { col: 0, row: i }
+        })
+      }
+    }
   }
 }

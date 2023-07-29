@@ -1,6 +1,7 @@
 import Modal from './modal.js'
-import { toArray } from '../../../game/utilFunctions.js'
+import { arrayize } from '../../../game/utilFunctions.js'
 import { fadeIn, fadeOut } from '../animations/simple.js'
+import _ from 'lodash'
 
 const SIMPLE_MODAL_HTML = `
   <div class='title displaynone'></div>
@@ -52,7 +53,7 @@ export default class SimpleModal extends Modal{
 
   setButtons(buttons){
 
-    buttons = toArray(buttons)
+    buttons = arrayize(buttons)
 
     const buttonsEl = this.querySelector('.buttons')
     buttonsEl.classList.toggle('displaynone', !buttons.length)
@@ -65,14 +66,20 @@ export default class SimpleModal extends Modal{
         content: null,
         style: 'normal',
         value: null,
+        disabled: false,
         fn: () => {}, // Called on click. If it returns false, the modal won't close after clicking.
         ...options
       }
 
       const btn = document.createElement('button')
       btn.classList.add('style-' + options.style)
+      btn.toggleAttribute('disabled', options.disabled)
       if(options.content){
-        btn.append(options.content)
+        if(_.isString(options.content)){
+          btn.innerHTML = options.content
+        }else{
+          btn.append(options.content)
+        }
       }else{
         btn.textContent = options.text
       }

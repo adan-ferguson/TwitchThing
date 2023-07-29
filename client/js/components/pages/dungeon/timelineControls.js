@@ -76,7 +76,9 @@ export default class TimelineControls extends HTMLElement{
     })
     this.querySelector('button.back').addEventListener('click', () => {
       const backThreshold = 2000 * this.speed
-      const index = this._timeline.currentEntryIndex + (this._timeline.timeSinceLastEntry > backThreshold ? 0 : -1)
+      const backOne = !this._timeline.timeSinceLastEntry ||
+        this._timeline.timeSinceLastEntry < backThreshold && this._ticker.running
+      const index = this._timeline.currentEntryIndex + (backOne ? -1 : 0)
       const targetTime = Math.max(0, this._timeline.entries[index].time)
       this.jumpTo(targetTime, {
         animate: false
@@ -158,6 +160,10 @@ export default class TimelineControls extends HTMLElement{
     })
   }
 
+  updateEvent(currentEvent){
+    this._timeline.addEntry(currentEvent)
+  }
+
   addEvents(events){
     const update = this._timeline.finished
     events.forEach(event => this._timeline.addEntry(event))
@@ -209,7 +215,7 @@ export default class TimelineControls extends HTMLElement{
   }
 
   _setupEventLog(adventurer){
-    this._eventLog = new EventLog(this._timeline, adventurer, {
+    this._eventLog = new EventLog(this._timeline, {
       rowsClickable: this._options.isReplay
     })
     this._eventLog.addEventListener('event_selected', e => {

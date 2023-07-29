@@ -1,4 +1,5 @@
-import { performGainHealthAction, triggerEvent } from '../actionsAndTicks/common.js'
+import { gainHealth } from '../mechanics/gainHealth.js'
+import { processAbilityEvents } from '../mechanics/abilities.js'
 
 export function shouldRest(dungeonRun){
   return dungeonRun.adventurerInstance.hpPct < dungeonRun.restThreshold / 100 && dungeonRun.adventurerInstance.food
@@ -7,20 +8,19 @@ export function shouldRest(dungeonRun){
 export function rest(dungeonRun){
 
   const ai = dungeonRun.adventurerInstance
-  const hpBefore = ai.hp
-  const results = []
   ai.food--
-  results.push(performGainHealthAction(null, ai, { scaling: { hpMissingPct: 1 } }))
-  results.push(...triggerEvent(null, ai, 'rest'))
+
+  processAbilityEvents(dungeonRun, 'rest', ai)
+
+  const result = gainHealth(dungeonRun, ai, ai.hpMax)
 
   return {
-    results,
     roomType: 'rest',
     penalty: {
       food: -1
     },
     rewards: {
-      health: ai.hp - hpBefore
+      health: result.healthGained
     },
     message: `${dungeonRun.adventurerInstance.displayName} takes a break.`
   }

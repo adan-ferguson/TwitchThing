@@ -4,7 +4,9 @@ export default {
   [StatType.FLAT]: flatValue,
   [StatType.MULTIPLIER]: multiplierValue,
   [StatType.PERCENTAGE]: percentageValue,
-  [StatType.COMPOSITE]: compositeValue
+  [StatType.COMPOSITE]: compositeValue,
+  [StatType.MINIMUM_ONLY]: minimumOnlyValue,
+  [StatType.MAXIMUM_ONLY]: maximumOnlyValue
 }
 
 export function parseStatVal(val){
@@ -58,26 +60,39 @@ function percentageValue(values, defaultValue){
 
   const mods = organizeMods(values)
 
-  if(mods.all.flat.length){
-    throw 'Percentage stats can not have flat values'
+  if(mods.positive.multi.length){
+    throw 'Percentage stats can not have positive multipliers'
   }
 
-  if(mods.all.multi.length){
-    throw 'Percentage stats can not have multiplier values'
+  if(mods.negative.pct.length){
+    throw 'Percentage stats can not have negative pcts'
   }
 
-  let value = mods.positive.pct.reduce((val, mod) => {
-    if(mod > 100){
+  mods.positive.pct.forEach(p => {
+    if(p > 100){
       throw 'Percentage stats can not have values over 100'
     }
+  })
+
+  mods.all.flat.forEach(f => {
+    if(f < 0){
+      throw 'Percentage stats can not have negative flats'
+    }else if(f > 1){
+      throw 'Percentage stats can not have flats above 1'
+    }
+  })
+
+  const positives = [
+    ...mods.positive.pct,
+    ...mods.positive.flat.map(f => f * 100)
+  ]
+
+  let value = positives.reduce((val, mod) => {
     return val + (1 - val) * (mod / 100)
   }, defaultValue)
 
-  value = mods.negative.pct.reduce((val, mod) => {
-    if(mods < -100){
-      throw 'Percentage stats can not have values under 100'
-    }
-    return val * (1 + mod / 100)
+  value = mods.negative.multi.reduce((val, mod) => {
+    return val * mod
   }, value)
 
   return {
@@ -98,26 +113,26 @@ function multiplierValue(values, defaultValue = 1){
 
   const mods = organizeMods(values)
 
-  if(mods.all.flat.length){
-    throw 'Multiplier stats can not have flat values'
-  }
+  const decimalPositive = mods.all.flat.map(m => m >= 1 ? 100 * (m - 1) : null).filter(m => m !== null)
+  const decimalNegative = mods.all.flat.map(m => m < 1 ? 100 * (m - 1) : null).filter(m => m !== null)
 
-  if(mods.all.multi.length){
-    throw 'Multiplier stats can not have multiplier values (lol)'
-  }
-
-  let value = mods.positive.pct.reduce((val, mod) => {
+  let value = [...decimalPositive, ...mods.positive.pct].reduce((val, mod) => {
     return val + mod
   }, 100)
 
-  value = mods.negative.pct.sort().reduce((val, mod) => {
+  value = [...decimalNegative, ...mods.negative.pct].sort().reduce((val, mod) => {
+    // return val * (1 + mod/100)
     if(val + mod > 100){
-      return val += mod
+      return val + mod
     }else if(val < 100){
       return val * (1 + mod/100)
     }else{
       return val + mod
     }
+  }, value)
+
+  value = [...mods.positive.multi, ...mods.negative.multi].reduce((val, mod) => {
+    return val * mod
   }, value)
 
   value = defaultValue * value / 100
@@ -149,13 +164,14 @@ function compositeValue(values, defaultValue){
   }, 100)
 
   pcts = mods.negative.pct.sort().reduce((val, mod) => {
-    if(val + mod > 100){
-      return val += mod
-    }else if(val < 100){
-      return val * (1 + mod/100)
-    }else{
-      return val + mod
-    }
+    return val * (1 + mod/100)
+    // if(val + mod > 100){
+    //   return val = mod
+    // }else if(val < 100){
+    //   return val * (1 + mod/100)
+    // }else{
+    //   return val + mod
+    // }
   }, pcts)
 
   value *= pcts / 100
@@ -168,6 +184,42 @@ function compositeValue(values, defaultValue){
     value,
     mods
   }
+}
+
+function minimumOnlyValue(values, defaultValue){
+  const mods = organizeMods(values)
+
+  if(mods.all.pct.length){
+    throw 'Minimum-Only stats can not have percentage values'
+  }
+
+  if(mods.all.multi.length){
+    throw 'Minimum-Only stats can not have multiplier values'
+  }
+
+  const value = mods.all.flat.reduce((val, mod) => {
+    return Math.min(val, mod)
+  }, defaultValue)
+
+  return { value, mods }
+}
+
+function maximumOnlyValue(values, defaultValue){
+  const mods = organizeMods(values)
+
+  if(mods.all.pct.length){
+    throw 'Maximum-Only stats can not have percentage values'
+  }
+
+  if(mods.all.multi.length){
+    throw 'Maximum-Only stats can not have multiplier values'
+  }
+
+  const value = mods.all.flat.reduce((val, mod) => {
+    return Math.max(val, mod)
+  }, defaultValue)
+
+  return { value, mods }
 }
 
 /**

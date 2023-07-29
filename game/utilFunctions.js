@@ -1,7 +1,11 @@
 import { v4 } from 'uuid'
 import _ from 'lodash'
+import Joi from 'joi'
 
-export function toArray(arrayOrVal){
+export function arrayize(arrayOrVal){
+  if(!arrayOrVal){
+    return []
+  }
   return Array.isArray(arrayOrVal) ? arrayOrVal : [arrayOrVal]
 }
 
@@ -40,11 +44,20 @@ export function toDisplayName(str){
   return displayName
 }
 
-export function roundToFixed(val, digits){
+export function roundToFixed(val, digits = 2, padEnd = false){
   const multi = Math.pow(10, digits)
   val *= multi
   val = Math.round(val)
-  return val / multi
+  val /= multi
+
+  if(padEnd){
+    const singles = Math.floor(val)
+    if(singles !== val){
+      val = val.toString().padEnd(1 + singles.toString().length + digits, '0')
+    }
+  }
+
+  return val
 }
 
 export function roundToNearestIntervalOf(val, interval){
@@ -67,17 +80,22 @@ export function mergeOptionsObjects(currentOptions, newOptions){
   return options
 }
 
-export function wrapContent(content, options = {}){
-  if(options.allowHTML){
-    return makeEl({
-      content: content,
-      ...options
-    })
-  }
+export function wrapText(text, options = {}){
   return makeEl({
-    text: content,
+    text,
     ...options
   })
+}
+
+export function wrapContent(content, options = {}){
+  return makeEl({
+    content,
+    ...options
+  })
+}
+
+export function htmlToEl(html){
+  return wrapContent(html).children[0]
 }
 
 export function makeEl(options = {}){
@@ -87,23 +105,31 @@ export function makeEl(options = {}){
     text: null,
     content: null,
     class: null,
+    nodes: null,
+    tooltip: null,
     ...options
   }
 
   const el = document.createElement(options.elementType)
   if (options.content){
-    if (options.content instanceof HTMLElement){
+    if(options.content instanceof HTMLElement){
       el.appendChild(options.content)
-    } else {
+    }else{
       el.innerHTML = options.content
     }
-  } else if (options.text){
+  }else if(options.text){
     el.textContent = options.text
+  }else if(options.nodes){
+    el.append(...options.nodes.map(n => _.isString(n) ? wrapContent(n, { elementType: 'span' }) : n))
   }
 
   if (options.class){
     const classArray = Array.isArray(options.class) ? options.class : options.class.split(' ')
     el.classList.add(...classArray)
+  }
+
+  if(options.tooltip){
+    el.setAttribute('tooltip', options.tooltip)
   }
 
   return el
@@ -161,24 +187,22 @@ export function toTimerFormat(ms){
 }
 
 export function suffixedNumber(val, digits = 5){
-  // TODO: make this for real
-  // if(val > 10000000){
-  //   return Math.round(val / 1000000) + 'M'
-  // }
-  // return val + ''
+  if(!Number.isFinite(val)){
+    debugger
+  }
   return val.toLocaleString()
 }
 
 /**
  * Cleanup common issues with objects.
- * 1) Numbers are rounded to nearest 0.01 (fix floating point nonsense)
+ * 1) Numbers are rounded to nearest 0.0001 (fix floating point nonsense)
  * @param obj
  */
 export function cleanupObject(obj){
   const newObj = _.isArray(obj) ? [] : {}
   for(let key in obj){
     if(_.isNumber(obj[key])){
-      newObj[key] = roundToFixed(obj[key], 2)
+      newObj[key] = roundToFixed(obj[key], 4)
     }else if(_.isObject(obj[key])){
       newObj[key] = cleanupObject(obj[key])
     }else{
@@ -186,4 +210,40 @@ export function cleanupObject(obj){
     }
   }
   return newObj
+}
+
+export function isolate(arrayOfObjs, propName){
+  const arr = []
+  arrayOfObjs.forEach(obj => {
+    if(obj[propName]){
+      arr.push(obj[propName])
+    }
+  })
+  return arr
+}
+
+export function deepClone(obj){
+  if(!obj){
+    return obj
+  }
+  return JSON.parse(JSON.stringify(obj))
+}
+
+export function keyedObject(keyList, defaultValue = null){
+  return keyList.reduce((val, key) => { return { ...val, [key]: defaultValue } }, {})
+}
+
+export function pushOrCreate(obj, key, toPush){
+  if(!obj[key]){
+    obj[key] = []
+  }
+  obj[key].push(...arrayize(toPush))
+}
+
+export function msToS(ms){
+  return roundToFixed(ms / 1000, 2)
+}
+
+export function toPct(decimal, digits = 0){
+  return roundToFixed(decimal * 100, digits) + '%'
 }
