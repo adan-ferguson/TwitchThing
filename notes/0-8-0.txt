@@ -1,3 +1,9 @@
+v0.8.1
+------
+- Fixed bug where a run would crash if you got 2 chests in 1 fight. (The Bounty Collector + random chest or boss chest)
+- Fixed bug where your loadout would revert. (There's still another similar bug with skills that I haven't found yet)
+- Fixed bug where status effects weren't extending correctly (haste, coffee carafe).
+
 v0.8.0
 ------
 New Things:

@@ -63,12 +63,11 @@ function applyStatusEffect(subject, sei, abilityInstance){
       return sourceEffectId && sourceEffectId === sei2.sourceEffectId
     })
     if(existing){
-      const durationRemainingBefore = existing.durationRemaining
       existing.replaceData(sei.data)
       if(existing.stacking === 'replace'){
         existing.refresh()
       }else if(existing.stacking === 'extend'){
-        existing.extend(durationRemainingBefore)
+        existing.extend()
       }else if(existing.stacking === 'stack'){
         existing.modifyStacks(1).refresh()
       }

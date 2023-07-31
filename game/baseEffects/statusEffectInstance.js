@@ -66,8 +66,12 @@ export default class StatusEffectInstance extends EffectInstance{
     return new Stats(Array(this.stacks).fill(super.stats))
   }
 
+  get baseDuration(){
+    return this.effectData.duration ?? 0
+  }
+
   get duration(){
-    return (this.effectData.duration ?? 0) + this.extendedDuration
+    return this.baseDuration + this.extendedDuration
   }
 
   get extendedDuration(){
@@ -139,8 +143,9 @@ export default class StatusEffectInstance extends EffectInstance{
     return this.effectData.diminishingReturns ?? false
   }
 
-  extend(extendedDuration){
-    this._state.extendedDuration = this.extendedDuration + extendedDuration
+  extend(){
+    this._state.extendedDuration = this.extendedDuration + this.baseDuration
+    console.log(this.extendedDuration, this.duration, this.time)
     return this
   }
 
