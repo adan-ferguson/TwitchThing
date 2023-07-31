@@ -1,4 +1,4 @@
-v0.8.1
+v0.8.0.1
 ------
 - Fixed bug where a run would crash if you got 2 chests in 1 fight. (The Bounty Collector + random chest or boss chest)
 - Fixed bug where your loadout would revert. (There's still another similar bug with skills that I haven't found yet)
