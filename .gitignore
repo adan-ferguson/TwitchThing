@@ -11,5 +11,7 @@ logs
 ngrok.*
 
 game/**/combined.js
+server/**/combined.js
 
 client/js/componentImporter.js
+
