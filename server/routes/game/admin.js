@@ -29,7 +29,7 @@ router.post('/', async(req, res) => {
 })
 
 router.post('/adventurers', async(req, res) => {
-  const adventurers = await Adventurers.find()
+  const adventurers = await Adventurers.find({ sort: { level: -1 } })
   res.status(200).send({ adventurers })
 })
 

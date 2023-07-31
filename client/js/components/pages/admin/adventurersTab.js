@@ -21,7 +21,7 @@ export default class AdminAdventurerTab extends HTMLElement{
     this.innerHTML = HTML
     this._list = this.querySelector('di-list')
       .setOptions({
-        pageSize: 15
+        pageSize: 10
       })
     this._adventurerPane = this.querySelector('di-adventurer-pane')
   }
@@ -34,6 +34,7 @@ export default class AdminAdventurerTab extends HTMLElement{
     adventurers.forEach(adventurer => {
       const row = wrapAdventurer(adventurer)
       row.addEventListener('click', e => {
+        console.log(adventurer)
         this._adventurerPane.setAdventurer(new Adventurer(adventurer))
       })
       rows.push(row)
