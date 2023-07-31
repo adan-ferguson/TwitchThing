@@ -170,7 +170,8 @@ async function validateIdle(req, res, next){
     throw {
       status: 400,
       message: 'Adventurer is in a dungeon run and can not perform this action.',
-      targetPage: ''
+      targetPage: '',
+      output: false,
     }
   }
   next()

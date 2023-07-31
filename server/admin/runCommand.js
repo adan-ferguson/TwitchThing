@@ -6,26 +6,27 @@ import Combats from '../collections/combats.js'
 import Purchases from '../collections/purchases.js'
 import { getAllItemKeys } from '../../game/adventurerClassInfo.js'
 import { purgeAllOldRuns } from '../dungeons/results.js'
+import { broadcast } from '../socketServer.js'
 
 export async function runCommand(cmd){
   return (await COMMANDS[cmd]?.()) ?? 'Command not found'
 }
 
 const COMMANDS = {
-  'reset all': async () => {
-    cancelAllRuns()
-    await Promise.all([
-      Users.resetAll(),
-      Adventurers.removeAll(),
-      DungeonRuns.removeAll(),
-      Combats.removeAll(),
-      Purchases.removeAll()
-    ])
-    return 'Everything has been successfully reset.'
-  },
-  purge: async () => {
-    const removed = await purgeAllOldRuns()
-    return `Old runs purged. ${removed} combats removed.`
+  // 'reset all': async () => {
+  //   cancelAllRuns()
+  //   await Promise.all([
+  //     Users.resetAll(),
+  //     Adventurers.removeAll(),
+  //     DungeonRuns.removeAll(),
+  //     Combats.removeAll(),
+  //     Purchases.removeAll()
+  //   ])
+  //   return 'Everything has been successfully reset.'
+  // },
+  'force reload': () => {
+    broadcast('force reload')
+    return 'Broadcasted'
   },
   'give stuff': async () => {
     const users = await Users.find()
@@ -47,11 +48,12 @@ const COMMANDS = {
     })
     return 'Stuff given'
   },
-  'stop runs': async () => {
-    cancelAllRuns()
-    Adventurers.collection.updateMany({}, [{
-      $unset: 'dungeonRunID'
-    }])
-    return 'runs cancelled'
-  }
+//   'stop runs': async () => {
+//     cancelAllRuns()
+//     Adventurers.collection.updateMany({}, [{
+//       $unset: 'dungeonRunID'
+//     }])
+//     return 'runs cancelled'
+//   }
+// }
 }

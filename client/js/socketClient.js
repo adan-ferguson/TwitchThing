@@ -1,4 +1,5 @@
 import { io } from 'socket.io-client'
+import SimpleModal from './components/simpleModal.js'
 
 let socket
 const rooms = {}

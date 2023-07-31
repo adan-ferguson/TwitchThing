@@ -52,7 +52,9 @@ export default class Inventory extends DIElement{
   }
 
   setup(items, adventurer){
-    this.listEl.setRows(inventoryItemsToRows(items))
+    if(!this._beenSetup){
+      this.listEl.setRows(inventoryItemsToRows(items))
+    }
     this._beenSetup = true
     this.adventurer = adventurer
     this._updateSortAndFilter()

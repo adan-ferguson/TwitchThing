@@ -36,6 +36,9 @@ export function addRewards(rewards, toAdd){
       if(!r[key]){
         r[key] = []
       }
+      if(!Array.isArray(r[key])){
+        r[key] = [r[key]]
+      }
       r[key].push(...arrayize(toAdd[key]))
     }
   }

@@ -42,6 +42,7 @@ export default class Modal extends HTMLElement{
       }
     }
     this._closeButton.classList.toggle('displaynone', !this._options.closeOnUnderlayClick)
+    return this
   }
 
   show = () => {
