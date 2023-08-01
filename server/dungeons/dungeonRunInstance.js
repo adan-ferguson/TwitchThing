@@ -107,7 +107,7 @@ export default class DungeonRunInstance extends EventEmitter{
       return
     }
 
-    if(this.newestEvent.runFinished){
+    if(this.newestEvent?.runFinished){
       this.doc.results = calculateResults(this.events)
       this.doc.finished = true
       this.doc.elapsedTime = this.nextEventTime

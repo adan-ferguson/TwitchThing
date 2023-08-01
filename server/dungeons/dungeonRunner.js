@@ -75,7 +75,7 @@ async function advance(){
     timer.log('Cleared finished runs')
     await advanceRuns()
     timer.log('Advanced runs')
-    await saveAllRuns()
+    saveAllRuns()
     timer.log('Saved runs')
   }
 
@@ -234,8 +234,18 @@ function emitSocketEvents(){
 }
 
 async function saveAllRuns(){
-  const docs = Object.values(activeRuns).map(r => r.doc)
+  const docs = Object.values(activeRuns)
+    .map(r => r.doc)
+    .filter(doc => {
+      if(doc.finished){
+        return true
+      }else if(doc.room === 2){
+        return true
+      }
+    })
+  const start = Date.now()
   await DungeonRuns.saveMany(docs)
+  console.log(Date.now() - start, 'saveMany docs time')
 }
 
 function clearFinishedRuns(){

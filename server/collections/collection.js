@@ -1,4 +1,5 @@
 import db from '../db.js'
+import ConsoleTimer from '../../game/consoleTimer.js'
 
 export default class Collection{
 
@@ -27,7 +28,8 @@ export default class Collection{
       return
     }
     docs.forEach(doc => this.validateSave())
-    return await db.saveMany(docs.map(doc => db.fix(doc, this.defaults)), this.collectionName)
+    const fixThem = docs.map(doc => db.fix(doc, this.defaults))
+    await db.saveMany(fixThem, this.collectionName)
   }
 
   async find(options = {}){

@@ -145,7 +145,6 @@ export default class StatusEffectInstance extends EffectInstance{
 
   extend(){
     this._state.extendedDuration = this.extendedDuration + this.baseDuration
-    console.log(this.extendedDuration, this.duration, this.time)
     return this
   }
 
