@@ -1,5 +1,5 @@
 export default function(error, req, res, next){
-  if(req.body?.output !== 'false'){
+  if(req.body?.output !== false){
     console.error('Ajax Error', req.url, req.body, error)
   }
   if(req.method === 'GET' && error.redirect){

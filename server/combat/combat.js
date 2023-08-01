@@ -5,7 +5,7 @@ import { takeCombatTurn } from './takeCombatTurn.js'
 import { processAbilityEvents } from '../mechanics/abilities.js'
 import { performAction, useAbility } from '../mechanics/actions/performAction.js'
 import { overtimeDamageBonus } from '../../game/combatMechanics.js'
-import { arrayize } from '../../game/utilFunctions.js'
+import { arrayize, fillArray } from '../../game/utilFunctions.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 import { blockBarrierAction } from '../../game/commonMechanics/blockBarrierAction.js'
 

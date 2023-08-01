@@ -4,6 +4,7 @@ import Users from '../collections/users.js'
 import DungeonRunInstance from './dungeonRunInstance.js'
 import { emit } from '../socketServer.js'
 import Adventurer from '../../game/adventurer.js'
+import ConsoleTimer from '../../game/consoleTimer.js'
 
 let lastAdvancement = new Date()
 let running = false
@@ -62,12 +63,19 @@ export async function start(){
 async function advance(){
 
   const before = new Date()
+  const timer = new ConsoleTimer()
 
   if(Object.keys(activeRuns).length){
+    timer.reset()
+    timer.log(`Advancing ${Object.keys(activeRuns).length} runs.`)
     emitSocketEvents()
+    timer.log('Emitted socket events')
     clearFinishedRuns()
+    timer.log('Cleared finished runs')
     await advanceRuns()
+    timer.log('Advanced runs')
     await saveAllRuns()
+    timer.log('Saved runs')
   }
 
   lastAdvancement = before

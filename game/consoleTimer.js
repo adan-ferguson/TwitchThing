@@ -1,10 +1,13 @@
 export default class ConsoleTimer{
   constructor(){
     this._lastTime = Date.now()
-    this._logCount = 0
   }
-  log(){
-    console.log(++this._logCount, Date.now() - this._lastTime)
+
+  reset(){
+    this._lastTime = Date.now()
+  }
+  log(msg){
+    console.log(Date.now() - this._lastTime, msg)
     this._lastTime = Date.now()
   }
 }
