@@ -67,6 +67,7 @@ async function advance(){
 
   if(Object.keys(activeRuns).length){
     timer.reset()
+    console.log('--------------------')
     timer.log(`Advancing ${Object.keys(activeRuns).length} runs.`)
     emitSocketEvents()
     timer.log('Emitted socket events')

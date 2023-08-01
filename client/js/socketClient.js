@@ -5,6 +5,7 @@ let socket
 const rooms = {}
 
 export function connect(){
+  console.log('attempting to connect...')
   socket = io.connect()
   socket.on('connect', () => {
     console.log('Socket connected')
@@ -17,6 +18,9 @@ export function connect(){
   })
   socket.on('room left', id => {
     console.log('Room left', id)
+  })
+  socket.on('error', e => {
+    console.error(e)
   })
 }
 

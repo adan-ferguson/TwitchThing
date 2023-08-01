@@ -1,3 +1,9 @@
+v0.8.0.2
+------
+- Fixed bug where penance would crash the run when you rest.
+- Fixed firefox bug where skills had their icon way off to the side.
+- Other logging stuff, attempting to find the source of the slowness.
+
 v0.8.0.1
 ------
 - Fixed bug where a run would crash if you got 2 chests in 1 fight. (The Bounty Collector + random chest or boss chest)

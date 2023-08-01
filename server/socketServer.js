@@ -12,13 +12,18 @@ export function setup(server, sessionMiddleware){
   })
 
   io.on('connection', async socket => {
-    const user = await Users.deserializeFromSession(socket.request.session?.passport?.user)
-    if(user){
-      const id = user._id.toString()
-      socket.join(id)
-      socket.emit('user connect', id)
-    }else{
-      socket.emit('anonymous connect')
+
+    try {
+      const user = await Users.deserializeFromSession(socket.request.session?.passport?.user)
+      if(user){
+        const id = user._id.toString()
+        socket.join(id)
+        socket.emit('user connect', id)
+      }else{
+        socket.emit('anonymous connect')
+      }
+    }catch(ex){
+      socket.emit('error', ex)
     }
 
     socket.on('joinroom', roomID => {

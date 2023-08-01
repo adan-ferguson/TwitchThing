@@ -81,7 +81,7 @@ export function emitWorkerStatus(){
 }
 
 export function emitCombat(combatDoc){
-  console.log('combat ran', combatDoc._id, combatDoc.times.startup, combatDoc.times.calc)
+  // console.log('combat ran', combatDoc._id, combatDoc.times.startup, combatDoc.times.calc)
   // emit('admin performance tab','admin show combat', getWorkerStatus())
 }
 
