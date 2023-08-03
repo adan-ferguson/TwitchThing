@@ -8,6 +8,8 @@ client_dist
 
 logs
 
+test
+
 ngrok.*
 
 game/**/combined.js
