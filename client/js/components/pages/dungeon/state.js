@@ -55,26 +55,25 @@ export default class State extends HTMLElement{
     }
   }
 
-  update(eventsList, adventurerInstance, animate){
-
-    const currentEvent = eventsList.at(-1)
-    const results = new DungeonRunResults(eventsList)
-
-    if(currentEvent){
-      this._floorAndRoomEl.textContent = `Floor ${currentEvent.floor} - ${currentEvent.room ? 'Room ' + currentEvent.room : 'Entrance'}`
-    }
-
-    this._setXP(results.xp, animate)
-    this._updateChests(results.chests, animate)
-
-    // TODO: this is sort of a weird fundamental problem
-    // if(animate){
-    //   this._setFoodRemaining((currentEvent.penalty?.food ?? 0) + this._lastFood)
-    //   this._setFoodRemaining((currentEvent.rewards?.food ?? 0) + this._lastFood)
-    // }else{
+  update(dungeonRun, adventurerInstance, animate){
+    // const currentEvent = eventsList.at(-1)
+    // const results = new DungeonRunResults(eventsList)
+    //
+    // if(currentEvent){
+    //   this._floorAndRoomEl.textContent = `Floor ${currentEvent.floor} - ${currentEvent.room ? 'Room ' + currentEvent.room : 'Entrance'}`
     // }
-    this._setFoodRemaining(adventurerInstance.food, adventurerInstance.maxFood)
-    this._contentEl.classList.remove('displaynone')
+    //
+    // this._setXP(results.xp, animate)
+    // this._updateChests(results.chests, animate)
+    //
+    // // TODO: this is sort of a weird fundamental problem
+    // // if(animate){
+    // //   this._setFoodRemaining((currentEvent.penalty?.food ?? 0) + this._lastFood)
+    // //   this._setFoodRemaining((currentEvent.rewards?.food ?? 0) + this._lastFood)
+    // // }else{
+    // // }
+    // this._setFoodRemaining(adventurerInstance.food, adventurerInstance.maxFood)
+    // this._contentEl.classList.remove('displaynone')
   }
 
   _setXP(xp, animate){

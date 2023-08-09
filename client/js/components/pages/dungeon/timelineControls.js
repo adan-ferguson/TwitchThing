@@ -8,7 +8,7 @@ const HTML = `
 <di-bar class="event-time-bar"></di-bar>
 <div class="flex-rows">
   <div class="flex-columns buttons">
-    <button class="log" title="View event log"><i class="fa-solid fa-list"></i></button>
+    <button class="log displaynone" title="View event log"><i class="fa-solid fa-list"></i></button>
     <button class="end-run replay-no" title="Tell your adventurer to leave via some sort of magic pager">Leave</button>
     <select class="speed replay-yes">
       <option value="25">25%</option>

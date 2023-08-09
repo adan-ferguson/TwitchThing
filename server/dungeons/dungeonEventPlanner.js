@@ -15,9 +15,9 @@ export async function generateEvent(dungeonRun){
   const room = dungeonRun.room
   const adventurerInstance = dungeonRun.adventurerInstance
   const bossFloor = floor % 10 === 0
-  const previousEvent = dungeonRun.events.at(-1)
+  const previousEvent = dungeonRun.newestEvent
 
-  if(previousEvent.monster?.boss){
+  if(previousEvent.data.monster?.boss){
     const runEndEvent = runEnd(dungeonRun)
     if(runEndEvent){
       return runEndEvent
@@ -50,7 +50,7 @@ export async function generateEvent(dungeonRun){
     return rest(dungeonRun)
   }
 
-  const encounterPossible = previousEvent.wandering ? true : false //(previousEvent?.combatID || room <= 1) ? false : true
+  const encounterPossible = previousEvent.data.wandering ? true : false //(previousEvent?.combatID || room <= 1) ? false : true
 
   if(encounterPossible && foundMonster(dungeonRun)){
     const monsterDef = await generateMonster(dungeonRun)

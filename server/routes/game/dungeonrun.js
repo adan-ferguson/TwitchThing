@@ -23,10 +23,6 @@ router.use('/:dungeonRunID', verifiedRouter)
 
 verifiedRouter.post('/', async (req, res, next) => {
   const ret = { dungeonRun: req.dungeonRun }
-  // if(req.dungeonRun.finished){
-  //   const combatIds = req.dungeonRun.events.filter(e => e.roomType === 'combat').map(e => e.combatID)
-  //   ret.combats = arrayToObject(await Combats.findByIDs(combatIds), '_id')
-  // }
   res.send(ret)
 })
 

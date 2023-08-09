@@ -2,6 +2,7 @@ import { arrayize } from './utilFunctions.js'
 import { CombatResult } from './combatResult.js'
 
 export default function calculateResults(eventsList){
+  debugger
   eventsList = eventsList.events ?? eventsList
   const rewards = toRewards(eventsList)
   const results = {

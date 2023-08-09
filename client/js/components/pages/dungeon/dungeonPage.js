@@ -212,6 +212,8 @@ export default class DungeonPage extends Page{
       this._adventurerPane.setState(this.currentEvent.adventurerState ?? {}, !animate)
       this._ce?.destroy()
     }
+
+    console.log(this._timeline.entries)
   }
 
   _showResults(){

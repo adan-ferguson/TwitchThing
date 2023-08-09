@@ -25,14 +25,14 @@ router.post('/', async(req, res) => {
   const adventurers = await Adventurers.findByIDs(req.user.adventurers)
   for(let adv of adventurers){
     if(adv.dungeonRunID){
-      adv.dungeonRun = await getRunData(adv.dungeonRunID, true)
+      adv.dungeonRun = await getRunData(adv.dungeonRunID)
     }
   }
   res.send({ adventurers })
 })
 
 router.post('/livedungeonmap', async(req, res) => {
-  const activeRuns = getAllActiveRuns(true)
+  const activeRuns = getAllActiveRuns()
   res.send({
     activeRuns
   })

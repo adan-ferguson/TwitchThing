@@ -28,13 +28,13 @@ export async function generateCombatEvent(dungeonRun, monsterDef){
 }
 
 export async function resumeCombatEvent(dungeonRun){
-  runCombat(dungeonRun, dungeonRun.newestEvent.monster)
+  runCombat(dungeonRun, dungeonRun.newestEvent.data.monster)
 }
 
 export async function runCombat(dungeonRun, monsterDef){
 
   const adventurerInstance = dungeonRun.adventurerInstance
-  const combatEvent = dungeonRun.newestEvent
+  const combatEventData = dungeonRun.newestEvent.data
 
   try {
     const combatDoc = await generateCombat({
@@ -44,7 +44,7 @@ export async function runCombat(dungeonRun, monsterDef){
       params: {
         floor: dungeonRun.floor
       }
-    }, combatEvent.combatID)
+    }, combatEventData.combatID)
 
     adventurerInstance.state = combatDoc.fighter1.endState
 
@@ -53,16 +53,16 @@ export async function runCombat(dungeonRun, monsterDef){
     adventurerInstance.endCombat()
 
     const refereeTime = Math.max(0, combatDoc.times.total - ADVANCEMENT_INTERVAL)
-    combatEvent.duration = combatDoc.duration + refereeTime + END_COMBAT_PADDING
-    combatEvent.refereeTime = refereeTime
-    combatEvent.pending = false
+    combatEventData.duration = combatDoc.duration + refereeTime + END_COMBAT_PADDING
+    combatEventData.refereeTime = refereeTime
+    combatEventData.pending = false
 
-    const resultEvent = {
+    const resultEventData = {
       duration: MIN_RESULT_TIME,
       result: combatDoc.result,
       combatID: combatDoc._id,
       roomType: 'combatResult',
-      monster: monsterDef
+      monster: monsterDef,
     }
 
     const endStateMonsterInstance = new MonsterInstance(monsterDef, combatDoc.fighter2.endState)
@@ -73,22 +73,22 @@ export async function runCombat(dungeonRun, monsterDef){
       )
       adventurerInstance.food += rewards.food ?? 0
       rewards.xp = Math.round(rewards.xp * xpBonus)
-      resultEvent.rewards = rewards
+      resultEventData.rewards = rewards
     }else{
-      combatEvent.runFinished = true
-      return combatEvent
+      combatEventData.runFinished = true
+      return combatEventData
     }
 
     emit(dungeonRun.doc._id, 'dungeon run update', {
       id: dungeonRun.doc._id,
       combatUpdate: {
-        newCombatEvent: combatEvent,
+        newCombatEvent: combatEventData,
         combatDoc: combatDoc
       }
     })
-    dungeonRun.finishRunningCombat(combatEvent, resultEvent)
+    dungeonRun.finishRunningCombat(combatEventData, resultEventData)
   }catch(ex){
-    combatEvent.error = true
+    combatEventData.error = true
     cancelRun(dungeonRun.doc, ex)
   }
 }

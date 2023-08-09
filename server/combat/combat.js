@@ -5,7 +5,7 @@ import { takeCombatTurn } from './takeCombatTurn.js'
 import { processAbilityEvents } from '../mechanics/abilities.js'
 import { performAction, useAbility } from '../mechanics/actions/performAction.js'
 import { overtimeDamageBonus } from '../../game/combatMechanics.js'
-import { arrayize, fillArray } from '../../game/utilFunctions.js'
+import { arrayize } from '../../game/utilFunctions.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 import { blockBarrierAction } from '../../game/commonMechanics/blockBarrierAction.js'
 
@@ -13,7 +13,7 @@ const MAX_CONSECUTIVE_ZERO_TIME_ADVANCEMENTS = 30
 const MAX_TRIGGER_LOOPS = 30
 const MAX_TRIGGER_COUNTER = 500
 
-const MAX_CALCULATION_TIME = 3000
+const MAX_CALCULATION_TIME = 30000000
 const OVERTIME = 60000
 const SUDDEN_DEATH = 120000
 

@@ -7,6 +7,8 @@ import { advXpToLevel } from '../../game/adventurer.js'
 import { applyChestToUser } from './chests.js'
 import Combats from '../collections/combats.js'
 import { adjustInventoryBasics } from '../user/inventory.js'
+import Events from '../collections/fullEvents.js'
+import FullEvents from '../collections/fullEvents.js'
 
 const REWARDS_TYPES = {
   xp: 'num',
@@ -193,13 +195,14 @@ export async function purgeOldRuns(adventurerID){
 async function purgeReplays(drDocs){
   const combatIDs = []
   for(let doc of drDocs){
-    doc.events.forEach(ev => {
-      if (ev.combatID && ev.roomType === 'combat'){
-        combatIDs.push(ev.combatID)
+    const events = await FullEvents.findByDungeonRunID(doc._id)
+    events.forEach(ev => {
+      if (ev.data.combatID && ev.data.roomType === 'combat'){
+        combatIDs.push(ev.data.combatID)
       }
     })
-    doc.events = []
     doc.purged = true
+    await Events.collection.deleteMany({ dungeonRunID: doc._id })
     await DungeonRuns.save(doc)
   }
   const result = await Combats.collection.updateMany({
