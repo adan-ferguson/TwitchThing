@@ -5,7 +5,7 @@ import FullEvents from '../collections/fullEvents.js'
 import { broadcast } from '../socketServer.js'
 import { roundToFixed, toPct } from '../../game/utilFunctions.js'
 
-const MIGRATION_ID = 6
+const MIGRATION_ID = 7
 
 const Migrations = new Collection('migrations', {
   migrationId: null
@@ -74,7 +74,7 @@ async function compressEvents(){
         data: event,
       }
     })
-    // await FullEvents.saveMany(fullEvents)
+    await FullEvents.saveMany(fullEvents)
     doc.events = null
     runsToSave.push(doc)
   }
@@ -82,6 +82,5 @@ async function compressEvents(){
   console.log(length + ' / ' + length)
   console.log('trial migration finished')
   console.log(`${runsToSave.length} runs to update, ${eventsAdded} fullEvents added`)
-  // await DungeonRuns.saveMany(runsToSave)
-  process.exit()
+  await DungeonRuns.saveMany(runsToSave)
 }
