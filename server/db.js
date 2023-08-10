@@ -96,8 +96,12 @@ export default {
     }
     return null
   },
-  find: async (collection, { id = null, query = {}, projection = {}, defaults = {}, sort = {} }) => {
-    const docs = await connection.collection(collection).find(qoid(id ?? query), { projection }).sort(sort).toArray()
+  find: async (collection, { id = null, query = {}, projection = {}, defaults = {}, sort = {}, limit = -1 }) => {
+    let cursor = connection.collection(collection).find(qoid(id ?? query), { projection }).sort(sort)
+    if(limit > 0){
+      cursor = cursor.limit(limit)
+    }
+    const docs = await cursor.toArray()
     return docs.map(doc => fix(doc, defaults, projection))
   }
 }

@@ -10,6 +10,21 @@ import AdventurerPage from '../adventurer/adventurerPage.js'
 import AdventurerInstance from '../../../../../game/adventurerInstance.js'
 import { hideAll } from 'tippy.js'
 import { hideLoader, showLoader } from '../../../loader.js'
+import SimpleModal from '../../simpleModal.js'
+import { roundToFixed, wrapContent } from '../../../../../game/utilFunctions.js'
+import { decompress } from 'compress-json'
+
+const ALWAYS_LOAD_LARGE_RUNS_KEY = 'always-load-large-runs'
+const ESTIMATED_SIZE_PER_MS = 0.25 // About 15kb per minute
+const LARGE_RUN_THRESHOLD_MS = 1000 * 60 * 60
+const LARGE_RUN_MODAL_HTML = estSize => `
+<p>
+  Download data for this large run? Estimated size: ${estSize}.
+</p>
+<label>
+  <input type='checkbox' class='dont-ask'/> Don't ask me again
+</label>
+`
 
 const HTML = `
 <div class="content-rows">
@@ -188,12 +203,7 @@ export default class DungeonPage extends Page{
     }
 
     this._updateBackground()
-    this._stateEl.update(this._timelineEl.elapsedEvents, this.adventurerInstance, animate)
-
-    if(this.isReplay && !this._combatsAllLoaded && !this._timeline.finished){
-      await this._loadAllCombats()
-      this._combatsAllLoaded = true
-    }
+    this._stateEl.update(this.currentEvent, this.dungeonRun, this.adventurerInstance, animate)
 
     if(this.isReplay && this._timeline.finished){
       this._showResults()
@@ -296,13 +306,16 @@ export default class DungeonPage extends Page{
   }
 
   _setupTimeline(dungeonRun){
-    const targetTime = dungeonRun.finalized ? 0 : dungeonRun.virtualTime ?? dungeonRun.elapsedTime
+    const targetTime = dungeonRun.virtualTime ?? dungeonRun.elapsedTime
     this._timeline = new Timeline(dungeonRun.events, targetTime)
     this._timeline.on('timechange', obj => {
       this._timeChange(obj)
     })
     this._timelineEl.setup(this._timeline, dungeonRun, {
-      isReplay: this.isReplay
+      isReplay: this.isReplay,
+      loadEvents: async () => {
+        await this._loadEvents()
+      }
     })
   }
 
@@ -321,9 +334,35 @@ export default class DungeonPage extends Page{
     this._cachedCombats[combatID] = result.combat
   }
 
-  async _loadAllCombats(){
+  async _loadEvents(){
+    if(this._fullLoaded){
+      return
+    }
+    const isLarge = this.dungeonRun.elapsedTime > LARGE_RUN_THRESHOLD_MS
+    if(isLarge && !localStorage.getItem(ALWAYS_LOAD_LARGE_RUNS_KEY)){
+      const estSize = roundToFixed(ESTIMATED_SIZE_PER_MS * this.dungeonRun.elapsedTime / 1000000, 2)
+      const content = wrapContent(LARGE_RUN_MODAL_HTML(estSize + 'mb'))
+      const modal = new SimpleModal(content, [{
+        text: 'Yes',
+        style: 'good',
+        value: true,
+      },{
+        text: 'No',
+        value: false,
+      }]).show()
+      const result = await modal.awaitResult()
+      if(!result){
+        throw 'Lazy'
+      }
+      if(modal.querySelector('.dont-ask').checked){
+        localStorage.setItem(ALWAYS_LOAD_LARGE_RUNS_KEY, true)
+      }
+    }
     showLoader()
-    this._cachedCombats = await fizzetch(`/game/dungeonrun/${this._dungeonRunID}/allcombats`)
+    const { combats, events, compressed } = await fizzetch(`/game/dungeonrun/${this._dungeonRunID}/loadfull`)
+    this._cachedCombats = compressed ? decompress(combats) : combats
+    this._timeline.entries = compressed ? decompress(events) : events
+    this._fullLoaded = true
     hideLoader()
   }
 }

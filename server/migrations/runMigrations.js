@@ -17,8 +17,8 @@ export async function runMigrations(){
 
   console.log('running migrations')
 
-  const events = db.conn().collection('fullEvents')
-  events.createIndex({ dungeonRunID: 1 })
+  db.conn().collection('fullEvents').createIndex({ dungeonRunID: 1 })
+  db.conn().collection('dungeonRuns').createIndex({ cancelled: 1 })
 
   await compressEvents()
   Migrations.save({ migrationId: MIGRATION_ID })

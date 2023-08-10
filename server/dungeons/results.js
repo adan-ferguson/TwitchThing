@@ -7,7 +7,6 @@ import { advXpToLevel } from '../../game/adventurer.js'
 import { applyChestToUser } from './chests.js'
 import Combats from '../collections/combats.js'
 import { adjustInventoryBasics } from '../user/inventory.js'
-import Events from '../collections/fullEvents.js'
 import FullEvents from '../collections/fullEvents.js'
 
 const REWARDS_TYPES = {
@@ -57,7 +56,7 @@ export async function finalize(dungeonRunDoc){
     throw { error: 'Dungeon run is not finished yet.' }
   }
 
-  const lastEvent = dungeonRunDoc.events.at(-1)
+  const lastEvent = await FullEvents.lastEventOf(dungeonRunDoc._id)
   let deepestFloor = dungeonRunDoc.floor
   if(['cleared','outOfOrder'].includes(lastEvent.roomType)){
     deepestFloor += 1
@@ -202,7 +201,7 @@ async function purgeReplays(drDocs){
       }
     })
     doc.purged = true
-    await Events.collection.deleteMany({ dungeonRunID: doc._id })
+    await FullEvents.collection.deleteMany({ dungeonRunID: doc._id })
     await DungeonRuns.save(doc)
   }
   const result = await Combats.collection.updateMany({

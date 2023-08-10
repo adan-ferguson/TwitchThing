@@ -55,25 +55,20 @@ export default class State extends HTMLElement{
     }
   }
 
-  update(dungeonRun, adventurerInstance, animate){
-    // const currentEvent = eventsList.at(-1)
-    // const results = new DungeonRunResults(eventsList)
-    //
-    // if(currentEvent){
-    //   this._floorAndRoomEl.textContent = `Floor ${currentEvent.floor} - ${currentEvent.room ? 'Room ' + currentEvent.room : 'Entrance'}`
-    // }
-    //
-    // this._setXP(results.xp, animate)
-    // this._updateChests(results.chests, animate)
-    //
-    // // TODO: this is sort of a weird fundamental problem
-    // // if(animate){
-    // //   this._setFoodRemaining((currentEvent.penalty?.food ?? 0) + this._lastFood)
-    // //   this._setFoodRemaining((currentEvent.rewards?.food ?? 0) + this._lastFood)
-    // // }else{
-    // // }
-    // this._setFoodRemaining(adventurerInstance.food, adventurerInstance.maxFood)
-    // this._contentEl.classList.remove('displaynone')
+  update(event, run, adventurerInstance, animate){
+
+    const floor = event?.floor ?? run.floor
+    const room = event?.room ?? run.room
+    this._floorAndRoomEl.textContent = `Floor ${floor} - ${room ? 'Room ' + room : 'Entrance'}`
+
+    const rewards = event?.rewardsToDate ?? run.rewards ?? {}
+    this._setXP(rewards.xp ?? 0, animate)
+    this._updateChests(rewards.chests ?? 0, animate)
+
+    // TODO: still is bugged
+    this._setFoodRemaining(adventurerInstance.food, adventurerInstance.maxFood)
+
+    this._contentEl.classList.remove('displaynone')
   }
 
   _setXP(xp, animate){

@@ -8,16 +8,18 @@ const HTML = `
 <di-bar class="event-time-bar"></di-bar>
 <div class="flex-rows">
   <div class="flex-columns buttons">
-    <button class="log displaynone" title="View event log"><i class="fa-solid fa-list"></i></button>
-    <button class="end-run replay-no" title="Tell your adventurer to leave via some sort of magic pager">Leave</button>
-    <select class="speed replay-yes">
-      <option value="25">25%</option>
-      <option value="50">50%</option>
-      <option value="100">100%</option>
-      <option value="200">200%</option>
-      <option value="400">400%</option>
-    </select>
+    <div class="flex-columns">
+      <button class="log replay-yes" title="View event log"><i class="fa-solid fa-list"></i></button>
+      <button class="end-run replay-no" title="Tell your adventurer to leave via some sort of magic pager">Leave</button>
+    </div>
     <div class="flex-columns replay-yes">
+      <select class="speed">
+        <option value="25">25%</option>
+        <option value="50">50%</option>
+        <option value="100">100%</option>
+        <option value="200">200%</option>
+        <option value="400">400%</option>
+      </select>
       <button class="restart" title="Restart"><i class="fa-solid fa-backward-fast"></i></button>
       <button class="back" title="Back"><i class="fa-solid fa-backward-step"></i></button>
       <button class="pause" title="Pause"><i class="fa-solid fa-pause"></i></button>
@@ -34,7 +36,8 @@ const JUMP_MINIMUM_DIFF = 30 // If a jump is small, ignore it
 export default class TimelineControls extends HTMLElement{
 
   _options = {
-    isReplay: false
+    isReplay: false,
+    loadEvents: null,
   }
   _eventTimeBarEl
   _eventLog
@@ -69,12 +72,14 @@ export default class TimelineControls extends HTMLElement{
       this.pause()
     })
 
-    this.querySelector('button.restart').addEventListener('click', () => {
+    this.querySelector('button.restart').addEventListener('click', async () => {
+      await this._options.loadEvents?.()
       this.jumpTo(0, {
         animate: false
       })
     })
-    this.querySelector('button.back').addEventListener('click', () => {
+    this.querySelector('button.back').addEventListener('click', async () => {
+      await this._options.loadEvents?.()
       const backThreshold = 2000 * this.speed
       const backOne = !this._timeline.timeSinceLastEntry ||
         this._timeline.timeSinceLastEntry < backThreshold && this._ticker.running
@@ -95,7 +100,8 @@ export default class TimelineControls extends HTMLElement{
       })
     })
 
-    this.querySelector('button.log').addEventListener('click', () => {
+    this.querySelector('button.log').addEventListener('click', async () => {
+      await this._options.loadEvents?.()
       this._showEventLogModal()
     })
 
@@ -140,7 +146,6 @@ export default class TimelineControls extends HTMLElement{
     this._timeline.on('timechange', ({ before, after, jumped }) => {
       this._update()
     })
-    this._setupEventLog(dungeonRun.adventurer)
     this._ticker.currentTime = this._timeline.timeSinceLastEntry
     this._update()
   }
@@ -214,17 +219,6 @@ export default class TimelineControls extends HTMLElement{
     this._ticker.stop()
   }
 
-  _setupEventLog(adventurer){
-    this._eventLog = new EventLog(this._timeline, {
-      rowsClickable: this._options.isReplay
-    })
-    this._eventLog.addEventListener('event_selected', e => {
-      this.jumpToIndex(e.detail.eventIndex, {
-        animate: false
-      })
-    })
-  }
-
   _next(){
     if(this._destroyed){
       return
@@ -281,6 +275,18 @@ export default class TimelineControls extends HTMLElement{
   }
 
   _showEventLogModal(){
+
+    if(!this._eventLog){
+      this._eventLog = new EventLog(this._timeline, {
+        rowsClickable: this._options.isReplay
+      })
+      this._eventLog.addEventListener('event_selected', e => {
+        this.jumpToIndex(e.detail.eventIndex, {
+          animate: false
+        })
+      })
+    }
+
     const wasRunning = this._ticker.running
     const modal = new Modal()
     modal.innerContent.appendChild(this._eventLog)

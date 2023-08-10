@@ -195,6 +195,8 @@ export default class _DungeonRunInstance extends EventEmitter{
       nextEventData.duration += (ADVANCEMENT_INTERVAL - ((nextEventData.time + nextEventData.duration) % ADVANCEMENT_INTERVAL)) % ADVANCEMENT_INTERVAL
     }
 
+    nextEventData.rewardsToDate = this.doc.rewards ?? {}
+
     this.doc.room = nextEventData.room
     this.doc.floor = nextEventData.floor
 
