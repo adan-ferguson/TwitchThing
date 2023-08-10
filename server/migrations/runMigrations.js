@@ -4,7 +4,7 @@ import db from '../db.js'
 import FullEvents from '../collections/fullEvents.js'
 import { broadcast } from '../socketServer.js'
 
-const MIGRATION_ID = 4
+const MIGRATION_ID = 6
 
 const Migrations = new Collection('migrations', {
   migrationId: null
@@ -40,35 +40,37 @@ async function compressEvents(){
 
   console.log('loading runs')
 
-  const runs = await DungeonRuns.find({
-    query: { 'events.1': { $exists: true } },
-    // limit: 1000,
-  })
+  const query = { 'events.1': { $exists: true } }
+  const length = await DungeonRuns.collection.countDocuments(query)
+  const cursor = DungeonRuns.collection.find(query)
 
   const eventsToAdd = []
   const runsToSave = []
 
-  console.log(`Converting ${runs.length} runs...`)
-  runs.forEach((r,i) => {
+  console.log(`Converting ${length} runs...`)
+
+  let i = 0
+  for await (const doc of cursor){
     if(i % 10 === 0){
-      console.log(i + ' / ' + runs.length)
+      console.log(i + ' / ' + length)
     }
-    if(!r.events?.length){
+    i++
+    if(!doc.events?.length){
       return
     }
-    r.events?.forEach(event => {
+    doc.events?.forEach(event => {
       const withoutId = { ...event }
       delete withoutId._id
       eventsToAdd.push({
-        dungeonRunID: r._id,
+        dungeonRunID: doc._id,
         data: event,
       })
     })
-    r.events = null
-    runsToSave.push(r)
-  })
+    doc.events = null
+    runsToSave.push(doc)
+  }
 
-  console.log(runs.length + ' / ' + runs.length)
+  console.log(length + ' / ' + length)
   console.log('trial migration finished')
   console.log(`${runsToSave.length} runs to update, ${eventsToAdd.length} fullEvents to add`)
 
