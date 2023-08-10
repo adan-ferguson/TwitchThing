@@ -19,9 +19,9 @@ async function init(){
   await db.init()
   validateEverything()
   await startCombatWorkers()
-  await Server.init().catch(error => {
-    console.log('Server failed to load.', error)
-  })
+  // await Server.init().catch(error => {
+  //   console.log('Server failed to load.', error)
+  // })
   await runMigrations()
   DungeonRunner.start()
 }
