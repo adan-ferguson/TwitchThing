@@ -38,7 +38,10 @@ export async function runMigrations(){
  */
 async function compressEvents(){
 
-  const runs = await DungeonRuns.find({ 'events.1': { $exists: true } }).limit(100)
+  const runs = await DungeonRuns.find({
+    query: { 'events.1': { $exists: true } },
+    limit: 100,
+  })
 
   const eventsToAdd = []
   const runsToSave = []
