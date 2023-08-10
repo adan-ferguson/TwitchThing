@@ -6,11 +6,11 @@ const DEFAULTS = {
   dungeonOptions: {},
   finished: false,
   finalized: null,
-  results: null,
+  results: {},
   floor: 1,
   room: 1,
   rewards: {},
-  events: [],
+  events: null, // deprecated
   elapsedTime: 0,
   startTime: 0,
   purged: false,
@@ -19,4 +19,5 @@ const DEFAULTS = {
 }
 
 const DungeonRuns = new Collection('dungeonRuns', DEFAULTS)
+
 export default DungeonRuns

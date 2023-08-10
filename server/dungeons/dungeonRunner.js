@@ -5,6 +5,7 @@ import DungeonRunInstance from './dungeonRunInstance.js'
 import { emit } from '../socketServer.js'
 import Adventurer from '../../game/adventurer.js'
 import ConsoleTimer from '../../game/consoleTimer.js'
+import FullEvents from '../collections/fullEvents.js'
 
 let lastAdvancement = new Date()
 let running = false
@@ -36,7 +37,7 @@ export async function start(){
   const adventurers = await Adventurers.findByIDs(dungeonRuns.map(dr => dr.adventurer._id))
   const users = await Users.findByIDs(adventurers.map(adv => adv.userID))
 
-  dungeonRuns.forEach(dr => {
+  for(let dr of dungeonRuns){
     const adventurer = adventurers.find(adv => adv._id.equals(dr.adventurer._id))
     console.log(`starting ${adventurer.name}'s run`)
     if(!adventurer || !adventurer.dungeonRunID?.equals(dr._id)){
@@ -53,8 +54,8 @@ export async function start(){
       return
     }
     activeRuns[dr._id] = new DungeonRunInstance(dr, user)
-    activeRuns[dr._id].resumePending()
-  })
+    await activeRuns[dr._id].resume()
+  }
 
   console.log('go!')
   advance()
@@ -113,7 +114,8 @@ export async function addRun(adventurerID, dungeonOptions){
     adventurer,
     dungeonOptions,
     floor: startingFloor,
-    startTime: Date.now()
+    startTime: Date.now(),
+    version: DungeonRuns.CURRENT_VERSION,
   })
 
   adventurer.dungeonRunID = drDoc._id
@@ -132,8 +134,8 @@ export async function getRunDataMulti(dungeonRunIDs){
   return runs
 }
 
-export function getAllActiveRuns(truncated = false){
-  return Object.values(activeRuns).map(activeRun => truncated ? truncatedRun(activeRun.doc) : activeRun.doc)
+export function getAllActiveRuns(){
+  return Object.keys(activeRuns).map(id => getRunData(id))
 }
 
 export function getActiveRunData(dungeonRunID){
@@ -147,12 +149,26 @@ export function getActiveRunData(dungeonRunID){
   }
 }
 
-export async function getRunData(dungeonRunID, truncated = false){
-  const data = getActiveRunData(dungeonRunID) || await DungeonRuns.findByID(dungeonRunID)
-  if(truncated){
-    return truncatedRun(data)
+export async function getRunData(dungeonRunID){
+
+  let newestEvents
+  let doc
+  if(activeRuns[dungeonRunID]){
+    doc = activeRuns[dungeonRunID].doc
+    newestEvents = activeRuns[dungeonRunID].events.slice(-3)
+  }else{
+    doc = await DungeonRuns.findByID(dungeonRunID)
+    newestEvents = await FullEvents.collection.find({
+      dungeonRunID
+    }).sort({ 'data.time': -1 }).limit(3).toArray()
+    newestEvents = newestEvents.reverse()
   }
-  return data
+
+  return {
+    ...doc,
+    virtualTime: virtualTime(doc),
+    events: newestEvents.map(e => e.data),
+  }
 }
 
 export function getActiveRun(id){
@@ -213,10 +229,9 @@ function emitSocketEvents(){
     }
     const clipped = {
       ...dri.doc,
-      newEvents: dri.getNewEvents(),
+      newEvents: dri.getNewEvents().map(e => e.data),
       virtualTime: virtualTime(dri.doc)
     }
-    delete clipped.events
 
     emit(clipped._id, 'dungeon run update', { id: clipped._id, dungeonRun: clipped })
     if(!perUser[clipped.adventurer.userID]){
@@ -234,15 +249,7 @@ function emitSocketEvents(){
 }
 
 async function saveAllRuns(){
-  const docs = Object.values(activeRuns)
-    .map(r => r.doc)
-    .filter(doc => {
-      if(doc.finished){
-        return true
-      }else if(doc.room === 2){
-        return true
-      }
-    })
+  const docs = Object.values(activeRuns).map(r => r.doc)
   const start = Date.now()
   await DungeonRuns.saveMany(docs)
   console.log(Date.now() - start, 'saveMany docs time')
@@ -253,20 +260,6 @@ function clearFinishedRuns(){
     .forEach(r => {
       delete activeRuns[r.doc._id.toString()]
     })
-}
-
-/**
- * @param doc {object}
- * @returns {object}
- */
-function truncatedRun(doc){
-  const truncatedDoc = {
-    ...doc,
-    currentEvent: doc.events.at(-1),
-    virtualTime: virtualTime(doc)
-  }
-  delete truncatedDoc.events
-  return truncatedDoc
 }
 
 export function virtualTime(doc){

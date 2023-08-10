@@ -43,13 +43,6 @@ export default class EventLog extends HTMLElement{
       return row
     }
 
-    timeline.on('entry_added', event => {
-      const row = addEvent(event, timeline.entries.length - 1)
-      if(row){
-        this._setCurrent(row)
-      }
-    })
-
     timeline.entries.forEach((event, i) => {
       addEvent(event, i)
     })

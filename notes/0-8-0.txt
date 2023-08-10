@@ -1,3 +1,10 @@
+v0.8.0.3
+--------
+- Database changes should result in faster loading times when opening dungeon runs.
+- Extremely long runs will save much faster and hopefully no longer get stuck and slow down the server.
+- Implemented some compression so there's less downloading, plus it will warn if you're downloading all the data for an extremely long run.
+- As a consequence, the event log is no longer visible until the run is finished. Maybe it'll be back later.
+
 v0.8.0.2
 ------
 - Fixed bug where penance would crash the run when you rest.

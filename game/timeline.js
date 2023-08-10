@@ -12,6 +12,10 @@ export default class Timeline extends EventEmitter{
     return this._entries
   }
 
+  set entries(val){
+    this._entries = val
+  }
+
   get duration(){
     if(!this._entries.length){
       return 0

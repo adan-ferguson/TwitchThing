@@ -6,7 +6,7 @@ export default class ConsoleTimer{
   reset(){
     this._lastTime = Date.now()
   }
-  log(msg){
+  log(msg = ''){
     console.log(Date.now() - this._lastTime, msg)
     this._lastTime = Date.now()
   }

@@ -1,6 +1,6 @@
 import CustomAnimation from '../../animations/customAnimation.js'
 import FlyingTextEffect from '../visualEffects/flyingTextEffect.js'
-import { mergeOptionsObjects } from '../../../../game/utilFunctions.js'
+import { mergeOptionsObjects, suffixedNumber } from '../../../../game/utilFunctions.js'
 import _ from 'lodash'
 
 const innerHTML = `
@@ -263,7 +263,7 @@ export default class Bar extends HTMLElement{
 }
 
 function spwrap(val){
-  return `<span>${val}</span>`
+  return `<span>${suffixedNumber(val)}</span>`
 }
 
 customElements.define('di-bar', Bar)

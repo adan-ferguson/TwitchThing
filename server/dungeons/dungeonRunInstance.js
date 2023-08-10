@@ -3,18 +3,20 @@ import { generateEvent } from './dungeonEventPlanner.js'
 import { addRewards } from './results.js'
 import { ADVANCEMENT_INTERVAL } from './dungeonRunner.js'
 import calculateResults from '../../game/dungeonRunResults.js'
-import { arrayize } from '../../game/utilFunctions.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
 import { resumeCombatEvent } from '../combat/fns.js'
 import { useAbility } from '../mechanics/actions/performAction.js'
+import FullEvents from '../collections/fullEvents.js'
 
-export default class DungeonRunInstance extends EventEmitter{
+export default class _DungeonRunInstance extends EventEmitter{
 
-  shouldEmit = false
+  _fullEvents = []
   _lastAdvancement = new Date()
   _instructions = {
     leave: false
   }
+  _newEventIterator = 0
+  shouldEmit = false
 
   constructor(doc, user){
     super()
@@ -23,7 +25,6 @@ export default class DungeonRunInstance extends EventEmitter{
       throw 'User mismatch in dungeonRun instance'
     }
     this.user = user
-    this._newEventIterator = this.events.length
   }
 
   get adventurer(){
@@ -48,7 +49,7 @@ export default class DungeonRunInstance extends EventEmitter{
    * @returns {array}
    */
   get events(){
-    return this.doc.events
+    return this._fullEvents
   }
 
   get rewards(){
@@ -65,10 +66,10 @@ export default class DungeonRunInstance extends EventEmitter{
 
   get nextEventTime(){
     if(this.newestEvent){
-      if(this.newestEvent.pending){
+      if(this.newestEvent.data.pending){
         return Number.POSITIVE_INFINITY
       }
-      return this.newestEvent.time + this.newestEvent.duration
+      return this.newestEvent.data.time + this.newestEvent.data.duration
     }
     return 0
   }
@@ -86,13 +87,13 @@ export default class DungeonRunInstance extends EventEmitter{
   }
 
   async initialize(){
-    this.doc.events = [{
+    await this._saveFullEvent({
       message: `${this.adventurer.name} enters the dungeon.`,
       roomType: 'entrance',
       time: -ADVANCEMENT_INTERVAL,
       duration: ADVANCEMENT_INTERVAL,
-      floor: this.doc.floor
-    }]
+      floor: this.doc.floor,
+    })
     this.doc.elapsedTime = -ADVANCEMENT_INTERVAL
     await this.advance()
   }
@@ -107,10 +108,10 @@ export default class DungeonRunInstance extends EventEmitter{
       return
     }
 
-    if(this.newestEvent?.runFinished){
-      this.doc.results = calculateResults(this.events)
+    if(this.newestEvent?.data.runFinished){
       this.doc.finished = true
       this.doc.elapsedTime = this.nextEventTime
+      this.doc.results = calculateResults(this.events.map(e => e.data))
       return
     }
 
@@ -118,9 +119,9 @@ export default class DungeonRunInstance extends EventEmitter{
   }
 
   async cancel(message){
-    this._addEvent({
-      runFinished: true,
+    await this._addEvent({
       roomType: 'outOfOrder',
+      runFinished: true,
       message: `${this.adventurerInstance.displayName} finds a secret message! It says: "${message}". Suddenly, everything explodes.`
     })
     this.doc.elapsedTime = this.nextEventTime
@@ -144,14 +145,18 @@ export default class DungeonRunInstance extends EventEmitter{
     }
   }
 
-  finishRunningCombat(newCombatEvent, resultEvent){
+  finishRunningCombat(newCombatEventData, resultEventData){
     this.shouldEmit = true
-    this.events.pop()
-    this._addEvent([newCombatEvent, resultEvent])
+    this.newestEvent.data = newCombatEventData
+    resultEventData.time = newCombatEventData.time + newCombatEventData.duration
+    FullEvents.save(this.newestEvent)
+    this._addEvent(resultEventData)
   }
 
-  resumePending(){
-    if(this.newestEvent?.pending){
+  async resume(){
+    this._fullEvents = await FullEvents.findByDungeonRunID(this.doc._id)
+    this._newEventIterator = this.events.length
+    if(this.newestEvent?.data.pending){
       resumeCombatEvent(this)
     }
   }
@@ -164,43 +169,41 @@ export default class DungeonRunInstance extends EventEmitter{
   }
 
   async _nextEvent(){
-    this.doc.room = this.newestEvent?.nextRoom || this.doc.room
-    this.doc.floor = this.newestEvent?.nextFloor || this.doc.floor
+    this.doc.room = this.newestEvent?.data.nextRoom || this.doc.room
+    this.doc.floor = this.newestEvent?.data.nextFloor || this.doc.floor
     this._addEvent(await generateEvent(this))
   }
 
-  async _addEvent(events){
+  async _addEvent(event){
 
-    events = arrayize(events)
-    let durationSum = 0
-    let startTime = events[0].time ?? this.doc.elapsedTime
-    events.forEach((e, i) => {
-      const nextEvent = {
-        room: this.doc.room,
-        floor: this.doc.floor,
-        time: startTime + durationSum,
-        duration: ADVANCEMENT_INTERVAL,
-        ...e
-      }
-      this.doc.events.push(nextEvent)
-      durationSum += e.duration ?? ADVANCEMENT_INTERVAL
-      if(nextEvent.rewards){
-        if(nextEvent.rewards.xp){
-          nextEvent.rewards.xp = Math.ceil(nextEvent.rewards.xp)
-        }
-        this.doc.rewards = addRewards(this.doc.rewards, nextEvent.rewards)
-      }
-      if(i === events.length - 1){
-        if(!nextEvent.runFinished){
-          nextEvent.duration += (ADVANCEMENT_INTERVAL - (durationSum % ADVANCEMENT_INTERVAL)) % ADVANCEMENT_INTERVAL
-        }
-        this.doc.room = nextEvent.room
-        this.doc.floor = nextEvent.floor
-      }
-      this._updateState(nextEvent)
-    })
+    const nextEventData = {
+      room: this.doc.room,
+      floor: this.doc.floor,
+      time: event.time ?? (this.newestEvent.data.time + this.newestEvent.data.duration),
+      duration: ADVANCEMENT_INTERVAL,
+      ...event
+    }
 
+    if(nextEventData.rewards){
+      if(nextEventData.rewards.xp){
+        nextEventData.rewards.xp = Math.ceil(nextEventData.rewards.xp)
+      }
+      this.doc.rewards = addRewards(this.doc.rewards, nextEventData.rewards)
+    }
+
+    if(!nextEventData.runFinished){
+      nextEventData.duration += (ADVANCEMENT_INTERVAL - ((nextEventData.time + nextEventData.duration) % ADVANCEMENT_INTERVAL)) % ADVANCEMENT_INTERVAL
+    }
+
+    nextEventData.rewardsToDate = this.doc.rewards ?? {}
+
+    this.doc.room = nextEventData.room
+    this.doc.floor = nextEventData.floor
+
+    this._updateState(nextEventData)
+    this._saveFullEvent(nextEventData)
     this._fixTimeline()
+
     this.doc.elapsedTime = Math.min(this.doc.elapsedTime, this.nextEventTime)
   }
 
@@ -222,11 +225,25 @@ export default class DungeonRunInstance extends EventEmitter{
     if(!this.events.length){
       return
     }
-    let time = this.events[0].time
+    let time = this.events[0].data.time
     for(let i in this.events){
       const entry = this.events[i]
-      entry.time = time
-      time += entry.duration
+      if(entry.data.time !== time){
+        entry.data.time = time
+        FullEvents.save(entry)
+      }
+      time += entry.data.duration
     }
+  }
+
+  _saveFullEvent(data){
+    const fullEvent = {
+      dungeonRunID: this.doc._id,
+      data,
+    }
+    this._fullEvents.push(fullEvent)
+    FullEvents.save(fullEvent).then(newDoc => {
+      fullEvent._id = newDoc._id
+    })
   }
 }

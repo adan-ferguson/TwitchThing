@@ -4,6 +4,8 @@ import express from 'express'
 import Combats from '../../collections/combats.js'
 import { arrayToObject } from '../../../game/utilFunctions.js'
 import { requireRegisteredUser } from '../../validations.js'
+import FullEvents from '../../collections/fullEvents.js'
+import { compress } from 'compress-json'
 
 const router = express.Router()
 const verifiedRouter = express.Router()
@@ -23,16 +25,22 @@ router.use('/:dungeonRunID', verifiedRouter)
 
 verifiedRouter.post('/', async (req, res, next) => {
   const ret = { dungeonRun: req.dungeonRun }
-  // if(req.dungeonRun.finished){
-  //   const combatIds = req.dungeonRun.events.filter(e => e.roomType === 'combat').map(e => e.combatID)
-  //   ret.combats = arrayToObject(await Combats.findByIDs(combatIds), '_id')
-  // }
   res.send(ret)
 })
 
-verifiedRouter.post('/allcombats', async (req, res, next) => {
-  const combatIds = req.dungeonRun.events.filter(e => e.roomType === 'combat').map(e => e.combatID)
-  res.send(arrayToObject(await Combats.findByIDs(combatIds), '_id'))
+verifiedRouter.post('/loadfull', async (req, res, next) => {
+  let events = (await FullEvents.findByDungeonRunID(req.dungeonRun._id)).map(e => e.data)
+  const combatIds = events.filter(e => e.roomType === 'combat').map(e => e.combatID)
+  let combats = arrayToObject(await Combats.findByIDs(combatIds), '_id')
+
+  const compressed = true
+  if(compressed){
+    events.filter(e => e.combatID).forEach(e => e.combatID = e.combatID.toString())
+    events = compress(events)
+    combats = compress(combats)
+  }
+
+  res.send({ combats, events, compressed })
 })
 
 verifiedRouter.post('/finalize', async (req, res, next) => {

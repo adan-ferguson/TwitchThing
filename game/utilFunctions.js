@@ -188,7 +188,7 @@ export function toTimerFormat(ms){
 
 export function suffixedNumber(val, digits = 5){
   if(!Number.isFinite(val)){
-    debugger
+    return val
   }
   return val.toLocaleString()
 }

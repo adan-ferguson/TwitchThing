@@ -7,6 +7,7 @@ import { validateAllMonsters } from './validations/monster.js'
 import { validateAllItems } from './validations/adventurerItem.js'
 import { validateAllSkills } from './validations/adventurerSkill.js'
 import { validateAllBaseEffects } from './validations/effect.js'
+import { runMigrations } from './migrations/runMigrations.js'
 
 init().catch(ex => {
   console.error(ex)
@@ -16,12 +17,13 @@ init().catch(ex => {
 async function init(){
   await initLogging()
   await db.init()
-  await startCombatWorkers()
   validateEverything()
-  DungeonRunner.start()
+  await startCombatWorkers()
   await Server.init().catch(error => {
     console.log('Server failed to load.', error)
   })
+  await runMigrations()
+  DungeonRunner.start()
 }
 
 function validateEverything(){
