@@ -61,13 +61,14 @@ async function compressEvents(){
     doc.events?.forEach(event => {
       const withoutId = { ...event }
       delete withoutId._id
-      eventsToAdd.push({
-        dungeonRunID: doc._id,
-        data: event,
-      })
+      eventsToAdd.push('b')
+      // {
+      //   dungeonRunID: doc._id,
+      //   data: event,
+      // })
     })
     doc.events = null
-    runsToSave.push(doc)
+    runsToSave.push('a') //doc)
   }
 
   console.log(length + ' / ' + length)
