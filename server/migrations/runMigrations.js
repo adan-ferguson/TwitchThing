@@ -38,9 +38,11 @@ export async function runMigrations(){
  */
 async function compressEvents(){
 
+  console.log('loading runs')
+
   const runs = await DungeonRuns.find({
     query: { 'events.1': { $exists: true } },
-    limit: 100,
+    // limit: 1000,
   })
 
   const eventsToAdd = []
@@ -68,7 +70,7 @@ async function compressEvents(){
 
   console.log(runs.length + ' / ' + runs.length)
   console.log('trial migration finished')
-  console.log(`${runsToSave.length} runs to updates, ${eventsToAdd.length} fullEvents to add`)
+  console.log(`${runsToSave.length} runs to update, ${eventsToAdd.length} fullEvents to add`)
 
   process.exit()
   // await FullEvents.saveMany(eventsToAdd)
