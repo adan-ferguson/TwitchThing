@@ -4,7 +4,7 @@ import db from '../db.js'
 import FullEvents from '../collections/fullEvents.js'
 import { broadcast } from '../socketServer.js'
 
-const MIGRATION_ID = 3
+const MIGRATION_ID = 4
 
 const Migrations = new Collection('migrations', {
   migrationId: null
@@ -25,7 +25,9 @@ export async function runMigrations(){
   console.log('indexes created')
 
   await compressEvents()
-  broadcast('force reload')
+  setTimeout(() => {
+    broadcast('force reload')
+  }, 5000)
   console.log('done')
   Migrations.save({ migrationId: MIGRATION_ID })
 }
@@ -61,6 +63,7 @@ async function compressEvents(){
     runsToSave.push(r)
   })
 
+  console.log(runs.length + ' / ' + runs.length)
   console.log('trial migration finished')
   console.log(`${runsToSave.length} runs to updates, ${eventsToAdd.length} fullEvents to add`)
 
