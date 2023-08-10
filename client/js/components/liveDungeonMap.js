@@ -39,7 +39,7 @@ export default class LiveDungeonMap extends HTMLElement{
   }
 
   updateRun(dungeonRun){
-    const currentEvent = dungeonRun.currentEvent ?? dungeonRun.newEvents?.at(-1)
+    const currentEvent = dungeonRun.currentEvent ?? dungeonRun.newEvents?.at(-1) ?? dungeonRun.events?.at(-1)
     if(!currentEvent){
       return
     }

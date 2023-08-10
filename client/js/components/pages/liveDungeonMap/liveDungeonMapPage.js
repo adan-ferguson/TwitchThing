@@ -20,7 +20,7 @@ export default class LiveDungeonMapPage extends Page{
     return ['livedungeonmap']
   }
 
-  async load(_){
+  async load(){
     const { activeRuns } = await this.fetchData()
     joinSocketRoom('live dungeon map')
     getSocket().on('live dungeon map update', this._updateRuns)
