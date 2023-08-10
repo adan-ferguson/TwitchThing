@@ -1,10 +1,10 @@
 import DungeonRuns from '../collections/dungeonRuns.js'
 import Collection from '../collections/collection.js'
 import db from '../db.js'
-import Events from '../collections/fullEvents.js'
+import FullEvents from '../collections/fullEvents.js'
 import { broadcast } from '../socketServer.js'
 
-const MIGRATION_ID = 1
+const MIGRATION_ID = 2
 
 const Migrations = new Collection('migrations', {
   migrationId: null
@@ -17,13 +17,16 @@ export async function runMigrations(){
     return
   }
 
-  console.log('running migrations')
+  console.log('running migration')
 
   db.conn().collection('fullEvents').createIndex({ dungeonRunID: 1 })
   db.conn().collection('dungeonRuns').createIndex({ cancelled: 1 })
 
+  console.log('indexes created')
+
   await compressEvents()
   broadcast('force reload')
+  console.log('done')
   Migrations.save({ migrationId: MIGRATION_ID })
 }
 
@@ -37,7 +40,12 @@ async function compressEvents(){
 
   const eventsToAdd = []
   const runsToSave = []
-  runs.forEach(r => {
+
+  console.log('Converting runs...')
+  runs.forEach((r,i) => {
+    if(i % 100 === 0){
+      console.log(i + ' / ' + runs.length)
+    }
     if(!r.events?.length){
       return
     }
@@ -53,6 +61,10 @@ async function compressEvents(){
     runsToSave.push(r)
   })
 
-  await Events.saveMany(eventsToAdd)
-  await DungeonRuns.saveMany(runsToSave)
+  console.log('trial migration finished')
+  console.log(`${runsToSave.length} runs to updates, ${eventsToAdd.length} fullEvents to add`)
+
+  process.exit()
+  // await FullEvents.saveMany(eventsToAdd)
+  // await DungeonRuns.saveMany(runsToSave)
 }

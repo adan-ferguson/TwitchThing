@@ -168,7 +168,7 @@ verifiedRouter.post('/previousruns', async(req, res, next) => {
 async function validateIdle(req, res, next){
   if(req.adventurerDoc.dungeonRunID){
     throw {
-      status: 400,
+      code: 400,
       message: 'Adventurer is in a dungeon run and can not perform this action.',
       targetPage: '',
       output: false,
