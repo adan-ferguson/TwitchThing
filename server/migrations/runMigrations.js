@@ -38,14 +38,14 @@ export async function runMigrations(){
  */
 async function compressEvents(){
 
-  const runs = await DungeonRuns.find({ 'events.1': { $exists: true } })
+  const runs = await DungeonRuns.find({ 'events.1': { $exists: true } }).limit(100)
 
   const eventsToAdd = []
   const runsToSave = []
 
   console.log(`Converting ${runs.length} runs...`)
   runs.forEach((r,i) => {
-    if(i % 100 === 0){
+    if(i % 10 === 0){
       console.log(i + ' / ' + runs.length)
     }
     if(!r.events?.length){
