@@ -135,7 +135,7 @@ export async function getRunDataMulti(dungeonRunIDs){
 }
 
 export function getAllActiveRuns(){
-  return Object.values(activeRuns).map(activeRun => getRunData(activeRun.doc))
+  return Object.keys(activeRuns).map(id => getRunData(id))
 }
 
 export function getActiveRunData(dungeonRunID){
