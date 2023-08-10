@@ -2,6 +2,7 @@ import DungeonRuns from '../collections/dungeonRuns.js'
 import Collection from '../collections/collection.js'
 import db from '../db.js'
 import Events from '../collections/fullEvents.js'
+import { broadcast } from '../socketServer.js'
 
 const MIGRATION_ID = 1
 
@@ -10,6 +11,7 @@ const Migrations = new Collection('migrations', {
 })
 
 export async function runMigrations(){
+
   const m = await Migrations.findOne({ query: { migrationId: MIGRATION_ID } })
   if(m){
     return
@@ -21,6 +23,7 @@ export async function runMigrations(){
   db.conn().collection('dungeonRuns').createIndex({ cancelled: 1 })
 
   await compressEvents()
+  broadcast('force reload')
   Migrations.save({ migrationId: MIGRATION_ID })
 }
 
@@ -30,14 +33,14 @@ export async function runMigrations(){
  */
 async function compressEvents(){
 
-  const runs = await DungeonRuns.find({
-    version: {
-      $le: 0
-    }
-  })
+  const runs = await DungeonRuns.find({})
 
   const eventsToAdd = []
+  const runsToSave = []
   runs.forEach(r => {
+    if(!r.events?.length){
+      return
+    }
     r.events?.forEach(event => {
       const withoutId = { ...event }
       delete withoutId._id
@@ -46,10 +49,10 @@ async function compressEvents(){
         data: event,
       })
     })
-
     r.events = null
+    runsToSave.push(r)
   })
 
   await Events.saveMany(eventsToAdd)
-  await DungeonRuns.saveMany(runs)
+  await DungeonRuns.saveMany(runsToSave)
 }

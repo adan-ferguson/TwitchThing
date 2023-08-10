@@ -18,12 +18,12 @@ async function init(){
   await initLogging()
   await db.init()
   validateEverything()
-  await runMigrations()
   await startCombatWorkers()
-  DungeonRunner.start()
   await Server.init().catch(error => {
     console.log('Server failed to load.', error)
   })
+  await runMigrations()
+  DungeonRunner.start()
 }
 
 function validateEverything(){
