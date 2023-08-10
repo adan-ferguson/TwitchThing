@@ -4,7 +4,7 @@ import db from '../db.js'
 import FullEvents from '../collections/fullEvents.js'
 import { broadcast } from '../socketServer.js'
 
-const MIGRATION_ID = 2
+const MIGRATION_ID = 3
 
 const Migrations = new Collection('migrations', {
   migrationId: null
