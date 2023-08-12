@@ -80,7 +80,6 @@ async function compressEvents(){
   }
 
   console.log(length + ' / ' + length)
-  console.log('trial migration finished')
   console.log(`${runsToSave.length} runs to update, ${eventsAdded} fullEvents added`)
   await DungeonRuns.saveMany(runsToSave)
 }
