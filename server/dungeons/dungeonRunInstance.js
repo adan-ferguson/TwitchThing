@@ -154,9 +154,10 @@ export default class _DungeonRunInstance extends EventEmitter{
   }
 
   async resume(){
-    this._fullEvents = await FullEvents.findByDungeonRunID(this.doc._id)
+    this._fullEvents = await FullEvents.findByDungeonRunID(this.doc._id, 5)
     this._newEventIterator = this.events.length
-    if(this.newestEvent?.data.pending){
+    this.doc.elapsedTime = this.newestEvent.data.time
+    if(this.newestEvent.data.pending){
       resumeCombatEvent(this)
     }
   }
@@ -242,6 +243,7 @@ export default class _DungeonRunInstance extends EventEmitter{
       data,
     }
     this._fullEvents.push(fullEvent)
+    this._fullEvents = this._fullEvents.slice(-5)
     FullEvents.save(fullEvent).then(newDoc => {
       fullEvent._id = newDoc._id
     })
