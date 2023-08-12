@@ -52,10 +52,12 @@ function xp(rewards){
 function chests(rewards){
   const arr = []
   rewards.forEach(r => {
-    const chests = arrayize(r.chests ?? [])
+    const chests = arrayize(r.chests)
     chests.forEach(chest => {
       arr.push(chest)
     })
   })
-  return arr
+  return arr.sort((a,b) => {
+    return 1
+  })
 }

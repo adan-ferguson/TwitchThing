@@ -10,13 +10,19 @@ import ChestOpenage from './chestOpenage.js'
 import MonsterInstance from '../../../../../game/monsterInstance.js'
 import Adventurer from '../../../../../game/adventurer.js'
 import { orbPointEntry, skillPointEntry } from '../../common.js'
+import { inventoryItemsToRows } from '../../listHelpers.js'
 
 const WAIT_TIME = 500
+const MAX_CHESTS = 20
 
 const HTML = `
 <di-tabz>
   <div data-tab-name="Results"></div>
   <div data-tab-name="Monsters"></div>
+  <div data-tab-name="Loot">
+    <p></p>
+    <di-list></di-list>
+  </div>
 </di-tabz>
 <button class="finalizer appealing displaynone">Finish</button>
 `
@@ -54,6 +60,7 @@ export default class EventContentsResults extends HTMLElement{
     })
 
     this._setupMonstersTab(tabz.getContentEl('Monsters'), dungeonRun.results.monstersKilled)
+    this._setupLootTab(tabz.getContentEl('Loot').querySelector('di-list'), dungeonRun.results.chests)
   }
 
   stop(){
@@ -96,6 +103,20 @@ export default class EventContentsResults extends HTMLElement{
       const { name, amount } = monstersKilled[i]
       this._addText(el, `${toDisplayName(name)} ${amount}`)
     }
+  }
+
+  _setupLootTab(list, chests){
+    debugger
+    const totalItems = {}
+    let totalGold = 0
+    chests.forEach(c => {
+      const { gold, items } = c.contents
+      totalGold += gold
+      for(let key in items.basic){
+        totalItems[key] = (totalItems[key] ?? 0) + items.basic[key]
+      }
+    })
+    list.setRows(inventoryItemsToRows({ basic: totalItems }))
   }
 
   _addRow(target, row){
@@ -144,6 +165,9 @@ export default class EventContentsResults extends HTMLElement{
     el.appendChild(chestDiv)
 
     for(let i = 0; i < chests.length; i++){
+      if(i >= MAX_CHESTS){
+        this._addText(`And ${chests.length - MAX_CHESTS + 1} more, check the Loot tab for a breakdown.`)
+      }
       const openage = new ChestOpenage(chests[i], chestsOpened)
       openage.addEventListener('opened', () => {
         checkOpenAllButton()

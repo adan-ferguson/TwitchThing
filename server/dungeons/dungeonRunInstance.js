@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events'
 import { generateEvent } from './dungeonEventPlanner.js'
-import { addRewards } from './results.js'
+import { addRewards, simplifyRewards } from './results.js'
 import { ADVANCEMENT_INTERVAL } from './dungeonRunner.js'
 import calculateResults from '../../game/dungeonRunResults.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
@@ -195,7 +195,7 @@ export default class _DungeonRunInstance extends EventEmitter{
       nextEventData.duration += (ADVANCEMENT_INTERVAL - ((nextEventData.time + nextEventData.duration) % ADVANCEMENT_INTERVAL)) % ADVANCEMENT_INTERVAL
     }
 
-    nextEventData.rewardsToDate = this.doc.rewards ?? {}
+    nextEventData.rewardsToDate = simplifyRewards(this.doc.rewards ?? {})
 
     this.doc.room = nextEventData.room
     this.doc.floor = nextEventData.floor
