@@ -1,6 +1,7 @@
 import MongoDB from 'mongodb'
 import config from './config.js'
 import { EventEmitter } from 'events'
+import tunnel from 'tunnel-ssh'
 
 let connection
 let client
@@ -9,7 +10,15 @@ const events = new EventEmitter()
 
 const init = async () => {
   try {
-    client = await MongoDB.MongoClient.connect(`mongodb://localhost:${config.db.port}`, {
+    let port
+    if(config.db.ssh){
+      const { tunnelOptions, serverOptions, sshOptions, forwardOptions } = config.db.ssh
+      await tunnel.createTunnel(tunnelOptions, serverOptions, sshOptions, forwardOptions)
+      port = serverOptions.port
+    }else{
+      port = config.db.port
+    }
+    client = await MongoDB.MongoClient.connect(`mongodb://localhost:${port}`, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     })

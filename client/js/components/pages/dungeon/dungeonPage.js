@@ -336,7 +336,8 @@ export default class DungeonPage extends Page{
     if(this._fullLoaded){
       return
     }
-    const isLarge = this.dungeonRun.elapsedTime > LARGE_RUN_THRESHOLD_MS
+    // FIXME: remove this? we don't load everything anymore anyway
+    const isLarge = false // this.dungeonRun.elapsedTime > LARGE_RUN_THRESHOLD_MS
     if(isLarge && !localStorage.getItem(ALWAYS_LOAD_LARGE_RUNS_KEY)){
       const estSize = roundToFixed(ESTIMATED_SIZE_PER_MS * this.dungeonRun.elapsedTime / 1000000, 2)
       const content = wrapContent(LARGE_RUN_MODAL_HTML(estSize + 'mb'))

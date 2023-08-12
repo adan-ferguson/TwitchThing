@@ -44,7 +44,7 @@ export async function runCombat(dungeonRun, monsterDef){
       params: {
         floor: dungeonRun.floor
       }
-    }, combatEventData.combatID)
+    }, { _id: combatEventData.combatID, dungeonRunID: dungeonRun.doc._id })
 
     adventurerInstance.state = combatDoc.fighter1.endState
 

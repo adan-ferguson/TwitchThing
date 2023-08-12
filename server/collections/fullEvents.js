@@ -6,17 +6,17 @@ const DEFAULTS = {
   _id: null,
 }
 
+const EVENTS_LIMIT = 1000
+
 const FullEvents = new Collection('fullEvents', DEFAULTS)
 
 FullEvents.findByDungeonRunID = async function(dungeonRunID){
-  return await FullEvents.find({
-    query: {
-      dungeonRunID
-    },
-    sort: {
-      'data.time': 1
-    }
-  })
+  const cursor = FullEvents.collection.find({ dungeonRunID }).sort({ 'data.time': -1 }).limit(EVENTS_LIMIT)
+  const arr = []
+  for await(let doc of cursor){
+    arr.push(doc)
+  }
+  return arr.reverse()
 }
 
 FullEvents.lastEventOf = async function(dungeonRunID){
