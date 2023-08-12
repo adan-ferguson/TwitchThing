@@ -186,7 +186,7 @@ export async function purgeOldRuns(adventurerID){
     },
     sort: {
       startTime: -1
-    }
+    },
   })
   purgeReplays(runs.slice(5))
 }
@@ -194,13 +194,8 @@ export async function purgeOldRuns(adventurerID){
 async function purgeReplays(drDocs){
   const combatIDs = []
   for(let doc of drDocs){
-    const events = await FullEvents.findByDungeonRunID(doc._id)
-    events.forEach(ev => {
-      if (ev.data.combatID && ev.data.roomType === 'combat'){
-        combatIDs.push(ev.data.combatID)
-      }
-    })
     doc.purged = true
+    await Combats.collection.deleteMany({ dungeonRunID: doc._id })
     await FullEvents.collection.deleteMany({ dungeonRunID: doc._id })
     await DungeonRuns.save(doc)
   }

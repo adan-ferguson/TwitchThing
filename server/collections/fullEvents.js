@@ -6,17 +6,20 @@ const DEFAULTS = {
   _id: null,
 }
 
+const EVENTS_LIMIT = 250
+
 const FullEvents = new Collection('fullEvents', DEFAULTS)
 
 FullEvents.findByDungeonRunID = async function(dungeonRunID){
-  return await FullEvents.find({
+  return (await FullEvents.find({
     query: {
       dungeonRunID
     },
     sort: {
-      'data.time': 1
-    }
-  })
+      'data.time': -1
+    },
+    limit: EVENTS_LIMIT,
+  })).reverse()
 }
 
 FullEvents.lastEventOf = async function(dungeonRunID){

@@ -10,6 +10,7 @@ const DEFAULTS = {
   floor: 1,
   times: {},
   params: {},
+  dungeonRunID: null,
   _id: null
 }
 
