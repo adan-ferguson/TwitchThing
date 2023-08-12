@@ -6,7 +6,7 @@ const DEFAULTS = {
   _id: null,
 }
 
-const EVENTS_LIMIT = 250
+const EVENTS_LIMIT = 1000
 
 const FullEvents = new Collection('fullEvents', DEFAULTS)
 
