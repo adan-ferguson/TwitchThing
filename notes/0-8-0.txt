@@ -1,3 +1,10 @@
+v0.8.0.4
+--------
+- Fixed some more DB problems
+- On results page, if you have more than 20 chests, it will just say "...and more" instead of loading all of them and freezing the page.
+- There's also a "loot" results tab that has everything added up and sorted.
+- When you view a replay, it will only load 100 events instead of like a billion of them.
+
 v0.8.0.3
 --------
 - Database changes should result in faster loading times when opening dungeon runs.

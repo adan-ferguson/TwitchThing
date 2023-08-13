@@ -1,6 +1,6 @@
 import { EventEmitter } from 'events'
 import { generateEvent } from './dungeonEventPlanner.js'
-import { addRewards } from './results.js'
+import { addRewards, simplifyRewards } from './results.js'
 import { ADVANCEMENT_INTERVAL } from './dungeonRunner.js'
 import calculateResults from '../../game/dungeonRunResults.js'
 import AdventurerInstance from '../../game/adventurerInstance.js'
@@ -111,7 +111,7 @@ export default class _DungeonRunInstance extends EventEmitter{
     if(this.newestEvent?.data.runFinished){
       this.doc.finished = true
       this.doc.elapsedTime = this.nextEventTime
-      this.doc.results = calculateResults(this.events.map(e => e.data))
+      this.doc.results = calculateResults(this)
       return
     }
 
@@ -125,13 +125,13 @@ export default class _DungeonRunInstance extends EventEmitter{
       message: `${this.adventurerInstance.displayName} finds a secret message! It says: "${message}". Suddenly, everything explodes.`
     })
     this.doc.elapsedTime = this.nextEventTime
-    this.doc.results = calculateResults(this.events)
+    this.doc.results = calculateResults(this)
     this.doc.finished = true
   }
 
   getNewEvents(){
-    const slice = this.events.slice(this._newEventIterator)
-    this._newEventIterator = this.events.length
+    const slice = this.events.slice(-this._newEventIterator)
+    this._newEventIterator = 0
     return slice
   }
 
@@ -154,9 +154,9 @@ export default class _DungeonRunInstance extends EventEmitter{
   }
 
   async resume(){
-    this._fullEvents = await FullEvents.findByDungeonRunID(this.doc._id)
-    this._newEventIterator = this.events.length
-    if(this.newestEvent?.data.pending){
+    this._fullEvents = await FullEvents.findByDungeonRunID(this.doc._id, 5)
+    this.doc.elapsedTime = this.newestEvent.data.time
+    if(this.newestEvent.data.pending){
       resumeCombatEvent(this)
     }
   }
@@ -195,7 +195,7 @@ export default class _DungeonRunInstance extends EventEmitter{
       nextEventData.duration += (ADVANCEMENT_INTERVAL - ((nextEventData.time + nextEventData.duration) % ADVANCEMENT_INTERVAL)) % ADVANCEMENT_INTERVAL
     }
 
-    nextEventData.rewardsToDate = {} //this.doc.rewards ?? {}
+    nextEventData.rewardsToDate = simplifyRewards(this.doc.rewards ?? {})
 
     this.doc.room = nextEventData.room
     this.doc.floor = nextEventData.floor
@@ -241,6 +241,9 @@ export default class _DungeonRunInstance extends EventEmitter{
       dungeonRunID: this.doc._id,
       data,
     }
+
+    this._newEventIterator++
+    this._fullEvents = this._fullEvents.slice(-5)
     this._fullEvents.push(fullEvent)
     FullEvents.save(fullEvent).then(newDoc => {
       fullEvent._id = newDoc._id

@@ -107,7 +107,8 @@ export default class State extends HTMLElement{
    */
   _updateChests(chests, animate){
     // TODO: animate
-    this._chests.textContent = (chests?.length || 0) + ''
+    const amount = Array.isArray(chests) ? chests.length : (chests || 0)
+    this._chests.textContent = amount + ''
   }
 
   _setFoodRemaining(food, max = this._lastFoodMax){

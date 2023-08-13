@@ -9,14 +9,22 @@ import {
 import ChestOpenage from './chestOpenage.js'
 import MonsterInstance from '../../../../../game/monsterInstance.js'
 import Adventurer from '../../../../../game/adventurer.js'
-import { orbPointEntry, skillPointEntry } from '../../common.js'
+import { goldEntry, orbPointEntry, skillPointEntry } from '../../common.js'
+import { inventoryItemsToRows } from '../../listHelpers.js'
 
 const WAIT_TIME = 500
+const MAX_CHESTS = 20
 
 const HTML = `
 <di-tabz>
   <div data-tab-name="Results"></div>
   <div data-tab-name="Monsters"></div>
+  <div data-tab-name="Loot" class="fill-contents">
+    <div class="flex-rows">
+      <p class="gold-loot"></p>
+      <di-list class="flex-grow"></di-list>
+    </div>
+  </div>
 </di-tabz>
 <button class="finalizer appealing displaynone">Finish</button>
 `
@@ -54,6 +62,7 @@ export default class EventContentsResults extends HTMLElement{
     })
 
     this._setupMonstersTab(tabz.getContentEl('Monsters'), dungeonRun.results.monstersKilled)
+    this._setupLootTab(tabz.getContentEl('Loot').querySelector('di-list'), dungeonRun.rewards.chests)
   }
 
   stop(){
@@ -73,7 +82,7 @@ export default class EventContentsResults extends HTMLElement{
     await this._adventurerXp(el, dungeonRun.results, adventurerPane)
 
     this._addNewline(el)
-    await this._addChests(el, dungeonRun.results.chests, watching)
+    await this._addChests(el, dungeonRun.rewards.chests, watching)
   }
 
   _adventurerXp = async (el, dungeonRunResults, adventurerPane) => {
@@ -96,6 +105,33 @@ export default class EventContentsResults extends HTMLElement{
       const { name, amount } = monstersKilled[i]
       this._addText(el, `${toDisplayName(name)} ${amount}`)
     }
+  }
+
+  _setupLootTab(list, chests){
+    const totalItems = {}
+    let totalGold = 0
+    chests.forEach(c => {
+      const { gold = 0, items } = c.contents
+      totalGold += gold
+      if(items?.basic){
+        for(let key in items.basic){
+          totalItems[key] = (totalItems[key] ?? 0) + items.basic[key]
+        }
+      }
+    })
+    this.querySelector('.gold-loot').innerHTML = goldEntry(totalGold)
+    list.setOptions({
+      pageSize: 10,
+      sortFn: (a,b) => {
+        const itemA = a.adventurerItem
+        const itemB = b.adventurerItem
+        if(itemA.rarity !== itemB.rarity){
+          return itemB.rarity - itemA.rarity
+        }
+        return b.count - a.count
+      }
+    })
+    list.setRows(inventoryItemsToRows({ basic: totalItems }))
   }
 
   _addRow(target, row){
@@ -144,6 +180,10 @@ export default class EventContentsResults extends HTMLElement{
     el.appendChild(chestDiv)
 
     for(let i = 0; i < chests.length; i++){
+      if(i >= MAX_CHESTS){
+        this._addText(el, `And ${chests.length - MAX_CHESTS + 1} more, check the Loot tab for a breakdown.`)
+        break
+      }
       const openage = new ChestOpenage(chests[i], chestsOpened)
       openage.addEventListener('opened', () => {
         checkOpenAllButton()

@@ -46,6 +46,12 @@ export function addRewards(rewards, toAdd){
   return r
 }
 
+export function simplifyRewards(rewards){
+  const r = { ...rewards }
+  r.chests = arrayize(r.chests).length
+  return r
+}
+
 export async function finalize(dungeonRunDoc){
 
   if(dungeonRunDoc.finalized){
