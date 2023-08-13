@@ -9,7 +9,7 @@ const DEFAULTS = {
 
 const FullEvents = new Collection('fullEvents', DEFAULTS)
 
-FullEvents.findByDungeonRunID = async function(dungeonRunID, limit = 1000){
+FullEvents.findByDungeonRunID = async function(dungeonRunID, limit = 100){
   const timer = new ConsoleTimer()
   timer.log('loading ' + dungeonRunID)
   let cursor = FullEvents.collection.find({ dungeonRunID }).sort({ 'data.time': -1 }).limit(limit)
