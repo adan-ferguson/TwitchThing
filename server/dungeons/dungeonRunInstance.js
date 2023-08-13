@@ -111,7 +111,7 @@ export default class _DungeonRunInstance extends EventEmitter{
     if(this.newestEvent?.data.runFinished){
       this.doc.finished = true
       this.doc.elapsedTime = this.nextEventTime
-      this.doc.results = calculateResults(this.events.map(e => e.data))
+      this.doc.results = calculateResults(this)
       return
     }
 
@@ -125,7 +125,7 @@ export default class _DungeonRunInstance extends EventEmitter{
       message: `${this.adventurerInstance.displayName} finds a secret message! It says: "${message}". Suddenly, everything explodes.`
     })
     this.doc.elapsedTime = this.nextEventTime
-    this.doc.results = calculateResults(this.events)
+    this.doc.results = calculateResults(this)
     this.doc.finished = true
   }
 

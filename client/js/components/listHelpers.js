@@ -25,7 +25,7 @@ export function inventoryItemsToRows(items){
       rows.push(row)
     }
   })
-  Object.values(items.crafted).forEach(itemDef => {
+  Object.values(items.crafted ?? {}).forEach(itemDef => {
     const row = makeAdventurerItemRow(itemDef)
     if(row){
       rows.push(row)

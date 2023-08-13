@@ -1,15 +1,16 @@
 import { arrayize } from './utilFunctions.js'
 import { CombatResult } from './combatResult.js'
 
-export default function calculateResults(eventsList){
+export default function calculateResults(dungeonRunInstance){
 
-  eventsList = eventsList.events ?? eventsList
+  const eventsList = dungeonRunInstance.events.map(e => e.data)
+  const chests = dungeonRunInstance.rewards.chests
 
   const rewards = toRewards(eventsList)
   const results = {
     xp: xp(rewards),
     monstersKilled: monstersKilled(eventsList),
-    chests: chests(rewards)
+    chests
   }
 
   if(!eventsList.length){
@@ -47,17 +48,4 @@ function toRewards(eventsList){
 
 function xp(rewards){
   return rewards.reduce((prev, r) => prev + (r.xp ?? 0), 0) ?? 0
-}
-
-function chests(rewards){
-  const arr = []
-  rewards.forEach(r => {
-    const chests = arrayize(r.chests)
-    chests.forEach(chest => {
-      arr.push(chest)
-    })
-  })
-  return arr.sort((a,b) => {
-    return 1
-  })
 }
