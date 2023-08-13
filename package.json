@@ -12,7 +12,7 @@
     "prod-restart": "npx pm2 stop twitchthing; npx pm2 start ./server/index.js --name twitchthing",
     "prod-build-and-restart": "git pull && npm install && gulp prod && npx pm2 stop twitchthing; npx pm2 start ./server/index.js --name twitchthing",
     "prod-build": "git pull && npm install && gulp prod",
-    "generate-dist": "webpack --mode=production && gulp deploy",
+    "generate-dist": "gulp deploy && webpack --mode=production",
     "dev-webpack-watch": "webpack --watch",
     "dev-gulp-watch": "gulp watch",
     "startdb": "mongod --dbpath db/data",
