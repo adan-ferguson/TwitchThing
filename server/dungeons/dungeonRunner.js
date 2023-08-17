@@ -165,6 +165,9 @@ export async function getRunData(dungeonRunID){
     newestEvents = activeRuns[dungeonRunID].events.slice(-3)
   }else{
     doc = await DungeonRuns.findByID(dungeonRunID)
+    if(!doc){
+      throw 'Invalid dungeonRunID ' + dungeonRunID
+    }
     newestEvents = await FullEvents.collection.find({
       dungeonRunID
     }).sort({ 'data.time': -1 }).limit(3).toArray()

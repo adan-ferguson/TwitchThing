@@ -10,6 +10,7 @@ const defaults = {
     publishableKey: null,
     secretKey: null
   },
+  verboseLogs: false,
   secret: null,
   requireHttps: true,
 }

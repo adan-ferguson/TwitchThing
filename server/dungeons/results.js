@@ -62,7 +62,7 @@ export async function finalize(dungeonRunDoc){
     throw { error: 'Dungeon run is not finished yet.' }
   }
 
-  const lastEvent = await FullEvents.lastEventOf(dungeonRunDoc._id)
+  const lastEvent = (await FullEvents.lastEventOf(dungeonRunDoc._id)).data
   let deepestFloor = dungeonRunDoc.floor
   if(['cleared','outOfOrder'].includes(lastEvent.roomType)){
     deepestFloor += 1
@@ -188,7 +188,8 @@ export async function purgeOldRuns(adventurerID){
     query: {
       finalized: true,
       'adventurer._id': adventurerID,
-      purged: { $ne: true }
+      purged: { $ne: true },
+      cancelled: { $ne: true },
     },
     sort: {
       startTime: -1
@@ -198,17 +199,12 @@ export async function purgeOldRuns(adventurerID){
 }
 
 async function purgeReplays(drDocs){
-  const combatIDs = []
   for(let doc of drDocs){
     doc.purged = true
-    await Combats.collection.deleteMany({ dungeonRunID: doc._id })
-    await FullEvents.collection.deleteMany({ dungeonRunID: doc._id })
+    const c1 = await Combats.collection.deleteMany({ dungeonRunID: doc._id })
+    const c2 = await FullEvents.collection.deleteMany({ dungeonRunID: doc._id })
+    console.log('purged', c1.deletedCount, c2.deletedCount)
     await DungeonRuns.save(doc)
   }
-  const result = await Combats.collection.updateMany({
-    _id: { $in: combatIDs }
-  }, [{
-    $unset: 'timeline'
-  }])
-  return result.modifiedCount
+  return 0
 }

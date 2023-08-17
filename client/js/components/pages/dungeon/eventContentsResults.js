@@ -18,7 +18,6 @@ const MAX_CHESTS = 20
 const HTML = `
 <di-tabz>
   <div data-tab-name="Results"></div>
-  <div data-tab-name="Monsters"></div>
   <div data-tab-name="Loot" class="fill-contents">
     <div class="flex-rows">
       <p class="gold-loot"></p>
@@ -61,7 +60,6 @@ export default class EventContentsResults extends HTMLElement{
       })
     })
 
-    this._setupMonstersTab(tabz.getContentEl('Monsters'), dungeonRun.results.monstersKilled)
     this._setupLootTab(tabz.getContentEl('Loot').querySelector('di-list'), dungeonRun.rewards.chests)
   }
 
@@ -98,13 +96,6 @@ export default class EventContentsResults extends HTMLElement{
       },
       skipAnimation: this._skipAnimations
     })
-  }
-
-  _setupMonstersTab(el, monstersKilled){
-    for(let i = 0; i < monstersKilled.length; i++){
-      const { name, amount } = monstersKilled[i]
-      this._addText(el, `${toDisplayName(name)} ${amount}`)
-    }
   }
 
   _setupLootTab(list, chests){

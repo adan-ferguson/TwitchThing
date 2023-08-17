@@ -1,3 +1,9 @@
+v0.8.0.5
+--------
+- Fixed bug where old events weren't purging.
+- Fixed bug where users weren't unlocking the next zone after clearing a zone.
+- Fixed bug where results page showed wrong number of xp if the run was really long. (Not a retroactive fix)
+
 v0.8.0.4
 --------
 - Fixed some more DB problems

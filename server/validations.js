@@ -23,7 +23,7 @@ export function validateParam(val, type = 'any', required = true){
 
 export function requireRegisteredUser(req){
   if(!req.user){
-    throw { code: 401, message: 'Not logged in', redirect: '/' }
+    throw { code: 401, message: 'Not logged in', redirect: '/', output: false, }
   }
   if(!Users.isSetupComplete(req.user)){
     throw { code: 401, message: 'User setup not complete', redirect: '/user/newuser' }

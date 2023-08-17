@@ -21,7 +21,7 @@ FullEvents.findByDungeonRunID = async function(dungeonRunID, limit = 100){
 }
 
 FullEvents.lastEventOf = async function(dungeonRunID){
-  return await FullEvents.find({
+  const last = await FullEvents.find({
     query: {
       dungeonRunID
     },
@@ -30,6 +30,7 @@ FullEvents.lastEventOf = async function(dungeonRunID){
     },
     limit: 1
   })
+  return last[0]
 }
 
 export default FullEvents

@@ -7,7 +7,6 @@ const HTML = (_id, {
   endingFloor,
   xp,
   chests,
-  monstersKilled
 }) => `
 <div class="flex-rows">
   <div class="floors">Floor ${startingFloor} to ${endingFloor}</div>
@@ -15,7 +14,6 @@ const HTML = (_id, {
   <div class="xp">+${xp} xp</div>
 </div>
 <div class="flex-rows">
-  <div class="monsters">Monsters: ${monstersKilled.length}</div>
   <div class="chests">Chests: ${chestStr(chests)}</div>
 </div>
 <div class="flex-rows ${_id ? '' : 'displaynone'}">  
@@ -38,5 +36,5 @@ export default class PreviousRunRow extends HTMLElement{
 customElements.define('di-previous-run-row', PreviousRunRow)
 
 function chestStr(chests){
-  return chests.length
+  return Number.isFinite(chests) ? chests : 0
 }

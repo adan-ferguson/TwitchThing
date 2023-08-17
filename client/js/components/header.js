@@ -12,7 +12,7 @@ const HTML = `
   <button class="back-button"><i class="fa-solid fa-arrow-left"></i></button>
   <div class="flex-rows">
     <a class="autocrawl clickable" href="/game">AUTOCRAWL</a>
-    <a class="version" href="/notes/0-8-0">v0.8.0.4</a>
+    <a class="version" href="/notes/0-8-0">v0.8.0.5</a>
   </div>
 </div>
 <div class="right-side">
