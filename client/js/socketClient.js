@@ -1,12 +1,11 @@
 import { io } from 'socket.io-client'
-import SimpleModal from './components/simpleModal.js'
 
 let socket
 const rooms = {}
 
 export function connect(){
   console.log('attempting to connect...')
-  socket = io.connect()
+  socket = io({ transports: ['websocket'] })
   socket.on('connect', () => {
     console.log('Socket connected')
     for(let id in rooms){
