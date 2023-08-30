@@ -8,17 +8,17 @@ let client
 
 const events = new EventEmitter()
 
-const init = async () => {
+const init = async (forceSsh = false) => {
   try {
     let port
-    if(config.db.ssh){
+    if(config.db.ssh.enabled || forceSsh){
       const { tunnelOptions, serverOptions, sshOptions, forwardOptions } = config.db.ssh
       await tunnel.createTunnel(tunnelOptions, serverOptions, sshOptions, forwardOptions)
       port = serverOptions.port
     }else{
       port = config.db.port
     }
-    client = await MongoDB.MongoClient.connect(`mongodb://localhost:${port}`, {
+    client = await MongoDB.MongoClient.connect(`mongodb://127.0.0.1:${port}`, {
       useNewUrlParser: true,
       useUnifiedTopology: true
     })
@@ -30,7 +30,7 @@ const init = async () => {
   }
 }
 
-const id = id => MongoDB.ObjectID(id)
+const id = id => new MongoDB.ObjectId(id)
 
 const fix = (doc, defaults, projection = {}) => {
   const fixedDoc = {} // _id: doc._id }
@@ -45,7 +45,7 @@ const fix = (doc, defaults, projection = {}) => {
 }
 
 const qoid = queryOrID => {
-  if(typeof(queryOrID) === 'string' || queryOrID instanceof MongoDB.ObjectID){
+  if(typeof(queryOrID) === 'string' || queryOrID instanceof MongoDB.ObjectId){
     queryOrID = { _id : id(queryOrID) }
   }
   return queryOrID

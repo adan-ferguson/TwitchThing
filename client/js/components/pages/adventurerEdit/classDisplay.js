@@ -140,6 +140,12 @@ export default class ClassDisplay extends DIElement{
           this._showUnlockModal(skill)
         }
       })
+      row.addEventListener('contextmenu', e => {
+        if(status !== AdventurerSkillRowStatus.HIDDEN){
+          this._showUnlockModal(skill)
+          e.preventDefault()
+        }
+      })
       const rowRow = makeEl({
         class: 'skill-row-row'
       })

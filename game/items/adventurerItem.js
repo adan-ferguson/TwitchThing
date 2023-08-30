@@ -63,9 +63,13 @@ export default class AdventurerItem extends AdventurerLoadoutObject{
     return this._def
   }
 
+  get baseDisplayName(){
+    return this._def.displayName ?? this.data.displayName ?? toDisplayName(this._baseItem.id)
+  }
+
   get displayName(){
     let txt = this.level > 1 ? `L${this.level} ` : ''
-    return txt + (this._def.displayName ?? this.data.displayName ?? toDisplayName(this._baseItem.id))
+    return txt + this.baseDisplayName
   }
 
   get isBasic(){

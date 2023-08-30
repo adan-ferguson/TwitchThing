@@ -50,7 +50,12 @@ export default class Skills extends DIElement{
 
   setup(adventurer, featureStatus = 2){
     this.adventurer = adventurer
-    const unlocked = adventurer.doc.unlockedSkills
+    this.featureStatus = featureStatus
+    this.updateSkills()
+  }
+
+  updateSkills(){
+    const unlocked = this.adventurer.doc.unlockedSkills
     const rows = []
     let hasSkillUnlocked = false
     for(let id in unlocked){
@@ -59,7 +64,7 @@ export default class Skills extends DIElement{
       rows.push(new AdventurerSkillRow().setOptions({ skill }))
     }
     this.listEl.setRows(rows)
-    if(!featureStatus){
+    if(!this.featureStatus){
       featureLocked(this.listEl, 'Level 5')
     }else if(hasSkillUnlocked && !localStorage.getItem('equipped-skill-callout')){
       tippyCallout(this.listEl.querySelector('di-adventurer-skill-row'), 'Make sure to equip your skills!')

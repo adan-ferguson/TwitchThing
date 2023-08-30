@@ -148,9 +148,11 @@ export default class _DungeonRunInstance extends EventEmitter{
   finishRunningCombat(newCombatEventData, resultEventData){
     this.shouldEmit = true
     this.newestEvent.data = newCombatEventData
-    resultEventData.time = newCombatEventData.time + newCombatEventData.duration
     FullEvents.save(this.newestEvent)
-    this._addEvent(resultEventData)
+    if(resultEventData){
+      resultEventData.time = newCombatEventData.time + newCombatEventData.duration
+      this._addEvent(resultEventData)
+    }
   }
 
   async resume(){

@@ -57,14 +57,7 @@ export async function runCombat(dungeonRun, monsterDef){
     combatEventData.refereeTime = refereeTime
     combatEventData.pending = false
 
-    const resultEventData = {
-      duration: MIN_RESULT_TIME,
-      result: combatDoc.result,
-      combatID: combatDoc._id,
-      roomType: 'combatResult',
-      monster: monsterDef,
-    }
-
+    let resultEventData
     const endStateMonsterInstance = new MonsterInstance(monsterDef, combatDoc.fighter2.endState)
     if(combatDoc.result === CombatResult.F1_WIN){
       const rewards = addRewards(
@@ -73,10 +66,16 @@ export async function runCombat(dungeonRun, monsterDef){
       )
       adventurerInstance.food += rewards.food ?? 0
       rewards.xp = Math.round(rewards.xp * xpBonus)
-      resultEventData.rewards = rewards
+      resultEventData = {
+        duration: MIN_RESULT_TIME,
+        result: combatDoc.result,
+        combatID: combatDoc._id,
+        roomType: 'combatResult',
+        monster: monsterDef,
+        rewards,
+      }
     }else{
       combatEventData.runFinished = true
-      return combatEventData
     }
 
     emit(dungeonRun.doc._id, 'dungeon run update', {
@@ -86,7 +85,9 @@ export async function runCombat(dungeonRun, monsterDef){
         combatDoc: combatDoc
       }
     })
+
     dungeonRun.finishRunningCombat(combatEventData, resultEventData)
+
   }catch(ex){
     combatEventData.error = true
     cancelRun(dungeonRun.doc, ex)

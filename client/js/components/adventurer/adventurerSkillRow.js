@@ -50,10 +50,10 @@ export default class AdventurerSkillRow extends DIElement{
       if(this.adventurerSkill && this._options.showTooltip && !this._options.noRightClick){
         e.preventDefault()
 
-        // const overrideParent = this.closest('.adventurer-skill-right-click-override')
-        // if(overrideParent){
-        //   return overrideParent.adventurerSkillRightClickOverride(this)
-        // }
+        const overrideParent = this.closest('.adventurer-skill-right-click-override')
+        if(overrideParent){
+          return overrideParent.adventurerSkillRightClickOverride(this)
+        }
 
         const details = new SkillCard().setSkill(this.adventurerSkill)
         new SimpleModal(details).show()

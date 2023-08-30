@@ -10,6 +10,7 @@ import AdventurerItem from '../../../../../game/items/adventurerItem.js'
 import Modal from '../../modal.js'
 import AddXpModalContent from '../adventurer/addXpModalContent.js'
 import { hideLoader, showLoader } from '../../../loader.js'
+import { showUnlockModal } from './unlockModal.js'
 
 const HTML = `
 <div class="content-columns fill-contents">
@@ -84,7 +85,7 @@ export default class LoadoutTab extends DIElement{
     const { items, adventurer, user } = parentPage
 
     this._adventurer = adventurer
-
+    
     this.inventoryEl.setup(items, adventurer)
     this.adventurerPaneEl.setAdventurer(adventurer)
     this.skillsEl.setup(adventurer, user.features.skills)
@@ -94,18 +95,19 @@ export default class LoadoutTab extends DIElement{
       this._setupAdder(user, adventurer)
     }
   }
-  //
-  // adventurerSkillRightClickOverride(adventurerSkillRow){
-  //   showUnlockModal(adventurerSkillRow.adventurerSkill, this._adventurer, async s => {
-  //     const adv = this.parentPage?.adventurer
-  //     if(!adv || !s){
-  //       return
-  //     }
-  //     adv.upgradeSkill(s)
-  //     await fizzetch('/game' + this.parentPage.path + '/spendskillpoint', { skillId: s.id })
-  //     this.parentPage.reload()
-  //   })
-  // }
+
+  adventurerSkillRightClickOverride(adventurerSkillRow){
+    showUnlockModal(adventurerSkillRow.adventurerSkill, this._adventurer, async s => {
+      const adv = this.parentPage?.adventurer
+      if(!adv || !s){
+        return
+      }
+      adv.upgradeSkill(s)
+      await fizzetch('/game' + this.parentPage.path + '/spendskillpoint', { skillId: s.id })
+      this.adventurerPaneEl.update(true)
+      this.skillsEl.updateSkills()
+    })
+  }
 
   adventurerItemRightClickOverride(adventurerItemRow){
     // TODO: this is pretty hacky...
@@ -140,10 +142,7 @@ export default class LoadoutTab extends DIElement{
 
   async _save(){
     this._saving = true
-    const { error, success } = await fizzetch('/game' + this.parentPage.path + '/save', {
-      items: this._adventurer.loadout.items.map(i => i?.def),
-      skills: this._adventurer.loadout.skills.map(s => s?.id)
-    })
+    const { error, success } = await fizzetch('/game' + this.parentPage.path + '/save', this._adventurer.loadout.serialize())
     if(!success){
       console.error(error || 'Saving failed for some reason')
       this._saving = false

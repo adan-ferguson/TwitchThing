@@ -15,6 +15,10 @@ const POWER_BASE = 5
 const POWER_GROWTH = 1
 const POWER_GROWTH_PCT = STAT_GROWTH_PCT
 
+/**
+ * @param xp
+ * @returns {number}
+ */
 export function advXpToLevel(xp){
   return AdventurerXpCalculator.xpToLevel(xp)
 }
@@ -151,6 +155,13 @@ export default class Adventurer{
       throw 'Can not upgrade skill'
     }
     this.doc.unlockedSkills[skill.id] = skill.level + 1
-    this._loadout = null
+    this._uncacheLoadout()
+  }
+
+  _uncacheLoadout(){
+    if(this._loadout){
+      this._doc.loadout = this._loadout.serialize()
+      this._loadout = null
+    }
   }
 }

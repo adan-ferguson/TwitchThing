@@ -150,6 +150,13 @@ export default class AdventurerLoadout{
     this._objs[col][row] = loadoutObject instanceof LoadoutObjectInstance ? loadoutObject.obj : loadoutObject
     this._modifiers = null
   }
+
+  serialize(){
+    return {
+      items: this.items.map(i => i?.def),
+      skills: this.skills.map(s => s?.id)
+    }
+  }
 }
 
 function restrictionFailed(obj, restriction, col, row){

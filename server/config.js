@@ -4,7 +4,10 @@ const defaults = {
   port: 8080,
   db: {
     port: 27017,
-    name: 'thing'
+    name: 'thing',
+    ssh: {
+      enabled: false,
+    }
   },
   magic: {
     publishableKey: null,
