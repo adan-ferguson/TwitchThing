@@ -5,7 +5,7 @@ const rooms = {}
 
 export function connect(){
   console.log('attempting to connect...')
-  socket = io({ transports: ['websocket'] })
+  socket = io() //{ transports: ['websocket'] })
   socket.on('connect', () => {
     console.log('Socket connected')
     for(let id in rooms){
