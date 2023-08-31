@@ -23,6 +23,10 @@ const XP_GROWTH = 1.5
 const XP_GROWTH_PCT = 0.08
 const XP_ZONE_BONUS = 2
 
+const GOLD_BASE = 2
+const GOLD_GROWTH = 1
+const GOLD_GROWTH_PCT = 0.02
+
 export function monsterLevelToXpReward(lvl){
   const zoneBonuses = Math.floor((lvl - 1) / 10)
   const val = Math.floor(geometricProgression(XP_GROWTH_PCT, lvl - 1, XP_GROWTH))
@@ -30,6 +34,11 @@ export function monsterLevelToXpReward(lvl){
     XP_BASE + val * Math.pow(XP_ZONE_BONUS, zoneBonuses),
     3
   )
+}
+
+export function monsterLevelToGoldReward(lvl){
+  const geo = geometricProgression(GOLD_GROWTH_PCT, lvl, GOLD_GROWTH)
+  return toNumberOfDigits(Math.ceil(GOLD_BASE + geo), 3)
 }
 
 export function monsterLevelToHp(lvl){
@@ -120,6 +129,10 @@ export default class MonsterInstance extends FighterInstance{
 
   get xpReward(){
     return monsterLevelToXpReward(this.level)
+  }
+
+  get goldReward(){
+    return monsterLevelToGoldReward(this.level)
   }
 
   get isBoss(){

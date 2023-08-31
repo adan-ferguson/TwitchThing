@@ -84,6 +84,7 @@ const CHEST_DROP_CHANCE = 0.025
 const CHEST_DROP_CHANCE_HARD_ENEMY = 0.09 // It's an enemy of level >= adventurer's deepest floor
 
 const BOSS_XP_BONUS = 10
+const BOSS_GOLD_BONUS = 10
 
 // Monsters of level [currentFloor - FLOOR_RANGE] to [currentFloor] will spawn (both inclusive).
 const FLOOR_RANGE = 4
@@ -120,21 +121,22 @@ export async function generateMonster(dungeonRun, boss){
 
 function generateRewards(dungeonRun, monsterDefinition){
   const monsterInstance = new MonsterInstance(monsterDefinition)
+  const ai = dungeonRun.adventurerInstance
   const level = monsterInstance.level
   const rewards = {
-    xp: monsterInstance.xpReward * (monsterInstance.isBoss ? BOSS_XP_BONUS : 1)
+    xp: monsterInstance.xpReward * (monsterInstance.isBoss ? BOSS_XP_BONUS : 1),
   }
-  if(dungeonRun.user.accomplishments.firstRunFinished){
+
+  if(!ai.hasMod('goldOnly') && dungeonRun.user.accomplishments.firstRunFinished){
     const userChests = dungeonRun.user.accomplishments.chestsFound ?? 0
     const hardEnemy = level >= dungeonRun.adventurer.accomplishments.deepestFloor
-    const dropMulti = dungeonRun.adventurerInstance.stats.get('chestFind').value
+    const dropMulti = ai.stats.get('chestFind').value
     const dropChance = (userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE :
       hardEnemy ? CHEST_DROP_CHANCE_HARD_ENEMY : CHEST_DROP_CHANCE) * dropMulti
     const dropChest =
       Math.random() < dropChance ||
       monsterInstance.isBoss ||
       dropPityChest(dungeonRun, dropChance)
-
     if(dropChest){
       rewards.chests = generateMonsterChest(dungeonRun, monsterInstance)
       rewards.pityPoints = -1
@@ -142,6 +144,12 @@ function generateRewards(dungeonRun, monsterDefinition){
       rewards.pityPoints = dropChance
     }
   }
+
+  // Start adding gold once skills have been unlocked
+  if(dungeonRun.user.features.skills){
+    rewards.gold = monsterInstance.goldReward * (monsterInstance.isBoss ? BOSS_GOLD_BONUS : 1)
+  }
+
   return addRewards(rewards, monsterInstance.rewards)
 }
 

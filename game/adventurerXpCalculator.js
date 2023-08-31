@@ -49,7 +49,9 @@ function flatFactorAdd(lvl){
     return FLAT_FACTOR
   }else if(lvl < 31){
     return FLAT_FACTOR * 1.75
-  }else{
+  }else if(lvl < 101){
     return FLAT_FACTOR / 2
+  }else{
+    return FLAT_FACTOR * (2 + (lvl - 100) / 40)
   }
 }

@@ -11,6 +11,7 @@ import FullEvents from '../collections/fullEvents.js'
 
 const REWARDS_TYPES = {
   xp: 'num',
+  gold: 'num',
   chests: 'array',
   food: 'num',
   pityPoints: 'num'
