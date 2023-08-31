@@ -1,3 +1,10 @@
+v0.8.0.6 (Aug 30, 2023)
+--------
+- Fixed bug where skills would revert if you changed them, then went to points tab, then went back to loadout tab. (There still might be some problems though)
+- Fixed final combat being really long in the replay
+- Trying to fix some socket thing
+- (Accidentally included this LOL) you can now upgrade skills from the loadout tab via right-click
+
 v0.8.0.5
 --------
 - Fixed bug where old events weren't purging.
