@@ -15,7 +15,8 @@ const DEFAULTS = {
   accomplishments: {
     deepestFloor: 1,
     firstRunFinished: 0,
-    chestsFound: 0
+    chestsFound: 0,
+    advClasses: {},
   },
   rewards: {
     zonesCleared: []
@@ -33,7 +34,7 @@ const DEFAULTS = {
       paladin: 2,
       rogue: 0,
       chimera: 0
-    }
+    },
   },
   inventory: {
     adventurerSlots: 1,

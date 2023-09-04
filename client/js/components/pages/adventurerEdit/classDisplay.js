@@ -7,7 +7,7 @@ import { OrbsTooltip } from '../../orbRow.js'
 import { ICON_SVGS } from '../../../assetLoader.js'
 import tippyCallout from '../../visualEffects/tippyCallout.js'
 import { showUnlockModal } from './unlockModal.js'
-import { htmlToEl, makeEl, wrapContent } from '../../../../../game/utilFunctions.js'
+import { htmlToEl, makeEl } from '../../../../../game/utilFunctions.js'
 
 const HTML = `
 <div class="unset">
@@ -133,36 +133,53 @@ export default class ClassDisplay extends DIElement{
     const list = this.querySelector('.skills-list')
     list.innerHTML = ''
     for(let i = 0; i < 12; i++){
-      const skill = skills[i]
-      const status = skillStatus(this._adventurer, skill)
-      const row = new AdventurerSkillRow().setOptions({
-        status,
-        skill: skills[i],
-        clickable: true,
-        noRightClick: true
-      })
-      row.addEventListener('click', () => {
-        if(status !== AdventurerSkillRowStatus.HIDDEN){
-          this._showUnlockModal(skill)
-        }
-      })
-      row.addEventListener('contextmenu', e => {
-        if(status !== AdventurerSkillRowStatus.HIDDEN){
-          this._showUnlockModal(skill)
-          e.preventDefault()
-        }
-      })
-      const rowRow = makeEl({
-        class: 'skill-row-row'
-      })
-      const icon = coloredIcon('check', '#92eac6', status === AdventurerSkillRowStatus.UNLOCKED ? '' : 'hidden')
-      rowRow.append(row, htmlToEl(icon))
-      list.appendChild(rowRow)
+      list.appendChild(this._makeRow(skills[i]))
     }
 
     if(!this._user.features.skills){
       featureLocked(list, 'Level 5')
     }
+  }
+
+  _makeRow(skill){
+
+    const status = skillStatus(this._user, this._adventurer, skill)
+    const row = new AdventurerSkillRow().setOptions({
+      status,
+      skill,
+      clickable: true,
+      noRightClick: true
+    })
+    row.addEventListener('click', () => {
+      if(status !== AdventurerSkillRowStatus.HIDDEN){
+        this._showUnlockModal(skill)
+      }
+    })
+    row.addEventListener('contextmenu', e => {
+      if(status !== AdventurerSkillRowStatus.HIDDEN){
+        this._showUnlockModal(skill)
+        e.preventDefault()
+      }
+    })
+    const rowRow = makeEl({
+      class: 'skill-row-row'
+    })
+
+    const icon = makeEl({ class: 'row-edit-icon' })
+    if(status === AdventurerSkillRowStatus.UNLOCKED){
+      icon.innerHTML = coloredIcon('check', '#92eac6')
+    }else if(status === AdventurerSkillRowStatus.HIDDEN && userCanPeek(this._user, skill)){
+      icon.classList.add('hoverable')
+      icon.innerHTML = coloredIcon('eye', 'black')
+      icon.addEventListener('pointerover', () => {
+        row.peek = true
+      })
+      icon.addEventListener('pointerleave', () => {
+        row.peek = false
+      })
+    }
+    rowRow.append(row, icon)
+    return rowRow
   }
 
   _setClass(){
@@ -185,14 +202,18 @@ export default class ClassDisplay extends DIElement{
 
 customElements.define('di-adventurer-edit-class-display', ClassDisplay)
 
-function skillStatus(adventurer, skill){
+function skillStatus(user, adventurer, skill){
   if(!skill){
     return AdventurerSkillRowStatus.HIDDEN
   }else if(adventurer.hasSkillUnlocked(skill)){
     return AdventurerSkillRowStatus.UNLOCKED
   }else if(adventurer.canSeeSkill(skill)){
     return AdventurerSkillRowStatus.CAN_UNLOCK
-  }else{
-    return AdventurerSkillRowStatus.HIDDEN
   }
+  return AdventurerSkillRowStatus.HIDDEN
+}
+
+function userCanPeek(user, skill){
+  const maxOrbsForAdvClass = user.accomplishments.advClasses?.[skill.advClass]?.maxOrbs
+  return maxOrbsForAdvClass >= skill.requiredOrbs
 }

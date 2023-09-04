@@ -181,6 +181,7 @@ di-adventurer-edit-points-tab
       .feature-locked
         left: -5rem
         right: -5rem
+
       > .skill-row-row
         display: flex
         flex: 0 1 8%
@@ -191,9 +192,18 @@ di-adventurer-edit-points-tab
           flex-grow: 1
           height: 100%
 
-        > i.fa-solid
-          //width: 20rem
-          font-size: 1.2em
+        > .row-edit-icon
+          width: 20rem
+
+          &.hoverable
+            opacity: 0.5
+            cursor: pointer
+
+            &:hover
+              opacity: 1
+
+          i.fa-solid
+            font-size: 1.2em
 
   di-adventurer-edit-skill-point-meter
     flex-grow: 0 !important

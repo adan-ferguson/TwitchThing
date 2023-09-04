@@ -31,13 +31,15 @@ const SKILL_HTML = (name, right, classIcon) => `
 export const AdventurerSkillRowStatus = {
   UNLOCKED: 0,
   CAN_UNLOCK: 1,
-  HIDDEN: 2
+  HIDDEN: 2,
 }
 
 export default class AdventurerSkillRow extends DIElement{
 
   _adventurerSkill
   _adventurerSkillInstance
+
+  _peek = false
 
   constructor(){
     super()
@@ -112,7 +114,11 @@ export default class AdventurerSkillRow extends DIElement{
 
   get tooltip(){
 
-    if(!this._options.skill || !this._options.showTooltip || this._options.status === AdventurerSkillRowStatus.HIDDEN){
+    if(
+      !this._options.skill ||
+      !this._options.showTooltip ||
+      (!this._peek && this._options.status === AdventurerSkillRowStatus.HIDDEN)
+    ){
       return null
     }
 
@@ -132,6 +138,15 @@ export default class AdventurerSkillRow extends DIElement{
     }
 
     return tooltip
+  }
+
+  set peek(val){
+    if(this._peek === val){
+      return
+    }
+    this._peek = val
+    this._update()
+    this.forceShowTooltip = val
   }
 
   flash(){
@@ -163,7 +178,7 @@ export default class AdventurerSkillRow extends DIElement{
       this.contentEl.innerHTML = ''
     }else{
       const info = classDisplayInfo(skill.advClass)
-      if(this._options.status === AdventurerSkillRowStatus.HIDDEN){
+      if(this._options.status === AdventurerSkillRowStatus.HIDDEN && !this._peek){
         this.contentEl.innerHTML = HIDDEN_HTML(skill.requiredOrbs, info.icon)
         return
       }
