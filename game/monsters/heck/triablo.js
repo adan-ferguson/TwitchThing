@@ -4,8 +4,8 @@ export default function(){
   return {
     baseStats: {
       hpMax: '+666%',
-      speed: -20,
-      physPower: '+25%',
+      speed: 10,
+      physPower: '-60%',
       magicPower: '+150%'
     },
     items: [
@@ -86,6 +86,14 @@ export default function(){
           }]
         }
       },
+      {
+        name: 'Triple Attack',
+        effect: {
+          stats: {
+            basicAttacks: 2,
+          }
+        }
+      }
     ]
   }
 }

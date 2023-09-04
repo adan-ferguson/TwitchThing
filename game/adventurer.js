@@ -84,7 +84,7 @@ export default class Adventurer{
 
   get loadout(){
     if(!this._loadout){
-      this._loadout = new AdventurerLoadout(this.doc)
+      this._loadout = new AdventurerLoadout(this)
     }
     return this._loadout
   }
@@ -155,7 +155,9 @@ export default class Adventurer{
       throw 'Can not upgrade skill'
     }
     this.doc.unlockedSkills[skill.id] = skill.level + 1
-    this._uncacheLoadout()
+    if(skill.level === 0){
+      this.loadout.addSkillToEmptySlot(skill.id)
+    }
   }
 
   _uncacheLoadout(){

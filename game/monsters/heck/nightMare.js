@@ -1,8 +1,8 @@
 export default function(){
   return {
     baseStats: {
-      hpMax: '+20%',
-      speed: 20,
+      hpMax: '+30%',
+      speed: 30,
     },
     items: [{
       name: 'Gallop',
@@ -17,7 +17,7 @@ export default function(){
                 name: 'Sprinting',
                 polarity: 'buff',
                 stats: {
-                  speed: 100
+                  speed: 120
                 }
               }
             }

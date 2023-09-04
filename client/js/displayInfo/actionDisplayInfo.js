@@ -1,7 +1,7 @@
 import { expandActionDef } from '../../../game/actionDefs/expandActionDef.js'
 import {
   attachedActiveSkill,
-  attachedItem,
+  attachedItem, attachedSkill,
   describeStat, goldEntry,
   healthIcon,
   iconAndValue, pluralize,
@@ -24,6 +24,9 @@ const ABILITY_ACTION_HARDCODES = {
   },
   hydraSproutHead: () => {
     return 'Sprout 2 more hydra heads.'
+  },
+  bountyCollector: ability => {
+    return `When you kill an enemy with ${attachedSkill(false)}, its gold reward is multiplied by <b>${ability.vars.goldReward}</b>.`
   }
 }
 
@@ -151,7 +154,7 @@ const ACTION_DEFS = {
   },
   theBountyCollectorKill: (actionDef, ability) => {
     const goldStr = `Enemy Lvl x ${actionDef.value}`
-    return `When you kill an enemy with ${attachedActiveSkill(true)}, get a bounty chest containing ${goldEntry(goldStr)}.`
+    return `When you kill an enemy with ${attachedActiveSkill(true)}, gain an extra ${goldEntry(goldStr)}.`
   },
   mushroomSpores: () => {
     return 'Release spores which give the attacker a random debuff.'
@@ -178,15 +181,19 @@ const ACTION_DEFS = {
   }
 }
 
-export function actionArrayDescriptions(actions, abilityInstance){
-  if(ABILITY_ACTION_HARDCODES[abilityInstance?.abilityId]){
-    return [ABILITY_ACTION_HARDCODES[abilityInstance.abilityId](abilityInstance)]
+export function abilityActionsDescriptions(ability, abilityInstance){
+  if (ABILITY_ACTION_HARDCODES[ability.abilityId]){
+    return [ABILITY_ACTION_HARDCODES[ability.abilityId](ability, abilityInstance)]
   }
+  return arrayToDescriptions(ability.actions, abilityInstance)
+}
+
+function arrayToDescriptions(actions, abilityInstance){
   const chunks = []
   actions = actions ?? []
   actions.forEach(actionDef => {
     if(Array.isArray(actionDef)){
-      chunks.push(...actionArrayDescriptions(actionDef, abilityInstance))
+      chunks.push(...arrayToDescriptions(actionDef, abilityInstance))
     }else{
       actionDef = expandActionDef(actionDef) ?? actionDef
       const key = Object.keys(actionDef)[0]

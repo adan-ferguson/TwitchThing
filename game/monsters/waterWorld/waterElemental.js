@@ -3,8 +3,8 @@ import { barrierAction } from '../../commonMechanics/barrierAction.js'
 export default function(){
   return{
     baseStats: {
-      hpMax: '-30%',
-      magicPower: '+100%',
+      hpMax: '-10%',
+      magicPower: '+130%',
       speed: 30
     },
     items: [
@@ -15,7 +15,7 @@ export default function(){
             trigger: 'active',
             cooldown: 20000,
             actions: [barrierAction({
-              hpMax: 0.25
+              hpMax: 0.35
             },{
               stats: {
                 physPower: '2x',

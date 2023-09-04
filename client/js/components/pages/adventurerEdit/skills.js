@@ -57,16 +57,14 @@ export default class Skills extends DIElement{
   updateSkills(){
     const unlocked = this.adventurer.doc.unlockedSkills
     const rows = []
-    let hasSkillUnlocked = false
     for(let id in unlocked){
-      hasSkillUnlocked = true
       const skill = new AdventurerSkill(id, unlocked[id])
       rows.push(new AdventurerSkillRow().setOptions({ skill }))
     }
     this.listEl.setRows(rows)
     if(!this.featureStatus){
       featureLocked(this.listEl, 'Level 5')
-    }else if(hasSkillUnlocked && !localStorage.getItem('equipped-skill-callout')){
+    }else if(this.listEl.hasVisibleRows && !localStorage.getItem('equipped-skill-callout')){
       tippyCallout(this.listEl.querySelector('di-adventurer-skill-row'), 'Make sure to equip your skills!')
       localStorage.setItem('equipped-skill-callout', true)
     }

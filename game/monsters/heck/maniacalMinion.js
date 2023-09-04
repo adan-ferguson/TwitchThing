@@ -19,7 +19,7 @@ export default function(){
                   cantDie: true,
                 }],
                 statusEffectId: 'noDie',
-                duration: 15000,
+                duration: 10000,
                 polarity: 'buff',
               }
             }

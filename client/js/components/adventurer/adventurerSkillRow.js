@@ -80,6 +80,10 @@ export default class AdventurerSkillRow extends DIElement{
     this.setOptions({ skill: adventurerSkill })
   }
 
+  get loadoutObj(){
+    return this._adventurerSkill
+  }
+
   get adventurerSkill(){
     return this._adventurerSkill
   }

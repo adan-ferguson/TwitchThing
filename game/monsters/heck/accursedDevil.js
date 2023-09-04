@@ -2,10 +2,10 @@
 export default function(){
   return {
     baseStats: {
-      hpMax: '-30%',
+      hpMax: '-10%',
       speed: 40,
-      physPower: '-50%',
-      magicPower: '+50%'
+      physPower: '-40%',
+      magicPower: '+110%'
     },
     items: [
       {

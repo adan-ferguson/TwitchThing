@@ -10,10 +10,10 @@ import { adjustInventoryBasics } from '../user/inventory.js'
 import FullEvents from '../collections/fullEvents.js'
 
 const REWARDS_TYPES = {
-  xp: 'num',
-  gold: 'num',
+  xp: 'int',
+  gold: 'int',
   chests: 'array',
-  food: 'num',
+  food: 'int',
   pityPoints: 'num'
 }
 
@@ -29,7 +29,12 @@ export function addRewards(rewards, toAdd){
       continue
     }
 
-    if(REWARDS_TYPES[key] === 'num'){
+    if(REWARDS_TYPES[key] === 'int'){
+      if(!r[key]){
+        r[key] = 0
+      }
+      r[key] = Math.round(r[key] + toAdd[key])
+    }else if(REWARDS_TYPES[key] === 'num'){
       if(!r[key]){
         r[key] = 0
       }
@@ -145,6 +150,7 @@ export async function finalize(dungeonRunDoc){
       })
     }
 
+    userDoc.inventory.gold += Math.round(dungeonRunDoc.rewards.gold ?? 0)
     userDoc.accomplishments.deepestFloor = Math.max(userDoc.accomplishments.deepestFloor, deepestFloor)
     await Users.save(userDoc)
   }

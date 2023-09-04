@@ -49,8 +49,8 @@ export default class ShopPage extends Page{
         id: shopItemDef.id,
         count
       })
-      if(result.chest){
-        const openage = new ChestOpenage(result.chest)
+      if(result.chests){
+        const openage = new ChestOpenage(result.chests)
         modal.innerContent.innerHTML = ''
         modal.innerContent.appendChild(openage)
         openage.events.on('opened', () => {

@@ -142,7 +142,7 @@ export default class LoadoutTab extends DIElement{
 
   async _save(){
     this._saving = true
-    const { error, success } = await fizzetch('/game' + this.parentPage.path + '/save', this._adventurer.loadout.serialize())
+    const { error, success } = await fizzetch('/game' + this.parentPage.path + '/save', this._adventurer.doc.loadout)
     if(!success){
       console.error(error || 'Saving failed for some reason')
       this._saving = false
@@ -158,25 +158,29 @@ export default class LoadoutTab extends DIElement{
       rowSelector: 'di-adventurer-item-row',
       suggestChange: change => {
         const loadout = this._adventurer.loadout
+        let primarySlot = -1
         if(change.type === 'add'){
           const item = change.row.item
-          const slot = change.row2 ?
+          primarySlot = change.row2 ?
             slotIndex(change.row2) :
             getNextSlotIndex(loadout, item)
-          if(slot === -1){
+          if(primarySlot === -1){
             return
           }
           this.inventoryEl.removeItem(item)
-          this.inventoryEl.addItem(loadout.items[slot])
-          loadout.setSlot(0, slot, item)
+          this.inventoryEl.addItem(loadout.items[primarySlot])
+          loadout.setSlot(0, primarySlot, item)
         }else if(change.type === 'remove'){
           this.inventoryEl.addItem(change.row.item)
-          loadout.setSlot(0, slotIndex(change.row), null)
+          primarySlot = slotIndex(change.row)
+          loadout.setSlot(0, primarySlot, null)
         }else if(change.type === 'swap'){
-          loadout.setSlot(0, slotIndex(change.row2), change.row.item)
+          primarySlot = slotIndex(change.row2)
+          loadout.setSlot(0, primarySlot, change.row.item)
           loadout.setSlot(0, slotIndex(change.row), change.row2.item)
         }
         this.adventurerPaneEl.update(true)
+        this.adventurerPaneEl.loadoutEl.flashAffectedSlots(0, primarySlot)
         this._save()
       }
     })
@@ -207,23 +211,27 @@ export default class LoadoutTab extends DIElement{
       rowSelector: 'di-adventurer-skill-row',
       suggestChange: change => {
         const loadout = this._adventurer.loadout
+        let primarySlot = -1
         if(change.type === 'add'){
           const skill = change.row.skill
-          const slot = change.row2 ?
+          primarySlot = change.row2 ?
             slotIndex(change.row2) :
             getNextSlotIndex(loadout, skill)
-          if(slot === -1){
+          if(primarySlot === -1){
             return
           }
-          loadout.setSlot(1, slot, skill)
+          loadout.setSlot(1, primarySlot, skill)
         }else if(change.type === 'remove'){
-          loadout.setSlot(1, slotIndex(change.row), null)
+          primarySlot = slotIndex(change.row)
+          loadout.setSlot(1, primarySlot, null)
         }else if(change.type === 'swap'){
-          loadout.setSlot(1, slotIndex(change.row2), change.row.skill)
+          primarySlot = slotIndex(change.row2)
+          loadout.setSlot(1, primarySlot, change.row.skill)
           loadout.setSlot(1, slotIndex(change.row), change.row2.skill)
         }
         this.adventurerPaneEl.update(true)
         this.skillsEl.listEl.fullUpdate()
+        this.adventurerPaneEl.loadoutEl.flashAffectedSlots(1, primarySlot)
         this._save()
       }
     })

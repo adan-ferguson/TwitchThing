@@ -2,7 +2,7 @@ import AbilityInstance from '../../../game/abilityInstance.js'
 import { attachedSkill, describeStat, refundTime, wrapStats } from '../components/common.js'
 import { arrayize, toPct } from '../../../game/utilFunctions.js'
 import { keyword } from './keywordDisplayInfo.js'
-import { actionArrayDescriptions } from './actionDisplayInfo.js'
+import { abilityActionsDescriptions } from './actionDisplayInfo.js'
 
 const DEFS = {
   saplingBlock: () => {
@@ -47,7 +47,7 @@ function abilityDescription(ability){
   const abilityInstance = ability instanceof AbilityInstance ? ability : null
   chunks.push(...prefix(ability.trigger, ability.conditions ?? {}))
   chunks.push(...arrayize(replacementsDescription(ability.replacements, ability, abilityInstance)))
-  chunks.push(...actionArrayDescriptions(ability.actions, abilityInstance))
+  chunks.push(...abilityActionsDescriptions(ability, abilityInstance))
 
   if(ability.conditions){
     chunks.push(...conditionsDescription(ability.conditions))

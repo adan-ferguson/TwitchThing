@@ -1,8 +1,8 @@
 export default function(){
   return {
     baseStats: {
-      hpMax: '+20%',
-      physPower: '-10%'
+      hpMax: '+15%',
+      physPower: '-20%'
     },
     items: [
       {
@@ -18,7 +18,7 @@ export default function(){
                   polarity: 'buff',
                   stacking: 'stack',
                   stats: {
-                    speed: 30
+                    speed: 25
                   }
                 }
               }

@@ -3,10 +3,10 @@ import { biteMonsterItem } from '../../commonMechanics/biteMonsterItem.js'
 export default function(){
   return {
     baseStats: {
-      physPower: '-20%',
-      magicPower: '-20%',
-      speed: 0,
-      hpMax: '-20%',
+      physPower: '-10%',
+      magicPower: '-10%',
+      speed: 5,
+      hpMax: '-10%',
     },
     items: [
       {

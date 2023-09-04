@@ -29,22 +29,26 @@ export default class PointsTab extends DIElement{
     this.innerHTML = HTML
     this.classDisplays.forEach(cd => {
       cd.events
-        .on('spend orb', className => {
+        .on('spend orb', ({ className, count }) => {
           const adv = this.parentPage?.adventurer
-          if(!adv || !adv.unspentOrbs){
+          if(!adv){
             return
           }
-          adv.orbs[className] = (adv.orbs[className] ?? 0) + 1
-          fizzetch('/game' + this.parentPage.path + '/spendorb', { advClass: className })
+          count = Math.min(count, adv.unspentOrbs)
+          if(!count){
+            return
+          }
+          adv.orbs[className] = (adv.orbs[className] ?? 0) + count
+          fizzetch('/game' + this.parentPage.path + '/spendorb', { advClass: className, count })
           this._updateAll()
         })
-        .on('spend skill points', skill => {
+        .on('spend skill points', async skill => {
           const adv = this.parentPage?.adventurer
           if(!adv || !skill){
             return
           }
           adv.upgradeSkill(skill)
-          fizzetch('/game' + this.parentPage.path + '/spendskillpoint', { skillId: skill.id })
+          await fizzetch('/game' + this.parentPage.path + '/spendskillpoint', { skillId: skill.id })
           this._updateAll()
         })
     })

@@ -3,11 +3,11 @@ import flutteringMonsterItem from '../../commonMechanics/flutteringMonsterItem.j
 export default function(){
   return {
     baseStats: {
-      magicDef: '+30%',
+      magicDef: '+20%',
       speed: 20,
-      physPower: '+10%',
-      magicPower: '+10%',
-      hpMax: '+30%'
+      physPower: '-20%',
+      magicPower: '-20%',
+      hpMax: '-10%'
     },
     items: [
       flutteringMonsterItem,

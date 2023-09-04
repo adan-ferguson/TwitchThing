@@ -2,9 +2,9 @@ export default function(){
   const chance = 0.2
   return {
     baseStats: {
-      hpMax: '+20%',
-      physPower: '-20%',
-      speed: 20
+      hpMax: '+10%',
+      physPower: '-30%',
+      speed: 10
     },
     items: [
       {

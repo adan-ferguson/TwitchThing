@@ -43,13 +43,19 @@ export default class ClassDisplay extends DIElement{
       ci.querySelector('.class-name').textContent = cdi.displayName
       ci.querySelector('.description').innerHTML = cdi.description
     })
-    this.unlockButton.addEventListener('click', () => {
+    this.unlockButton.addEventListener('click', e => {
       if(this.classSelectorEl.selectedClass){
-        this.events.emit('spend orb', this.classSelectorEl.selectedClass)
+        this.events.emit('spend orb', {
+          className: this.classSelectorEl.selectedClass,
+          count: e.shiftKey ? 5 : 1,
+        })
       }
     })
-    this.adderButton.addEventListener('click', () => {
-      this.events.emit('spend orb', this.advClass)
+    this.adderButton.addEventListener('click', e => {
+      this.events.emit('spend orb', {
+        className: this.advClass,
+        count: e.shiftKey ? 5 : 1,
+      })
     })
   }
 

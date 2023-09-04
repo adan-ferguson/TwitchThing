@@ -1,10 +1,10 @@
 export default function(){
   return {
     baseStats: {
-      hpMax: '-20%',
+      hpMax: '-15%',
       physPower: '-50%',
-      magicPower: '+40%',
-      speed: 30
+      magicPower: '+60%',
+      speed: 40
     },
     items: [
       {
@@ -12,7 +12,7 @@ export default function(){
         effect: {
           abilities: [{
             trigger: 'active',
-            initialCooldown: 11000,
+            initialCooldown: 10000,
             abilityId: 'bearForm',
             uses: 1,
             actions: [{
@@ -27,7 +27,7 @@ export default function(){
                   stats: {
                     hpMax: '+220%',
                     physPower: '+220%',
-                    speed: -70
+                    speed: -40
                   }
                 }
               }

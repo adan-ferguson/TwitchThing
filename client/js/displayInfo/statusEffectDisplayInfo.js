@@ -1,7 +1,7 @@
 import { STATUSEFFECT_COLORS } from '../colors.js'
 import { effectInstanceState } from '../effectInstanceState.js'
 import {
-  capitalizeFirstChunk,
+  capitalizeFirstChunk, goldEntry,
   optionalScaledNumber,
   statScaling,
   toSeconds,

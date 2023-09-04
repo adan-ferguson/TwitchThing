@@ -1,7 +1,7 @@
 export default function(){
   return {
     baseStats: {
-      speed: 10,
+      speed: -10,
       hpMax: '+40%',
       physDef: '20%'
     },
@@ -14,7 +14,7 @@ export default function(){
           actions: [{
             attack: {
               scaling: {
-                physPower: 1.5
+                physPower: 1.4
               }
             }
           }]

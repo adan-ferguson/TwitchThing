@@ -1,12 +1,13 @@
 import Page from '../page.js'
 import DungeonPage from '../dungeon/dungeonPage.js'
 import DIForm from '../../form.js'
+import { localStorageItem } from '../../../localStorageItem.js'
 
 const FORM_HTML = `
 <div class="input-group">
   <div class="input-title">Pace</div>
   <label>
-    <input type="radio" name="pace" value="Brisk" checked="checked">
+    <input type="radio" name="pace" value="Brisk">
     <span>Brisk</span>
     <div class="subtitle">Go deeper as soon as the stairs are found</div>
   </label>
@@ -34,8 +35,6 @@ const HTML = `
 </div>
 `
 
-const REST_THRESHOLD_STORAGE_KEY = 'rest-threshold'
-
 export default class DungeonPickerPage extends Page{
 
   _formEl
@@ -51,12 +50,15 @@ export default class DungeonPickerPage extends Page{
       action: `/game/adventurer/${this.adventurerID}/enterdungeon`,
       submitText: 'Go!',
       html: FORM_HTML,
-      success: ({ dungeonRun }) => this.redirectTo(DungeonPage.path(dungeonRun._id)),
+      success: ({ dungeonRun }) => {
+        this.storedOptions.setMulti(this._formEl.data())
+        this.redirectTo(DungeonPage.path(dungeonRun._id))
+      },
       extraData: () => ({ startingFloor: this.floorSlider.value })
     })
     this.querySelector('.stuff').appendChild(this._formEl)
 
-    const val = localStorage.getItem(REST_THRESHOLD_STORAGE_KEY) ?? 50
+    const val = this.storedOptions.restThreshold
     const restSlider = this.querySelector('[name=restThreshold]')
     restSlider.value = val
 
@@ -64,8 +66,12 @@ export default class DungeonPickerPage extends Page{
     restText.textContent = val
     restSlider.addEventListener('input', () => {
       restText.textContent = restSlider.value
-      localStorage.setItem(REST_THRESHOLD_STORAGE_KEY, restSlider.value)
     })
+
+    const radio = this.querySelector(`[name=pace][value=${this.storedOptions.pace}]`)
+    if(radio){
+      radio.checked = true
+    }
   }
 
   static get pathDef(){
@@ -78,6 +84,17 @@ export default class DungeonPickerPage extends Page{
 
   get titleText(){
     return 'Entering Dungeon'
+  }
+
+  get storageKey(){
+    return `dungeon-picker-options-${this.adventurerID}`
+  }
+
+  get storedOptions(){
+    return localStorageItem(this.storageKey, {
+      pace: 'Brisk',
+      restThreshold: 50
+    })
   }
 
   async load(){

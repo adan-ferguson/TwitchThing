@@ -1,6 +1,9 @@
 import AdventurerItem from '../../../game/items/adventurerItem.js'
 import AdventurerItemRow from './adventurer/adventurerItemRow.js'
 import { ADVENTURER_CLASS_LIST } from '../displayInfo/classDisplayInfo.js'
+import { goldEntry } from './common.js'
+import { mergeOptionsObjects } from '../../../game/utilFunctions.js'
+import List from './list.js'
 
 export function adventurerItemsToRows(items){
   const rows = []
@@ -149,4 +152,39 @@ export function makeAdventurerItemRow(itemDef, count = 1){
 
 export function advClassIndex(advClassName){
   return ADVENTURER_CLASS_LIST.findIndex(advClass => advClass.name === advClassName)
+}
+
+export function consolidatedChestRows(chests, options = {}){
+  const totalItems = {}
+  // let totalGold = 0
+  chests.forEach(c => {
+    const { gold = 0, items } = c.contents
+    // totalGold += gold
+    if(items?.basic){
+      for(let key in items.basic){
+        totalItems[key] = (totalItems[key] ?? 0) + items.basic[key]
+      }
+    }
+  })
+  return inventoryItemsToRows({ basic: totalItems })
+}
+
+export function consolidatedChestList(chests, options = {}){
+  options = mergeOptionsObjects({}, options)
+  const list = new List()
+  // this.querySelector('.gold-loot').innerHTML = goldEntry(totalGold)
+  list.setOptions({
+    pageSize: Math.min(10, chests.length),
+    paginate: chests.length > 10,
+    sortFn: (a,b) => {
+      const itemA = a.adventurerItem
+      const itemB = b.adventurerItem
+      if(itemA.rarity !== itemB.rarity){
+        return itemB.rarity - itemA.rarity
+      }
+      return b.count - a.count
+    }
+  })
+  list.setRows(consolidatedChestRows(chests, options))
+  return list
 }

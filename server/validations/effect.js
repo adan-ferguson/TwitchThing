@@ -115,9 +115,6 @@ const as = Joi.object({
     }),
     count: Joi.number().integer().min(1)
   }),
-  theBountyCollectorKill: Joi.object({
-    value: Joi.number()
-  }),
   terribleCurse: Joi.object({
     attackScaling: Joi.number(),
   }),

@@ -74,7 +74,8 @@ verifiedRouter.post('/edit', validateIdle, async (req, res) => {
 verifiedRouter.post('/edit/spendorb', validateIdle, async(req, res) => {
   requireOwnsAdventurer(req)
   const className = validateParam(req.body.advClass, { type: 'string' })
-  spendAdventurerOrb(req.adventurerDoc, req.user, className)
+  const count = validateParam(req.body.count, { type: 'number' })
+  spendAdventurerOrb(req.adventurerDoc, req.user, className, count)
   await Adventurers.save(req.adventurerDoc)
   res.status(200).send({ success: 1 })
 })
@@ -84,7 +85,7 @@ verifiedRouter.post('/edit/spendskillpoint', validateIdle, async(req, res) => {
   const skillId = validateParam(req.body.skillId, 'string')
   spendAdventurerSkillPoint(req.adventurerDoc, skillId)
   await Adventurers.save(req.adventurerDoc)
-  res.status(200).send({ success: 1 })
+  res.status(200).send({ success: 1, adventurerDoc: req.adventurerDoc })
 })
 
 verifiedRouter.post('/addxp', async(req, res) => {

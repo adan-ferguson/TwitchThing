@@ -1,9 +1,9 @@
 export default function(){
   return {
     baseStats: {
-      speed: 30,
-      hpMax: '-40%',
-      physPower: '-20%'
+      speed: 40,
+      hpMax: '-30%',
+      physPower: '-10%'
     },
     items: [
       {

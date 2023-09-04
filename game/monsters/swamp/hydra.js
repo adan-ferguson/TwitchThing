@@ -34,8 +34,8 @@ const SPROUT_HEAD_ACTION = (i = 5) => {
 export default function(){
   return {
     baseStats: {
-      hpMax: '-70%',
-      physPower: '-70%',
+      hpMax: '-65%',
+      physPower: '-60%',
       speed: -100
     },
     items: [

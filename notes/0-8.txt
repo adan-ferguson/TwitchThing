@@ -1,3 +1,27 @@
+v0.8.1.0
+--------
+**General**
+- Chests no longer contain gold, you'll get gold whenever you kill an enemy instead (like every JRPG ever).
+- Increased the amount of XP required to level up for levels beyond 100. This change will lower the levels of some adventurers.
+- Skills will automatically equip when unlocked if there's an empty slot for them to go.
+- Hidden convenience thing: You can shift+click when spending points to spend 5 at a time.
+
+**Monsters (Regular Versions)**
+Numbers-only Changes
+- Buffs: Druid, Bitey Plant, Hydra, Siren, Two-Headed Shark, Water Elemental, Cerberus, Night Mare, Pit Fiend, Succubus, Demoted Lucifer
+- Nerfs: Werewolf, Centaur, Assassin, Basilisk, Wyvern, Maniacal Minion.
+
+Triablo
+- Added a "Triple Attack" ability to help it deal with dodges/bat wings/wizard hats. Phys power reduced to compensate.
+- Speed increased.
+
+**Rogue**
+Just attempting to neuter the farming a little bit, because the strategy of farming to purchase more farmers ad nauseam seems a bit degenerate. This might just always be overpowered though, or maybe it's fine. Idk.
+
+The Bounty Collector
+- No longer gives chests, now increases the gold reward from the enemy by 4x/7/10x/...
+- Cost changed from 10/15/20/... to 10/17/24/...
+
 v0.8.0.6 (Aug 30, 2023)
 --------
 - Fixed bug where skills would revert if you changed them, then went to points tab, then went back to loadout tab. (There still might be some problems though)

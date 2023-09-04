@@ -84,7 +84,7 @@ const CHEST_DROP_CHANCE = 0.025
 const CHEST_DROP_CHANCE_HARD_ENEMY = 0.09 // It's an enemy of level >= adventurer's deepest floor
 
 const BOSS_XP_BONUS = 10
-const BOSS_GOLD_BONUS = 10
+const BOSS_GOLD_BONUS = 5
 
 // Monsters of level [currentFloor - FLOOR_RANGE] to [currentFloor] will spawn (both inclusive).
 const FLOOR_RANGE = 4

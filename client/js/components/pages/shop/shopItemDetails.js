@@ -95,18 +95,16 @@ export default class ShopItemDetails extends DIElement{
       this._updateCount()
     })
     this.querySelector('.plus').addEventListener('click', () => {
-      this.sliderEl.value += 1
+      this.sliderEl.value = parseInt(this.sliderEl.value) + 1
       this._updateCount()
     })
   }
 
   _updateCount(){
-    const val = this._shopItemDef.data?.[this._shopItemDef.id]
+    const val = this._shopItemDef.data?.[this._shopItemDef.id] ?? 1
     const sliderVal = this.sliderEl.value
     let count
-    if(!val){
-      count = 1
-    }else if(val.base){
+    if(val.base){
       count = arithmeticSum(val.base, val.growth, sliderVal)
     }else{
       count = val * sliderVal

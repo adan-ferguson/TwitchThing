@@ -14,16 +14,23 @@ export function chestShopItems(userDoc, purchases){
   return chests
 }
 
-export async function shopChestPurchased(userDoc, chestData){
-  const chest = generateRandomChest({
-    classes: [chestData.className],
-    level: chestData.level,
-    type: 'shop',
-    noGold: true,
-    itemLimit: 10,
-  })
-  applyChestToUser(userDoc, chest)
-  return chest
+export async function shopChestPurchased(userDoc, chestData, count = 1){
+  if(chestData.level !== 100 && count > 1){
+    throw 'Can not multi-buy chests that below max level'
+  }
+  const chests = []
+  for(let i = 0; i < count; i++){
+    const chest = generateRandomChest({
+      classes: [chestData.className],
+      level: chestData.level,
+      type: 'shop',
+      noGold: true,
+      itemLimit: 10,
+    })
+    applyChestToUser(userDoc, chest)
+    chests.push(chest)
+  }
+  return chests
 }
 
 function countPurchases(purchases){
@@ -49,6 +56,7 @@ function chestDef(className, purchaseCount){
   return {
     type: 'chest',
     id: className + 'Chest',
+    scalable: level === 100,
     price: {
       gold: toPrice(level)
     },

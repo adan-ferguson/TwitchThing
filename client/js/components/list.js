@@ -124,6 +124,14 @@ export default class List extends DIElement{
     this._update()
   }
 
+  get hasVisibleRows(){
+    return this._sortedRows?.length ? true : false
+  }
+
+  get shouldPaginate(){
+    return this._options.paginate
+  }
+
   clear(){
     return this.setRows([])
   }
@@ -191,7 +199,7 @@ export default class List extends DIElement{
     hideAllTippys({ duration: 0 })
     this.isMobile = mobileMode()
 
-    if(!this._options.paginate){
+    if(!this.shouldPaginate){
       this.querySelector('.pagination-buttons').classList.add('displaynone')
     }
 
