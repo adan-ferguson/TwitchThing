@@ -117,7 +117,7 @@ export default class AdventurerSkillRow extends DIElement{
     if(
       !this._options.skill ||
       !this._options.showTooltip ||
-      (!this._peek && this._options.status === AdventurerSkillRowStatus.HIDDEN)
+      (!this.isVisible)
     ){
       return null
     }
@@ -149,6 +149,10 @@ export default class AdventurerSkillRow extends DIElement{
     this.forceShowTooltip = val
   }
 
+  get isVisible(){
+    return this._options.status !== AdventurerSkillRowStatus.HIDDEN || this._peek
+  }
+
   flash(){
     this.stateEl?.flash()
   }
@@ -178,7 +182,8 @@ export default class AdventurerSkillRow extends DIElement{
       this.contentEl.innerHTML = ''
     }else{
       const info = classDisplayInfo(skill.advClass)
-      if(this._options.status === AdventurerSkillRowStatus.HIDDEN && !this._peek){
+      if(!this.isVisible){
+        this._updateBorder()
         this.contentEl.innerHTML = HIDDEN_HTML(skill.requiredOrbs, info.icon)
         return
       }
@@ -193,16 +198,19 @@ export default class AdventurerSkillRow extends DIElement{
       displayStyle: 'skill'
     }).update()
 
+    this._updateBorder()
+    return this
+  }
+
+  _updateBorder(){
     const ado = getAbilityDisplayInfoForObj(this.adventurerSkill)
-    if(ado[0]?.type === 'active'){
+    if(ado[0]?.type === 'active' && this.isVisible){
       this.style.borderColor = ITEM_ROW_COLORS.active
       this.style.borderWidth = '3rem'
     }else{
       this.style.borderColor = null
       this.style.borderWidth = null
     }
-
-    return this
   }
 }
 

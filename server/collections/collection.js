@@ -1,5 +1,4 @@
 import db from '../db.js'
-import ConsoleTimer from '../../game/consoleTimer.js'
 
 export default class Collection{
 

@@ -1,6 +1,8 @@
 import Adventurers from './adventurers.js'
 import Collection from './collection.js'
 import { emit } from '../socketServer.js'
+import { deepClone } from '../../game/utilFunctions.js'
+import { updateAccomplishments } from '../user/accomplishments.js'
 
 const DEFAULTS = {
   _id: null,
@@ -135,7 +137,7 @@ Users.isSetupComplete = function isSetupComplete(userDoc){
   return userDoc.displayname ? true : false
 }
 
-Users.gameData = function(userDoc){
+Users.gameData = async function(userDoc){
   if(!userDoc){
     return null
   }
@@ -186,7 +188,7 @@ Users.clearNewItems = async function(userDoc){
 
 Users.saveAndEmit = async function(doc){
   const result = await this.save(doc)
-  emit(doc._id.toString(), 'user updated', Users.gameData(doc))
+  emit(doc._id.toString(), 'user updated', await Users.gameData(doc))
   return result
 }
 
