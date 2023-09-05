@@ -3,7 +3,7 @@ export default function(level){
     effect: {
       abilities: [{
         trigger: 'active',
-        cooldown: 30000 * Math.pow(0.8, level - 1),
+        cooldown: 20000 * Math.pow(0.8, level - 1),
         conditions: {
           owner: {
             hpPctBelow: 0.5

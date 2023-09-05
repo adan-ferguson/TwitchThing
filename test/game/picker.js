@@ -14,8 +14,9 @@
 //   })
 // })
 
-import { advLevelToXp } from '../../game/adventurer.js'
+import { speedToTurnTime } from '../../game/fighterInstance.js'
 
-for(let i = 50; i < 200; i++){
-  console.log(i, advLevelToXp(i))
+for(let i = 0; i < 500; i = i + 10){
+  // console.log(i, speedToTurnTime(i))
+  console.log(-i, speedToTurnTime(-i))
 }

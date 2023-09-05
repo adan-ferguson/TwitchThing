@@ -1,12 +1,17 @@
 v0.8.1.0
 --------
-**General**
+************ General ************
 - Chests no longer contain gold, you'll get gold whenever you kill an enemy instead (like every JRPG ever).
 - Increased the amount of XP required to level up for levels beyond 100. This change will lower the levels of some adventurers.
 - Skills will automatically equip when unlocked if there's an empty slot for them to go.
-- Hidden convenience thing: You can shift+click when spending points to spend 5 at a time.
+- Hidden convenience thing: You can shift+click when spending points to go to the nearest 5.
+- As a temporary measure, there's now an eye icon next to skills which you've seen on that user account, but can't be unlocked yet by that adventurer.
 
-**Monsters (Regular Versions)**
+- Skills and items which granted max hp, phys power, or magic power now generally have improved scaling as they're upgraded.
+-- Won't list all of them, but for example, Short Sword went from [20/35/50/65...] to [20/35/52/70...]
+-- Some of these have better scaling than others, based on their rarity and how popular they were in previous patch.
+
+************ Monsters (Regular Versions) ************
 Numbers-only Changes
 - Buffs: Druid, Bitey Plant, Hydra, Siren, Two-Headed Shark, Water Elemental, Cerberus, Night Mare, Pit Fiend, Succubus, Demoted Lucifer
 - Nerfs: Werewolf, Centaur, Assassin, Basilisk, Wyvern, Maniacal Minion.
@@ -15,12 +20,116 @@ Triablo
 - Added a "Triple Attack" ability to help it deal with dodges/bat wings/wizard hats. Phys power reduced to compensate.
 - Speed increased.
 
-**Rogue**
-Just attempting to neuter the farming a little bit, because the strategy of farming to purchase more farmers ad nauseam seems a bit degenerate. This might just always be overpowered though, or maybe it's fine. Idk.
+************ Fighter ************
+Pretty happy with this as the "starter" class, Final Fight was noticably overpowered though. People would skip like 5 floors when they unlocked it, and they probably still will.
+
+Light Armor
+- Probably the item I was most wrong about.
+- Speed reduced from [20/30/40...] to [20/27/34...]
+- Armor reduced from [10%/16.3%/22.2%/...] to [10%/15.4%/20.5%...]
+
+Heavy Axe
+- Speed increased from [-50/-75/-100...] to [-40/-60/-80...]
+
+Coffee Carafe
+- Speed increased from [50/80/110...] to [60/95/130...]
+- This might have also been unpopular because it was bugged and didn't stack correctly.
+
+Twin Blades
+- Cost increased from [11/17/23...] to [12/20/28...]
+
+Berserker
+- Doesn't get improved scaling because it's already the most popular skill in the game.
+
+Reckless Attack
+- Damage increased from [3.0/4.2/5.4...] to [4.0/5.5/7.0...]
+- Will most likely replace this eventually.
+
+Swift Strikes
+- Cooldown lowered from 15s to 12s because I felt like it.
+
+Final Fight
+- Lifesteal is removed, hopefully this is both a nerf but also will make it work better with chimera's "below 50%" archetype.
+- Duration reduced from [5.0/6.0/7.0/...] to [5.0/5.5/6.0/...].
+- Doesn't get the improved scaling because it already scales like crazy.
+
+Execute
+- Now gets the Wood Elf ability (can't miss, can't be dodged).
+
+************ Mage ************
+Pretty happy with mage in general, most changes are just me fiddling around.
+
+Spellbook
+- XP Gain lowered from [10/15/20...] to [10/13/16...]
+
+Magic Ring
+- Multiplier increased from [.85x/.77x/.69x...] to [.85x/.78x/.72x...]
+
+Mana Biscuit
+- Name changed to "Mana Biscuits"
+- Wildly unpopular, probably will rework later.
+- Cost reduced from [3/4/5...] to [1/2/3...]
+
+Miniature Scroll
+- I swear this was good already, but incredibly underused!
+- Cost reduced from [3/5/7] to [3/4/5]
+
+Unstable Scroll
+- Okay, I knew this was bad.
+- Stun duration reduced from [2.0/3.5/5.0...] to [1/2/3...]
+
+Lightning Ring
+- Damage increased from [0.5/1.0/1.5...] to [0.6/1.2/1.8...]
+
+Ascension Scroll
+- Levelups increased from [2/3/4...] to [3/5/7...]
+- Cost increased from [9/13/17...] to [10/15/20...]
+
+Wizard Hat
+- Base cooldown increased from 30s to 45s
+
+Overload
+- Cooldown increase reduced from [2x/3x/4x...] to [1.5x/2x/2.5x...]
+
+************ Paladin ************
+A couple of duds, but generally wound up okay. Healing is hard to make exciting.
+
+Tower Shield
+- Block increased from [20%/26%/32%...] to [21%/29%/37%...]
+
+Plate Mail
+- Base phys def increased from 25% to 40%
+
+Magic Plate Mail
+- Probably should just replace this, very boring.
+- Base def increased from 35% to 45%
+
+Cleansing Potion
+- Now refunds 50% turn time.
+
+Celestial Greatsword
+- Cost increased from [12/20/28...] to [15/25/35...]
+- Probably just a dangerous item to keep around in general.
+
+Greater Heal
+- Base cooldown reduced from 30s to 20s
+
+Penance
+- Multiplier reduced from [120%/170%/220%...] to [100%/140%/180%...]
+- Now also works on overheals.
+
+Purity
+- Too strong, but I don't really have a knob to adjust. I'll just leave it for now.
+
+************ Rogue ************
+The farming strategies seem a bit degenerate, because you can make farmers which pay for more slots for more farmers, and so on.
+This really skewed the heck out of the stats.
+
+
 
 The Bounty Collector
-- No longer gives chests, now increases the gold reward from the enemy by 4x/7/10x/...
-- Cost changed from 10/15/20/... to 10/17/24/...
+- No longer gives chests, now increases the gold reward from the enemy by [4x/7/10x...]
+- Cost changed from [10/15/20...] to [10/17/24...]
 
 v0.8.0.6 (Aug 30, 2023)
 --------

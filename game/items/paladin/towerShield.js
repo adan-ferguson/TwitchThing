@@ -5,7 +5,7 @@ export default function(level){
     orbs: level * 1 + 1,
     effect: {
       stats: {
-        block: 0.14 + 0.06 * level
+        block: 0.13 + 0.08 * level
       }
     },
     loadoutModifiers: [bigLoadoutModifier()]

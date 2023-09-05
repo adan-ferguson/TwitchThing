@@ -20,7 +20,7 @@ export default function(level){
   }
   return {
     effect,
-    orbs: 1 + 2 * level,
+    orbs: 2 + 1 * level,
     maxLevel: 3
   }
 }

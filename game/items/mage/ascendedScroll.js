@@ -6,12 +6,12 @@ export default function(level){
       conditions: {
         hasAbility: 'active'
       },
-      levelUp: level + 1
+      levelUp: 1 + level * 2
     }],
     effect: {
       tags: ['scroll']
     },
-    orbs: 5 + 4 * level,
+    orbs: 5 + 5 * level,
     displayName: 'Ascension Scroll'
   }
 }

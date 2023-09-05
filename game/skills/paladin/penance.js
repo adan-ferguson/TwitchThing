@@ -1,5 +1,5 @@
 export default function(level){
-  const pct = 0.7 + level * 0.5
+  const pct = 0.6 + level * 0.4
   return {
     effect: {
       abilities: [{

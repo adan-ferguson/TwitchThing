@@ -52,9 +52,11 @@ export default class ClassDisplay extends DIElement{
       }
     })
     this.adderButton.addEventListener('click', e => {
+      const current = this._adventurer.doc.orbs[this.advClass]
+      const toNext5 = 5 - (current % 5)
       this.events.emit('spend orb', {
         className: this.advClass,
-        count: e.shiftKey ? 5 : 1,
+        count: e.shiftKey ? toNext5 : 1,
       })
     })
   }

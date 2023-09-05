@@ -1,5 +1,5 @@
 export default function(level){
-  const speed = 20 + level * 30
+  const speed = 25 + level * 35
   const duration = 20000
   return {
     effect: {

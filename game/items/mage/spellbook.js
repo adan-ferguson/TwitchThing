@@ -1,11 +1,11 @@
-import { wrappedPct } from '../../growthFunctions.js'
+import { geometricProgression, wrappedPct } from '../../growthFunctions.js'
 
 export default function(level){
   return {
     effect: {
       stats: {
-        magicPower: wrappedPct( 10 * level),
-        combatXP: wrappedPct(5 + 5 * level)
+        magicPower: wrappedPct( 10 + geometricProgression(0.10, level-1, 7, 1)),
+        combatXP: wrappedPct(7 + 3 * level)
       }
     },
     orbs: 1 * level

@@ -18,6 +18,7 @@ export default function(level){
         }]
       }]
     },
-    orbs: 2 + level * 1
+    orbs: 2 + level * 1,
+    displayName: 'Mana Biscuits',
   }
 }
