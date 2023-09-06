@@ -52,9 +52,10 @@ export default class Inventory extends DIElement{
   }
 
   setup(items, adventurer){
-    if(!this._beenSetup){
-      this.listEl.setRows(inventoryItemsToRows(items))
-    }
+    // TODO: have a performative dynamic thing react style yolo
+    // if(!this._beenSetup){
+    // }
+    this.listEl.setRows(inventoryItemsToRows(items))
     this._beenSetup = true
     this.adventurer = adventurer
     this._updateSortAndFilter()

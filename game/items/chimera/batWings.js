@@ -8,7 +8,7 @@ export default function(level){
         flutteringAbility(cooldown)
       ],
     },
-    orbs: level * 3 + 2
+    orbs: level * 4 + 1
   }
   if(level > 1){
     ret.effect.stats = { speed: ( level - 1 ) * 20 }

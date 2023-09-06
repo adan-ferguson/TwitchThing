@@ -158,11 +158,13 @@ export default class Adventurer{
     if(skill.level === 0){
       this.loadout.addSkillToEmptySlot(skill.id)
     }
+    this._uncacheLoadout()
   }
 
   _uncacheLoadout(){
     if(this._loadout){
-      this._doc.loadout = this._loadout.serialize()
+      // TODO: this sucks
+      this._loadout._serialize()
       this._loadout = null
     }
   }

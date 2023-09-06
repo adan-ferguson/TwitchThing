@@ -21,12 +21,7 @@ Triablo
 - Speed increased.
 
 ************ Fighter ************
-Pretty happy with this as the "starter" class, Final Fight was noticably overpowered though. People would skip like 5 floors when they unlocked it, and they probably still will.
-
-Light Armor
-- Probably the item I was most wrong about.
-- Speed reduced from [20/30/40...] to [20/27/34...]
-- Armor reduced from [10%/16.3%/22.2%/...] to [10%/15.4%/20.5%...]
+Pretty happy with this as the "starter" class.
 
 Heavy Axe
 - Speed increased from [-50/-75/-100...] to [-40/-60/-80...]
@@ -38,9 +33,6 @@ Coffee Carafe
 Twin Blades
 - Cost increased from [11/17/23...] to [12/20/28...]
 
-Berserker
-- Doesn't get improved scaling because it's already the most popular skill in the game.
-
 Reckless Attack
 - Damage increased from [3.0/4.2/5.4...] to [4.0/5.5/7.0...]
 - Will most likely replace this eventually.
@@ -49,18 +41,14 @@ Swift Strikes
 - Cooldown lowered from 15s to 12s because I felt like it.
 
 Final Fight
-- Lifesteal is removed, hopefully this is both a nerf but also will make it work better with chimera's "below 50%" archetype.
-- Duration reduced from [5.0/6.0/7.0/...] to [5.0/5.5/6.0/...].
-- Doesn't get the improved scaling because it already scales like crazy.
+- Lifesteal removed, hopefully this is both a nerf but also will make it work better with chimera's "low health" archetype.
+- Duration reduced from [5.0/6.0/7.0...] to [5.0/5.5/6.0...]
 
 Execute
 - Now gets the Wood Elf ability (can't miss, can't be dodged).
 
 ************ Mage ************
-Pretty happy with mage in general, most changes are just me fiddling around.
-
-Spellbook
-- XP Gain lowered from [10/15/20...] to [10/13/16...]
+Pretty happy with mage in general, it teaches the game's mechanics very well.
 
 Magic Ring
 - Multiplier increased from [.85x/.77x/.69x...] to [.85x/.78x/.72x...]
@@ -71,7 +59,7 @@ Mana Biscuit
 - Cost reduced from [3/4/5...] to [1/2/3...]
 
 Miniature Scroll
-- I swear this was good already, but incredibly underused!
+- I swear this was good already!
 - Cost reduced from [3/5/7] to [3/4/5]
 
 Unstable Scroll
@@ -95,21 +83,21 @@ Overload
 A couple of duds, but generally wound up okay. Healing is hard to make exciting.
 
 Tower Shield
-- Block increased from [20%/26%/32%...] to [21%/29%/37%...]
+- Block increased from [20%/26%/32%...] to [25%/35%/45%...]
 
 Plate Mail
+- This is destined to be an item no one uses.
 - Base phys def increased from 25% to 40%
 
 Magic Plate Mail
-- Probably should just replace this, very boring.
-- Base def increased from 35% to 45%
+- Base defs increased from 35% to 45%
 
 Cleansing Potion
 - Now refunds 50% turn time.
 
 Celestial Greatsword
 - Cost increased from [12/20/28...] to [15/25/35...]
-- Probably just a dangerous item to keep around in general.
+- Maybe impossible to balance?
 
 Greater Heal
 - Base cooldown reduced from 30s to 20s
@@ -119,17 +107,95 @@ Penance
 - Now also works on overheals.
 
 Purity
-- Too strong, but I don't really have a knob to adjust. I'll just leave it for now.
+- The most upgraded non-rogue skill. Makes sense because if you're going purity (8 paladin items), then you might as well just spam this.
+- There's not a great way to nerf it though.
 
 ************ Rogue ************
 The farming strategies seem a bit degenerate, because you can make farmers which pay for more slots for more farmers, and so on.
 This really skewed the heck out of the stats.
+Was a weird class, had some things no one liked at all.
 
+Quick Attack
+- This was the #1 most upgraded skill in the game, only to get the cooldown really low for bounty collecting.
+- No point in nerfing this, could be done with many other skills (like Slash)
 
+Appraise
+- Rare find reduced from [50%/100%/150%...] to [40%/70%/100%...]
+
+Exhaustive Search
+- Floor size reduced from [50%/100%/150%...] to [40%/70%/100%...]
+
+Midas Touch
+- Gold bonus reduced from [100%/200%/300%...] to [100%/150%/200%...]
+
+Deadly Magickqs
+- No one cared about this, mage doesn't have problems dealing damage.
+-
+
+Critical Crit
+- Bonus changed from [+200%/+400%/+600%...] to [x2,x3,x4...]
+- Penalty lowered from [2,3,4...] to [1.5,2,2.5...] (value your crit chance is divided by)
+
+Cloak
+- Dodge reduced from [10%/14.5%/18.8%...] to [10%/13.6%/17.1%...]
+- Speed reduced from [20/40/60...] to [15/30/45...]
+
+Sleep Powder
+- Not removing it because I think it's interesting, but it needs more support.
+
+Lucky Ring
+- Joke item! Just kidding. it's the most equipped item in the game (1.1 per rogue)
+- Letting it ride for now, what do I even do?
+
+Phantom Cloak
+- A nice 0% usage, which made me double check that it even works at all.
+-
 
 The Bounty Collector
 - No longer gives chests, now increases the gold reward from the enemy by [4x/7/10x...]
-- Cost changed from [10/15/20...] to [10/17/24...]
+- Cost increased from [10/15/20...] to [10/17/24...]
+
+************ Chimera ************
+For being a hodge-podge, wound up pretty good.
+Everything that was "50% or lower" is now "65% or lower".
+
+Body Slam
+- Cooldown lowers on rankup now.
+
+Fight And/Or Flight
+- Speed lowered from [60/100/140...] to [50/75/100...]
+- Phys power gets scaled growth, so it won't match speed anymore.
+
+Sense Weakness
+- Removed this for now
+- Stay hungry
+
+Furious Strikes
+- Cooldown lowered from 15s to 12s because I felt like it.
+
+Extra Arms
+-
+
+Dragon Breath
+-
+
+Spiked Shell
+-
+
+Salamander Tail
+- Damage increased from [30%/60%/90%...] to [40%/80%/120%...]
+
+Bat Wings
+- Cost increased from [5/8/11...] to [5/9/13...]
+
+Troll Regeneration
+- I still can't think of a better name for this, it should be something tangible. It reads like a skill name.
+
+Shimmering Scales
+-
+
+Phoenix Plumage
+- Cost reduced from [15/30/45...] to [12/24/36...]
 
 v0.8.0.6 (Aug 30, 2023)
 --------

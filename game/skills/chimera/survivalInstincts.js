@@ -10,7 +10,7 @@ export default function(level){
         },
         conditions: {
           owner: {
-            hpPctBelow: 0.5
+            hpPctBelow: 0.65
           }
         },
         effectModification: {

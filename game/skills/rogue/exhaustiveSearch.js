@@ -4,7 +4,7 @@ export default function(level){
   return {
     effect: {
       stats: {
-        leisurelyPaceMultiplier: wrappedPct(50 * level),
+        leisurelyPaceMultiplier: wrappedPct(10 + 30 * level),
       }
     }
   }

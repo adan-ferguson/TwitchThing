@@ -1,11 +1,11 @@
-import { wrappedPct } from '../../growthFunctions.js'
+import { roundToFixed } from '../../utilFunctions.js'
 
 export default function(level){
   return {
     effect: {
       stats: {
-        critChance: (1 / (level + 1)) + 'x',
-        critDamage: wrappedPct(level * 200)
+        critChance: roundToFixed(1 / (1 + level * 0.5)) + 'x',
+        critDamage: (1 + level) + 'x',
       }
     }
   }
