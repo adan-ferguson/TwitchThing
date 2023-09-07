@@ -14,7 +14,6 @@ import magicPower from '../../assets/icons/magicPower.svg'
 import speed from '../../assets/icons/action.svg'
 import gold from '../../assets/icons/gold.svg'
 import AdventurerItem from '../../../game/items/adventurerItem.js'
-import AbilityInstance from '../../../game/abilityInstance.js'
 import { subjectKeyForLoadoutObject } from '../subjectClientFns.js'
 import { scaledNumberFromInstance } from '../../../game/scaledNumber.js'
 import tippy from 'tippy.js'
@@ -77,6 +76,9 @@ export function orbEntries(obj){
 }
 
 export function orbEntry(cls, count){
+  if(cls === 'all'){
+    return orbPointEntry(count)
+  }
   return `<di-orb-entry orb-class="${cls}" orb-used="${count}"></di-orb-entry>`
 }
 

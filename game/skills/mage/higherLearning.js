@@ -2,7 +2,9 @@ export default function(level){
   return {
     loadoutModifiers: [{
       loadoutModifierId: 'higherLearning',
-      subjectKey: 'all',
+      subject: {
+        key: 'all'
+      },
       conditions: {
         hasTag: 'scroll'
       },

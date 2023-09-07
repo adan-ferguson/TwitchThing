@@ -30,17 +30,17 @@ export function subjectKeyForLoadoutObject(loadoutObject){
   }
   const subjectKeys = {}
   for(let me of loadoutObject.metaEffects){
-    if(me.subject.key){
+    if(me.subject?.key){
       subjectKeys[me.subject.key] = true
     }
   }
   for(let ability of loadoutObject.abilities){
-    if(ability.conditions?.source?.subjectKey){
-      subjectKeys[ability.conditions.source.subjectKey] = true
+    if(ability.conditions?.source?.subject?.key){
+      subjectKeys[ability.conditions.source.subject.key] = true
     }
   }
   for(let lm of loadoutObject.loadoutModifiers){
-    subjectKeys[lm.subjectKey] = true
+    subjectKeys[lm.subject?.key] = true
   }
   if(subjectKeys.attached){
     return 'attached'

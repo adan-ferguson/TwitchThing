@@ -82,7 +82,7 @@ export default class AdventurerLoadout{
         return false
       }
       for(let lm of (loadoutItem?.loadoutModifiers ?? [])){
-        if(lm.subjectKey === 'neighbouring' && lm.restrictions && (slot === 0 || slot === 7)){
+        if(lm.subject?.key === 'neighbouring' && lm.restrictions && (slot === 0 || slot === 7)){
           return true
         }
       }

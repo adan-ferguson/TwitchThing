@@ -2,7 +2,9 @@ export default function(level){
   return {
     loadoutModifiers: [{
       loadoutModifierId: 'purity',
-      subjectKey: 'all',
+      subject: {
+        key: 'all'
+      },
       orbs: {
         paladin: -level
       }

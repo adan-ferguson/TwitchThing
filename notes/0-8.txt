@@ -180,7 +180,7 @@ Dragon Breath
 -
 
 Spiked Shell
--
+- Return damage increased from [12%/16%/20%...] to [20%/25%/30%...]
 
 Salamander Tail
 - Damage increased from [30%/60%/90%...] to [40%/80%/120%...]

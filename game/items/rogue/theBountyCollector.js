@@ -7,7 +7,7 @@ export default function(level){
         abilityId: 'bountyCollector',
         conditions: {
           source: {
-            subjectKey: 'attached',
+            key: 'attached',
             trigger: 'active'
           }
         },

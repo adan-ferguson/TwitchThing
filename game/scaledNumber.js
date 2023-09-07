@@ -8,7 +8,6 @@ const fighterFns = fighterInstance => {
     hp: val => val * fighterInstance.hp,
     magicPower: val => val * fighterInstance.magicPower,
     physPower: val => val * fighterInstance.physPower,
-    effectStats: () => 0
   }
 }
 
@@ -22,22 +21,6 @@ export function scaledNumberFromAbilityInstance(abilityInstance, scalingOptions)
     ...fighterFns(fighterInstance),
     magicPower: val => val * abilityInstance.totalStats.get('magicPower').value,
     physPower: val => val * abilityInstance.totalStats.get('physPower').value,
-    effectStats: (options = {}) => {
-      options = {
-        base: null,
-        stat: null,
-        subjectKey: 'self',
-        ...options
-      }
-      let total = 0
-      if(options.subjectKey){
-        getMatchingEffectInstances(abilityInstance.parentEffect, options.subjectKey)
-          .forEach(ei => {
-            total += options.base * ei.stats.get(options.stat).value
-          })
-      }
-      return total
-    }
   })
 }
 

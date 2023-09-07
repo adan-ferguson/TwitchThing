@@ -1,3 +1,5 @@
+import { toPct } from '../../utilFunctions.js'
+
 export default function(level){
   return {
     effect: {
@@ -10,5 +12,14 @@ export default function(level){
         }
       }]
     },
+    loadoutModifiers: [{
+      loadoutModifierId: 'extraArms',
+      subject: {
+        key: 'attached'
+      },
+      orbs: {
+        all: toPct(level / 2)
+      }
+    }]
   }
 }

@@ -20,11 +20,6 @@ const SCALED_NUMBER_SCHEMA = Joi.object({
   physPower: Joi.number(),
   flat: Joi.number(),
   parentEffectParam: Joi.object(),
-  effectStats: Joi.object({
-    base: Joi.number().required(),
-    stat: STATS_NAME_SCHEMA.required(),
-    subjectKey: SUBJECT_KEYS_SCHEMA,
-  })
 })
 
 const OPTIONAL_SCALED_NUMBER_SCHEMA = Joi.alternatives().try(
@@ -68,10 +63,12 @@ const as = Joi.object({
     ignoreDefense: Joi.bool().truthy(),
     ignoreOvertime: Joi.bool().truthy()
   }),
-  useAbility: Joi.object({
-    subjectKey: Joi.string().valid(...SUBJECT_KEYS).required(),
-    trigger: TRIGGER_NAME_SCHEMA
-  }),
+  // useAbility: Joi.object({
+  //   subject: {
+  //     key: Joi.string().valid(...SUBJECT_KEYS).required(),
+  //   },
+  //   trigger: TRIGGER_NAME_SCHEMA,
+  // }),
   modifyAbility: Joi.object({
     targets: TARGETS_SCHEMA,
     subject: Joi.object(),

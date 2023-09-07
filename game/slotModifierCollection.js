@@ -37,15 +37,16 @@ function calcOutgoing(obj, col, row, propName){
     return false
   }
   for(let modifier of obj[propName]){
-    getSubjects(modifier.subjectKey, col, row).forEach(subj => {
+    getSubjects(modifier.subject, col, row).forEach(subj => {
       mtx[subj.col][subj.row].push(modifier)
     })
   }
   return mtx
 }
 
-export function getSubjects(subjectKey, col, row){
+export function getSubjects(subjectDef, col, row){
   const subjects = []
+  const subjectKey = subjectDef.key
   if(subjectKey === 'self'){
     subjects.push({ col, row })
   }else if(subjectKey === 'attached'){

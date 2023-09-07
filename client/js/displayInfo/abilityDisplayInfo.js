@@ -115,7 +115,7 @@ function prefix(trigger, conditions){
   if(trigger === 'attackHit'){
     const type = conditions.data?.damageType ? 'a ' + conditions.data.damageType : 'an'
     chunks.push('After landing', type, 'attack')
-    if(conditions.source?.subjectKey === 'attached'){
+    if(conditions.source?.key === 'attached'){
       chunks.push(`with ${attachedSkill()} `)
     }
   }
@@ -134,7 +134,7 @@ function prefix(trigger, conditions){
   if(trigger === 'hitByAttack'){
     const type = conditions.data?.damageType ? 'a ' + conditions.data.damageType : 'an'
     chunks.push('After being hit by', type, 'attack')
-    if(conditions.source?.subjectKey === 'attached'){
+    if(conditions.source?.key === 'attached'){
       chunks.push(`with ${attachedSkill()}`)
     }
   }
