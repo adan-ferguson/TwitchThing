@@ -7,6 +7,7 @@ import { TRIGGER_NAME_SCHEMA } from './triggers.js'
 const STATUS_EFFECT_CONDITIONS_SCHEMA = Joi.object({
   name: Joi.string(),
   tag: TAG_NAME_SCHEMA,
+  barrier: Joi.bool(),
 })
 
 export const FIGHTER_INSTANCE_CONDITIONS_SCHEMA = Joi.object({

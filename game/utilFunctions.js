@@ -240,10 +240,18 @@ export function pushOrCreate(obj, key, toPush){
   obj[key].push(...arrayize(toPush))
 }
 
-export function msToS(ms){
-  return roundToFixed(ms / 1000, 2)
+export function msToS(ms, suffix = false){
+  return roundToFixed(ms / 1000, 2) + (suffix ? 's' : '')
 }
 
 export function toPct(decimal, digits = 0){
   return roundToFixed(decimal * 100, digits) + '%'
+}
+
+export function tryClass(Class, args){
+  try{
+    return new Class(...args)
+  }catch(ex){
+    return null
+  }
 }

@@ -1,32 +1,31 @@
-import DungeonRuns from '../collections/dungeonRuns.js'
 import Collection from '../collections/collection.js'
-import db from '../db.js'
-import FullEvents from '../collections/fullEvents.js'
-import { broadcast } from '../socketServer.js'
-import { deepClone, roundToFixed, toPct } from '../../game/utilFunctions.js'
 import Adventurers from '../collections/adventurers.js'
 import { updateAccomplishments } from '../user/accomplishments.js'
 import Users from '../collections/users.js'
-
-const MIGRATION_ID = 81
+import { removeInvalidSkills } from './deleteSkill.js'
+import { msToS } from '../../game/utilFunctions.js'
 
 const Migrations = new Collection('migrations', {
   migrationId: null
 })
 
 export async function runMigrations(){
+  console.log('running migrations')
+  await migration(81, setUserAdvClassAccomplishments)
+  await migration(83, async () => await removeInvalidSkills())
+  console.log('done')
+}
 
-  const m = await Migrations.findOne({ query: { migrationId: MIGRATION_ID } })
+async function migration(migrationId, fn){
+  const m = await Migrations.findOne({ query: { migrationId } })
   if(m){
     return
   }
-
-  console.log('running migration')
-
-  await setUserAdvClassAccomplishments()
-
-  console.log('done')
-  Migrations.save({ migrationId: MIGRATION_ID })
+  const time = Date.now()
+  console.log('running migration', migrationId)
+  await fn()
+  console.log('finished migration', migrationId, msToS(Date.now() - time))
+  Migrations.save({ migrationId })
 }
 
 async function setUserAdvClassAccomplishments(){

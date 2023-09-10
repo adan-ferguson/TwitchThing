@@ -14,7 +14,7 @@ v0.8.1.0
 ************ Monsters (Regular Versions) ************
 Numbers-only Changes
 - Buffs: Druid, Bitey Plant, Hydra, Siren, Two-Headed Shark, Water Elemental, Cerberus, Night Mare, Pit Fiend, Succubus, Demoted Lucifer
-- Nerfs: Werewolf, Centaur, Assassin, Basilisk, Wyvern, Maniacal Minion.
+- Nerfs: Werewolf, Centaur, Assassin, Basilisk, Ancient Tortoise, Wyvern, Maniacal Minion.
 
 Triablo
 - Added a "Triple Attack" ability to help it deal with dodges/bat wings/wizard hats. Phys power reduced to compensate.
@@ -70,7 +70,8 @@ Lightning Ring
 - Damage increased from [0.5/1.0/1.5...] to [0.6/1.2/1.8...]
 
 Ascension Scroll
-- Levelups increased from [2/3/4...] to [3/5/7...]
+- Let's spice this up a bit
+- Level-ups increased from [2/3/4...] to [3/5/7...]
 - Cost increased from [9/13/17...] to [10/15/20...]
 
 Wizard Hat
@@ -86,11 +87,16 @@ Tower Shield
 - Block increased from [20%/26%/32%...] to [25%/35%/45%...]
 
 Plate Mail
-- This is destined to be an item no one uses.
 - Base phys def increased from 25% to 40%
+
+Spiked Shield
+- Now works with any barrier, not just the Block one.
 
 Magic Plate Mail
 - Base defs increased from 35% to 45%
+
+Immaculate Shield
+- Now works with any barrier, not just the Block one.
 
 Cleansing Potion
 - Now refunds 50% turn time.
@@ -104,15 +110,14 @@ Greater Heal
 
 Penance
 - Multiplier reduced from [120%/170%/220%...] to [100%/140%/180%...]
-- Now also works on overheals.
+- Now also works on overheals (!)
 
 Purity
 - The most upgraded non-rogue skill. Makes sense because if you're going purity (8 paladin items), then you might as well just spam this.
-- There's not a great way to nerf it though.
+- There's not an elegant way to nerf it though. (Or is there?)
 
 ************ Rogue ************
-The farming strategies seem a bit degenerate, because you can make farmers which pay for more slots for more farmers, and so on.
-This really skewed the heck out of the stats.
+The farming strategies seem a bit degenerate, because you can make farmers which pay for more slots for more farmers, and so on. This really skewed the heck out of the stats.
 Was a weird class, had some things no one liked at all.
 
 Quick Attack
@@ -129,8 +134,9 @@ Midas Touch
 - Gold bonus reduced from [100%/200%/300%...] to [100%/150%/200%...]
 
 Deadly Magickqs
-- No one cared about this, mage doesn't have problems dealing damage.
--
+- This was boring and bad.
+- Magic attacks can now just crit again by default (like in v0.7).
+- Replaced with new skill, "Deadly Maneuvers".
 
 Critical Crit
 - Bonus changed from [+200%/+400%/+600%...] to [x2,x3,x4...]
@@ -141,58 +147,62 @@ Cloak
 - Speed reduced from [20/40/60...] to [15/30/45...]
 
 Sleep Powder
-- Not removing it because I think it's interesting, but it needs more support.
+- Will replace this in v0.8.2 probably.
 
 Lucky Ring
 - Joke item! Just kidding. it's the most equipped item in the game (1.1 per rogue)
-- Letting it ride for now, what do I even do?
+- Letting it ride for now just because I want to see if the farm strategies win when there's actual enemies to fight.
 
 Phantom Cloak
 - A nice 0% usage, which made me double check that it even works at all.
 -
 
 The Bounty Collector
-- No longer gives chests, now increases the gold reward from the enemy by [4x/7/10x...]
-- Cost increased from [10/15/20...] to [10/17/24...]
+- No longer gives chests, now increases the gold reward from the enemy by [4x/7x/10x...]
 
 ************ Chimera ************
-For being a hodge-podge, wound up pretty good.
+For being a hodge-podge, wound up pretty good, had some reasonable variety too.
 Everything that was "50% or lower" is now "65% or lower".
 
 Body Slam
-- Cooldown lowers on rankup now.
+- Cooldown lowers on rank-up now, to help the "max hp" archetype which literally only has this for damage.
 
 Fight And/Or Flight
 - Speed lowered from [60/100/140...] to [50/75/100...]
-- Phys power gets scaled growth, so it won't match speed anymore.
+- Phys power grows faster now.
 
 Sense Weakness
-- Removed this for now
-- Stay hungry
+- Removed this for now. If you had this before (and you didn't), it'll be refunded.
+- Replaced with new skill, "Stay Hungry".
 
 Furious Strikes
 - Cooldown lowered from 15s to 12s because I felt like it.
 
 Extra Arms
--
+- Wow, should 1 skill be worth an unlimited amount of orb??? Turns out, no.
+- Attached item now costs [50%/100%/150%...] more orbs. (Wait, this doesn't really fix the problem...)
+- This is displayed in a sort of stupid way...
 
 Dragon Breath
--
+- Cooldown reduced from [60/90/120...] to [30/40/50...] (lol)
+- Damage increased from [300%/400%/500%...] to [500%/650%/800%...]
+- Fixed the descriptions (ice slows, necrotic reduces by a percentage (not rounded up to 1))
 
 Spiked Shell
-- Return damage increased from [12%/16%/20%...] to [20%/25%/30%...]
+- Return damage increased from [12%/16%/20%...] to [30%/40%/50%...]
+
+Shimmering Scales
+- Return damage increased from [30%/45%/60%...] to [50%/70%/90%...]
 
 Salamander Tail
 - Damage increased from [30%/60%/90%...] to [40%/80%/120%...]
 
 Bat Wings
-- Cost increased from [5/8/11...] to [5/9/13...]
+- Speed reduced from [0/20/40...] to [0/10/20...]
 
 Troll Regeneration
-- I still can't think of a better name for this, it should be something tangible. It reads like a skill name.
-
-Shimmering Scales
--
+- Name changed to "Regenerative Cells" because "Troll Renegeration" sounds more like a skill than an item.
+- Not married to it.
 
 Phoenix Plumage
 - Cost reduced from [15/30/45...] to [12/24/36...]

@@ -70,11 +70,11 @@ const ACTION_DEFS = {
     chunks.push(`
     <ul>
       <li>Fire: Take ${statScaling({ magicPower: def.burn }, abilityInstance)} magic damage per 3s</li>
-      <li>Ice: ${wrapStat('speed', def.slow)}</li>
+      <li>Ice: ${wrapStat('speed', -def.slow)}</li>
       <li>Necrotic: ${wrapStat('physPower', def.weaken)} & ${wrapStat('physPower', def.weaken)}</li>
     </ul>
     `)
-    chunks.push('If your health is at 50% or lower, apply all 3.')
+    chunks.push('If your health is at 65% or lower, apply all 3.')
     return chunks
   },
   applyStatusEffect: (def, abilityInstance) => {
@@ -95,7 +95,7 @@ const ACTION_DEFS = {
   },
   modifyAbility: (actionDef, ai) => {
     if(actionDef.modification.cooldownRemaining){
-      return modifyCooldownRemaining(actionDef)
+      return modifyCooldownRemaining(actionDef, actionDef.modification.cooldownRemaining)
     }
   },
   shieldBash: (actionDef, ai) => {
@@ -205,12 +205,17 @@ function arrayToDescriptions(actions, abilityInstance){
   return chunks
 }
 
-function modifyCooldownRemaining(def){
+function modifyCooldownRemaining(actionDef, cdrDef){
   //  TODO: hacky
-  if(def.targets === 'self'){
+  debugger
+  if(actionDef.targets === 'self'){
     return `Refresh your active cooldowns by ${msToS(-def.modification.cooldownRemaining)}s.`
   }else{
-    return `Increase enemy's action cooldowns by ${msToS(def.modification.cooldownRemaining)}s.`
+    return `Increase the enemy's active cooldowns by ${msToS(def.modification.cooldownRemaining)}s.`
+  }
+
+  function factor(cdrDef){
+    
   }
 }
 

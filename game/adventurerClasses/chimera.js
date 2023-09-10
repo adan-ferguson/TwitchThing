@@ -10,7 +10,7 @@ export const CHIMERA_CLASS_INFO = {
     Skills.ambush,
     Skills.bodySlam,
     Skills.fightAndOrFlight,
-    Skills.senseWeakness,
+    Skills.stayHungry,
     Skills.furiousStrikes,
     Skills.unstoppable,
     Skills.extraArms,

@@ -28,15 +28,15 @@ export default function(combat, actor, abilityInstance, def){
     }),
     ase({
       stats: {
-        physPower: def.weaken + 'x',
-        magicPower: def.weaken + 'x',
+        physPower: def.weaken,
+        magicPower: def.weaken,
       },
       stackingId: 'dbWeak',
       name: 'Weakened'
     }),
   ]
 
-  if(actor.hpPct <= 0.5){
+  if(actor.hpPct < 0.65){
     actions.push(...options)
   }else{
     actions.push(chooseOne(options))

@@ -150,7 +150,7 @@ const as = Joi.object({
     magicPower: Joi.number(),
     burn: Joi.number(),
     slow: Joi.number(),
-    weaken: Joi.number(),
+    weaken: Joi.string(),
   },
   mushroomSpores: {},
   explode: {

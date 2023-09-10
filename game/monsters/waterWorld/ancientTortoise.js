@@ -5,7 +5,7 @@ export default function(){
     baseStats: {
       hpMax: '+200%',
       physPower: '+50%',
-      speed: -60
+      speed: -60,
     },
     items: [{
       name: 'Withdraw',
@@ -37,7 +37,7 @@ export default function(){
     },{
       name: 'Spiked Shell',
       effect: {
-        abilities: [spikedShellAbility(0.12)]
+        abilities: [spikedShellAbility(0.08)]
       }
     }]
   }

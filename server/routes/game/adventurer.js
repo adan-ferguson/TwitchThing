@@ -90,7 +90,7 @@ verifiedRouter.post('/edit/spendskillpoint', validateIdle, async(req, res) => {
 
 verifiedRouter.post('/addxp', async(req, res) => {
   requireOwnsAdventurer(req)
-  const xp = Joi.attempt(req.body.xp, Joi.number().integer())
+  const xp = Joi.attempt(req.body.xp, Joi.number().integer().unsafe())
   spendStashedXp(req.user, req.adventurerDoc, xp)
   await Adventurers.save(req.adventurerDoc)
   await Users.save(req.user)

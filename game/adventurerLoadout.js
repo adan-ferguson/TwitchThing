@@ -2,7 +2,7 @@ import AdventurerItem from './items/adventurerItem.js'
 import AdventurerSkill from './skills/adventurerSkill.js'
 import OrbsData from './orbsData.js'
 import SlotModifierCollection from './slotModifierCollection.js'
-import { isolate } from './utilFunctions.js'
+import { isolate, tryClass } from './utilFunctions.js'
 import LoadoutObjectInstance from './loadoutObjectInstance.js'
 import Stats from './stats/stats.js'
 
@@ -19,7 +19,7 @@ export default class AdventurerLoadout{
       this._objs[0][i] = loadoutObj.items[i] ? new AdventurerItem(loadoutObj.items[i]) : null
 
       const skillName = loadoutObj.skills[i]
-      this._objs[1][i] = skillName ? new AdventurerSkill(skillName, adventurer.doc.unlockedSkills[skillName]) : null
+      this._objs[1][i] = skillName ? tryClass(AdventurerSkill, [skillName, adventurer.doc.unlockedSkills[skillName]]) : null
     }
   }
 
@@ -105,7 +105,7 @@ export default class AdventurerLoadout{
       const modOrbs = this.modifiers.get(col, slot, 'orbs', loadoutItem)
         .filter(mo => {
           for(let key in mo){
-            if(key in loadoutItem.orbs){
+            if(key === 'all' || key in loadoutItem.orbs){
               return true
             }
           }

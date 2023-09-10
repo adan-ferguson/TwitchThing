@@ -34,7 +34,6 @@ const DEFS = {
 
 export function loadoutModifierToEl(modifier, isItem){
 
-  debugger
   const def = DEFS[modifier.loadoutModifierId]?.(modifier)
   if(def){
     return wrapContent(def)

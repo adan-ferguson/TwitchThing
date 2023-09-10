@@ -1,4 +1,5 @@
 import _ from 'lodash'
+import { calculateCompositeValue } from './stats/statValueFns.js'
 
 export default class OrbsData{
 
@@ -47,25 +48,36 @@ export default class OrbsData{
 
 function toObj(objOrArray, key){
   if(Array.isArray(objOrArray)){
-    objOrArray = objOrArray.reduce((current, next) => {
-      if(next instanceof OrbsData){
+    const byClass = {}
+    objOrArray.forEach(next => {
+      if (next instanceof OrbsData){
         next = next[key + 'Orbs']
       }
-      for(let group in next){
-        if(!current[group]){
-          current[group] = 0
+      for (let group in next){
+        if (!byClass[group]){
+          byClass[group] = []
         }
-        current[group] += next[group]
+        byClass[group].push(next[group])
       }
-      return current
-    }, {})
+    })
+    const all = byClass.all ?? []
+    objOrArray = {}
+    for(let advClass in byClass){
+      if(advClass === 'all'){
+        continue
+      }
+      objOrArray[advClass] = calculateCompositeValue([
+        ...byClass[advClass],
+        ...all
+      ])
+    }
   }else if(objOrArray instanceof OrbsData){
     objOrArray = objOrArray[key + 'Orbs']
   }
 
   // Remove negatives, maybe shouldn't always be the case?
   for(let key in objOrArray){
-    objOrArray[key] = Math.max(0, objOrArray[key])
+    objOrArray[key] = Math.max(0, Math.round(objOrArray[key]))
   }
 
   return objOrArray || {}

@@ -12,7 +12,7 @@ export default function(level){
             targets: 'self',
             trigger: 'active',
             modification: {
-              cooldownRemaining: -amount
+              cooldownRemaining: { flat: -amount }
             }
           }
         }]

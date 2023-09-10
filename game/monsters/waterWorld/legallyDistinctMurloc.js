@@ -14,7 +14,7 @@ export default function(){
               targets: 'enemy',
               trigger: 'active',
               modification: {
-                cooldownRemaining: 10000
+                cooldownRemaining: { flat: 10000 }
               }
             }
           }]

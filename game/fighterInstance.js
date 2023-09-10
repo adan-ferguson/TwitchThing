@@ -347,6 +347,9 @@ export default class FighterInstance{
       if(conditions.tag && !sei.tags.includes(conditions.tag)){
         return false
       }
+      if(conditions.barrier && !sei.barrier){
+        return false
+      }
       return true
     })
   }

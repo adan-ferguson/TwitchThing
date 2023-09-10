@@ -102,7 +102,7 @@ export default class App extends HTMLElement{
       if(page.useHistory){
         addPageToHistory(page, replaceHistoryState)
       }
-      this.showError(ex.error ?? ex)
+      this.showError(ex.error ?? ex, path ? true : false)
       return
     }
 
@@ -129,8 +129,10 @@ export default class App extends HTMLElement{
     this.style.backgroundImage = texture ? `url("/assets/textures/${texture}")` : null
   }
 
-  showError(error){
-    this.setPage('')
+  showError(error, redirectToMain = true){
+    if(redirectToMain){
+      this.setPage('')
+    }
     let str
     if(!error){
       str = 'Some error'

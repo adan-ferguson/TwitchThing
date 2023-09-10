@@ -9,7 +9,7 @@ export default function(combat, actor, subject, abilityInstance = null, actionDe
     .slice(0, actionDef.count ?? undefined)
     .forEach(ei => {
       return ei.getAbilities(actionDef.trigger, 'action').forEach(ability => {
-        ability.cooldownRemaining += actionDef.modification.cooldownRemaining ?? 0
+        changeCooldown(ability, actionDef.modification.cooldownRemaining ?? {})
         modifiedAbilities.push({ parentEffect: ei.uniqueID })
       })
     })
@@ -17,4 +17,9 @@ export default function(combat, actor, subject, abilityInstance = null, actionDe
   return {
     modifiedAbilities
   }
+}
+
+function changeCooldown(ability, change ){
+
+  ability.cooldownRemaining += actionDef.modification.cooldownRemaining ?? 0
 }
