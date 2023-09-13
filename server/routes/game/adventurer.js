@@ -133,18 +133,22 @@ verifiedRouter.post('/refund', async(req, res, next) => {
   if(index === -1){
     throw 'Adventurer can not be refunded, not in user\'s adventurer list'
   }
-  req.adventurerDoc.xp /= 2
-  req.adventurerDoc.unlockedSkills = {}
-  req.adventurerDoc.orbs = {}
+  const doc = req.adventurerDoc
+  if(!doc.state.canRefundForFree){
+    doc.xp /= 2
+  }
+  doc.state.canRefundForFree = true
+  doc.unlockedSkills = {}
+  doc.orbs = {}
   commitAdventurerLoadout(
-    req.adventurerDoc,
+    doc,
     req.user,
     fillArray(() => null, 8),
     fillArray(() => null, 8)
   )
-  await Adventurers.save(req.adventurerDoc)
+  await Adventurers.save(doc)
   await Users.save(req.user)
-  res.status(200).send({ success: 1, adventurer: req.adventurerDoc })
+  res.status(200).send({ success: 1, adventurer: doc })
 })
 
 

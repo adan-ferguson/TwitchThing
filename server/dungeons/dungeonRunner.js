@@ -105,21 +105,22 @@ export async function addRun(adventurerID, dungeonOptions){
     ...dungeonOptions
   }
 
-  const adventurer = await Adventurers.findByID(adventurerID)
+  const advDoc = await Adventurers.findByID(adventurerID)
   const startingFloor = parseInt(dungeonOptions.startingFloor) || 1
-  const userDoc = await Users.findByID(adventurer.userID)
-  validateNew(adventurer, userDoc, dungeonOptions)
+  const userDoc = await Users.findByID(advDoc.userID)
+  validateNew(advDoc, userDoc, dungeonOptions)
 
   const drDoc = await DungeonRuns.save({
-    adventurer,
+    adventurer: advDoc,
     dungeonOptions,
     floor: startingFloor,
     startTime: Date.now(),
     version: DungeonRuns.CURRENT_VERSION,
   })
 
-  adventurer.dungeonRunID = drDoc._id
-  await Adventurers.save(adventurer)
+  advDoc.dungeonRunID = drDoc._id
+  advDoc.state.canRefundForFree = false
+  await Adventurers.save(advDoc)
 
   activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, userDoc)
   await activeRuns[drDoc._id].initialize()

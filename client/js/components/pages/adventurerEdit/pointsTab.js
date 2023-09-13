@@ -18,7 +18,7 @@ const HTML = `
   </div>
 </div>
 <div style="flex: 0 1; align-self: center;">
-Gain ${skillPointEntry(1)} every 5 levels <button class="refund-points">Refund Points</button>
+Gain ${skillPointEntry(1)} every 5 levels <button class="refund-points">Refund Points<span class="free-txt"> (Free)</span></span></button>
 </div>
 `
 
@@ -64,19 +64,17 @@ export default class PointsTab extends DIElement{
       cd.setup(user, adventurer, index)
     })
 
+    const free = adventurer.doc.state.canRefundForFree
     const btn = this.querySelector('.refund-points')
-    btn.addEventListener('click', () => {
-      const oldLevel = advXpToLevel(adventurer.xp)
-      const newLevel = advXpToLevel(adventurer.xp / 2)
 
-      new SimpleModal(`
-      Refund all points? You'll lose half your xp.
-      <br/><br/>
-      Lvl. ${oldLevel} -> ${newLevel}
-      <br/><br/>
-      (This is like dismissing an adventurer and creating a new one, but a bit more convenient).`, [{
+    if(free){
+      btn.classList.add('free')
+    }
+
+    btn.addEventListener('click', () => {
+      new SimpleModal(msg(adventurer, free), [{
         text: 'Refund',
-        style: 'scary',
+        style: free ? 'good' : 'scary',
         value: true
       },{
         text: 'Never Mind',
@@ -96,3 +94,18 @@ export default class PointsTab extends DIElement{
   }
 }
 customElements.define('di-adventurer-edit-points-tab', PointsTab)
+
+function msg(adventurer, free){
+  if(free){
+    return 'Refund all points? You won\'t lose any xp because this adventurer hasn\'t done anything since its last refund.'
+  }else{
+    const oldLevel = advXpToLevel(adventurer.xp)
+    const newLevel = advXpToLevel(adventurer.xp / 2)
+    return  `
+      Refund all points? You'll lose half your xp.
+      <br/><br/>
+      Lvl. ${oldLevel} -> ${newLevel}
+      <br/><br/>
+      (This is like dismissing an adventurer and creating a new one, but a bit more convenient).`
+  }
+}

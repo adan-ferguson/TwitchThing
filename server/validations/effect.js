@@ -1,6 +1,6 @@
 import { SUBJECT_KEYS, SUBJECT_KEYS_SCHEMA } from './subjectKeys.js'
 import Joi from 'joi'
-import { STATS_MODIFIERS_SCHEMA, STATS_NAME_SCHEMA, STATS_SCHEMA } from './stats.js'
+import { STATS_MODIFIERS_SCHEMA, STATS_NAME_SCHEMA, STATS_NUMBER_SCHEMA, STATS_SCHEMA } from './stats.js'
 import { DAMAGE_TYPE_SCHEMA } from './damage.js'
 import { MODS_SCHEMA } from './mods.js'
 import { status as StatusEffects, phantom as PhantomEffects } from '../../game/baseEffects/combined.js'
@@ -74,7 +74,11 @@ const as = Joi.object({
     subject: Joi.object(),
     trigger: TRIGGER_NAME_SCHEMA,
     modification: Joi.object({
-      cooldownRemaining: Joi.number().integer()
+      cooldownRemaining: Joi.object({
+        flat: Joi.number().integer(),
+        remaining: Joi.number().min(0),
+        total: Joi.number().min(0),
+      })
     }).required()
   }),
   modifyStatusEffect: Joi.object({
@@ -232,6 +236,7 @@ export const META_EFFECT_SCHEMA = Joi.object({
       repetitions: Joi.number().integer().min(1),
       exclusiveStats: STATS_SCHEMA,
       addAction: ACTION_SCHEMA,
+      cooldown: STATS_NUMBER_SCHEMA,
       vars: Joi.object()
     })
   }

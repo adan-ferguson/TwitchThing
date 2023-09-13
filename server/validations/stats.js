@@ -15,3 +15,5 @@ for(let key in Stats){
 export const STATS_SCHEMA = Joi.object(TYPES)
 export const STATS_MODIFIERS_SCHEMA = Joi.object(MODIFIERS)
 export const STATS_NAME_SCHEMA = Joi.string().valid(...Object.keys(Stats))
+
+export const STATS_NUMBER_SCHEMA = Joi.alternatives(Joi.number(), Joi.string().pattern(/^[0-9.]+[%x]?$/))

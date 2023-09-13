@@ -19,7 +19,12 @@ export default function(combat, actor, subject, abilityInstance = null, actionDe
   }
 }
 
-function changeCooldown(ability, change ){
-
-  ability.cooldownRemaining += actionDef.modification.cooldownRemaining ?? 0
+function changeCooldown(ability, cdrDef){
+  if(cdrDef.flat){
+    ability.cooldownRemaining += cdrDef.flat
+  }else if(cdrDef.total){
+    ability.cooldownRemaining += (cdrDef.total - 1) * ability.cooldown
+  }else if(cdrDef.remaining){
+    ability.cooldownRemaining += (cdrDef.remaining - 1) * ability.cooldownRemaining
+  }
 }

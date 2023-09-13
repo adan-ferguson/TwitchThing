@@ -40,6 +40,10 @@ export default class EventContentsResults extends HTMLElement{
     window.addEventListener('click', this._skipAnims)
   }
 
+  get tabz(){
+    return this.querySelector('di-tabz')
+  }
+
   showFinalizerButton(fn){
     const el = this.querySelector('.finalizer')
     el.classList.remove('displaynone')
@@ -50,17 +54,16 @@ export default class EventContentsResults extends HTMLElement{
 
     this._linkedAdventurerPane = adventurerPane
 
-    const tabz = this.querySelector('di-tabz')
     adventurerPane.setAdventurer(new Adventurer(deepClone(dungeonRun.adventurer)))
 
     requestAnimationFrame(() => {
       this._skipAnimations = false
       waitUntilDocumentVisible().then(() => {
-        this._showMainResults(tabz.getContentEl('Results'), dungeonRun, adventurerPane, watching)
+        this._showMainResults(this.tabz.getContentEl('Results'), dungeonRun, adventurerPane, watching)
       })
     })
 
-    this._setupLootTab(tabz.getContentEl('Loot').querySelector('.chest-list'), dungeonRun.rewards.chests)
+    this._setupLootTab(dungeonRun.rewards.chests)
   }
 
   stop(){
@@ -105,8 +108,12 @@ export default class EventContentsResults extends HTMLElement{
     })
   }
 
-  _setupLootTab(target, chests){
-    target.appendChild(consolidatedChestList(chests))
+  _setupLootTab(chests){
+    if(!chests || !chests.length){
+      this.tabz.hideTab('Loot')
+      return
+    }
+    this.tabz.getContentEl('Loot').querySelector('.chest-list').appendChild(consolidatedChestList(chests))
   }
 
   _addRow(target, row){
@@ -135,7 +142,7 @@ export default class EventContentsResults extends HTMLElement{
 
   async _addChests(el, chests, chestsOpened){
 
-    if(!chests.length){
+    if(!chests?.length){
       return
     }
 

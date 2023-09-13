@@ -206,16 +206,22 @@ function arrayToDescriptions(actions, abilityInstance){
 }
 
 function modifyCooldownRemaining(actionDef, cdrDef){
-  //  TODO: hacky
-  debugger
+
+  //  TODO: this is hacky/incomplete
   if(actionDef.targets === 'self'){
-    return `Refresh your active cooldowns by ${msToS(-def.modification.cooldownRemaining)}s.`
+    return `Refresh your active cooldowns by <b>${factor(cdrDef)}</b>.`
   }else{
-    return `Increase the enemy's active cooldowns by ${msToS(def.modification.cooldownRemaining)}s.`
+    return `Increase the enemy's active cooldowns by <b></b>${factor(cdrDef)}</b>.`
   }
 
   function factor(cdrDef){
-    
+    if(cdrDef.flat){
+      return msToS(cdrDef.flat) + 's'
+    }else if(cdrDef.total){
+      return toPct(1 - cdrDef.total) + ' of max'
+    }else if(cdrDef.remaining){
+      return toPct(1 - cdrDef.remaining) + ' of remaining'
+    }
   }
 }
 

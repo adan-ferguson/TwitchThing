@@ -155,9 +155,9 @@ export default class Adventurer{
       throw 'Can not upgrade skill'
     }
     this.doc.unlockedSkills[skill.id] = skill.level + 1
-    if(skill.level === 0){
-      this.loadout.addSkillToEmptySlot(skill.id)
-    }
+    // if(skill.level === 0){
+    //   this.loadout.addSkillToEmptySlot(skill.id)
+    // }
     this._uncacheLoadout()
   }
 

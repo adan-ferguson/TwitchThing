@@ -37,6 +37,15 @@ export default class Tabz extends DIElement{
     return this.currentTab?.getAttribute('data-tab-name')
   }
 
+  hideTab(name){
+    this.getTab(name).classList.add('displaynone')
+    this.getContentEl(name).classList.add('displaynone')
+  }
+
+  getTab(name){
+    return this.querySelector(`.tabz-list [data-tab-name=${name}]`)
+  }
+
   getContentEl(name){
     return this.querySelector(`.tabz-content [data-tab-name=${name}]`)
   }

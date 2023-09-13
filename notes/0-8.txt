@@ -3,9 +3,9 @@ v0.8.1.0
 ************ General ************
 - Chests no longer contain gold, you'll get gold whenever you kill an enemy instead (like every JRPG ever).
 - Increased the amount of XP required to level up for levels beyond 100. This change will lower the levels of some adventurers.
-- Skills will automatically equip when unlocked if there's an empty slot for them to go.
 - Hidden convenience thing: You can shift+click when spending points to go to the nearest 5.
 - As a temporary measure, there's now an eye icon next to skills which you've seen on that user account, but can't be unlocked yet by that adventurer.
+- When you refund points, refunds with that adventurer are now free until you enter a dungeon.
 
 - Skills and items which granted max hp, phys power, or magic power now generally have improved scaling as they're upgraded.
 -- Won't list all of them, but for example, Short Sword went from [20/35/50/65...] to [20/35/52/70...]
@@ -155,7 +155,9 @@ Lucky Ring
 
 Phantom Cloak
 - A nice 0% usage, which made me double check that it even works at all.
--
+- It now also lowers the ability's cooldown by [10/15/20...] seconds, which allows for getting it low enough to trigger each dodge.
+- Dodge chance granted starts at 10% instead of 0%.
+- Cost changed from [12/15/18...] to [12/18/24...]
 
 The Bounty Collector
 - No longer gives chests, now increases the gold reward from the enemy by [4x/7x/10x...]

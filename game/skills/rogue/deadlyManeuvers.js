@@ -9,7 +9,7 @@ export default function(level){
             trigger: 'active',
             modification: {
               cooldownRemaining: {
-                total: 0.8 * Math.pow(0.9, level - 1),
+                total: 0.85 * Math.pow(0.92, level - 1),
               }
             }
           }
