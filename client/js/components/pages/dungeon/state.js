@@ -15,7 +15,7 @@ const innerHTML = `
     <div>
       XP: <span class="xp-reward">0</span>
     </div>
-    <div>
+    <div class="gold-yes">
       Gold <span class="gold-reward">0</span>
     </div>
     <div>
@@ -49,7 +49,7 @@ export default class State extends HTMLElement{
     return this.querySelector('.max-food')
   }
 
-  setup(dungeonRun){
+  setup(dungeonRun, user){
     let paceAndRest = dungeonRun.dungeonOptions.pace ?? 'Brisk'
     if(dungeonRun.dungeonOptions.restThreshold > 0){
       paceAndRest += `, Rest when HP < ${dungeonRun.dungeonOptions.restThreshold}%`
@@ -57,6 +57,10 @@ export default class State extends HTMLElement{
       this.querySelectorAll('.resting-yes').forEach(el => el.classList.add('displaynone'))
     }
     this.querySelector('.pace-and-rest').textContent = paceAndRest
+
+    if(!user.features.gold){
+      this.querySelectorAll('.gold-yes').forEach(el => el.classList.add('displaynone'))
+    }
   }
 
   update(event, run, adventurerInstance, animate){

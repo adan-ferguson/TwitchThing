@@ -1,8 +1,6 @@
 import Adventurers from './adventurers.js'
 import Collection from './collection.js'
 import { emit } from '../socketServer.js'
-import { deepClone } from '../../game/utilFunctions.js'
-import { updateAccomplishments } from '../user/accomplishments.js'
 
 const DEFAULTS = {
   _id: null,
@@ -27,9 +25,11 @@ const DEFAULTS = {
     editLoadout: 0,
     spendPoints: 0,
     skills: 0,
+    gold: 0,
     dungeonPicker: 0,
     shop: 0,
     workshop: 0,
+    superDungeon: 0,
     advClasses: {
       fighter: 2,
       mage: 2,

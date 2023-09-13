@@ -87,13 +87,13 @@ export async function finalize(dungeonRunDoc){
     adventurerDoc.xp = xpAfter
     adventurerDoc.level = advXpToLevel(xpAfter)
     adventurerDoc.accomplishments.deepestFloor = Math.max(deepestFloor, adventurerDoc.accomplishments.deepestFloor)
-    // if(deepestFloor === 60 && lastEvent.roomType === 'cleared' && !adventurerDoc.accomplishments.deepestSuperFloor){
-    //   adventurerDoc.accomplishments.deepestSuperFloor = 1
-    //   emit(userDoc._id, 'show popup', {
-    //     title: 'Wow!',
-    //     message: `${adventurerDoc.name} cleared the whole dungeon, now try the unfair and gigantic waste of time SUPER dungeon!`
-    //   })
-    // }
+    if(deepestFloor === 61 && !adventurerDoc.accomplishments.deepestSuperFloor){
+      adventurerDoc.accomplishments.deepestSuperFloor = 1
+      emit(userDoc._id, 'show popup', {
+        title: 'Wow!',
+        message: `${adventurerDoc.name} cleared the whole dungeon, now try the unfair and gigantic waste of time SUPER dungeon!`
+      })
+    }
     await Adventurers.save(adventurerDoc)
     return adventurerDoc
   }
@@ -133,6 +133,7 @@ export async function finalize(dungeonRunDoc){
 
     if(adventurerDoc.level >= 5 && !userDoc.features.skills){
       userDoc.features.skills = 1
+      userDoc.features.gold = 2
       emit(userDoc._id, 'show popup', {
         title: 'Skill Point!',
         message: 'You got your first skill point, go spend it now! Now now now!'

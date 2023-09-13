@@ -23,7 +23,7 @@ export default class ActionBar extends Bar{
 
   setBaseTime(fighterInstance){
     const speedStatObj = fighterInstance.stats.get('speed')
-    this._baseTime = speedToTurnTime(speedStatObj.baseValue)
+    this._baseTime = fighterInstance.baseTurnTime * speedToTurnTime(speedStatObj.baseValue)
   }
 
   setTime(fighterInstance, dontFlash = false){

@@ -57,7 +57,7 @@ export default class LiveDungeonMap extends HTMLElement{
       this._floorEls[dungeonRun.floor - 1].appendChild(el)
       this._showZones(Math.floor((el.floor - 1) / 10))
     }
-    const fs = dungeonRun.room / floorSize(dungeonRun.floor)
+    const fs = dungeonRun.room / floorSize(dungeonRun)
     const pct = 95 * Math.min(1, fs)
     el.style.left = `${pct}%`
   }

@@ -82,6 +82,10 @@ export default class _DungeonRunInstance extends EventEmitter{
     return this.doc.dungeonOptions.restThreshold ?? 0
   }
 
+  get isSuper(){
+    return this.doc.dungeonOptions.super ? true : false
+  }
+
   get instructions(){
     return this._instructions
   }

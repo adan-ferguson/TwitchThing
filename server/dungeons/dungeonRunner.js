@@ -102,6 +102,7 @@ export async function addRun(adventurerID, dungeonOptions){
     startingFloor: 1,
     pace: 'Brisk',
     restThreshold: null,
+    superDungeon: false,
     ...dungeonOptions
   }
 
@@ -203,7 +204,7 @@ export async function cancelRun(dungeonRunDoc, ex){
   await DungeonRuns.save(dungeonRunDoc)
 }
 
-function validateNew(adventurerDoc, userDoc, { startingFloor }){
+function validateNew(adventurerDoc, userDoc, { startingFloor, superDungeon }){
   if(!adventurerDoc){
     throw 'Adventurer not found'
   }
@@ -216,6 +217,9 @@ function validateNew(adventurerDoc, userDoc, { startingFloor }){
   const adventurer = new Adventurer(adventurerDoc)
   if(!adventurer.isValid){
     throw 'Adventurer has invalid loadout.'
+  }
+  if(superDungeon && !adventurerDoc.accomplishments.deepestSuperFloor){
+    throw 'Adventurer has not unlocked super dungeon.'
   }
 }
 

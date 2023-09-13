@@ -39,7 +39,8 @@ verifiedRouter.post('/enterdungeon', validateIdle, async(req, res) => {
   const params = Joi.attempt(req.body, Joi.object({
     startingFloor: Joi.number().integer(),
     pace: Joi.string(),
-    restThreshold: Joi.number().integer()
+    restThreshold: Joi.number().integer(),
+    superDungeon: Joi.bool(),
   }))
   const dungeonRun = await addRun(req.adventurerDoc._id, params)
   res.send({ dungeonRun })

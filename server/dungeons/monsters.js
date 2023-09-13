@@ -110,7 +110,10 @@ export async function generateMonster(dungeonRun, boss){
 
   const index = boss ? dungeonRun.floor : floorToLevel(dungeonRun.floor)
   const monsterDefinition = getMonsterDefinition(index)
-  monsterDefinition.level = index
+  const level = dungeonRun.isSuper ? superLevel(index) : index
+
+  monsterDefinition.tier = dungeonRun.isSuper ? 1 : 0
+  monsterDefinition.level = level
   monsterDefinition.boss = boss
 
   return {
@@ -221,4 +224,10 @@ function dropPityChest(dungeonRun, dropChance){
     return true
   }
   return false
+}
+
+function superLevel(level){
+  const BASE = 70
+  const PER = 2
+  return BASE + (level - 1) * PER
 }

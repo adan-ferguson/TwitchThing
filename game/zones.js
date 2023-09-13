@@ -41,9 +41,11 @@ export function floorToZone(floor){
   return Math.floor((floor - 1) / 10)
 }
 
-export function floorSize(floor){
+export function floorSize(dungeonRunDoc){
+  const floor = dungeonRunDoc.floor
+  const isSuper = dungeonRunDoc.dungeonOptions.super
   const zone = Math.floor((floor - 1) / 10)
   const zoneFloor = floor - zone * 10
   const bonus = zoneFloor === 10 ? FINAL_FLOOR_BONUS : 1
-  return Math.floor((zone === 0 ? ZONE_0_REDUCTION : 1) * bonus * (SIZE_BASE + zoneFloor * SIZE_PER_FLOOR) + zone * SIZE_PER_ZONE)
+  return Math.floor((zone === 0 && !isSuper ? ZONE_0_REDUCTION : 1) * bonus * (SIZE_BASE + zoneFloor * SIZE_PER_FLOOR) + zone * SIZE_PER_ZONE)
 }

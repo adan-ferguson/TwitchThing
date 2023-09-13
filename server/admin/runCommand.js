@@ -13,17 +13,17 @@ export async function runCommand(cmd){
 }
 
 const COMMANDS = {
-  // 'reset all': async () => {
-  //   cancelAllRuns()
-  //   await Promise.all([
-  //     Users.resetAll(),
-  //     Adventurers.removeAll(),
-  //     DungeonRuns.removeAll(),
-  //     Combats.removeAll(),
-  //     Purchases.removeAll()
-  //   ])
-  //   return 'Everything has been successfully reset.'
-  // },
+  'reset all 2': async () => {
+    cancelAllRuns()
+    await Promise.all([
+      Users.resetAll(),
+      Adventurers.removeAll(),
+      DungeonRuns.removeAll(),
+      Combats.removeAll(),
+      Purchases.removeAll()
+    ])
+    return 'Everything has been successfully reset.'
+  },
   'force reload': () => {
     broadcast('force reload')
     return 'Broadcasted'
@@ -42,6 +42,7 @@ const COMMANDS = {
       userDoc.features.shop = 2
       userDoc.features.workshop = 2
       userDoc.features.skills = 2
+      userDoc.features.gold = 2
       userDoc.features.advClasses.rogue = 2
       userDoc.features.advClasses.chimera = 2
       Users.save(userDoc)
