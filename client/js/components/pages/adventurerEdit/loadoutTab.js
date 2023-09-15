@@ -279,7 +279,7 @@ export default class LoadoutTab extends DIElement{
           if(content.val){
             showLoader()
             fizzetch(`/game/adventurer/${adventurer.id}/addxp`, {
-              xp: content.val * 10000000000000000000
+              xp: content.val
             }).then(() => {
               hideLoader()
               this.parentPage.reload()

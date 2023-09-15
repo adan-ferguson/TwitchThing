@@ -3,7 +3,7 @@ import { getStatDisplayInfo, statDefinitionsInfo, StatsDisplayStyle } from '../d
 import {
   deepClone,
   makeEl,
-  roundToNearestIntervalOf,
+  roundToNearestIntervalOf, suffixedNumber,
   toDisplayName,
   toPct,
   wrapContent
@@ -186,11 +186,11 @@ export function statScaling(scaling, obj = null, range = null, sourceStr = ''){
       if(obj?.totalStats){
         const statVal = val * obj.totalStats.get(scalingType).value
         if(range){
-          const val1 = Math.ceil(statVal * range[0])
-          const val2 = Math.ceil(statVal * range[1])
+          const val1 = suffixedNumber(Math.ceil(statVal * range[0]))
+          const val2 = suffixedNumber(Math.ceil(statVal * range[1]))
           str = val1 + ' to ' + val2
         }else{
-          str = Math.ceil(statVal)
+          str = suffixedNumber(Math.ceil(statVal))
         }
       }else{
         if(range){

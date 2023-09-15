@@ -4,7 +4,7 @@ import Adventurers from '../../collections/adventurers.js'
 import { validateParam } from '../../validations.js'
 import { getErrorLogTail, getOutputLogTail } from '../../logging.js'
 import { generateSimulatedCombat, getCombatArgs } from '../../combat/fns.js'
-import { getAllMonsters } from '../../dungeons/monsters.js'
+import { getAllMonsters, getAllSuperMonsters } from '../../dungeons/monsters.js'
 import { runCommand } from '../../admin/runCommand.js'
 import { getWorkerStatus } from '../../combat/interop.js'
 import DungeonRuns from '../../collections/dungeonRuns.js'
@@ -48,7 +48,8 @@ router.post('/runcommand', async(req, res) => {
 router.post('/sim', async (req, res) => {
   const adventurers = await Adventurers.find({ sort: { level: -1 } })
   const monsters = getAllMonsters()
-  res.status(200).send({ adventurers, monsters })
+  const superMonsters = getAllSuperMonsters()
+  res.status(200).send({ adventurers, monsters, superMonsters })
 })
 
 router.post('/sim/run', async (req, res) => {

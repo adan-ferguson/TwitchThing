@@ -23,8 +23,8 @@ const XP_GROWTH = 1.5
 const XP_GROWTH_PCT = 0.08
 const XP_ZONE_BONUS = 2
 
-const GOLD_BASE = 2
-const GOLD_GROWTH = 1
+const GOLD_BASE = 1
+const GOLD_GROWTH = 0.5
 const GOLD_GROWTH_PCT = 0.02
 
 export function monsterLevelToXpReward(lvl){
@@ -96,7 +96,7 @@ export default class MonsterInstance extends FighterInstance{
   }
 
   get isSuper(){
-    return this.monsterDef.super ?  true : false
+    return this.monsterDef.tier > 0 ?  true : false
   }
 
   get description(){

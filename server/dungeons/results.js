@@ -74,8 +74,8 @@ export async function finalize(dungeonRunDoc){
     deepestFloor += 1
   }
 
-  const adventurerDoc = await saveAdventurer()
   const userDoc = await Users.findByID(dungeonRunDoc.adventurer.userID)
+  const adventurerDoc = await saveAdventurer()
   await saveUser()
   await saveDungeonRun()
   await purgeOldRuns(dungeonRunDoc.adventurer._id)

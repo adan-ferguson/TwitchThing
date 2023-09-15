@@ -16,7 +16,7 @@ const innerHTML = `
       XP: <span class="xp-reward">0</span>
     </div>
     <div class="gold-yes">
-      Gold <span class="gold-reward">0</span>
+      Gold: <span class="gold-reward">0</span>
     </div>
     <div>
       Chests: <span class="chests">0</span>

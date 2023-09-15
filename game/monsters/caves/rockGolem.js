@@ -1,10 +1,10 @@
-export default function(){
+export default function(tier){
   return {
     baseStats: {
       hpMax: '+30%',
       physPower: '+110%',
       speed: -110,
-      physDef: '50%'
+      physDef: tier ? '99%' : '50%'
     }
   }
 }

@@ -101,7 +101,7 @@ export function generateSuperMonster(dungeonRun){
   monsterDefinition.level = dungeonRun.room + 54
   return {
     ...monsterDefinition,
-    super: true,
+    tier: 1,
     rewards: generateRewards(dungeonRun, monsterDefinition)
   }
 }
@@ -190,6 +190,16 @@ export function getAllMonsters(){
   })
 }
 
+export function getAllSuperMonsters(){
+  return getAllMonsters().map(mDef => {
+    return {
+      ...mDef,
+      level: superLevel(mDef.level),
+      tier: 1,
+    }
+  })
+}
+
 /**
  * Given a floor, return a random level equal to this floor or less, but it has to be
  * the same zone (aka the tens digit must remain the same).
@@ -215,7 +225,8 @@ function getBasicMonsterDefinition(floor){
   return {
     _id: 'basic-' + uniqueID(),
     baseType: monstersByFloor[floor].id,
-    level: floor
+    level: floor,
+    tier: 0,
   }
 }
 
