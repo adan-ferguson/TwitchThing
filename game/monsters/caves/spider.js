@@ -28,7 +28,7 @@ export default function(tier){
     baseStats: {
       physPower: '+20%',
       hpMax: '+30%',
-      speed: 10
+      speed: 10 + 40 * tier
     },
     items: [webShot],
   }

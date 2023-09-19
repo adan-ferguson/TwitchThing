@@ -255,3 +255,8 @@ export function tryClass(Class, args){
     return null
   }
 }
+
+export function removeNaNs(obj){
+  // I guess that's good enough? NaN gets replaced with null
+  return deepClone(obj)
+}

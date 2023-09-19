@@ -28,7 +28,8 @@ const FORM_HTML = `
 const HTML = `
 <div class="content-columns">
   <div class="content-well floor-picker fill-contents">
-    <di-floor-slider></di-floor-slider>
+    <di-checkbox class="super-dungeon flex-no-grow">SUPER Dungeon</di-checkbox>
+    <di-floor-picker></di-floor-picker>
   </div>
   <div class="content-well stuff">
   </div>
@@ -43,7 +44,6 @@ export default class DungeonPickerPage extends Page{
     super()
     this.adventurerID = adventurerID
     this.innerHTML = HTML
-    this.floorSlider = this.querySelector('di-floor-slider')
     this._formEl = new DIForm({
       async: true,
       fullscreenLoading: { message: 'Entering Dungeon...' },
@@ -54,7 +54,10 @@ export default class DungeonPickerPage extends Page{
         this.storedOptions.setMulti(this._formEl.data())
         this.redirectTo(DungeonPage.path(dungeonRun._id))
       },
-      extraData: () => ({ startingFloor: this.floorSlider.value })
+      extraData: () => ({
+        startingFloor: this.floorPicker.value,
+        superDungeon: this.superDungeonCheckbox.input.checked,
+      })
     })
     this.querySelector('.stuff').appendChild(this._formEl)
 
@@ -72,6 +75,11 @@ export default class DungeonPickerPage extends Page{
     if(radio){
       radio.checked = true
     }
+
+    this.superDungeonCheckbox.input.addEventListener('change', () => {
+      this.storedOptions.superDungeon = this.superDungeonCheckbox.input.checked
+      this._updateFloorPicker()
+    })
   }
 
   static get pathDef(){
@@ -93,8 +101,17 @@ export default class DungeonPickerPage extends Page{
   get storedOptions(){
     return localStorageItem(this.storageKey, {
       pace: 'Brisk',
-      restThreshold: 50
+      restThreshold: 50,
+      superDungeon: false,
     })
+  }
+
+  get superDungeonCheckbox(){
+    return this.querySelector('.super-dungeon')
+  }
+
+  get floorPicker(){
+    return this.querySelector('di-floor-picker')
   }
 
   async load(){
@@ -102,8 +119,20 @@ export default class DungeonPickerPage extends Page{
     const { adventurer } = await this.fetchData()
 
     this.adventurer = adventurer
-    this.floorSlider.setOptions({
-      max: adventurer.accomplishments.deepestFloor,
+
+    if(adventurer.accomplishments.deepestSuperFloor > 0){
+      this.superDungeonCheckbox.input.checked = this.storedOptions.superDungeon
+    }else{
+      this.superDungeonCheckbox.classList.add('displaynone')
+    }
+
+    this._updateFloorPicker()
+  }
+
+  _updateFloorPicker(){
+    const maxProp = this.storedOptions.superDungeon ? 'deepestSuperFloor' : 'deepestFloor'
+    this.floorPicker.setOptions({
+      max: this.adventurer.accomplishments[maxProp],
       showTutorialTooltip: this.user.features.dungeonPicker === 1
     })
   }

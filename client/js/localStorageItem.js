@@ -1,15 +1,29 @@
+const BOOL_TRUE = '__BOOL__TRUE__'
+const BOOL_FALSE = '__BOOL__FALSE__'
+
 const handler = {
   get(obj, prop){
     if(prop in obj){
       return obj[prop]
     }
     if(prop in obj.defaults){
-      return localStorage.getItem(obj.storageKey + '-' + prop) ?? obj.defaults[prop]
+      const val = localStorage.getItem(obj.storageKey + '-' + prop) ?? obj.defaults[prop]
+      if(val === BOOL_TRUE){
+        return true
+      }else if(val === BOOL_FALSE){
+        return false
+      }
+      return val
     }
     throw 'Invalid prop ' + prop
   },
   set(obj, prop, val){
     if(prop in obj.defaults){
+      if(val === true){
+        val = BOOL_TRUE
+      }else if(val === false){
+        val = BOOL_FALSE
+      }
       localStorage.setItem(obj.storageKey + '-' + prop, val)
       return true
     }

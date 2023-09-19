@@ -8,6 +8,7 @@ import { applyChestToUser } from './chests.js'
 import Combats from '../collections/combats.js'
 import { adjustInventoryBasics } from '../user/inventory.js'
 import FullEvents from '../collections/fullEvents.js'
+import DungeonRunInstance from './dungeonRunInstance.js'
 
 const REWARDS_TYPES = {
   xp: 'int',
@@ -75,6 +76,7 @@ export async function finalize(dungeonRunDoc){
   }
 
   const userDoc = await Users.findByID(dungeonRunDoc.adventurer.userID)
+  const dri = new DungeonRunInstance(dungeonRunDoc, userDoc)
   const adventurerDoc = await saveAdventurer()
   await saveUser()
   await saveDungeonRun()
@@ -86,14 +88,27 @@ export async function finalize(dungeonRunDoc){
     adventurerDoc.dungeonRunID = null
     adventurerDoc.xp = xpAfter
     adventurerDoc.level = advXpToLevel(xpAfter)
-    adventurerDoc.accomplishments.deepestFloor = Math.max(deepestFloor, adventurerDoc.accomplishments.deepestFloor)
-    if(deepestFloor === 61 && !adventurerDoc.accomplishments.deepestSuperFloor){
-      adventurerDoc.accomplishments.deepestSuperFloor = 1
-      emit(userDoc._id, 'show popup', {
-        title: 'Wow!',
-        message: `${adventurerDoc.name} cleared the whole dungeon, now try the unfair and gigantic waste of time SUPER dungeon!`
-      })
+
+    if(dri.isSuper){
+      const prev = adventurerDoc.accomplishments.deepestSuperFloor
+      adventurerDoc.accomplishments.deepestSuperFloor = Math.max(deepestFloor, adventurerDoc.accomplishments.deepestSuperFloor)
+      if(deepestFloor === 61 && prev < 61){
+        emit(userDoc._id, 'show popup', {
+          title: 'Banned!',
+          message: `${adventurerDoc.name} cleared the whole SUPER dungeon, which probably means you used UNFAIR GAMEPLAY EXPLOITS! Or the balance just blows.`
+        })
+      }
+    }else{
+      adventurerDoc.accomplishments.deepestFloor = Math.max(deepestFloor, adventurerDoc.accomplishments.deepestFloor)
+      if(deepestFloor === 61 && !adventurerDoc.accomplishments.deepestSuperFloor){
+        adventurerDoc.accomplishments.deepestSuperFloor = 1
+        emit(userDoc._id, 'show popup', {
+          title: 'Wow!',
+          message: `${adventurerDoc.name} cleared the whole dungeon, now try the unfair and gigantic waste of time SUPER dungeon!`
+        })
+      }
     }
+
     await Adventurers.save(adventurerDoc)
     return adventurerDoc
   }

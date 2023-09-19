@@ -43,7 +43,7 @@ export function floorToZone(floor){
 
 export function floorSize(dungeonRunDoc){
   const floor = dungeonRunDoc.floor
-  const isSuper = dungeonRunDoc.dungeonOptions.super
+  const isSuper = dungeonRunDoc.isSuper
   const zone = Math.floor((floor - 1) / 10)
   const zoneFloor = floor - zone * 10
   const bonus = zoneFloor === 10 ? FINAL_FLOOR_BONUS : 1

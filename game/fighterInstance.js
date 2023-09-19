@@ -226,6 +226,10 @@ export default class FighterInstance{
     return Math.ceil(this.stats.get('hpMax').value)
   }
 
+  get hpMissing(){
+    return this.hpMax - this.hp
+  }
+
   get hpPct(){
     return this._state.hpPct ?? 1
   }

@@ -2,7 +2,7 @@ import { getActiveRun, getRunData } from '../../dungeons/dungeonRunner.js'
 import { finalize } from '../../dungeons/results.js'
 import express from 'express'
 import Combats from '../../collections/combats.js'
-import { arrayToObject } from '../../../game/utilFunctions.js'
+import { arrayToObject, removeNaNs } from '../../../game/utilFunctions.js'
 import { requireRegisteredUser } from '../../validations.js'
 import FullEvents from '../../collections/fullEvents.js'
 import { compress } from 'compress-json'
@@ -36,8 +36,8 @@ verifiedRouter.post('/loadfull', async (req, res, next) => {
   const compressed = true
   if(compressed){
     events.filter(e => e.combatID).forEach(e => e.combatID = e.combatID.toString())
-    events = compress(events)
-    combats = compress(combats)
+    events = compress(removeNaNs(events))
+    combats = compress(removeNaNs(combats))
   }
 
   res.send({ combats, events, compressed })

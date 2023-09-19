@@ -4,7 +4,10 @@ import tippy from 'tippy.js'
 import AdventurerStatus from './adventurer/adventurerStatus.js'
 
 const HTML = `
-<div class="runs"></div>
+<di-tabz>
+  <div data-tab-name="Regular" class="runs"></div>
+  <div data-tab-name="SUPER" class="runs"></div>
+</di-tabz>
 `
 
 const ZONE_HTML = ({ name }) => `
@@ -13,29 +16,23 @@ const ZONE_HTML = ({ name }) => `
 
 export default class LiveDungeonMap extends HTMLElement{
 
-  _floorEls = []
   _dungeonRunEls = {}
 
   constructor(){
     super()
     this.innerHTML = HTML
-    const runsEl = this.querySelector('.runs')
-    Zones.forEach((zone, zoneIndex) => {
-      const zoneEl = wrapContent(ZONE_HTML(zone), {
-        class: 'zone',
-        allowHTML: true
-      })
-      zoneEl.classList.add('displaynone')
-      zoneEl.style.backgroundColor = zone.color
-      zoneEl.style.backgroundImage = `url("/assets/textures/${zone.texture}")`
-      for(let i = 0; i < 10; i++){
-        const floorEl = makeEl({ class: 'floor' })
-        this._floorEls[i + 10 * zoneIndex] = floorEl
-        zoneEl.appendChild(floorEl)
-      }
-      runsEl.appendChild(zoneEl)
-    })
+    this._setupRuns(this.regularRunsEl)
+    this._setupRuns(this.superRunsEl)
     this._showZones(0)
+    this.querySelector('di-tabz').hideTab('SUPER')
+  }
+
+  get regularRunsEl(){
+    return this.querySelector('.runs[data-tab-name=Regular]')
+  }
+
+  get superRunsEl(){
+    return this.querySelector('.runs[data-tab-name=SUPER]')
   }
 
   updateRun(dungeonRun){
@@ -54,8 +51,8 @@ export default class LiveDungeonMap extends HTMLElement{
     el.classList.toggle('in-combat', currentEvent.combatID ? true : false)
     if(el.floor !== dungeonRun.floor){
       el.floor = dungeonRun.floor
-      this._floorEls[dungeonRun.floor - 1].appendChild(el)
-      this._showZones(Math.floor((el.floor - 1) / 10))
+      this._getFloorEl(dungeonRun).appendChild(el)
+      this._showZones(Math.floor((el.floor - 1) / 10), dungeonRun.dungeonOptions.superDungeon)
     }
     const fs = dungeonRun.room / floorSize(dungeonRun)
     const pct = 95 * Math.min(1, fs)
@@ -90,12 +87,41 @@ export default class LiveDungeonMap extends HTMLElement{
     this._dungeonRunEls[_id] = el
   }
 
-  _showZones(index){
-    this.querySelectorAll('.zone').forEach((el, i) => {
+  _showZones(index, superDungeon = false){
+    const runsEl = superDungeon ? this.superRunsEl : this.regularRunsEl
+    runsEl.querySelectorAll('.zone').forEach((el, i) => {
       if(i <= index){
         el.classList.remove('displaynone')
       }
     })
+    if(superDungeon){
+      this.querySelector('di-tabz').unhideTab('SUPER')
+    }
+  }
+
+  _setupRuns(runsEl){
+    Zones.forEach((zone, zoneIndex) => {
+      const zoneEl = wrapContent(ZONE_HTML(zone), {
+        class: 'zone',
+        allowHTML: true
+      })
+      zoneEl.classList.add('displaynone')
+      zoneEl.style.backgroundColor = zone.color
+      zoneEl.style.backgroundImage = `url("/assets/textures/${zone.texture}")`
+      for(let i = 0; i < 10; i++){
+        const floorEl = makeEl({ class: 'floor' })
+        zoneEl.appendChild(floorEl)
+      }
+      runsEl.appendChild(zoneEl)
+    })
+  }
+
+  _getFloorEl(dungeonRun){
+    return this._getRunsEl(dungeonRun.dungeonOptions.superDungeon).querySelectorAll('.floor')[dungeonRun.floor - 1]
+  }
+
+  _getRunsEl(isSuper){
+    return isSuper ? this.superRunsEl : this.regularRunsEl
   }
 }
 
