@@ -1,11 +1,12 @@
 import tastyMonsterItem from '../../commonMechanics/tastyMonsterItem.js'
+import { toPct } from '../../utilFunctions.js'
 
-export default function(){
+export default function(tier){
   return {
     baseStats: {
-      hpMax: '+40%',
-      physPower: '+20%',
-      speed: 10
+      hpMax: toPct(0.4 + tier * 1.2),
+      physPower: toPct(0.2 + tier * 0.6),
+      speed: 10 + tier * 40,
     },
     items: [tastyMonsterItem]
   }

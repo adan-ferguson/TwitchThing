@@ -1,4 +1,5 @@
 import { EventEmitter } from 'events'
+import { suffixedNumber } from '../../../../game/utilFunctions.js'
 
 const EFFECT_HTML = (text, color) => `
 <span style='color:${color};'>${text}</span>
@@ -11,7 +12,7 @@ export default class FlyingTextEffect extends EventEmitter{
 
     if(!isNaN(text) && !options.color){
       // Integer mode, positive is green and has a leading plus sign
-      const number = parseInt(text)
+      const number = suffixedNumber(parseInt(text))
       options.color = number > 0 ? '#75e075' : 'red'
       text = (number > 0 ? '+' : '') + number
     }

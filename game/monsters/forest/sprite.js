@@ -1,6 +1,6 @@
 import flutteringMonsterItem from '../../commonMechanics/flutteringMonsterItem.js'
 
-export default function(){
+export default function(tier){
 
   const magicBlast = {
     trigger: 'active',
@@ -9,8 +9,9 @@ export default function(){
     actions: [{
       attack: {
         scaling: {
-          magicPower: 1
+          magicPower: 0.5
         },
+        hits: tier * 3 + 2,
         damageType: 'magic'
       }
     }]
@@ -21,12 +22,12 @@ export default function(){
       speed: 55,
       hpMax: '-50%',
       physPower: '-40%',
-      magicPower: '+40%'
+      magicPower: '+30%'
     },
     items: [
       flutteringMonsterItem,
       {
-        name: 'Magic Blast',
+        name: 'Magic Barrage',
         effect: {
           abilities: [magicBlast]
         }

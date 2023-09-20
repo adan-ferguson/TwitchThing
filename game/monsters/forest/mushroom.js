@@ -1,11 +1,11 @@
+import { toPct } from '../../utilFunctions.js'
 
-
-export default function(){
+export default function(tier){
   return {
     baseStats: {
-      hpMax: '+80%',
+      hpMax: toPct(0.8 + tier * 2.2),
       physPower: '-80%',
-      magicPower: '+20%'
+      magicPower: toPct(0.2 + tier * 1.3)
     },
     items: [
       {
@@ -39,7 +39,7 @@ export default function(){
             trigger: 'hitByAttack',
             abilityId: 'mushroomSpores',
             actions: [{
-              mushroomSpores: {}
+              mushroomSpores: { tier }
             }]
           }]
         }

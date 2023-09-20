@@ -4,7 +4,7 @@ import AdventurerInfo from '../adventurer/adventurerInfo.js'
 import MonsterInfo from '../monster/monsterInfo.js'
 import FlyingTextEffect from '../visualEffects/flyingTextEffect.js'
 import CustomAnimation from '../../animations/customAnimation.js'
-import { mergeOptionsObjects, roundToFixed, toDisplayName } from '../../../../game/utilFunctions.js'
+import { mergeOptionsObjects, roundToFixed, suffixedNumber, toDisplayName } from '../../../../game/utilFunctions.js'
 import { DAMAGE_COLORS } from '../../colors.js'
 import { flash } from '../../animations/simple.js'
 import { ICON_SVGS } from '../../assetLoader.js'
@@ -124,7 +124,9 @@ export default class FighterInstancePane extends HTMLElement{
     if(amount <= 0){
       return
     }
-    new FlyingTextEffect(this.hpBarEl, amount, {
+    let dmgStr = suffixedNumber(roundToFixed(amount, 2))
+    new FlyingTextEffect(this.hpBarEl, dmgStr, {
+      color: '#75e075',
       fontSize: TEXT_EFFECT_MIN + Math.min(0.5, amount / this.fighterInstance.hpMax) * TEXT_EFFECT_MAX,
       clearExistingForSource: true
     })
@@ -136,11 +138,6 @@ export default class FighterInstancePane extends HTMLElement{
   }
 
   _displayDamageResult = (damageResult) => {
-
-    // if(damageResult.cancelled){
-    //   this._displayCancellation(damageResult)
-    //   return
-    // }
 
     const data = damageResult.damageInfo
     const classes = ['damage']
@@ -156,7 +153,7 @@ export default class FighterInstancePane extends HTMLElement{
       if(amount === 0){
         continue
       }
-      let dmgStr = roundToFixed(amount, 2)
+      let dmgStr = suffixedNumber(roundToFixed(amount, 2))
       let html = `<span class="${classes.join(' ')}">-${dmgStr}${data.crit ? '!!' : ''}</span>`
       let barEl = distribution.id === 'hp' ? this.hpBarEl : this._getEffectEl(distribution.id)?.barEl
       if(!barEl){

@@ -156,7 +156,9 @@ const as = Joi.object({
     slow: Joi.number(),
     weaken: Joi.string(),
   },
-  mushroomSpores: {},
+  mushroomSpores: {
+    tier: Joi.number(),
+  },
   explode: {
     scaling: SCALED_NUMBER_SCHEMA,
   },

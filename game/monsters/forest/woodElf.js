@@ -1,4 +1,4 @@
-export default function(){
+export default function(tier){
 
   const aimedShot = {
     trigger: 'active',
@@ -16,7 +16,7 @@ export default function(){
 
   return {
     baseStats: {
-      speed: 30,
+      speed: 30 + tier * 120,
       hpMax: '-10%',
       physPower: '-10%'
     },

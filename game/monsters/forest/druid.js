@@ -1,9 +1,11 @@
-export default function(){
+import { toPct } from '../../utilFunctions.js'
+
+export default function(tier){
   return {
     baseStats: {
       hpMax: '-15%',
       physPower: '-50%',
-      magicPower: '+60%',
+      magicPower: toPct(0.6 + tier * 0.6),
       speed: 40
     },
     items: [
@@ -25,9 +27,9 @@ export default function(){
                     silenced: true
                   }],
                   stats: {
-                    hpMax: '+220%',
-                    physPower: '+220%',
-                    speed: -40
+                    hpMax: toPct(2.2 + tier * 2.2),
+                    physPower: toPct(2.2 + tier * 2.2),
+                    speed: -40 + tier * 140
                   }
                 }
               }
