@@ -1,4 +1,6 @@
-const SPROUT_HEAD_ACTION = (i = 5) => {
+import { toPct } from '../../utilFunctions.js'
+
+const SPROUT_HEAD_ACTION = (offset = 1) => {
   return {
     applyStatusEffect: {
       targets: 'self',
@@ -16,7 +18,7 @@ const SPROUT_HEAD_ACTION = (i = 5) => {
         stacking: null,
         abilities: [{
           trigger: 'instant',
-          initialCooldown: (i + 1) * 1000,
+          initialCooldown: 6000 * offset,
           cooldown: 6000,
           actions: [{
             attack: {
@@ -31,11 +33,13 @@ const SPROUT_HEAD_ACTION = (i = 5) => {
   }
 }
 
-export default function(){
+export default function(tier){
+
+  const heads = 6 + tier * 2
   return {
     baseStats: {
-      hpMax: '-65%',
-      physPower: '-60%',
+      hpMax: toPct(-0.6 + tier * 0.5),
+      physPower: toPct(-0.6 + tier * 0.1),
       speed: -100
     },
     items: [
@@ -46,7 +50,7 @@ export default function(){
             abilityId: 'hydraMultiHeaded',
             trigger: 'startOfCombat',
             uses: 1,
-            actions: new Array(6).fill(0).map((_, i) => SPROUT_HEAD_ACTION(i))
+            actions: new Array(heads).fill(0).map((_, i) => SPROUT_HEAD_ACTION(i/heads))
           }],
           mods: [{
             freezeActionBar: true
@@ -59,8 +63,8 @@ export default function(){
           abilities: [{
             abilityId: 'hydraSproutHead',
             trigger: 'instant',
-            uses: 6,
-            initialCooldown: 5000,
+            uses: 6 + tier * 6,
+            initialCooldown: tier ? 2500 : 5000,
             actions: [SPROUT_HEAD_ACTION(),SPROUT_HEAD_ACTION()]
           }]
         }

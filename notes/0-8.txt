@@ -11,6 +11,7 @@ v0.8.1.0
 -- Won't list all of them, but for example, Short Sword went from [20/35/50/65...] to [20/35/52/70...]
 -- Some of these have better scaling than others, based on their rarity and how popular they were in previous patch.
 
+- Did lazy high-number notation, will do it for real eventually.
 ************ Monsters (Regular Versions) ************
 Numbers-only Changes
 - Buffs: Druid, Bitey Plant, Hydra, Siren, Two-Headed Shark, Water Elemental, Cerberus, Night Mare, Pit Fiend, Succubus, Demoted Lucifer

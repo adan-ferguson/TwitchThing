@@ -1,8 +1,10 @@
-export default function(){
-  const chance = 0.2
+import { toPct } from '../../utilFunctions.js'
+
+export default function(tier){
+  const chance = tier ? 0.9 : 0.2
   return {
     baseStats: {
-      hpMax: '+10%',
+      hpMax: toPct(0.1 + tier * 1.5),
       physPower: '-30%',
       speed: 10
     },

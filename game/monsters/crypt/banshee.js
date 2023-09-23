@@ -1,4 +1,4 @@
-export default function(){
+export default function(tier){
   return {
     baseStats: {
       physPower: '-20%',
@@ -26,7 +26,7 @@ export default function(){
         name: 'Incorporeal',
         effect: {
           stats: {
-            damageCeiling: 1/3
+            damageCeiling: tier ? 1/50 : 1/3
           }
         }
       }

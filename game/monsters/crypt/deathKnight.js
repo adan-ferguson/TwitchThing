@@ -1,6 +1,4 @@
-import { onHit } from '../../commonMechanics/onHit.js'
-
-export default function(){
+export default function(tier){
 
   const removeBuff = {
     modifyStatusEffect: {
@@ -18,7 +16,7 @@ export default function(){
     baseStats: {
       physPower: '+5%',
       physDef: '+20%',
-      speed: -15,
+      speed: -15 + tier * 30,
       hpMax: '+20%'
     },
     items: [
@@ -28,11 +26,11 @@ export default function(){
           abilities: [
             {
               trigger: 'active',
-              initialCooldown: 8000,
+              initialCooldown: 8000 - tier * 2500,
               actions: [removeBuff, {
                 attack: {
                   scaling: {
-                    physPower: 1.7
+                    physPower: 1.5
                   },
                 }
               }]

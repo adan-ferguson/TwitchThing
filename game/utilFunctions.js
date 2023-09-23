@@ -190,7 +190,13 @@ export function suffixedNumber(val, digits = 5){
   if(!Number.isFinite(val)){
     return val
   }
-  return val.toLocaleString()
+  // TODO: this but better
+  let suffix = ''
+  if(val > Math.pow(10,9)){
+    suffix = 'M'
+    val = Math.round(val / Math.pow(10, 6))
+  }
+  return val.toLocaleString() + suffix
 }
 
 /**

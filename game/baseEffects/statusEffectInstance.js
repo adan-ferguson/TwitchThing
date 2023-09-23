@@ -159,6 +159,7 @@ export default class StatusEffectInstance extends EffectInstance{
       return
     }
     this._expired = true
+    this.invalidate()
   }
 
   replaceData(data){
