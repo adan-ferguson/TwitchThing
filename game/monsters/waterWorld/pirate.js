@@ -1,9 +1,11 @@
-export default function(){
+import { toPct } from '../../utilFunctions.js'
+
+export default function(tier){
   return {
     baseStats: {
       hpMax: '-20%',
-      physPower: '-10%',
-      speed: 30
+      physPower: toPct(-0.1 + tier * 0.3),
+      speed: 30 + tier * 70
     },
     items: [
       {
@@ -13,7 +15,7 @@ export default function(){
             trigger: 'active',
             cooldown: 6000,
             exclusiveStats: {
-              critDamage: '+200%',
+              critDamage: toPct(2 + tier * 18),
               critChance: 1 / 3
             },
             actions: [{

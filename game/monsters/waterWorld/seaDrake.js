@@ -1,10 +1,11 @@
 import flutteringMonsterItem from '../../commonMechanics/flutteringMonsterItem.js'
+import { toPct } from '../../utilFunctions.js'
 
-export default function(){
+export default function(tier){
   return {
     baseStats: {
-      hpMax: '+25%',
-      speed: -25,
+      hpMax: toPct(0.25 + tier * 0.6),
+      speed: -25 + tier * 50,
       magicDef: '+25%'
     },
     items: [
@@ -33,7 +34,7 @@ export default function(){
                   stacking: 'stack',
                   stackingId: 'seaSerpentFrost',
                   stats: {
-                    speed: -50
+                    speed: tier ? -250 : -50
                   }
                 }
               }

@@ -1,9 +1,10 @@
 import tastyMonsterItem from '../../commonMechanics/tastyMonsterItem.js'
+import { toPct } from '../../utilFunctions.js'
 
-export default function(){
+export default function(tier){
   return {
     baseStats: {
-      physDef: '50%',
+      physDef: toPct(tier ? 0.9 : 0.5),
       speed: 10
     },
     items: [
@@ -12,7 +13,7 @@ export default function(){
         effect: {
           abilities: [{
             trigger: 'active',
-            cooldown: 7000,
+            cooldown: 7000 - tier * 3000,
             actions: [{
               attack: {
                 hits: 2,

@@ -1,11 +1,12 @@
 import { biteMonsterItem } from '../../commonMechanics/biteMonsterItem.js'
+import { toPct } from '../../utilFunctions.js'
 
-export default function(){
+export default function(tier){
   return {
     baseStats: {
-      hpMax: '+30%',
-      physPower: '+10%',
-      speed: 30
+      hpMax: toPct(0.3 + tier * 0.8),
+      physPower: toPct(0.1 + tier * 0.6),
+      speed: 30 + tier * 100
     },
     displayName: 'Two-Headed Shark',
     items: [

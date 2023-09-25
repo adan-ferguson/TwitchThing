@@ -6,7 +6,8 @@ export default function(combat, actor, abilityInstance, actionDef, triggerData){
   if(!target.hasStatusEffect({ tag: 'terribleCurse' })){
     return {
       random: {
-        options: terribleCurses()
+        options: terribleCurses(),
+        count: actionDef.count ?? 1,
       }
     }
   }

@@ -1,9 +1,11 @@
 import { biteMonsterItem } from '../../commonMechanics/biteMonsterItem.js'
+import { toPct } from '../../utilFunctions.js'
 
-export default function(){
+export default function(tier){
   return {
     baseStats: {
-      hpMax: '+10%',
+      hpMax: toPct(0.1 + tier * 0.3),
+      physPower: toPct(0.05 + tier * 0.5),
       speed: 45
     },
     items: [

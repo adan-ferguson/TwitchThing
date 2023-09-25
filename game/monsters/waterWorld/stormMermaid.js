@@ -1,13 +1,14 @@
 import { lightningStormAbility } from '../../commonMechanics/lightningStormAbility.js'
+import { toPct } from '../../utilFunctions.js'
 
-export default function(){
+export default function(tier){
   return {
     baseStats: {
       physPower: '-50%',
-      magicPower: '+75%',
+      magicPower: toPct(tier ? 1.8 : 0.75),
       speed: 20,
-      hpMax: '-50%',
-      magicDef: '40%',
+      hpMax: toPct(tier ? 0.3 : -0.5),
+      magicDef: toPct(tier ? 0.8 : 0.4),
     },
     items: [
       {
@@ -24,7 +25,7 @@ export default function(){
         effect: {
           abilities: [{
             trigger: 'active',
-            cooldown: 3000,
+            cooldown: tier ? 1000 : 3000,
             actions: [{
               attack: {
                 scaling: {

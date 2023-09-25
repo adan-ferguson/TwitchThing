@@ -1,7 +1,7 @@
-export default function(){
+export default function(tier){
   return {
     baseStats: {
-      speed: 50,
+      speed: 50 + tier * 50,
       hpMax: '+5%',
       physPower: '-10%'
     },
@@ -32,7 +32,7 @@ export default function(){
         name: 'Drain You',
         effect: {
           stats: {
-            lifesteal: 0.33
+            lifesteal: tier ? 3.33 : 0.33
           }
         }
       }

@@ -1,4 +1,6 @@
-export default function(){
+import { toPct } from '../../utilFunctions.js'
+
+export default function(tier){
   const chillingTouch = {
     name: 'Chilling Touch',
     effect: {
@@ -25,7 +27,7 @@ export default function(){
     effect: {
       abilities: [{
         trigger: 'active',
-        cooldown: 15000,
+        cooldown: tier ? 7500 : 15000,
         actions: [{
           applyStatusEffect: {
             targets: 'enemy',
@@ -45,8 +47,8 @@ export default function(){
   return {
     baseStats: {
       physPower: '-10%',
-      speed: 10,
-      hpMax: '+750%'
+      speed: 10 + 30 * tier,
+      hpMax: toPct(7.5 + tier * 22.5)
     },
     items: [chillingTouch, inkCloud]
   }

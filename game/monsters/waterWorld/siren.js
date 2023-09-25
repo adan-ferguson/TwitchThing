@@ -1,7 +1,7 @@
-export default function(){
+export default function(tier){
   return {
     baseStats: {
-      speed: 40,
+      speed: 40 + tier * 60,
       hpMax: '-30%',
       physPower: '-10%'
     },
@@ -18,7 +18,7 @@ export default function(){
                 statusEffect: {
                   base: {
                     charmed: {
-                      duration: 15000
+                      duration: 15000 + tier * 15000,
                     }
                   }
                 }

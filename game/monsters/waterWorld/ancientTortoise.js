@@ -1,9 +1,10 @@
 import { spikedShellAbility } from '../../commonMechanics/spikedShellAbility.js'
+import { toPct } from '../../utilFunctions.js'
 
-export default function(){
+export default function(tier){
   return {
     baseStats: {
-      hpMax: '+200%',
+      hpMax: toPct(2 + tier * 8),
       physPower: '+50%',
       speed: -60,
     },

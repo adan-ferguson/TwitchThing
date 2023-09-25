@@ -1,12 +1,13 @@
 import { barrierAction } from '../../commonMechanics/barrierAction.js'
+import { toPct } from '../../utilFunctions.js'
 
-export default function(){
+export default function(tier){
   return {
     baseStats: {
-      hpMax: '+20%',
+      hpMax: toPct(0.2 + tier * 0.6),
       physPower: '-20%',
       magicPower: '-20%',
-      speed: 20,
+      speed: 20 + tier * 40,
     },
     items: [
       {
@@ -19,8 +20,8 @@ export default function(){
               hpMax: 0.4
             },{
               stats: {
-                physPower: '2x',
-                magicPower: '2x'
+                physPower: tier ? '10x' : '2x',
+                magicPower: tier ? '10x' : '2x'
               }
             })]
           }]

@@ -1,7 +1,7 @@
-export default function(){
+export default function(tier){
   return {
     baseStats: {
-      speed: 70,
+      speed: 70 + tier * 80,
     },
     items: [{
       name: 'Gargle Gibberish',
@@ -14,7 +14,7 @@ export default function(){
               targets: 'enemy',
               trigger: 'active',
               modification: {
-                cooldownRemaining: { flat: 10000 }
+                cooldownRemaining: { flat: 10000 + tier * 10000 }
               }
             }
           }]

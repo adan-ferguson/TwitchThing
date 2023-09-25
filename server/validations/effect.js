@@ -118,6 +118,7 @@ const as = Joi.object({
   }),
   terribleCurse: Joi.object({
     attackScaling: Joi.number(),
+    count: Joi.number().integer().min(1),
   }),
   terribleSituation: Joi.bool(),
   painTrain: Joi.object({
@@ -129,7 +130,8 @@ const as = Joi.object({
       value: Joi.custom(val => {
         return Joi.attempt(val, as)
       }).required(),
-    }))
+    })),
+    count: Joi.number().integer().min(1),
   },
   maybe: {
     chance: Joi.number().min(0).max(1).required(),

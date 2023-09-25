@@ -1,7 +1,8 @@
-export default function(){
+export default function(tier){
+
   return {
     baseStats: {
-      hpMax: '+150%',
+      hpMax: '+100%',
       speed: 70,
       physPower: '-10%',
     },
@@ -20,7 +21,7 @@ export default function(){
         effect: {
           effectId: 'behemothCarapace',
           stats: {
-            damageThreshold: 0.05
+            damageThreshold: tier ? 1 : 0.05
           }
         }
       }

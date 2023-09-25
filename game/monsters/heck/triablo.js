@@ -1,11 +1,11 @@
 import { simpleAttackAction } from '../../commonMechanics/simpleAttackAction.js'
 
-export default function(){
+export default function(tier){
   return {
     baseStats: {
       hpMax: '+666%',
-      speed: 10,
-      physPower: '-60%',
+      speed: 10 + tier * 70,
+      physPower: '-50%',
       magicPower: '+150%'
     },
     items: [
@@ -14,8 +14,8 @@ export default function(){
         effect: {
           abilities: [{
             trigger: 'active',
-            initialCooldown: 10000,
-            cooldown: 20000,
+            initialCooldown: 10000 - tier * 5000,
+            cooldown: 20000 - tier * 10000,
             actions: [simpleAttackAction('magic', 1),{
               modifyAbility: {
                 targets: 'enemy',
@@ -32,7 +32,7 @@ export default function(){
         name: 'Bane Train',
         effect: {
           abilities: [{
-            initialCooldown: 20000,
+            initialCooldown: 20000 - tier * 10000,
             trigger: 'active',
             actions: [{
               modifyStatusEffect: {
@@ -60,7 +60,7 @@ export default function(){
                 targets: 'self',
                 statusEffect: {
                   name: 'darkArmor',
-                  startingStacks: 20,
+                  startingStacks: 20 + tier * 20,
                   polarity: 'buff',
                   stats: {
                     physDef: '10%',
