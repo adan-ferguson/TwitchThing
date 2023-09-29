@@ -1,4 +1,5 @@
 import { simpleAttackAction } from '../../commonMechanics/simpleAttackAction.js'
+import { darkArmorOfDoomEffect } from '../../commonMechanics/effects/darkArmorOfDoomEffect.js'
 
 export default function(tier){
   return {
@@ -51,40 +52,7 @@ export default function(tier){
       },
       {
         name: 'Dark Armor (of Doom)',
-        effect: {
-          abilities: [{
-            trigger: 'startOfCombat',
-            uses: 1,
-            actions: [{
-              applyStatusEffect: {
-                targets: 'self',
-                statusEffect: {
-                  name: 'darkArmor',
-                  startingStacks: 20 + tier * 20,
-                  polarity: 'buff',
-                  stats: {
-                    physDef: '10%',
-                    magicDef: '10%'
-                  },
-                  abilities: [{
-                    trigger: 'instant',
-                    initialCooldown: 3000,
-                    actions: [{
-                      modifyStatusEffect: {
-                        subject: {
-                          key: 'self'
-                        },
-                        modification: {
-                          stacks: -1
-                        }
-                      }
-                    }]
-                  }]
-                }
-              }
-            }]
-          }]
-        }
+        effect: darkArmorOfDoomEffect(20 + tier * 20)
       },
       {
         name: 'Triple Attack',

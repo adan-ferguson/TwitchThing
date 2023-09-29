@@ -138,7 +138,7 @@ const ACTION_DEFS = {
       const str = actionDef.count ? pluralize(polarity, actionDef.count) : `all ${polarity}s`
       return `Remove ${str} from ${actionDef.targets === 'self' ? 'yourself' : 'the enemy'}.`
     }else if(actionDef.modification.stacks){
-      if(actionDef.modification.stacks > 1){
+      if(actionDef.modification.stacks > 0){
         return `Add ${pluralize('stack', actionDef.modification.stacks)}`
       }else{
         return `Remove ${pluralize('stack', -actionDef.modification.stacks)}`

@@ -34,7 +34,7 @@ export default function(tier){
                   stacking: 'stack',
                   stackingId: 'seaSerpentFrost',
                   stats: {
-                    speed: tier ? -250 : -50
+                    speed: tier ? -200 : -50
                   }
                 }
               }

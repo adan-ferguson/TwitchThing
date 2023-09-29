@@ -14,7 +14,7 @@ export default function(tier){
     },
     items: [
       {
-        name: 'Frenzy',
+        name: tier ? 'Berserk Frenzy' : 'Frenzy',
         effect: {
           abilities: [{
             trigger: 'attackHit',

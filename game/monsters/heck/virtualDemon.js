@@ -1,3 +1,5 @@
+import { toPct } from '../../utilFunctions.js'
+
 export default function(tier){
 
   return {
@@ -12,7 +14,7 @@ export default function(tier){
         effect: {
           stats: {
             critChance: 0.2,
-            critDamage: '+100%'
+            critDamage: toPct(1 + tier * 2)
           }
         }
       },

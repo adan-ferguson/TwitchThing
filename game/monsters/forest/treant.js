@@ -1,6 +1,7 @@
 import { toPct } from '../../utilFunctions.js'
 
 export default function(tier){
+  const uses = 3 + tier * 17
   return {
     baseStats: {
       speed: -120,
@@ -8,7 +9,7 @@ export default function(tier){
       physPower: toPct(0.6 + tier * 0.2)
     },
     items: [{
-      name: 'Sprout Saplings',
+      name: tier ? 'Sprout Way Too Many Saplings' : 'Sprout Saplings',
       effect: {
         abilities: [{
           trigger: 'startOfCombat',
@@ -23,12 +24,15 @@ export default function(tier){
                 statusEffectId: 'sproutSaplings',
                 abilities: [{
                   trigger: 'attacked',
-                  uses: 3 + tier * 17,
+                  uses,
                   abilityId: 'saplingBlock',
                   replacements: {
                     cancel: 'absorbed'
                   }
-                }]
+                }],
+                vars: {
+                  uses
+                }
               }
             }
           }]

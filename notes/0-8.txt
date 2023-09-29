@@ -12,10 +12,21 @@ v0.8.1.0
 -- Some of these have better scaling than others, based on their rarity and how popular they were in previous patch.
 
 - Did lazy high-number notation, will do it for real eventually.
+
+************ SUPER Dungeon *************
+- If you've cleared the regular dungeon (floor 60), you should have access to the SUPER dungeon on the dungeon picker page.
+- It's similar to the regular dungeon but the monsters are super-powered. Some have modified/new abilities!
+- Supposed to be unfair with the idea that degenerate builds are required to progress, though really I have no idea if that's true...
+- Hopefully I didn't accidentally mess with the normal monsters, but it's possible.
+- Basically didn't balance test this at all, honestly.
+
 ************ Monsters (Regular Versions) ************
 Numbers-only Changes
 - Buffs: Druid, Bitey Plant, Hydra, Siren, Two-Headed Shark, Water Elemental, Cerberus, Night Mare, Pit Fiend, Succubus, Demoted Lucifer
 - Nerfs: Werewolf, Centaur, Assassin, Basilisk, Ancient Tortoise, Wyvern, Maniacal Minion.
+
+Demoted Lucifer
+- There were supposed to be 6 random terrible curses, but I had commented out 5 of them...oops.
 
 Triablo
 - Added a "Triple Attack" ability to help it deal with dodges/bat wings/wizard hats. Phys power reduced to compensate.

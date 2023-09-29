@@ -235,9 +235,9 @@ const DEFS = {
       statsHandled: true,
     }
   },
-  sproutSaplings: () => {
+  sproutSaplings: effectData => {
     return {
-      description: 'Sprout 3 Saplings which intercept abilities',
+      description: `Sprout ${effectData.vars.uses} Saplings which intercept abilities`,
       grammatic: '',
     }
   },

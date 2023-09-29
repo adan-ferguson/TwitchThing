@@ -1,9 +1,11 @@
+import { toPct } from '../../utilFunctions.js'
+
 export default function(tier){
   return {
     baseStats: {
       speed: 40 + tier * 60,
       hpMax: '-30%',
-      physPower: '-10%'
+      physPower: toPct(-0.1 + tier * 0.7)
     },
     items: [
       {
@@ -18,7 +20,7 @@ export default function(tier){
                 statusEffect: {
                   base: {
                     charmed: {
-                      duration: 15000 + tier * 15000,
+                      duration: 15000 + tier * 5000,
                     }
                   }
                 }

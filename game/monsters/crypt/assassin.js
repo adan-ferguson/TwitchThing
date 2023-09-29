@@ -3,7 +3,7 @@ export default function(tier){
     baseStats: {
       hpMax: '-25%',
       physPower: '-10%',
-      speed: 20,
+      speed: 20 + tier * 40,
     },
     items: [
       {
@@ -22,10 +22,7 @@ export default function(tier){
             uses: 1,
             actions: [{
               breakItem: {
-                statusEffect: {
-                  duration: 10000,
-                },
-                count: 1 + tier * 2,
+                count: tier ? 2 : 1,
               }
             }]
           }]
