@@ -20,7 +20,6 @@ const HTML = `
   <div data-tab-name="Results"></div>
   <div data-tab-name="Loot" class="fill-contents">
     <div class="flex-rows">
-      <p class="gold-loot"></p>
       <div class="flex-grow chest-list"></div>
     </div>
   </div>
@@ -113,7 +112,11 @@ export default class EventContentsResults extends HTMLElement{
       this.tabz.hideTab('Loot')
       return
     }
-    this.tabz.getContentEl('Loot').querySelector('.chest-list').appendChild(consolidatedChestList(chests))
+    const list = consolidatedChestList(chests).setOptions({
+      pageSize: 12,
+      paginate: 'maybe',
+    })
+    this.tabz.getContentEl('Loot').querySelector('.chest-list').appendChild(list)
   }
 
   _addRow(target, row){

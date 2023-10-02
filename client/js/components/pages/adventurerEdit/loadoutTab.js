@@ -106,6 +106,7 @@ export default class LoadoutTab extends DIElement{
       await fizzetch('/game' + this.parentPage.path + '/spendskillpoint', { skillId: s.id })
       this.adventurerPaneEl.update(true)
       this.skillsEl.updateSkills()
+      this.parentPage.updatePoints()
     })
   }
 

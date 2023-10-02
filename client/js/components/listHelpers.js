@@ -172,10 +172,11 @@ export function consolidatedChestRows(chests, options = {}){
 export function consolidatedChestList(chests, options = {}){
   options = mergeOptionsObjects({}, options)
   const list = new List()
+  const rows = consolidatedChestRows(chests, options)
   // this.querySelector('.gold-loot').innerHTML = goldEntry(totalGold)
   list.setOptions({
-    pageSize: Math.min(10, chests.length),
-    paginate: chests.length > 10,
+    pageSize: Math.min(10, rows.length),
+    paginate: 'maybe',
     sortFn: (a,b) => {
       const itemA = a.adventurerItem
       const itemB = b.adventurerItem
@@ -185,6 +186,6 @@ export function consolidatedChestList(chests, options = {}){
       return b.count - a.count
     }
   })
-  list.setRows(consolidatedChestRows(chests, options))
+  list.setRows(rows)
   return list
 }

@@ -63,7 +63,9 @@ export default class ChestOpenage extends DIElement{
     this.querySelector('.inset-title').textContent = displayInfo.displayName
 
     this._addGold()
-    this.contentsEl.appendChild(consolidatedChestList(this._chests))
+
+    const list = consolidatedChestList(this._chests)
+    this.contentsEl.appendChild(list)
     this.events.emit('opened')
   }
 

@@ -1,5 +1,6 @@
 import Adventurer from '../../game/adventurer.js'
 import AdventurerSkill from '../../game/skills/adventurerSkill.js'
+import { updateAccomplishments } from '../user/accomplishments.js'
 
 export function spendAdventurerOrb(advDoc, userDoc, advClass, count){
   const adv = new Adventurer(advDoc)
@@ -17,6 +18,7 @@ export function spendAdventurerOrb(advDoc, userDoc, advClass, count){
     advDoc.orbs[advClass] = 0
   }
   advDoc.orbs[advClass] = advDoc.orbs[advClass] + count
+  updateAccomplishments(userDoc, advDoc)
 }
 
 export function spendAdventurerSkillPoint(advDoc, skillId){

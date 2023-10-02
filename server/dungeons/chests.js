@@ -60,8 +60,7 @@ export function generateRandomChest(options = {}){
     }
   }
 
-  const totalValue = options.level * options.value
-  let valueRemaining = totalValue
+  let valueRemaining = options.level * options.value
   let items = []
   while(valueRemaining > 0){
     const advClass = chooseOne(options.classes)

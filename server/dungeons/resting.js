@@ -2,7 +2,7 @@ import { gainHealth } from '../mechanics/gainHealth.js'
 import { processAbilityEvents } from '../mechanics/abilities.js'
 
 export function shouldRest(dungeonRun){
-  if(dungeonRun.newestEvent.roomType === 'rest'){
+  if(['wandering','rest'].includes(dungeonRun.newestEvent.data.roomType)){
     // No doubles
     return
   }
@@ -13,8 +13,9 @@ export function rest(dungeonRun){
 
   const ai = dungeonRun.adventurerInstance
   const stayHungry = ai.hasMod('stayHungry')
+  const change = stayHungry ? 1/2 : 1
 
-  ai.food -= stayHungry ? 1/2 : 1
+  ai.food -= change
   processAbilityEvents(dungeonRun, 'rest', ai)
 
   const result = gainHealth(dungeonRun, ai, 1 + ai.hpMissing * (stayHungry ? 1/2 : 1))
@@ -22,7 +23,7 @@ export function rest(dungeonRun){
   return {
     roomType: 'rest',
     penalty: {
-      food: -1
+      food: -change
     },
     rewards: {
       health: result.healthGained

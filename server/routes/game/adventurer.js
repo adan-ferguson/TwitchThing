@@ -9,6 +9,7 @@ import { spendAdventurerOrb, spendAdventurerSkillPoint, spendStashedXp } from '.
 import { commitAdventurerLoadout } from '../../adventurer/loadout.js'
 import Joi from 'joi'
 import { fillArray } from '../../../game/utilFunctions.js'
+import { updateAccomplishments } from '../../user/accomplishments.js'
 
 const router = express.Router()
 const verifiedRouter = express.Router()
@@ -78,6 +79,7 @@ verifiedRouter.post('/edit/spendorb', validateIdle, async(req, res) => {
   const count = validateParam(req.body.count, { type: 'number' })
   spendAdventurerOrb(req.adventurerDoc, req.user, className, count)
   await Adventurers.save(req.adventurerDoc)
+  await Users.save(req.user)
   res.status(200).send({ success: 1 })
 })
 
