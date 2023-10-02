@@ -240,7 +240,10 @@ export function triggeredAbility(txt){
   return `<span class="triggered-ability-rect" tooltip="Triggered Ability">${txt}</span>`
 }
 
-export function pluralize(str, count){
+export function pluralize(str, count, ifSingle = null){
+  if(ifSingle && count === 1){
+    return `${ifSingle} ${str}`
+  }
   return `${count} ${str + (count === 1 ? '' : 's')}`
 }
 

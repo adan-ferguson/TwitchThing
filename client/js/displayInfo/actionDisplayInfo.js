@@ -174,7 +174,8 @@ const ACTION_DEFS = {
     const str = statScaling({
       magicPower: actionDef.attackScaling
     }, ability)
-    return `Give the opponent a TERRIBLE curse, or if they have one already, attack for ${str} magic damage.`
+    const countStr = pluralize('TERRIBLE curse', actionDef.count, 'a')
+    return `Give the opponent ${countStr}, or if they have one already, attack for ${str} magic damage.`
   },
   fireSpiritExplode: (actionDef, ability) => {
     return `Explode! Deal ${actionDef.ratio}x remaining barrier magic damage.`
