@@ -93,7 +93,7 @@ export const statDefinitionsInfo = {
   },
   goldFind: {
     text: 'Gold Find',
-    description: 'Multiplies amount of gold found in chests'
+    description: 'Multiplies amount of gold found.'
   },
   chestFind: {
     text: 'Chest Find',
