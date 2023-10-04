@@ -3,7 +3,7 @@ import Page from '../page.js'
 
 const HTML = `
 <div class="content-well">
-  <di-live-dungeon-map></di-live-dungeon-map>
+  <di-live-dungeon-map class="absolute-full-size"></di-live-dungeon-map>
 </div>
 `
 export default class LiveDungeonMapPage extends Page{

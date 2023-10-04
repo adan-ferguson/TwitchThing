@@ -4,7 +4,7 @@ import tippy from 'tippy.js'
 import AdventurerStatus from './adventurer/adventurerStatus.js'
 
 const HTML = `
-<di-tabz>
+<di-tabz class='absolute-full-size'>
   <div data-tab-name="Regular" class="runs"></div>
   <div data-tab-name="SUPER" class="runs"></div>
 </di-tabz>
