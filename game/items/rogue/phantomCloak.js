@@ -1,23 +1,23 @@
 import { exponentialPercentage } from '../../growthFunctions.js'
 
 export default function(level){
-  const stats = level === 1 ? {} : {
-    dodgeChance: exponentialPercentage(0.12, level - 2, 0.12)
-  }
   return {
     effect: {
-      stats,
+      stats: {
+        dodgeChance: exponentialPercentage(0.1, level - 1, 0.1)
+      },
       metaEffects: [{
         metaEffectId: 'phantomCloak',
         subject: { key: 'attached' },
         effectModification: {
           abilityModification: {
             trigger: 'active',
-            newTrigger: 'thwart'
+            newTrigger: 'thwart',
+            cooldown: -5000 * (1 + level)
           }
         }
       }],
     },
-    orbs: 9 + level * 3,
+    orbs: 6 + level * 6,
   }
 }

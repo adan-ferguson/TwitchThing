@@ -1,4 +1,4 @@
-import { toDisplayName } from '../../../game/utilFunctions.js'
+import { arrayize, toDisplayName } from '../../../game/utilFunctions.js'
 import classDisplayInfo from './classDisplayInfo.js'
 
 const CHESTS = {
@@ -18,9 +18,14 @@ const CHESTS = {
   }
 }
 
-export function getChestDisplayInfo(chest){
+export function getChestDisplayInfo(chests){
 
-  let type = chest.options.type ?? 'normal'
+  chests = arrayize(chests)
+
+  const multi = chests.length > 1
+  const main = chests[0]
+
+  let type = main.options.type ?? 'normal'
 
   if(type === 'shop'){
     return shopChest()
@@ -31,18 +36,31 @@ export function getChestDisplayInfo(chest){
   }
 
   return {
-    displayName: toDisplayName(type),
+    displayName: toChestName(type),
     icon: '<i class="fa-solid fa-star"></i>',
+    multi,
     ...CHESTS[type]
   }
 
   function shopChest(){
-    const info = classDisplayInfo(chest.options.classes[0])
+    const info = classDisplayInfo(main.options.classes[0])
     return {
-      displayName: info.displayName,
+      displayName: toChestName(main.options.classes[0]),
       icon: info.icon,
       color: info.color,
       stars: 1
     }
+  }
+
+  function toChestName(type){
+    let text = ''
+    if(main.options.level){
+      text += `Lvl. ${main.options.level} `
+    }
+    text += `${toDisplayName(type)} Chest`
+    if(multi){
+      text += ` x${chests.length}`
+    }
+    return text
   }
 }

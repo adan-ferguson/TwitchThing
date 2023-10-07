@@ -5,7 +5,7 @@ export default function(level){
     effect: {
       stats: {
         physPower: wrappedPct(75 + geometricProgression(0.25, level, 75, 5)),
-        speed: -25 - 25 * level
+        speed: -20 - 20 * level
       }
     },
     orbs: 3 * level + 3

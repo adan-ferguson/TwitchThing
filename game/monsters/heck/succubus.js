@@ -1,8 +1,8 @@
-export default function(){
+export default function(tier){
   return {
     baseStats: {
-      speed: 20,
-      hpMax: '-10%',
+      speed: 50 + tier * 50,
+      hpMax: '+5%',
       physPower: '-10%'
     },
     items: [
@@ -12,7 +12,7 @@ export default function(){
           abilities: [{
             trigger: 'active',
             cooldown: 20000,
-            initialCooldown: 4000,
+            initialCooldown: 3000,
             actions: [{
               applyStatusEffect: {
                 targets: 'enemy',
@@ -32,7 +32,7 @@ export default function(){
         name: 'Drain You',
         effect: {
           stats: {
-            lifesteal: 0.33
+            lifesteal: tier ? 3.33 : 0.33
           }
         }
       }

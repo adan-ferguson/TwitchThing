@@ -61,5 +61,5 @@ const lethargy = terribleCurse({
 })
 
 export function terribleCurses(){
-  return [vulnerability] //[agony, suffering, debilitation, vulnerability, simplicity, lethargy]
+  return [agony, suffering, debilitation, vulnerability, simplicity, lethargy]
 }

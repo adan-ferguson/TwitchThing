@@ -1,6 +1,6 @@
 import { SUBJECT_KEYS, SUBJECT_KEYS_SCHEMA } from './subjectKeys.js'
 import Joi from 'joi'
-import { STATS_MODIFIERS_SCHEMA, STATS_NAME_SCHEMA, STATS_SCHEMA } from './stats.js'
+import { STATS_MODIFIERS_SCHEMA, STATS_NAME_SCHEMA, STATS_NUMBER_SCHEMA, STATS_SCHEMA } from './stats.js'
 import { DAMAGE_TYPE_SCHEMA } from './damage.js'
 import { MODS_SCHEMA } from './mods.js'
 import { status as StatusEffects, phantom as PhantomEffects } from '../../game/baseEffects/combined.js'
@@ -20,11 +20,6 @@ const SCALED_NUMBER_SCHEMA = Joi.object({
   physPower: Joi.number(),
   flat: Joi.number(),
   parentEffectParam: Joi.object(),
-  effectStats: Joi.object({
-    base: Joi.number().required(),
-    stat: STATS_NAME_SCHEMA.required(),
-    subjectKey: SUBJECT_KEYS_SCHEMA,
-  })
 })
 
 const OPTIONAL_SCALED_NUMBER_SCHEMA = Joi.alternatives().try(
@@ -68,16 +63,22 @@ const as = Joi.object({
     ignoreDefense: Joi.bool().truthy(),
     ignoreOvertime: Joi.bool().truthy()
   }),
-  useAbility: Joi.object({
-    subjectKey: Joi.string().valid(...SUBJECT_KEYS).required(),
-    trigger: TRIGGER_NAME_SCHEMA
-  }),
+  // useAbility: Joi.object({
+  //   subject: {
+  //     key: Joi.string().valid(...SUBJECT_KEYS).required(),
+  //   },
+  //   trigger: TRIGGER_NAME_SCHEMA,
+  // }),
   modifyAbility: Joi.object({
     targets: TARGETS_SCHEMA,
     subject: Joi.object(),
     trigger: TRIGGER_NAME_SCHEMA,
     modification: Joi.object({
-      cooldownRemaining: Joi.number().integer()
+      cooldownRemaining: Joi.object({
+        flat: Joi.number().integer(),
+        remaining: Joi.number().min(0),
+        total: Joi.number().min(0),
+      })
     }).required()
   }),
   modifyStatusEffect: Joi.object({
@@ -115,11 +116,9 @@ const as = Joi.object({
     }),
     count: Joi.number().integer().min(1)
   }),
-  theBountyCollectorKill: Joi.object({
-    value: Joi.number()
-  }),
   terribleCurse: Joi.object({
     attackScaling: Joi.number(),
+    count: Joi.number().integer().min(1),
   }),
   terribleSituation: Joi.bool(),
   painTrain: Joi.object({
@@ -131,7 +130,8 @@ const as = Joi.object({
       value: Joi.custom(val => {
         return Joi.attempt(val, as)
       }).required(),
-    }))
+    })),
+    count: Joi.number().integer().min(1),
   },
   maybe: {
     chance: Joi.number().min(0).max(1).required(),
@@ -156,9 +156,11 @@ const as = Joi.object({
     magicPower: Joi.number(),
     burn: Joi.number(),
     slow: Joi.number(),
-    weaken: Joi.number(),
+    weaken: Joi.string(),
   },
-  mushroomSpores: {},
+  mushroomSpores: {
+    tier: Joi.number(),
+  },
   explode: {
     scaling: SCALED_NUMBER_SCHEMA,
   },
@@ -238,6 +240,7 @@ export const META_EFFECT_SCHEMA = Joi.object({
       repetitions: Joi.number().integer().min(1),
       exclusiveStats: STATS_SCHEMA,
       addAction: ACTION_SCHEMA,
+      cooldown: STATS_NUMBER_SCHEMA,
       vars: Joi.object()
     })
   }

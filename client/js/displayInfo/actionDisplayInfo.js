@@ -1,7 +1,7 @@
 import { expandActionDef } from '../../../game/actionDefs/expandActionDef.js'
 import {
   attachedActiveSkill,
-  attachedItem,
+  attachedItem, attachedSkill,
   describeStat, goldEntry,
   healthIcon,
   iconAndValue, pluralize,
@@ -24,6 +24,9 @@ const ABILITY_ACTION_HARDCODES = {
   },
   hydraSproutHead: () => {
     return 'Sprout 2 more hydra heads.'
+  },
+  bountyCollector: ability => {
+    return `When you kill an enemy with ${attachedSkill(false)}, its gold reward is multiplied by <b>${ability.vars.goldReward}</b>.`
   }
 }
 
@@ -67,11 +70,11 @@ const ACTION_DEFS = {
     chunks.push(`
     <ul>
       <li>Fire: Take ${statScaling({ magicPower: def.burn }, abilityInstance)} magic damage per 3s</li>
-      <li>Ice: ${wrapStat('speed', def.slow)}</li>
+      <li>Ice: ${wrapStat('speed', -def.slow)}</li>
       <li>Necrotic: ${wrapStat('physPower', def.weaken)} & ${wrapStat('physPower', def.weaken)}</li>
     </ul>
     `)
-    chunks.push('If your health is at 50% or lower, apply all 3.')
+    chunks.push('If your health is at 65% or lower, apply all 3.')
     return chunks
   },
   applyStatusEffect: (def, abilityInstance) => {
@@ -92,7 +95,7 @@ const ACTION_DEFS = {
   },
   modifyAbility: (actionDef, ai) => {
     if(actionDef.modification.cooldownRemaining){
-      return modifyCooldownRemaining(actionDef)
+      return modifyCooldownRemaining(actionDef, actionDef.modification.cooldownRemaining)
     }
   },
   shieldBash: (actionDef, ai) => {
@@ -135,7 +138,7 @@ const ACTION_DEFS = {
       const str = actionDef.count ? pluralize(polarity, actionDef.count) : `all ${polarity}s`
       return `Remove ${str} from ${actionDef.targets === 'self' ? 'yourself' : 'the enemy'}.`
     }else if(actionDef.modification.stacks){
-      if(actionDef.modification.stacks > 1){
+      if(actionDef.modification.stacks > 0){
         return `Add ${pluralize('stack', actionDef.modification.stacks)}`
       }else{
         return `Remove ${pluralize('stack', -actionDef.modification.stacks)}`
@@ -151,7 +154,7 @@ const ACTION_DEFS = {
   },
   theBountyCollectorKill: (actionDef, ability) => {
     const goldStr = `Enemy Lvl x ${actionDef.value}`
-    return `When you kill an enemy with ${attachedActiveSkill(true)}, get a bounty chest containing ${goldEntry(goldStr)}.`
+    return `When you kill an enemy with ${attachedActiveSkill(true)}, gain an extra ${goldEntry(goldStr)}.`
   },
   mushroomSpores: () => {
     return 'Release spores which give the attacker a random debuff.'
@@ -171,22 +174,27 @@ const ACTION_DEFS = {
     const str = statScaling({
       magicPower: actionDef.attackScaling
     }, ability)
-    return `Give the opponent a TERRIBLE curse, or if they have one already, attack for ${str} magic damage.`
+    const countStr = pluralize('TERRIBLE curse', actionDef.count, 'a')
+    return `Give the opponent ${countStr}, or if they have one already, attack for ${str} magic damage.`
   },
   fireSpiritExplode: (actionDef, ability) => {
     return `Explode! Deal ${actionDef.ratio}x remaining barrier magic damage.`
   }
 }
 
-export function actionArrayDescriptions(actions, abilityInstance){
-  if(ABILITY_ACTION_HARDCODES[abilityInstance?.abilityId]){
-    return [ABILITY_ACTION_HARDCODES[abilityInstance.abilityId](abilityInstance)]
+export function abilityActionsDescriptions(ability, abilityInstance){
+  if (ABILITY_ACTION_HARDCODES[ability.abilityId]){
+    return [ABILITY_ACTION_HARDCODES[ability.abilityId](ability, abilityInstance)]
   }
+  return arrayToDescriptions(ability.actions, abilityInstance)
+}
+
+function arrayToDescriptions(actions, abilityInstance){
   const chunks = []
   actions = actions ?? []
   actions.forEach(actionDef => {
     if(Array.isArray(actionDef)){
-      chunks.push(...actionArrayDescriptions(actionDef, abilityInstance))
+      chunks.push(...arrayToDescriptions(actionDef, abilityInstance))
     }else{
       actionDef = expandActionDef(actionDef) ?? actionDef
       const key = Object.keys(actionDef)[0]
@@ -198,12 +206,23 @@ export function actionArrayDescriptions(actions, abilityInstance){
   return chunks
 }
 
-function modifyCooldownRemaining(def){
-  //  TODO: hacky
-  if(def.targets === 'self'){
-    return `Refresh your active cooldowns by ${msToS(-def.modification.cooldownRemaining)}s.`
+function modifyCooldownRemaining(actionDef, cdrDef){
+
+  //  TODO: this is hacky/incomplete
+  if(actionDef.targets === 'self'){
+    return `Refresh your active cooldowns by <b>${factor(cdrDef)}</b>.`
   }else{
-    return `Increase enemy's action cooldowns by ${msToS(def.modification.cooldownRemaining)}s.`
+    return `Increase the enemy's active cooldowns by <b></b>${factor(cdrDef)}</b>.`
+  }
+
+  function factor(cdrDef){
+    if(cdrDef.flat){
+      return msToS(cdrDef.flat) + 's'
+    }else if(cdrDef.total){
+      return toPct(1 - cdrDef.total) + ' of max'
+    }else if(cdrDef.remaining){
+      return toPct(1 - cdrDef.remaining) + ' of remaining'
+    }
   }
 }
 

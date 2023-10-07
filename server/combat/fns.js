@@ -48,6 +48,7 @@ export async function runCombat(dungeonRun, monsterDef){
 
     adventurerInstance.state = combatDoc.fighter1.endState
 
+    const goldBonus = adventurerInstance.stats.get('goldFind').value
     const xpBonus = adventurerInstance.stats.get('combatXP').value
 
     adventurerInstance.endCombat()
@@ -66,6 +67,7 @@ export async function runCombat(dungeonRun, monsterDef){
       )
       adventurerInstance.food += rewards.food ?? 0
       rewards.xp = Math.round(rewards.xp * xpBonus)
+      rewards.gold = Math.round((rewards.gold ?? 0) * goldBonus * endStateMonsterInstance.stats.get('goldReward').value)
       resultEventData = {
         duration: MIN_RESULT_TIME,
         result: combatDoc.result,

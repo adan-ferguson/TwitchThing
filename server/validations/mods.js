@@ -17,5 +17,6 @@ export const MODS_SCHEMA = Joi.array().items(
     magicCrit: Joi.bool(),
     goldOnly: Joi.bool(),
     glitchedCooldowns: Joi.bool(),
+    stayHungry: Joi.bool(),
   })
 )

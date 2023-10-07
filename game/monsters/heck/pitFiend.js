@@ -1,12 +1,13 @@
 import { simpleAttackAction } from '../../commonMechanics/simpleAttackAction.js'
+import { toPct } from '../../utilFunctions.js'
 
-export default function(){
+export default function(tier){
   return {
     baseStats: {
       hpMax: '+40%',
-      speed: -25,
-      physPower: '+20%',
-      magicPower: '+20%',
+      speed: -5 + tier * 70,
+      physPower: toPct(0.2 + tier * 0.6),
+      magicPower: toPct(0.2 + tier * 1.4),
     },
     items: [
       {
@@ -14,7 +15,7 @@ export default function(){
         effect: {
           abilities: [{
             trigger: 'active',
-            cooldown: 8000,
+            cooldown: 8000 - tier * 4000,
             actions: [
               simpleAttackAction('phys'),
               simpleAttackAction('magic')
@@ -31,7 +32,7 @@ export default function(){
             },
             effectModification: {
               stats: {
-                speed: 25
+                speed: 35 + tier * 65,
               }
             }
           }]

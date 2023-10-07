@@ -1,10 +1,12 @@
-export default function(){
+import { toPct } from '../../utilFunctions.js'
+
+export default function(tier){
   return {
     baseStats: {
-      hpMax: '-20%',
+      hpMax: '-15%',
       physPower: '-50%',
-      magicPower: '+40%',
-      speed: 30
+      magicPower: toPct(0.6 + tier * 0.6),
+      speed: 40
     },
     items: [
       {
@@ -12,7 +14,7 @@ export default function(){
         effect: {
           abilities: [{
             trigger: 'active',
-            initialCooldown: 11000,
+            initialCooldown: 10000,
             abilityId: 'bearForm',
             uses: 1,
             actions: [{
@@ -25,9 +27,9 @@ export default function(){
                     silenced: true
                   }],
                   stats: {
-                    hpMax: '+220%',
-                    physPower: '+220%',
-                    speed: -70
+                    hpMax: toPct(2.2 + tier * 2.2),
+                    physPower: toPct(2.2 + tier * 2.2),
+                    speed: -40 + tier * 140
                   }
                 }
               }

@@ -15,7 +15,8 @@ const DEFAULTS = {
   accomplishments: {
     deepestFloor: 1,
     firstRunFinished: 0,
-    chestsFound: 0
+    chestsFound: 0,
+    advClasses: {},
   },
   rewards: {
     zonesCleared: []
@@ -24,16 +25,18 @@ const DEFAULTS = {
     editLoadout: 0,
     spendPoints: 0,
     skills: 0,
+    gold: 0,
     dungeonPicker: 0,
     shop: 0,
     workshop: 0,
+    superDungeon: 0,
     advClasses: {
       fighter: 2,
       mage: 2,
       paladin: 2,
       rogue: 0,
       chimera: 0
-    }
+    },
   },
   inventory: {
     adventurerSlots: 1,
@@ -134,7 +137,7 @@ Users.isSetupComplete = function isSetupComplete(userDoc){
   return userDoc.displayname ? true : false
 }
 
-Users.gameData = function(userDoc){
+Users.gameData = async function(userDoc){
   if(!userDoc){
     return null
   }
@@ -185,7 +188,7 @@ Users.clearNewItems = async function(userDoc){
 
 Users.saveAndEmit = async function(doc){
   const result = await this.save(doc)
-  emit(doc._id.toString(), 'user updated', Users.gameData(doc))
+  emit(doc._id.toString(), 'user updated', await Users.gameData(doc))
   return result
 }
 

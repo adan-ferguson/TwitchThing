@@ -1,6 +1,6 @@
 import { barrierAction } from '../../commonMechanics/barrierAction.js'
 
-export default function(){
+export default function(tier){
   const time = 5000
   const ratio = 4
   const explode = {
@@ -25,11 +25,12 @@ export default function(){
         effect: {
           abilities: [{
             trigger: 'active',
-            cooldown: 6000,
+            cooldown: 6000 - tier * 3000,
             actions: [barrierAction({
-              magicPower: 2.51
+              magicPower: 2.50
             }, {
               name: 'fireSpirit',
+              stacking: null,
               abilities: [explode],
             })]
           }],

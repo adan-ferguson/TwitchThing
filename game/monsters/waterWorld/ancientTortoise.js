@@ -1,11 +1,12 @@
 import { spikedShellAbility } from '../../commonMechanics/spikedShellAbility.js'
+import { toPct } from '../../utilFunctions.js'
 
-export default function(){
+export default function(tier){
   return {
     baseStats: {
-      hpMax: '+200%',
+      hpMax: toPct(2 + tier * 8),
       physPower: '+50%',
-      speed: -60
+      speed: -60,
     },
     items: [{
       name: 'Withdraw',
@@ -37,7 +38,7 @@ export default function(){
     },{
       name: 'Spiked Shell',
       effect: {
-        abilities: [spikedShellAbility(0.12)]
+        abilities: [spikedShellAbility(0.08)]
       }
     }]
   }

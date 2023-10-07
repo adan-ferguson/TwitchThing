@@ -54,7 +54,7 @@ const DEFS = {
   },
   goldOnly: () => {
     return {
-      description: 'Chests found will only contain gold.'
+      description: 'Enemies don\'t drop chests.'
     }
   },
   noAttack: () => {
@@ -70,6 +70,11 @@ const DEFS = {
   glitchedCooldowns: () => {
     return {
       description: `Your ${describeStat('cooldownMultiplier')} stat also affects ${triggeredAbility('triggered abilities')} & buffs/debuffs. Probably stupid.`
+    }
+  },
+  stayHungry: () => {
+    return {
+      description: 'When resting, use only 0.5 food, but restore only 50% missing health.'
     }
   }
 }

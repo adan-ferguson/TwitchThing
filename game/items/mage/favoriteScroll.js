@@ -19,7 +19,9 @@ export default function(level){
       tags: ['scroll'],
     },
     loadoutModifiers: [{
-      subjectKey: 'self',
+      subject: {
+        key: 'self'
+      },
       restrictions: {
         slot: 1
       }

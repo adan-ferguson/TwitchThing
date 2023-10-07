@@ -1,8 +1,10 @@
-export default function(){
+import { toPct } from '../../utilFunctions.js'
+
+export default function(tier){
   return {
     baseStats: {
-      hpMax: '+40%',
-      speed: -30,
+      hpMax: toPct(0.4 + tier * 0.8),
+      speed: -30 + tier * 40,
       physPower: '+60%'
     },
     items: [
@@ -20,7 +22,7 @@ export default function(){
                   polarity: 'debuff',
                   name: 'constricted',
                   stats: {
-                    speed: -10
+                    speed: -10 - tier * 20,
                   },
                   stacking: 'stack',
                   abilities: [{

@@ -42,8 +42,8 @@ di-chest-openage
   transition: background-color 0.2s ease
   overflow: visible
 
-  di-loadout-row
-    height: 30rem
+  di-loadout-row, .blank-row
+    min-height: 30rem
 
   $insetPadding: 6rem
 
@@ -96,7 +96,7 @@ di-chest-openage
 
     di-adventurer-item-row
       width: 200rem
-      height: 30rem
+      min-height: 30rem
 
   .unopened
     height: 28rem
@@ -117,3 +117,7 @@ di-chest-openage
   &.clickable:hover
     border-style: solid
     background-color: #F8F8F8
+
+.chest-list
+  di-list
+    height: 100%

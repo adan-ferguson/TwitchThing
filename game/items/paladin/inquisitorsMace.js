@@ -14,7 +14,7 @@ export default function(level){
         trigger: 'attackHit',
         conditions: {
           source: {
-            subjectKey: 'attached'
+            key: 'attached'
           },
           data: {
             damageType: 'phys'

@@ -54,8 +54,8 @@ export function getFighterInstanceAbilities(triggerHandler, fighterInstance, typ
 }
 
 function conditionsMatch(triggerHandler, conditions, sourceAbility, subjectAbility, data){
-  if(conditions.source?.subjectKey && sourceAbility && subjectAbility){
-    if(!subjectKeyMatchesEffectInstances(subjectAbility.parentEffect, sourceAbility.parentEffect, conditions.source.subjectKey)){
+  if(conditions.source?.key && sourceAbility && subjectAbility){
+    if(!subjectKeyMatchesEffectInstances(subjectAbility.parentEffect, sourceAbility.parentEffect, conditions.source.key)){
       return false
     }
   }

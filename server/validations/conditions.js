@@ -7,6 +7,7 @@ import { TRIGGER_NAME_SCHEMA } from './triggers.js'
 const STATUS_EFFECT_CONDITIONS_SCHEMA = Joi.object({
   name: Joi.string(),
   tag: TAG_NAME_SCHEMA,
+  barrier: Joi.bool(),
 })
 
 export const FIGHTER_INSTANCE_CONDITIONS_SCHEMA = Joi.object({
@@ -22,7 +23,7 @@ export const FIGHTER_INSTANCE_CONDITIONS_SCHEMA = Joi.object({
 
 export const ABILITY_CONDITIONS_SCHEMA = Joi.object({
   source: Joi.object({
-    subjectKey: SUBJECT_KEYS_SCHEMA,
+    key: SUBJECT_KEYS_SCHEMA,
     hasTag: TAG_NAME_SCHEMA,
     trigger: TRIGGER_NAME_SCHEMA
   }),

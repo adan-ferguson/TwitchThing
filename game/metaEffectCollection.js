@@ -130,6 +130,9 @@ function mergeAbilityModification(amod, abilities){
       }
       newDef.trigger = amod.newTrigger
     }
+    if(amod.cooldown){
+      newDef.cooldown = Math.max(0, (newDef.cooldown ?? 0) + amod.cooldown)
+    }
     return newDef
   })
 }

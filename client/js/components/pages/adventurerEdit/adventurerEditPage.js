@@ -2,7 +2,6 @@ import Page from '../page.js'
 import { hideLoader, showLoader } from '../../../loader.js'
 import Adventurer from '../../../../../game/adventurer.js'
 import { orbPointEntry, skillPointEntry } from '../../common.js'
-import tippyCallout from '../../visualEffects/tippyCallout.js'
 
 const HTML = `
 <di-tabz>

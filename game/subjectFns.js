@@ -38,3 +38,17 @@ export function subjectKeyMatchesSlotInfos(sourceSlotInfo, subjectSlotInfo, subj
     return subjectSlotInfo.col === sourceSlotInfo.col && subjectSlotInfo.row === sourceSlotInfo.row + 1
   }
 }
+
+export function getMatchingSlots(col, row, subjectKey){
+  const matches = []
+  const sourceSlot = { col, row }
+  for(let col = 0; col < 2; col++){
+    for(let row = 0; row < 8; row++){
+      const subjectSlot = { col, row }
+      if(subjectKeyMatchesSlotInfos(sourceSlot, subjectSlot, subjectKey)){
+        matches.push(subjectSlot)
+      }
+    }
+  }
+  return matches
+}

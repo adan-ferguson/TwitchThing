@@ -1,5 +1,5 @@
 export default function(level){
-  const physPower = 1.8 + level * 1.2
+  const physPower = 2.5 + level * 1.5
   const turns = level
   return {
     effect: {

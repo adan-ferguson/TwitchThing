@@ -7,7 +7,7 @@ export default function(level){
       stats: {
         magicDef: exponentialPercentage(0.12, level - 1, 0.3)
       },
-      abilities: [spikedShellAbility(0.15 + 0.15 * level, 'magic')]
+      abilities: [spikedShellAbility(0.3 + 0.2 * level, 'magic')]
     },
     orbs: 4 + level * 3,
   }

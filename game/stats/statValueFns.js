@@ -9,6 +9,10 @@ export default {
   [StatType.MAXIMUM_ONLY]: maximumOnlyValue
 }
 
+export function calculateCompositeValue(arr){
+  return compositeValue(arr, 0).value
+}
+
 export function parseStatVal(val){
   val = val + ''
   let value = parseFloat(val)

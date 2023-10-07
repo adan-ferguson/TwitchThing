@@ -190,7 +190,13 @@ export function suffixedNumber(val, digits = 5){
   if(!Number.isFinite(val)){
     return val
   }
-  return val.toLocaleString()
+  // TODO: this but better
+  let suffix = ''
+  if(val > Math.pow(10,9)){
+    suffix = 'M'
+    val = Math.round(val / Math.pow(10, 6))
+  }
+  return val.toLocaleString() + suffix
 }
 
 /**
@@ -240,10 +246,23 @@ export function pushOrCreate(obj, key, toPush){
   obj[key].push(...arrayize(toPush))
 }
 
-export function msToS(ms){
-  return roundToFixed(ms / 1000, 2)
+export function msToS(ms, suffix = false){
+  return roundToFixed(ms / 1000, 2) + (suffix ? 's' : '')
 }
 
 export function toPct(decimal, digits = 0){
   return roundToFixed(decimal * 100, digits) + '%'
+}
+
+export function tryClass(Class, args){
+  try{
+    return new Class(...args)
+  }catch(ex){
+    return null
+  }
+}
+
+export function removeNaNs(obj){
+  // I guess that's good enough? NaN gets replaced with null
+  return deepClone(obj)
 }

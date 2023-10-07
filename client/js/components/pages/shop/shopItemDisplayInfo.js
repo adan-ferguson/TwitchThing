@@ -5,7 +5,6 @@ import { xpIcon } from '../../common.js'
 
 export function shopItemDisplayInfo(shopItemDef){
 
-
   let description
   let imageHtml
   let name

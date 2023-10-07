@@ -5,8 +5,8 @@ export default function(level){
     orbs: level * 3 + 7,
     effect: {
       stats: {
-        physDef: exponentialPercentage(0.2, level - 1, 0.35),
-        magicDef: exponentialPercentage(0.2, level - 1, 0.35),
+        physDef: exponentialPercentage(0.2, level - 1, 0.45),
+        magicDef: exponentialPercentage(0.2, level - 1, 0.45),
         speed: -10 + level * -20
       }
     },

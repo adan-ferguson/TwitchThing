@@ -1,11 +1,12 @@
 import { simpleAttackAction } from '../../commonMechanics/simpleAttackAction.js'
+import { darkArmorOfDoomEffect } from '../../commonMechanics/effects/darkArmorOfDoomEffect.js'
 
-export default function(){
+export default function(tier){
   return {
     baseStats: {
       hpMax: '+666%',
-      speed: -20,
-      physPower: '+25%',
+      speed: 10 + tier * 70,
+      physPower: '-50%',
       magicPower: '+150%'
     },
     items: [
@@ -14,14 +15,14 @@ export default function(){
         effect: {
           abilities: [{
             trigger: 'active',
-            initialCooldown: 10000,
-            cooldown: 20000,
+            initialCooldown: 10000 - tier * 5000,
+            cooldown: 20000 - tier * 10000,
             actions: [simpleAttackAction('magic', 1),{
               modifyAbility: {
                 targets: 'enemy',
                 trigger: 'active',
                 modification: {
-                  cooldownRemaining: 5000
+                  cooldownRemaining: { flat: 5000 }
                 }
               }
             }]
@@ -32,7 +33,7 @@ export default function(){
         name: 'Bane Train',
         effect: {
           abilities: [{
-            initialCooldown: 20000,
+            initialCooldown: 20000 - tier * 10000,
             trigger: 'active',
             actions: [{
               modifyStatusEffect: {
@@ -51,41 +52,16 @@ export default function(){
       },
       {
         name: 'Dark Armor (of Doom)',
-        effect: {
-          abilities: [{
-            trigger: 'startOfCombat',
-            uses: 1,
-            actions: [{
-              applyStatusEffect: {
-                targets: 'self',
-                statusEffect: {
-                  name: 'darkArmor',
-                  startingStacks: 20,
-                  polarity: 'buff',
-                  stats: {
-                    physDef: '10%',
-                    magicDef: '10%'
-                  },
-                  abilities: [{
-                    trigger: 'instant',
-                    initialCooldown: 3000,
-                    actions: [{
-                      modifyStatusEffect: {
-                        subject: {
-                          key: 'self'
-                        },
-                        modification: {
-                          stacks: -1
-                        }
-                      }
-                    }]
-                  }]
-                }
-              }
-            }]
-          }]
-        }
+        effect: darkArmorOfDoomEffect(20 + tier * 20)
       },
+      {
+        name: 'Triple Attack',
+        effect: {
+          stats: {
+            basicAttacks: 2,
+          }
+        }
+      }
     ]
   }
 }

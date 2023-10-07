@@ -1,6 +1,6 @@
-import { onHit } from '../../commonMechanics/onHit.js'
+import { darkArmorOfDoomEffect } from '../../commonMechanics/effects/darkArmorOfDoomEffect.js'
 
-export default function(){
+export default function(tier){
 
   const removeBuff = {
     modifyStatusEffect: {
@@ -14,6 +14,36 @@ export default function(){
     }
   }
 
+  const items = [
+    {
+      name: 'Cursed Strike',
+      effect: {
+        abilities: [
+          {
+            trigger: 'active',
+            initialCooldown: 8000 - tier * 2500,
+            actions: [removeBuff, {
+              attack: {
+                scaling: {
+                  physPower: 1.5
+                },
+              }
+            }]
+          }
+        ]
+      }
+    },
+  ]
+
+  if(tier){
+    items.push(
+      {
+        name: 'Dark Armor',
+        effect: darkArmorOfDoomEffect(5)
+      }
+    )
+  }
+
   return {
     baseStats: {
       physPower: '+5%',
@@ -21,25 +51,6 @@ export default function(){
       speed: -15,
       hpMax: '+20%'
     },
-    items: [
-      {
-        name: 'Cursed Strike',
-        effect: {
-          abilities: [
-            {
-              trigger: 'active',
-              initialCooldown: 8000,
-              actions: [removeBuff, {
-                attack: {
-                  scaling: {
-                    physPower: 1.7
-                  },
-                }
-              }]
-            }
-          ]
-        }
-      }
-    ]
+    items
   }
 }

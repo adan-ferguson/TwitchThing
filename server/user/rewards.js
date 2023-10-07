@@ -55,10 +55,9 @@ export function checkForRewards(userDoc){
     }))
   }
 
-  if(shouldRewardZoneClear(5)){
-    popups.push(zoneCleared(5, {
-      message: 'You\'ve reached the end of the dungeon for now...stay tuned for more.',
-    }))
+  if(shouldRewardZoneClear(5) || shouldUnlockSuperDungeon()){
+    // Popup handled elsewhere I guess
+    userDoc.features.superDungeon = 1
   }
 
   if(popups.length){
@@ -81,5 +80,9 @@ export function checkForRewards(userDoc){
       userDoc.rewards.zonesCleared[zone] = 1
     }
     return should
+  }
+
+  function shouldUnlockSuperDungeon(){
+    return userDoc.rewards.zonesCleared[5] && !userDoc.features.superDungeon
   }
 }

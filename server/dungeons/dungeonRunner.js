@@ -102,24 +102,26 @@ export async function addRun(adventurerID, dungeonOptions){
     startingFloor: 1,
     pace: 'Brisk',
     restThreshold: null,
+    superDungeon: false,
     ...dungeonOptions
   }
 
-  const adventurer = await Adventurers.findByID(adventurerID)
+  const advDoc = await Adventurers.findByID(adventurerID)
   const startingFloor = parseInt(dungeonOptions.startingFloor) || 1
-  const userDoc = await Users.findByID(adventurer.userID)
-  validateNew(adventurer, userDoc, dungeonOptions)
+  const userDoc = await Users.findByID(advDoc.userID)
+  validateNew(advDoc, userDoc, dungeonOptions)
 
   const drDoc = await DungeonRuns.save({
-    adventurer,
+    adventurer: advDoc,
     dungeonOptions,
     floor: startingFloor,
     startTime: Date.now(),
     version: DungeonRuns.CURRENT_VERSION,
   })
 
-  adventurer.dungeonRunID = drDoc._id
-  await Adventurers.save(adventurer)
+  advDoc.dungeonRunID = drDoc._id
+  advDoc.state.canRefundForFree = false
+  await Adventurers.save(advDoc)
 
   activeRuns[drDoc._id] = new DungeonRunInstance(drDoc, userDoc)
   await activeRuns[drDoc._id].initialize()
@@ -202,7 +204,7 @@ export async function cancelRun(dungeonRunDoc, ex){
   await DungeonRuns.save(dungeonRunDoc)
 }
 
-function validateNew(adventurerDoc, userDoc, { startingFloor }){
+function validateNew(adventurerDoc, userDoc, { startingFloor, superDungeon }){
   if(!adventurerDoc){
     throw 'Adventurer not found'
   }
@@ -215,6 +217,9 @@ function validateNew(adventurerDoc, userDoc, { startingFloor }){
   const adventurer = new Adventurer(adventurerDoc)
   if(!adventurer.isValid){
     throw 'Adventurer has invalid loadout.'
+  }
+  if(superDungeon && !adventurerDoc.accomplishments.deepestSuperFloor){
+    throw 'Adventurer has not unlocked super dungeon.'
   }
 }
 

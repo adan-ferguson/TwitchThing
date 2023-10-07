@@ -3,6 +3,7 @@ export default function(level){
     effect: {
       abilities: [{
         trigger: 'active',
+        turnRefund: 0.5,
         uses: 1 + level * 3,
         conditions: {
           owner: {

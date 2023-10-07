@@ -41,8 +41,8 @@ export function loadoutModifierToEl(modifier, isItem){
 
   const nodes = []
   const contentNodes = []
-  if(modifier.subjectKey !== 'self'){
-    let content = modifier.conditions?.hasTag === 'scroll' ? 'Your scrolls ' : subjectDescription(modifier.subjectKey, isItem)
+  if(modifier.subject?.key !== 'self'){
+    let content = modifier.conditions?.hasTag === 'scroll' ? 'Your scrolls ' : subjectDescription(modifier.subject, isItem)
     nodes.push(wrapContent(content, { class: 'loadout-modifier-header' }))
   }
 

@@ -18,7 +18,8 @@ const DEFS = {
     return null
   },
   phantomCloak: (metaEffect, obj) => {
-    return `${attachedSkill(true)}'s ${activeAbility()} becomes ${triggeredAbility('on ' + keyword('thwart'))} (It still has a cooldown)`
+    return `${attachedSkill(true)}'s ${activeAbility()} becomes ${triggeredAbility('on ' + keyword('thwart'))}. 
+    Additionally, reduce its base cooldown by <b>${msToS(metaEffect.effectModification.abilityModification.cooldown * -1)}s</b>.`
   },
   getMad: (metaEffect, obj) => {
     return `Your debuffs also grant you ${wrapStats(metaEffect.effectModification.stats)}.`

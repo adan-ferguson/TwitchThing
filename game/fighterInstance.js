@@ -13,7 +13,7 @@ export const COMBAT_BASE_TURN_TIME = 3000
 
 export function speedToTurnTime(speed){
   let turnTime
-  const dimSpeed = diminish(Math.abs(speed), 50)
+  const dimSpeed = diminish(Math.abs(speed), 40)
   if(speed >= 0){
     turnTime = COMBAT_BASE_TURN_TIME * (100 / (dimSpeed + 100))
   }else{
@@ -22,7 +22,7 @@ export function speedToTurnTime(speed){
   return turnTime
 
   function diminish(speed, basis){
-    return basis * Math.pow(speed / basis, 0.75)
+    return basis * Math.pow(speed / basis, 0.7)
   }
 }
 
@@ -226,6 +226,10 @@ export default class FighterInstance{
     return Math.ceil(this.stats.get('hpMax').value)
   }
 
+  get hpMissing(){
+    return this.hpMax - this.hp
+  }
+
   get hpPct(){
     return this._state.hpPct ?? 1
   }
@@ -345,6 +349,9 @@ export default class FighterInstance{
         return false
       }
       if(conditions.tag && !sei.tags.includes(conditions.tag)){
+        return false
+      }
+      if(conditions.barrier && !sei.barrier){
         return false
       }
       return true

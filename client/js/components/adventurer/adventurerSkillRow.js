@@ -31,13 +31,15 @@ const SKILL_HTML = (name, right, classIcon) => `
 export const AdventurerSkillRowStatus = {
   UNLOCKED: 0,
   CAN_UNLOCK: 1,
-  HIDDEN: 2
+  HIDDEN: 2,
 }
 
 export default class AdventurerSkillRow extends DIElement{
 
   _adventurerSkill
   _adventurerSkillInstance
+
+  _peek = false
 
   constructor(){
     super()
@@ -80,6 +82,10 @@ export default class AdventurerSkillRow extends DIElement{
     this.setOptions({ skill: adventurerSkill })
   }
 
+  get loadoutObj(){
+    return this._adventurerSkill
+  }
+
   get adventurerSkill(){
     return this._adventurerSkill
   }
@@ -108,7 +114,11 @@ export default class AdventurerSkillRow extends DIElement{
 
   get tooltip(){
 
-    if(!this._options.skill || !this._options.showTooltip || this._options.status === AdventurerSkillRowStatus.HIDDEN){
+    if(
+      !this._options.skill ||
+      !this._options.showTooltip ||
+      (!this.isVisible)
+    ){
       return null
     }
 
@@ -128,6 +138,19 @@ export default class AdventurerSkillRow extends DIElement{
     }
 
     return tooltip
+  }
+
+  set peek(val){
+    if(this._peek === val){
+      return
+    }
+    this._peek = val
+    this._update()
+    this.forceShowTooltip = val
+  }
+
+  get isVisible(){
+    return this._options.status !== AdventurerSkillRowStatus.HIDDEN || this._peek
   }
 
   flash(){
@@ -159,7 +182,8 @@ export default class AdventurerSkillRow extends DIElement{
       this.contentEl.innerHTML = ''
     }else{
       const info = classDisplayInfo(skill.advClass)
-      if(this._options.status === AdventurerSkillRowStatus.HIDDEN){
+      if(!this.isVisible){
+        this._updateBorder()
         this.contentEl.innerHTML = HIDDEN_HTML(skill.requiredOrbs, info.icon)
         return
       }
@@ -174,16 +198,19 @@ export default class AdventurerSkillRow extends DIElement{
       displayStyle: 'skill'
     }).update()
 
+    this._updateBorder()
+    return this
+  }
+
+  _updateBorder(){
     const ado = getAbilityDisplayInfoForObj(this.adventurerSkill)
-    if(ado[0]?.type === 'active'){
+    if(ado[0]?.type === 'active' && this.isVisible){
       this.style.borderColor = ITEM_ROW_COLORS.active
       this.style.borderWidth = '3rem'
     }else{
       this.style.borderColor = null
       this.style.borderWidth = null
     }
-
-    return this
   }
 }
 

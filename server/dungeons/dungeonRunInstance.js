@@ -8,7 +8,7 @@ import { resumeCombatEvent } from '../combat/fns.js'
 import { useAbility } from '../mechanics/actions/performAction.js'
 import FullEvents from '../collections/fullEvents.js'
 
-export default class _DungeonRunInstance extends EventEmitter{
+export default class DungeonRunInstance extends EventEmitter{
 
   _fullEvents = []
   _lastAdvancement = new Date()
@@ -80,6 +80,10 @@ export default class _DungeonRunInstance extends EventEmitter{
 
   get restThreshold(){
     return this.doc.dungeonOptions.restThreshold ?? 0
+  }
+
+  get isSuper(){
+    return this.doc.dungeonOptions.superDungeon ? true : false
   }
 
   get instructions(){

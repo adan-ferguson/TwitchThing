@@ -1,4 +1,4 @@
-import { roundToFixed, toDisplayName, toPct } from '../../../game/utilFunctions.js'
+import { roundToFixed, suffixedNumber, toDisplayName, toPct } from '../../../game/utilFunctions.js'
 import { StatType } from '../../../game/stats/statType.js'
 import statValueFns from '../../../game/stats/statValueFns.js'
 import { ICON_SVGS } from '../assetLoader.js'
@@ -93,7 +93,7 @@ export const statDefinitionsInfo = {
   },
   goldFind: {
     text: 'Gold Find',
-    description: 'Multiplies amount of gold found in chests'
+    description: 'Multiplies amount of gold found.'
   },
   chestFind: {
     text: 'Chest Find',
@@ -205,7 +205,7 @@ function toText(stat, style){
   }else if(stat.type === StatType.MINIMUM_ONLY || stat.type === StatType.MAXIMUM_ONLY){
     return value
   }
-  return `${plusSign(style, value)}${value}`
+  return `${plusSign(style, value)}${suffixedNumber(value)}`
 }
 
 function flatValuePercentageDisplay(statObj, { style }){

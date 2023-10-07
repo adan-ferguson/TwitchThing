@@ -5,13 +5,14 @@ import { TAG_NAME_SCHEMA } from './tagNames.js'
 import { STATS_NAME_SCHEMA } from './stats.js'
 import { TRIGGER_NAME_SCHEMA } from './triggers.js'
 
+// TODO: be more specific
 const ORB_MODIFIER_SCHEMA = Joi.object({
-  all: Joi.number().integer(),
-  fighter: Joi.number().integer(),
-  mage: Joi.number().integer(),
-  paladin: Joi.number().integer(),
-  rogue: Joi.number().integer(),
-  chimera: Joi.number().integer(),
+  all: Joi.any(),
+  fighter: Joi.any(),
+  mage: Joi.any(),
+  paladin: Joi.any(),
+  rogue: Joi.any(),
+  chimera: Joi.any(),
 })
 
 const RESTRICTION_SCHEMA = {
@@ -22,7 +23,9 @@ const RESTRICTION_SCHEMA = {
 }
 
 const LOADOUT_MODIFIERS = Joi.array().items(Joi.object({
-  subjectKey: SUBJECT_KEYS_SCHEMA,
+  subject: Joi.object({
+    key: SUBJECT_KEYS_SCHEMA,
+  }),
   conditions: Joi.object({
     hasTag: TAG_NAME_SCHEMA,
     hasAbility: TRIGGER_NAME_SCHEMA

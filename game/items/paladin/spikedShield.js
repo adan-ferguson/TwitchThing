@@ -16,7 +16,7 @@ export default function(level){
         conditions: {
           owner: {
             hasStatusEffect: {
-              name: 'block'
+              barrier: true,
             }
           },
           data: {

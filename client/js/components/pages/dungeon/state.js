@@ -1,24 +1,26 @@
 import CustomAnimation from '../../../animations/customAnimation.js'
-import DungeonRunResults from '../../../../../game/dungeonRunResults.js'
 import { minMax, suffixedNumber } from '../../../../../game/utilFunctions.js'
+import NumberChanger from '../../numberChanger.js'
 
 const innerHTML = `
-<div class="content">
-  <div class="floor-and-room"></div>
+<div class="content flex-columns">
   <div>
-    <span class="pace"></span> Pace
-  </div>
-  <div class="resting-yes">
-    Rest when HP below <span class="rest-threshold"></span>%
-  </div>
-  <div class="resting-yes">
-    Food: <span class="food">0</span>/<span class="max-food">0</span>
+    <div class="floor-and-room"></div>
+    <div class="pace-and-rest"></div>
+    <div class="resting-yes">
+      Food: <span class="food">0</span>/<span class="max-food">0</span>
+    </div>
   </div>
   <div>
-    XP: <span class="xp-reward">0</span>
-  </div>
-  <div>
-    Chests: <span class="chests">0</span>
+    <div>
+      XP: <span class="xp-reward">0</span>
+    </div>
+    <div class="gold-yes">
+      Gold: <span class="gold-reward">0</span>
+    </div>
+    <div>
+      Chests: <span class="chests">0</span>
+    </div>
   </div>
 </div>
 `
@@ -36,22 +38,28 @@ export default class State extends HTMLElement{
     this.innerHTML = innerHTML
     this._floorAndRoomEl = this.querySelector('.floor-and-room')
     this._contentEl = this.querySelector('.content')
-    this.xp = this.querySelector('.xp-reward')
-    this.xpVal = null
     this._chests = this.querySelector('.chests')
     this._food = this.querySelector('.food')
+
+    this._xpChanger = new NumberChanger(this.querySelector('.xp-reward'))
+    this._goldChanger = new NumberChanger(this.querySelector('.gold-reward'))
   }
 
   get maxFoodEl(){
     return this.querySelector('.max-food')
   }
 
-  setup(dungeonRun){
-    this.querySelector('.pace').textContent = dungeonRun.dungeonOptions.pace ?? 'Brisk'
+  setup(dungeonRun, user){
+    let paceAndRest = dungeonRun.dungeonOptions.pace ?? 'Brisk'
     if(dungeonRun.dungeonOptions.restThreshold > 0){
-      this.querySelector('.rest-threshold').textContent = dungeonRun.dungeonOptions.restThreshold
+      paceAndRest += `, Rest when HP < ${dungeonRun.dungeonOptions.restThreshold}%`
     }else{
       this.querySelectorAll('.resting-yes').forEach(el => el.classList.add('displaynone'))
+    }
+    this.querySelector('.pace-and-rest').textContent = paceAndRest
+
+    if(!user.features.gold){
+      this.querySelectorAll('.gold-yes').forEach(el => el.classList.add('displaynone'))
     }
   }
 
@@ -62,42 +70,14 @@ export default class State extends HTMLElement{
     this._floorAndRoomEl.textContent = `Floor ${floor} - ${room ? 'Room ' + room : 'Entrance'}`
 
     const rewards = event?.rewardsToDate ?? run.rewards ?? {}
-    this._setXP(rewards.xp ?? 0, animate)
+    this._xpChanger.set(rewards.xp ?? 0, animate)
+    this._goldChanger.set(rewards.gold ?? 0, animate)
     this._updateChests(rewards.chests ?? 0, animate)
 
     // TODO: still is bugged
     this._setFoodRemaining(adventurerInstance.food, adventurerInstance.maxFood)
 
     this._contentEl.classList.remove('displaynone')
-  }
-
-  _setXP(xp, animate){
-
-    const prev = this._prevXpVal
-    this._prevXpVal = xp
-
-    if(!animate || prev === undefined){
-      this.xp.textContent = suffixedNumber(xp)
-      this._xpAnimation?.cancel()
-      return
-    }
-
-    this._xpAnimation?.cancel()
-
-    // TODO: make a text animation helper
-    this._xpAnimation = new CustomAnimation({
-      duration: 1500,
-      easing: 'easeOut',
-      cancel: () => {
-        this._xpAnimation = null
-      },
-      finish: () => {
-        this._xpAnimation = null
-      },
-      tick: pct => {
-        this.xp.textContent = suffixedNumber(Math.round(prev * (1 - pct) + xp * pct))
-      }
-    })
   }
 
   /**

@@ -100,9 +100,6 @@ function tryMiss(actionDef, abilityInstance){
 }
 
 function tryCrit(actionDef, abilityInstance, target){
-  if(actionDef.damageType !== 'phys' && !abilityInstance.fighterInstance.hasMod('magicCrit')){
-    return false
-  }
   const chance = target.stats.get('enemyCritChance').value + abilityInstance.totalStats.get('critChance').value
   return Math.random() + chance > 1
 }

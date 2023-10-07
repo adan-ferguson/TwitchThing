@@ -1,85 +1,58 @@
-import DungeonRuns from '../collections/dungeonRuns.js'
 import Collection from '../collections/collection.js'
-import db from '../db.js'
-import FullEvents from '../collections/fullEvents.js'
-import { broadcast } from '../socketServer.js'
-import { roundToFixed, toPct } from '../../game/utilFunctions.js'
-
-const MIGRATION_ID = 7
+import Adventurers from '../collections/adventurers.js'
+import { updateAccomplishments } from '../user/accomplishments.js'
+import Users from '../collections/users.js'
+import { removeInvalidSkills } from './deleteSkill.js'
+import { msToS } from '../../game/utilFunctions.js'
 
 const Migrations = new Collection('migrations', {
   migrationId: null
 })
 
 export async function runMigrations(){
+  console.log('running migrations')
+  await migration(81, setUserAdvClassAccomplishments)
+  await migration(83, async () => await removeInvalidSkills())
+  await migration(84, async () => await updateUserFlags())
+  console.log('done')
+}
 
-  const m = await Migrations.findOne({ query: { migrationId: MIGRATION_ID } })
+async function updateUserFlags(){
+  for(let userDoc of await Users.find()){
+    userDoc.features.gold = userDoc.features.skills ? 1 : 0
+    await Users.save(userDoc)
+  }
+  for(let advDoc of await Adventurers.find()){
+    if(!advDoc.accomplishments.deepestSuperFloor && advDoc.accomplishments.deepestFloor > 60){
+      advDoc.accomplishments.deepestSuperFloor = 1
+      await Adventurers.save(advDoc)
+    }
+  }
+}
+
+async function migration(migrationId, fn){
+  const m = await Migrations.findOne({ query: { migrationId } })
   if(m){
     return
   }
-
-  console.log('running migration')
-
-  db.conn().collection('fullEvents').createIndex({ dungeonRunID: 1 })
-  db.conn().collection('dungeonRuns').createIndex({ cancelled: 1 })
-
-  console.log('indexes created')
-
-  await compressEvents()
-  setTimeout(() => {
-    broadcast('force reload')
-  }, 5000)
-  console.log('done')
-  Migrations.save({ migrationId: MIGRATION_ID })
+  const time = Date.now()
+  console.log('running migration', migrationId)
+  await fn()
+  console.log('finished migration', migrationId, msToS(Date.now() - time))
+  Migrations.save({ migrationId })
 }
 
-/**
- * Version 0 -> 1
- * @returns {Promise<void>}
- */
-async function compressEvents(){
-
-  console.log('loading runs')
-
-  const query = { 'events.1': { $exists: true } }
-  const length = await DungeonRuns.collection.countDocuments(query)
-  const cursor = DungeonRuns.collection.find(query)
-
-  const runsToSave = []
-
-  console.log(`Converting ${length} runs...`)
-
-  let i = 0
-  let eventsAdded = 0
-  for await (const doc of cursor){
-    if(i % 10 === 0){
-      const used = process.memoryUsage().heapUsed / 1024 / 1024
-      const total = process.memoryUsage().heapTotal / 1024 / 1024
-      console.log(i + ' / ' + length,
-        roundToFixed(used),
-        roundToFixed(total),
-        toPct(used / total),
-      )
-    }
-    i++
-    if(!doc.events?.length){
-      return
-    }
-    const fullEvents = doc.events?.map(event => {
-      const withoutId = { ...event }
-      delete withoutId._id
-      eventsAdded++
-      return {
-        dungeonRunID: doc._id,
-        data: event,
+async function setUserAdvClassAccomplishments(){
+  for(let userDoc of await Users.find()){
+    userDoc.accomplishments.advClasses = {}
+    const advs = await Adventurers.find({
+      query: {
+        userID: userDoc._id
       }
     })
-    await FullEvents.saveMany(fullEvents)
-    doc.events = null
-    runsToSave.push(doc)
+    for(let advDoc of advs){
+      updateAccomplishments(userDoc, advDoc)
+    }
+    await Users.save(userDoc)
   }
-
-  console.log(length + ' / ' + length)
-  console.log(`${runsToSave.length} runs to update, ${eventsAdded} fullEvents added`)
-  await DungeonRuns.saveMany(runsToSave)
 }

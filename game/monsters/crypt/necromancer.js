@@ -1,11 +1,12 @@
 import { barrierAction } from '../../commonMechanics/barrierAction.js'
+import { toPct } from '../../utilFunctions.js'
 
-export default function(){
+export default function(tier){
   return {
     baseStats: {
       hpMax: '+10%',
-      speed: -65, // keep this desynced
-      magicPower: '+50%',
+      speed: -65 + tier * 60, // keep this desynced
+      magicPower: toPct(0.5 + tier * 0.5),
       physPower: '-40%'
     },
     items: [
@@ -25,6 +26,7 @@ export default function(){
                   abilities: [{
                     trigger: 'instant',
                     initialCooldown: 3000,
+                    repetitions: 1 + tier * 1,
                     actions: [{
                       attack: {
                         scaling: {

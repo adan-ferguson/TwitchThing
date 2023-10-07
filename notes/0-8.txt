@@ -1,0 +1,296 @@
+v0.8.1.0
+--------
+************ General ************
+- Chests no longer contain gold, you'll get gold whenever you kill an enemy instead (like every JRPG ever).
+- Increased the amount of XP required to level up for levels beyond 100. This change will lower the levels of some adventurers. This won't break existing ones, but
+they won't gain any more orbs/skill points until the numbers match up.
+- Hidden convenience thing: You can shift+click when spending points to go to the nearest 5.
+- As a temporary measure, there's now an eye icon next to skills which you've seen on that user account, but can't be unlocked yet by that adventurer.
+- When you refund points, refunds with that adventurer are now free until you enter a dungeon.
+
+- Skills and items which granted max hp, phys power, or magic power now generally have improved scaling as they're upgraded.
+-- Won't list all of them, but for example, Short Sword went from [20/35/50/65...] to [20/35/52/70...]
+-- Some of these have better scaling than others, based on their rarity and how popular they were in previous patch.
+
+- Did lazy high-number notation, will do it for real eventually.
+
+************ SUPER Dungeon *************
+- If you've cleared the regular dungeon (floor 60), you should have access to the SUPER dungeon on the dungeon picker page.
+- It's similar to the regular dungeon but the monsters are super-powered. Some have modified/new abilities!
+- Supposed to be unfair with the idea that degenerate builds are required to progress, though really I have no idea if that's true...
+- Hopefully I didn't accidentally mess with the normal monsters, but it's possible.
+- Basically didn't balance test this at all, honestly.
+
+************ Monsters (Regular Versions) ************
+Numbers-only Changes
+- Buffs: Druid, Bitey Plant, Hydra, Siren, Two-Headed Shark, Water Elemental, Cerberus, Night Mare, Pit Fiend, Succubus, Demoted Lucifer
+- Nerfs: Werewolf, Centaur, Assassin, Basilisk, Ancient Tortoise, Wyvern, Maniacal Minion.
+
+Demoted Lucifer
+- There were supposed to be 6 random terrible curses, but I had commented out 5 of them...oops.
+
+Triablo
+- Added a "Triple Attack" ability to help it deal with dodges/bat wings. Phys power reduced to compensate.
+- Speed increased.
+
+************ Fighter ************
+Pretty happy with this as the "starter" class.
+
+Heavy Axe
+- Speed increased from [-50/-75/-100...] to [-40/-60/-80...]
+
+Coffee Carafe
+- Speed increased from [50/80/110...] to [60/95/130...]
+- This might have also been unpopular because it was bugged and didn't stack correctly.
+
+Twin Blades
+- Cost increased from [11/17/23...] to [12/20/28...]
+
+Reckless Attack
+- Damage increased from [3.0/4.2/5.4...] to [4.0/5.5/7.0...]
+- Will most likely replace this eventually.
+
+Swift Strikes
+- Cooldown lowered from 15s to 12s because I felt like it.
+
+Final Fight
+- Lifesteal removed, hopefully this is both a nerf but also will make it work better with chimera's "low health" archetype.
+- Duration reduced from [5.0/6.0/7.0...] to [5.0/5.5/6.0...]
+
+Execute
+- Now gets the Wood Elf ability (can't miss, can't be dodged).
+
+************ Mage ************
+Pretty happy with mage in general, it teaches the game's mechanics very well.
+
+Magic Ring
+- Multiplier increased from [.85x/.77x/.69x...] to [.85x/.78x/.72x...]
+
+Mana Biscuit
+- Name changed to "Mana Biscuits"
+- Wildly unpopular, probably will rework later.
+- Cost reduced from [3/4/5...] to [1/2/3...]
+
+Miniature Scroll
+- I swear this was good already!
+- Cost reduced from [3/5/7] to [3/4/5]
+
+Unstable Scroll
+- Okay, I knew this was bad.
+- Stun duration reduced from [2.0/3.5/5.0...] to [1/2/3...]
+
+Lightning Ring
+- Damage increased from [0.5/1.0/1.5...] to [0.6/1.2/1.8...]
+
+Ascension Scroll
+- Let's spice this up a bit
+- Level-ups increased from [2/3/4...] to [3/5/7...]
+- Cost increased from [9/13/17...] to [10/15/20...]
+
+Wizard Hat
+- Base cooldown increased from 30s to 45s
+
+Overload
+- Cooldown increase reduced from [2x/3x/4x...] to [1.5x/2x/2.5x...]
+
+************ Paladin ************
+A couple of duds, but generally wound up okay. Healing is hard to make exciting.
+
+Tower Shield
+- Block increased from [20%/26%/32%...] to [25%/35%/45%...]
+
+Plate Mail
+- Base phys def increased from 25% to 40%
+
+Spiked Shield
+- Now works with any barrier, not just the Block one.
+
+Magic Plate Mail
+- Base defs increased from 35% to 45%
+
+Immaculate Shield
+- Now works with any barrier, not just the Block one.
+
+Cleansing Potion
+- Now refunds 50% turn time.
+
+Celestial Greatsword
+- Cost increased from [12/20/28...] to [15/25/35...]
+- Maybe impossible to balance?
+
+Greater Heal
+- Base cooldown reduced from 30s to 20s
+
+Penance
+- Multiplier reduced from [120%/170%/220%...] to [100%/140%/180%...]
+- Now also works on overheals (!)
+
+Purity
+- The most upgraded non-rogue skill. Makes sense because if you're going purity (8 paladin items), then you might as well just spam this.
+- There's not an elegant way to nerf it though. (Or is there?)
+
+************ Rogue ************
+The farming strategies seem a bit degenerate, because you can make farmers which pay for more slots for more farmers, and so on. This really skewed the heck out of the stats.
+Was a weird class, had some things no one liked at all.
+
+Quick Attack
+- This was the #1 most upgraded skill in the game, only to get the cooldown really low for bounty collecting.
+- No point in nerfing this, could be done with many other skills (like Slash)
+
+Appraise
+- Rare find reduced from [50%/100%/150%...] to [40%/70%/100%...]
+
+Exhaustive Search
+- Floor size reduced from [50%/100%/150%...] to [40%/70%/100%...]
+
+Midas Touch
+- Gold bonus reduced from [100%/200%/300%...] to [100%/150%/200%...]
+
+Deadly Magickqs
+- This was boring and bad.
+- Magic attacks can now just crit again by default (like in v0.7).
+- Replaced with new skill, "Deadly Maneuvers".
+
+Critical Crit
+- Bonus changed from [+200%/+400%/+600%...] to [x2,x3,x4...]
+- Penalty lowered from [2,3,4...] to [1.5,2,2.5...] (value your crit chance is divided by)
+
+Cloak
+- Dodge reduced from [10%/14.5%/18.8%...] to [10%/13.6%/17.1%...]
+- Speed reduced from [20/40/60...] to [15/30/45...]
+
+Sleep Powder
+- Will replace this in v0.8.2 probably.
+
+Lucky Ring
+- Joke item! Just kidding. it's the most equipped item in the game (1.1 per rogue)
+- Letting it ride for now just because I want to see if the farm strategies win when there's actual enemies to fight.
+
+Phantom Cloak
+- A nice 0% usage, which made me double check that it even works at all.
+- It now also lowers the ability's cooldown by [10/15/20...] seconds, which allows for getting it low enough to trigger each dodge.
+- Dodge chance granted starts at 10% instead of 0%.
+- Cost changed from [12/15/18...] to [12/18/24...]
+
+The Bounty Collector
+- No longer gives chests, now increases the gold reward from the enemy by [4x/7x/10x...]
+
+************ Chimera ************
+For being a hodge-podge, wound up pretty good, had some reasonable variety too.
+Everything that was "50% or lower" is now "65% or lower".
+
+Body Slam
+- Cooldown lowers on rank-up now, to help the "max hp" archetype which literally only has this for damage.
+
+Fight And/Or Flight
+- Speed lowered from [60/100/140...] to [50/75/100...]
+- Phys power grows faster now.
+
+Sense Weakness
+- Removed this for now. If you had this before (and you didn't), it'll be refunded.
+- Replaced with new skill, "Stay Hungry".
+
+Furious Strikes
+- Cooldown lowered from 15s to 12s because I felt like it.
+
+Extra Arms
+- Wow, should 1 skill be worth an unlimited amount of orb??? Turns out, no.
+- Attached item now costs [50%/100%/150%...] more orbs. (Wait, this doesn't really fix the problem...)
+- This is displayed in a sort of stupid way...
+
+Dragon Breath
+- Cooldown reduced from [60/90/120...] to [30/40/50...] (lol)
+- Damage increased from [300%/400%/500%...] to [500%/650%/800%...]
+- Fixed the descriptions (ice slows, necrotic reduces by a percentage (not rounded up to 1))
+
+Spiked Shell
+- Return damage increased from [12%/16%/20%...] to [30%/40%/50%...]
+
+Shimmering Scales
+- Return damage increased from [30%/45%/60%...] to [50%/70%/90%...]
+
+Salamander Tail
+- Damage increased from [30%/60%/90%...] to [40%/80%/120%...]
+
+Bat Wings
+- Speed reduced from [0/20/40...] to [0/10/20...]
+
+Troll Regeneration
+- Name changed to "Regenerative Cells" because "Troll Renegeration" sounds more like a skill than an item.
+- Not married to it.
+
+Phoenix Plumage
+- Cost reduced from [15/30/45...] to [12/24/36...]
+
+v0.8.0.6 (Aug 30, 2023)
+--------
+- Fixed bug where skills would revert if you changed them, then went to points tab, then went back to loadout tab. (There still might be some problems though)
+- Fixed final combat being really long in the replay
+- Trying to fix some socket thing
+- (Accidentally included this LOL) you can now upgrade skills from the loadout tab via right-click
+
+v0.8.0.5
+--------
+- Fixed bug where old events weren't purging.
+- Fixed bug where users weren't unlocking the next zone after clearing a zone.
+- Fixed bug where results page showed wrong number of xp if the run was really long. (Not a retroactive fix)
+
+v0.8.0.4
+--------
+- Fixed some more DB problems
+- On results page, if you have more than 20 chests, it will just say "...and more" instead of loading all of them and freezing the page.
+- There's also a "loot" results tab that has everything added up and sorted.
+- When you view a replay, it will only load 100 events instead of like a billion of them.
+
+v0.8.0.3
+--------
+- Database changes should result in faster loading times when opening dungeon runs.
+- Extremely long runs will save much faster and hopefully no longer get stuck and slow down the server.
+- Implemented some compression so there's less downloading, plus it will warn if you're downloading all the data for an extremely long run.
+- As a consequence, the event log is no longer visible until the run is finished. Maybe it'll be back later.
+
+v0.8.0.2
+------
+- Fixed bug where penance would crash the run when you rest.
+- Fixed firefox bug where skills had their icon way off to the side.
+- Other logging stuff, attempting to find the source of the slowness.
+
+v0.8.0.1
+------
+- Fixed bug where a run would crash if you got 2 chests in 1 fight. (The Bounty Collector + random chest or boss chest)
+- Fixed bug where your loadout would revert. (There's still another similar bug with skills that I haven't found yet)
+- Fixed bug where status effects weren't extending correctly (haste, coffee carafe).
+
+v0.8.0
+------
+New Things:
+- Users can not play anonymously without logging in, which was a big sticking point for people (understandably).
+- Skill selector added, gain one skill point for each 5 levels gained. The previous idea of "random skill options on level-up" has been removed, because it was hard to make it interesting.
+- Now have 8 item slots AND 8 skill slots.
+- 5 classes, rogue unlocked level 30, ??? unlocked level 40.
+- Each class now has 12 items, 12 skills. In general, the old items have been split up into items & skills, usually active abilities are skills.
+- 6th zone added, the "super dungeon" has been removed for now.
+- You can now buy "Stashed XP", which you can give to adventurers. You also get stashed XP when you dismiss an adventurer (50%).
+
+Changes:
+- Basically remade the entire battle engine, a lot of small differences, but you'd have to be looking close to even see them.
+- Lots of enemies have a bunch of changes because I had to remake all of them too.
+- Speed has more diminishing returns, both positive and negative.
+- Some abilities also now have diminishing returns. They'll have a double-down-arrow icon.
+- When leveling up items, now they generally also increase in Orb cost. No more level 250 items, unfortunately. (Or I mean, I guess technically you could...)
+- Starting food is now 2 + 1 per 10 levels.
+- Gold accrual is a lot flatter now.
+- Adventurer slot prices don't grow as harshly now. (Free -> 1000 -> 2000 -> 5000 -> 10000 -> ... )
+- Shop chests now cap at level 100.
+- To prevent overly long combats, after 60 seconds, combats enter "overtime" which increases all damage dealt by more and more the longer it goes. After 120 seconds, the player starts taking unpreventable damage.
+- A bunch of other things, who cares.
+
+Improvements:
+- In the shop, some items have sliders, so you can buy multiple at once. (Not chests yet, but I don't think you'll be buying like a billion of them anymore anyway)
+- Tooltips generally improved in many ways (probably wasted too much time on these, honestly)
+- You can now upgrade items from the adventurer loadout page. When you right-click an item, if you have forge unlocked, it'll show an "upgrade" button.
+- Combats should generally calculate faster, and slow ones won't crash the server or slow everyone else down. Still a lot of work to do on this though.
+- More, probably.
+
+Fixes:
+- Fixed a lot, but the funniest bug before was cooldown multiplier affecting status effect ticks. Cooldown reduction now just affects your active items. (Or does it? ...)

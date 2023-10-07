@@ -1,27 +1,18 @@
-export default function(){
+import { regenerationEffect } from '../../commonMechanics/effects/regenerationEffect.js'
+import { toPct } from '../../utilFunctions.js'
+
+export default function(tier){
   return {
     baseStats: {
-      hpMax: '+40%',
+      hpMax: toPct(0.4 + 0.8 * tier),
       physPower: '+10%',
       physDef: '20%',
-      speed: -10
+      speed: -10 + tier * 50,
     },
     items: [
       {
         name: 'Hyper Regeneration',
-        effect: {
-          abilities: [{
-            trigger: 'instant',
-            initialCooldown: 5000,
-            actions: [{
-              gainHealth: {
-                scaling: {
-                  hpMissing: 0.2
-                }
-              }
-            }]
-          }]
-        }
+        effect: regenerationEffect(0.2 + tier * 0.15)
       }
     ]
   }

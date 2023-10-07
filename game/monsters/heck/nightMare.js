@@ -1,8 +1,10 @@
-export default function(){
+import { toPct } from '../../utilFunctions.js'
+
+export default function(tier){
   return {
     baseStats: {
-      hpMax: '+20%',
-      speed: 20,
+      hpMax: toPct(0.3 + tier * 0.5),
+      speed: 30,
     },
     items: [{
       name: 'Gallop',
@@ -17,7 +19,7 @@ export default function(){
                 name: 'Sprinting',
                 polarity: 'buff',
                 stats: {
-                  speed: 100
+                  speed: 120 + tier * 180
                 }
               }
             }

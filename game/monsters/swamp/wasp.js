@@ -1,4 +1,4 @@
-export default function(){
+export default function(tier){
   const scaling = {
     physPower: 0.3
   }
@@ -8,7 +8,7 @@ export default function(){
     baseStats: {
       hpMax: '-50%',
       physPower: '-50%',
-      speed: 200
+      speed: 200 + tier * 300,
     },
     items: [{
       name: 'Stinger',

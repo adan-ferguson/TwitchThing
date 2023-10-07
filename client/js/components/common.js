@@ -3,7 +3,7 @@ import { getStatDisplayInfo, statDefinitionsInfo, StatsDisplayStyle } from '../d
 import {
   deepClone,
   makeEl,
-  roundToNearestIntervalOf,
+  roundToNearestIntervalOf, suffixedNumber,
   toDisplayName,
   toPct,
   wrapContent
@@ -14,7 +14,6 @@ import magicPower from '../../assets/icons/magicPower.svg'
 import speed from '../../assets/icons/action.svg'
 import gold from '../../assets/icons/gold.svg'
 import AdventurerItem from '../../../game/items/adventurerItem.js'
-import AbilityInstance from '../../../game/abilityInstance.js'
 import { subjectKeyForLoadoutObject } from '../subjectClientFns.js'
 import { scaledNumberFromInstance } from '../../../game/scaledNumber.js'
 import tippy from 'tippy.js'
@@ -77,6 +76,9 @@ export function orbEntries(obj){
 }
 
 export function orbEntry(cls, count){
+  if(cls === 'all'){
+    return orbPointEntry(count)
+  }
   return `<di-orb-entry orb-class="${cls}" orb-used="${count}"></di-orb-entry>`
 }
 
@@ -184,11 +186,11 @@ export function statScaling(scaling, obj = null, range = null, sourceStr = ''){
       if(obj?.totalStats){
         const statVal = val * obj.totalStats.get(scalingType).value
         if(range){
-          const val1 = Math.ceil(statVal * range[0])
-          const val2 = Math.ceil(statVal * range[1])
+          const val1 = suffixedNumber(Math.ceil(statVal * range[0]))
+          const val2 = suffixedNumber(Math.ceil(statVal * range[1]))
           str = val1 + ' to ' + val2
         }else{
-          str = Math.ceil(statVal)
+          str = suffixedNumber(Math.ceil(statVal))
         }
       }else{
         if(range){
@@ -238,7 +240,10 @@ export function triggeredAbility(txt){
   return `<span class="triggered-ability-rect" tooltip="Triggered Ability">${txt}</span>`
 }
 
-export function pluralize(str, count){
+export function pluralize(str, count, ifSingle = null){
+  if(ifSingle && count === 1){
+    return `${ifSingle} ${str}`
+  }
   return `${count} ${str + (count === 1 ? '' : 's')}`
 }
 

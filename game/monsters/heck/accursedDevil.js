@@ -1,11 +1,12 @@
+import { toPct } from '../../utilFunctions.js'
 
-export default function(){
+export default function(tier){
   return {
     baseStats: {
-      hpMax: '-30%',
+      hpMax: '-10%',
       speed: 40,
-      physPower: '-50%',
-      magicPower: '+50%'
+      physPower: '-40%',
+      magicPower: toPct(1.1 + tier * 0.9)
     },
     items: [
       {
@@ -16,7 +17,8 @@ export default function(){
             uses: 1,
             actions: [{
               terribleCurse: {
-                attackScaling: 1
+                attackScaling: 1,
+                count: tier ? 2 : 1,
               }
             }]
           }]

@@ -2,7 +2,7 @@ import AdventurerItem from './items/adventurerItem.js'
 import AdventurerSkill from './skills/adventurerSkill.js'
 import OrbsData from './orbsData.js'
 import SlotModifierCollection from './slotModifierCollection.js'
-import { isolate } from './utilFunctions.js'
+import { isolate, tryClass } from './utilFunctions.js'
 import LoadoutObjectInstance from './loadoutObjectInstance.js'
 import Stats from './stats/stats.js'
 
@@ -10,14 +10,16 @@ export default class AdventurerLoadout{
 
   _objs
 
-  constructor(adventurerDoc){
+  constructor(adventurer){
+    this._adventurer = adventurer
     this._objs = [[], []]
-    const loadoutObj = adventurerDoc.loadout
+
+    const loadoutObj = adventurer.doc.loadout
     for(let i = 0; i < 8; i++){
       this._objs[0][i] = loadoutObj.items[i] ? new AdventurerItem(loadoutObj.items[i]) : null
 
       const skillName = loadoutObj.skills[i]
-      this._objs[1][i] = skillName ? new AdventurerSkill(skillName, adventurerDoc.unlockedSkills[skillName]) : null
+      this._objs[1][i] = skillName ? tryClass(AdventurerSkill, [skillName, adventurer.doc.unlockedSkills[skillName]]) : null
     }
   }
 
@@ -80,7 +82,7 @@ export default class AdventurerLoadout{
         return false
       }
       for(let lm of (loadoutItem?.loadoutModifiers ?? [])){
-        if(lm.subjectKey === 'neighbouring' && lm.restrictions && (slot === 0 || slot === 7)){
+        if(lm.subject?.key === 'neighbouring' && lm.restrictions && (slot === 0 || slot === 7)){
           return true
         }
       }
@@ -103,7 +105,7 @@ export default class AdventurerLoadout{
       const modOrbs = this.modifiers.get(col, slot, 'orbs', loadoutItem)
         .filter(mo => {
           for(let key in mo){
-            if(key in loadoutItem.orbs){
+            if(key === 'all' || key in loadoutItem.orbs){
               return true
             }
           }
@@ -149,10 +151,21 @@ export default class AdventurerLoadout{
   setSlot(col, row, loadoutObject){
     this._objs[col][row] = loadoutObject instanceof LoadoutObjectInstance ? loadoutObject.obj : loadoutObject
     this._modifiers = null
+    this._serialize()
   }
 
-  serialize(){
-    return {
+  addSkillToEmptySlot(skillId){
+    const s = new AdventurerSkill(skillId)
+    for(let i = 0; i < 8; i++){
+      if(!this._objs[1][i] && this.canFillSlot(1, i, s)){
+        this.setSlot(1, i, s)
+        return
+      }
+    }
+  }
+
+  _serialize(){
+    this._adventurer._doc.loadout = {
       items: this.items.map(i => i?.def),
       skills: this.skills.map(s => s?.id)
     }

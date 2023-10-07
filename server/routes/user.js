@@ -119,7 +119,7 @@ router.get('/newuseranonymous', passport.authenticate('anonymous'), async (req, 
 })
 
 router.post('/appfetch', async (req, res) => {
-  const user = Users.gameData(req.user) || { anonymous: true }
+  const user = await Users.gameData(req.user) || { anonymous: true }
   const popups = user.anonymous ? [] : checkForRewards(req.user)
   res.send({ user, popups })
 })

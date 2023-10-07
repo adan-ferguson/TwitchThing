@@ -8,11 +8,13 @@ import { applyChestToUser } from './chests.js'
 import Combats from '../collections/combats.js'
 import { adjustInventoryBasics } from '../user/inventory.js'
 import FullEvents from '../collections/fullEvents.js'
+import DungeonRunInstance from './dungeonRunInstance.js'
 
 const REWARDS_TYPES = {
-  xp: 'num',
+  xp: 'int',
+  gold: 'int',
   chests: 'array',
-  food: 'num',
+  food: 'int',
   pityPoints: 'num'
 }
 
@@ -28,7 +30,12 @@ export function addRewards(rewards, toAdd){
       continue
     }
 
-    if(REWARDS_TYPES[key] === 'num'){
+    if(REWARDS_TYPES[key] === 'int'){
+      if(!r[key]){
+        r[key] = 0
+      }
+      r[key] = Math.round(r[key] + toAdd[key])
+    }else if(REWARDS_TYPES[key] === 'num'){
       if(!r[key]){
         r[key] = 0
       }
@@ -68,8 +75,9 @@ export async function finalize(dungeonRunDoc){
     deepestFloor += 1
   }
 
-  const adventurerDoc = await saveAdventurer()
   const userDoc = await Users.findByID(dungeonRunDoc.adventurer.userID)
+  const dri = new DungeonRunInstance(dungeonRunDoc, userDoc)
+  const adventurerDoc = await saveAdventurer()
   await saveUser()
   await saveDungeonRun()
   await purgeOldRuns(dungeonRunDoc.adventurer._id)
@@ -80,14 +88,27 @@ export async function finalize(dungeonRunDoc){
     adventurerDoc.dungeonRunID = null
     adventurerDoc.xp = xpAfter
     adventurerDoc.level = advXpToLevel(xpAfter)
-    adventurerDoc.accomplishments.deepestFloor = Math.max(deepestFloor, adventurerDoc.accomplishments.deepestFloor)
-    // if(deepestFloor === 60 && lastEvent.roomType === 'cleared' && !adventurerDoc.accomplishments.deepestSuperFloor){
-    //   adventurerDoc.accomplishments.deepestSuperFloor = 1
-    //   emit(userDoc._id, 'show popup', {
-    //     title: 'Wow!',
-    //     message: `${adventurerDoc.name} cleared the whole dungeon, now try the unfair and gigantic waste of time SUPER dungeon!`
-    //   })
-    // }
+
+    if(dri.isSuper){
+      const prev = adventurerDoc.accomplishments.deepestSuperFloor
+      adventurerDoc.accomplishments.deepestSuperFloor = Math.max(deepestFloor, adventurerDoc.accomplishments.deepestSuperFloor)
+      if(deepestFloor === 61 && prev < 61){
+        emit(userDoc._id, 'show popup', {
+          title: 'Banned!',
+          message: `${adventurerDoc.name} cleared the whole SUPER dungeon, which probably means you used UNFAIR GAMEPLAY EXPLOITS!`
+        })
+      }
+    }else{
+      adventurerDoc.accomplishments.deepestFloor = Math.max(deepestFloor, adventurerDoc.accomplishments.deepestFloor)
+      if(deepestFloor === 61 && !adventurerDoc.accomplishments.deepestSuperFloor){
+        adventurerDoc.accomplishments.deepestSuperFloor = 1
+        emit(userDoc._id, 'show popup', {
+          title: 'Wow!',
+          message: `${adventurerDoc.name} cleared the whole dungeon, now try the unfair and gigantic waste of time SUPER dungeon!`
+        })
+      }
+    }
+
     await Adventurers.save(adventurerDoc)
     return adventurerDoc
   }
@@ -127,6 +148,7 @@ export async function finalize(dungeonRunDoc){
 
     if(adventurerDoc.level >= 5 && !userDoc.features.skills){
       userDoc.features.skills = 1
+      userDoc.features.gold = 2
       emit(userDoc._id, 'show popup', {
         title: 'Skill Point!',
         message: 'You got your first skill point, go spend it now! Now now now!'
@@ -144,6 +166,7 @@ export async function finalize(dungeonRunDoc){
       })
     }
 
+    userDoc.inventory.gold += Math.round(dungeonRunDoc.rewards.gold ?? 0)
     userDoc.accomplishments.deepestFloor = Math.max(userDoc.accomplishments.deepestFloor, deepestFloor)
     await Users.save(userDoc)
   }

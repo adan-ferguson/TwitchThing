@@ -1,11 +1,12 @@
 import { barrierAction } from '../../commonMechanics/barrierAction.js'
+import { toPct } from '../../utilFunctions.js'
 
-export default function(){
+export default function(tier){
   return{
     baseStats: {
-      hpMax: '-30%',
-      magicPower: '+100%',
-      speed: 30
+      hpMax: toPct(-0.1 + tier * 0.4),
+      magicPower: toPct(1.3 + tier * 1.3),
+      speed: 30 + tier * 100
     },
     items: [
       {
@@ -15,11 +16,11 @@ export default function(){
             trigger: 'active',
             cooldown: 20000,
             actions: [barrierAction({
-              hpMax: 0.25
+              hpMax: 0.35
             },{
               stats: {
-                physPower: '2x',
-                magicPower: '2x'
+                physPower: tier ? '10x' : '2x',
+                magicPower: tier ? '10x' : '2x'
               }
             })]
           }]
@@ -30,7 +31,7 @@ export default function(){
         effect: {
           abilities: [{
             trigger: 'active',
-            initialCooldown: 15000,
+            initialCooldown: 10000,
             cooldown: 20000,
             actions: [[{
               attack: {

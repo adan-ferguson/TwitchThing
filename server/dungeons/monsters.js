@@ -84,6 +84,7 @@ const CHEST_DROP_CHANCE = 0.025
 const CHEST_DROP_CHANCE_HARD_ENEMY = 0.09 // It's an enemy of level >= adventurer's deepest floor
 
 const BOSS_XP_BONUS = 10
+const BOSS_GOLD_BONUS = 5
 
 // Monsters of level [currentFloor - FLOOR_RANGE] to [currentFloor] will spawn (both inclusive).
 const FLOOR_RANGE = 4
@@ -100,7 +101,7 @@ export function generateSuperMonster(dungeonRun){
   monsterDefinition.level = dungeonRun.room + 54
   return {
     ...monsterDefinition,
-    super: true,
+    tier: 1,
     rewards: generateRewards(dungeonRun, monsterDefinition)
   }
 }
@@ -109,7 +110,10 @@ export async function generateMonster(dungeonRun, boss){
 
   const index = boss ? dungeonRun.floor : floorToLevel(dungeonRun.floor)
   const monsterDefinition = getMonsterDefinition(index)
-  monsterDefinition.level = index
+  const level = dungeonRun.isSuper ? superLevel(index) : index
+
+  monsterDefinition.tier = dungeonRun.isSuper ? 1 : 0
+  monsterDefinition.level = level
   monsterDefinition.boss = boss
 
   return {
@@ -120,21 +124,22 @@ export async function generateMonster(dungeonRun, boss){
 
 function generateRewards(dungeonRun, monsterDefinition){
   const monsterInstance = new MonsterInstance(monsterDefinition)
+  const ai = dungeonRun.adventurerInstance
   const level = monsterInstance.level
   const rewards = {
-    xp: monsterInstance.xpReward * (monsterInstance.isBoss ? BOSS_XP_BONUS : 1)
+    xp: monsterInstance.xpReward * (monsterInstance.isBoss ? BOSS_XP_BONUS : 1),
   }
-  if(dungeonRun.user.accomplishments.firstRunFinished){
+
+  if(!ai.hasMod('goldOnly') && dungeonRun.user.accomplishments.firstRunFinished){
     const userChests = dungeonRun.user.accomplishments.chestsFound ?? 0
     const hardEnemy = level >= dungeonRun.adventurer.accomplishments.deepestFloor
-    const dropMulti = dungeonRun.adventurerInstance.stats.get('chestFind').value
+    const dropMulti = ai.stats.get('chestFind').value
     const dropChance = (userChests < BONUS_CHESTS_UNTIL ? BONUS_CHEST_CHANCE :
       hardEnemy ? CHEST_DROP_CHANCE_HARD_ENEMY : CHEST_DROP_CHANCE) * dropMulti
     const dropChest =
       Math.random() < dropChance ||
       monsterInstance.isBoss ||
       dropPityChest(dungeonRun, dropChance)
-
     if(dropChest){
       rewards.chests = generateMonsterChest(dungeonRun, monsterInstance)
       rewards.pityPoints = -1
@@ -142,6 +147,12 @@ function generateRewards(dungeonRun, monsterDefinition){
       rewards.pityPoints = dropChance
     }
   }
+
+  // Start adding gold once skills have been unlocked
+  if(dungeonRun.user.features.skills){
+    rewards.gold = monsterInstance.goldReward * (monsterInstance.isBoss ? BOSS_GOLD_BONUS : 1)
+  }
+
   return addRewards(rewards, monsterInstance.rewards)
 }
 
@@ -179,6 +190,16 @@ export function getAllMonsters(){
   })
 }
 
+export function getAllSuperMonsters(){
+  return getAllMonsters().map(mDef => {
+    return {
+      ...mDef,
+      level: superLevel(mDef.level),
+      tier: 1,
+    }
+  })
+}
+
 /**
  * Given a floor, return a random level equal to this floor or less, but it has to be
  * the same zone (aka the tens digit must remain the same).
@@ -204,7 +225,8 @@ function getBasicMonsterDefinition(floor){
   return {
     _id: 'basic-' + uniqueID(),
     baseType: monstersByFloor[floor].id,
-    level: floor
+    level: floor,
+    tier: 0,
   }
 }
 
@@ -213,4 +235,10 @@ function dropPityChest(dungeonRun, dropChance){
     return true
   }
   return false
+}
+
+function superLevel(level){
+  const BASE = 70
+  const PER = 2
+  return BASE + (level - 1) * PER
 }

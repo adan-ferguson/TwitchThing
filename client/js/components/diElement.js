@@ -31,10 +31,19 @@ export default class DIElement extends HTMLElement{
     return this.closest('.tippy-content')
   }
 
+  set forceShowTooltip(val){
+    this._tippy[val ? 'show' : 'hide']()
+  }
+
   get inModal(){
     return this.closest('di-modal')
   }
 
+  /**
+   * @param options
+   * @param forceUpdate
+   * @returns {this}
+   */
   setOptions(options = {}, forceUpdate = false){
     const newOptions = mergeOptionsObjects(this._options, options)
     if(!forceUpdate && _.isEqual(newOptions, this._options)){
@@ -53,7 +62,6 @@ export default class DIElement extends HTMLElement{
         maxWidth: 'none',
         // delay: 50,
         duration: 150,
-
       })
     }
     if(content && !this.inTooltip){

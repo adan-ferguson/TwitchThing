@@ -70,6 +70,9 @@ export default class EventContentsNormal extends HTMLElement{
           continue
         }
         let val = r[key]
+        if(!val){
+          continue
+        }
         if(key === 'chests'){
           if(Array.isArray(val) && val.length > 1){
             html += `<div>Found ${val.length} treasure chests</div>`

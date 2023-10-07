@@ -37,6 +37,20 @@ export default class Tabz extends DIElement{
     return this.currentTab?.getAttribute('data-tab-name')
   }
 
+  hideTab(name){
+    this.getTab(name).classList.add('displaynone')
+    this.getContentEl(name).classList.add('displaynone')
+  }
+
+  unhideTab(name){
+    this.getTab(name).classList.remove('displaynone')
+    this.getContentEl(name).classList.remove('displaynone')
+  }
+
+  getTab(name){
+    return this.querySelector(`.tabz-list [data-tab-name=${name}]`)
+  }
+
   getContentEl(name){
     return this.querySelector(`.tabz-content [data-tab-name=${name}]`)
   }
@@ -52,6 +66,10 @@ export default class Tabz extends DIElement{
         tabContent.show?.()
       }
       tabContent.classList.toggle('active', match)
+    })
+    this.querySelectorAll('.tabz-list > *').forEach(tab => {
+      const match = tab.getAttribute('data-tab-name') === name
+      tab.classList.toggle('active', match)
     })
     this.events.emit('changed')
   }

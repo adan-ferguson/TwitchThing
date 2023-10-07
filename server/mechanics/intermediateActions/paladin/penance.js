@@ -3,7 +3,7 @@ export default function(combat, actor, abilityInstance, actionDef, triggerData){
   if(!target){
     return
   }
-  const damage = Math.ceil(triggerData.healthGained * actionDef.pct)
+  const damage = Math.ceil(triggerData.total * actionDef.pct)
   if(damage < 0){
     return
   }

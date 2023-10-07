@@ -73,6 +73,7 @@ export async function generateEvent(dungeonRun){
   return {
     message,
     wandering: true,
+    roomType: 'wandering',
     nextRoom: room + 1
   }
 }

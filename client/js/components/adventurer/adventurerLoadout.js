@@ -2,6 +2,10 @@ import AdventurerItemRow from './adventurerItemRow.js'
 import AdventurerSkillRow from './adventurerSkillRow.js'
 import DIElement from '../diElement.js'
 import AdventurerInstance from '../../../../game/adventurerInstance.js'
+import { subjectKeyForLoadoutObject } from '../../subjectClientFns.js'
+import { getMatchingSlots } from '../../../../game/subjectFns.js'
+import { flash } from '../../animations/simple.js'
+import { FLASH_COLORS } from '../../colors.js'
 
 const HTML = `
 <div class="adv-items slots">
@@ -84,6 +88,26 @@ export default class AdventurerLoadout extends DIElement{
     this.skillSlots.forEach(row => {
       row.stateEl.advanceTime(ms)
     })
+  }
+
+  flashAffectedSlots(col, row){
+    const { loadoutItem } = this._adventurerInstance.getSlotInfo(col, row)
+    if(!loadoutItem){
+      return
+    }
+    const subjectKey = subjectKeyForLoadoutObject(loadoutItem.obj)
+    if(!subjectKey || subjectKey === 'self'){
+      return
+    }
+    const matches = getMatchingSlots(col, row, subjectKey)
+    matches
+      .forEach(({ col, row }) => {
+        flash(this._getRow(col, row), FLASH_COLORS.active)
+      })
+  }
+
+  _getRow(col, row){
+    return this[col === 0 ? 'itemSlots' : 'skillSlots'][row]
   }
 }
 

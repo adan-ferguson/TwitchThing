@@ -2,7 +2,7 @@ import { geometricProgression } from '../../growthFunctions.js'
 
 export default function(level){
   const magicPower = (1.5 + geometricProgression(0.25, level, 1, 0.05)) + 'x'
-  const stunDuration = 500 + level * 1500
+  const stunDuration = level * 1000
   return {
     effect: {
       metaEffects: [{

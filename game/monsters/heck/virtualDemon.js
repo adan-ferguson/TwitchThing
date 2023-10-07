@@ -1,7 +1,10 @@
-export default function(){
+import { toPct } from '../../utilFunctions.js'
+
+export default function(tier){
+
   return {
     baseStats: {
-      hpMax: '+150%',
+      hpMax: '+100%',
       speed: 70,
       physPower: '-10%',
     },
@@ -11,7 +14,7 @@ export default function(){
         effect: {
           stats: {
             critChance: 0.2,
-            critDamage: '+100%'
+            critDamage: toPct(1 + tier * 2)
           }
         }
       },
@@ -20,7 +23,7 @@ export default function(){
         effect: {
           effectId: 'behemothCarapace',
           stats: {
-            damageThreshold: 0.05
+            damageThreshold: tier ? 1 : 0.05
           }
         }
       }

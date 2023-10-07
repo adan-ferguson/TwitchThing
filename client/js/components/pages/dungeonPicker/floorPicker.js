@@ -26,7 +26,7 @@ ${NOTCH_SVG(notchType)}
 <span class="start-here"><-- Start Here</span>
 `
 
-export default class FloorSlider extends HTMLElement{
+export default class FloorPicker extends HTMLElement{
 
   _options = {
     max: 1,
@@ -75,6 +75,7 @@ export default class FloorSlider extends HTMLElement{
 
   _update(){
     this._entriesEl.innerHTML = ''
+    this._floorEls = []
     const max = Math.min(60, this._options.max)
     const zones = 1 + Math.floor((max - 1) / 10)
     for(let i = 0; i < zones; i++){
@@ -125,4 +126,4 @@ export default class FloorSlider extends HTMLElement{
   }
 }
 
-customElements.define('di-floor-slider', FloorSlider)
+customElements.define('di-floor-picker', FloorPicker)

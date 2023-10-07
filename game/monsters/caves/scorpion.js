@@ -1,6 +1,4 @@
-import { onHit } from '../../commonMechanics/onHit.js'
-
-export default function(){
+export default function(tier){
   return {
     baseStats: {
       hpMax: '+30%',
@@ -34,7 +32,7 @@ export default function(){
                     }
                   },
                   name: 'poisoned',
-                  duration: 15000,
+                  duration: tier ? 0 : 15000,
                   persisting: true,
                 }
               }

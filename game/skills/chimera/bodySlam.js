@@ -4,7 +4,7 @@ export default function(level){
     effect: {
       abilities: [{
         trigger: 'active',
-        cooldown: 10000,
+        cooldown: Math.floor(10000 * Math.pow(0.92, level - 1)),
         actions: [{
           attack: {
             scaling: {

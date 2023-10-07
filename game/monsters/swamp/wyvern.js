@@ -1,40 +1,47 @@
 import flutteringMonsterItem from '../../commonMechanics/flutteringMonsterItem.js'
 
-export default function(){
+export default function(tier){
+
+  const items = [
+    {
+      name: 'Acid Breath',
+      effect: {
+        abilities: [
+          {
+            trigger: 'active',
+            uses: 1,
+            abilityId: 'acidBreath',
+            actions: [{
+              attack: {
+                damageType: 'magic',
+                scaling: {
+                  magicPower: 2
+                },
+              }
+            },{
+              breakItem: {
+                count: 2 + tier
+              }
+            }]
+          }
+        ]
+      }
+    },
+    flutteringMonsterItem,
+  ]
+
+  if(tier){
+    items.push(flutteringMonsterItem)
+  }
+
   return {
     baseStats: {
-      magicDef: '+30%',
+      magicDef: '+20%',
       speed: 20,
-      physPower: '+10%',
-      magicPower: '+10%',
-      hpMax: '+30%'
+      physPower: '-20%',
+      magicPower: '-20%',
+      hpMax: '-10%'
     },
-    items: [
-      flutteringMonsterItem,
-      {
-        name: 'Acid Breath',
-        effect: {
-          abilities: [
-            {
-              trigger: 'active',
-              uses: 1,
-              abilityId: 'acidBreath',
-              actions: [{
-                attack: {
-                  damageType: 'magic',
-                  scaling: {
-                    magicPower: 2
-                  },
-                }
-              },{
-                breakItem: {
-                  count: 2
-                }
-              }]
-            }
-          ]
-        }
-      }
-    ]
+    items,
   }
 }

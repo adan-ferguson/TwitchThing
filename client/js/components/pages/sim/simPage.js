@@ -12,6 +12,7 @@ const HTML = `
     <di-tabz>
       <di-list data-tab-name="Adventurers"></di-list>
       <di-list data-tab-name="Monsters"></di-list>
+      <di-list data-tab-name="SUPER Monsters"></di-list>
     </di-tabz>
   </div>
   <div class="flex-rows right-side">
@@ -40,6 +41,10 @@ export default class SimPage extends Page{
       .setOptions({
         pageSize: 10
       })
+    this._superMonstersListEl = this.querySelector('di-list[data-tab-name="SUPER Monsters"]')
+      .setOptions({
+        pageSize: 10
+      })
     this._goButton = this.querySelector('.go')
     this._goButton.addEventListener('click', () => {
       this._go()
@@ -55,7 +60,7 @@ export default class SimPage extends Page{
   }
 
   async load(){
-    const { adventurers, monsters } = await this.fetchData()
+    const { adventurers, monsters, superMonsters } = await this.fetchData()
 
     const rows = []
     adventurers.forEach(adventurer => {
@@ -76,6 +81,16 @@ export default class SimPage extends Page{
       mrows.push(row)
     })
     this._monstersListEl.setRows(mrows)
+
+    const smrows = []
+    superMonsters.forEach(monsterDef => {
+      const row = makeMonsterRow(monsterDef)
+      row.addEventListener('click', e => {
+        this._chooseMonster(monsterDef)
+      })
+      smrows.push(row)
+    })
+    this._superMonstersListEl.setRows(smrows)
   }
 
   _chooseAdventurer(adventurer){

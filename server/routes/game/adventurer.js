@@ -9,6 +9,7 @@ import { spendAdventurerOrb, spendAdventurerSkillPoint, spendStashedXp } from '.
 import { commitAdventurerLoadout } from '../../adventurer/loadout.js'
 import Joi from 'joi'
 import { fillArray } from '../../../game/utilFunctions.js'
+import { updateAccomplishments } from '../../user/accomplishments.js'
 
 const router = express.Router()
 const verifiedRouter = express.Router()
@@ -39,7 +40,8 @@ verifiedRouter.post('/enterdungeon', validateIdle, async(req, res) => {
   const params = Joi.attempt(req.body, Joi.object({
     startingFloor: Joi.number().integer(),
     pace: Joi.string(),
-    restThreshold: Joi.number().integer()
+    restThreshold: Joi.number().integer(),
+    superDungeon: Joi.bool(),
   }))
   const dungeonRun = await addRun(req.adventurerDoc._id, params)
   res.send({ dungeonRun })
@@ -74,8 +76,10 @@ verifiedRouter.post('/edit', validateIdle, async (req, res) => {
 verifiedRouter.post('/edit/spendorb', validateIdle, async(req, res) => {
   requireOwnsAdventurer(req)
   const className = validateParam(req.body.advClass, { type: 'string' })
-  spendAdventurerOrb(req.adventurerDoc, req.user, className)
+  const count = validateParam(req.body.count, { type: 'number' })
+  spendAdventurerOrb(req.adventurerDoc, req.user, className, count)
   await Adventurers.save(req.adventurerDoc)
+  await Users.save(req.user)
   res.status(200).send({ success: 1 })
 })
 
@@ -84,12 +88,12 @@ verifiedRouter.post('/edit/spendskillpoint', validateIdle, async(req, res) => {
   const skillId = validateParam(req.body.skillId, 'string')
   spendAdventurerSkillPoint(req.adventurerDoc, skillId)
   await Adventurers.save(req.adventurerDoc)
-  res.status(200).send({ success: 1 })
+  res.status(200).send({ success: 1, adventurerDoc: req.adventurerDoc })
 })
 
 verifiedRouter.post('/addxp', async(req, res) => {
   requireOwnsAdventurer(req)
-  const xp = Joi.attempt(req.body.xp, Joi.number().integer())
+  const xp = Joi.attempt(req.body.xp, Joi.number().integer().unsafe())
   spendStashedXp(req.user, req.adventurerDoc, xp)
   await Adventurers.save(req.adventurerDoc)
   await Users.save(req.user)
@@ -132,18 +136,22 @@ verifiedRouter.post('/refund', async(req, res, next) => {
   if(index === -1){
     throw 'Adventurer can not be refunded, not in user\'s adventurer list'
   }
-  req.adventurerDoc.xp /= 2
-  req.adventurerDoc.unlockedSkills = {}
-  req.adventurerDoc.orbs = {}
+  const doc = req.adventurerDoc
+  if(!doc.state.canRefundForFree){
+    doc.xp /= 2
+  }
+  doc.state.canRefundForFree = true
+  doc.unlockedSkills = {}
+  doc.orbs = {}
   commitAdventurerLoadout(
-    req.adventurerDoc,
+    doc,
     req.user,
     fillArray(() => null, 8),
     fillArray(() => null, 8)
   )
-  await Adventurers.save(req.adventurerDoc)
+  await Adventurers.save(doc)
   await Users.save(req.user)
-  res.status(200).send({ success: 1, adventurer: req.adventurerDoc })
+  res.status(200).send({ success: 1, adventurer: doc })
 })
 
 

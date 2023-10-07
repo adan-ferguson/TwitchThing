@@ -126,7 +126,7 @@ export default class Bar extends HTMLElement{
     val = Math.min(this._options.max, Math.max(this._options.min, val))
 
     if(options.flyingText){
-      this._flyingText(val - this._val)
+      this._flyingText(suffixedNumber(val - this._val))
     }
 
     if(!options.animate){

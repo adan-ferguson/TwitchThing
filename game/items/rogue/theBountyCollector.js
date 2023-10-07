@@ -1,20 +1,29 @@
 export default function(level){
-  const value = level * 5
+  const goldReward = `${1 + level * 3}x`
   return {
     effect: {
       abilities: [{
         trigger: 'kill',
+        abilityId: 'bountyCollector',
         conditions: {
           source: {
-            subjectKey: 'attached',
+            key: 'attached',
             trigger: 'active'
           }
         },
         actions: [{
-          theBountyCollectorKill: {
-            value
+          applyStatusEffect: {
+            targets: 'target',
+            statusEffect: {
+              stats: {
+                goldReward
+              },
+            }
           }
-        }]
+        }],
+        vars: {
+          goldReward
+        }
       }]
     },
     orbs: 5 + level * 5,

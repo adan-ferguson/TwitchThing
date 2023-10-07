@@ -134,7 +134,7 @@ export default class EffectDetails extends DIElement{
       this.appendChild(wrapContent(`Worth ${scrapEntry(this._obj.data.scrapValue)}`))
     }
     if(this._obj.statMultiplier && this._obj.statMultiplier !== 1 && this._isMeta){
-      this.appendChild(wrapContent(`Stats are multiplied by ${this._obj.statMultiplier}.<br/> (Generally doesn't affect ${activeAbility('these')} or ${triggeredAbility('these')})`))
+      this.appendChild(wrapContent(`Stats are multiplied by ${this._obj.statMultiplier}.`))
     }
   }
 

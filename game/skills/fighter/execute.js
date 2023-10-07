@@ -11,7 +11,9 @@ export default function(level){
           attack: {
             scaling: {
               physPower
-            }
+            },
+            cantDodge: true,
+            cantMiss: true,
           }
         }]
       }]

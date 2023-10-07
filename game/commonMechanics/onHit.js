@@ -7,7 +7,7 @@ export function onHit(action){
     trigger: 'attackHit',
     conditions: {
       source: {
-        subjectKey: 'self',
+        key: 'self',
         trigger: 'active'
       }
     },

@@ -5,11 +5,14 @@ export function gainHealth(triggerHandler, actor, amount){
     return
   }
   const hpBefore = actor.hp
-  actor.hp += amount * actor.stats.get('healing').value
+  const toGain = Math.round(amount * actor.stats.get('healing').value)
+  actor.hp += toGain
   const healthGained = actor.hp - hpBefore
   if(healthGained > 0){
     processAbilityEvents(triggerHandler, 'gainedHealth', actor, null, {
-      healthGained
+      healthGained,
+      overheal: Math.max(0, toGain - healthGained),
+      total: toGain,
     })
   }
   return {

@@ -124,6 +124,16 @@ export default class List extends DIElement{
     this._update()
   }
 
+  get hasVisibleRows(){
+    return this._sortedRows?.length ? true : false
+  }
+
+  get shouldPaginate(){
+    return this._options.paginate === 'maybe' ?
+      this.maxPage > 1 :
+      (this._options.paginate ? true : false)
+  }
+
   clear(){
     return this.setRows([])
   }
@@ -191,9 +201,7 @@ export default class List extends DIElement{
     hideAllTippys({ duration: 0 })
     this.isMobile = mobileMode()
 
-    if(!this._options.paginate){
-      this.querySelector('.pagination-buttons').classList.add('displaynone')
-    }
+    this.querySelector('.pagination-buttons').classList.toggle('displaynone', !this.shouldPaginate)
 
     this._page = Math.max(1, Math.min(this.maxPage, this._page))
     this.querySelector('.first').disabled = this._page === 1 ? true : false

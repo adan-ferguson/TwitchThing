@@ -1,7 +1,9 @@
 export function bigLoadoutModifier(){
   return {
     loadoutModifierId: 'big',
-    subjectKey: 'neighbouring',
+    subject: {
+      key: 'neighbouring'
+    },
     restrictions: {
       empty: true
     }

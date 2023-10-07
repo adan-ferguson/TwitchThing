@@ -1,10 +1,7 @@
-import { fillArray, makeEl, wait } from '../../../../../game/utilFunctions.js'
+import { arrayize, fillArray, makeEl, wait } from '../../../../../game/utilFunctions.js'
 import { getChestDisplayInfo } from '../../../displayInfo/chestDisplayInfo.js'
 import DIElement from '../../diElement.js'
-import { ICON_SVGS } from '../../../assetLoader.js'
-import AdventurerItem from '../../../../../game/items/adventurerItem.js'
-import AdventurerItemRow from '../../adventurer/adventurerItemRow.js'
-import { standardItemSort } from '../../listHelpers.js'
+import { consolidatedChestList } from '../../listHelpers.js'
 
 const UNOPENED_HTML = `
 <span class="unopened">
@@ -23,17 +20,20 @@ const OPENED_HTML = `
 
 export default class ChestOpenage extends DIElement{
 
-  constructor(chest, opened = false){
+  constructor(chests, opened = false){
     super()
-    this._chest = chest
-    const chestDisplayInfo = getChestDisplayInfo(chest)
-    this.style.color = chestDisplayInfo.color
+    this._chests = arrayize(chests)
+    this.style.color = getChestDisplayInfo(chests).color
 
     if(!opened){
       this._setupUnopened()
     }else{
       this.open(false)
     }
+  }
+
+  get contentsEl(){
+    return this.querySelector('.contents')
   }
 
   async open(animate = true){
@@ -59,40 +59,28 @@ export default class ChestOpenage extends DIElement{
     this.classList.add('opened')
     this.dispatchEvent(new CustomEvent('opened'))
 
-    const displayInfo = getChestDisplayInfo(this._chest)
+    const displayInfo = getChestDisplayInfo(this._chests)
+    this.querySelector('.inset-title').textContent = displayInfo.displayName
 
-    let text = ''
-    if(this._chest.options.level){
-      text += `Lvl. ${this._chest.options.level} `
-    }
+    this._addGold()
 
-    this.querySelector('.inset-title').textContent = text + `${displayInfo.displayName} Chest`
-
-    const contents = this.querySelector('.contents')
-    if(this._chest.contents.gold){
-      contents.appendChild(makeEl({
-        content: `${ICON_SVGS.gold}<span> +${this._chest.contents.gold}</span>`,
-        class: 'gold-contents'
-      }))
-    }
-
-    const basicItems = arrayOfItems(this._chest.contents.items?.basic ?? [])
-    const rows = basicItems
-      .map(({ name, count }) => {
-        const item = new AdventurerItem(name)
-        return new AdventurerItemRow().setOptions({ item, count })
-      })
-      .sort((a,b) => {
-        return b.adventurerItem.rarity - a.adventurerItem.rarity
-      })
-
-    rows.forEach(row => contents.appendChild(row))
-
+    const list = consolidatedChestList(this._chests)
+    this.contentsEl.appendChild(list)
     this.events.emit('opened')
   }
 
+  _addGold(){
+    // TODO: If chests with gold come back, fix this
+    // if(this._chest.contents.gold){
+    //   this.contentsEl.appendChild(makeEl({
+    //     content: `${ICON_SVGS.gold}<span> +${this._chest.contents.gold}</span>`,
+    //     class: 'gold-contents'
+    //   }))
+    // }
+  }
+
   _setupUnopened(){
-    const displayInfo = getChestDisplayInfo(this._chest)
+    const displayInfo = getChestDisplayInfo(this._chests)
     this.innerHTML = UNOPENED_HTML
     const starsHTML = fillArray(() => displayInfo.icon, displayInfo.stars ?? 0).join('')
     this.querySelectorAll('.stars').forEach(el => {

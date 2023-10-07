@@ -10,7 +10,7 @@ import ChestOpenage from './chestOpenage.js'
 import MonsterInstance from '../../../../../game/monsterInstance.js'
 import Adventurer from '../../../../../game/adventurer.js'
 import { goldEntry, orbPointEntry, skillPointEntry } from '../../common.js'
-import { inventoryItemsToRows } from '../../listHelpers.js'
+import { consolidatedChestList, inventoryItemsToRows } from '../../listHelpers.js'
 
 const WAIT_TIME = 500
 const MAX_CHESTS = 20
@@ -20,8 +20,7 @@ const HTML = `
   <div data-tab-name="Results"></div>
   <div data-tab-name="Loot" class="fill-contents">
     <div class="flex-rows">
-      <p class="gold-loot"></p>
-      <di-list class="flex-grow"></di-list>
+      <div class="flex-grow chest-list"></div>
     </div>
   </div>
 </di-tabz>
@@ -40,6 +39,10 @@ export default class EventContentsResults extends HTMLElement{
     window.addEventListener('click', this._skipAnims)
   }
 
+  get tabz(){
+    return this.querySelector('di-tabz')
+  }
+
   showFinalizerButton(fn){
     const el = this.querySelector('.finalizer')
     el.classList.remove('displaynone')
@@ -50,17 +53,16 @@ export default class EventContentsResults extends HTMLElement{
 
     this._linkedAdventurerPane = adventurerPane
 
-    const tabz = this.querySelector('di-tabz')
     adventurerPane.setAdventurer(new Adventurer(deepClone(dungeonRun.adventurer)))
 
     requestAnimationFrame(() => {
       this._skipAnimations = false
       waitUntilDocumentVisible().then(() => {
-        this._showMainResults(tabz.getContentEl('Results'), dungeonRun, adventurerPane, watching)
+        this._showMainResults(this.tabz.getContentEl('Results'), dungeonRun, adventurerPane, watching)
       })
     })
 
-    this._setupLootTab(tabz.getContentEl('Loot').querySelector('di-list'), dungeonRun.rewards.chests)
+    this._setupLootTab(dungeonRun.rewards.chests)
   }
 
   stop(){
@@ -75,9 +77,16 @@ export default class EventContentsResults extends HTMLElement{
     await this._wait()
     this._addText(el, getFinishReason(dungeonRun.results.finalEvent))
     await this._wait()
+    this._addText(el)
 
     this._addNewline(el)
     await this._adventurerXp(el, dungeonRun.results, adventurerPane)
+
+    if(dungeonRun.rewards.gold){
+      this._addNewline(el)
+      this._addText(el, `+${dungeonRun.rewards.gold} gold`)
+      await this._wait()
+    }
 
     this._addNewline(el)
     await this._addChests(el, dungeonRun.rewards.chests, watching)
@@ -98,31 +107,16 @@ export default class EventContentsResults extends HTMLElement{
     })
   }
 
-  _setupLootTab(list, chests){
-    const totalItems = {}
-    let totalGold = 0
-    chests.forEach(c => {
-      const { gold = 0, items } = c.contents
-      totalGold += gold
-      if(items?.basic){
-        for(let key in items.basic){
-          totalItems[key] = (totalItems[key] ?? 0) + items.basic[key]
-        }
-      }
+  _setupLootTab(chests){
+    if(!chests || !chests.length){
+      this.tabz.hideTab('Loot')
+      return
+    }
+    const list = consolidatedChestList(chests).setOptions({
+      pageSize: 12,
+      paginate: 'maybe',
     })
-    this.querySelector('.gold-loot').innerHTML = goldEntry(totalGold)
-    list.setOptions({
-      pageSize: 10,
-      sortFn: (a,b) => {
-        const itemA = a.adventurerItem
-        const itemB = b.adventurerItem
-        if(itemA.rarity !== itemB.rarity){
-          return itemB.rarity - itemA.rarity
-        }
-        return b.count - a.count
-      }
-    })
-    list.setRows(inventoryItemsToRows({ basic: totalItems }))
+    this.tabz.getContentEl('Loot').querySelector('.chest-list').appendChild(list)
   }
 
   _addRow(target, row){
@@ -151,7 +145,7 @@ export default class EventContentsResults extends HTMLElement{
 
   async _addChests(el, chests, chestsOpened){
 
-    if(!chests.length){
+    if(!chests?.length){
       return
     }
 

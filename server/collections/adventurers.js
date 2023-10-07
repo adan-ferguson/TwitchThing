@@ -17,6 +17,9 @@ const DEFAULTS = {
   accomplishments: {
     deepestFloor: 1,
     deepestSuperFloor: 0
+  },
+  state: {
+    canRefundForFree: false,
   }
 }
 

@@ -1,12 +1,20 @@
-export default function(){
+import { toPct } from '../../utilFunctions.js'
+
+export default function(tier){
+  const stats = {
+    speed: 25 + tier * 25,
+  }
+  if(tier > 0){
+    stats.physPower = toPct(0.20)
+  }
   return {
     baseStats: {
-      hpMax: '+20%',
-      physPower: '-10%'
+      hpMax: toPct(0.15 + tier * 0.35),
+      physPower: '-20%'
     },
     items: [
       {
-        name: 'Frenzy',
+        name: tier ? 'Berserk Frenzy' : 'Frenzy',
         effect: {
           abilities: [{
             trigger: 'attackHit',
@@ -17,9 +25,7 @@ export default function(){
                   name: 'frenzy',
                   polarity: 'buff',
                   stacking: 'stack',
-                  stats: {
-                    speed: 30
-                  }
+                  stats
                 }
               }
             }]
