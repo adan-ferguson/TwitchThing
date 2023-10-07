@@ -13,7 +13,21 @@ export async function runMigrations(){
   console.log('running migrations')
   await migration(81, setUserAdvClassAccomplishments)
   await migration(83, async () => await removeInvalidSkills())
+  await migration(84, async () => await updateUserFlags())
   console.log('done')
+}
+
+async function updateUserFlags(){
+  for(let userDoc of await Users.find()){
+    userDoc.features.gold = userDoc.features.skills ? 1 : 0
+    await Users.save(userDoc)
+  }
+  for(let advDoc of await Adventurers.find()){
+    if(!advDoc.accomplishments.deepestSuperFloor && advDoc.accomplishments.deepestFloor > 60){
+      advDoc.accomplishments.deepestSuperFloor = 1
+      await Adventurers.save(advDoc)
+    }
+  }
 }
 
 async function migration(migrationId, fn){

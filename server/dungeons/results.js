@@ -95,7 +95,7 @@ export async function finalize(dungeonRunDoc){
       if(deepestFloor === 61 && prev < 61){
         emit(userDoc._id, 'show popup', {
           title: 'Banned!',
-          message: `${adventurerDoc.name} cleared the whole SUPER dungeon, which probably means you used UNFAIR GAMEPLAY EXPLOITS! Or the balance just blows.`
+          message: `${adventurerDoc.name} cleared the whole SUPER dungeon, which probably means you used UNFAIR GAMEPLAY EXPLOITS!`
         })
       }
     }else{
